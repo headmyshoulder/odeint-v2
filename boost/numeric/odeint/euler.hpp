@@ -74,12 +74,38 @@ namespace odeint {
     };
 
 
+    /* Euler stepper implementation that works with c-style arrays T* */
+    template< class T>
+    class ode_step_euler<T*>
+    {
+	T* dxdt;
+	size_t current_size;
+
+    private:
+	void resize( size_t N )
+	{
+	    if( dxdt != NULL ) delete[] dxdt;
+	    dxdt = new T[N];
+	    current_size = N;
+	}
+
+    public:
+	ode_step_euler() :dxdt( NULL ) , current_size( 0 ) {}
+
+	template< class DynamicalSystem , class TimeType>
+	void next_step( DynamicalSystem system , T* x , size_t N , TimeType t , TimeType dt )
+	{
+	    if( current_size != N ) resize(N);
+	    detail::euler_imp( system , x , x+N , dxdt , dt , t );
+	}
+    };
+
 /* ToDo:
    Write stepper for
    * fixed size systems
    * array<T>
    * system( T* , T* , T )
- */
+*/
 
 
 } // namespace odeint
