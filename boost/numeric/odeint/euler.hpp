@@ -18,32 +18,67 @@
 #define BOOST_NUMERIC_ODEINT_EULER_HPP
 
 #include <boost/concept_check.hpp>
+#include <tr1/array>
 
 namespace boost {
 namespace numeric {
 namespace odeint {
 
+
     template< class ContainerType >
+    class container_resizer
+    {
+    public:
+
+	void resize( const ContainerType &x , ContainerType &dxdt ) const
+        {
+	    if( x.size() != dxdt.size() )
+		dxdt.resize( x.size() );
+	}
+    };
+
+
+
+    template< class T , int N >
+    class array_resizer
+    {
+    public:
+	void resize( const std::tr1::array<T,N> &x , std::tr1::array<T,N> &dxdt ) const
+        {
+	}
+    };
+
+
+
+    template<
+	class ContainerType ,
+	class ResizerType = container_resizer<ContainerType>
+	>
     class ode_step_euler
     {
-	BOOST_CLASS_REQUIRE( ContainerType , boost , SequenceConcept );
+	// BOOST_CLASS_REQUIRE( ContainerType , boost , SequenceConcept );
 	ContainerType dxdt;
+	ResizerType resizer;
+
+	typedef typename ContainerType::iterator iterator;
 
     public:
 
 	template< class DynamicalSystem , class TimeType>
-	void next_step( DynamicalSystem system , ContainerType &x , TimeType t , TimeType dt )
+	void next_step( DynamicalSystem system ,
+			ContainerType &x ,
+			TimeType t ,
+			TimeType dt )
 	{
-	    if( x.size() != dxdt.size() ) dxdt.resize( x.size() );
+	    resizer.resize( x , dxdt );
 	    system( x , dxdt , t );
-	    typename ContainerType::iterator state_begin = x.begin();
-	    typename ContainerType::iterator state_end = x.end();
-	    typename ContainerType::iterator derivative_begin = dxdt.begin();
+	    iterator state_begin = x.begin();
+	    iterator state_end = x.end();
+	    iterator derivative_begin = dxdt.begin();
 	    while( state_begin != state_end ) 
 		(*state_begin++) += dt * (*derivative_begin++);
 	}
     };
-
 
 
 /* ToDo:
