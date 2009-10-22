@@ -17,36 +17,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_EULER_HPP
 #define BOOST_NUMERIC_ODEINT_EULER_HPP
 
-
-namespace boost {
-namespace numeric {
-namespace odeint {
-namespace detail {
-
-    template< class DynamicalSystem ,
-	      class StateIterator ,
-	      class DerivativeIterator ,
-	      class TimeType >
-    void euler_imp( DynamicalSystem system ,
-		    StateIterator state_begin ,
-		    StateIterator state_end ,
-		    DerivativeIterator derivative_begin ,
-		    TimeType time_step ,
-		    TimeType time )
-    {
-	system( state_begin , derivative_begin , time );
-	while( state_begin != state_end ) (*state_begin++) += time_step * (*derivative_begin++);
-    }
-
-} // namespace odeint
-} // namespace numeric
-} // namespace boost
-} // namespace detail
-
-
-
-
-
+#include "/usr/include/boost/concept_check.hpp"
 
 namespace boost {
 namespace numeric {
@@ -55,7 +26,7 @@ namespace odeint {
     template< class ContainerType >
     class ode_step_euler
     {
-
+	BOOST_CONCEPT_ASSERT((ForwardContainer<ContainerType>));
 	ContainerType dxdt;
 
     public:
@@ -64,41 +35,16 @@ namespace odeint {
 	void next_step( DynamicalSystem system , ContainerType &x , TimeType t , TimeType dt )
 	{
 	    if( x.size() != dxdt.size() ) dxdt.resize( x.size() );
-
-	    typename ContainerType::iterator dxdt_iter = dxdt.begin();
-	    typename ContainerType::iterator x_iter = x.begin();
-	    typename ContainerType::iterator x_end = x.end();
-
-	    detail::euler_imp( system , x_iter , x_end , dxdt_iter , dt , t );
+	    system( x , dxdt , t );
+	    typename ContainerType::iterator state_begin = x.begin();
+	    typename ContainerType::iterator state_end = x.end();
+	    typename ContainerType::iterator derivative_begin = dxdt.begin();
+	    while( state_begin != state_end ) 
+		(*state_begin++) += dt * (*derivative_begin++);
 	}
     };
 
 
-    /* Euler stepper implementation that works with c-style arrays T* */
-    template< class T>
-    class ode_step_euler<T*>
-    {
-	T* dxdt;
-	size_t current_size;
-
-    private:
-	void resize( size_t N )
-	{
-	    if( dxdt != NULL ) delete[] dxdt;
-	    dxdt = new T[N];
-	    current_size = N;
-	}
-
-    public:
-	ode_step_euler() :dxdt( NULL ) , current_size( 0 ) {}
-
-	template< class DynamicalSystem , class TimeType>
-	void next_step( DynamicalSystem system , T* x , size_t N , TimeType t , TimeType dt )
-	{
-	    if( current_size != N ) resize(N);
-	    detail::euler_imp( system , x , x+N , dxdt , dt , t );
-	}
-    };
 
 /* ToDo:
    Write stepper for
