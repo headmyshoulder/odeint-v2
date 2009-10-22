@@ -42,7 +42,7 @@ const size_t olen = 10000;
 typedef vector<double> state_type;
 //typedef list<double> state_type;
 
-void lorenz( state_type::iterator x , state_type::iterator dxdt , double t )
+void lorenz( state_type &x , state_type &dxdt , double t )
 {
     dxdt[0] = sigma * ( x[1] - x[0] );
     dxdt[1] = R * x[0] - x[1] - x[0] * x[2];
