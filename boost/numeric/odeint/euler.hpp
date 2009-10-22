@@ -17,7 +17,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_EULER_HPP
 #define BOOST_NUMERIC_ODEINT_EULER_HPP
 
-#include "/usr/include/boost/concept_check.hpp"
+#include <boost/concept_check.hpp>
 
 namespace boost {
 namespace numeric {
@@ -26,7 +26,7 @@ namespace odeint {
     template< class ContainerType >
     class ode_step_euler
     {
-	BOOST_CONCEPT_ASSERT((ForwardContainer<ContainerType>));
+	BOOST_CLASS_REQUIRE( ContainerType , boost , SequenceConcept );
 	ContainerType dxdt;
 
     public:

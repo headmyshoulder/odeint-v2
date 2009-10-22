@@ -39,6 +39,7 @@ const double b = 8.0 / 3.0;
 const double dt = 0.01;
 const size_t olen = 10000;
 
+//typedef array<double, 3> state_type;
 typedef vector<double> state_type;
 //typedef list<double> state_type;
 
