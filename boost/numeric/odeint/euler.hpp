@@ -18,6 +18,7 @@
 #define BOOST_NUMERIC_ODEINT_EULER_HPP
 
 #include <boost/concept_check.hpp>
+#include <boost/numeric/odeint/concept/concepts.hpp>
 #include <tr1/array>
 
 namespace boost {
@@ -61,12 +62,12 @@ namespace odeint {
 	>
     class ode_step_euler
     {
-	// BOOST_CLASS_REQUIRE( ContainerType , boost , SequenceConcept );
-	ContainerType dxdt;
-	ResizeType resizer;
+        BOOST_CLASS_REQUIRE( ContainerType , boost::numeric::odeint, StateType );
+        ContainerType dxdt;
+        ResizeType resizer;
 
-	typedef typename ContainerType::iterator iterator;
-
+        typedef typename ContainerType::iterator iterator;
+        
     public:
 
         template< class DynamicalSystem , class TimeType>
