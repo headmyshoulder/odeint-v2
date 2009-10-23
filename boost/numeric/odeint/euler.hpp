@@ -25,27 +25,39 @@ namespace numeric {
 namespace odeint {
 
 
-    template< class ContainerType > class container_resizer
+    template< class ContainerType > 
+    class resizer
     {
     public:
-	void resize( const ContainerType &x , ContainerType &dxdt ) const
+        void resize( const ContainerType &x , ContainerType &dxdt ) const
         {
-	    if( x.size() != dxdt.size() ) dxdt.resize( x.size() );
-	}
+            dxdt.resize( x.size() );
+        }
+        
+        bool same_size( const ContainerType &x1 , ContainerType &x2 ) const
+        {
+            return (x1.size() == x2.size());
+        }
     };
 
     template< class T , size_t N >
-    class container_resizer< std::tr1::array< T , N > >
+    class resizer< std::tr1::array< T , N > >
     {
     public:
-	void resize( const std::tr1::array<T,N> &x , std::tr1::array<T,N> &dxdt ) const
+        void resize( const std::tr1::array<T,N> &x , std::tr1::array<T,N> &dxdt ) const
         {
-	}
+            throw; // should never be called
+        }
+
+        const bool same_size( const std::tr1::array<T,N> &x1 , std::tr1::array<T,N> &x2 ) const
+        {
+            return true; // if this was false, the code wouldn't compile
+        }
     };
 
     template<
 	class ContainerType ,
-	class ResizeType = container_resizer< ContainerType >
+	class ResizeType = resizer< ContainerType >
 	>
     class ode_step_euler
     {
@@ -57,20 +69,20 @@ namespace odeint {
 
     public:
 
-	template< class DynamicalSystem , class TimeType>
-	void next_step( DynamicalSystem system ,
-			ContainerType &x ,
-			TimeType t ,
-			TimeType dt )
+        template< class DynamicalSystem , class TimeType>
+        void next_step( DynamicalSystem system ,
+                        ContainerType &x ,
+                        TimeType t ,
+                        TimeType dt )
         {
-	    resizer.resize( x , dxdt );
-	    system( x , dxdt , t );
-	    iterator state_begin = x.begin();
-	    iterator state_end = x.end();
-	    iterator derivative_begin = dxdt.begin();
-	    while( state_begin != state_end ) 
-		(*state_begin++) += dt * (*derivative_begin++);
-	}
+            if( !resizer.same_size(x, dxdt) ) resizer.resize(x, dxdt);
+            system( x , dxdt , t );
+            iterator state_begin = x.begin();
+            iterator state_end = x.end();
+            iterator derivative_begin = dxdt.begin();
+            while( state_begin != state_end ) 
+                (*state_begin++) += dt * (*derivative_begin++);
+        }
     };
 
 

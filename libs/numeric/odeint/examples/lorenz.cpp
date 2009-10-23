@@ -39,9 +39,7 @@ const double b = 8.0 / 3.0;
 const double dt = 0.01;
 const size_t olen = 10000;
 
-//typedef array<double, 3> state_type;
 typedef vector<double> state_type;
-//typedef list<double> state_type;
 
 void lorenz( state_type &x , state_type &dxdt , double t )
 {
@@ -58,7 +56,7 @@ int main( int argc , char **argv )
     x[1] = 0.0;
     x[2] = 0.0;
 
-    ode_step_euler_container< state_type > euler;
+    ode_step_euler< state_type > euler;
 
     double t = 0.0;
     for( size_t oi=0 ; oi<olen ; ++oi,t+=dt )
