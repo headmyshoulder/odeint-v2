@@ -52,7 +52,8 @@ int main( int argc , char **argv )
     x[1] = 0.0;
     x[2] = 0.0;
 
-    ode_step_euler< state_type , array_resizer<double,3> > euler;
+    // tr1::array is not resizable, we have to tell this to the stepper!
+    ode_step_euler< state_type , non_resizable > euler;
 
     double t = 0.0;
     for( size_t oi=0 ; oi<olen ; ++oi,t+=dt )

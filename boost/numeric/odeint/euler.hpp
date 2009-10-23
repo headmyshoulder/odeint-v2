@@ -24,12 +24,9 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-
-    template< class ContainerType >
-    class container_resizer
+    struct resizable
     {
-    public:
-
+	template< class ContainerType >
 	void resize( const ContainerType &x , ContainerType &dxdt ) const
         {
 	    if( x.size() != dxdt.size() )
@@ -39,12 +36,12 @@ namespace odeint {
 
 
 
-    template< class T , int N >
-    class array_resizer
+    struct non_resizable
     {
-    public:
-	void resize( const std::tr1::array<T,N> &x , std::tr1::array<T,N> &dxdt ) const
-        {
+	template< class ContainerType >
+	void resize( const ContainerType &x , ContainerType &dxdt ) const
+        { 
+	    throw; //should not happen 
 	}
     };
 
@@ -52,13 +49,13 @@ namespace odeint {
 
     template<
 	class ContainerType ,
-	class ResizerType = container_resizer<ContainerType>
+	class ResizeType = resizable
 	>
     class ode_step_euler
     {
 	// BOOST_CLASS_REQUIRE( ContainerType , boost , SequenceConcept );
 	ContainerType dxdt;
-	ResizerType resizer;
+	ResizeType resizer;
 
 	typedef typename ContainerType::iterator iterator;
 
