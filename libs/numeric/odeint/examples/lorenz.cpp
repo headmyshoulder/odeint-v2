@@ -58,7 +58,7 @@ int main( int argc , char **argv )
     x[1] = 0.0;
     x[2] = 0.0;
 
-    ode_step_euler< state_type > euler;
+    ode_step_euler_container< state_type > euler;
 
     double t = 0.0;
     for( size_t oi=0 ; oi<olen ; ++oi,t+=dt )

@@ -24,32 +24,28 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-    struct resizable
+
+    template< class ContainerType > class container_resizer
     {
-	template< class ContainerType >
+    public:
 	void resize( const ContainerType &x , ContainerType &dxdt ) const
         {
-	    if( x.size() != dxdt.size() )
-		dxdt.resize( x.size() );
+	    if( x.size() != dxdt.size() ) dxdt.resize( x.size() );
 	}
     };
 
-
-
-    struct non_resizable
+    template< class T , size_t N >
+    class container_resizer< std::tr1::array< T , N > >
     {
-	template< class ContainerType >
-	void resize( const ContainerType &x , ContainerType &dxdt ) const
-        { 
-	    throw; //should not happen 
+    public:
+	void resize( const std::tr1::array<T,N> &x , std::tr1::array<T,N> &dxdt ) const
+        {
 	}
     };
-
-
 
     template<
 	class ContainerType ,
-	class ResizeType = resizable
+	class ResizeType = container_resizer< ContainerType >
 	>
     class ode_step_euler
     {
@@ -66,7 +62,7 @@ namespace odeint {
 			ContainerType &x ,
 			TimeType t ,
 			TimeType dt )
-	{
+        {
 	    resizer.resize( x , dxdt );
 	    system( x , dxdt , t );
 	    iterator state_begin = x.begin();
