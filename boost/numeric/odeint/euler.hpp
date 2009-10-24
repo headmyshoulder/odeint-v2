@@ -18,43 +18,14 @@
 #define BOOST_NUMERIC_ODEINT_EULER_HPP
 
 #include <boost/concept_check.hpp>
-#include <boost/numeric/odeint/concept/concepts.hpp>
-#include <tr1/array>
+
+#include <boost/numeric/odeint/concepts/state_concept.hpp>
+#include <boost/numeric/odeint/resizer.hpp>
 
 namespace boost {
 namespace numeric {
 namespace odeint {
 
-
-    template< class ContainerType > 
-    class resizer
-    {
-    public:
-        void resize( const ContainerType &x , ContainerType &dxdt ) const
-        {
-            dxdt.resize( x.size() );
-        }
-        
-        bool same_size( const ContainerType &x1 , ContainerType &x2 ) const
-        {
-            return (x1.size() == x2.size());
-        }
-    };
-
-    template< class T , size_t N >
-    class resizer< std::tr1::array< T , N > >
-    {
-    public:
-        void resize( const std::tr1::array<T,N> &x , std::tr1::array<T,N> &dxdt ) const
-        {
-            throw; // should never be called
-        }
-
-        const bool same_size( const std::tr1::array<T,N> &x1 , std::tr1::array<T,N> &x2 ) const
-        {
-            return true; // if this was false, the code wouldn't compile
-        }
-    };
 
     template<
 	class ContainerType ,
@@ -85,15 +56,6 @@ namespace odeint {
                 (*state_begin++) += dt * (*derivative_begin++);
         }
     };
-
-
-/* ToDo:
-   Write stepper for
-   * fixed size systems
-   * array<T>
-   * system( T* , T* , T )
-*/
-
 
 } // namespace odeint
 } // namespace numeric

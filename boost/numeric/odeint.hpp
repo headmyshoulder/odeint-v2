@@ -16,5 +16,6 @@
 #define BOOST_NUMERIC_ODEINT_HPP
 
 #include <boost/numeric/odeint/euler.hpp>
+#include <boost/numeric/odeint/runge_kutta_4.hpp>
 
 #endif // BOOST_NUMERIC_ODEINT_HPP

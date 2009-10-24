@@ -47,18 +47,22 @@ void lorenz( state_type &x , state_type &dxdt , double t )
 
 int main( int argc , char **argv )
 {
-    state_type x;
+    state_type x , x2;
     x[0] = 1.0;
     x[1] = 0.0;
-    x[2] = 0.0;
+    x[2] = 20.0;
+    x2 = x;
 
     ode_step_euler< state_type > euler;
+    ode_step_runge_kutta_4< state_type > rk4;
 
     double t = 0.0;
     for( size_t oi=0 ; oi<olen ; ++oi,t+=dt )
     {
-	cout << t << tab << x[0] << tab << x[1] << tab << x[2] << endl;
+	cout << t << tab << x[0] << tab << x[1] << tab << x[2] << tab;
+	cout << x2[0] << tab << x2[1] << tab << x2[2] << endl;
 	euler.next_step( lorenz , x , t , dt );
+	rk4.next_step( lorenz , x2 , t , dt );
     }
 
     return 0;
