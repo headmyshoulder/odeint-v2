@@ -53,17 +53,16 @@ namespace odeint {
                         TimeType t ,
                         TimeType dt )
         {
-	    const value_type val2 = value_type( 2.0 );
+	    const TimeType val2 = TimeType( 2.0 );
 
             if( ! resizer.same_size( x , dxdt ) ) resizer.resize( x , dxdt );
             if( ! resizer.same_size( x , dxt ) ) resizer.resize( x , dxt );
             if( ! resizer.same_size( x , dxm ) ) resizer.resize( x , dxm );
             if( ! resizer.same_size( x , xt ) ) resizer.resize( x , xt );
 
-	    value_type dt_val = value_type( dt );
-            value_type dh = dt_val * value_type( 0.5 );
-	    value_type d6 = dt_val / value_type( 6.0 );
-            value_type th = dh + value_type( t );
+            TimeType  dh = TimeType( 0.5 ) * dt;
+	    TimeType d6 = dt /  TimeType( 6.0 );
+            TimeType th = t + dh;
 
 	    iterator iter1 , iter2 ,iter3 , iter4;
 	    iterator x_end = x.end() , xt_end = xt.end();
@@ -82,7 +81,7 @@ namespace odeint {
 	    iter1 = xt.begin() ; iter2 = x.begin() ; iter3 = dxm.begin() ; iter4  = dxt.begin();
 	    while( iter1 != xt_end )
 	    {
-		(*iter1++) = (*iter2++) + dt_val * (*iter3);
+		(*iter1++) = (*iter2++) + dt * (*iter3);
 		(*iter3++) += (*iter4++);
 	    }
 

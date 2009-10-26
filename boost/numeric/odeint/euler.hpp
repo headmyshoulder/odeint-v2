@@ -38,7 +38,8 @@ namespace odeint {
         ResizeType resizer;
 
         typedef typename ContainerType::iterator iterator;
-        
+	typedef typename ContainerType::value_type value_type;
+
     public:
 
         template< class DynamicalSystem , class TimeType>
