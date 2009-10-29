@@ -31,10 +31,15 @@ namespace odeint {
             dxdt.resize( x.size() );
         }
         
-        bool same_size( const ContainerType &x1 , ContainerType &x2 ) const
+        bool same_size( const ContainerType &x1 , const ContainerType &x2 ) const
         {
             return (x1.size() == x2.size());
         }
+
+	void check_size_and_resize( const ContainerType &x1 , ContainerType &x2 ) const
+        {
+	    if( same_size( x1 , x2 ) ) resize( x1 , x2 );
+	}
     };
 
     /* Template Specialization for fixed size array - no resizing can happen */
@@ -53,6 +58,11 @@ namespace odeint {
         {
             return true; // if this was false, the code wouldn't compile
         }
+
+	void check_size_and_resize( const  std::tr1::array<T,N> &x1 ,  std::tr1::array<T,N> &x2 ) const
+        {
+	    if( !same_size( x1 , x2 ) ) throw;
+	}
     };
 
 
