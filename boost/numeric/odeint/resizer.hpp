@@ -22,6 +22,9 @@ namespace odeint {
     template< class ContainerType > 
     class resizer
     {
+	// we need a resizable container here (obviously...)
+	BOOST_CLASS_REQUIRE( ContainerType , boost::numeric::odeint, Resizable );
+
     public:
         void resize( const ContainerType &x , ContainerType &dxdt ) const
         {
@@ -34,6 +37,7 @@ namespace odeint {
         }
     };
 
+    /* Template Specialization for fixed size array - no resizing can happen */
     template< class T , size_t N >
     class resizer< std::tr1::array< T , N > >
     {

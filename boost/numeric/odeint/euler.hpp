@@ -26,7 +26,6 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-
     template<
 	class ContainerType ,
 	class ResizeType = resizer< ContainerType >

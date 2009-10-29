@@ -20,6 +20,7 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+    /* Concept StateType */
     template<class X>
     struct StateType {
 
@@ -44,6 +45,27 @@ namespace odeint {
         void same_type( T const&, T const& );
 
     };
+
+
+    /* Concept Resizable */
+    template<class X>
+    struct Resizable {
+
+    public:
+
+	//BOOST_CONCEPT_ASSERT((StateType<X>));
+
+	BOOST_CONCEPT_USAGE(Resizable)
+	{
+	    state.resize(1); // state has resize function
+	    size_t n = 2;
+	    state.resize(n);
+	}
+
+    private:
+	X state;
+
+	};
 
 } // namespace odeint
 } // namespace numeric
