@@ -53,7 +53,7 @@ namespace odeint {
 
     public:
 
-	//BOOST_CONCEPT_ASSERT((StateType<X>));
+	BOOST_CONCEPT_ASSERT((StateType<X>));
 
 	BOOST_CONCEPT_USAGE(Resizable)
 	{

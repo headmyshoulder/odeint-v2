@@ -17,5 +17,6 @@
 
 #include <boost/numeric/odeint/euler.hpp>
 #include <boost/numeric/odeint/runge_kutta_4.hpp>
+#include <boost/numeric/odeint/stepsize_controller_standard.hpp>
 
 #endif // BOOST_NUMERIC_ODEINT_HPP

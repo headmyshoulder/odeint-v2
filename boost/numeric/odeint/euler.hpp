@@ -19,7 +19,7 @@
 
 #include <boost/concept_check.hpp>
 
-#include <boost/numeric/odeint/detail/accumulators.hpp>
+#include <boost/numeric/odeint/detail/iterator_algebra.hpp>
 #include <boost/numeric/odeint/concepts/state_concept.hpp>
 #include <boost/numeric/odeint/resizer.hpp>
 
@@ -47,6 +47,8 @@ namespace odeint {
 
     public:
 
+	const unsigned int order() { return 1; }
+
 	template< class DynamicalSystem , class TimeType >
 	void next_step( DynamicalSystem system ,
                         ContainerType &x ,
@@ -54,7 +56,7 @@ namespace odeint {
                         TimeType t ,
                         TimeType dt )
         {
-	    detail::multiply_and_add( x.begin() , x.end() , dxdt.begin() , dt );
+	    detail::it_algebra::scale_and_add( x.begin() , x.end() , dxdt.begin() , dt );
 	}
 
         template< class DynamicalSystem , class TimeType >
@@ -63,7 +65,7 @@ namespace odeint {
                         TimeType t ,
                         TimeType dt )
         {
-	    resizer.check_size_and_resize( x , dxdt );
+	    resizer.adjust_size( x , dxdt );
             system( x , dxdt , t );
 	    next_step( system , x , dxdt , t , dt );
         }
@@ -76,8 +78,8 @@ namespace odeint {
                         TimeType dt ,
 			ContainerType &xerr )
         {
-	    resizer.check_size_and_resize( x , dxdt );
-	    resizer.check_size_and_resize( x , xerr );
+	    resizer.adjust_size( x , dxdt );
+	    resizer.adjust_size( x , xerr );
 
 	    xtemp = x;
 	    TimeType dt2 = 0.5*dt;
@@ -88,8 +90,29 @@ namespace odeint {
 	    next_step( system , xtemp , dxdt , t , dt2 );
 	    next_step( system , xtemp , t+dt2 , dt2 );
 
-	    detail::substract_and_assign( x.begin() , x.end() , xtemp.begin() , xerr.begin() );
+	    detail::it_algebra::substract_and_assign( x.begin() , x.end() , xtemp.begin() , xerr.begin() );
 	}
+
+	template< class DynamicalSystem , class TimeType >
+        void next_step( DynamicalSystem system ,
+                        ContainerType &x ,
+			ContainerType &dxdt ,
+                        TimeType t ,
+                        TimeType dt ,
+			ContainerType &xerr )
+        {
+	    resizer.adjust_size( x , xerr );
+
+	    xtemp = x;
+	    TimeType dt2 = 0.5*dt;
+
+	    next_step( system , x , dxdt , t , dt );
+	    next_step( system , xtemp , dxdt , t , dt2 );
+	    next_step( system , xtemp , t+dt2 , dt2 );
+
+	    detail::it_algebra::substract_and_assign( x.begin() , x.end() , xtemp.begin() , xerr.begin() );
+	}
+
 
     };
 
