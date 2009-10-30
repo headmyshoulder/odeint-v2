@@ -1,8 +1,8 @@
-/* Boost numeric/odeint/examples/lorenz_array.cpp
+/* Boost numeric/odeint/examples/lorenz_controlled.cpp
  
  Copyright 2009 Karsten Ahnert
 
- Shows, the usage of odeint, and integrates the Lorenz equations,
+ Shows the usage of odeint by integrating the Lorenz equations,
  a deterministic chaotic system
 
  dx/dt = sigma * ( x - y)
@@ -35,8 +35,8 @@ const double b = 8.0 / 3.0;
 
 const size_t olen = 10000;
 
-const double eps_abs = 1E-3;
-const double eps_rel = 1E-3;
+const double eps_abs = 1E-7;
+const double eps_rel = 1E-8;
 
 const double min_dt = 1E-10;
 
@@ -62,7 +62,7 @@ int main( int argc , char **argv )
 								    1.0, 1.0);
     
     double t = 0.0;
-    double dt = 0.01;
+    double dt = 1E-4;
     controlled_step_result result;
 
     cout.precision(5);

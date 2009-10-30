@@ -22,8 +22,6 @@
 #include <boost/numeric/odeint/concepts/state_concept.hpp>
 #include <boost/numeric/odeint/resizer.hpp>
 
-#include <iostream>
-
 namespace boost {
 namespace numeric {
 namespace odeint {

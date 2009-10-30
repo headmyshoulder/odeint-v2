@@ -1,8 +1,9 @@
-/* Boost numeric/odeint/examples/lorenz.cpp
+/* Boost numeric/odeint/examples/lorenz_integrator.cpp
  
  Copyright 2009 Karsten Ahnert
+ Copyright 2009 Mario Mulansky
 
- Shows the usage of odeint, and integrates the Lorenz equations,
+ Shows the usage of odeint integrator by integrating the Lorenz equations,
  a deterministic chaotic system
 
  dx/dt = sigma * ( x - y)
@@ -29,17 +30,16 @@ using namespace std;
 using namespace std::tr1;
 using namespace boost::numeric::odeint;
 
-
-
-
 const double sigma = 10.0;
 const double R = 28.0;
 const double b = 8.0 / 3.0;
 
-const double dt = 0.01;
-const size_t olen = 10000;
+const double eps_abs = 1E-3;
+const double eps_rel = 1E-3;
 
-typedef vector<double> state_type;
+const size_t time_points = 100;
+
+typedef array<double, 3> state_type;
 
 void lorenz( state_type &x , state_type &dxdt , double t )
 {
@@ -50,27 +50,35 @@ void lorenz( state_type &x , state_type &dxdt , double t )
 
 int main( int argc , char **argv )
 {
-    
-    state_type x(3);
+    state_type x;
     x[0] = 1.0;
     x[1] = 0.0;
-    x[2] = 0.0;
+    x[2] = 20.0;
+
+    vector<state_type> x_t_vec(time_points);
+    vector<double> times(time_points);
+    for( size_t i=0; i<time_points; i++ ) {
+	times[i] = 0.1*i;
+    }
 
     ode_step_euler< state_type > euler;
+    integrator odeint;
+    odeint.integrate( euler, lorenz, x, times, x_t_vec);
 
-    double t = 0.0;
-    for( size_t oi=0 ; oi<olen ; ++oi,t+=dt )
-    {
-	cout << t << tab << x[0] << tab << x[1] << tab << x[2] << endl;
-	euler.next_step( lorenz , x , t , dt );
+    cout.precision(5);
+    cout.setf(ios::fixed,ios::floatfield);
+    
+
+    for( size_t i=0; i<time_points; i++ ) {
+	//cout << "current state: " ;
+	cout << times[i] << tab;
+	cout << x_t_vec[i][0] << tab << x_t_vec[i][1] << tab << x_t_vec[i][2] << endl;
     }
 
     return 0;
 }
 
-
-
 /*
   Compile with
-  g++ -Wall -I$BOOST_ROOT -I../../../../ lorenz.cpp
+  g++ -Wall -I$BOOST_ROOT -I../../../../ lorenz_array.cpp
 */
