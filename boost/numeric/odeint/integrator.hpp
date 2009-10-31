@@ -24,6 +24,7 @@ namespace odeint {
     class integrator {
 
     public:
+
 	template< class StepType,
 		  class DynamicalSystem,
 		  class StateType,
