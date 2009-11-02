@@ -42,6 +42,7 @@ namespace odeint {
 	ContainerType m_xtemp;
         ResizeType m_resizer;
 
+	typedef typename ContainerType container_type;
         typedef typename ContainerType::iterator iterator;
 	typedef typename ContainerType::value_type value_type;
 
