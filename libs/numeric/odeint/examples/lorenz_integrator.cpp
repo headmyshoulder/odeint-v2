@@ -80,5 +80,5 @@ int main( int argc , char **argv )
 
 /*
   Compile with
-  g++ -Wall -I$BOOST_ROOT -I../../../../ lorenz_array.cpp
+  g++ -Wall -I$BOOST_ROOT -I../../../../ lorenz_integrator.cpp
 */

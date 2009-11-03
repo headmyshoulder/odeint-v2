@@ -46,6 +46,9 @@ typedef enum{SUCCESS, STEP_SIZE_DECREASED, STEP_SIZE_INCREASED} controlled_step_
 	ResizeType resizer;
 	
     public:
+
+	typedef ContainerType container_type;
+	
 	step_controller_standard( T abs_err, T rel_err, T factor_x, T factor_dxdt )
 	    : eps_abs(abs_err), eps_rel(rel_err), a_x(factor_x), a_dxdt(factor_dxdt)
 	{ }

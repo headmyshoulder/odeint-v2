@@ -44,6 +44,8 @@ namespace odeint {
 
     public:
 
+
+	// provide ContainerType, ResizeType, iterator and value_type to users of this class
 	typedef ContainerType container_type;
 	typedef ResizerType resizer_type;
         typedef typename container_type::iterator iterator;

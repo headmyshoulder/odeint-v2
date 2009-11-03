@@ -21,25 +21,31 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+
     class integrator {
 
     public:
 
+	/*
+	 */
 	template< class StepType,
 		  class DynamicalSystem,
-		  class StateType,
 		  class T >
-	size_t integrate(StepType &stepper, DynamicalSystem &system, StateType &x, 
-			 std::vector<T> &times, std::vector<StateType> &x_vec,
+	size_t integrate(StepType &stepper, 
+			 DynamicalSystem &system, 
+			 typename StepType::container_type &x, 
+			 std::vector<T> &times, 
+			 std::vector<typename StepType::container_type> &x_vec,
 			 T dt = 1E-4, T eps_abs = 1E-7, 
 			 T eps_rel = 1E-8, T a_x = 1.0 , T a_dxdt = 1.0)
 	{
 	    if( times.size() != x_vec.size() ) throw;
-	    step_controller_standard< StateType, T >
-		controller(eps_abs, eps_rel, a_x, a_dxdt );
+	    // we use the standard controller for this adaptive integrator
+	    step_controller_standard< typename StepType::container_type, T, typename StepType::resize_type>
+		controller(eps_abs, eps_rel, a_x, a_dxdt ); // initialized with values from above
 
 	    typename std::vector<T>::iterator t_iter = times.begin();
-	    typename std::vector<StateType>::iterator x_iter = x_vec.begin();
+	    typename std::vector<typename StepType::container_type>::iterator x_iter = x_vec.begin();
 	    controlled_step_result result;
 	    T t = *t_iter;
 
