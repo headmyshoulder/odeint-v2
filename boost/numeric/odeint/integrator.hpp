@@ -16,6 +16,7 @@
 #include <boost/numeric/odeint/stepsize_controller_standard.hpp>
 #include <boost/numeric/odeint/resizer.hpp>
 #include <vector>
+#include <limits>
 
 namespace boost {
 namespace numeric {
@@ -59,9 +60,9 @@ namespace odeint {
 
 	while( t_iter < times.end() ) {
 
-	    if( t >= *t_iter ) {
-		*x_iter++ = x;
-		t_iter++;
+	    if( t >= *t_iter ) { // we've reached the next time point
+		*x_iter++ = x; // save the vector
+		t_iter++; // next time point
 	    }
 
 	    result = controller.controlled_step( stepper, system, x, t, dt );
@@ -69,7 +70,8 @@ namespace odeint {
 		result = controller.controlled_step( stepper, system, x, t, dt );
 		if( result == STEP_SIZE_INCREASED )
 		    iterations++;
-		if( dt < 1E-10 ) throw;
+		if( !( t+dt > t) ) 
+		    throw; // we've reached machine precision with dt - no advancing in t
 	    }
 	    iterations++;
 	}
@@ -117,8 +119,8 @@ namespace odeint {
 		     typename StepType::container_type &x, 
 		     std::vector<T> &times, 
 		     std::vector<typename StepType::container_type> &x_vec,
-		     T dt = 1E-4, T eps_abs = 1E-7, 
-		     T eps_rel = 1E-8, T a_x = 1.0 , T a_dxdt = 1.0)
+		     T dt = 1E-4, T eps_abs = 1E-6, 
+		     T eps_rel = 1E-7, T a_x = 1.0 , T a_dxdt = 1.0)
     {
 	if( times.size() != x_vec.size() ) throw;
 	// we use the standard controller for this adaptive integrator
