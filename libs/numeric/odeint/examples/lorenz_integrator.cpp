@@ -62,8 +62,9 @@ int main( int argc , char **argv )
     }
 
     ode_step_euler< state_type > euler;
-    integrator odeint;
-    odeint.integrate( euler, lorenz, x, times, x_t_vec);
+    size_t steps = integrate( euler, lorenz, x, times, x_t_vec);
+
+    clog << "Steps: " << steps << endl;
 
     cout.precision(5);
     cout.setf(ios::fixed,ios::floatfield);
