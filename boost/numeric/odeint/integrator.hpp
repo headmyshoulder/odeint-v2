@@ -39,8 +39,8 @@ namespace odeint {
 	      class DynamicalSystem,
 	      class StepController,
 	      class T >
-    size_t integrate(StepType &stepper, 
-		     DynamicalSystem &system, 
+    size_t integrate(StepType &stepper,
+		     DynamicalSystem &system,
 		     StepController &controller,
 		     typename StepType::container_type &x, 
 		     std::vector<T> &times, 
