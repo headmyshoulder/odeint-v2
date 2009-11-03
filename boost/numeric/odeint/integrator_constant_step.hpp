@@ -19,30 +19,37 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+
+
     template<
 	class Stepper ,
 	class DynamicalSystem ,
-	class TimeType ,
-	class ContainerType
+	class Observer
 	>
     void integrate(
 	Stepper stepper ,
 	DynamicalSystem system ,
-	TimeType start_time ,
-	TimeType dt ,
-	ContainerType &state ,
-	TimeType end_time
+	typename Stepper::time_type start_time ,
+	typename Stepper::time_type dt ,
+	typename Stepper::container_type &state ,
+	typename Stepper::time_type end_time ,
+	Observer observer
 	)
     {
 	if( start_time > end_time )
 	    throw std::invalid_argument( "integrate() : start_time > end_time" );
 
+	observer( start_time , state , system );
 	while( start_time < end_time )
 	{
 	    stepper.next_step( system , state , start_time , dt );
 	    start_time += dt;
+	    observer( start_time , state , system );
 	}
     }
+    
+
+
     
 
 } // odeint

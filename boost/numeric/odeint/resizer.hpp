@@ -19,47 +19,60 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-    template< class ContainerType > 
+    template< class Container > 
     class resizer
     {
-	// we need a resizable container here (obviously...)
-	BOOST_CLASS_REQUIRE( ContainerType , boost::numeric::odeint, Resizable );
-
     public:
-        void resize( const ContainerType &x , ContainerType &dxdt ) const
+
+	typedef Container container_type;
+
+
+    private:
+	// we need a resizable container here (obviously...)
+	BOOST_CLASS_REQUIRE( container_type , boost::numeric::odeint, Resizable );
+
+	
+    public:
+        void resize( const container_type &x , container_type &dxdt ) const
         {
             dxdt.resize( x.size() );
         }
         
-        bool same_size( const ContainerType &x1 , const ContainerType &x2 ) const
+        bool same_size( const container_type &x1 , const container_type &x2 ) const
         {
             return (x1.size() == x2.size());
         }
 
-	void adjust_size( const ContainerType &x1 , ContainerType &x2 ) const
+	void adjust_size( const container_type &x1 , container_type &x2 ) const
         {
 	    if( !same_size( x1 , x2 ) ) resize( x1 , x2 );
 	}
     };
+
+
 
     /* Template Specialization for fixed size array - no resizing can happen */
     template< class T , size_t N >
     class resizer< std::tr1::array< T , N > >
     {
     public:
-        void resize( const std::tr1::array<T,N> &x ,
-		     std::tr1::array<T,N> &dxdt ) const
+
+	typedef std::tr1::array< T , N > container_type;
+
+
+    public:
+
+        void resize( const container_type &x , container_type &dxdt ) const
         {
             throw; // should never be called
         }
 
-        const bool same_size( const std::tr1::array<T,N> &x1 ,
-			      std::tr1::array<T,N> &x2 ) const
+        const bool same_size( const container_type &x1 , const container_type &x2 ) const
         {
             return true; // if this was false, the code wouldn't compile
         }
 
-	void adjust_size( const  std::tr1::array<T,N> &x1 ,  std::tr1::array<T,N> &x2 ) const
+	void adjust_size( const container_type &x1 , container_type &x2 ) const
         {
 	    if( !same_size( x1 , x2 ) ) throw;
 	}

@@ -21,11 +21,23 @@
 #include <list>
 #include <tr1/array>
 
+#include <boost/lambda/lambda.hpp>
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/if.hpp>
+#include <boost/lambda/loops.hpp>
+#include <boost/lambda/switch.hpp>
+#include <boost/lambda/construct.hpp>
+#include <boost/lambda/casts.hpp>
+#include <boost/lambda/exceptions.hpp>
+#include <boost/lambda/numeric.hpp>
+#include <boost/lambda/algorithm.hpp>
+
 #include <boost/numeric/odeint.hpp>
 
 #define tab "\t"
 
 using namespace std;
+using namespace boost::lambda;
 using namespace boost::numeric::odeint;
 
 const double sigma = 10.0;
@@ -52,8 +64,16 @@ int main( int argc , char **argv )
     x[1] = 0.0;
     x[2] = 0.0;
 
-    ode_step_euler< state_type > euler;
-    integrate( euler , lorenz , 0.0 , 0.01 , x , 10.0 );
+    ode_step_euler< state_type , double > euler;
+//    integrate( euler , lorenz , 0.0 , 0.01 , x , 10.0 , my_observer );
+    integrate( euler , lorenz , 0.0 , 0.01 , x , 1.0 , cout << _1 << tab << _2[0] << "\n" );
+
+    vector<double> traj;
+    back_insert_iterator< vector<double> > iter(traj);
+    integrate( euler , lorenz , 0.0 , 0.01 , x , 1.0 , var(*iter++) = _2[1] );
+    copy( traj.begin() , traj.end() , ostream_iterator<double>( cout , "\n" ) );
+
+    
 
 
     return 0;

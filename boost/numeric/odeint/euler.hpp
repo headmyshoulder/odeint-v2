@@ -30,86 +30,114 @@ namespace numeric {
 namespace odeint {
 
     template<
-	class ContainerType ,
-	class ResizeType = resizer< ContainerType >
+	class Container ,
+	class Time = double ,
+	class Resizer = resizer< Container >
 	>
     class ode_step_euler
     {
-	// check the concept of the ContainerType
-        BOOST_CLASS_REQUIRE( ContainerType , boost::numeric::odeint, StateType );
 
-        ContainerType m_dxdt;
-	ContainerType m_xtemp;
-        ResizeType m_resizer;
 
+	// provide basic typedefs
     public:
 
-
-	// provide ContainerType, ResizeType, iterator and value_type to users of this class
-	typedef ContainerType container_type;
-	typedef ResizeType resize_type;
-        typedef typename container_type::iterator iterator;
+	typedef Container container_type;
+	typedef Resizer resizer_type;
+	typedef Time time_type;
 	typedef typename container_type::value_type value_type;
+        typedef typename container_type::iterator iterator;
+
+
+
+
+	// check the concept of the ContainerType
+    private:
+
+        BOOST_CLASS_REQUIRE( container_type , boost::numeric::odeint, StateType );
+
+
+
+
+	// private members
+    private:
+
+        container_type m_dxdt;
+	container_type m_xtemp;
+        resizer_type m_resizer;
+
+
+
+
+	// public interface
+    public:
 
 	const unsigned int order() { return 1; }
 
-	template< class DynamicalSystem , class TimeType >
+
+
+	template< class DynamicalSystem >
 	void next_step( DynamicalSystem system ,
-                        ContainerType &x ,
-			const ContainerType &dxdt ,
-                        TimeType t ,
-                        TimeType dt )
+                        container_type &x ,
+			const container_type &dxdt ,
+                        time_type t ,
+                        time_type dt )
         {
 	    detail::it_algebra::scale_and_add( x.begin() , x.end() , dxdt.begin() , dt );
 	}
 
-        template< class DynamicalSystem , class TimeType >
+
+
+        template< class DynamicalSystem >
         void next_step( DynamicalSystem system ,
-                        ContainerType &x ,
-                        TimeType t ,
-                        TimeType dt )
+                        container_type &x ,
+                        time_type t ,
+                        time_type dt )
         {
 	    m_resizer.adjust_size( x , m_dxdt );
             system( x , m_dxdt , t );
 	    next_step( system , x , m_dxdt , t , dt );
         }
 
-	template< class DynamicalSystem , class TimeType >
+
+
+	template< class DynamicalSystem >
 	void next_step( DynamicalSystem system ,
-			ContainerType &x ,
-			const ContainerType &dxdt ,
-			TimeType t ,
-			TimeType dt ,
-			ContainerType &xerr )
+			container_type &x ,
+			const container_type &dxdt ,
+			time_type t ,
+			time_type dt ,
+			container_type &xerr )
         {
 	    m_resizer.adjust_size( x , xerr );
 
 	    m_xtemp = x;
-	    TimeType dt2 = 0.5 * dt;
+	    time_type dt2 = 0.5 * dt;
 
 	    next_step( system , x , dxdt , t , dt );
 	    next_step( system , m_xtemp , dxdt , t , dt2 );
 	    next_step( system , m_xtemp , t+dt2 , dt2 );
 
-	    detail::it_algebra::substract_and_assign( x.begin() , x.end() , m_xtemp.begin() , xerr.begin() );
+	    detail::it_algebra::substract_and_assign(
+		x.begin() , x.end() , m_xtemp.begin() , xerr.begin()
+		);
 	}
 
 
 
-
-
-	template< class DynamicalSystem , class TimeType >
+	template< class DynamicalSystem >
         void next_step( DynamicalSystem system ,
-                        ContainerType &x ,
-                        TimeType t ,
-                        TimeType dt ,
-			ContainerType &xerr )
+                        container_type &x ,
+                        time_type t ,
+                        time_type dt ,
+			container_type &xerr )
         {
 	    m_resizer.check_size_and_resize( x , m_dxdt );
 	    system( x , m_dxdt , t );
 	    next_step( system , x , m_dxdt , t , dt , xerr );
 	}
     };
+
+
 
 } // namespace odeint
 } // namespace numeric
