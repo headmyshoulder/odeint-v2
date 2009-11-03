@@ -38,7 +38,7 @@ namespace odeint {
 
 	void adjust_size( const ContainerType &x1 , ContainerType &x2 ) const
         {
-	    if( same_size( x1 , x2 ) ) resize( x1 , x2 );
+	    if( !same_size( x1 , x2 ) ) resize( x1 , x2 );
 	}
     };
 

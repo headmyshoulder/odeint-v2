@@ -42,11 +42,12 @@ namespace odeint {
 	ContainerType m_xtemp;
         ResizeType m_resizer;
 
-	typedef typename ContainerType container_type;
-        typedef typename ContainerType::iterator iterator;
-	typedef typename ContainerType::value_type value_type;
-
     public:
+
+	typedef ContainerType container_type;
+	typedef ResizerType resizer_type;
+        typedef typename container_type::iterator iterator;
+	typedef typename container_type::value_type value_type;
 
 	const unsigned int order() { return 1; }
 
@@ -70,9 +71,6 @@ namespace odeint {
             system( x , m_dxdt , t );
 	    next_step( system , x , m_dxdt , t , dt );
         }
-
-
-
 
 	template< class DynamicalSystem , class TimeType >
 	void next_step( DynamicalSystem system ,

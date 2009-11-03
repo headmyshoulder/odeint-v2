@@ -13,6 +13,8 @@
 #ifndef BOOST_NUMERIC_ODEINT_INTEGRATOR_CONSTANT_STEP_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_INTEGRATOR_CONSTANT_STEP_HPP_INCLUDED
 
+#include <stdexcept>
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -21,22 +23,23 @@ namespace odeint {
 	class Stepper ,
 	class DynamicalSystem ,
 	class TimeType ,
-	class InsertIterator 
+	class ContainerType
 	>
     void integrate(
 	Stepper stepper ,
 	DynamicalSystem system ,
-	TimeType dt ,
 	TimeType start_time ,
-	Stepper::container_type state ,
-	TimeType end_time ,
-	InsertIterator inserter
+	TimeType dt ,
+	ContainerType &state ,
+	TimeType end_time
 	)
     {
+	if( start_time > end_time )
+	    throw std::invalid_argument( "integrate() : start_time > end_time" );
+
 	while( start_time < end_time )
 	{
-	    *inserter++ = state;
-	    stepper.next_step( system , state , t , dt );
+	    stepper.next_step( system , state , start_time , dt );
 	    start_time += dt;
 	}
     }
