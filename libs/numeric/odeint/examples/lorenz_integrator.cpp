@@ -37,7 +37,7 @@ const double b = 8.0 / 3.0;
 const double eps_abs = 1E-3;
 const double eps_rel = 1E-3;
 
-const size_t time_points = 100;
+const size_t time_points = 101;
 
 typedef array<double, 3> state_type;
 
@@ -58,7 +58,7 @@ int main( int argc , char **argv )
     vector<state_type> x_t_vec(time_points);
     vector<double> times(time_points);
     for( size_t i=0; i<time_points; i++ ) {
-	times[i] = 0.1*i;
+        times[i] = 0.1*i;
     }
 
     ode_step_euler< state_type > euler;
@@ -71,9 +71,9 @@ int main( int argc , char **argv )
     
 
     for( size_t i=0; i<time_points; i++ ) {
-	//cout << "current state: " ;
-	cout << times[i] << tab;
-	cout << x_t_vec[i][0] << tab << x_t_vec[i][1] << tab << x_t_vec[i][2] << endl;
+        //cout << "current state: " ;
+        cout << times[i] << tab;
+        cout << x_t_vec[i][0] << tab << x_t_vec[i][1] << tab << x_t_vec[i][2] << endl;
     }
 
     return 0;

@@ -35,10 +35,8 @@ const double b = 8.0 / 3.0;
 
 const size_t olen = 10000;
 
-const double eps_abs = 1E-7;
-const double eps_rel = 1E-8;
-
-const double min_dt = 1E-10;
+const double eps_abs = 1E-6;
+const double eps_rel = 1E-7;
 
 typedef array<double, 3> state_type;
 
@@ -49,6 +47,11 @@ void lorenz( state_type &x , state_type &dxdt , double t )
     dxdt[2] = x[0]*x[1] - b * x[2];
 }
 
+void print_state( double t, state_type &x, ... )
+{
+    cout << t << tab << x[0] << tab << x[1] << tab << x[2] << endl;
+}
+
 int main( int argc , char **argv )
 {
     state_type x;
@@ -57,28 +60,15 @@ int main( int argc , char **argv )
     x[2] = 20.0;
 
     ode_step_euler< state_type > euler;
-    step_controller_standard< state_type, double > controlled_euler(eps_abs, 
-								    eps_rel, 
-								    1.0, 1.0);
+    step_controller_standard< state_type, double > 
+        controller(eps_abs, eps_rel, 1.0, 1.0);
     
-    double t = 0.0;
-    double dt = 1E-4;
-    controlled_step_result result;
-
     cout.precision(5);
     cout.setf(ios::fixed,ios::floatfield);
     
+    size_t steps = integrate( euler, lorenz, controller, 0.0, 1E-4, x, 10.0, print_state );
 
-    while( (t<10.0) && (dt > min_dt) ) {
-	//cout << "current state: " ;
-	cout << t << tab << dt << tab << x[0] << tab << x[1] << tab << x[2] << endl;
-	result = controlled_euler.controlled_step( euler , lorenz , x , t , dt );
-	while( result != SUCCESS ) {
-	    result = controlled_euler.controlled_step( euler , lorenz , x , t , dt );
-	    if( dt < min_dt ) break;
-	}
-	//cout<<"SUCCESS with dt="<<dt<<endl;
-    }
+    clog << "Number of steps: " << steps << endl;
 
     return 0;
 }
