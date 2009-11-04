@@ -124,7 +124,7 @@ namespace odeint {
     {
 	if( times.size() != x_vec.size() ) throw;
 	// we use the standard controller for this adaptive integrator
-	step_controller_standard< typename StepType::container_type, T, typename StepType::resize_type>
+	step_controller_standard< typename StepType::container_type, T, typename StepType::resizer_type>
 	    controller(eps_abs, eps_rel, a_x, a_dxdt ); // initialized with values from above
 	
 	// call the normal integrator

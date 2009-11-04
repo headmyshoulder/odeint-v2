@@ -30,27 +30,27 @@ namespace numeric {
 namespace odeint {
 
     template<
-	class Container ,
-	class Time = double ,
-	class Resizer = resizer< Container >
-	>
+        class Container ,
+        class Time = double ,
+        class Resizer = resizer< Container >
+        >
     class ode_step_euler
     {
 
 
-	// provide basic typedefs
+        // provide basic typedefs
     public:
 
-	typedef Container container_type;
-	typedef Resizer resizer_type;
-	typedef Time time_type;
-	typedef typename container_type::value_type value_type;
+        typedef Container container_type;
+        typedef Resizer resizer_type;
+        typedef Time time_type;
+        typedef typename container_type::value_type value_type;
         typedef typename container_type::iterator iterator;
 
 
 
 
-	// check the concept of the ContainerType
+        // check the concept of the ContainerType
     private:
 
         BOOST_CLASS_REQUIRE( container_type , boost::numeric::odeint, StateType );
@@ -58,32 +58,32 @@ namespace odeint {
 
 
 
-	// private members
+        // private members
     private:
 
         container_type m_dxdt;
-	container_type m_xtemp;
+        container_type m_xtemp;
         resizer_type m_resizer;
 
 
 
 
-	// public interface
+        // public interface
     public:
 
-	const unsigned int order() { return 1; }
+        const unsigned int order() { return 1; }
 
 
 
-	template< class DynamicalSystem >
-	void next_step( DynamicalSystem system ,
+        template< class DynamicalSystem >
+        void next_step( DynamicalSystem system ,
                         container_type &x ,
-			const container_type &dxdt ,
+                        const container_type &dxdt ,
                         time_type t ,
                         time_type dt )
         {
-	    detail::it_algebra::scale_and_add( x.begin() , x.end() , dxdt.begin() , dt );
-	}
+            detail::it_algebra::scale_and_add( x.begin() , x.end() , dxdt.begin() , dt );
+        }
 
 
 
@@ -93,48 +93,49 @@ namespace odeint {
                         time_type t ,
                         time_type dt )
         {
-	    m_resizer.adjust_size( x , m_dxdt );
+            m_resizer.adjust_size( x , m_dxdt );
             system( x , m_dxdt , t );
-	    next_step( system , x , m_dxdt , t , dt );
+            next_step( system , x , m_dxdt , t , dt );
         }
 
 
 
-	template< class DynamicalSystem >
-	void next_step( DynamicalSystem system ,
-			container_type &x ,
-			const container_type &dxdt ,
-			time_type t ,
-			time_type dt ,
-			container_type &xerr )
+        template< class DynamicalSystem >
+        void next_step( DynamicalSystem system ,
+                        container_type &x ,
+                        const container_type &dxdt ,
+                        time_type t ,
+                        time_type dt ,
+                        container_type &xerr )
         {
-	    m_resizer.adjust_size( x , xerr );
+            m_resizer.adjust_size( x , xerr );
 
-	    m_xtemp = x;
-	    time_type dt2 = 0.5 * dt;
+            m_xtemp = x;
+            time_type dt2 = 0.5 * dt;
 
-	    next_step( system , x , dxdt , t , dt );
-	    next_step( system , m_xtemp , dxdt , t , dt2 );
-	    next_step( system , m_xtemp , t+dt2 , dt2 );
+            next_step( system , x , dxdt , t , dt );
+            next_step( system , m_xtemp , dxdt , t , dt2 );
+            next_step( system , m_xtemp , t+dt2 , dt2 );
 
-	    detail::it_algebra::substract_and_assign(
-		x.begin() , x.end() , m_xtemp.begin() , xerr.begin()
-		);
-	}
+            detail::it_algebra::substract_and_assign(x.begin() , 
+                                                     x.end() , 
+                                                     m_xtemp.begin() ,
+                                                     xerr.begin() );
+        }
 
 
 
-	template< class DynamicalSystem >
+        template< class DynamicalSystem >
         void next_step( DynamicalSystem system ,
                         container_type &x ,
                         time_type t ,
                         time_type dt ,
-			container_type &xerr )
+                        container_type &xerr )
         {
-	    m_resizer.check_size_and_resize( x , m_dxdt );
-	    system( x , m_dxdt , t );
-	    next_step( system , x , m_dxdt , t , dt , xerr );
-	}
+            m_resizer.check_size_and_resize( x , m_dxdt );
+            system( x , m_dxdt , t );
+            next_step( system , x , m_dxdt , t , dt , xerr );
+        }
     };
 
 
