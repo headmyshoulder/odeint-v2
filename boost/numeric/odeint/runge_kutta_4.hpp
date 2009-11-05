@@ -21,6 +21,7 @@
 
 #include <boost/numeric/odeint/concepts/state_concept.hpp>
 #include <boost/numeric/odeint/resizer.hpp>
+#include <iostream>
 
 namespace boost {
 namespace numeric {
@@ -28,73 +29,98 @@ namespace odeint {
 
 
     template<
-        class ContainerType ,
-        class ResizeType = resizer< ContainerType >
+        class Container ,
+	class Time = double ,
+        class Resizer = resizer< Container >
         >
     class ode_step_runge_kutta_4
     {
-        BOOST_CLASS_REQUIRE( ContainerType , boost::numeric::odeint, StateType );
 
-        ContainerType dxdt;
-        ContainerType dxt;
-        ContainerType dxm;
-        ContainerType xt;
-
-        ResizeType resizer;
-
-        typedef typename ContainerType::iterator iterator;
-        typedef typename ContainerType::value_type value_type;
-        
+        // provide basic typedefs
     public:
 
-        template< class DynamicalSystem , class TimeType>
+        typedef Container container_type;
+        typedef Resizer resizer_type;
+        typedef Time time_type;
+        typedef typename container_type::value_type value_type;
+        typedef typename container_type::iterator iterator;
+
+
+
+
+
+        // check the concept of the ContainerType
+    private:
+
+        BOOST_CLASS_REQUIRE( container_type ,
+			     boost::numeric::odeint, StateType );
+
+
+
+
+        // private members
+    private:
+
+        container_type m_dxdt;
+        container_type m_dxt;
+        container_type m_dxm;
+        container_type m_xt;
+        resizer_type m_resizer;
+
+        
+
+
+
+	// public interface
+    public:
+
+        template< class DynamicalSystem >
         void next_step( DynamicalSystem system ,
-                        ContainerType &x ,
-                        TimeType t ,
-                        TimeType dt )
+                        container_type &x ,
+                        time_type t ,
+                        time_type dt )
         {
-            const TimeType val2 = TimeType( 2.0 );
+	    using namespace detail::it_algebra;
 
-            if( ! resizer.same_size( x , dxdt ) ) resizer.resize( x , dxdt );
-            if( ! resizer.same_size( x , dxt ) ) resizer.resize( x , dxt );
-            if( ! resizer.same_size( x , dxm ) ) resizer.resize( x , dxm );
-            if( ! resizer.same_size( x , xt ) ) resizer.resize( x , xt );
+            const time_type val2 = time_type( 2.0 );
 
-            TimeType  dh = TimeType( 0.5 ) * dt;
-            TimeType d6 = dt /  TimeType( 6.0 );
-            TimeType th = t + dh;
+	    m_resizer.adjust_size( x , m_dxdt );
+	    m_resizer.adjust_size( x , m_dxt );
+	    m_resizer.adjust_size( x , m_dxm );
+	    m_resizer.adjust_size( x , m_xt );
+
+            time_type  dh = time_type( 0.5 ) * dt;
+            time_type d6 = dt /  time_type( 6.0 );
+            time_type th = t + dh;
 
             iterator iter1 , iter2 ,iter3 , iter4;
-            iterator x_end = x.end() , xt_end = xt.end();
+            iterator x_end = x.end() , xt_end = m_xt.end();
 
-            system( x , dxdt , t );
-            iter1 = xt.begin() ; iter2 = x.begin() ; iter3 = dxdt.begin();
-            while( iter1 != xt_end )
-                (*iter1++) = (*iter2++) + dh * (*iter3++);
+            system( x , m_dxdt , t );
+	    scale_and_add_and_assign( x.begin() , x.end() , m_dxdt.begin() , m_xt.begin() , dh );
 
-            system( xt , dxt , th );
-            iter1 = xt.begin() ; iter2 = x.begin() ; iter3 = dxt.begin();
-            while( iter1 != xt_end ) 
-                (*iter1++) = (*iter2++) + dh * (*iter3++);
+            system( m_xt , m_dxt , th );
+	    scale_and_add_and_assign( x.begin() , x.end() , m_dxt.begin() , m_xt.begin() , dh );
 
-            system( xt , dxm , th );
-            iter1 = xt.begin() ; iter2 = x.begin() ; iter3 = dxm.begin() ; iter4  = dxt.begin();
+            system( m_xt , m_dxm , th );
+            iter1 = m_xt.begin() ; iter2 = x.begin() ; iter3 = m_dxm.begin() ; iter4  = m_dxt.begin();
             while( iter1 != xt_end )
             {
                 (*iter1++) = (*iter2++) + dt * (*iter3);
                 (*iter3++) += (*iter4++);
             }
 
-            system( xt , dxt , value_type( t + dt ) );
-            iter1 = x.begin() ; iter2 = dxdt.begin() ; iter3 = dxt.begin() ; iter4 = dxm.begin();
-            while( iter1 != x_end )
-                (*iter1++) += d6 * ( (*iter2++) + (*iter3++) + val2 * (*iter4++) );
+            system( m_xt , m_dxt , value_type( t + dt ) );
+	    scale_and_add_and_add_and_assign( m_dxdt.begin() , m_dxdt.end() , m_dxt.begin() , m_dxm.begin() , x.begin() , val2 , d6 );
+
         }
+
+
     };
 
 } // namespace odeint
 } // namespace numeric
-    } // namespace boost
+} // namespace boost
 
 
 #endif // BOOST_NUMERIC_ODEINT_RUNGE_KUTTA_4_HPP

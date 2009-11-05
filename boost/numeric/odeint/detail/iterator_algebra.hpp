@@ -55,6 +55,49 @@ namespace it_algebra { // iterator algebra
 	    ( *out_start++ ) = ( *x_start++ ) - ( *y_start++ );
     }
 
+
+    /* computes out_n = x_n + alpha * y_n for all n
+       where x,y and out are given as iterators.
+       make sure, that x,y and out have the same range
+    */
+    template< class InputIterator1 ,
+	      class InputIterator2 ,
+	      class OutputIterator ,
+	      class T >
+    void scale_and_add_and_assign( InputIterator1 x_start ,
+				   InputIterator1 x_end ,
+				   InputIterator2 y_start ,
+				   OutputIterator out_start ,
+				   T alpha )
+    {
+	while( x_start != x_end )
+	    ( *out_start++) = ( *x_start++ ) + alpha * ( *y_start++ );
+    }
+
+
+
+
+    /* computes out_n = alpha2* ( x_n + y_n + alpha1*z_n )for all n
+       where x,y,z and out are given as iterators.
+       make sure, that x,y,z and out have the same range
+    */
+    template< class InputIterator1 ,
+	      class InputIterator2 ,
+	      class InputIterator3 ,
+	      class OutputIterator ,
+	      class T >
+    void scale_and_add_and_add_and_assign( InputIterator1 x_start ,
+					   InputIterator1 x_end ,
+					   InputIterator2 y_start ,
+					   InputIterator3 z_start ,
+					   OutputIterator out_start ,
+					   T alpha1 ,
+					   T alpha2 )
+    {
+	while( x_start != x_end )
+	    (*out_start++) += alpha2 * ( (*x_start++) + (*y_start++) + alpha1*(*z_start++) );
+    }
+
 }
 }
 }
