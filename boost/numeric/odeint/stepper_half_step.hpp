@@ -1,13 +1,12 @@
-/* Boost odeint/euler.hpp header file
+/* Boost odeint/stepper_half_stepr.hpp header file
  
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky
  Copyright 2009 Andre Bergner
  
- This file includes the explicit euler solver for ordinary differential equations.
-
- It solves any ODE dx/dt = f(x,t) via
- x(t+dt) = x(t) + dt*f(x,t)
+ This file includes a stepper which calculates the
+ error during one step from performing two steps with
+ the halt stepsize. It works with arbitray steppers
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
@@ -29,32 +28,24 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+
     template<
-        class Container ,
-        class Time = double ,
-        class Resizer = resizer< Container >
-        >
-    class ode_step_euler
+	class Stepper
+	>
+    class ode_step_half_step
     {
-
-
         // provide basic typedefs
     public:
 
-        typedef Container container_type;
-        typedef Resizer resizer_type;
-        typedef Time time_type;
+	typedef Stepper stepper_type;
+        typedef typename Stepper::container_type container_type;
+        typedef typename Stepper::resizer_type resizer_type;
+        typedef typename Stepper::time_type time_type;
         typedef typename container_type::value_type value_type;
         typedef typename container_type::iterator iterator;
 
 
 
-
-        // check the concept of the ContainerType
-    private:
-
-        BOOST_CLASS_REQUIRE( container_type ,
-			     boost::numeric::odeint, StateType );
 
 
 
@@ -65,14 +56,10 @@ namespace odeint {
         container_type m_dxdt;
         container_type m_xtemp;
         resizer_type m_resizer;
+	stepper_type m_stepper;
+	
 
-
-
-
-        // public interface
-    public:
-
-        const unsigned int order() { return 1; }
+        const unsigned int order() { return m_stepper.order(); }
 
 
 
@@ -83,7 +70,7 @@ namespace odeint {
                         time_type t ,
                         time_type dt )
         {
-            detail::it_algebra::increment( x.begin() , x.end() , dxdt.begin() , dt );
+	    m_stepper.next_step( system , x , dxdt , t , dt );
         }
 
 
@@ -94,12 +81,10 @@ namespace odeint {
                         time_type t ,
                         time_type dt )
         {
-            m_resizer.adjust_size( x , m_dxdt );
-            system( x , m_dxdt , t );
-            next_step( system , x , m_dxdt , t , dt );
+	    m_stepper.next_step( system , x , t , dt );
         }
 
-
+	/*
 
         template< class DynamicalSystem >
         void next_step( DynamicalSystem system ,
@@ -138,7 +123,8 @@ namespace odeint {
             system( x , m_dxdt , t );
             next_step( system , x , m_dxdt , t , dt , xerr );
         }
-    };
+	*/
+    }
 
 
 

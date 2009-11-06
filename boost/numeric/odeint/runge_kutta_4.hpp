@@ -90,29 +90,20 @@ namespace odeint {
 	    m_resizer.adjust_size( x , m_xt );
 
             time_type  dh = time_type( 0.5 ) * dt;
-            time_type d6 = dt /  time_type( 6.0 );
             time_type th = t + dh;
 
-            iterator iter1 , iter2 ,iter3 , iter4;
-            iterator x_end = x.end() , xt_end = m_xt.end();
-
             system( x , m_dxdt , t );
-	    scale_and_add_and_assign( x.begin() , x.end() , m_dxdt.begin() , m_xt.begin() , dh );
+	    assign_sum( m_xt.begin() , m_xt.end() , x.begin() , m_dxdt.begin() , dh );
 
             system( m_xt , m_dxt , th );
-	    scale_and_add_and_assign( x.begin() , x.end() , m_dxt.begin() , m_xt.begin() , dh );
+	    assign_sum( m_xt.begin() , m_xt.end() , x.begin() , m_dxt.begin() , dh );
 
             system( m_xt , m_dxm , th );
-            iter1 = m_xt.begin() ; iter2 = x.begin() ; iter3 = m_dxm.begin() ; iter4  = m_dxt.begin();
-            while( iter1 != xt_end )
-            {
-                (*iter1++) = (*iter2++) + dt * (*iter3);
-                (*iter3++) += (*iter4++);
-            }
+	    assign_sum_increment( m_xt.begin() , m_xt.end() , x.begin() , m_dxm.begin() , m_dxt.begin() , dt );
 
             system( m_xt , m_dxt , value_type( t + dt ) );
-	    scale_and_add_and_add_and_assign( m_dxdt.begin() , m_dxdt.end() , m_dxt.begin() , m_dxm.begin() , x.begin() , val2 , d6 );
-
+	    increment_sum_sum( x.begin() , x.end() , m_dxdt.begin() , m_dxt.begin() , m_dxm.begin() , dt /  time_type( 6.0 ) , val2
+		);
         }
 
 

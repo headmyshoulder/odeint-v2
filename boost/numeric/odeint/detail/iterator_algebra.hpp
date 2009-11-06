@@ -22,81 +22,113 @@ namespace odeint {
 namespace detail {
 namespace it_algebra { // iterator algebra
 
-    /* computes x_n += alpha * y_n for all n
-       where x and y are given by the iterators x_start, x_end, y_start
-       make sure that x and y have the same range
-     */
-    template< class Iterator1 ,
-	      class Iterator2 ,
-	      class T >
-    void scale_and_add( Iterator1 x_start ,
-			Iterator1 x_end ,
-			Iterator2 y_start ,
-			T alpha )
+
+    // computes y += alpha * x1
+    template <
+	class InOutIterator ,
+	class InputIterator ,
+	class T
+	>
+    void increment(
+	InOutIterator first1 ,
+	InOutIterator last1 ,
+	InputIterator first2 ,
+	T alpha
+	)
     {
-	while( x_start != x_end )
-	    (*x_start++) += alpha * (*y_start++);
+	while( first1 < last1 )
+	    (*first1++) += alpha * (*first2++);
     }
 
 
-    /* computes out_n = x_n - y_n for all n
-       where x,y, and out are given as iterators
-       make sure that x, y and out have the same range
-    */
-    template< class InputIterator1 ,
-	      class InputIterator2 ,
-	      class OutputIterator >
-    void substract_and_assign( InputIterator1 x_start ,
-			       InputIterator1 x_end ,
-			       InputIterator2 y_start ,
-			       OutputIterator out_start )
+    // computes y = x1 - x2
+    template <
+	class OutputIterator ,
+	class InputIterator1 ,
+	class InputIterator2
+	>
+    void assign_diff(
+	OutputIterator first1 ,
+	OutputIterator last1 ,
+	InputIterator1 first2 ,
+	InputIterator2 first3 )
     {
-	while( x_start != x_end )
-	    ( *out_start++ ) = ( *x_start++ ) - ( *y_start++ );
+	while( first1 < last1 )
+	    (*first1++) = (*first2++) - (*first3++);
+    }
+
+    // computes y = x1 + alpha * x2
+    template <
+	class OutputIterator ,
+	class InputIterator1 ,
+	class InputIterator2 ,
+	class T
+	>
+    void assign_sum(
+	OutputIterator first1 ,
+	OutputIterator last1 ,
+	InputIterator1 first2 ,
+	InputIterator2 first3 ,
+	T alpha )
+    {
+	while( first1 < last1 )
+	    (*first1++) = (*first2++) + alpha * (*first3++);
     }
 
 
-    /* computes out_n = x_n + alpha * y_n for all n
-       where x,y and out are given as iterators.
-       make sure, that x,y and out have the same range
-    */
-    template< class InputIterator1 ,
-	      class InputIterator2 ,
-	      class OutputIterator ,
-	      class T >
-    void scale_and_add_and_assign( InputIterator1 x_start ,
-				   InputIterator1 x_end ,
-				   InputIterator2 y_start ,
-				   OutputIterator out_start ,
-				   T alpha )
+    // computes y = alpha1 * ( x1 + x2 + alpha2*x3 )
+    template <
+	class OutputIterator ,
+	class InputIterator1 ,
+	class InputIterator2 ,
+	class InputIterator3 ,
+	class T
+	>
+    void increment_sum_sum(
+	OutputIterator first1 ,
+	OutputIterator last1 ,
+	InputIterator1 first2 ,
+	InputIterator2 first3 ,
+	InputIterator3 first4 ,
+	T alpha1 ,
+	T alpha2
+	)
     {
-	while( x_start != x_end )
-	    ( *out_start++) = ( *x_start++ ) + alpha * ( *y_start++ );
+	while( first1 < last1 )
+	    (*first1++) += alpha1 *
+		( (*first2++) + (*first3++) + alpha2*(*first4++) );
     }
 
 
-
-
-    /* computes out_n = alpha2* ( x_n + y_n + alpha1*z_n )for all n
-       where x,y,z and out are given as iterators.
-       make sure, that x,y,z and out have the same range
-    */
-    template< class InputIterator1 ,
-	      class InputIterator2 ,
-	      class InputIterator3 ,
-	      class OutputIterator ,
-	      class T >
-    void scale_and_add_and_add_and_assign( InputIterator1 x_start ,
-					   InputIterator1 x_end ,
-					   InputIterator2 y_start ,
-					   InputIterator3 z_start ,
-					   OutputIterator out_start ,
-					   T alpha1 ,
-					   T alpha2 )
+    // computes y = x1 + alpha * x2 ; x2 += x3
+    template<
+	class OutputIterator ,
+	class InputIterator1 ,
+	class InOutIterator ,
+	class InputIterator2 ,
+	class T
+	>
+    void assign_sum_increment(
+	OutputIterator first1 ,
+	OutputIterator last1 ,
+	InputIterator1 first2 ,
+	InOutIterator first3 ,
+	InputIterator2 first4 ,
+	T alpha
+	)
     {
-	while( x_start != x_end )
-	    (*out_start++) += alpha2 * ( (*x_start++) + (*y_start++) + alpha1*(*z_start++) );
+	while( first1 < last1 )
+	{
+	    (*first1++) = (*first2++) + alpha * (*first3);
+	    (*first3++) += (*first4++);
+	}
     }
+
+
+    
+
+
+
 
 }
 }

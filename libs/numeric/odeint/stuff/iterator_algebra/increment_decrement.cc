@@ -12,47 +12,113 @@
 using namespace std;
 using namespace boost::lambda;
 
-template< class Iterator1 , class Iterator2 >
-void increment( Iterator1 first1 , Iterator1 last1 , Iterator2 first2 )
+/*
+  Computes y += x
+ */
+template< class InOutIterator , class InputIterator >
+void increment( InOutIterator first1 , InOutIterator last1 , InputIterator first2 )
 {
     while( first1 < last1 )
 	(*first1++) += (*first2++);
 }
 
-template< class Iterator1 , class Iterator2 , class T >
-void increment( Iterator1 first1 , Iterator1 last1 , Iterator2 first2 , T val )
+/*
+  Computes y += a*x
+ */
+template< class InOutIterator , class InputIterator , class T >
+void increment( InOutIterator first1 , InOutIterator last1 , InputIterator first2 , T val )
 {
     while( first1 < last1 )
 	(*first1++) += val * (*first2++);
 }
 
-template< class Iterator1 , class Iterator2 , class Operation >
-void increment_op( Iterator1 first1 , Iterator1 last1 , Iterator2 first2 , Operation op )
+/*
+  Computes y += op(x)
+ */
+template< class InOutIterator , class InputIterator , class Operation >
+void increment_op( InOutIterator first1 , InOutIterator last1 , InputIterator first2 , Operation op )
 {
     while( first1 < last1 )
 	(*first1++) += op(*first2++);
 }
 
-template< class Iterator1 , class Iterator2 >
-void decrement( Iterator1 first1 , Iterator1 last1 , Iterator2 first2 )
+/*
+  Computes y -= x
+ */
+template< class InOutIterator , class InputIterator >
+void decrement( InOutIterator first1 , InOutIterator last1 , InputIterator first2 )
 {
     while( first1 < last1 )
 	(*first1++) -= (*first2++);
 }
 
-template< class Iterator1 , class Iterator2 , class T >
-void decrement( Iterator1 first1 , Iterator1 last1 , Iterator2 first2 , T val )
+/*
+  Computes y -= a*x
+ */
+template< class InOutIterator , class InputIterator , class T >
+void decrement( InOutIterator first1 , InOutIterator last1 , InputIterator first2 , T val )
 {
     while( first1 < last1 )
 	(*first1++) -= val * (*first2++);
 }
 
-template< class Iterator1 , class Iterator2 , class Operation >
-void decrement_op( Iterator1 first1 , Iterator1 last1 , Iterator2 first2 , Operation op )
+/*
+  Computes y -= f(x)
+ */
+template< class InOutIterator , class InputIterator , class Operation >
+void decrement_op( InOutIterator first1 , InOutIterator last1 , InputIterator first2 , Operation op )
 {
     while( first1 < last1 )
 	(*first1++) -= op(*first2++);
 }
+
+
+
+
+
+/*
+  Coputes y += x1 + x2
+*/
+template< class InOutIterator , class InputIterator1 , class InputIterator2 >
+void increment_add( InOutIterator first1 , InOutIterator last1 , InputIterator1 first2 , InputIterator2 first3 )
+{
+    while( first1 < last1 )
+	(*first1++) += (*first2++) + (*first3++);
+}
+
+/*
+  Computes y += a * ( x1 + x2 )
+*/
+template< class InOutIterator , class InputIterator1 , class InputIterator2 , class T >
+void increment_add( InOutIterator first1 , InOutIterator last1 , InputIterator1 first2 , InputIterator2 first3 , T val )
+{
+    while( first1 < last1 )
+	(*first1++) += val * ( (*first2++) + (*first3++) );
+}
+
+/*
+  Computes y += a * x1 + b * x2
+*/
+template< class InOutIterator , class InputIterator1 , class InputIterator2 , class T >
+void increment_add( InOutIterator first1 , InOutIterator last1 , InputIterator1 first2 , InputIterator2 first3 , T val1 , T val2 )
+{
+    while( first1 < last1 )
+	(*first1++) += val1 * (*first2++) + val2 * (*first3++);
+}
+
+/*
+  Computes y += op( x1 , x2 )
+*/
+template< class InOutIterator , class InputIterator1 , class InputIterator2 , class Operation >
+void increment_add_op( InOutIterator first1 , InOutIterator last1 , InputIterator1 first2 , InputIterator2 first3 , Operation op )
+{
+    while( first1 < last1 )
+	(*first1++) += op( *first2++ , *first3++ );
+}
+
+
+
+
 
 
 

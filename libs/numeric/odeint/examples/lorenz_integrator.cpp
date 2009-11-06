@@ -37,7 +37,7 @@ const double b = 8.0 / 3.0;
 const double eps_abs = 1E-3;
 const double eps_rel = 1E-3;
 
-const size_t time_points = 101;
+const size_t time_points = 201;
 
 typedef array<double, 3> state_type;
 
