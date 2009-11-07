@@ -73,7 +73,7 @@ namespace odeint {
         // public interface
     public:
 
-        order_type order() { return 1; }
+        order_type order() const { return 1; }
 
 
 

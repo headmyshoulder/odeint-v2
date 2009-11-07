@@ -75,7 +75,7 @@ namespace odeint {
 	// public interface
     public:
 
-	order_type order() { return 4; }
+	order_type order() const { return 4; }
 
         template< class DynamicalSystem >
         void next_step( DynamicalSystem system ,
