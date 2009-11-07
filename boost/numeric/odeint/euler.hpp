@@ -118,11 +118,11 @@ namespace odeint {
             next_step( system , m_xtemp , dxdt , t , dt2 );
             next_step( system , m_xtemp , t+dt2 , dt2 );
 
-            detail::it_algebra::assign_diff(
-		xerr.begin() ,
-		xerr.end() ,
-		x.begin() ,
-		m_xtemp.begin() );
+            //xerr = x - m_xtemp
+            detail::it_algebra::assign_diff(xerr.begin() ,
+                                            xerr.end() ,
+                                            x.begin() ,
+                                            m_xtemp.begin() );
         }
 
 

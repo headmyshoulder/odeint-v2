@@ -202,17 +202,17 @@ int main( int argc , char **argv )
 
 
     cout << endl << endl;
-    cout << "Berechne a += 0.25*b, mit " << endl;
-    cout << "1.  a += 0.25 * b" << endl;
-    cout << "2.  a -= (-0.25)*b" << endl;
-    cout << "3.  a += lambda( 0.25 *_1)" << endl;
-    cout << "4.  a -= lambda( -0.25 *_1)" << endl;
+    cout << "Berechne a += 0.33*b, mit " << endl;
+    cout << "1.  a += 0.33 * b" << endl;
+    cout << "2.  a -= (-0.33)*b" << endl;
+    cout << "3.  a += lambda( 0.33 *_1)" << endl;
+    cout << "4.  a -= lambda( -0.33 *_1)" << endl;
 
     eins1 = eins;
     zwei1 = zwei;
     st1 = clock();
     for( size_t i=0 ; i<cycles ; ++i )
-	increment( eins1.begin() , eins1.end() , zwei1.begin() , 0.25 );
+	increment( eins1.begin() , eins1.end() , zwei1.begin() , 0.33 );
     et1 = clock();
     time1 = double( et1 - st1 ) / double( CLOCKS_PER_SEC );
     cout << "1." << tab << time1 << endl;
@@ -221,7 +221,7 @@ int main( int argc , char **argv )
     zwei1 = zwei;
     st2 = clock();
     for( size_t i=0 ; i<cycles ; ++i )
-	decrement( eins1.begin() , eins1.end() , zwei1.begin() , -0.25 );
+	decrement( eins1.begin() , eins1.end() , zwei1.begin() , -0.33 );
     et2 = clock();
     time2 = double( et2 - st2 ) / double( CLOCKS_PER_SEC );
     cout << "2." << tab << time2 << endl;
@@ -231,7 +231,7 @@ int main( int argc , char **argv )
     zwei1 = zwei;
     st3 = clock();
     for( size_t i=0 ; i<cycles ; ++i )
-	increment_op( eins1.begin() , eins1.end() , zwei1.begin() , 0.25 * _1 );
+	increment_op( eins1.begin() , eins1.end() , zwei1.begin() , 0.33 * _1 );
     et3 = clock();
     time3 = double( et3 - st3 ) / double( CLOCKS_PER_SEC );
     cout << "3." << tab << time3 << endl;
@@ -240,7 +240,7 @@ int main( int argc , char **argv )
     zwei1 = zwei;
     st4 = clock();
     for( size_t i=0 ; i<cycles ; ++i )
-	decrement_op( eins1.begin() , eins1.end() , zwei1.begin() , -0.25 * _1 );
+	decrement_op( eins1.begin() , eins1.end() , zwei1.begin() , -0.33 * _1 );
     et4 = clock();
     time4 = double( et4 - st4 ) / double( CLOCKS_PER_SEC );
     cout << "4." << tab << time4 << endl;

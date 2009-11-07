@@ -37,7 +37,7 @@ namespace odeint {
         // provide basic typedefs
     public:
 
-	typedef Stepper stepper_type;
+        typedef Stepper stepper_type;
         typedef typename Stepper::container_type container_type;
         typedef typename Stepper::resizer_type resizer_type;
         typedef typename Stepper::time_type time_type;
@@ -56,7 +56,7 @@ namespace odeint {
         container_type m_dxdt;
         container_type m_xtemp;
         resizer_type m_resizer;
-	stepper_type m_stepper;
+        stepper_type m_stepper;
 	
 
         const unsigned int order() { return m_stepper.order(); }
@@ -70,7 +70,7 @@ namespace odeint {
                         time_type t ,
                         time_type dt )
         {
-	    m_stepper.next_step( system , x , dxdt , t , dt );
+            m_stepper.next_step( system , x , dxdt , t , dt );
         }
 
 
@@ -81,7 +81,7 @@ namespace odeint {
                         time_type t ,
                         time_type dt )
         {
-	    m_stepper.next_step( system , x , t , dt );
+            m_stepper.next_step( system , x , t , dt );
         }
 
 	/*
