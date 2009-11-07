@@ -44,6 +44,7 @@ namespace odeint {
         typedef Container container_type;
         typedef Resizer resizer_type;
         typedef Time time_type;
+	typedef const unsigned short order_type;
         typedef typename container_type::value_type value_type;
         typedef typename container_type::iterator iterator;
 
@@ -72,7 +73,7 @@ namespace odeint {
         // public interface
     public:
 
-        const unsigned int order() { return 1; }
+        order_type order() const { return 1; }
 
 
 
@@ -86,8 +87,6 @@ namespace odeint {
             detail::it_algebra::increment( x.begin() , x.end() , dxdt.begin() , dt );
         }
 
-
-
         template< class DynamicalSystem >
         void next_step( DynamicalSystem system ,
                         container_type &x ,
@@ -97,46 +96,6 @@ namespace odeint {
             m_resizer.adjust_size( x , m_dxdt );
             system( x , m_dxdt , t );
             next_step( system , x , m_dxdt , t , dt );
-        }
-
-
-
-        template< class DynamicalSystem >
-        void next_step( DynamicalSystem system ,
-                        container_type &x ,
-                        const container_type &dxdt ,
-                        time_type t ,
-                        time_type dt ,
-                        container_type &xerr )
-        {
-            m_resizer.adjust_size( x , xerr );
-
-            m_xtemp = x;
-            time_type dt2 = 0.5 * dt;
-
-            next_step( system , x , dxdt , t , dt );
-            next_step( system , m_xtemp , dxdt , t , dt2 );
-            next_step( system , m_xtemp , t+dt2 , dt2 );
-
-            //xerr = x - m_xtemp
-            detail::it_algebra::assign_diff(xerr.begin() ,
-                                            xerr.end() ,
-                                            x.begin() ,
-                                            m_xtemp.begin() );
-        }
-
-
-
-        template< class DynamicalSystem >
-        void next_step( DynamicalSystem system ,
-                        container_type &x ,
-                        time_type t ,
-                        time_type dt ,
-                        container_type &xerr )
-        {
-            m_resizer.check_size_and_resize( x , m_dxdt );
-            system( x , m_dxdt , t );
-            next_step( system , x , m_dxdt , t , dt , xerr );
         }
     };
 

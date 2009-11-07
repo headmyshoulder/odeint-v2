@@ -13,8 +13,8 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
-#ifndef BOOST_NUMERIC_ODEINT_EULER_HPP
-#define BOOST_NUMERIC_ODEINT_EULER_HPP
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_HALF_STEP_HPP
+#define BOOST_NUMERIC_ODEINT_STEPPER_HALF_STEP_HPP
 
 #include <boost/concept_check.hpp>
 
@@ -41,6 +41,7 @@ namespace odeint {
         typedef typename Stepper::container_type container_type;
         typedef typename Stepper::resizer_type resizer_type;
         typedef typename Stepper::time_type time_type;
+	typedef typename Stepper::order_type order_type;
         typedef typename container_type::value_type value_type;
         typedef typename container_type::iterator iterator;
 
@@ -59,7 +60,10 @@ namespace odeint {
         stepper_type m_stepper;
 	
 
-        const unsigned int order() { return m_stepper.order(); }
+	// public interface
+    public:
+
+        order_type order() const { return m_stepper.order(); }
 
 
 
@@ -83,8 +87,6 @@ namespace odeint {
         {
             m_stepper.next_step( system , x , t , dt );
         }
-
-	/*
 
         template< class DynamicalSystem >
         void next_step( DynamicalSystem system ,
@@ -119,12 +121,11 @@ namespace odeint {
                         time_type dt ,
                         container_type &xerr )
         {
-            m_resizer.check_size_and_resize( x , m_dxdt );
+            m_resizer.adjust_size( x , m_dxdt );
             system( x , m_dxdt , t );
             next_step( system , x , m_dxdt , t , dt , xerr );
         }
-	*/
-    }
+    };
 
 
 
@@ -133,4 +134,4 @@ namespace odeint {
 } // namespace boost
 
 
-#endif // BOOST_NUMERIC_ODEINT_EULER_HPP
+#endif // BOOST_NUMERIC_ODEINT_STEPPER_HALF_STEP_HPP

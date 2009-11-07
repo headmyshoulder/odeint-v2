@@ -1,6 +1,7 @@
 /* Boost numeric/odeint/examples/lorenz_controlled.cpp
  
  Copyright 2009 Karsten Ahnert
+ Copyright 2009 Mario Mulansky
 
  Shows the usage of odeint by integrating the Lorenz equations,
  a deterministic chaotic system
@@ -59,9 +60,10 @@ int main( int argc , char **argv )
     x[1] = 0.0;
     x[2] = 20.0;
 
-    ode_step_euler< state_type > euler;
+    ode_step_half_step< ode_step_euler< state_type > > euler;
+//    ode_step_euler< state_type > euler;
     step_controller_standard< state_type, double > 
-        controller(eps_abs, eps_rel, 1.0, 1.0);
+        controller( eps_abs , eps_rel, 1.0, 1.0);
     
     cout.precision(5);
     cout.setf(ios::fixed,ios::floatfield);
@@ -75,5 +77,5 @@ int main( int argc , char **argv )
 
 /*
   Compile with
-  g++ -Wall -I$BOOST_ROOT -I../../../../ lorenz_array.cpp
+  g++ -Wall -O3 -I$BOOST_ROOT -I../../../../ lorenz_controlled.cpp
 */

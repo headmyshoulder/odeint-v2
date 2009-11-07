@@ -17,7 +17,10 @@
 
 #include <boost/numeric/odeint/euler.hpp>
 #include <boost/numeric/odeint/runge_kutta_4.hpp>
+#include <boost/numeric/odeint/stepper_half_step.hpp>
+
 #include <boost/numeric/odeint/stepsize_controller_standard.hpp>
+
 #include <boost/numeric/odeint/integrator.hpp>
 #include <boost/numeric/odeint/integrator_constant_step.hpp>
 

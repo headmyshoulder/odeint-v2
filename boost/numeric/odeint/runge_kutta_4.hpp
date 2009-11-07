@@ -42,6 +42,7 @@ namespace odeint {
         typedef Container container_type;
         typedef Resizer resizer_type;
         typedef Time time_type;
+	typedef const unsigned short order_type;
         typedef typename container_type::value_type value_type;
         typedef typename container_type::iterator iterator;
 
@@ -74,9 +75,12 @@ namespace odeint {
         // public interface
     public:
 
+	order_type order() const { return 4; }
+
         template< class DynamicalSystem >
         void next_step( DynamicalSystem system ,
                         container_type &x ,
+                        const container_type &dxdt ,
                         time_type t ,
                         time_type dt )
         {
@@ -84,30 +88,39 @@ namespace odeint {
 
             const time_type val2 = time_type( 2.0 );
 
-            m_resizer.adjust_size( x , m_dxdt );
-            m_resizer.adjust_size( x , m_dxt );
-            m_resizer.adjust_size( x , m_dxm );
-            m_resizer.adjust_size( x , m_xt );
+	    m_resizer.adjust_size( x , m_dxt );
+	    m_resizer.adjust_size( x , m_dxm );
+	    m_resizer.adjust_size( x , m_xt );
 
             time_type  dh = time_type( 0.5 ) * dt;
             time_type th = t + dh;
 
-            system( x , m_dxdt , t );
-            //m_xt = x + dh*m_dxdt
-            assign_sum( m_xt.begin() , m_xt.end() , x.begin() , m_dxdt.begin() , dh );
+	    assign_sum( m_xt.begin() , m_xt.end() , x.begin() , dxdt.begin() , dh );
 
             system( m_xt , m_dxt , th );
-            //m_xt = x + dh*m_dxdt
             assign_sum( m_xt.begin() , m_xt.end() , x.begin() , m_dxt.begin() , dh );
 
             system( m_xt , m_dxm , th );
-            //m_xt = x + dt*m_dxm ; m_dxm += m_dxt
-            assign_sum_increment( m_xt.begin() , m_xt.end() , x.begin() , m_dxm.begin() , m_dxt.begin() , dt );
+	    assign_sum_increment( m_xt.begin() , m_xt.end() , x.begin() ,
+				  m_dxm.begin() , m_dxt.begin() , dt );
 
             system( m_xt , m_dxt , value_type( t + dt ) );
-            //x = dt/6 * ( m_dxdt + m_dxt + val2*m_dxm )
-            increment_sum_sum( x.begin() , x.end() , m_dxdt.begin() , m_dxt.begin() , m_dxm.begin() , dt /  time_type( 6.0 ) , val2
-                               );
+	    increment_sum_sum( x.begin() , x.end() , dxdt.begin() ,
+			       m_dxt.begin() , m_dxm.begin() ,
+			       dt /  time_type( 6.0 ) , val2 );
+        }
+
+
+
+        template< class DynamicalSystem >
+        void next_step( DynamicalSystem system ,
+                        container_type &x ,
+                        time_type t ,
+                        time_type dt )
+        {
+	    m_resizer.adjust_size( x , m_dxdt );
+	    system( x , m_dxdt , t );
+	    next_step( system , x , m_dxdt , t , dt );
         }
 
 
