@@ -30,7 +30,7 @@ namespace odeint {
 
     template<
         class Container ,
-        class Time = double ,
+	class Time = double ,
         class Resizer = resizer< Container >
         >
     class ode_step_runge_kutta_4
@@ -54,7 +54,7 @@ namespace odeint {
     private:
 
         BOOST_CLASS_REQUIRE( container_type ,
-                             boost::numeric::odeint, StateType );
+			     boost::numeric::odeint, StateType );
 
 
 
@@ -72,10 +72,10 @@ namespace odeint {
 
 
 
-        // public interface
+	// public interface
     public:
 
-	order_type order() const { return 4; }
+	order_type order() { return 4; }
 
         template< class DynamicalSystem >
         void next_step( DynamicalSystem system ,
@@ -84,7 +84,7 @@ namespace odeint {
                         time_type t ,
                         time_type dt )
         {
-            using namespace detail::it_algebra;
+	    using namespace detail::it_algebra;
 
             const time_type val2 = time_type( 2.0 );
 
@@ -98,7 +98,7 @@ namespace odeint {
 	    assign_sum( m_xt.begin() , m_xt.end() , x.begin() , dxdt.begin() , dh );
 
             system( m_xt , m_dxt , th );
-            assign_sum( m_xt.begin() , m_xt.end() , x.begin() , m_dxt.begin() , dh );
+	    assign_sum( m_xt.begin() , m_xt.end() , x.begin() , m_dxt.begin() , dh );
 
             system( m_xt , m_dxm , th );
 	    assign_sum_increment( m_xt.begin() , m_xt.end() , x.begin() ,
