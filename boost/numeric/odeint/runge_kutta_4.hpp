@@ -30,7 +30,7 @@ namespace odeint {
 
     template<
         class Container ,
-	class Time = double ,
+        class Time = double ,
         class Resizer = resizer< Container >
         >
     class ode_step_runge_kutta_4
@@ -42,7 +42,7 @@ namespace odeint {
         typedef Container container_type;
         typedef Resizer resizer_type;
         typedef Time time_type;
-	typedef const unsigned short order_type;
+        typedef const unsigned short order_type;
         typedef typename container_type::value_type value_type;
         typedef typename container_type::iterator iterator;
 
@@ -54,7 +54,7 @@ namespace odeint {
     private:
 
         BOOST_CLASS_REQUIRE( container_type ,
-			     boost::numeric::odeint, StateType );
+                             boost::numeric::odeint, StateType );
 
 
 
@@ -72,10 +72,10 @@ namespace odeint {
 
 
 
-	// public interface
+        // public interface
     public:
 
-	order_type order() const { return 4; }
+        order_type order() const { return 4; }
 
         template< class DynamicalSystem >
         void next_step( DynamicalSystem system ,
@@ -84,30 +84,34 @@ namespace odeint {
                         time_type t ,
                         time_type dt )
         {
-	    using namespace detail::it_algebra;
+            using namespace detail::it_algebra;
 
             const time_type val2 = time_type( 2.0 );
 
-	    m_resizer.adjust_size( x , m_dxt );
-	    m_resizer.adjust_size( x , m_dxm );
-	    m_resizer.adjust_size( x , m_xt );
+            m_resizer.adjust_size( x , m_dxt );
+            m_resizer.adjust_size( x , m_dxm );
+            m_resizer.adjust_size( x , m_xt );
 
             time_type  dh = time_type( 0.5 ) * dt;
             time_type th = t + dh;
 
-	    assign_sum( m_xt.begin() , m_xt.end() , x.begin() , dxdt.begin() , dh );
+            //m_xt = x + dh*dxdt
+            assign_sum( m_xt.begin() , m_xt.end() , x.begin() , dxdt.begin() , dh );
 
             system( m_xt , m_dxt , th );
-	    assign_sum( m_xt.begin() , m_xt.end() , x.begin() , m_dxt.begin() , dh );
+            //m_xt = x + dh*m_dxdt
+            assign_sum( m_xt.begin() , m_xt.end() , x.begin() , m_dxt.begin() , dh );
 
             system( m_xt , m_dxm , th );
-	    assign_sum_increment( m_xt.begin() , m_xt.end() , x.begin() ,
-				  m_dxm.begin() , m_dxt.begin() , dt );
+            //m_xt = x + dt*m_dxm ; m_dxm += m_dxt
+            assign_sum_increment( m_xt.begin() , m_xt.end() , x.begin() ,
+                                  m_dxm.begin() , m_dxt.begin() , dt );
 
             system( m_xt , m_dxt , value_type( t + dt ) );
-	    increment_sum_sum( x.begin() , x.end() , dxdt.begin() ,
-			       m_dxt.begin() , m_dxm.begin() ,
-			       dt /  time_type( 6.0 ) , val2 );
+            //x = dt/6 * ( m_dxdt + m_dxt + val2*m_dxm )
+            increment_sum_sum( x.begin() , x.end() , dxdt.begin() ,
+                               m_dxt.begin() , m_dxm.begin() ,
+                               dt /  time_type( 6.0 ) , val2 );
         }
 
 
@@ -118,9 +122,9 @@ namespace odeint {
                         time_type t ,
                         time_type dt )
         {
-	    m_resizer.adjust_size( x , m_dxdt );
-	    system( x , m_dxdt , t );
-	    next_step( system , x , m_dxdt , t , dt );
+            m_resizer.adjust_size( x , m_dxdt );
+            system( x , m_dxdt , t );
+            next_step( system , x , m_dxdt , t , dt );
         }
 
 

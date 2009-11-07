@@ -44,7 +44,7 @@ namespace odeint {
         typedef Container container_type;
         typedef Resizer resizer_type;
         typedef Time time_type;
-	typedef const unsigned short order_type;
+        typedef const unsigned short order_type;
         typedef typename container_type::value_type value_type;
         typedef typename container_type::iterator iterator;
 
@@ -84,6 +84,7 @@ namespace odeint {
                         time_type t ,
                         time_type dt )
         {
+            //x = x + dt*dxdt
             detail::it_algebra::increment( x.begin() , x.end() , dxdt.begin() , dt );
         }
 
