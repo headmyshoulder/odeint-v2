@@ -78,7 +78,7 @@ namespace odeint {
         order_type order() const { return 4; }
 
         template< class DynamicalSystem >
-        void next_step( DynamicalSystem system ,
+        void next_step( DynamicalSystem &system ,
                         container_type &x ,
                         const container_type &dxdt ,
                         time_type t ,
@@ -117,7 +117,7 @@ namespace odeint {
 
 
         template< class DynamicalSystem >
-        void next_step( DynamicalSystem system ,
+        void next_step( DynamicalSystem &system ,
                         container_type &x ,
                         time_type t ,
                         time_type dt )

@@ -141,9 +141,10 @@ int main( int argc , char **argv )
     t = 0.0;
     for( size_t i=0 ; i<tslen ; ++i,t+=dt )
     {
-	stepper.next_step( lorenz , x1 , t , dt );
+	stepper.next_step( lorenz , x1 , t , dt , x1_err );
 	gsl_odeiv_step_apply ( s , t , dt , x2 , x2_err , 0 , 0 , &sys );
-	rk4_lorenz( x3 , dt );
+	rk4_lorenz( x3 , 0.5*dt );
+	rk4_lorenz( x3 , 0.5*dt );
 	cout << t << tab << x1[0] << tab << x2[0] << tab << x3[0] << endl;
     }
 

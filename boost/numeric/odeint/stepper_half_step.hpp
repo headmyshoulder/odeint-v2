@@ -68,7 +68,7 @@ namespace odeint {
 
 
         template< class DynamicalSystem >
-        void next_step( DynamicalSystem system ,
+        void next_step( DynamicalSystem &system ,
                         container_type &x ,
                         const container_type &dxdt ,
                         time_type t ,
@@ -80,7 +80,7 @@ namespace odeint {
 
 
         template< class DynamicalSystem >
-        void next_step( DynamicalSystem system ,
+        void next_step( DynamicalSystem &system ,
                         container_type &x ,
                         time_type t ,
                         time_type dt )
@@ -89,7 +89,7 @@ namespace odeint {
         }
 
         template< class DynamicalSystem >
-        void next_step( DynamicalSystem system ,
+        void next_step( DynamicalSystem &system ,
                         container_type &x ,
                         const container_type &dxdt ,
                         time_type t ,
@@ -101,21 +101,21 @@ namespace odeint {
             m_xtemp = x;
             time_type dt2 = 0.5 * dt;
 
-            next_step( system , x , dxdt , t , dt );
-            next_step( system , m_xtemp , dxdt , t , dt2 );
-            next_step( system , m_xtemp , t+dt2 , dt2 );
+            next_step( system , m_xtemp , dxdt , t , dt );
+            next_step( system , x , dxdt , t , dt2 );
+            next_step( system , x , t+dt2 , dt2 );
 
             detail::it_algebra::assign_diff(
 		xerr.begin() ,
 		xerr.end() ,
-		x.begin() ,
-		m_xtemp.begin() );
+		m_xtemp.begin() ,
+		x.begin() );
         }
 
 
 
         template< class DynamicalSystem >
-        void next_step( DynamicalSystem system ,
+        void next_step( DynamicalSystem &system ,
                         container_type &x ,
                         time_type t ,
                         time_type dt ,
