@@ -158,5 +158,5 @@ int main( int argc , char **argv )
 
 /*
   Compile with
-  g++ -Wall -O3 -I$BOOST_ROOT -I../../../../ lorenz_stepper_cmp.cpp -lgsl -lgslcblas
+  g++ -Wall -O3 -I$BOOST_ROOT -I../../../../../ lorenz_stepper_cmp.cpp -lgsl -lgslcblas
 */

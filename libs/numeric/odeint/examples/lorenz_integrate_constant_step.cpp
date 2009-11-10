@@ -65,13 +65,23 @@ int main( int argc , char **argv )
 
     ode_step_runge_kutta_4< state_type , double > rk4;
     ode_step_euler< state_type , double > euler;
-    integrate( rk4 , lorenz , 0.0 , 0.01 , x , 100.0 , cout << _1 << tab << _2[0] << "\n" );
-//    integrate( euler , lorenz , 0.0 , 0.01 , x , 100.0 , cout << _1 << tab << _2[0] << "\n" );
+    integrate( rk4 , lorenz , 0.0 , 0.01 , x , 100.0 ,
+	       cout << _1 << tab << _2[0] << "\n" );
+
+    integrate_steps( rk4 , lorenz , 0.0 , 0.01 , x , 100 ,
+		     cout << _1 << tab << _2[0] << "\n" );
+
+    integrate( rk4 , lorenz , 0.0 , 0.01 , x , 100.0 );
+    integrate_steps( rk4 , lorenz , 0.0 , 0.01 , x , 1000 );
+
+/*    integrate( euler , lorenz , 0.0 , 0.01 , x , 100.0 ,
+      cout << _1 << tab << _2[0] << "\n" );*/
 
 /*    vector<double> traj;
     back_insert_iterator< vector<double> > iter(traj);
     integrate( euler , lorenz , 0.0 , 0.01 , x , 1.0 , var(*iter++) = _2[1] );
-    copy( traj.begin() , traj.end() , ostream_iterator<double>( cout , "\n" ) );*/
+    copy( traj.begin() , traj.end() ,
+	  ostream_iterator<double>( cout , "\n" ) ); */
 
     
 
