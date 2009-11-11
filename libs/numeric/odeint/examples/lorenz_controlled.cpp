@@ -61,9 +61,7 @@ int main( int argc , char **argv )
     x[2] = 20.0;
 
     ode_step_half_step< ode_step_euler< state_type > > euler;
-//    ode_step_euler< state_type > euler;
-    step_controller_standard< state_type, double > 
-        controller( eps_abs , eps_rel, 1.0, 1.0);
+    step_controller_standard< state_type, double > controller( eps_abs , eps_rel, 1.0, 1.0);
     
     cout.precision(5);
     cout.setf(ios::fixed,ios::floatfield);

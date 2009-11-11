@@ -15,6 +15,7 @@
 
 #include <boost/numeric/odeint/stepsize_controller_standard.hpp>
 #include <boost/numeric/odeint/resizer.hpp>
+#include <boost/numeric/odeint/observer.hpp>
 #include <vector>
 #include <limits>
 
@@ -41,12 +42,13 @@ namespace odeint {
         controlled_step_result result;
         size_t iterations = 0;
         typename Stepper::time_type t = start_time;
+        typename Stepper::time_type dt_ = dt;
 
         observer(t, state, system);
         
         while( t < end_time )
 	{
-            result = controller.controlled_step( stepper, system, state, t, dt );
+            result = controller.controlled_step( stepper, system, state, t, dt_ );
             if( result != STEP_SIZE_DECREASED )
 	    { // we actually did a step forward
                 observer(t, state, system);
@@ -54,13 +56,13 @@ namespace odeint {
             }
             while( result != SUCCESS )
 	    {
-                result = controller.controlled_step( stepper, system, state, t, dt );
+                result = controller.controlled_step( stepper, system, state, t, dt_ );
                 if( result != STEP_SIZE_DECREASED )
 		{ // we did a step
                     observer(t, state, system);
                     iterations++;
                 }
-                if( !( t+dt > t) ) 
+                if( !( t+dt_ > t) ) 
                     throw; // we've reached machine precision with dt - no advancing in t
             }
         }
@@ -86,45 +88,20 @@ namespace odeint {
         class Stepper,
         class DynamicalSystem,
         class StepController,
+        class TimeContainer,
         class InsertIterator
 	>
     size_t integrate(Stepper &stepper,
 		     DynamicalSystem &system,
 		     StepController &controller,
 		     typename Stepper::container_type &state, 
-		     std::vector<typename Stepper::time_type> &times, 
+		     TimeContainer &times, 
                      InsertIterator state_inserter,
-		     typename Stepper::time_type dt)
+		     typename Stepper::time_type &dt)
     {
-        // iterators for the time and state vectors
-        typename std::vector<typename Stepper::time_type>::iterator t_iter = times.begin();
-
-        controlled_step_result result;
-        size_t iterations = 0;
-        typename Stepper::time_type t = *t_iter;
-
-        while( true ) { // loop will break from inside
-
-            if( t >= *t_iter ) { // we've reached the next time point
-                *state_inserter++ = state; // save the state
-                t_iter++; // next time point
-            }
-
-            if( t_iter >= times.end() ) // reached end of integration time
-                break; // stop loop
-
-            result = controller.controlled_step( stepper, system, state, t, dt );
-            if( result != STEP_SIZE_DECREASED )
-                iterations++;
-            while( result != SUCCESS ) {
-                result = controller.controlled_step( stepper, system, state, t, dt );
-                if( result != STEP_SIZE_DECREASED )
-                    iterations++;
-                if( !( t+dt > t) ) 
-                    throw; // we've reached machine precision with dt - no advancing in t
-            }
-        }
-        return iterations;
+        state_copy_observer<InsertIterator, TimeContainer> observer(times, state_inserter);
+        return integrate(stepper, system, controller, *(times.begin()), 
+                         dt, state, *(times.end()-1), observer);
     }
 
 
