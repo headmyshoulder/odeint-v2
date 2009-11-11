@@ -81,45 +81,43 @@ namespace odeint {
        whole intervale times.begin() - times.end().
        Note that the values in times don't influence the stepsize, but only the 
        time points at which the state is stored into x_vec.
-     */
+    */
     template< 
-        class StepType,
+        class Stepper,
         class DynamicalSystem,
         class StepController,
-        class T >
-    size_t integrate(StepType &stepper,
+        class InsertIterator
+	>
+    size_t integrate(Stepper &stepper,
 		     DynamicalSystem &system,
 		     StepController &controller,
-		     typename StepType::container_type &x, 
-		     std::vector<T> &times, 
-		     std::vector<typename StepType::container_type> &x_vec,
-		     T dt)
+		     typename Stepper::container_type &state, 
+		     std::vector<typename Stepper::time_type> &times, 
+                     InsertIterator state_inserter,
+		     typename Stepper::time_type dt)
     {
-        if( times.size() != x_vec.size() ) throw;
-
         // iterators for the time and state vectors
-        typename std::vector<T>::iterator t_iter = times.begin();
-        typename std::vector<typename StepType::container_type>::iterator x_iter = x_vec.begin();
+        typename std::vector<typename Stepper::time_type>::iterator t_iter = times.begin();
 
         controlled_step_result result;
         size_t iterations = 0;
-        T t = *t_iter;
+        typename Stepper::time_type t = *t_iter;
 
         while( true ) { // loop will break from inside
 
             if( t >= *t_iter ) { // we've reached the next time point
-                *x_iter++ = x; // save the state
+                *state_inserter++ = state; // save the state
                 t_iter++; // next time point
             }
 
             if( t_iter >= times.end() ) // reached end of integration time
                 break; // stop loop
 
-            result = controller.controlled_step( stepper, system, x, t, dt );
+            result = controller.controlled_step( stepper, system, state, t, dt );
             if( result != STEP_SIZE_DECREASED )
                 iterations++;
             while( result != SUCCESS ) {
-                result = controller.controlled_step( stepper, system, x, t, dt );
+                result = controller.controlled_step( stepper, system, state, t, dt );
                 if( result != STEP_SIZE_DECREASED )
                     iterations++;
                 if( !( t+dt > t) ) 
@@ -161,25 +159,30 @@ namespace odeint {
 
        To avoid extensive chages in dt, the decrease factor is limited to 0.2 and 
        the increase factor to 5.0.
-     */
-    template< class StepType,
+    */
+    template< class Stepper,
               class DynamicalSystem,
-              class T >
-    size_t integrate(StepType &stepper, 
+              class InsertIterator
+	      >
+    size_t integrate(Stepper &stepper, 
                      DynamicalSystem &system, 
-                     typename StepType::container_type &x, 
-                     std::vector<T> &times, 
-                     std::vector<typename StepType::container_type> &x_vec,
-                     T dt = 1E-4, T eps_abs = 1E-6, 
-                     T eps_rel = 1E-7, T a_x = 1.0 , T a_dxdt = 1.0)
+                     typename Stepper::container_type &x, 
+                     std::vector<typename Stepper::time_type> &times, 
+                     InsertIterator state_inserter,
+                     typename Stepper::time_type dt = 1E-4, 
+		     typename Stepper::time_type eps_abs = 1E-6, 
+                     typename Stepper::time_type eps_rel = 1E-7, 
+		     typename Stepper::time_type a_x = 1.0 , 
+		     typename Stepper::time_type a_dxdt = 1.0)
     {
-        if( times.size() != x_vec.size() ) throw;
         // we use the standard controller for this adaptive integrator
-        step_controller_standard< typename StepType::container_type, T, typename StepType::resizer_type>
-            controller(eps_abs, eps_rel, a_x, a_dxdt ); // initialized with values from above
+        step_controller_standard< typename Stepper::container_type, 
+	    typename Stepper::time_type, 
+	    typename Stepper::resizer_type > controller(eps_abs, eps_rel, a_x, a_dxdt ); 
+        // initialized with values from above
         
         // call the normal integrator
-        return integrate(stepper, system, controller, x, times, x_vec, dt);
+        return integrate(stepper, system, controller, x, times, state_inserter, dt);
     }
     
 

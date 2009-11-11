@@ -19,6 +19,7 @@
 
 #include <iostream>
 #include <vector>
+#include <iterator>
 #include <list>
 #include <tr1/array>
 
@@ -55,14 +56,14 @@ int main( int argc , char **argv )
     x[1] = 0.0;
     x[2] = 20.0;
 
-    vector<state_type> x_t_vec(time_points);
+    vector<state_type> x_t_vec;
     vector<double> times(time_points);
     for( size_t i=0; i<time_points; i++ ) {
         times[i] = 0.1*i;
     }
 
     ode_step_half_step< ode_step_euler< state_type > > euler;
-    size_t steps = integrate( euler, lorenz, x, times, x_t_vec);
+    size_t steps = integrate( euler, lorenz, x, times, back_inserter(x_t_vec));
 
     clog << "Steps: " << steps << endl;
 

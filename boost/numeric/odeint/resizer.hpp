@@ -29,7 +29,7 @@ namespace odeint {
 
     private:
 	// we need a resizable container here (obviously...)
-	BOOST_CLASS_REQUIRE( container_type , boost::numeric::odeint, Resizable );
+	BOOST_CLASS_REQUIRE( container_type , boost::numeric::odeint, Resizer );
 
 	
     public:

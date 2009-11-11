@@ -22,7 +22,7 @@ namespace odeint {
 
     /* Concept StateType */
     template<class X>
-    struct StateType {
+    struct Container {
 
     public:
         typedef typename X::iterator iterator; // requires iterator typedef
@@ -30,7 +30,7 @@ namespace odeint {
         // requires iterator being ForwardIterator
         BOOST_CONCEPT_ASSERT((ForwardIterator<iterator>));
 
-        BOOST_CONCEPT_USAGE(StateType)
+        BOOST_CONCEPT_USAGE(Container)
         {
             same_type(state.begin(), it); //requires begin() method
             same_type(state.end(), it); // requires end() method
@@ -49,13 +49,13 @@ namespace odeint {
 
     /* Concept Resizable */
     template<class X>
-    struct Resizable {
+    struct Resizer {
 
     public:
 
-	BOOST_CONCEPT_ASSERT((StateType<X>));
+	BOOST_CONCEPT_ASSERT((Container<X>));
 
-	BOOST_CONCEPT_USAGE(Resizable)
+	BOOST_CONCEPT_USAGE(Resizer)
 	{
 	    state.resize(1); // state has resize function
 	    size_t n = 2;

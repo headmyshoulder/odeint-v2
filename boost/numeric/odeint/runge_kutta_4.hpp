@@ -54,7 +54,7 @@ namespace odeint {
     private:
 
         BOOST_CLASS_REQUIRE( container_type ,
-                             boost::numeric::odeint, StateType );
+                             boost::numeric::odeint, Container );
 
 
 
