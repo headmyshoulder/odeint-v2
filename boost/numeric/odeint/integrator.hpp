@@ -47,18 +47,20 @@ namespace odeint {
         observer(t, state, system);
         
         while( t < end_time )
-	{
+        {
+            // do a controlled step
             result = controller.controlled_step( stepper, system, state, t, dt_ );
             if( result != STEP_SIZE_DECREASED )
-	    { // we actually did a step forward
+            { // we actually did a step forward (dt was small enough)
                 observer(t, state, system);
                 iterations++;
             }
-            while( result != SUCCESS )
-	    {
+            while( result != SUCCESS ) // as long as dt is too large/small
+            {
+                // do the controlled step
                 result = controller.controlled_step( stepper, system, state, t, dt_ );
                 if( result != STEP_SIZE_DECREASED )
-		{ // we did a step
+                { // we did a step
                     observer(t, state, system);
                     iterations++;
                 }

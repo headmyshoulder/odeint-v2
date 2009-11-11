@@ -72,11 +72,11 @@ typedef enum{SUCCESS, STEP_SIZE_DECREASED, STEP_SIZE_INCREASED} controlled_step_
 	    T max_rel_err = 0.0;
 
 	    while( x_start != x_tmp.end() ) {
-		// get the maximal value of x_err/D where 
-		// D = eps_abs + eps_rel * (a_x*|x| + a_dxdt*|dxdt|);
-		T err = eps_abs + eps_rel * (a_x * std::abs(*x_start++) + 
+            // get the maximal value of x_err/D where 
+            // D = eps_abs + eps_rel * (a_x*|x| + a_dxdt*|dxdt|);
+            T err = eps_abs + eps_rel * (a_x * std::abs(*x_start++) + 
 					     a_dxdt * dt * std::abs(*dxdt_start++));
-		max_rel_err = max( std::abs(*x_err_start++)/err , max_rel_err );
+            max_rel_err = max( std::abs(*x_err_start++)/err , max_rel_err );
 	    }
 
 	    //std::cout<<max_rel_err<<std::endl;
