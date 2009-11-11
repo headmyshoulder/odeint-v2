@@ -15,8 +15,8 @@
 #ifndef BOOST_NUMERIC_ODEINT_HPP
 #define BOOST_NUMERIC_ODEINT_HPP
 
-#include <boost/numeric/odeint/euler.hpp>
-#include <boost/numeric/odeint/runge_kutta_4.hpp>
+#include <boost/numeric/odeint/stepper_euler.hpp>
+#include <boost/numeric/odeint/stepper_rk4.hpp>
 #include <boost/numeric/odeint/stepper_half_step.hpp>
 
 #include <boost/numeric/odeint/stepsize_controller_standard.hpp>

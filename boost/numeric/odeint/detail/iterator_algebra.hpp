@@ -36,7 +36,7 @@ namespace it_algebra { // iterator algebra
 	T alpha
 	)
     {
-	while( first1 < last1 )
+	while( first1 != last1 )
 	    (*first1++) += alpha * (*first2++);
     }
 
@@ -53,7 +53,7 @@ namespace it_algebra { // iterator algebra
 	InputIterator1 first2 ,
 	InputIterator2 first3 )
     {
-	while( first1 < last1 )
+	while( first1 != last1 )
 	    (*first1++) = (*first2++) - (*first3++);
     }
 
@@ -71,7 +71,7 @@ namespace it_algebra { // iterator algebra
 	InputIterator2 first3 ,
 	T alpha )
     {
-	while( first1 < last1 )
+	while( first1 != last1 )
 	    (*first1++) = (*first2++) + alpha * (*first3++);
     }
 
@@ -94,7 +94,7 @@ namespace it_algebra { // iterator algebra
 	T alpha2
 	)
     {
-	while( first1 < last1 )
+	while( first1 != last1 )
 	    (*first1++) += alpha1 *
 		( (*first2++) + (*first3++) + alpha2*(*first4++) );
     }
@@ -117,7 +117,7 @@ namespace it_algebra { // iterator algebra
 	T alpha
 	)
     {
-	while( first1 < last1 )
+	while( first1 != last1 )
 	{
 	    (*first1++) = (*first2++) + alpha * (*first3);
 	    (*first3++) += (*first4++);

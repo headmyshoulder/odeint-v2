@@ -39,6 +39,7 @@ using namespace boost::numeric::odeint;
 
 typedef std::tr1::array< double , 3 > state_type;
 
+
 const double sigma = 10.0;
 const double R = 28.0;
 const double b = 8.0 / 3.0;
@@ -89,6 +90,8 @@ void rk4_lorenz( double *x , double h )
 }
 
 
+
+
 int main( int argc , char **argv )
 {
     const double dt = 0.01;
@@ -104,7 +107,7 @@ int main( int argc , char **argv )
 
     // odeint method
     state_type x1 = x_start , x1_err;
-    ode_step_half_step< ode_step_runge_kutta_4< state_type > > stepper;
+    stepper_half_step< stepper_rk4< state_type > > stepper;
 
     start= clock();
     t = 0.0;

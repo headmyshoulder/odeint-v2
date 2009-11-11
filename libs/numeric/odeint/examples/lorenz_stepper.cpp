@@ -69,8 +69,8 @@ int main( int argc , char **argv )
     x1[2] = 0.0;
     state_type2 x2 = {{ 1.0 , 0.0 , 0.0 }};
 
-    ode_step_runge_kutta_4< state_type1 > stepper1;
-    ode_step_runge_kutta_4< state_type2 > stepper2;
+    stepper_rk4< state_type1 > stepper1;
+    stepper_rk4< state_type2 > stepper2;
 
     clock_t start , end;
     double t;

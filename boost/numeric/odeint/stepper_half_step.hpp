@@ -32,7 +32,7 @@ namespace odeint {
     template<
 	class Stepper
 	>
-    class ode_step_half_step
+    class stepper_half_step
     {
         // provide basic typedefs
     public:

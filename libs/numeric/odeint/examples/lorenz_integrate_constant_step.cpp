@@ -63,8 +63,8 @@ int main( int argc , char **argv )
     x[1] = 0.0;
     x[2] = 0.0;
 
-    ode_step_runge_kutta_4< state_type , double > rk4;
-    ode_step_euler< state_type , double > euler;
+    stepper_rk4< state_type , double > rk4;
+    stepper_euler< state_type , double > euler;
     integrate( rk4 , lorenz , 0.0 , 0.01 , x , 100.0 ,
 	       cout << _1 << tab << _2[0] << "\n" );
 

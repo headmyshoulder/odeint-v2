@@ -62,7 +62,7 @@ int main( int argc , char **argv )
         times[i] = 0.1*i;
     }
 
-    ode_step_half_step< ode_step_euler< state_type > > euler;
+    stepper_half_step< stepper_euler< state_type > > euler;
     size_t steps = integrate( euler, lorenz, x, times, back_inserter(x_t_vec));
 
     clog << "Steps: " << steps << endl;
