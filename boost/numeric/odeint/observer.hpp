@@ -21,7 +21,7 @@ namespace odeint {
 
 
     template< class Time , class Container , class System >
-    void do_nothing_observer( Time , Container& , System& )
+    inline void do_nothing_observer( Time , Container& , System& )
     {
     }
     

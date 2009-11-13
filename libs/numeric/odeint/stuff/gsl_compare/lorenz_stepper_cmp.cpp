@@ -105,7 +105,7 @@ int main( int argc , char **argv )
 
 
 
-    // odeint method
+    // odeint method 1 - rk4 with half stepsize error estimation
     state_type x1 = x_start , x1_err;
     stepper_half_step< stepper_rk4< state_type > > stepper;
 
@@ -114,12 +114,20 @@ int main( int argc , char **argv )
     for( size_t oi=0 ; oi<olen ; ++oi,t+=dt )
         stepper.next_step( lorenz , x1 , t , dt , x1_err );
     end = clock();
-    clog << "odeint array : " << double ( end - start ) / double( CLOCKS_PER_SEC ) << endl;
+    clog << "odeint half step array : " << double ( end - start ) / double( CLOCKS_PER_SEC ) << endl;
+
+    // odeint method 2 - rk45 with Cash Karp error estimation
+    x1 = x_start;
+    stepper_rk4< state_type > stepper_cash_karp;
+    start = clock();
+    t = 0.0;
+    for( size_t oi=0 ; oi<olen ; ++oi,t+=dt )
+        stepper_cash_karp.next_step( lorenz , x1 , t , dt , x1_err );
+    end = clock();
+    clog << "odeint Cash-Karp array : " << double ( end - start ) / double( CLOCKS_PER_SEC ) << endl;
 
 
-
-
-    // gsl method
+    // gsl method rk4
     gsl_odeiv_step *s = gsl_odeiv_step_alloc( gsl_odeiv_step_rk4 , 3);
     gsl_odeiv_system sys = { lorenz_gsl , 0 , 3 , 0 };
     double x2[3] = { x_start[0] , x_start[1] , x_start[2] } , x2_err[3];
@@ -130,6 +138,19 @@ int main( int argc , char **argv )
         gsl_odeiv_step_apply ( s , t , dt , x2 , x2_err , 0 , 0 , &sys );
     end = clock();
     clog << "gsl rk4 : " << double ( end - start ) / double( CLOCKS_PER_SEC ) << endl;
+
+
+    // gsl method rk4 cash-karp
+    gsl_odeiv_step *s_rkck = gsl_odeiv_step_alloc( gsl_odeiv_step_rkck , 3);
+    //    sys = { lorenz_gsl , 0 , 3 , 0 };
+    copy( x_start.begin() , x_start.end() , x2 );
+
+    start= clock();
+    t = 0.0;
+    for( size_t oi=0 ; oi<olen ; ++oi,t+=dt )
+        gsl_odeiv_step_apply ( s_rkck , t , dt , x2 , x2_err , 0 , 0 , &sys );
+    end = clock();
+    clog << "gsl rk4 Cash-Karp : " << double ( end - start ) / double( CLOCKS_PER_SEC ) << endl;
      
 
 
@@ -138,6 +159,9 @@ int main( int argc , char **argv )
     x1 = x_start;
     copy( x_start.begin() , x_start.end() , x2 );
     double x3[3] = { x_start[0] , x_start[1] , x_start[2] };
+
+    state_type x_odeint_rkck = x_start;
+    double x_gsl_rkck[3] = { x_start[0] , x_start[1] , x_start[2] };
     cout.precision( 14 );
     cout.flags( ios::scientific );
 
@@ -148,7 +172,11 @@ int main( int argc , char **argv )
         gsl_odeiv_step_apply ( s , t , dt , x2 , x2_err , 0 , 0 , &sys );
         rk4_lorenz( x3 , 0.5*dt );
         rk4_lorenz( x3 , 0.5*dt );
-        cout << t << tab << x1[0] << tab << x2[0] << tab << x3[0] << endl;
+        cout << t << tab << x1[0] << tab <<  x2[0] << tab << x3[0] << tab;
+        // compare cash-karp methods
+        stepper_cash_karp.next_step( lorenz , x_odeint_rkck , t , dt , x1_err );
+        gsl_odeiv_step_apply ( s_rkck , t , dt , x_gsl_rkck , x2_err , 0 , 0 , &sys );
+        cout << x_odeint_rkck[0] << tab << x_gsl_rkck[0] << endl;
     }
 
     gsl_odeiv_step_free (s);

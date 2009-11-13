@@ -6,7 +6,10 @@
  Shows the usage of odeint by integrating the equations of a 
  pendulum with horizontally vibrating pivot:
 
- 
+ d^2x/dt^2 + sin(x) + alpha*x = a*omega^2*sin(omega*t)*cos(x)
+
+ for large enough omega >sim 20 two new fixpoints (of the 
+ slow dynamics) arise, that can be seen in the simulations as well
 
  Distributed under the Boost Software License, Version 1.0.
 (See accompanying file LICENSE_1_0.txt or
