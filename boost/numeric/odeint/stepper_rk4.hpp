@@ -149,7 +149,7 @@ namespace constants {
         template< class DynamicalSystem >
         void next_step( DynamicalSystem &system ,
                         container_type &x ,
-                        const container_type &dxdt ,
+                        container_type &dxdt ,
                         time_type t ,
                         time_type dt ,
                         container_type &xerr )
@@ -167,85 +167,54 @@ namespace constants {
             assign_sum( m_xt.begin() , m_xt.end() , x.begin() , dxdt.begin() , 
                         dt*time_type(rk4_b21) );
 
-            system( m_xt , m_dxt , t + dt*time_type(rk4_a2) ); // m_dxt = nr_ak2
-            iterator x_i = x.begin();
-            iterator m_xt_i = m_xt.begin();
-            typename container_type::const_iterator dxdt_i = dxdt.begin();
-            iterator m_dxt_i = m_dxt.begin();
-            while( x_i != x.end() ) {
-                *m_xt_i++ = (*x_i++) + dt*( time_type(rk4_b31)*(*dxdt_i++) + 
-                                            time_type(rk4_b32)*(*m_dxt_i++) );
-            }
+            time_type t_1 = time_type(1.0);
 
+            system( m_xt , m_dxt , t + dt*time_type(rk4_a2) ); // m_dxt = nr_ak2
+            // m_xt = x + dt*rk4_b31*dxt + dt*rk4_b32*m_dxt
+            scale_sum( m_xt.begin(), m_xt.end(), 
+                       t_1, x.begin(), 
+                       dt*time_type(rk4_b31), dxdt.begin(),
+                       dt*time_type(rk4_b32), m_dxt.begin() );
+            
             system( m_xt , m_dxm , t + dt*time_type(rk4_a3) ); // m_dxm = nr_ak3
-            x_i = x.begin();
-            m_xt_i = m_xt.begin();
-            dxdt_i = dxdt.begin();
-            m_dxt_i = m_dxt.begin();
-            iterator m_dxm_i = m_dxm.begin();
-            while( x_i != x.end() ) {
-                *m_xt_i++ = (*x_i++) + dt*( time_type(rk4_b41)*(*dxdt_i++) + 
-                                            time_type(rk4_b42)*(*m_dxt_i++) + 
-                                            time_type(rk4_b43)*(*m_dxm_i++) );
-            }
+            scale_sum( m_xt.begin(), m_xt.end(), 
+                       t_1, x.begin(),
+                       dt*time_type(rk4_b41), dxdt.begin(),
+                       dt*time_type(rk4_b42), m_dxt.begin(),
+                       dt*time_type(rk4_b43), m_dxm.begin() );
 
             system( m_xt, m_x4 , t + dt*time_type(rk4_a4) ); // m_x4 = nr_ak4
-            x_i = x.begin();
-            m_xt_i = m_xt.begin();
-            dxdt_i = dxdt.begin();
-            m_dxt_i = m_dxt.begin();
-            m_dxm_i = m_dxm.begin();
-            iterator m_x4_i = m_x4.begin();
-            while( x_i != x.end() ) {
-                *m_xt_i++ = (*x_i++) + dt*( time_type(rk4_b51)*(*dxdt_i++) + 
-                                            time_type(rk4_b52)*(*m_dxt_i++) +
-                                            time_type(rk4_b53)*(*m_dxm_i++) + 
-                                            time_type(rk4_b54)*(*m_x4_i++) ) ;
-            }
+            scale_sum( m_xt.begin(), m_xt.end(), 
+                       t_1, x.begin(),
+                       dt*time_type(rk4_b51), dxdt.begin(),
+                       dt*time_type(rk4_b52), m_dxt.begin(),
+                       dt*time_type(rk4_b53), m_dxm.begin(),
+                       dt*time_type(rk4_b54), m_x4.begin() );
 
             system( m_xt , m_x5 , t + dt*time_type(rk4_a5) ); // m_x5 = nr_ak5
-            x_i = x.begin();
-            m_xt_i = m_xt.begin();
-            dxdt_i = dxdt.begin();
-            m_dxt_i = m_dxt.begin();
-            m_dxm_i = m_dxm.begin();
-            m_x4_i = m_x4.begin();
-            iterator m_x5_i = m_x5.begin();
-            while( x_i != x.end() ) {
-                *m_xt_i++ = (*x_i++) + dt*( time_type(rk4_b61)*(*dxdt_i++) +
-                                          time_type(rk4_b62)*(*m_dxt_i++) +
-                                          time_type(rk4_b63)*(*m_dxm_i++) +
-                                          time_type(rk4_b64)*(*m_x4_i++) +
-                                          time_type(rk4_b65)*(*m_x5_i++) );
-            }
+            scale_sum( m_xt.begin(), m_xt.end(), 
+                       t_1, x.begin(),
+                       dt*time_type(rk4_b61), dxdt.begin(),
+                       dt*time_type(rk4_b62), m_dxt.begin(),
+                       dt*time_type(rk4_b63), m_dxm.begin(),
+                       dt*time_type(rk4_b64), m_x4.begin(),
+                       dt*time_type(rk4_b65), m_x5.begin() );
 
             system( m_xt , m_x6 , t + dt*time_type(rk4_a6) ); // m_x6 = nr_ak6
-            x_i = x.begin();
-            dxdt_i = dxdt.begin();
-            m_dxm_i = m_dxm.begin();
-            m_x4_i = m_x4.begin();
-            iterator m_x6_i = m_x6.begin();
-            while( x_i != x.end() ) {
-                (*x_i++) += dt*( time_type(rk4_c1)*(*dxdt_i++) +
-                                 time_type(rk4_c3)*(*m_dxm_i++) +
-                                 time_type(rk4_c4)*(*m_x4_i++) +
-                                 time_type(rk4_c6)*(*m_x6_i++) );
-            }
-
+            scale_sum( x.begin(), x.end(), 
+                       t_1, x.begin(),
+                       dt*time_type(rk4_c1), dxdt.begin(),
+                       dt*time_type(rk4_c3), m_dxm.begin(),
+                       dt*time_type(rk4_c4), m_x4.begin(),
+                       dt*time_type(rk4_c6), m_x6.begin() );
+            
             // error estimate
-            iterator xerr_i = xerr.begin();
-            dxdt_i = dxdt.begin();
-            m_dxm_i = m_dxm.begin();
-            m_x4_i = m_x4.begin();
-            m_x5_i = m_x5.begin();
-            m_x6_i = m_x6.begin();
-            while( xerr_i != xerr.end() ) {
-                *xerr_i++ = dt*( time_type(rk4_dc1)*(*dxdt_i++) +
-                                  time_type(rk4_dc3)*(*m_dxm_i++) +
-                                  time_type(rk4_dc4)*(*m_x4_i++) +
-                                  time_type(rk4_dc5)*(*m_x5_i++) +
-                                  time_type(rk4_dc6)*(*m_x6_i++) );
-            }
+            scale_sum(xerr.begin(), xerr.end(),
+                      dt*time_type(rk4_dc1), dxdt.begin(),
+                      dt*time_type(rk4_dc3), m_dxm.begin(),
+                      dt*time_type(rk4_dc4), m_x4.begin(),
+                      dt*time_type(rk4_dc5), m_x5.begin(),
+                      dt*time_type(rk4_dc6), m_x6.begin() );
         }
 
         template< class DynamicalSystem >
