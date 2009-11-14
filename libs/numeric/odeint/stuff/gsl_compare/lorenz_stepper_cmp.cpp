@@ -118,7 +118,7 @@ int main( int argc , char **argv )
 
     // odeint method 2 - rk45 with Cash Karp error estimation
     x1 = x_start;
-    stepper_rk4< state_type > stepper_cash_karp;
+    stepper_rk5_ck< state_type > stepper_cash_karp;
     start = clock();
     t = 0.0;
     for( size_t oi=0 ; oi<olen ; ++oi,t+=dt )
@@ -162,7 +162,7 @@ int main( int argc , char **argv )
 
     state_type x_odeint_rkck = x_start;
     double x_gsl_rkck[3] = { x_start[0] , x_start[1] , x_start[2] };
-    cout.precision( 14 );
+    cout.precision( 16 );
     cout.flags( ios::scientific );
 
     t = 0.0;

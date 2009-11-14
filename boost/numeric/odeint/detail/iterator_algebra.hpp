@@ -99,7 +99,7 @@ namespace it_algebra { // iterator algebra
                 ( (*first2++) + (*first3++) + alpha2*(*first4++) );
     }
 
-    // computes y = x1 + alpha2*x2
+    // computes y = alpha1*x1 + alpha2*x2
     template <
         class OutputIterator ,
         class InputIterator ,
