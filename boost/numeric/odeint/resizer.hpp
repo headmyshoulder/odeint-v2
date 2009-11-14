@@ -72,10 +72,10 @@ namespace odeint {
             return true; // if this was false, the code wouldn't compile
         }
 
-	void adjust_size( const container_type &x1 , container_type &x2 ) const
+        void adjust_size( const container_type &x1 , container_type &x2 ) const
         {
-	    if( !same_size( x1 , x2 ) ) throw;
-	}
+            if( !same_size( x1 , x2 ) ) throw;
+        }
     };
 
 

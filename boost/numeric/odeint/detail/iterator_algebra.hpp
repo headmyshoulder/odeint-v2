@@ -14,7 +14,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_DETAIL_ACCUMULATORS_HPP
 #define BOOST_NUMERIC_ODEINT_DETAIL_ACCUMULATORS_HPP
 
-
+#include <iostream>
 
 namespace boost {
 namespace numeric {
@@ -222,6 +222,39 @@ namespace it_algebra { // iterator algebra
                 alpha4 * (*x4_begin++) +
                 alpha5 * (*x5_begin++) +
                 alpha6 * (*x6_begin++);
+    }
+
+    // generic version for n values
+    template <
+        class OutputIterator ,
+        class InputIterator ,
+        class InputIteratorIterator ,
+        class FactorIterator ,
+        class T
+        >
+    inline void scale_sum_generic( OutputIterator y_begin ,
+                                   OutputIterator y_end ,
+                                   FactorIterator alpha_begin ,
+                                   FactorIterator alpha_end ,
+                                   T beta ,
+                                   InputIterator x_begin ,
+                                   InputIteratorIterator x_iter_begin )
+    {
+        FactorIterator alpha_iter;
+        InputIteratorIterator x_iter_iter;
+        while( y_begin != y_end ) {
+            x_iter_iter = x_iter_begin;
+            alpha_iter = alpha_begin;
+            *y_begin = *x_begin++;
+            //std::clog<<(*y_begin);
+            while( alpha_iter != alpha_end ) {
+                //std::clog<< " + " <<beta<<" * "<<*alpha_iter<<"*"<<(*(*(x_iter_iter)));
+                (*y_begin) += beta * (*alpha_iter++) * (*(*x_iter_iter++)++);
+            }
+            //std::clog<<" = "<<*y_begin<<std::endl;
+            y_begin++;
+        }
+        //std::clog<<std::endl;
     }
 
 
