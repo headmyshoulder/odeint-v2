@@ -79,13 +79,14 @@ namespace odeint {
         template< class DynamicalSystem >
         void next_step( DynamicalSystem &system ,
                         container_type &x ,
-                        const container_type &dxdt ,
+                        container_type &dxdt ,
                         time_type t ,
                         time_type dt )
         {
             using namespace detail::it_algebra;
 
             const time_type val2 = time_type( 2.0 );
+            const time_type val1 = time_type( 1.0 );
 
             m_resizer.adjust_size( x , m_dxt );
             m_resizer.adjust_size( x , m_dxm );
@@ -95,22 +96,37 @@ namespace odeint {
             time_type th = t + dh;
 
             //m_xt = x + dh*dxdt
-            assign_sum( m_xt.begin() , m_xt.end() , x.begin() , dxdt.begin() , dh );
+            // old: assign_sum( m_xt.begin() , m_xt.end() , x.begin() , dxdt.begin() , dh );
+            scale_sum( m_xt.begin(), m_xt.end(),
+                       val1, x.begin(),
+                       dh, dxdt.begin() );
 
             system( m_xt , m_dxt , th );
-            //m_xt = x + dh*m_dxdt
-            assign_sum( m_xt.begin() , m_xt.end() , x.begin() , m_dxt.begin() , dh );
+            //m_xt = x + dh*m_dxt
+            // old: assign_sum( m_xt.begin() , m_xt.end() , x.begin() , m_dxt.begin() , dh );
+            scale_sum( m_xt.begin(), m_xt.end(),
+                       val1, x.begin(),
+                       dh, m_dxt.begin() );
 
             system( m_xt , m_dxm , th );
             //m_xt = x + dt*m_dxm ; m_dxm += m_dxt
-            assign_sum_increment( m_xt.begin() , m_xt.end() , x.begin() ,
-                                  m_dxm.begin() , m_dxt.begin() , dt );
+            // old: assign_sum_increment( m_xt.begin() , m_xt.end() , x.begin() ,
+            //                      m_dxm.begin() , m_dxt.begin() , dt );
+            scale_sum( m_xt.begin(), m_xt.end(),
+                       val1, x.begin(),
+                       dt, m_dxm.begin() );
 
-            system( m_xt , m_dxt , value_type( t + dt ) );
-            //x = dt/6 * ( m_dxdt + m_dxt + val2*m_dxm )
-            increment_sum_sum( x.begin() , x.end() , dxdt.begin() ,
-                               m_dxt.begin() , m_dxm.begin() ,
-                               dt /  time_type( 6.0 ) , val2 );
+            system( m_xt , m_xt , value_type( t + dt ) );
+            //x += dt/6 * ( m_dxdt + m_xt + val2*m_dxm )
+            // old: increment_sum_sum( x.begin() , x.end() , dxdt.begin() ,
+            //                   m_xt.begin() , m_dxm.begin() ,
+            //                   dt /  time_type( 6.0 ) , val2 );
+            scale_sum( x.begin(), x.end(),
+                       val1, x.begin(),
+                       dt / time_type( 6.0 ), dxdt.begin(),
+                       dt / time_type( 3.0 ), m_dxt.begin(),
+                       dt / time_type( 3.0 ), m_dxm.begin(),
+                       dt / time_type( 6.0 ), m_xt.begin() );
         }
 
 

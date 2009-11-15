@@ -80,29 +80,32 @@ int main( int argc , char **argv )
 
     cout.precision(16);
 
-    t = 0.0;
-    stepper_rk4.next_step( lorenz , x1 , t , dt );
-    cout << "x after one step: "<<x1[0]<<tab<<x1[1]<<tab<<x1[2]<<endl;
-    t += dt;
-    start= clock();
-    for( size_t oi=0 ; oi<olen ; ++oi,t+=dt ) {
-        stepper_rk4.next_step( lorenz , x1 , t , dt );
-    }
-    end = clock();
-    cout << "RK4 : " << double ( end - start ) / double( CLOCKS_PER_SEC ) << endl;
-    cout << "x after "<<olen<<" steps: "<<x1[0]<<tab<<x1[1]<<tab<<x1[2]<<endl;
+    cout << "Hand written Runge Kutta 4"<<endl;
 
     t = 0.0;
-    stepper_generic4.next_step( lorenz , x2 , t , dt );
-    cout << "x after one step: "<<x2[0]<<tab<<x2[1]<<tab<<x2[2]<<endl;
-    t += dt;
     start= clock();
-    for( size_t oi=0 ; oi<olen ; ++oi,t+=dt ) {
-        stepper_generic4.next_step( lorenz , x2 , t , dt );
+    for( size_t oi=1 ; oi<olen ; ++oi,t+=dt ) {
+        stepper_rk4.next_step( lorenz , x1 , t , dt );
+        if( oi < 5 )
+            cout << "x after step "<<oi<<": "<<x1[0]<<tab<<x1[1]<<tab<<x1[2]<<endl;
+
     }
     end = clock();
-    cout << "Generic RK4 : " << double ( end - start ) / double( CLOCKS_PER_SEC ) << endl;
+    cout << "x after "<<olen<<" steps: "<<x1[0]<<tab<<x1[1]<<tab<<x1[2]<<endl;
+    cout << "Time for "<<olen<<" steps: " << double ( end - start ) / double( CLOCKS_PER_SEC ) <<"s"<< endl;
+    cout << endl << "###########################" << endl << endl;
+    cout << "Runge Kutta 4 via generic Runge Kutta implementation"<<endl;
+
+    t = 0.0;
+    start= clock();
+    for( size_t oi=1 ; oi<olen ; ++oi,t+=dt ) {
+        stepper_generic4.next_step( lorenz , x2 , t , dt );
+        if( oi < 5 )
+            cout << "x after step "<<oi<<":  "<<x2[0]<<tab<<x2[1]<<tab<<x2[2]<<endl;        
+    }
+    end = clock();
     cout << "x after "<<olen<<" steps: "<<x2[0]<<tab<<x2[1]<<tab<<x2[2]<<endl;
+    cout << "Time for "<<olen<<" steps: " << double ( end - start ) / double( CLOCKS_PER_SEC ) << endl;
 
     return 0;
 }
