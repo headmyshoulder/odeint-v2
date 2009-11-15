@@ -61,9 +61,9 @@ namespace odeint {
         container_vector m_xvec;
         container_iterator_vector m_xiter_vec;
         container_type m_xtmp;
-        std::vector< time_type > m_a;
-        std::vector< std::vector<time_type> > m_b;
-        std::vector< time_type > m_c;
+        const std::vector< time_type > m_a;
+        const std::vector< std::vector<time_type> > m_b;
+        const std::vector< time_type > m_c;
 
         order_type m_q;
 
@@ -102,8 +102,8 @@ namespace odeint {
             x_iter = m_xvec.begin(); 
             (*x_iter++) = dxdt;
             
-            typename std::vector< time_type >::iterator a_iter = m_a.begin();
-            typename std::vector< std::vector<time_type> >::iterator b_iter = m_b.begin();
+            typename std::vector< time_type >::const_iterator a_iter = m_a.begin();
+            typename std::vector< std::vector<time_type> >::const_iterator b_iter = m_b.begin();
             while( x_iter != m_xvec.end() ) {
                 reset_iter(m_xiter_vec.begin());
                 scale_sum_generic( m_xtmp.begin(), m_xtmp.end(),
@@ -116,7 +116,7 @@ namespace odeint {
             }
 
             reset_iter(m_xiter_vec.begin());
-            typename std::vector< time_type >::iterator c_iter = m_c.begin();
+            typename std::vector< time_type >::const_iterator c_iter = m_c.begin();
             scale_sum_generic( x.begin(), x.end(),
                                m_c.begin(), m_c.end(), dt,
                                x.begin(), m_xiter_vec.begin() );

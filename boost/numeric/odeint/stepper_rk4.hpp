@@ -63,8 +63,8 @@ namespace odeint {
         container_type m_dxdt;
         container_type m_dxt;
         container_type m_dxm;
+        container_type m_dxh;
         container_type m_xt;
-        container_type m_x4, m_x5, m_x6;
         resizer_type m_resizer;
 
         
@@ -85,15 +85,18 @@ namespace odeint {
         {
             using namespace detail::it_algebra;
 
-            const time_type val2 = time_type( 2.0 );
+            //const time_type val2 = time_type( 2.0 );
             const time_type val1 = time_type( 1.0 );
 
             m_resizer.adjust_size( x , m_dxt );
             m_resizer.adjust_size( x , m_dxm );
             m_resizer.adjust_size( x , m_xt );
+            m_resizer.adjust_size( x , m_dxh );
 
             time_type  dh = time_type( 0.5 ) * dt;
             time_type th = t + dh;
+
+            // dt * dxdt = k1
 
             //m_xt = x + dh*dxdt
             // old: assign_sum( m_xt.begin() , m_xt.end() , x.begin() , dxdt.begin() , dh );
@@ -101,14 +104,14 @@ namespace odeint {
                        val1, x.begin(),
                        dh, dxdt.begin() );
 
-            system( m_xt , m_dxt , th );
+            system( m_xt , m_dxt , th ); // dt * m_dxt = k2
             //m_xt = x + dh*m_dxt
             // old: assign_sum( m_xt.begin() , m_xt.end() , x.begin() , m_dxt.begin() , dh );
             scale_sum( m_xt.begin(), m_xt.end(),
                        val1, x.begin(),
                        dh, m_dxt.begin() );
 
-            system( m_xt , m_dxm , th );
+            system( m_xt , m_dxm , th ); // dt * m_dxm = k3
             //m_xt = x + dt*m_dxm ; m_dxm += m_dxt
             // old: assign_sum_increment( m_xt.begin() , m_xt.end() , x.begin() ,
             //                      m_dxm.begin() , m_dxt.begin() , dt );
@@ -116,7 +119,7 @@ namespace odeint {
                        val1, x.begin(),
                        dt, m_dxm.begin() );
 
-            system( m_xt , m_xt , value_type( t + dt ) );
+            system( m_xt , m_dxh , value_type( t + dt ) );  // dt * m_dxh = k4
             //x += dt/6 * ( m_dxdt + m_xt + val2*m_dxm )
             // old: increment_sum_sum( x.begin() , x.end() , dxdt.begin() ,
             //                   m_xt.begin() , m_dxm.begin() ,
@@ -126,7 +129,7 @@ namespace odeint {
                        dt / time_type( 6.0 ), dxdt.begin(),
                        dt / time_type( 3.0 ), m_dxt.begin(),
                        dt / time_type( 3.0 ), m_dxm.begin(),
-                       dt / time_type( 6.0 ), m_xt.begin() );
+                       dt / time_type( 6.0 ), m_dxh.begin() );
         }
 
 
