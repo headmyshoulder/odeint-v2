@@ -61,7 +61,7 @@ void lorenz2( state_type2 &x , state_type2 &dxdt , double t )
 int main( int argc , char **argv )
 {
     const double dt = 0.01;
-    const size_t olen = 1000000000;
+    const size_t olen = 100000000;
     
     state_type1 x1(3);
     x1[0] = 1.0;
@@ -78,18 +78,19 @@ int main( int argc , char **argv )
     start= clock();
     t = 0.0;
     for( size_t oi=0 ; oi<olen ; ++oi,t+=dt )
-	stepper1.next_step( lorenz1 , x1 , t , dt );
+        stepper1.next_step( lorenz1 , x1 , t , dt );
     end = clock();
     cout << "vector : " << double ( end - start ) / double( CLOCKS_PER_SEC ) << endl;
+    cout << "x: "<<x1[0]<<tab<<x1[1]<<tab<<x1[2]<<endl;
 
 
     start= clock();
     t = 0.0;
     for( size_t oi=0 ; oi<olen ; ++oi,t+=dt )
-	stepper2.next_step( lorenz2 , x2 , t , dt );
+        stepper2.next_step( lorenz2 , x2 , t , dt );
     end = clock();
     cout << "array : " << double ( end - start ) / double( CLOCKS_PER_SEC ) << endl;
-
+    cout << "x: "<<x2[0]<<tab<<x2[1]<<tab<<x2[2]<<endl;
 
     return 0;
 }

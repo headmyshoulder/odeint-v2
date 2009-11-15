@@ -55,7 +55,7 @@ int main( int argc , char **argv )
     vector< double > a(3);
 
     a[0] = 0.5; 
-    a[1] = 0.5; 
+    a[1] = 0.5;
     a[2] = 1;
 
     vector< vector<double> > b(3);

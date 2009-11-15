@@ -7,7 +7,7 @@
  This file includes generic Runge Kutta solver
  for ordinary differential equations.
 
- It solves any ODE dx/dt = f(x,t).
+ It solves any ODE dx/dt = f(x,t) using a general Runge Kutta scheme.
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
@@ -18,6 +18,9 @@
 #define BOOST_NUMERIC_ODEINT_STEPPER_RK_GENERIC_HPP
 
 #include <vector>
+#include <exception>
+#include <cmath> // for pow( ) and abs()
+#include <limits>
 #include <boost/concept_check.hpp>
 
 #include <boost/numeric/odeint/concepts/state_concept.hpp>
@@ -28,6 +31,24 @@
 namespace boost {
 namespace numeric {
 namespace odeint {
+
+
+    class butcher_tableau_consistency_exception : public std::exception {
+        
+        virtual const char* what() const throw()
+        {
+            return "Consistency Check of Butcher Tableau failed!";
+        }
+    };
+
+    class butcher_tableau_order_condition_exception : public std::exception {
+
+        virtual const char* what() const throw()
+        {
+            return "Order Condition Check of Butcher Tableau failed!";
+        }
+    };
+
 
     template<
         class Container ,
@@ -69,8 +90,88 @@ namespace odeint {
 
         resizer_type m_resizer;
 
+    private:
+        void reset_iter(typename container_iterator_vector::iterator xiter_iter)
+        {
+            typename container_vector::iterator x_iter = m_xvec.begin();
+            while( x_iter != m_xvec.end() ) {
+                (*xiter_iter++) = (*x_iter++).begin();
+            }
+        }
+
+        void check_consitency()
+        {
+            typename std::vector< time_type >::const_iterator a_iter = m_a.begin();
+            typename std::vector< time_type >::const_iterator c_iter = m_c.begin();
+            typename std::vector< std::vector<time_type> >::const_iterator b_iter = m_b.begin();
+            typename std::vector<time_type>::const_iterator b_iter_iter;
+
+            // check 1: a_i = sum_j b_ij 
+            while( a_iter != m_a.end() ) {
+                time_type tmp = 0.0;
+                b_iter_iter = (*b_iter).begin();
+                while( b_iter_iter != (*b_iter).end() ) {
+                    tmp += *b_iter_iter++;
+                }
+                b_iter++;
+                if( *a_iter++ != tmp ) 
+                    throw butcher_tableau_consistency_exception();
+            }
+
+            // check 2: sum_i c_i * (a_i)^(k-1) = 1/k   k = 1..q
+            for( unsigned short k = 1; k <= m_q; k++ ) {
+                time_type tmp = 0.0;
+                a_iter = m_a.begin();
+                c_iter = m_c.begin();
+                if( k == 1 ) // special treatment for 0^0 = 1
+                    tmp += *c_iter++;
+                else
+                    c_iter++;
+                while( a_iter != m_a.end() ) {
+                    //std::clog<<pow( *a_iter , k-1 )<< ", ";
+                    tmp += (*c_iter++) * pow( *a_iter++ , k-1 );
+                }
+                //std::clog << tmp << " = " << time_type(1.0)/time_type(k) << "?" << std::endl;
+                if( std::abs(time_type(tmp - time_type(1.0)/time_type(k))) > 
+                    std::numeric_limits<time_type>::epsilon() ) {
+                    //std::clog << std::abs(time_type(tmp - time_type(1.0)/time_type(k))) << std::endl;
+                    throw butcher_tableau_order_condition_exception();
+                }
+            }
+        }
+
+
     public:
 
+        /* Constructor
+
+           a,b,c are vectors providing the butcher tableau for the Runge Kutta scheme
+           
+           0     |
+           a_1   | b_21
+           a_2   | b_31 b_32
+           ...   | ...  ...
+           a_q-1 | b_q1 b_q2 ... b_qq-1
+           -------------------------------
+                 | c_1  c_2  ... c_q-1  c_q
+
+          The size of c is determining the order of the scheme q.
+          a is of length q-1
+          b is of length q-1, b[0] of length 1, b[1] of length 2 and so on
+          c is of length q (which defines q).
+
+          There are 2 conditions that these parameters have to fullfill:
+          Consitency:
+
+              a_i = sum_j b_ij  for i = 1 ... q-1
+
+          Condition on the order of the method (all error terms dt^k , k<q+1 cancel out):
+
+              sum_i c_i * (a_(i+1))^(k-1) = 1/k   k = 1 ... q
+
+              Note, that a_0 = 1 (implicitely) and 0^0 = 1
+              so this means sum_i c_i = 1 at k=1
+        */
         stepper_rk_generic( std::vector<time_type> &a,
                             std::vector< std::vector<time_type> > &b,
                             std::vector< time_type > &c)
@@ -78,6 +179,8 @@ namespace odeint {
         {
             m_xvec.resize(m_q);
             m_xiter_vec.resize(m_q);
+
+            check_consitency();
         }
 
         order_type order() const { return m_q; }
@@ -92,15 +195,17 @@ namespace odeint {
             using namespace detail::it_algebra;
             typename container_vector::iterator x_iter = m_xvec.begin();
             typename container_iterator_vector::iterator xiter_iter = m_xiter_vec.begin();
+
+            (*x_iter) = dxdt;
+            (*xiter_iter++) = (*x_iter++).begin();
+
             while( x_iter != m_xvec.end() ) {
                 m_resizer.adjust_size(x, (*x_iter));
-                (*xiter_iter++) = (*x_iter).begin();
-                x_iter++;
+                (*xiter_iter++) = (*x_iter++).begin();
             }
             m_resizer.adjust_size(x, m_xtmp);
             
-            x_iter = m_xvec.begin(); 
-            (*x_iter++) = dxdt;
+            x_iter = m_xvec.begin()+1;
             
             typename std::vector< time_type >::const_iterator a_iter = m_a.begin();
             typename std::vector< std::vector<time_type> >::const_iterator b_iter = m_b.begin();
@@ -109,9 +214,7 @@ namespace odeint {
                 scale_sum_generic( m_xtmp.begin(), m_xtmp.end(),
                                    (*b_iter).begin(), (*b_iter).end(), dt,
                                    x.begin(), m_xiter_vec.begin() );
-                system( m_xtmp, *x_iter , t + dt*(*a_iter) );
-                x_iter++;
-                a_iter++;
+                system( m_xtmp, *x_iter++ , t + dt*(*a_iter++) );
                 b_iter++;
             }
 
@@ -120,14 +223,6 @@ namespace odeint {
             scale_sum_generic( x.begin(), x.end(),
                                m_c.begin(), m_c.end(), dt,
                                x.begin(), m_xiter_vec.begin() );
-        }
-
-        void reset_iter(typename container_iterator_vector::iterator xiter_iter)
-        {
-            typename container_vector::iterator x_iter = m_xvec.begin();
-            while( x_iter != m_xvec.end() ) {
-                (*xiter_iter++) = (*x_iter++).begin();
-            }
         }
 
         template< class DynamicalSystem >

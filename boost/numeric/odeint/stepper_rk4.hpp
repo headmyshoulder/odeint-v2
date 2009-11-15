@@ -120,9 +120,9 @@ namespace odeint {
                        dt, m_dxm.begin() );
 
             system( m_xt , m_dxh , value_type( t + dt ) );  // dt * m_dxh = k4
-            //x += dt/6 * ( m_dxdt + m_xt + val2*m_dxm )
+            //x += dt/6 * ( m_dxdt + m_dxt + val2*m_dxm )
             // old: increment_sum_sum( x.begin() , x.end() , dxdt.begin() ,
-            //                   m_xt.begin() , m_dxm.begin() ,
+            //                   m_dxt.begin() , m_dxm.begin() ,
             //                   dt /  time_type( 6.0 ) , val2 );
             scale_sum( x.begin(), x.end(),
                        val1, x.begin(),
