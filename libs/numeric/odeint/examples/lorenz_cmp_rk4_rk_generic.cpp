@@ -21,6 +21,7 @@
 #include <tr1/array>
 
 #include <boost/numeric/odeint.hpp>
+#include <boost/numeric/odeint/stepper_rk_generic_test.hpp>
 
 #define tab "\t"
 
@@ -73,7 +74,13 @@ int main( int argc , char **argv )
     c[2] = 1.0/3.0;
     c[3] = 1.0/6.0;
 
+    const double a2[3] = {0.5, 0.5, 1.0 };
+    const double b2[6] = {0.5, 0.0, 0.5, 0.0, 0.0, 1.0};
+    const double c2[4] = {1.0/6.0, 1.0/3.0, 1.0/3.0, 1.0/6.0};
+
     stepper_rk_generic< state_type > stepper_generic4(a, b, c);
+
+    stepper_rk_generic_test< state_type > stepper_generic4_test(a2, b2, c2, 4);
 
     clock_t start , end;
     double t;
