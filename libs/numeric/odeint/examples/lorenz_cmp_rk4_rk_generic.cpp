@@ -21,7 +21,6 @@
 #include <tr1/array>
 
 #include <boost/numeric/odeint.hpp>
- // #include <boost/numeric/odeint/stepper_rk_generic.hpp>
 
 #define tab "\t"
 
@@ -76,13 +75,13 @@ int main( int argc , char **argv )
     c[2] = 1.0/3.0;
     c[3] = 1.0/6.0;
 
-/*    const double a2[3] = {0.5, 0.5, 1.0 };
+    const double a2[3] = {0.5, 0.5, 1.0 };
     const double b2[6] = {0.5, 0.0, 0.5, 0.0, 0.0, 1.0};
-    const double c2[4] = {1.0/6.0, 1.0/3.0, 1.0/3.0, 1.0/6.0};*/
+    const double c2[4] = {1.0/6.0, 1.0/3.0, 1.0/3.0, 1.0/6.0};
 
     stepper_rk_generic< state_type > stepper_generic4(a, b, c);
 
-//    stepper_rk_generic_test< state_type > stepper_generic4_test(a2, b2, c2, 4);
+    stepper_rk_generic_ptr< state_type > stepper_generic4_ptr(a2, b2, c2, 4);
 
     clock_t start , end;
     double t;
@@ -115,6 +114,20 @@ int main( int argc , char **argv )
     }
     end = clock();
     cout << "x after "<<olen<<" steps: "<<x2[0]<<tab<<x2[1]<<tab<<x2[2]<<endl;
+    cout << "Time for "<<olen<<" steps: " << double ( end - start ) / double( CLOCKS_PER_SEC ) << endl;
+
+    cout << endl << "###########################" << endl << endl;
+    cout << "Runge Kutta 4 via C-Array styled generic Runge Kutta implementation"<<endl;
+
+    t = 0.0;
+    start= clock();
+    for( size_t oi=1 ; oi<olen ; ++oi,t+=dt ) {
+        stepper_generic4_ptr.next_step( lorenz , x3 , t , dt );
+        if( oi < 5 )
+            cout << "x after step "<<oi<<":  "<<x3[0]<<tab<<x3[1]<<tab<<x3[2]<<endl;        
+    }
+    end = clock();
+    cout << "x after "<<olen<<" steps: "<<x3[0]<<tab<<x3[1]<<tab<<x3[2]<<endl;
     cout << "Time for "<<olen<<" steps: " << double ( end - start ) / double( CLOCKS_PER_SEC ) << endl;
 
 

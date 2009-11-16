@@ -127,8 +127,6 @@ namespace odeint {
         }
 
 
-        /* RK4 step with error estimation to 5th order according to Cash Karp */
-
     };
 
 } // namespace odeint
