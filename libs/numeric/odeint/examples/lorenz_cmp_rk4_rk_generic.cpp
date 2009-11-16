@@ -21,7 +21,7 @@
 #include <tr1/array>
 
 #include <boost/numeric/odeint.hpp>
-#include <boost/numeric/odeint/stepper_rk_generic_test.hpp>
+ // #include <boost/numeric/odeint/stepper_rk_generic.hpp>
 
 #define tab "\t"
 
@@ -50,8 +50,10 @@ int main( int argc , char **argv )
     
     state_type x1 = {{1.0, 0.0, 0.0}};
     state_type x2 = {{1.0, 0.0, 0.0}};
+    state_type x3 = {{1.0, 0.0, 0.0}};
 
     stepper_rk4< state_type > stepper_rk4;
+    stepper_rk4_classical< state_type > stepper_rk4_classical;
 
     vector< double > a(3);
 
@@ -74,13 +76,13 @@ int main( int argc , char **argv )
     c[2] = 1.0/3.0;
     c[3] = 1.0/6.0;
 
-    const double a2[3] = {0.5, 0.5, 1.0 };
+/*    const double a2[3] = {0.5, 0.5, 1.0 };
     const double b2[6] = {0.5, 0.0, 0.5, 0.0, 0.0, 1.0};
-    const double c2[4] = {1.0/6.0, 1.0/3.0, 1.0/3.0, 1.0/6.0};
+    const double c2[4] = {1.0/6.0, 1.0/3.0, 1.0/3.0, 1.0/6.0};*/
 
     stepper_rk_generic< state_type > stepper_generic4(a, b, c);
 
-    stepper_rk_generic_test< state_type > stepper_generic4_test(a2, b2, c2, 4);
+//    stepper_rk_generic_test< state_type > stepper_generic4_test(a2, b2, c2, 4);
 
     clock_t start , end;
     double t;
@@ -100,9 +102,10 @@ int main( int argc , char **argv )
     end = clock();
     cout << "x after "<<olen<<" steps: "<<x1[0]<<tab<<x1[1]<<tab<<x1[2]<<endl;
     cout << "Time for "<<olen<<" steps: " << double ( end - start ) / double( CLOCKS_PER_SEC ) <<"s"<< endl;
-    cout << endl << "###########################" << endl << endl;
-    cout << "Runge Kutta 4 via generic Runge Kutta implementation"<<endl;
 
+    cout << endl << "###########################" << endl << endl;
+
+    cout << "Runge Kutta 4 via generic Runge Kutta implementation"<<endl;
     t = 0.0;
     start= clock();
     for( size_t oi=1 ; oi<olen ; ++oi,t+=dt ) {
@@ -114,6 +117,21 @@ int main( int argc , char **argv )
     cout << "x after "<<olen<<" steps: "<<x2[0]<<tab<<x2[1]<<tab<<x2[2]<<endl;
     cout << "Time for "<<olen<<" steps: " << double ( end - start ) / double( CLOCKS_PER_SEC ) << endl;
 
+
+    cout << endl << "###########################" << endl << endl;
+
+    cout << "Runge Kutta 4 with classical NR-style Runge Kutta implementation"<<endl;
+    t = 0.0;
+    start= clock();
+    for( size_t oi=1 ; oi<olen ; ++oi,t+=dt ) {
+        stepper_rk4_classical.next_step( lorenz , x3 , t , dt );
+        if( oi < 5 )
+            cout << "x after step "<<oi<<":  "<<x3[0]<<tab<<x3[1]<<tab<<x3[2]<<endl;        
+    }
+    end = clock();
+    cout << "x after "<<olen<<" steps: "<<x3[0]<<tab<<x3[1]<<tab<<x3[2]<<endl;
+    cout << "Time for "<<olen<<" steps: " << double ( end - start ) / double( CLOCKS_PER_SEC ) << endl;
+
     return 0;
 }
 
@@ -121,5 +139,5 @@ int main( int argc , char **argv )
 
 /*
   Compile with
-  g++ -Wall -O3 -I$BOOST_ROOT -I../../../../ lorenz_stepper.cpp
+  g++ -Wall -O3 -I$BOOST_ROOT -I../../../../ lorenz_cmp_rk4_rk_generic.cpp
 */

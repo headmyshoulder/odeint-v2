@@ -26,8 +26,10 @@ namespace odeint {
     }
     
 
+
     template< class InsertIterator, class TimeContainer = std::vector<double> >
-    class state_copy_observer {
+    class state_copy_observer
+    {
         
     private:
         TimeContainer *m_times;
@@ -37,8 +39,11 @@ namespace odeint {
         typedef typename TimeContainer::value_type time_type;
 
     public:
-        state_copy_observer( TimeContainer &times, InsertIterator state_inserter ) 
-            : m_times(&times), m_state_inserter(state_inserter), m_time_iter(m_times->begin()) 
+        state_copy_observer( TimeContainer &times ,
+			     InsertIterator state_inserter ) 
+            : m_times(&times),
+	      m_state_inserter(state_inserter),
+	      m_time_iter(m_times->begin()) 
         {  }
         
         template< class Container, class System >
@@ -48,9 +53,7 @@ namespace odeint {
                 m_time_iter++; // next time point
             }
         }
-            
     };
-   
 
 } // odeint
 } // numeric

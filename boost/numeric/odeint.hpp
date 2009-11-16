@@ -17,6 +17,7 @@
 
 #include <boost/numeric/odeint/stepper_euler.hpp>
 #include <boost/numeric/odeint/stepper_rk4.hpp>
+#include <boost/numeric/odeint/stepper_rk4_classical.hpp>
 #include <boost/numeric/odeint/stepper_rk5_ck.hpp>
 #include <boost/numeric/odeint/stepper_rk_generic.hpp>
 #include <boost/numeric/odeint/stepper_half_step.hpp>
