@@ -242,12 +242,14 @@ namespace it_algebra { // iterator algebra
     {
         FactorIterator alpha_iter;
         InputIteratorIterator x_iter_iter;
-        while( y_begin != y_end ) {
+        while( y_begin != y_end )
+	{
             x_iter_iter = x_iter_begin;
             alpha_iter = alpha_begin;
             *y_begin = *x_begin++;
             //std::clog<<(*y_begin);
-            while( alpha_iter != alpha_end ) {
+            while( alpha_iter != alpha_end )
+	    {
                 //std::clog<< " + " <<beta<<" * "<<*alpha_iter<<"*"<<(*(*(x_iter_iter)));
                 (*y_begin) += beta * (*alpha_iter++) * (*(*x_iter_iter++)++);
             }

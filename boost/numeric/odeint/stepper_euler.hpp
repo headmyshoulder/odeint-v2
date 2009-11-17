@@ -37,8 +37,6 @@ namespace odeint {
         >
     class stepper_euler
     {
-
-
         // provide basic typedefs
     public:
 

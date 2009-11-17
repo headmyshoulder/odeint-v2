@@ -67,12 +67,18 @@ namespace odeint {
         container_type m_xt;
         resizer_type m_resizer;
 
-        
 
+	// private member functions
+    private:
 
 
         // public interface
     public:
+
+	stepper_rk4( void )
+	    : current_size(0)
+        {
+	}
 
         order_type order() const { return 4; }
 
@@ -85,7 +91,6 @@ namespace odeint {
         {
             using namespace detail::it_algebra;
 
-            //const time_type val2 = time_type( 2.0 );
             const time_type val1 = time_type( 1.0 );
 
             m_resizer.adjust_size( x , m_dxt );
@@ -97,33 +102,28 @@ namespace odeint {
             time_type th = t + dh;
 
             // dt * dxdt = k1
-
-            //m_xt = x + dh*dxdt
-            // old: assign_sum( m_xt.begin() , m_xt.end() , x.begin() , dxdt.begin() , dh );
+            // m_xt = x + dh*dxdt
             scale_sum( m_xt.begin(), m_xt.end(),
                        val1, x.begin(),
                        dh, dxdt.begin() );
 
-            system( m_xt , m_dxt , th ); // dt * m_dxt = k2
+	    // dt * m_dxt = k2
+            system( m_xt , m_dxt , th );
             //m_xt = x + dh*m_dxt
-            // old: assign_sum( m_xt.begin() , m_xt.end() , x.begin() , m_dxt.begin() , dh );
             scale_sum( m_xt.begin(), m_xt.end(),
                        val1, x.begin(),
                        dh, m_dxt.begin() );
 
-            system( m_xt , m_dxm , th ); // dt * m_dxm = k3
-            //m_xt = x + dt*m_dxm ; m_dxm += m_dxt
-            // old: assign_sum_increment( m_xt.begin() , m_xt.end() , x.begin() ,
-            //                      m_dxm.begin() , m_dxt.begin() , dt );
+            // dt * m_dxm = k3
+            system( m_xt , m_dxm , th ); 
+            //m_xt = x + dt*m_dxm
             scale_sum( m_xt.begin(), m_xt.end(),
                        val1, x.begin(),
                        dt, m_dxm.begin() );
 
-            system( m_xt , m_dxh , value_type( t + dt ) );  // dt * m_dxh = k4
+	    // dt * m_dxh = k4
+            system( m_xt , m_dxh , value_type( t + dt ) );  
             //x += dt/6 * ( m_dxdt + m_dxt + val2*m_dxm )
-            // old: increment_sum_sum( x.begin() , x.end() , dxdt.begin() ,
-            //                   m_dxt.begin() , m_dxm.begin() ,
-            //                   dt /  time_type( 6.0 ) , val2 );
             scale_sum( x.begin(), x.end(),
                        val1, x.begin(),
                        dt / time_type( 6.0 ), dxdt.begin(),

@@ -26,7 +26,7 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-typedef enum{SUCCESS, STEP_SIZE_DECREASED, STEP_SIZE_INCREASED} controlled_step_result;
+    typedef enum{SUCCESS, STEP_SIZE_DECREASED, STEP_SIZE_INCREASED} controlled_step_result;
 
     template< 
 	class ContainerType, 

@@ -10,8 +10,8 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
-#ifndef BOOST_NUMERIC_ODEINT_INTEGRATOR_CONSTANT_STEP_HPP_INCLUDED
-#define BOOST_NUMERIC_ODEINT_INTEGRATOR_CONSTANT_STEP_HPP_INCLUDED
+#ifndef BOOST_NUMERIC_ODEINT_INTEGRATOR_CONSTANT_STEPSIZE_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_INTEGRATOR_CONSTANT_STEPSIZE_HPP_INCLUDED
 
 #include <boost/numeric/odeint/observer.hpp>
 
@@ -25,7 +25,7 @@ namespace odeint {
         class DynamicalSystem ,
         class Observer
         >
-    size_t integrate(
+    size_t integrate_const(
 	Stepper &stepper ,
 	DynamicalSystem &system ,
 	typename Stepper::time_type start_time ,
@@ -54,7 +54,7 @@ namespace odeint {
         class Stepper ,
         class DynamicalSystem
         >
-    size_t integrate(
+    size_t integrate_const(
 	Stepper &stepper ,
 	DynamicalSystem &system ,
 	typename Stepper::time_type start_time ,
@@ -63,7 +63,7 @@ namespace odeint {
 	typename Stepper::time_type end_time
 	)
     {
-	return integrate(
+	return integrate_const(
 	    stepper , system , start_time , dt , state , end_time ,
 	    do_nothing_observer<
 	    typename Stepper::time_type ,
@@ -79,7 +79,7 @@ namespace odeint {
         class DynamicalSystem ,
         class Observer
         >
-    typename Stepper::time_type integrate_steps(
+    typename Stepper::time_type integrate_const_steps(
 	Stepper &stepper ,
 	DynamicalSystem &system ,
 	typename Stepper::time_type start_time ,
@@ -107,7 +107,7 @@ namespace odeint {
 	class Stepper , 
         class DynamicalSystem
 	>
-    typename Stepper::time_type integrate_steps(
+    typename Stepper::time_type integrate_const_steps(
 	Stepper &stepper ,
 	DynamicalSystem &system ,
 	typename Stepper::time_type start_time ,
@@ -116,7 +116,7 @@ namespace odeint {
 	size_t num_of_steps 
 	)
     {
-	return integrate_steps(
+	return integrate_const_steps(
 	    stepper , system , start_time , dt , state , num_of_steps ,
 	    do_nothing_observer<
 	    typename Stepper::time_type ,
@@ -133,4 +133,4 @@ namespace odeint {
 } // numeric
 } // boost
 
-#endif //BOOST_NUMERIC_ODEINT_INTEGRATOR_CONSTANT_STEP_HPP_INCLUDED
+#endif //BOOST_NUMERIC_ODEINT_INTEGRATOR_CONSTANT_STEPSIZE_HPP_INCLUDED

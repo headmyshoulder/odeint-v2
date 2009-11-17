@@ -55,7 +55,9 @@ namespace odeint {
         class Time = double ,
         class Resizer = resizer< Container >
         >
-    class stepper_rk_generic {
+    class stepper_rk_generic
+    {
+
 
         // provide basic typedefs
     public:
@@ -68,14 +70,19 @@ namespace odeint {
         typedef typename container_type::iterator iterator;
 
 
+
+
         // check the concept of the ContainerType
     private:
 
         BOOST_CLASS_REQUIRE( container_type ,
                              boost::numeric::odeint, Container );
 
+
+
         // private variables
     private:
+
         typedef std::vector< container_type > container_vector;
         typedef std::vector< iterator > container_iterator_vector;
 
@@ -90,7 +97,10 @@ namespace odeint {
 
         resizer_type m_resizer;
 
+
+	// private member functions
     private:
+
         void reset_iter(typename container_iterator_vector::iterator xiter_iter)
         {
             typename container_vector::iterator x_iter = m_xvec.begin();
@@ -143,6 +153,8 @@ namespace odeint {
 
     public:
 
+
+
         /* Constructor
 
            a,b,c are vectors providing the butcher tableau for the Runge Kutta scheme
@@ -185,6 +197,7 @@ namespace odeint {
 
         order_type order() const { return m_q; }
 
+
         template< class DynamicalSystem >
         void next_step( DynamicalSystem &system ,
                         container_type &x ,
@@ -199,7 +212,8 @@ namespace odeint {
             (*x_iter) = dxdt;
             (*xiter_iter++) = (*x_iter++).begin();
 
-            while( x_iter != m_xvec.end() ) {
+            while( x_iter != m_xvec.end() )
+	    {
                 m_resizer.adjust_size(x, (*x_iter));
                 (*xiter_iter++) = (*x_iter++).begin();
             }
@@ -209,7 +223,8 @@ namespace odeint {
             
             typename std::vector< time_type >::const_iterator a_iter = m_a.begin();
             typename std::vector< std::vector<time_type> >::const_iterator b_iter = m_b.begin();
-            while( x_iter != m_xvec.end() ) {
+            while( x_iter != m_xvec.end() )
+	    {
                 reset_iter(m_xiter_vec.begin());
                 scale_sum_generic( m_xtmp.begin(), m_xtmp.end(),
                                    (*b_iter).begin(), (*b_iter).end(), dt,
@@ -381,7 +396,8 @@ namespace odeint {
             (*x_iter) = dxdt;
             (*xiter_iter++) = (*x_iter++).begin();
 
-            while( x_iter != m_xvec.end() ) {
+            while( x_iter != m_xvec.end() )
+	    {
                 m_resizer.adjust_size(x, (*x_iter));
                 (*xiter_iter++) = (*x_iter++).begin();
             }
@@ -392,7 +408,8 @@ namespace odeint {
             const time_type* a_iter = &m_a[0];
             const time_type* b_iter = &m_b[0];
             unsigned short b_len= 1;
-            while( x_iter != m_xvec.end() ) {
+            while( x_iter != m_xvec.end() )
+	    {
                 reset_iter(m_xiter_vec.begin());
                 const time_type* b_end = b_iter + b_len;
                 scale_sum_generic( m_xtmp.begin(), m_xtmp.end(),

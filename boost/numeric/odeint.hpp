@@ -24,7 +24,7 @@
 
 #include <boost/numeric/odeint/stepsize_controller_standard.hpp>
 
-#include <boost/numeric/odeint/integrator.hpp>
-#include <boost/numeric/odeint/integrator_constant_step.hpp>
+#include <boost/numeric/odeint/integrator_adaptive_stepsize.hpp>
+#include <boost/numeric/odeint/integrator_constant_stepsize.hpp>
 
 #endif // BOOST_NUMERIC_ODEINT_HPP

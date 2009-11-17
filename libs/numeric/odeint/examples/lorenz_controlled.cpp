@@ -66,7 +66,7 @@ int main( int argc , char **argv )
     cout.precision(5);
     cout.setf(ios::fixed,ios::floatfield);
     
-    size_t steps = integrate( euler, lorenz, controller, 0.0, 1E-4, x, 10.0, print_state );
+    size_t steps = integrate_adaptive( euler, lorenz, controller, 0.0, 1E-4, x, 10.0, print_state );
 
     clog << "Number of steps: " << steps << endl;
 

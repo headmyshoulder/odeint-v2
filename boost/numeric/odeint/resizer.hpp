@@ -33,6 +33,7 @@ namespace odeint {
 
 	
     public:
+
         void resize( const container_type &x , container_type &dxdt ) const
         {
             dxdt.resize( x.size() );

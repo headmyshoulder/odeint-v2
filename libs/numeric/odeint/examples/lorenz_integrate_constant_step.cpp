@@ -65,14 +65,14 @@ int main( int argc , char **argv )
 
     stepper_rk4< state_type , double > rk4;
     stepper_euler< state_type , double > euler;
-    integrate( rk4 , lorenz , 0.0 , 0.01 , x , 100.0 ,
+    integrate_const( rk4 , lorenz , 0.0 , 0.01 , x , 100.0 ,
 	       cout << _1 << tab << _2[0] << "\n" );
 
-    integrate_steps( rk4 , lorenz , 0.0 , 0.01 , x , 100 ,
+    integrate_const_steps( rk4 , lorenz , 0.0 , 0.01 , x , 100 ,
 		     cout << _1 << tab << _2[0] << "\n" );
 
-    integrate( rk4 , lorenz , 0.0 , 0.01 , x , 100.0 );
-    integrate_steps( rk4 , lorenz , 0.0 , 0.01 , x , 1000 );
+    integrate_const( rk4 , lorenz , 0.0 , 0.01 , x , 100.0 );
+    integrate_const_steps( rk4 , lorenz , 0.0 , 0.01 , x , 1000 );
 
 /*    integrate( euler , lorenz , 0.0 , 0.01 , x , 100.0 ,
       cout << _1 << tab << _2[0] << "\n" );*/

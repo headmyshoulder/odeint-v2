@@ -70,7 +70,7 @@ namespace odeint {
         template< class DynamicalSystem >
         void next_step( DynamicalSystem &system ,
                         container_type &x ,
-                        const container_type &dxdt ,
+                        container_type &dxdt ,
                         time_type t ,
                         time_type dt )
         {
@@ -91,7 +91,7 @@ namespace odeint {
         template< class DynamicalSystem >
         void next_step( DynamicalSystem &system ,
                         container_type &x ,
-                        const container_type &dxdt ,
+                        container_type &dxdt ,
                         time_type t ,
                         time_type dt ,
                         container_type &xerr )

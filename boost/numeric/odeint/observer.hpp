@@ -27,28 +27,37 @@ namespace odeint {
     
 
 
-    template< class InsertIterator, class TimeContainer = std::vector<double> >
+    template< class InsertIterator, class TimeSequence = std::vector<double> >
     class state_copy_observer
     {
         
     private:
-        TimeContainer *m_times;
-        InsertIterator m_state_inserter;
-        typename TimeContainer::iterator m_time_iter;
 
-        typedef typename TimeContainer::value_type time_type;
+        TimeSequence &m_times;
+        InsertIterator m_state_inserter;
+        typename TimeSequence::iterator m_time_iter;
+
+        typedef typename TimeSequence::value_type time_type;
+
 
     public:
-        state_copy_observer( TimeContainer &times ,
+
+        state_copy_observer( TimeSequence &times ,
 			     InsertIterator state_inserter ) 
-            : m_times(&times),
+            : m_times(times),
 	      m_state_inserter(state_inserter),
-	      m_time_iter(m_times->begin()) 
+	      m_time_iter(m_times.begin()) 
         {  }
+
+	void reset( void ) { m_time_iter = m_times.begin(); }
         
         template< class Container, class System >
-        void operator () (time_type t, Container &state, System &system ) {
-            if( t >= *m_time_iter ) { // we've reached the next time point
+        void operator () (time_type t, Container &state, System &system )
+	{
+            if( ( m_time_iter != m_times.end() ) &&
+		( t >= *m_time_iter ) )
+	    {
+		// we've reached the next time point
                 *m_state_inserter++ = state; // insert the state
                 m_time_iter++; // next time point
             }
