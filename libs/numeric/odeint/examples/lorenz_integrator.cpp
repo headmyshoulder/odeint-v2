@@ -51,21 +51,29 @@ void lorenz( state_type &x , state_type &dxdt , double t )
 
 int main( int argc , char **argv )
 {
-    state_type x;
-    x[0] = 1.0;
-    x[1] = 0.0;
-    x[2] = 20.0;
+    state_type x1;
+    x1[0] = 1.0;
+    x1[1] = 0.0;
+    x1[2] = 20.0;
+    state_type x2(x1);
 
-    vector<state_type> x_t_vec;
+
+    vector<state_type> x1_t_vec;
+    vector<state_type> x2_t_vec;
     vector<double> times(time_points);
     for( size_t i=0; i<time_points; i++ ) {
         times[i] = 0.1*i;
     }
 
     stepper_half_step< stepper_euler< state_type > > euler;
-    size_t steps = integrate( euler, lorenz, x, times, back_inserter(x_t_vec));
+    size_t steps = integrate( euler, lorenz, x1, times, back_inserter(x1_t_vec));
 
-    clog << "Steps: " << steps << endl;
+    clog << "Euler Steps: " << steps << endl;
+
+    stepper_rk5_ck< state_type > rk5;
+    steps = integrate( rk5, lorenz, x2, times, back_inserter(x2_t_vec));
+    
+    clog << "RK5 Steps: " << steps << endl;
 
     cout.precision(5);
     cout.setf(ios::fixed,ios::floatfield);
@@ -74,7 +82,8 @@ int main( int argc , char **argv )
     for( size_t i=0; i<time_points; i++ ) {
         //cout << "current state: " ;
         cout << times[i] << tab;
-        cout << x_t_vec[i][0] << tab << x_t_vec[i][1] << tab << x_t_vec[i][2] << endl;
+        cout << x1_t_vec[i][0] << tab << x1_t_vec[i][1] << tab << x1_t_vec[i][2] << tab;
+        cout << x2_t_vec[i][0] << tab << x2_t_vec[i][1] << tab << x2_t_vec[i][2] << endl;
     }
 
     return 0;

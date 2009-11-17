@@ -99,17 +99,16 @@ namespace odeint {
             m_resizer.adjust_size( x , xerr );
 
             m_xtemp = x;
-            time_type dt2 = 0.5 * dt;
+            time_type dt2 = static_cast<time_type>(0.5) * dt;
 
             next_step( system , m_xtemp , dxdt , t , dt );
             next_step( system , x , dxdt , t , dt2 );
             next_step( system , x , t+dt2 , dt2 );
 
-            detail::it_algebra::assign_diff(
-		xerr.begin() ,
-		xerr.end() ,
-		m_xtemp.begin() ,
-		x.begin() );
+            detail::it_algebra::assign_diff( xerr.begin() ,
+                                             xerr.end() ,
+                                             m_xtemp.begin() ,
+                                             x.begin() );
         }
 
 

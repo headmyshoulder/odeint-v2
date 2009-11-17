@@ -26,7 +26,6 @@
 #include <boost/numeric/odeint/concepts/state_concept.hpp>
 #include <boost/numeric/odeint/resizer.hpp>
 
-#include <iostream>
 
 namespace boost {
 namespace numeric {
@@ -85,13 +84,15 @@ namespace odeint {
 
         typedef std::vector< container_type > container_vector;
         typedef std::vector< iterator > container_iterator_vector;
+        typedef std::vector< time_type > parameter_vector;
+        typedef std::vector< parameter_vector > parameter_matrix;
 
         container_vector m_xvec;
         container_iterator_vector m_xiter_vec;
         container_type m_xtmp;
-        const std::vector< time_type > m_a;
-        const std::vector< std::vector<time_type> > m_b;
-        const std::vector< time_type > m_c;
+        const parameter_vector m_a;
+        const parameter_matrix m_b;
+        const parameter_vector m_c;
 
         order_type m_q;
 
@@ -111,10 +112,10 @@ namespace odeint {
 
         void check_consitency()
         {
-            typename std::vector< time_type >::const_iterator a_iter = m_a.begin();
-            typename std::vector< time_type >::const_iterator c_iter = m_c.begin();
-            typename std::vector< std::vector<time_type> >::const_iterator b_iter = m_b.begin();
-            typename std::vector<time_type>::const_iterator b_iter_iter;
+            typename parameter_vector::const_iterator a_iter = m_a.begin();
+            typename parameter_vector::const_iterator c_iter = m_c.begin();
+            typename parameter_matrix::const_iterator b_iter = m_b.begin();
+            typename parameter_vector::const_iterator b_iter_iter;
 
             // check 1: a_i = sum_j b_ij 
             while( a_iter != m_a.end() ) {
@@ -184,9 +185,9 @@ namespace odeint {
               Note, that a_0 = 1 (implicitely) and 0^0 = 1
               so this means sum_i c_i = 1 at k=1
         */
-        stepper_rk_generic( std::vector<time_type> &a,
-                            std::vector< std::vector<time_type> > &b,
-                            std::vector< time_type > &c)
+        stepper_rk_generic( parameter_vector &a,
+                            parameter_matrix &b,
+                            parameter_vector &c)
             : m_a(a), m_b(b), m_c(c), m_q(c.size())
         {
             m_xvec.resize(m_q);
@@ -213,7 +214,7 @@ namespace odeint {
             (*xiter_iter++) = (*x_iter++).begin();
 
             while( x_iter != m_xvec.end() )
-	    {
+            {
                 m_resizer.adjust_size(x, (*x_iter));
                 (*xiter_iter++) = (*x_iter++).begin();
             }
@@ -221,10 +222,10 @@ namespace odeint {
             
             x_iter = m_xvec.begin()+1;
             
-            typename std::vector< time_type >::const_iterator a_iter = m_a.begin();
-            typename std::vector< std::vector<time_type> >::const_iterator b_iter = m_b.begin();
+            typename parameter_vector::const_iterator a_iter = m_a.begin();
+            typename parameter_matrix::const_iterator b_iter = m_b.begin();
             while( x_iter != m_xvec.end() )
-	    {
+            {
                 reset_iter(m_xiter_vec.begin());
                 scale_sum_generic( m_xtmp.begin(), m_xtmp.end(),
                                    (*b_iter).begin(), (*b_iter).end(), dt,
@@ -234,7 +235,7 @@ namespace odeint {
             }
 
             reset_iter(m_xiter_vec.begin());
-            typename std::vector< time_type >::const_iterator c_iter = m_c.begin();
+            typename parameter_vector::const_iterator c_iter = m_c.begin();
             scale_sum_generic( x.begin(), x.end(),
                                m_c.begin(), m_c.end(), dt,
                                x.begin(), m_xiter_vec.begin() );

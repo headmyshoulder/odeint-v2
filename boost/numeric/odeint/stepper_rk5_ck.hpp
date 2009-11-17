@@ -95,7 +95,7 @@ namespace odeint {
             m_resizer.adjust_size( x , m_x5 );
             m_resizer.adjust_size( x , m_x6 );
 
-            time_type t_1 = time_type(1.0);
+            const time_type t_1 = static_cast<time_type>(1.0);
 
             //m_x1 = x + dt*b21*dxdt
             scale_sum( m_x1.begin() , m_x1.end() , 

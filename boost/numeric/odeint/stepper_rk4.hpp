@@ -4,8 +4,8 @@
  Copyright 2009 Mario Mulansky
  Copyright 2009 Andre Bergner
  
- This file includes the explicit runge kutta solver for
- ordinary differential equations.
+ This file includes the explicit 4th order runge kutta 
+ solver for ordinary differential equations.
 
  It solves any ODE dx/dt = f(x,t).
 
@@ -75,10 +75,9 @@ namespace odeint {
         // public interface
     public:
 
-	stepper_rk4( void )
-	    : current_size(0)
+        stepper_rk4( void )
         {
-	}
+        }
 
         order_type order() const { return 4; }
 
@@ -91,14 +90,14 @@ namespace odeint {
         {
             using namespace detail::it_algebra;
 
-            const time_type val1 = time_type( 1.0 );
+            const time_type val1 = static_cast<time_type>( 1.0 );
 
             m_resizer.adjust_size( x , m_dxt );
             m_resizer.adjust_size( x , m_dxm );
             m_resizer.adjust_size( x , m_xt );
             m_resizer.adjust_size( x , m_dxh );
 
-            time_type  dh = time_type( 0.5 ) * dt;
+            time_type  dh = static_cast<time_type>( 0.5 ) * dt;
             time_type th = t + dh;
 
             // dt * dxdt = k1
@@ -126,10 +125,10 @@ namespace odeint {
             //x += dt/6 * ( m_dxdt + m_dxt + val2*m_dxm )
             scale_sum( x.begin(), x.end(),
                        val1, x.begin(),
-                       dt / time_type( 6.0 ), dxdt.begin(),
-                       dt / time_type( 3.0 ), m_dxt.begin(),
-                       dt / time_type( 3.0 ), m_dxm.begin(),
-                       dt / time_type( 6.0 ), m_dxh.begin() );
+                       dt / static_cast<time_type>( 6.0 ), dxdt.begin(),
+                       dt / static_cast<time_type>( 3.0 ), m_dxt.begin(),
+                       dt / static_cast<time_type>( 3.0 ), m_dxm.begin(),
+                       dt / static_cast<time_type>( 6.0 ), m_dxh.begin() );
         }
 
 
