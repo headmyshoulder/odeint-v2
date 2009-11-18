@@ -260,6 +260,29 @@ namespace it_algebra { // iterator algebra
     }
 
 
+    /* calculates tmp = y, y = x1 + alpha*x2, x1 = tmp */
+    template <
+        class OutputIterator,
+        class InputIterator,
+        class T
+        >
+    inline void scale_sum_swap(
+            OutputIterator y_begin,
+            OutputIterator y_end,
+            OutputIterator x1_begin,
+            T alpha,
+            InputIterator x2_begin )
+    {
+        T swap;
+        while( y_begin != y_end )
+        {
+            swap = (*x1_begin) + alpha*(*x2_begin++);
+            *x1_begin++ = *y_begin;
+            *y_begin++ = swap;
+        }
+    }
+
+
     // computes y = x1 + alpha2 * x2 ; x2 += x3
     template<
         class OutputIterator ,

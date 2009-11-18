@@ -62,7 +62,7 @@ namespace odeint {
 
         container_type m_x0;
         container_type m_x1;
-        container_type m_x2;
+        //container_type m_x2;
         container_type m_dxdt;
 
     public:
@@ -88,34 +88,36 @@ namespace odeint {
 
             m_resizer.adjust_size(x, m_x0);
             m_resizer.adjust_size(x, m_x1);
-            m_resizer.adjust_size(x, m_x2);
+            m_resizer.adjust_size(x, m_dxdt);
 
             using namespace detail::it_algebra;
 
-            scale_sum( m_x1.begin(), m_x1.end(),
+            // m_x0 = x + h*dxdt
+            scale_sum( m_x0.begin(), m_x0.end(),
                        t_1, x.begin(),
                        h, dxdt.begin() );
-            system( m_x1, m_x2, th );
+            system( m_x0, m_dxdt, th );
 
             m_x1 = x;
 
-            unsigned short i = 2;
+            unsigned short i = 1;
             while( i != n )
             {   // general step
-                m_x0 = m_x1;
-                scale_sum( m_x1.begin(), m_x1.end(),
-                           t_1, m_x0.begin(),
-                           h2, m_x2.begin() );
+                //tmp = m_x1; m_x1 = m_x0 + h2*m_dxdt; m_x0 = tmp
+                scale_sum_swap( m_x1.begin(), m_x1.end(), 
+                                m_x0.begin(),
+                                h2, m_dxdt.begin() );
                 th += h;
-                system( m_x1, m_x2, th);
+                system( m_x1, m_dxdt, th);
                 i++;
             }
             
             // last step
+            // x = 0.5*( m_x0 + m_x1 + h*m_dxdt
             scale_sum( x.begin(), x.end(),
                        t_05, m_x0.begin(),
                        t_05, m_x1.begin(),
-                       t_05*h, m_x2.begin() );
+                       t_05*h, m_dxdt.begin() );
         }
 
 
