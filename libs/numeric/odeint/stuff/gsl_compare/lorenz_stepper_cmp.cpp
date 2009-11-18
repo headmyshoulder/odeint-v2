@@ -142,6 +142,7 @@ int main( int argc , char **argv )
 
     // gsl method rk4 cash-karp
     gsl_odeiv_step *s_rkck = gsl_odeiv_step_alloc( gsl_odeiv_step_rkck , 3);
+    clog << "Order of gsl " << gsl_odeiv_step_name(s_rkck) << ": " << gsl_odeiv_step_order(s_rkck) << endl;
     //    sys = { lorenz_gsl , 0 , 3 , 0 };
     copy( x_start.begin() , x_start.end() , x2 );
 
@@ -150,7 +151,7 @@ int main( int argc , char **argv )
     for( size_t oi=0 ; oi<olen ; ++oi,t+=dt )
         gsl_odeiv_step_apply ( s_rkck , t , dt , x2 , x2_err , 0 , 0 , &sys );
     end = clock();
-    clog << "gsl rk4 Cash-Karp : " << double ( end - start ) / double( CLOCKS_PER_SEC ) << endl;
+    clog << "gsl rk Cash-Karp : " << double ( end - start ) / double( CLOCKS_PER_SEC ) << endl;
      
 
 

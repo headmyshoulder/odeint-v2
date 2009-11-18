@@ -56,10 +56,12 @@ int main( int argc , char **argv )
     x1[1] = 0.0;
     x1[2] = 20.0;
     state_type x2(x1);
+    state_type x3(x1);
 
 
     vector<state_type> x1_t_vec;
     vector<state_type> x2_t_vec;
+    vector<state_type> x3_t_vec;
     vector<double> times(time_points);
     for( size_t i=0; i<time_points; i++ ) {
         times[i] = 0.1*i;
@@ -68,14 +70,20 @@ int main( int argc , char **argv )
     stepper_half_step< stepper_euler< state_type > > euler;
     size_t steps = integrate( euler, lorenz, x1, times, back_inserter(x1_t_vec));
 
-    clog << "Euler Steps: " << steps << endl;
+    clog << "Euler Half Step: #steps " << steps << endl;
+
+    stepper_half_step< stepper_rk4< state_type > > rk4;
+    steps = integrate( rk4, lorenz, x2, times, back_inserter(x2_t_vec));
+
+    clog << "RK4 Half Step: #steps " << steps << endl;
+
 
     stepper_rk5_ck< state_type > rk5;
-    steps = integrate( rk5, lorenz, x2, times, back_inserter(x2_t_vec));
+    steps = integrate( rk5, lorenz, x3, times, back_inserter(x3_t_vec));
     
-    clog << "RK5 Steps: " << steps << endl;
+    clog << "RK5 Cash-Karp: #steps: " << steps << endl;
 
-    cout.precision(5);
+    cout.precision(16);
     cout.setf(ios::fixed,ios::floatfield);
     
 
@@ -83,7 +91,8 @@ int main( int argc , char **argv )
         //cout << "current state: " ;
         cout << times[i] << tab;
         cout << x1_t_vec[i][0] << tab << x1_t_vec[i][1] << tab << x1_t_vec[i][2] << tab;
-        cout << x2_t_vec[i][0] << tab << x2_t_vec[i][1] << tab << x2_t_vec[i][2] << endl;
+        cout << x2_t_vec[i][0] << tab << x2_t_vec[i][1] << tab << x2_t_vec[i][2] << tab;
+        cout << x3_t_vec[i][0] << tab << x3_t_vec[i][1] << tab << x3_t_vec[i][2] << endl;
     }
 
     return 0;

@@ -8,6 +8,9 @@
  with cash-karp error estimation (4th order) for ordinary 
  differential equations.
 
+ doi:10.1145/79505.79507.
+ http://portal.acm.org/citation.cfm?doid=79505.79507
+
  It solves any ODE dx/dt = f(x,t).
 
  Distributed under the Boost Software License, Version 1.0.
@@ -64,7 +67,20 @@ namespace odeint {
 
     public:
 
-        order_type order() const { return 5; }
+        order_type order() const 
+        { 
+            /* the 5th order evaluation is used as step result */
+            return 5; 
+        }
+
+
+
+        order_type order_error() const 
+        {   /* The error is computed from the difference of 4th and 5th
+             * order evaluation and hence is order 5.
+             */
+            return 5; 
+        }
 
         template< class DynamicalSystem >
         void next_step( DynamicalSystem &system ,
