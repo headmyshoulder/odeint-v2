@@ -60,13 +60,29 @@ namespace odeint {
     private:
         resizer_type m_resizer;
 
+        unsigned short m_stepcount;
+
         container_type m_x0;
         container_type m_x1;
         container_type m_dxdt;
 
     public:
+
+        stepper_midpoint( unsigned short stepcount = 2 )
+        { }
         
         order_type order() const { return 2; }
+
+        void set_stepcount( unsigned short stepcount )
+        {
+            if( stepcount > 1 )
+                m_stepcount = stepcount;
+        }
+
+        unsigned short get_step_count()
+        {
+            return m_stepcount;
+        }
 
         template< class DynamicalSystem >
         void next_step( 
@@ -74,12 +90,10 @@ namespace odeint {
                 container_type &x ,
                 container_type &dxdt ,
                 time_type t ,
-                time_type dt ,
-                unsigned short n = 2 )
+                time_type dt
+                        )
         {
-            if( n < 2 ) return;
-
-            const time_type h = dt/static_cast<time_type>( n );
+            const time_type h = dt/static_cast<time_type>( m_stepcount );
             const time_type h2 = static_cast<time_type>( 2.0 )*h;
             const time_type t_1 = static_cast<time_type>( 1.0 );
             const time_type t_05 = static_cast<time_type>( 0.5 );
@@ -100,7 +114,7 @@ namespace odeint {
             m_x1 = x;
 
             unsigned short i = 1;
-            while( i != n )
+            while( i != m_stepcount )
             {   // general step
                 //tmp = m_x1; m_x1 = m_x0 + h2*m_dxdt; m_x0 = tmp
                 scale_sum_swap( m_x1.begin(), m_x1.end(), 

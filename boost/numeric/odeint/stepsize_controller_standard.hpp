@@ -26,7 +26,7 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-    typedef enum{SUCCESS, STEP_SIZE_DECREASED, STEP_SIZE_INCREASED} controlled_step_result;
+    typedef enum{success, step_size_decreased, step_size_increased} controlled_step_result;
 
     /*
        The initial state is given in x.
@@ -116,15 +116,15 @@ namespace odeint {
                 dt *= max( 0.9*pow(max_rel_err , -1.0/(stepper.order_error()-1.0)) , 0.2 );
                 // reset state
                 x = x_tmp;
-                return STEP_SIZE_DECREASED;
+                return step_size_decreased;
 	    } else if( max_rel_err < 0.5 ) { //error too small - increase dt
                 t += dt; // we keep the evolution -> increase time
                 // limit scaling factor to 5.0
                 dt *= min( 0.9*pow(max_rel_err , -1.0/stepper.order()), 5.0 );
-                return STEP_SIZE_INCREASED;
+                return step_size_increased;
 	    } else {
                 t += dt;
-                return SUCCESS;
+                return success;
 	    }
 	}
     };
