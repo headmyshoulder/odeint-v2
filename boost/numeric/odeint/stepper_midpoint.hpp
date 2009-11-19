@@ -62,7 +62,6 @@ namespace odeint {
 
         container_type m_x0;
         container_type m_x1;
-        //container_type m_x2;
         container_type m_dxdt;
 
     public:

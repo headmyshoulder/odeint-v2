@@ -34,10 +34,10 @@ namespace odeint {
             Stepper &stepper,
             DynamicalSystem &system,
             StepController &controller,
-            typename Stepper::time_type start_time,
-            typename Stepper::time_type dt,
             typename Stepper::container_type &state,
+            typename Stepper::time_type start_time,
             typename Stepper::time_type end_time,
+            typename Stepper::time_type dt,
             Observer &observer )
     {
         controlled_step_result result;
@@ -73,14 +73,14 @@ namespace odeint {
             Stepper &stepper,
             DynamicalSystem &system,
             StepController &controller,
-            typename Stepper::time_type start_time,
-            typename Stepper::time_type dt,
             typename Stepper::container_type &state,
-            typename Stepper::time_type end_time )
+            typename Stepper::time_type start_time,
+            typename Stepper::time_type end_time, 
+            typename Stepper::time_type dt )
     {
         return integrate_adaptive(
 	    stepper , system , controller ,
-	    start_time , dt , state , end_time ,
+	    state, start_time , end_time,
 	    do_nothing_observer<
 		typename Stepper::time_type ,
 		typename Stepper::container_type ,
@@ -117,15 +117,15 @@ namespace odeint {
             StepController &controller,
             typename Stepper::container_type &state, 
             TimeSequence &times, 
-            InsertIterator state_inserter,
-            typename Stepper::time_type &dt)
+            typename Stepper::time_type &dt, 
+            InsertIterator state_inserter)
     {
         if( times.empty() ) return 0;
         else
         {
             state_copy_observer<InsertIterator, TimeSequence> observer(times, state_inserter);
-            return integrate_adaptive(stepper, system, controller, times.front() , 
-                                      dt, state, times.back() , observer);
+            return integrate_adaptive(stepper, system, controller, state, 
+                                      times.front() , times.back(), dt , observer);
         }
     }
 
@@ -135,32 +135,6 @@ namespace odeint {
        Integrates an ode give by system using the integration scheme stepper and the
        a standard step-size controller that ensures the error being below the values 
        given below.
-       The initial state is given in x.
-       t is an vector including the times at which the state will be written into 
-       the vector x_vec.
-       x_vec must provide enough space to hold times.size() states.
-       dt is the initial step size (will be adjusted according to the errors).
-       This function returns the total number of steps required to integrate the
-       whole intervale times.begin() - times.end().
-       Note that the values in times don't influence the stepsize, but only the 
-       time points at which the state is stored into x_vec.
-       
-       The stepsize is adjust such that the following maximal relative error is 
-       small enough for each step:
-       R = max( x_err_n / [eps_abs + eps_rel*( a_x * |x_n| + a_dxdt * |dxdt_n| )] )
-       where the max refers to the componentwise maximum the expression.
-       
-       if R > 1.1 the stepsize is decreased:
-       dt = dt*S*R^(-1/q)
-       
-       if R < 0.5 the stepsize is increased:
-       dt = dt*S*R^(-1/(q+1))
-
-       q is the order of the stepper (e.g. 1 for simple euler) and S is a safety 
-       factor set to S = 0.9.
-
-       To avoid extensive chages in dt, the decrease factor is limited to 0.2 and 
-       the increase factor to 5.0.
     */
     template< 
             class Stepper,
@@ -188,7 +162,7 @@ namespace odeint {
         // initialized with values from above
         
         // call the normal integrator
-        return integrate(stepper, system, controller, x, times, state_inserter, dt);
+        return integrate(stepper, system, controller, x, times, dt, state_inserter);
     }
     
 
