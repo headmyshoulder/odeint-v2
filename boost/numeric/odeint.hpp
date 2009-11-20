@@ -23,7 +23,7 @@
 #include <boost/numeric/odeint/stepper_half_step.hpp>
 #include <boost/numeric/odeint/stepper_midpoint.hpp>
 
-#include <boost/numeric/odeint/stepsize_controller_standard.hpp>
+#include <boost/numeric/odeint/controlled_stepper_standard.hpp>
 
 #include <boost/numeric/odeint/integrator_adaptive_stepsize.hpp>
 #include <boost/numeric/odeint/integrator_constant_stepsize.hpp>

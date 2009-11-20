@@ -13,7 +13,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_INTEGRATOR_ADAPTIVE_STEPSIZE_HPP
 #define BOOST_NUMERIC_ODEINT_INTEGRATOR_ADAPTIVE_STEPSIZE_HPP
 
-#include <boost/numeric/odeint/stepsize_controller_standard.hpp>
+#include <boost/numeric/odeint/controlled_stepper_standard.hpp>
 #include <boost/numeric/odeint/resizer.hpp>
 #include <boost/numeric/odeint/observer.hpp>
 #include <vector>
@@ -25,32 +25,30 @@ namespace odeint {
 
 
     template<
-            class Stepper,
+            class ControlledStepper,
             class DynamicalSystem,
-            class StepController,
             class Observer
             >
     size_t integrate_adaptive(
-            Stepper &stepper,
+            ControlledStepper &stepper,
             DynamicalSystem &system,
-            StepController &controller,
-            typename Stepper::container_type &state,
-            typename Stepper::time_type start_time,
-            typename Stepper::time_type end_time,
-            typename Stepper::time_type dt,
+            typename ControlledStepper::container_type &state,
+            typename ControlledStepper::time_type start_time,
+            typename ControlledStepper::time_type end_time,
+            typename ControlledStepper::time_type dt,
             Observer &observer )
     {
         controlled_step_result result;
         size_t iterations = 0;
-        typename Stepper::time_type t = start_time;
-        typename Stepper::time_type dt_ = dt;
+        typename ControlledStepper::time_type t = start_time;
+        typename ControlledStepper::time_type dt_ = dt;
 
         observer(t, state, system);
         
         while( t < end_time )
         {
             // do a controlled step
-            result = controller.controlled_step( stepper, system, state, t, dt_ );
+            result = stepper.next_step( system, state, t, dt_ );
 
             if( result != step_size_decreased )
             { // we actually did a step forward (dt was small enough)
@@ -65,26 +63,24 @@ namespace odeint {
     }
 
     template<
-        class Stepper,
-        class DynamicalSystem,
-        class StepController
+        class ControlledStepper,
+        class DynamicalSystem
         >
     size_t integrate_adaptive(
-            Stepper &stepper,
+            ControlledStepper &stepper,
             DynamicalSystem &system,
-            StepController &controller,
-            typename Stepper::container_type &state,
-            typename Stepper::time_type start_time,
-            typename Stepper::time_type end_time, 
-            typename Stepper::time_type dt )
+            typename ControlledStepper::container_type &state,
+            typename ControlledStepper::time_type start_time,
+            typename ControlledStepper::time_type end_time, 
+            typename ControlledStepper::time_type dt )
     {
         return integrate_adaptive(
-	    stepper , system , controller ,
-	    state, start_time , end_time,
-	    do_nothing_observer<
-		typename Stepper::time_type ,
-		typename Stepper::container_type ,
-		DynamicalSystem >
+                stepper, system ,
+                state, start_time , end_time,
+                do_nothing_observer<
+		    typename ControlledStepper::time_type ,
+		    typename ControlledStepper::container_type ,
+		    DynamicalSystem >
 	    );
     }
 
@@ -105,26 +101,24 @@ namespace odeint {
        time points at which the state is stored into x_vec.
     */
     template< 
-        class Stepper,
+        class ControlledStepper,
         class DynamicalSystem,
-        class StepController,
         class TimeSequence,
         class InsertIterator
 	>
     size_t integrate(
-            Stepper &stepper,
+            ControlledStepper &stepper,
             DynamicalSystem &system,
-            StepController &controller,
-            typename Stepper::container_type &state, 
+            typename ControlledStepper::container_type &state, 
             TimeSequence &times, 
-            typename Stepper::time_type &dt, 
+            typename ControlledStepper::time_type dt, 
             InsertIterator state_inserter)
     {
         if( times.empty() ) return 0;
         else
         {
             state_copy_observer<InsertIterator, TimeSequence> observer(times, state_inserter);
-            return integrate_adaptive(stepper, system, controller, state, 
+            return integrate_adaptive(stepper, system, state, 
                                       times.front() , times.back(), dt , observer);
         }
     }
@@ -137,32 +131,33 @@ namespace odeint {
        given below.
     */
     template< 
-            class Stepper,
             class DynamicalSystem,
-            class InsertIterator ,
-            class TimeSequence
+            class ContainerType,
+            class InsertIterator,
+            class TimeSequence,
+            class T
             >
     size_t integrate(
-            Stepper &stepper, 
             DynamicalSystem &system, 
-            typename Stepper::container_type &x, 
+            ContainerType &x, 
             TimeSequence &times, 
             InsertIterator state_inserter,
-            typename Stepper::time_type dt = 1E-4, 
-            typename Stepper::time_type eps_abs = 1E-6, 
-            typename Stepper::time_type eps_rel = 1E-7, 
-            typename Stepper::time_type a_x = 1.0 , 
-            typename Stepper::time_type a_dxdt = 1.0
+            T dt = 1E-4, 
+            T eps_abs = 1E-6, 
+            T eps_rel = 1E-7, 
+            T a_x = 1.0 , 
+            T a_dxdt = 1.0
                      )
     {
+        // we use cash karp stepper as base stepper
+        stepper_rk5_ck< ContainerType > stepper_cash_karp;
         // we use the standard controller for this adaptive integrator
-        step_controller_standard< typename Stepper::container_type, 
-	    typename Stepper::time_type, 
-	    typename Stepper::resizer_type > controller(eps_abs, eps_rel, a_x, a_dxdt ); 
+        controlled_stepper_standard< ContainerType, T> 
+            controlled_stepper(stepper_cash_karp, eps_abs, eps_rel, a_x, a_dxdt ); 
         // initialized with values from above
         
         // call the normal integrator
-        return integrate(stepper, system, controller, x, times, dt, state_inserter);
+        return integrate(controlled_stepper, system, x, times, dt, state_inserter);
     }
     
 

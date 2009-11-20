@@ -61,12 +61,13 @@ int main( int argc , char **argv )
     x[2] = 20.0;
 
     stepper_half_step< stepper_euler< state_type > > euler;
-    step_controller_standard< state_type, double > controller( eps_abs , eps_rel, 1.0, 1.0);
+    controlled_stepper_standard< stepper_half_step< stepper_euler< state_type > > > 
+        controlled_stepper( euler, eps_abs , eps_rel, 1.0, 1.0);
     
     cout.precision(5);
     cout.setf(ios::fixed,ios::floatfield);
     
-    size_t steps = integrate_adaptive( euler, lorenz, controller, x, 0.0, 10.0, 1E-4, print_state );
+    size_t steps = integrate_adaptive( controlled_stepper, lorenz, x, 0.0, 10.0, 1E-4, print_state );
 
     clog << "Number of steps: " << steps << endl;
 

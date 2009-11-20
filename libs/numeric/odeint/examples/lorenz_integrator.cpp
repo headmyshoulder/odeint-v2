@@ -35,8 +35,8 @@ const double sigma = 10.0;
 const double R = 28.0;
 const double b = 8.0 / 3.0;
 
-const double eps_abs = 1E-3;
-const double eps_rel = 1E-3;
+const double eps_abs = 1E-6;
+const double eps_rel = 1E-7;
 
 const size_t time_points = 101;
 
@@ -68,18 +68,25 @@ int main( int argc , char **argv )
     }
 
     stepper_half_step< stepper_euler< state_type > > euler;
-    size_t steps = integrate( euler, lorenz, x1, times, back_inserter(x1_t_vec));
+    controlled_stepper_standard< stepper_half_step< stepper_euler< state_type > > >
+        euler_controlled( euler , eps_abs, eps_rel, 1.0, 1.0);
+    size_t steps = integrate( euler_controlled, lorenz, x1, 
+                              times, 1E-4, back_inserter(x1_t_vec));
 
     clog << "Euler Half Step: #steps " << steps << endl;
 
     stepper_half_step< stepper_rk4< state_type > > rk4;
-    steps = integrate( rk4, lorenz, x2, times, back_inserter(x2_t_vec));
+    controlled_stepper_standard< stepper_half_step< stepper_rk4< state_type > > >
+        rk4_controlled( rk4 , eps_abs, eps_rel, 1.0, 1.0);
+    steps = integrate( rk4_controlled, lorenz, x2, times, 1E-4, back_inserter(x2_t_vec));
 
     clog << "RK4 Half Step: #steps " << steps << endl;
 
 
     stepper_rk5_ck< state_type > rk5;
-    steps = integrate( rk5, lorenz, x3, times, back_inserter(x3_t_vec));
+    controlled_stepper_standard< stepper_rk5_ck< state_type > > 
+        rk5_controlled( rk5 , eps_abs, eps_rel, 1.0, 1.0);
+    steps = integrate( rk5_controlled, lorenz, x3, times, 1E-4, back_inserter(x3_t_vec));
     
     clog << "RK5 Cash-Karp: #steps: " << steps << endl;
 

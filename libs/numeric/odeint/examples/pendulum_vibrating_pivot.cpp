@@ -59,7 +59,10 @@ int main( int argc , char **argv )
     
     stepper_half_step< stepper_rk4< state_type > > stepper;
 
-    size_t steps = integrate( stepper, my_system, x, times, back_inserter(x_t_vec));
+    controlled_stepper_standard< stepper_half_step< stepper_rk4< state_type > > >
+        controlled_stepper( stepper, 1E-6 , 1E-7 , 1.0 , 1.0 );
+
+    size_t steps = integrate( controlled_stepper, my_system, x, times, 1E-4, back_inserter(x_t_vec)); \
 
         clog << "Steps: " << steps << endl;
 
