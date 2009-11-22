@@ -7,3 +7,17 @@
 import os ;
 
 path-constant BOOST_ROOT : [ os.environ BOOST_ROOT ] ;
+
+
+###### The following is copied from another sandbox project #####
+###### to get the quickbook and boostbook working ...       #####
+
+import modules ;
+import path ; 
+
+local boost-root = [ modules.peek : BOOST_ROOT ] ;
+local explore-header-include = $(top)/../.. ;
+
+use-project /boost/regex : $(boost-root)/libs/regex/build ;
+
+##################################################################
