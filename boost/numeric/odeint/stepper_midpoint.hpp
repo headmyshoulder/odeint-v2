@@ -58,6 +58,7 @@ namespace odeint {
         
         // private memebers
     private:
+
         resizer_type m_resizer;
 
         unsigned short m_stepcount;
@@ -68,8 +69,7 @@ namespace odeint {
 
     public:
 
-        stepper_midpoint( unsigned short stepcount = 2 )
-        { }
+        stepper_midpoint( unsigned short stepcount = 2 ) { }
         
         order_type order() const { return 2; }
 
@@ -79,10 +79,7 @@ namespace odeint {
                 m_stepcount = stepcount;
         }
 
-        unsigned short get_step_count()
-        {
-            return m_stepcount;
-        }
+        unsigned short get_step_count() const { return m_stepcount; }
 
         template< class DynamicalSystem >
         void do_step( 
@@ -90,13 +87,13 @@ namespace odeint {
                 container_type &x ,
                 container_type &dxdt ,
                 time_type t ,
-                time_type dt
-                        )
+                time_type dt )
         {
-            const time_type h = dt/static_cast<time_type>( m_stepcount );
-            const time_type h2 = static_cast<time_type>( 2.0 )*h;
             const time_type t_1 = static_cast<time_type>( 1.0 );
             const time_type t_05 = static_cast<time_type>( 0.5 );
+
+            const time_type h = dt/static_cast<time_type>( m_stepcount );
+            const time_type h2 = static_cast<time_type>( 2.0 )*h;
             time_type th = t + h;
 
             m_resizer.adjust_size(x, m_x0);
@@ -139,12 +136,11 @@ namespace odeint {
                 DynamicalSystem &system ,
                 container_type &x ,
                 time_type t ,
-                time_type dt ,
-                unsigned short n = 2 )
+                time_type dt )
         {
             m_resizer.adjust_size(x, m_dxdt);
             system( x, m_dxdt, t );
-            do_step( system , x, m_dxdt, t, dt, n );
+            do_step( system , x, m_dxdt, t, dt );
         }
             
 

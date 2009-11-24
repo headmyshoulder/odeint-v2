@@ -147,10 +147,3 @@ int main( int argc , char **argv )
 
     return 0;
 }
-
-
-
-/*
-  Compile with
-  g++ -Wall -O3 -I$BOOST_ROOT -I../../../../ lorenz_cmp_rk4_rk_generic.cpp
-*/

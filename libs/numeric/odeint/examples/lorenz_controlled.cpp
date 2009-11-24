@@ -36,8 +36,8 @@ const double b = 8.0 / 3.0;
 
 const size_t olen = 10000;
 
-const double eps_abs = 1E-6;
-const double eps_rel = 1E-7;
+const double eps_abs = 1E-2;
+const double eps_rel = 1E-3;;
 
 typedef array<double, 3> state_type;
 
@@ -67,7 +67,7 @@ int main( int argc , char **argv )
     cout.precision(5);
     cout.setf(ios::fixed,ios::floatfield);
     
-    size_t steps = integrate_adaptive( controlled_stepper, lorenz, x, 0.0, 10.0, 1E-4, print_state );
+    size_t steps = integrate_adaptive( controlled_stepper, lorenz, x, 0.0, 10.0, 1E-2, print_state );
 
     clog << "Number of steps: " << steps << endl;
 

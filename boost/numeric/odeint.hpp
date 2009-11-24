@@ -22,6 +22,7 @@
 #include <boost/numeric/odeint/stepper_rk_generic.hpp>
 #include <boost/numeric/odeint/stepper_half_step.hpp>
 #include <boost/numeric/odeint/stepper_midpoint.hpp>
+#include <boost/numeric/odeint/stepper_rk78_fehlberg.hpp>
 
 #include <boost/numeric/odeint/controlled_stepper_standard.hpp>
 

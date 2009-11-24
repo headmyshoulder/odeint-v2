@@ -63,7 +63,6 @@ namespace odeint {
     private:
 
         container_type m_dxdt;
-        container_type m_xtemp;
         resizer_type m_resizer;
 
 
