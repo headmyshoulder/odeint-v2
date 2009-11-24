@@ -39,7 +39,7 @@ namespace odeint {
         while( start_time < end_time )
 	{
 	    observer( start_time , state , system );
-            stepper.next_step( system , state , start_time , dt );
+            stepper.do_step( system , state , start_time , dt );
             start_time += dt;
 	    ++iteration;
         }
@@ -93,7 +93,7 @@ namespace odeint {
         while( iteration < num_of_steps )
 	{
 	    observer( start_time , state , system );
-            stepper.next_step( system , state , start_time , dt );
+            stepper.do_step( system , state , start_time , dt );
             start_time += dt;
 	    ++iteration;
         }

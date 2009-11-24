@@ -48,7 +48,7 @@ namespace odeint {
         while( t < end_time )
         {
             // do a controlled step
-            result = stepper.next_step( system, state, t, dt_ );
+            result = stepper.try_step( system, state, t, dt_ );
 
             if( result != step_size_decreased )
             { // we actually did a step forward (dt was small enough)

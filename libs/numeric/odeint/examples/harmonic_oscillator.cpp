@@ -186,10 +186,10 @@ int main(int argc, char **argv)
       r_error_rms += pow(r_error, 2);
        
       // Advance the solvers
-      euler.next_step(harm_osc::harmonic_oscillator,
+      euler.do_step(harm_osc::harmonic_oscillator,
                       x_euler, t, harm_osc::dt);
 
-      rk4.next_step(harm_osc::harmonic_oscillator,
+      rk4.do_step(harm_osc::harmonic_oscillator,
                     x_rk4, t, harm_osc::dt);
       
     }

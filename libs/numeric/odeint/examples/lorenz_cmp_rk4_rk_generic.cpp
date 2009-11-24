@@ -93,7 +93,7 @@ int main( int argc , char **argv )
     t = 0.0;
     start= clock();
     for( size_t oi=1 ; oi<olen ; ++oi,t+=dt ) {
-        stepper_rk4.next_step( lorenz , x1 , t , dt );
+        stepper_rk4.do_step( lorenz , x1 , t , dt );
         if( oi < 5 )
             cout << "x after step "<<oi<<": "<<x1[0]<<tab<<x1[1]<<tab<<x1[2]<<endl;
 
@@ -108,7 +108,7 @@ int main( int argc , char **argv )
     t = 0.0;
     start= clock();
     for( size_t oi=1 ; oi<olen ; ++oi,t+=dt ) {
-        stepper_generic4.next_step( lorenz , x2 , t , dt );
+        stepper_generic4.do_step( lorenz , x2 , t , dt );
         if( oi < 5 )
             cout << "x after step "<<oi<<":  "<<x2[0]<<tab<<x2[1]<<tab<<x2[2]<<endl;        
     }
@@ -122,7 +122,7 @@ int main( int argc , char **argv )
     t = 0.0;
     start= clock();
     for( size_t oi=1 ; oi<olen ; ++oi,t+=dt ) {
-        stepper_generic4_ptr.next_step( lorenz , x3 , t , dt );
+        stepper_generic4_ptr.do_step( lorenz , x3 , t , dt );
         if( oi < 5 )
             cout << "x after step "<<oi<<":  "<<x3[0]<<tab<<x3[1]<<tab<<x3[2]<<endl;        
     }
@@ -137,7 +137,7 @@ int main( int argc , char **argv )
     t = 0.0;
     start= clock();
     for( size_t oi=1 ; oi<olen ; ++oi,t+=dt ) {
-        stepper_rk4_classical.next_step( lorenz , x3 , t , dt );
+        stepper_rk4_classical.do_step( lorenz , x3 , t , dt );
         if( oi < 5 )
             cout << "x after step "<<oi<<":  "<<x3[0]<<tab<<x3[1]<<tab<<x3[2]<<endl;        
     }

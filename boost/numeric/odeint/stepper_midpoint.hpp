@@ -85,7 +85,7 @@ namespace odeint {
         }
 
         template< class DynamicalSystem >
-        void next_step( 
+        void do_step( 
                 DynamicalSystem &system ,
                 container_type &x ,
                 container_type &dxdt ,
@@ -135,7 +135,7 @@ namespace odeint {
 
 
         template< class DynamicalSystem >
-        void next_step( 
+        void do_step( 
                 DynamicalSystem &system ,
                 container_type &x ,
                 time_type t ,
@@ -144,7 +144,7 @@ namespace odeint {
         {
             m_resizer.adjust_size(x, m_dxdt);
             system( x, m_dxdt, t );
-            next_step( system , x, m_dxdt, t, dt, n );
+            do_step( system , x, m_dxdt, t, dt, n );
         }
             
 

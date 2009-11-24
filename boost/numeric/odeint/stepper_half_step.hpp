@@ -71,28 +71,28 @@ namespace odeint {
         }
 
         template< class DynamicalSystem >
-        void next_step( DynamicalSystem &system ,
+        void do_step( DynamicalSystem &system ,
                         container_type &x ,
                         container_type &dxdt ,
                         time_type t ,
                         time_type dt )
         {
-            m_stepper.next_step( system , x , dxdt , t , dt );
+            m_stepper.do_step( system , x , dxdt , t , dt );
         }
 
 
 
         template< class DynamicalSystem >
-        void next_step( DynamicalSystem &system ,
+        void do_step( DynamicalSystem &system ,
                         container_type &x ,
                         time_type t ,
                         time_type dt )
         {
-            m_stepper.next_step( system , x , t , dt );
+            m_stepper.do_step( system , x , t , dt );
         }
 
         template< class DynamicalSystem >
-        void next_step( DynamicalSystem &system ,
+        void do_step( DynamicalSystem &system ,
                         container_type &x ,
                         container_type &dxdt ,
                         time_type t ,
@@ -104,9 +104,9 @@ namespace odeint {
             m_xtemp = x;
             time_type dt2 = static_cast<time_type>(0.5) * dt;
 
-            next_step( system , m_xtemp , dxdt , t , dt );
-            next_step( system , x , dxdt , t , dt2 );
-            next_step( system , x , t+dt2 , dt2 );
+            do_step( system , m_xtemp , dxdt , t , dt );
+            do_step( system , x , dxdt , t , dt2 );
+            do_step( system , x , t+dt2 , dt2 );
 
             detail::it_algebra::assign_diff( xerr.begin() ,
                                              xerr.end() ,
@@ -117,7 +117,7 @@ namespace odeint {
 
 
         template< class DynamicalSystem >
-        void next_step( DynamicalSystem &system ,
+        void do_step( DynamicalSystem &system ,
                         container_type &x ,
                         time_type t ,
                         time_type dt ,
@@ -125,7 +125,7 @@ namespace odeint {
         {
             m_resizer.adjust_size( x , m_dxdt );
             system( x , m_dxdt , t );
-            next_step( system , x , m_dxdt , t , dt , xerr );
+            do_step( system , x , m_dxdt , t , dt , xerr );
         }
     };
 

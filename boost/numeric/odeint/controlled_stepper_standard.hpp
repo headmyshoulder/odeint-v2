@@ -101,7 +101,7 @@ namespace odeint {
            is returned.
          */
 	template< class DynamicalSystem >
-	controlled_step_result next_step( 
+	controlled_step_result try_step( 
                 DynamicalSystem &system, 
                 container_type &x, 
                 time_type &t, 
@@ -111,7 +111,7 @@ namespace odeint {
 
 	    x_tmp = x; // copy current state
 	    system( x, dxdt, t ); // compute dxdt
-	    m_stepper.next_step(system, x, dxdt, t, dt, x_err ); // do step forward with error
+	    m_stepper.do_step(system, x, dxdt, t, dt, x_err ); // do step forward with error
 
 	    iterator x_start = x_tmp.begin();
 	    iterator dxdt_start = dxdt.begin();
