@@ -79,7 +79,8 @@ namespace odeint {
                 m_stepcount = stepcount;
         }
 
-        unsigned short get_step_count() const { return m_stepcount; }
+        unsigned short get_stepcount() const { return m_stepcount; }
+
 
         template< class DynamicalSystem >
         void do_step( 
@@ -87,7 +88,8 @@ namespace odeint {
                 container_type &x ,
                 container_type &dxdt ,
                 time_type t ,
-                time_type dt )
+                time_type dt ,
+                container_type &x_out )
         {
             const time_type t_1 = static_cast<time_type>( 1.0 );
             const time_type t_05 = static_cast<time_type>( 0.5 );
@@ -124,11 +126,23 @@ namespace odeint {
             
             // last step
             // x = 0.5*( m_x0 + m_x1 + h*m_dxdt
-            scale_sum( x.begin(), x.end(),
+            scale_sum( x_out.begin(), x_out.end(),
                        t_05, m_x0.begin(),
                        t_05, m_x1.begin(),
                        t_05*h, m_dxdt.begin() );
         }
+
+        template< class DynamicalSystem >
+        void do_step( 
+                DynamicalSystem &system ,
+                container_type &x ,
+                container_type &dxdt ,
+                time_type t ,
+                time_type dt )
+        {
+            do_step( system, x, dxdt, t, dt, x );
+        }
+
 
 
         template< class DynamicalSystem >

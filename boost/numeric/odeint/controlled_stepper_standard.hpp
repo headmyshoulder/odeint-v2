@@ -70,6 +70,8 @@ namespace odeint {
         typedef typename container_type::value_type value_type;
         typedef typename container_type::iterator iterator;
 
+        typedef unsigned short order_type;
+
         // private members
     private:
 
@@ -127,6 +129,7 @@ namespace odeint {
               m_a_dxdt(factor_dxdt)
 	{ }
 
+        order_type order() { return m_stepper.order(); }
 
         /* Tries a controlled step with the given stepsize dt. If dt is too large,
            x remains unchanged, an appropriate stepsize is assigned to dt and 
