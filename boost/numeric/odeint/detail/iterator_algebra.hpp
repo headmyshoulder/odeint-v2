@@ -102,15 +102,16 @@ namespace it_algebra { // iterator algebra
     // computes y = alpha1*x1 + alpha2*x2
     template <
         class OutputIterator ,
-        class InputIterator ,
+        class InputIterator1 ,
+        class InputIterator2 ,
         class T
         >
     inline void scale_sum( OutputIterator y_begin ,
                            OutputIterator y_end ,
                            T alpha1 ,
-                           InputIterator x1_begin ,
+                           InputIterator1 x1_begin ,
                            T alpha2 ,
-                           InputIterator x2_begin )
+                           InputIterator2 x2_begin )
     {
         while( y_begin != y_end )
             (*y_begin++) = alpha1 * (*x1_begin++) + alpha2 * (*x2_begin++);
@@ -193,7 +194,8 @@ namespace it_algebra { // iterator algebra
     }
 
 
-    // computes y = x1 + alpha2*x2 + alpha3*x3 + alpha4*x4 + alpha5*x5 + alpha6*x6
+    // computes y = x1 + alpha2*x2 + alpha3*x3 + alpha4*x4 + alpha5*x5
+    // + alpha6*x6
     template <
         class OutputIterator ,
         class InputIterator ,
@@ -223,6 +225,182 @@ namespace it_algebra { // iterator algebra
                 alpha5 * (*x5_begin++) +
                 alpha6 * (*x6_begin++);
     }
+
+
+    // computes y = x1 + alpha2*x2 + alpha3*x3 + alpha4*x4 + alpha5*x5
+    // + alpha6*x6 + alpha7*x7
+    template <
+        class OutputIterator ,
+        class InputIterator ,
+        class T
+        >
+    inline void scale_sum( OutputIterator y_begin ,
+                           OutputIterator y_end ,
+                           T alpha1 ,
+                           InputIterator x1_begin ,
+                           T alpha2 ,
+                           InputIterator x2_begin ,
+                           T alpha3 ,
+                           InputIterator x3_begin ,
+                           T alpha4 ,
+                           InputIterator x4_begin ,
+                           T alpha5 ,
+                           InputIterator x5_begin ,
+                           T alpha6 ,
+                           InputIterator x6_begin ,
+                           T alpha7 ,
+                           InputIterator x7_begin )
+
+    {
+        while( y_begin != y_end )
+            (*y_begin++) = 
+                alpha1 * (*x1_begin++) + 
+                alpha2 * (*x2_begin++) + 
+                alpha3 * (*x3_begin++) +
+                alpha4 * (*x4_begin++) +
+                alpha5 * (*x5_begin++) +
+                alpha6 * (*x6_begin++) +
+                alpha7 * (*x7_begin++) ;
+    }
+
+
+
+    // computes y = x1 + alpha2*x2 + alpha3*x3 + alpha4*x4 + alpha5*x5
+    // + alpha6*x6 + alpha7*x7 + alpha8*x8
+    template <
+        class OutputIterator ,
+        class InputIterator ,
+        class T
+        >
+    inline void scale_sum( OutputIterator y_begin ,
+                           OutputIterator y_end ,
+                           T alpha1 ,
+                           InputIterator x1_begin ,
+                           T alpha2 ,
+                           InputIterator x2_begin ,
+                           T alpha3 ,
+                           InputIterator x3_begin ,
+                           T alpha4 ,
+                           InputIterator x4_begin ,
+                           T alpha5 ,
+                           InputIterator x5_begin ,
+                           T alpha6 ,
+                           InputIterator x6_begin ,
+                           T alpha7 ,
+                           InputIterator x7_begin ,
+                           T alpha8 ,
+                           InputIterator x8_begin )
+
+
+    {
+        while( y_begin != y_end )
+            (*y_begin++) = 
+                alpha1 * (*x1_begin++) + 
+                alpha2 * (*x2_begin++) + 
+                alpha3 * (*x3_begin++) +
+                alpha4 * (*x4_begin++) +
+                alpha5 * (*x5_begin++) +
+                alpha6 * (*x6_begin++) +
+                alpha7 * (*x7_begin++) +
+                alpha8 * (*x8_begin++);
+    }
+
+    // computes y = x1 + alpha2*x2 + alpha3*x3 + alpha4*x4 + alpha5*x5
+    // + alpha6*x6 + alpha7*x7 + alpha8*x8 + alpha9*x9
+    template <
+        class OutputIterator ,
+        class InputIterator ,
+        class T
+        >
+    inline void scale_sum( OutputIterator y_begin ,
+                           OutputIterator y_end ,
+                           T alpha1 ,
+                           InputIterator x1_begin ,
+                           T alpha2 ,
+                           InputIterator x2_begin ,
+                           T alpha3 ,
+                           InputIterator x3_begin ,
+                           T alpha4 ,
+                           InputIterator x4_begin ,
+                           T alpha5 ,
+                           InputIterator x5_begin ,
+                           T alpha6 ,
+                           InputIterator x6_begin ,
+                           T alpha7 ,
+                           InputIterator x7_begin ,
+                           T alpha8 ,
+                           InputIterator x8_begin ,
+                           T alpha9 ,
+                           InputIterator x9_begin )
+
+
+    {
+        while( y_begin != y_end )
+            (*y_begin++) = 
+                alpha1 * (*x1_begin++) + 
+                alpha2 * (*x2_begin++) + 
+                alpha3 * (*x3_begin++) +
+                alpha4 * (*x4_begin++) +
+                alpha5 * (*x5_begin++) +
+                alpha6 * (*x6_begin++) +
+                alpha7 * (*x7_begin++) +
+                alpha8 * (*x8_begin++) +
+                alpha9 * (*x9_begin++);
+    }
+
+
+
+
+    // computes y = x1 + alpha2*x2 + alpha3*x3 + alpha4*x4 + alpha5*x5
+    // + alpha6*x6 + alpha7*x7 + alpha8*x8 + alpha9*x9 + alpha10*x10
+    template <
+        class OutputIterator ,
+        class InputIterator ,
+        class T
+        >
+    inline void scale_sum( OutputIterator y_begin ,
+                           OutputIterator y_end ,
+                           T alpha1 ,
+                           InputIterator x1_begin ,
+                           T alpha2 ,
+                           InputIterator x2_begin ,
+                           T alpha3 ,
+                           InputIterator x3_begin ,
+                           T alpha4 ,
+                           InputIterator x4_begin ,
+                           T alpha5 ,
+                           InputIterator x5_begin ,
+                           T alpha6 ,
+                           InputIterator x6_begin ,
+                           T alpha7 ,
+                           InputIterator x7_begin ,
+                           T alpha8 ,
+                           InputIterator x8_begin ,
+                           T alpha9 ,
+                           InputIterator x9_begin ,
+                           T alpha10 ,
+                           InputIterator x10_begin 
+        )
+    {
+        while( y_begin != y_end )
+            (*y_begin++) = 
+                alpha1 * (*x1_begin++) + 
+                alpha2 * (*x2_begin++) + 
+                alpha3 * (*x3_begin++) +
+                alpha4 * (*x4_begin++) +
+                alpha5 * (*x5_begin++) +
+                alpha6 * (*x6_begin++) +
+                alpha7 * (*x7_begin++) +
+                alpha8 * (*x8_begin++) +
+                alpha9 * (*x9_begin++) +
+                alpha10 * (*x10_begin++);
+    }
+
+
+
+
+
+
 
     // generic version for n values
     template <

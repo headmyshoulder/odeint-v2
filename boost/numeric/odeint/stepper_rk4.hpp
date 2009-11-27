@@ -121,7 +121,7 @@ namespace odeint {
                        dt, m_dxm.begin() );
 
 	    // dt * m_dxh = k4
-            system( m_xt , m_dxh , value_type( t + dt ) );  
+            system( m_xt , m_dxh , t + dt );  
             //x += dt/6 * ( m_dxdt + m_dxt + val2*m_dxm )
             scale_sum( x.begin(), x.end(),
                        val1, x.begin(),

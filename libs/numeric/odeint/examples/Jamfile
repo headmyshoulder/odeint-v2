@@ -19,3 +19,4 @@ exe lorenz_integrate_constant_step : lorenz_integrate_constant_step.cpp ;
 exe lorenz_integrator : lorenz_integrator.cpp ;
 exe lorenz_stepper : lorenz_stepper.cpp ;
 exe pendulum_vibrating_pivot : pendulum_vibrating_pivot.cpp ;
+exe dnls_stepper_compare : dnls_stepper_compare.cpp ;

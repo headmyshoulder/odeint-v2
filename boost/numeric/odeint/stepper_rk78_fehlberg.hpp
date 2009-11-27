@@ -44,7 +44,7 @@ namespace odeint {
         container_type m_dxdt;
         container_type m_xt;
         container_type m_k02 , m_k03 , m_k04 , m_k05 , m_k06 , m_k07 ,
-            m_k08 , m_k09 , m_k10 , m_k11 , m_k12;
+            m_k08 , m_k09 , m_k10 , m_k11 , m_k12 , m_k13;
 
         resizer_type m_resizer;
 
@@ -64,7 +64,7 @@ namespace odeint {
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
                         container_type &x ,
-                        const container_type &dxdt ,
+                        container_type &dxdt ,
                         time_type t ,
                         time_type dt )
         {
@@ -87,7 +87,6 @@ namespace odeint {
             const time_type c10 = static_cast<time_type>( c09 );
             const time_type c12 = static_cast<time_type>( 41.0 / 840.0 );
             const time_type c13 = static_cast<time_type>( c12 );
-            const time_type c11 = static_cast<time_type>( 0. );
 
             // the coefficients for each step
             const time_type b02_01 = static_cast<time_type>( 2.0 / 27.0 );
@@ -188,38 +187,207 @@ namespace odeint {
             m_resizer.adjust_size( x , m_k10 );
             m_resizer.adjust_size( x , m_k11 );
             m_resizer.adjust_size( x , m_k12 );
+            m_resizer.adjust_size( x , m_k13 );
 
 
             // k1, the first system call has allready been evaluated
+
+            // k2 step
             scale_sum( m_xt.begin() , m_xt.end() , 
                        val1 , x.begin() , 
                        dt * b02_01 , dxdt.begin() );
-
-            // k2 step
             system( m_xt , m_k02 , m_t02 );
+
+            // k3 step
             scale_sum( m_xt.begin() , m_xt.end() ,
                        val1 , x.begin() ,
                        dt * b03_01 , dxdt.begin() ,
-                       dt * b03_02 , m_k02 );
+                       dt * b03_02 , m_k02.begin() );
+            system( m_xt , m_k03 , m_t03 );
 
 
+            // k4 step
+            scale_sum( m_xt.begin() , m_xt.end() ,
+                       val1 , x.begin() ,
+                       dt * b04_01 , dxdt.begin() ,
+                       dt * b04_03 , m_k03.begin() );
+            system( m_xt , m_k04 , m_t04 );
+
+
+            // k5 step
+            scale_sum( m_xt.begin() , m_xt.end() ,
+                       val1 , x.begin() ,
+                       dt * b05_01 , dxdt.begin() ,
+                       dt * b05_03 , m_k03.begin() ,
+                       dt * b05_04 , m_k04.begin() );
+            system( m_xt , m_k05 , m_t05 );
+
+
+            // k6 step
+            scale_sum( m_xt.begin() , m_xt.end() ,
+                       val1 , x.begin() ,
+                       dt * b06_01 , dxdt.begin() ,
+                       dt * b06_04 , m_k04.begin() ,
+                       dt * b06_05 , m_k05.begin() );
+            system( m_xt , m_k06 , m_t06 );
+
+
+            // k7 step
+            scale_sum( m_xt.begin() , m_xt.end() ,
+                       val1 , x.begin() ,
+                       dt * b07_01 , dxdt.begin() ,
+                       dt * b07_04 , m_k04.begin() ,
+                       dt * b07_05 , m_k05.begin() ,
+                       dt * b07_06 , m_k06.begin() );
+            system( m_xt , m_k07 , m_t07 );
+
+
+            // k8 step 
+            scale_sum( m_xt.begin() , m_xt.end() ,
+                       val1 , x.begin() ,
+                       dt * b08_01 , dxdt.begin() ,
+                       dt * b08_05 , m_k05.begin() ,
+                       dt * b08_06 , m_k06.begin() ,
+                       dt * b08_07 , m_k07.begin() );
+            system( m_xt , m_k08 , m_t08 );
+
+
+            // k9 step 
+            scale_sum( m_xt.begin() , m_xt.end() ,
+                       val1 , x.begin() ,
+                       dt * b09_01 , dxdt.begin() ,
+                       dt * b09_04 , m_k04.begin() ,
+                       dt * b09_05 , m_k05.begin() ,
+                       dt * b09_06 , m_k06.begin() ,
+                       dt * b09_07 , m_k07.begin() ,
+                       dt * b09_08 , m_k08.begin() );
+            system( m_xt , m_k09 , m_t09 );
 
             
+            // k10 step
+            scale_sum( m_xt.begin() , m_xt.end() ,
+                       val1 , x.begin() ,
+                       dt * b10_01 , dxdt.begin() ,
+                       dt * b10_04 , m_k04.begin() ,
+                       dt * b10_05 , m_k05.begin() ,
+                       dt * b10_06 , m_k06.begin() ,
+                       dt * b10_07 , m_k07.begin() ,
+                       dt * b10_08 , m_k08.begin() ,
+                       dt * b10_09 , m_k09.begin() );
+            system( m_xt , m_k10 , m_t10 );
 
 
+            // k11 step
+            scale_sum( m_xt.begin() , m_xt.end() ,
+                       val1 , x.begin() ,
+                       dt * b11_01 , dxdt.begin() ,
+                       dt * b11_04 , m_k04.begin()  ,
+                       dt * b11_05 , m_k05.begin() ,
+                       dt * b11_06 , m_k06.begin() ,
+                       dt * b11_07 , m_k07.begin() ,
+                       dt * b11_08 , m_k08.begin() ,
+                       dt * b11_09 , m_k09.begin() ,
+                       dt * b11_10 , m_k10.begin() );
+            system( m_xt , m_k11 , m_t11 );
+
+
+            // k12 step
+            scale_sum( m_xt.begin() , m_xt.end() ,
+                       val1 , x.begin() ,
+                       dt * b12_01 , dxdt.begin() ,
+                       dt * b12_06 , m_k06.begin() ,
+                       dt * b12_07 , m_k07.begin() ,
+                       dt * b12_08 , m_k08.begin() ,
+                       dt * b12_09 , m_k09.begin() ,
+                       dt * b12_10 , m_k10.begin() );
+            system( m_xt , m_k12 , m_t12 );
+
+
+            // k13 step
+            scale_sum( m_xt.begin() , m_xt.end() ,
+                       val1 , x.begin() ,
+                       dt * b13_01 , dxdt.begin() ,
+                       dt * b13_04 , m_k04.begin() ,
+                       dt * b13_05 , m_k05.begin() ,
+                       dt * b13_06 , m_k06.begin() ,
+                       dt * b13_07 , m_k07.begin() ,
+                       dt * b13_08 , m_k08.begin() ,
+                       dt * b13_09 , m_k09.begin() ,
+                       dt * b13_10 , m_k10.begin() ,
+                       dt * b13_12 , m_k12.begin() );
+            system( m_xt , m_k13 , m_t13 );
+
+            scale_sum( x.begin() , x.end() ,
+                       val1 , x.begin() ,
+                       dt * c06 , m_k06.begin() ,
+                       dt * c07 , m_k07.begin() ,
+                       dt * c08 , m_k08.begin() ,
+                       dt * c09 , m_k09.begin() ,
+                       dt * c10 , m_k10.begin() ,
+                       dt * c12 , m_k12.begin() ,
+                       dt * c13 , m_k13.begin() );
         }
 
 
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
-                        container_type &x ,
-                        time_type t ,
-                        time_type dt )
+                      container_type &x ,
+                      time_type t ,
+                      time_type dt )
         {
             m_resizer.adjust_size( x , m_dxdt );
             system( x , m_dxdt , t );
             do_step( system , x , m_dxdt , t , dt );
         }
+
+
+/*
+
+        template< class DynamicalSystem >
+        void do_step( DynamicalSystem &system ,
+                      container_type &x ,
+                      container_type &dxdt ,
+                      time_type t ,
+                      time_type dt ,
+                      container_type &xerr )
+        {
+            const time_type cc01 = static_cast<time_type>( 41.0 / 840.0 );
+            const time_type cc06 = static_cast<time_type>( 34.0 / 105.0 );
+            const time_type cc07 = static_cast<time_type>( 9.0 / 35.0 );
+            const time_type cc08 = static_cast<time_type>( cc08 );
+            const time_type cc09 = static_cast<time_type>( 9.0 / 280.0 );
+            const time_type cc10 = static_cast<time_type>( cc09 );
+            const time_type cc11 = static_cast<time_type>( cc01 );
+
+            xerr = x;
+            do_step( system , xerr , dxdt , t , dt );
+
+            // now, k1-k13 are calculated and stored in m_k01 - m_k13
+            scale_sum( x.begin() , x.end() ,
+                       static_cast<time_type>(1.0) , x.begin(),
+                       dt * cc01 , dxdt ,
+                       dt * cc06 , m_k06 ,
+                       dt * cc07 , m_k07 ,
+                       dt * cc08 , m_k08 ,
+                       dt * cc09 , m_k09 ,
+                       dt * cc10 , m_k10 ,
+                       dt * cc11 , m_k11 );
+
+            increment( xerr.begin() , xerr.end() , x.begin() , static_cast<time_type>(-1.0) );
+        }
+
+        template< class DynamicalSystem >
+        void do_step( DynamicalSystem &system ,
+                      container_type &x ,
+                      time_type t ,
+                      time_type dt ,
+                      container_type &xerr )
+        {
+            m_resizer.adjust_size( x , m_dxdt );
+            system( x , m_dxdt , t );
+            do_step( system , x , m_dxdt , t , dt , xerr );
+        }
+*/
     };
 
 } // namespace odeint
