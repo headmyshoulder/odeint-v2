@@ -25,6 +25,9 @@
 #include <boost/numeric/odeint/stepper_rk78_fehlberg.hpp>
 
 #include <boost/numeric/odeint/controlled_stepper_standard.hpp>
+#include <boost/numeric/odeint/controlled_stepper_bs.hpp>
+
+#include <boost/numeric/odeint/error_checker_standard.hpp>
 
 #include <boost/numeric/odeint/integrator_adaptive_stepsize.hpp>
 #include <boost/numeric/odeint/integrator_constant_stepsize.hpp>

@@ -23,7 +23,7 @@
 #include <boost/numeric/odeint/concepts/state_concept.hpp>
 #include <boost/numeric/odeint/resizer.hpp>
 
-
+#include <iostream>
 
 namespace boost {
 namespace numeric {
@@ -105,12 +105,14 @@ namespace odeint {
             using namespace detail::it_algebra;
 
             // m_x0 = x + h*dxdt
-            scale_sum( m_x0.begin(), m_x0.end(),
+            scale_sum( m_x1.begin(), m_x1.end(),
                        t_1, x.begin(),
                        h, dxdt.begin() );
-            system( m_x0, m_dxdt, th );
+            system( m_x1, m_dxdt, th );
 
-            m_x1 = x;
+            m_x0 = x;
+            
+            //std::clog<< "mp: " << 0 << '\t' << m_x1[0] << '\t' << m_x1[1] << '\t' << m_dxdt[0] << '\t' << m_dxdt[1] << std::endl;
 
             unsigned short i = 1;
             while( i != m_stepcount )
@@ -123,9 +125,11 @@ namespace odeint {
                 system( m_x1, m_dxdt, th);
                 i++;
             }
+
+            //std::clog<< "mp: " << i << '\t' << m_x1[0] << '\t' << m_x1[1] << '\t' << m_dxdt[0] << '\t' << m_dxdt[1] << std::endl;
             
             // last step
-            // x = 0.5*( m_x0 + m_x1 + h*m_dxdt
+            // x = 0.5*( m_x0 + m_x1 + h*m_dxdt )
             scale_sum( x_out.begin(), x_out.end(),
                        t_05, m_x0.begin(),
                        t_05, m_x1.begin(),

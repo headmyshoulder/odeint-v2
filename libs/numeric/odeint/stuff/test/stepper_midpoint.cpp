@@ -41,11 +41,14 @@ int main( int argc , char **argv )
     double t = 0.0;
     for( size_t oi=0 ; oi<olen ; ++oi,t+=dt )
     {
-        stepper_euler.next_step( harmonic_oscillator , x1 , t , dt );
-        stepper_mp.next_step( harmonic_oscillator , x2 , t , dt , 2 );
-        stepper_mp.next_step( harmonic_oscillator , x3 , t , dt , 4 );
-        stepper_mp.next_step( harmonic_oscillator , x4 , t , dt , 8 );
-        stepper_rk4.next_step( harmonic_oscillator , x5 , t , dt );
+        stepper_euler.do_step( harmonic_oscillator , x1 , t , dt );
+        stepper_mp.set_stepcount(2);
+        stepper_mp.do_step( harmonic_oscillator , x2 , t , dt );
+        stepper_mp.set_stepcount(4);
+        stepper_mp.do_step( harmonic_oscillator , x3 , t , dt );
+        stepper_mp.set_stepcount(8);
+        stepper_mp.do_step( harmonic_oscillator , x4 , t , dt );
+        stepper_rk4.do_step( harmonic_oscillator , x5 , t , dt );
         cout<< t << tab << x1[0]*x1[0] + x1[1]*x1[1];
         cout<< tab << x2[0]*x2[0] + x2[1]*x2[1];
         cout<< tab << x3[0]*x3[0] + x3[1]*x3[1];
