@@ -1,0 +1,17 @@
+import quickbook ;
+
+xml odeint
+  :
+    odeint.qbk
+  ;
+
+boostbook doc
+  :
+    odeint
+  ;
+
+install html
+  :
+    /boost//doc/html/boostbook.css
+  ;
+
