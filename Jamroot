@@ -26,7 +26,4 @@ path-constant BOOST_ROOT : [ os.environ BOOST_ROOT ] ;
 local boost-root = [ modules.peek : BOOST_ROOT ] ;
 local explore-header-include = $(top)/../.. ;
 
-use-project /boost/regex : $(boost-root)/libs/regex/build ;
-
-
 ##################################################################
