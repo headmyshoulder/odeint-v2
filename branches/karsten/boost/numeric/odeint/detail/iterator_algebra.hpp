@@ -36,8 +36,9 @@ namespace it_algebra { // iterator algebra
                    T alpha
                    )
     {
+        typedef typename std::iterator_traits<InputIterator>::value_type value_type;
         while( first1 != last1 )
-            (*first1++) += alpha * (*first2++);
+            (*first1++) += alpha * static_cast<value_type>(*first2++);
     }
 
 

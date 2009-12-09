@@ -1,3 +1,17 @@
+/* Boost odeint/error_checker_standard.hpp header file
+ 
+ Copyright 2009 Karsten Ahnert
+ Copyright 2009 Mario Mulansky
+ 
+ This file includes the standard error checker to be used with
+ controlled steppers. It's purpose is to provide a method
+ that calculates the error ration of a given error-estimation
+ with respect to some user defined tolerance.
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+*/
 
 
 #ifndef BOOST_NUMERIC_ODEINT_ERROR_CHECKER_STANDARD_HPP
