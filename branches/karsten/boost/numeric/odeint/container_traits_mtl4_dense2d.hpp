@@ -156,7 +156,7 @@ struct iterator_traits<
     mtl::utilities::iterator_adaptor< mtl::detail::direct_const_value< mtl::dense2D< Value , Parameters > >, Cursor, Value >
 >
 {
-    typedef const Value value_type;
+    typedef Value value_type;
     typedef int difference_type; // ?
     typedef const Value* pointer;
     typedef const Value& reference;
