@@ -21,10 +21,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_RK5_CK_HPP
 #define BOOST_NUMERIC_ODEINT_STEPPER_RK5_CK_HPP
 
-#include <boost/concept_check.hpp>
-
 #include <boost/numeric/odeint/concepts/state_concept.hpp>
-#include <boost/numeric/odeint/container_traits.hpp>
 
 namespace boost {
 namespace numeric {
@@ -47,17 +44,10 @@ namespace odeint {
         typedef Traits traits_type;
         typedef typename traits_type::value_type value_type;
         typedef typename traits_type::iterator iterator;
-        typedef typename traits_type::const_iterator constiterator;
+        typedef typename traits_type::const_iterator const_iterator;
 
 
 
-
-
-        // check the concept of the ContainerType
-    private:
-
-        BOOST_CLASS_REQUIRE( container_type ,
-                             boost::numeric::odeint, Container );
 
 
         // private members
@@ -123,53 +113,56 @@ namespace odeint {
 
             system( m_x1 , m_x2 , t + dt*a2 );
             // m_x1 = x + dt*b31*dxdt + dt*b32*m_x2
-            scale_sum( m_x1.begin(), m_x1.end(), 
-                       t_1, x.begin(), 
-                       dt*b31, dxdt.begin(),
-                       dt*b32, m_x2.begin() );
+            scale_sum( traits_type::begin(m_x1), traits_type::end(m_x1), 
+                       t_1, traits_type::begin(x), 
+                       dt*b31, traits_type::begin(dxdt),
+                       dt*b32, traits_type::begin(m_x2) );
             
             system( m_x1 , m_x3 , t + dt*a3 );
             // m_x1 = x + dt * (b41*dxdt + b42*m_x2 + b43*m_x3)
-            scale_sum( m_x1.begin(), m_x1.end(), 
-                       t_1, x.begin(),
-                       dt*b41, dxdt.begin(),
-                       dt*b42, m_x2.begin(),
-                       dt*b43, m_x3.begin() );
+            scale_sum( traits_type::begin(m_x1), traits_type::end(m_x1), 
+                       t_1, traits_type::begin(x),
+                       dt*b41, traits_type::begin(dxdt),
+                       dt*b42, traits_type::begin(m_x2),
+                       dt*b43, traits_type::begin(m_x3) );
 
             system( m_x1, m_x4 , t + dt*a4 );
             // 
-            scale_sum( m_x1.begin(), m_x1.end(), 
-                       t_1, x.begin(),
-                       dt*b51, dxdt.begin(),
-                       dt*b52, m_x2.begin(),
-                       dt*b53, m_x3.begin(),
-                       dt*b54, m_x4.begin() );
+            scale_sum( traits_type::begin(m_x1), traits_type::end(m_x1), 
+                       t_1, traits_type::begin(x),
+                       dt*b51, traits_type::begin(dxdt),
+                       dt*b52, traits_type::begin(m_x2),
+                       dt*b53, traits_type::begin(m_x3),
+                       dt*b54, traits_type::begin(m_x4) );
 
             system( m_x1 , m_x5 , t + dt*a5 ); // m_x5 = nr_ak5
-            scale_sum( m_x1.begin(), m_x1.end(), 
-                       t_1, x.begin(),
-                       dt*b61, dxdt.begin(),
-                       dt*b62, m_x2.begin(),
-                       dt*b63, m_x3.begin(),
-                       dt*b64, m_x4.begin(),
-                       dt*b65, m_x5.begin() );
+            scale_sum( traits_type::begin(m_x1), traits_type::end(m_x1), 
+                       t_1, traits_type::begin(x),
+                       dt*b61, traits_type::begin(dxdt),
+                       dt*b62, traits_type::begin(m_x2),
+                       dt*b63, traits_type::begin(m_x3),
+                       dt*b64, traits_type::begin(m_x4),
+                       dt*b65, traits_type::begin(m_x5) );
 
             system( m_x1 , m_x6 , t + dt*a6 ); // m_x6 = nr_ak6
-            scale_sum( x.begin(), x.end(), 
-                       t_1, x.begin(),
-                       dt*c1, dxdt.begin(),
-                       dt*c3, m_x3.begin(),
-                       dt*c4, m_x4.begin(),
-                       dt*c6, m_x6.begin() );
+            scale_sum( traits_type::begin(x), traits_type::end(x), 
+                       t_1, traits_type::begin(x),
+                       dt*c1, traits_type::begin(dxdt),
+                       dt*c3, traits_type::begin(m_x3),
+                       dt*c4, traits_type::begin(m_x4),
+                       dt*c6, traits_type::begin(m_x6) );
             
             // error estimate
-            scale_sum(xerr.begin(), xerr.end(),
-                      dt*dc1, dxdt.begin(),
-                      dt*dc3, m_x3.begin(),
-                      dt*dc4, m_x4.begin(),
-                      dt*dc5, m_x5.begin(),
-                      dt*dc6, m_x6.begin() );
+            scale_sum(traits_type::begin(xerr), traits_type::end(xerr),
+                      dt*dc1, traits_type::begin(dxdt),
+                      dt*dc3, traits_type::begin(m_x3),
+                      dt*dc4, traits_type::begin(m_x4),
+                      dt*dc5, traits_type::begin(m_x5),
+                      dt*dc6, traits_type::begin(m_x6) );
         }
+
+
+
 
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,

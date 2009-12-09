@@ -17,11 +17,9 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_MIDPOINT_HPP
 #define BOOST_NUMERIC_ODEINT_STEPPER_MIDPOINT_HPP
 
-#include <boost/concept_check.hpp>
 
 #include <boost/numeric/odeint/detail/iterator_algebra.hpp>
-#include <boost/numeric/odeint/concepts/state_concept.hpp>
-#include <boost/numeric/odeint/resizer.hpp>
+#include <boost/numeric/odeint/container_traits.hpp>
 
 #include <iostream>
 
@@ -32,40 +30,36 @@ namespace odeint {
     template<
         class Container ,
         class Time = double ,
-        class Resizer = resizer< Container >
+        class Traits = container_traits< Container >
         >
     class stepper_midpoint
     {
         // provide basic typedefs
     public:
 
-        typedef Container container_type;
-        typedef Resizer resizer_type;
-        typedef Time time_type;
         typedef const unsigned short order_type;
-        typedef typename container_type::value_type value_type;
-        typedef typename container_type::iterator iterator;
+        typedef Container container_type;
+        typedef Time time_type;
+        typedef Traits traits_type;
+        typedef typename traits_type::value_type value_type;
+        typedef typename traits_type::iterator iterator;
+        typedef typename traits_type::const_iterator const_iterator;
 
 
 
-
-        // check the concept of the ContainerType
-    private:
-
-        BOOST_CLASS_REQUIRE( container_type ,
-			     boost::numeric::odeint, Container );
 
         
         // private memebers
     private:
-
-        resizer_type m_resizer;
 
         unsigned short m_stepcount;
 
         container_type m_x0;
         container_type m_x1;
         container_type m_dxdt;
+
+
+
 
     public:
 
@@ -80,6 +74,8 @@ namespace odeint {
         }
 
         unsigned short get_stepcount() const { return m_stepcount; }
+
+
 
 
         template< class DynamicalSystem >
@@ -98,16 +94,16 @@ namespace odeint {
             const time_type h2 = static_cast<time_type>( 2.0 )*h;
             time_type th = t + h;
 
-            m_resizer.adjust_size(x, m_x0);
-            m_resizer.adjust_size(x, m_x1);
-            m_resizer.adjust_size(x, m_dxdt);
+            traits_type::adjust_size(x, m_x0);
+            traits_type::adjust_size(x, m_x1);
+            traits_type::adjust_size(x, m_dxdt);
 
             using namespace detail::it_algebra;
 
             // m_x0 = x + h*dxdt
-            scale_sum( m_x1.begin(), m_x1.end(),
-                       t_1, x.begin(),
-                       h, dxdt.begin() );
+            scale_sum( traits_type::begin(m_x1), traits_type::end(m_x1),
+                       t_1, traits_type::begin(x),
+                       h, traits_type::begin(dxdt) );
             system( m_x1, m_dxdt, th );
 
             m_x0 = x;
@@ -118,9 +114,9 @@ namespace odeint {
             while( i != m_stepcount )
             {   // general step
                 //tmp = m_x1; m_x1 = m_x0 + h2*m_dxdt; m_x0 = tmp
-                scale_sum_swap( m_x1.begin(), m_x1.end(), 
-                                m_x0.begin(),
-                                h2, m_dxdt.begin() );
+                scale_sum_swap( traits_type::begin(m_x1), traits_type::begin(m_x1), 
+                                traits_type::begin(m_x0),
+                                h2, traits_type::begin(m_dxdt) );
                 th += h;
                 system( m_x1, m_dxdt, th);
                 i++;
@@ -130,11 +126,15 @@ namespace odeint {
             
             // last step
             // x = 0.5*( m_x0 + m_x1 + h*m_dxdt )
-            scale_sum( x_out.begin(), x_out.end(),
-                       t_05, m_x0.begin(),
-                       t_05, m_x1.begin(),
-                       t_05*h, m_dxdt.begin() );
+            scale_sum( traits_type::begin(x_out), traits_type::end(x_out),
+                       t_05, traits_type::begin(m_x0),
+                       t_05, traits_type::begin(m_x1),
+                       t_05*h, traits_type::begin(m_dxdt) );
         }
+
+
+
+
 
         template< class DynamicalSystem >
         void do_step( 
@@ -149,6 +149,8 @@ namespace odeint {
 
 
 
+
+
         template< class DynamicalSystem >
         void do_step( 
                 DynamicalSystem &system ,
@@ -156,7 +158,7 @@ namespace odeint {
                 time_type t ,
                 time_type dt )
         {
-            m_resizer.adjust_size(x, m_dxdt);
+            traits_type::adjust_size(x, m_dxdt);
             system( x, m_dxdt, t );
             do_step( system , x, m_dxdt, t, dt );
         }
