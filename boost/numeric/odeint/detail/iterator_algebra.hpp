@@ -41,7 +41,7 @@ namespace it_algebra { // iterator algebra
             (*first1++) += alpha * static_cast<value_type>(*first2++);
     }
 
-
+    /*
     // computes y = x1 - x2
     template <
         class OutputIterator ,
@@ -57,7 +57,9 @@ namespace it_algebra { // iterator algebra
         while( first1 != last1 )
             (*first1++) = (*first2++) - (*first3++);
     }
+    */
 
+    /*
     // computes y = x1 + alpha * x2
     template <
         class OutputIterator ,
@@ -75,8 +77,10 @@ namespace it_algebra { // iterator algebra
         while( first1 != last1 )
             (*first1++) = (*first2++) + alpha * (*first3++);
     }
+    */
 
 
+    /*
     // computes y = alpha1 * ( x1 + x2 + alpha2*x3 )
     template <
         class OutputIterator ,
@@ -99,6 +103,9 @@ namespace it_algebra { // iterator algebra
             (*first1++) += alpha1 *
                 ( (*first2++) + (*first3++) + alpha2*(*first4++) );
     }
+    */
+
+
 
     // computes y = alpha1*x1 + alpha2*x2
     template <
@@ -114,84 +121,99 @@ namespace it_algebra { // iterator algebra
                            T alpha2 ,
                            InputIterator2 x2_begin )
     {
+        typedef typename std::iterator_traits<InputIterator1>::value_type value_type;
         while( y_begin != y_end )
-            (*y_begin++) = alpha1 * (*x1_begin++) + alpha2 * (*x2_begin++);
+            (*y_begin++) = 
+                alpha1 * static_cast<value_type>(*x1_begin++) + 
+                alpha2 * static_cast<value_type>(*x2_begin++);
     }
 
 
     // computes y = x1 + alpha2*x2 + alpha3*x3
     template <
         class OutputIterator ,
-        class InputIterator ,
+        class InputIterator1 ,
+        class InputIterator2 ,
+        class InputIterator3 ,
         class T
         >
     inline void scale_sum( OutputIterator y_begin ,
                            OutputIterator y_end ,
                            T alpha1 ,
-                           InputIterator x1_begin ,
+                           InputIterator1 x1_begin ,
                            T alpha2 ,
-                           InputIterator x2_begin ,
+                           InputIterator2 x2_begin ,
                            T alpha3 ,
-                           InputIterator x3_begin )
+                           InputIterator3 x3_begin )
     {
+        typedef typename std::iterator_traits<InputIterator1>::value_type value_type;
         while( y_begin != y_end )
             (*y_begin++) = 
-                alpha1 * (*x1_begin++) + 
-                alpha2 * (*x2_begin++) + 
-                alpha3 * (*x3_begin++);
+                alpha1 * static_cast<value_type>(*x1_begin++) + 
+                alpha2 * static_cast<value_type>(*x2_begin++) + 
+                alpha3 * static_cast<value_type>(*x3_begin++);
     }
 
     // computes y = x1 + alpha2*x2 + alpha3*x3 + alpha4*x4
     template <
         class OutputIterator ,
-        class InputIterator ,
+        class InputIterator1 ,
+        class InputIterator2 ,
+        class InputIterator3 ,
+        class InputIterator4 ,
         class T
         >
     inline void scale_sum( OutputIterator y_begin ,
                            OutputIterator y_end ,
                            T alpha1 ,
-                           InputIterator x1_begin ,
+                           InputIterator1 x1_begin ,
                            T alpha2 ,
-                           InputIterator x2_begin ,
+                           InputIterator2 x2_begin ,
                            T alpha3 ,
-                           InputIterator x3_begin ,
+                           InputIterator3 x3_begin ,
                            T alpha4 ,
-                           InputIterator x4_begin )
+                           InputIterator4 x4_begin )
     {
+        typedef typename std::iterator_traits<InputIterator1>::value_type value_type;
         while( y_begin != y_end )
             (*y_begin++) = 
-                alpha1 * (*x1_begin++) + 
-                alpha2 * (*x2_begin++) + 
-                alpha3 * (*x3_begin++) +
-                alpha4 * (*x4_begin++);
+                alpha1 * static_cast<value_type>(*x1_begin++) + 
+                alpha2 * static_cast<value_type>(*x2_begin++) + 
+                alpha3 * static_cast<value_type>(*x3_begin++) +
+                alpha4 * static_cast<value_type>(*x4_begin++);
     }
 
     // computes y = x1 + alpha2*x2 + alpha3*x3 + alpha4*x4 + alpha5*x5
     template <
         class OutputIterator ,
-        class InputIterator ,
+        class InputIterator1 ,
+        class InputIterator2 ,
+        class InputIterator3 ,
+        class InputIterator4 ,
+        class InputIterator5 ,
         class T
         >
     inline void scale_sum( OutputIterator y_begin ,
                            OutputIterator y_end ,
                            T alpha1 ,
-                           InputIterator x1_begin ,
+                           InputIterator1 x1_begin ,
                            T alpha2 ,
-                           InputIterator x2_begin ,
+                           InputIterator2 x2_begin ,
                            T alpha3 ,
-                           InputIterator x3_begin ,
+                           InputIterator3 x3_begin ,
                            T alpha4 ,
-                           InputIterator x4_begin ,
+                           InputIterator4 x4_begin ,
                            T alpha5 ,
-                           InputIterator x5_begin )
+                           InputIterator5 x5_begin )
     {
+        typedef typename std::iterator_traits<InputIterator1>::value_type value_type;
         while( y_begin != y_end )
             (*y_begin++) = 
-                alpha1 * (*x1_begin++) + 
-                alpha2 * (*x2_begin++) + 
-                alpha3 * (*x3_begin++) +
-                alpha4 * (*x4_begin++) +
-                alpha5 * (*x5_begin++);
+                alpha1 * static_cast<value_type>(*x1_begin++) + 
+                alpha2 * static_cast<value_type>(*x2_begin++) + 
+                alpha3 * static_cast<value_type>(*x3_begin++) +
+                alpha4 * static_cast<value_type>(*x4_begin++) +
+                alpha5 * static_cast<value_type>(*x5_begin++);
     }
 
 
@@ -199,32 +221,38 @@ namespace it_algebra { // iterator algebra
     // + alpha6*x6
     template <
         class OutputIterator ,
-        class InputIterator ,
+        class InputIterator1 ,
+        class InputIterator2 ,
+        class InputIterator3 ,
+        class InputIterator4 ,
+        class InputIterator5 ,
+        class InputIterator6 ,
         class T
         >
     inline void scale_sum( OutputIterator y_begin ,
                            OutputIterator y_end ,
                            T alpha1 ,
-                           InputIterator x1_begin ,
+                           InputIterator1 x1_begin ,
                            T alpha2 ,
-                           InputIterator x2_begin ,
+                           InputIterator2 x2_begin ,
                            T alpha3 ,
-                           InputIterator x3_begin ,
+                           InputIterator3 x3_begin ,
                            T alpha4 ,
-                           InputIterator x4_begin ,
+                           InputIterator4 x4_begin ,
                            T alpha5 ,
-                           InputIterator x5_begin ,
+                           InputIterator5 x5_begin ,
                            T alpha6 ,
-                           InputIterator x6_begin )
+                           InputIterator6 x6_begin )
     {
+        typedef typename std::iterator_traits<InputIterator1>::value_type value_type;
         while( y_begin != y_end )
             (*y_begin++) = 
-                alpha1 * (*x1_begin++) + 
-                alpha2 * (*x2_begin++) + 
-                alpha3 * (*x3_begin++) +
-                alpha4 * (*x4_begin++) +
-                alpha5 * (*x5_begin++) +
-                alpha6 * (*x6_begin++);
+                alpha1 * static_cast<value_type>(*x1_begin++) + 
+                alpha2 * static_cast<value_type>(*x2_begin++) + 
+                alpha3 * static_cast<value_type>(*x3_begin++) +
+                alpha4 * static_cast<value_type>(*x4_begin++) +
+                alpha5 * static_cast<value_type>(*x5_begin++) +
+                alpha6 * static_cast<value_type>(*x6_begin++);
     }
 
 
@@ -232,36 +260,43 @@ namespace it_algebra { // iterator algebra
     // + alpha6*x6 + alpha7*x7
     template <
         class OutputIterator ,
-        class InputIterator ,
+        class InputIterator1 ,
+        class InputIterator2 ,
+        class InputIterator3 ,
+        class InputIterator4 ,
+        class InputIterator5 ,
+        class InputIterator6 ,
+        class InputIterator7 ,
         class T
         >
     inline void scale_sum( OutputIterator y_begin ,
                            OutputIterator y_end ,
                            T alpha1 ,
-                           InputIterator x1_begin ,
+                           InputIterator1 x1_begin ,
                            T alpha2 ,
-                           InputIterator x2_begin ,
+                           InputIterator2 x2_begin ,
                            T alpha3 ,
-                           InputIterator x3_begin ,
+                           InputIterator3 x3_begin ,
                            T alpha4 ,
-                           InputIterator x4_begin ,
+                           InputIterator4 x4_begin ,
                            T alpha5 ,
-                           InputIterator x5_begin ,
+                           InputIterator5 x5_begin ,
                            T alpha6 ,
-                           InputIterator x6_begin ,
+                           InputIterator6 x6_begin ,
                            T alpha7 ,
-                           InputIterator x7_begin )
+                           InputIterator7 x7_begin )
 
     {
+        typedef typename std::iterator_traits<InputIterator1>::value_type value_type;
         while( y_begin != y_end )
             (*y_begin++) = 
-                alpha1 * (*x1_begin++) + 
-                alpha2 * (*x2_begin++) + 
-                alpha3 * (*x3_begin++) +
-                alpha4 * (*x4_begin++) +
-                alpha5 * (*x5_begin++) +
-                alpha6 * (*x6_begin++) +
-                alpha7 * (*x7_begin++) ;
+                alpha1 * static_cast<value_type>(*x1_begin++) + 
+                alpha2 * static_cast<value_type>(*x2_begin++) + 
+                alpha3 * static_cast<value_type>(*x3_begin++) +
+                alpha4 * static_cast<value_type>(*x4_begin++) +
+                alpha5 * static_cast<value_type>(*x5_begin++) +
+                alpha6 * static_cast<value_type>(*x6_begin++) +
+                alpha7 * static_cast<value_type>(*x7_begin++) ;
     }
 
 
@@ -270,83 +305,96 @@ namespace it_algebra { // iterator algebra
     // + alpha6*x6 + alpha7*x7 + alpha8*x8
     template <
         class OutputIterator ,
-        class InputIterator ,
+        class InputIterator1 ,
+        class InputIterator2 ,
+        class InputIterator3 ,
+        class InputIterator4 ,
+        class InputIterator5 ,
+        class InputIterator6 ,
+        class InputIterator7 ,
+        class InputIterator8 ,
         class T
         >
     inline void scale_sum( OutputIterator y_begin ,
                            OutputIterator y_end ,
                            T alpha1 ,
-                           InputIterator x1_begin ,
+                           InputIterator1 x1_begin ,
                            T alpha2 ,
-                           InputIterator x2_begin ,
+                           InputIterator2 x2_begin ,
                            T alpha3 ,
-                           InputIterator x3_begin ,
+                           InputIterator3 x3_begin ,
                            T alpha4 ,
-                           InputIterator x4_begin ,
+                           InputIterator4 x4_begin ,
                            T alpha5 ,
-                           InputIterator x5_begin ,
+                           InputIterator5 x5_begin ,
                            T alpha6 ,
-                           InputIterator x6_begin ,
+                           InputIterator6 x6_begin ,
                            T alpha7 ,
-                           InputIterator x7_begin ,
+                           InputIterator7 x7_begin ,
                            T alpha8 ,
-                           InputIterator x8_begin )
-
-
+                           InputIterator8 x8_begin )
     {
+        typedef typename std::iterator_traits<InputIterator1>::value_type value_type;
         while( y_begin != y_end )
             (*y_begin++) = 
-                alpha1 * (*x1_begin++) + 
-                alpha2 * (*x2_begin++) + 
-                alpha3 * (*x3_begin++) +
-                alpha4 * (*x4_begin++) +
-                alpha5 * (*x5_begin++) +
-                alpha6 * (*x6_begin++) +
-                alpha7 * (*x7_begin++) +
-                alpha8 * (*x8_begin++);
+                alpha1 * static_cast<value_type>(*x1_begin++) + 
+                alpha2 * static_cast<value_type>(*x2_begin++) + 
+                alpha3 * static_cast<value_type>(*x3_begin++) +
+                alpha4 * static_cast<value_type>(*x4_begin++) +
+                alpha5 * static_cast<value_type>(*x5_begin++) +
+                alpha6 * static_cast<value_type>(*x6_begin++) +
+                alpha7 * static_cast<value_type>(*x7_begin++) +
+                alpha8 * static_cast<value_type>(*x8_begin++);
     }
 
     // computes y = x1 + alpha2*x2 + alpha3*x3 + alpha4*x4 + alpha5*x5
     // + alpha6*x6 + alpha7*x7 + alpha8*x8 + alpha9*x9
     template <
         class OutputIterator ,
-        class InputIterator ,
+        class InputIterator1 ,
+        class InputIterator2 ,
+        class InputIterator3 ,        
+        class InputIterator4 ,
+        class InputIterator5 ,
+        class InputIterator6 ,
+        class InputIterator7 ,
+        class InputIterator8 ,
+        class InputIterator9 ,
         class T
         >
     inline void scale_sum( OutputIterator y_begin ,
                            OutputIterator y_end ,
                            T alpha1 ,
-                           InputIterator x1_begin ,
+                           InputIterator1 x1_begin ,
                            T alpha2 ,
-                           InputIterator x2_begin ,
+                           InputIterator2 x2_begin ,
                            T alpha3 ,
-                           InputIterator x3_begin ,
+                           InputIterator3 x3_begin ,
                            T alpha4 ,
-                           InputIterator x4_begin ,
+                           InputIterator4 x4_begin ,
                            T alpha5 ,
-                           InputIterator x5_begin ,
+                           InputIterator5 x5_begin ,
                            T alpha6 ,
-                           InputIterator x6_begin ,
+                           InputIterator6 x6_begin ,
                            T alpha7 ,
-                           InputIterator x7_begin ,
+                           InputIterator7 x7_begin ,
                            T alpha8 ,
-                           InputIterator x8_begin ,
+                           InputIterator8 x8_begin ,
                            T alpha9 ,
-                           InputIterator x9_begin )
-
-
+                           InputIterator9 x9_begin )
     {
+        typedef typename std::iterator_traits<InputIterator1>::value_type value_type;
         while( y_begin != y_end )
             (*y_begin++) = 
-                alpha1 * (*x1_begin++) + 
-                alpha2 * (*x2_begin++) + 
-                alpha3 * (*x3_begin++) +
-                alpha4 * (*x4_begin++) +
-                alpha5 * (*x5_begin++) +
-                alpha6 * (*x6_begin++) +
-                alpha7 * (*x7_begin++) +
-                alpha8 * (*x8_begin++) +
-                alpha9 * (*x9_begin++);
+                alpha1 * static_cast<value_type>(*x1_begin++) + 
+                alpha2 * static_cast<value_type>(*x2_begin++) + 
+                alpha3 * static_cast<value_type>(*x3_begin++) +
+                alpha4 * static_cast<value_type>(*x4_begin++) +
+                alpha5 * static_cast<value_type>(*x5_begin++) +
+                alpha6 * static_cast<value_type>(*x6_begin++) +
+                alpha7 * static_cast<value_type>(*x7_begin++) +
+                alpha8 * static_cast<value_type>(*x8_begin++) +
+                alpha9 * static_cast<value_type>(*x9_begin++);
     }
 
 
@@ -356,45 +404,54 @@ namespace it_algebra { // iterator algebra
     // + alpha6*x6 + alpha7*x7 + alpha8*x8 + alpha9*x9 + alpha10*x10
     template <
         class OutputIterator ,
-        class InputIterator ,
+        class InputIterator1 ,
+        class InputIterator2 ,
+        class InputIterator3 ,
+        class InputIterator4 ,
+        class InputIterator5 ,
+        class InputIterator6 ,
+        class InputIterator7 ,
+        class InputIterator8 ,
+        class InputIterator9 ,
+        class InputIterator10 ,
         class T
         >
     inline void scale_sum( OutputIterator y_begin ,
                            OutputIterator y_end ,
                            T alpha1 ,
-                           InputIterator x1_begin ,
+                           InputIterator1 x1_begin ,
                            T alpha2 ,
-                           InputIterator x2_begin ,
+                           InputIterator2 x2_begin ,
                            T alpha3 ,
-                           InputIterator x3_begin ,
+                           InputIterator3 x3_begin ,
                            T alpha4 ,
-                           InputIterator x4_begin ,
+                           InputIterator4 x4_begin ,
                            T alpha5 ,
-                           InputIterator x5_begin ,
+                           InputIterator5 x5_begin ,
                            T alpha6 ,
-                           InputIterator x6_begin ,
+                           InputIterator6 x6_begin ,
                            T alpha7 ,
-                           InputIterator x7_begin ,
+                           InputIterator7 x7_begin ,
                            T alpha8 ,
-                           InputIterator x8_begin ,
+                           InputIterator8 x8_begin ,
                            T alpha9 ,
-                           InputIterator x9_begin ,
+                           InputIterator9 x9_begin ,
                            T alpha10 ,
-                           InputIterator x10_begin 
+                           InputIterator10 x10_begin 
         )
     {
         while( y_begin != y_end )
             (*y_begin++) = 
-                alpha1 * (*x1_begin++) + 
-                alpha2 * (*x2_begin++) + 
-                alpha3 * (*x3_begin++) +
-                alpha4 * (*x4_begin++) +
-                alpha5 * (*x5_begin++) +
-                alpha6 * (*x6_begin++) +
-                alpha7 * (*x7_begin++) +
-                alpha8 * (*x8_begin++) +
-                alpha9 * (*x9_begin++) +
-                alpha10 * (*x10_begin++);
+                alpha1 * static_cast<value_type>(*x1_begin++) + 
+                alpha2 * static_cast<value_type>(*x2_begin++) + 
+                alpha3 * static_cast<value_type>(*x3_begin++) +
+                alpha4 * static_cast<value_type>(*x4_begin++) +
+                alpha5 * static_cast<value_type>(*x5_begin++) +
+                alpha6 * static_cast<value_type>(*x6_begin++) +
+                alpha7 * static_cast<value_type>(*x7_begin++) +
+                alpha8 * static_cast<value_type>(*x8_begin++) +
+                alpha9 * static_cast<value_type>(*x9_begin++) +
+                alpha10 * static_cast<value_type>(*x10_begin++);
     }
 
 
