@@ -17,9 +17,6 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_RK4_CLASSICAL_HPP
 #define BOOST_NUMERIC_ODEINT_STEPPER_RK4_CLASSICAL_HPP
 
-#include <boost/concept_check.hpp>
-
-#include <boost/numeric/odeint/concepts/state_concept.hpp>
 #include <boost/numeric/odeint/container_traits.hpp>
 
 namespace boost {
@@ -43,17 +40,9 @@ namespace odeint {
         typedef Traits traits_type;
         typedef typename traits_type::value_type value_type;
         typedef typename traits_type::iterator iterator;
-        typedef typename traits_type::const_iterator constiterator;
+        typedef typename traits_type::const_iterator const_iterator;
 
 
-
-
-
-        // check the concept of the ContainerType
-    private:
-
-        BOOST_CLASS_REQUIRE( container_type ,
-                             boost::numeric::odeint, Container );
 
 
 

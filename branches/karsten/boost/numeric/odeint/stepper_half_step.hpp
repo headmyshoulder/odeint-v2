@@ -103,10 +103,10 @@ namespace odeint {
             do_step( system , x , dxdt , t , dt2 );
             do_step( system , x , t+dt2 , dt2 );
 
-            detail::it_algebra::assign_diff( xerr.begin() ,
-                                             xerr.end() ,
-                                             m_xtemp.begin() ,
-                                             x.begin() );
+            detail::it_algebra::assign_diff( traits_type::begin(xerr) ,
+                                             traits_type::begin(xerr) ,
+                                             traits_type::begin(m_xtemp) ,
+                                             traits_type::begin(x) );
         }
 
 

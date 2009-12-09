@@ -13,6 +13,8 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_RK78_FEHLBERG_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_STEPPER_RK78_FEHLBERG_HPP_INCLUDED
 
+#include <boost/numeric/odeint/container_traits.hpp>
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -20,20 +22,20 @@ namespace odeint {
     template<
         class Container ,
         class Time = double ,
-        class Resizer = resizer< Container >
+        class Traits = container_traits< Container >
         >
     class stepper_rk78_fehlberg
     {
         // provide basic typedefs
     public:
 
-        typedef Container container_type;
-        typedef Resizer resizer_type;
-        typedef Time time_type;
         typedef const unsigned short order_type;
-        typedef typename container_type::value_type value_type;
-        typedef typename container_type::iterator iterator;
-
+        typedef Container container_type;
+        typedef Time time_type;
+        typedef Traits traits_type;
+        typedef typename traits_type::value_type value_type;
+        typedef typename traits_type::iterator iterator;
+        typedef typename traits_type::const_iterator const_iterator;
 
 
 
@@ -46,7 +48,6 @@ namespace odeint {
         container_type m_k02 , m_k03 , m_k04 , m_k05 , m_k06 , m_k07 ,
             m_k08 , m_k09 , m_k10 , m_k11 , m_k12 , m_k13;
 
-        resizer_type m_resizer;
 
         // the times at which system is called
         time_type m_t02 , m_t03 , m_t04 , m_t05 , m_t06 , m_t07 , m_t08 ,
@@ -174,157 +175,157 @@ namespace odeint {
             m_t13 = t + dt;
 
             // resize
-            m_resizer.adjust_size( x , m_xt );
-            m_resizer.adjust_size( x , m_k02 );
-            m_resizer.adjust_size( x , m_k03 );
-            m_resizer.adjust_size( x , m_k04 );
-            m_resizer.adjust_size( x , m_k05 );
-            m_resizer.adjust_size( x , m_k06 );
-            m_resizer.adjust_size( x , m_k07 );
-            m_resizer.adjust_size( x , m_k08 );
-            m_resizer.adjust_size( x , m_k09 );
-            m_resizer.adjust_size( x , m_k10 );
-            m_resizer.adjust_size( x , m_k11 );
-            m_resizer.adjust_size( x , m_k12 );
-            m_resizer.adjust_size( x , m_k13 );
+            traits_type::adjust_size( x , m_xt );
+            traits_type::adjust_size( x , m_k02 );
+            traits_type::adjust_size( x , m_k03 );
+            traits_type::adjust_size( x , m_k04 );
+            traits_type::adjust_size( x , m_k05 );
+            traits_type::adjust_size( x , m_k06 );
+            traits_type::adjust_size( x , m_k07 );
+            traits_type::adjust_size( x , m_k08 );
+            traits_type::adjust_size( x , m_k09 );
+            traits_type::adjust_size( x , m_k10 );
+            traits_type::adjust_size( x , m_k11 );
+            traits_type::adjust_size( x , m_k12 );
+            traits_type::adjust_size( x , m_k13 );
 
 
             // k1, the first system call has allready been evaluated
 
             // k2 step
-            scale_sum( m_xt.begin() , m_xt.end() , 
-                       val1 , x.begin() , 
-                       dt * b02_01 , dxdt.begin() );
+            scale_sum( traits_type::begin(m_xt) , traits_type::end(m_xt) , 
+                       val1 , traits_type::begin(x) , 
+                       dt * b02_01 , traits_type::begin(dxdt) );
             system( m_xt , m_k02 , m_t02 );
 
             // k3 step
-            scale_sum( m_xt.begin() , m_xt.end() ,
-                       val1 , x.begin() ,
-                       dt * b03_01 , dxdt.begin() ,
-                       dt * b03_02 , m_k02.begin() );
+            scale_sum( traits_type::begin(m_xt) , traits_type::end(m_xt) ,
+                       val1 , traits_type::begin(x) ,
+                       dt * b03_01 , traits_type::begin(dxdt) ,
+                       dt * b03_02 , traits_type::begin(m_k02) );
             system( m_xt , m_k03 , m_t03 );
 
 
             // k4 step
-            scale_sum( m_xt.begin() , m_xt.end() ,
-                       val1 , x.begin() ,
-                       dt * b04_01 , dxdt.begin() ,
-                       dt * b04_03 , m_k03.begin() );
+            scale_sum( traits_type::begin(m_xt) , traits_type::end(m_xt) ,
+                       val1 , traits_type::begin(x) ,
+                       dt * b04_01 , traits_type::begin(dxdt) ,
+                       dt * b04_03 , traits_type::begin(m_k03) );
             system( m_xt , m_k04 , m_t04 );
 
 
             // k5 step
-            scale_sum( m_xt.begin() , m_xt.end() ,
-                       val1 , x.begin() ,
-                       dt * b05_01 , dxdt.begin() ,
-                       dt * b05_03 , m_k03.begin() ,
-                       dt * b05_04 , m_k04.begin() );
+            scale_sum( traits_type::begin(m_xt) , traits_type::end(m_xt) ,
+                       val1 , traits_type::begin(x) ,
+                       dt * b05_01 , traits_type::begin(dxdt) ,
+                       dt * b05_03 , traits_type::begin(m_k03) ,
+                       dt * b05_04 , traits_type::begin(m_k04) );
             system( m_xt , m_k05 , m_t05 );
 
 
             // k6 step
-            scale_sum( m_xt.begin() , m_xt.end() ,
-                       val1 , x.begin() ,
-                       dt * b06_01 , dxdt.begin() ,
-                       dt * b06_04 , m_k04.begin() ,
-                       dt * b06_05 , m_k05.begin() );
+            scale_sum( traits_type::begin(m_xt) , traits_type::end(m_xt) ,
+                       val1 , traits_type::begin(x) ,
+                       dt * b06_01 , traits_type::begin(dxdt) ,
+                       dt * b06_04 , traits_type::begin(m_k04) ,
+                       dt * b06_05 , traits_type::begin(m_k05) );
             system( m_xt , m_k06 , m_t06 );
 
 
             // k7 step
-            scale_sum( m_xt.begin() , m_xt.end() ,
-                       val1 , x.begin() ,
-                       dt * b07_01 , dxdt.begin() ,
-                       dt * b07_04 , m_k04.begin() ,
-                       dt * b07_05 , m_k05.begin() ,
-                       dt * b07_06 , m_k06.begin() );
+            scale_sum( traits_type::begin(m_xt) , traits_type::end(m_xt) ,
+                       val1 , traits_type::begin(x) ,
+                       dt * b07_01 , traits_type::begin(dxdt) ,
+                       dt * b07_04 , traits_type::begin(m_k04) ,
+                       dt * b07_05 , traits_type::begin(m_k05) ,
+                       dt * b07_06 , traits_type::begin(m_k06) );
             system( m_xt , m_k07 , m_t07 );
 
 
             // k8 step 
-            scale_sum( m_xt.begin() , m_xt.end() ,
-                       val1 , x.begin() ,
-                       dt * b08_01 , dxdt.begin() ,
-                       dt * b08_05 , m_k05.begin() ,
-                       dt * b08_06 , m_k06.begin() ,
-                       dt * b08_07 , m_k07.begin() );
+            scale_sum( traits_type::begin(m_xt) , traits_type::end(m_xt) ,
+                       val1 , traits_type::begin(x) ,
+                       dt * b08_01 , traits_type::begin(dxdt) ,
+                       dt * b08_05 , traits_type::begin(m_k05) ,
+                       dt * b08_06 , traits_type::begin(m_k06) ,
+                       dt * b08_07 , traits_type::begin(m_k07) );
             system( m_xt , m_k08 , m_t08 );
 
 
             // k9 step 
-            scale_sum( m_xt.begin() , m_xt.end() ,
-                       val1 , x.begin() ,
-                       dt * b09_01 , dxdt.begin() ,
-                       dt * b09_04 , m_k04.begin() ,
-                       dt * b09_05 , m_k05.begin() ,
-                       dt * b09_06 , m_k06.begin() ,
-                       dt * b09_07 , m_k07.begin() ,
-                       dt * b09_08 , m_k08.begin() );
+            scale_sum( traits_type::begin(m_xt) , traits_type::end(m_xt) ,
+                       val1 , traits_type::begin(x) ,
+                       dt * b09_01 , traits_type::begin(dxdt) ,
+                       dt * b09_04 , traits_type::begin(m_k04) ,
+                       dt * b09_05 , traits_type::begin(m_k05) ,
+                       dt * b09_06 , traits_type::begin(m_k06) ,
+                       dt * b09_07 , traits_type::begin(m_k07) ,
+                       dt * b09_08 , traits_type::begin(m_k08) );
             system( m_xt , m_k09 , m_t09 );
 
             
             // k10 step
-            scale_sum( m_xt.begin() , m_xt.end() ,
-                       val1 , x.begin() ,
-                       dt * b10_01 , dxdt.begin() ,
-                       dt * b10_04 , m_k04.begin() ,
-                       dt * b10_05 , m_k05.begin() ,
-                       dt * b10_06 , m_k06.begin() ,
-                       dt * b10_07 , m_k07.begin() ,
-                       dt * b10_08 , m_k08.begin() ,
-                       dt * b10_09 , m_k09.begin() );
+            scale_sum( traits_type::begin(m_xt) , traits_type::end(m_xt) ,
+                       val1 , traits_type::begin(x) ,
+                       dt * b10_01 , traits_type::begin(dxdt) ,
+                       dt * b10_04 , traits_type::begin(m_k04) ,
+                       dt * b10_05 , traits_type::begin(m_k05) ,
+                       dt * b10_06 , traits_type::begin(m_k06) ,
+                       dt * b10_07 , traits_type::begin(m_k07) ,
+                       dt * b10_08 , traits_type::begin(m_k08) ,
+                       dt * b10_09 , traits_type::begin(m_k09) );
             system( m_xt , m_k10 , m_t10 );
 
 
             // k11 step
-            scale_sum( m_xt.begin() , m_xt.end() ,
-                       val1 , x.begin() ,
-                       dt * b11_01 , dxdt.begin() ,
-                       dt * b11_04 , m_k04.begin()  ,
-                       dt * b11_05 , m_k05.begin() ,
-                       dt * b11_06 , m_k06.begin() ,
-                       dt * b11_07 , m_k07.begin() ,
-                       dt * b11_08 , m_k08.begin() ,
-                       dt * b11_09 , m_k09.begin() ,
-                       dt * b11_10 , m_k10.begin() );
+            scale_sum( traits_type::begin(m_xt) , traits_type::end(m_xt) ,
+                       val1 , traits_type::begin(x) ,
+                       dt * b11_01 , traits_type::begin(dxdt) ,
+                       dt * b11_04 , traits_type::begin(m_k04)  ,
+                       dt * b11_05 , traits_type::begin(m_k05) ,
+                       dt * b11_06 , traits_type::begin(m_k06) ,
+                       dt * b11_07 , traits_type::begin(m_k07) ,
+                       dt * b11_08 , traits_type::begin(m_k08) ,
+                       dt * b11_09 , traits_type::begin(m_k09) ,
+                       dt * b11_10 , traits_type::begin(m_k10) );
             system( m_xt , m_k11 , m_t11 );
 
 
             // k12 step
-            scale_sum( m_xt.begin() , m_xt.end() ,
-                       val1 , x.begin() ,
-                       dt * b12_01 , dxdt.begin() ,
-                       dt * b12_06 , m_k06.begin() ,
-                       dt * b12_07 , m_k07.begin() ,
-                       dt * b12_08 , m_k08.begin() ,
-                       dt * b12_09 , m_k09.begin() ,
-                       dt * b12_10 , m_k10.begin() );
+            scale_sum( traits_type::begin(m_xt) , traits_type::end(m_xt) ,
+                       val1 , traits_type::begin(x) ,
+                       dt * b12_01 , traits_type::begin(dxdt) ,
+                       dt * b12_06 , traits_type::begin(m_k06) ,
+                       dt * b12_07 , traits_type::begin(m_k07) ,
+                       dt * b12_08 , traits_type::begin(m_k08) ,
+                       dt * b12_09 , traits_type::begin(m_k09) ,
+                       dt * b12_10 , traits_type::begin(m_k10) );
             system( m_xt , m_k12 , m_t12 );
 
 
             // k13 step
-            scale_sum( m_xt.begin() , m_xt.end() ,
-                       val1 , x.begin() ,
-                       dt * b13_01 , dxdt.begin() ,
-                       dt * b13_04 , m_k04.begin() ,
-                       dt * b13_05 , m_k05.begin() ,
-                       dt * b13_06 , m_k06.begin() ,
-                       dt * b13_07 , m_k07.begin() ,
-                       dt * b13_08 , m_k08.begin() ,
-                       dt * b13_09 , m_k09.begin() ,
-                       dt * b13_10 , m_k10.begin() ,
-                       dt * b13_12 , m_k12.begin() );
+            scale_sum( traits_type::begin(m_xt) , traits_type::end(m_xt) ,
+                       val1 , traits_type::begin(x) ,
+                       dt * b13_01 , traits_type::begin(dxdt) ,
+                       dt * b13_04 , traits_type::begin(m_k04) ,
+                       dt * b13_05 , traits_type::begin(m_k05) ,
+                       dt * b13_06 , traits_type::begin(m_k06) ,
+                       dt * b13_07 , traits_type::begin(m_k07) ,
+                       dt * b13_08 , traits_type::begin(m_k08) ,
+                       dt * b13_09 , traits_type::begin(m_k09) ,
+                       dt * b13_10 , traits_type::begin(m_k10) ,
+                       dt * b13_12 , traits_type::begin(m_k12) );
             system( m_xt , m_k13 , m_t13 );
 
-            scale_sum( x.begin() , x.end() ,
-                       val1 , x.begin() ,
-                       dt * c06 , m_k06.begin() ,
-                       dt * c07 , m_k07.begin() ,
-                       dt * c08 , m_k08.begin() ,
-                       dt * c09 , m_k09.begin() ,
-                       dt * c10 , m_k10.begin() ,
-                       dt * c12 , m_k12.begin() ,
-                       dt * c13 , m_k13.begin() );
+            scale_sum( traits_type::begin(x) , traits_type::end(x) ,
+                       val1 , traits_type::begin(x) ,
+                       dt * c06 , traits_type::begin(m_k06) ,
+                       dt * c07 , traits_type::begin(m_k07) ,
+                       dt * c08 , traits_type::begin(m_k08) ,
+                       dt * c09 , traits_type::begin(m_k09) ,
+                       dt * c10 , traits_type::begin(m_k10) ,
+                       dt * c12 , traits_type::begin(m_k12) ,
+                       dt * c13 , traits_type::begin(m_k13) );
         }
 
 
@@ -334,7 +335,7 @@ namespace odeint {
                       time_type t ,
                       time_type dt )
         {
-            m_resizer.adjust_size( x , m_dxdt );
+            traits_type::adjust_size( x , m_dxdt );
             system( x , m_dxdt , t );
             do_step( system , x , m_dxdt , t , dt );
         }
@@ -382,7 +383,7 @@ namespace odeint {
                       time_type dt ,
                       container_type &xerr )
         {
-            m_resizer.adjust_size( x , m_dxdt );
+            traits_type::adjust_size( x , m_dxdt );
             system( x , m_dxdt , t );
             do_step( system , x , m_dxdt , t , dt , xerr );
         }
