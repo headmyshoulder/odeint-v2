@@ -138,9 +138,9 @@ struct iterator_proxy<typename mtl::traits::value< mtl::matrix::dense2D< ValueTy
 // define iterator traits for dense2D iterators
 namespace std {
 
-template <typename Value_Map, typename Cursor , typename Value >
+template < typename Cursor , typename Value , typename Parameters>
 struct iterator_traits< 
-    mtl::utilities::iterator_adaptor< Value_Map, Cursor, Value >
+    mtl::utilities::iterator_adaptor< mtl::detail::direct_value< mtl::dense2D< Value , Parameters > >, Cursor, Value >
 >
 {
     typedef Value value_type;
@@ -151,10 +151,9 @@ struct iterator_traits<
 };
 
 
-    /*
-template <typename Value, typename Parameters >
+template < typename Cursor , typename Value , typename Parameters>
 struct iterator_traits< 
-    typename boost::numeric::odeint::container_traits< mtl::dense2D< Value , Parameters > >::const_iterator 
+    mtl::utilities::iterator_adaptor< mtl::detail::direct_const_value< mtl::dense2D< Value , Parameters > >, Cursor, Value >
 >
 {
     typedef const Value value_type;
@@ -163,7 +162,8 @@ struct iterator_traits<
     typedef const Value& reference;
     typedef std::random_access_iterator_tag iterator_category;
 };
-    */    
+
+
 }
 
 
