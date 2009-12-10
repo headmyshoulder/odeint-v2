@@ -62,10 +62,10 @@ namespace odeint {
 
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
-                        container_type &x ,
-                        const container_type &dxdt ,
-                        time_type t ,
-                        time_type dt )
+		      container_type &x ,
+		      const container_type &dxdt ,
+		      time_type t ,
+		      time_type dt )
         {
             //x = x + dt*dxdt
             detail::it_algebra::increment( traits_type::begin(x) ,
