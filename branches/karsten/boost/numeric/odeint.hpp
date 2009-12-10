@@ -29,6 +29,9 @@
 #include <boost/numeric/odeint/stepper_midpoint.hpp>
 #include <boost/numeric/odeint/stepper_rk78_fehlberg.hpp>
 
+#include <boost/numeric/odeint/hamiltonian_stepper_euler.hpp>
+#include <boost/numeric/odeint/hamiltonian_stepper_rk.hpp>
+
 
 #include <boost/numeric/odeint/controlled_stepper_standard.hpp>
 #include <boost/numeric/odeint/controlled_stepper_bs.hpp>
