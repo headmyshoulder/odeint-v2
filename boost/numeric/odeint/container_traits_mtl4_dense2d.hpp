@@ -113,7 +113,7 @@ struct iterator_proxy<typename mtl::traits::value< mtl::matrix::dense2D< ValueTy
 
     operator ValueType() const
     {
-        return map(*cursor);
+        return static_cast<ValueType>(map(*cursor));
     }
 
     self& operator=(ValueType const& value)
@@ -124,7 +124,7 @@ struct iterator_proxy<typename mtl::traits::value< mtl::matrix::dense2D< ValueTy
 
     self& operator+=(ValueType const& value)
     {
-        map( *cursor, value + map(*cursor) );
+        map( *cursor, value + static_cast<ValueType>map(*cursor)) );
         return *this;
     }
 
