@@ -36,9 +36,8 @@ namespace it_algebra { // iterator algebra
                    T alpha
                    )
     {
-        typedef typename std::iterator_traits<InputIterator>::value_type value_type;
         while( first1 != last1 )
-            (*first1++) += alpha * static_cast<value_type>(*first2++);
+            (*first1++) += alpha * (*first2++);
     }
 
     // computes y = x1 - x2
@@ -72,9 +71,8 @@ namespace it_algebra { // iterator algebra
                     InputIterator2 first3 ,
                     T alpha )
     {
-        typedef typename std::iterator_traits<InputIterator1>::value_type value_type;
         while( first1 != last1 )
-            (*first1++) = (*first2++) + alpha * static_cast<value_type>(*first3++);
+            (*first1++) = (*first2++) + alpha * (*first3++);
     }
 
 
@@ -97,10 +95,9 @@ namespace it_algebra { // iterator algebra
                            T alpha2
                            )
     {
-        typedef typename std::iterator_traits<InputIterator3>::value_type value_type;
         while( first1 != last1 )
             (*first1++) += alpha1 *
-                ( (*first2++) + (*first3++) + alpha2 * static_cast<value_type>(*first4++) );
+                ( (*first2++) + (*first3++) + alpha2 * (*first4++) );
     }
 
 
@@ -120,11 +117,10 @@ namespace it_algebra { // iterator algebra
                            T alpha2 ,
                            InputIterator2 x2_begin )
     {
-        typedef typename std::iterator_traits<InputIterator1>::value_type value_type;
         while( y_begin != y_end )
             (*y_begin++) = 
-                alpha1 * static_cast<value_type>(*x1_begin++) + 
-                alpha2 * static_cast<value_type>(*x2_begin++);
+                alpha1 * (*x1_begin++) + 
+                alpha2 * (*x2_begin++);
     }
 
 
@@ -145,12 +141,11 @@ namespace it_algebra { // iterator algebra
                            T alpha3 ,
                            InputIterator3 x3_begin )
     {
-        typedef typename std::iterator_traits<InputIterator1>::value_type value_type;
         while( y_begin != y_end )
             (*y_begin++) = 
-                alpha1 * static_cast<value_type>(*x1_begin++) + 
-                alpha2 * static_cast<value_type>(*x2_begin++) + 
-                alpha3 * static_cast<value_type>(*x3_begin++);
+                alpha1 * (*x1_begin++) + 
+                alpha2 * (*x2_begin++) + 
+                alpha3 * (*x3_begin++);
     }
 
     // computes y = x1 + alpha2*x2 + alpha3*x3 + alpha4*x4
@@ -173,13 +168,12 @@ namespace it_algebra { // iterator algebra
                            T alpha4 ,
                            InputIterator4 x4_begin )
     {
-        typedef typename std::iterator_traits<InputIterator1>::value_type value_type;
         while( y_begin != y_end )
             (*y_begin++) = 
-                alpha1 * static_cast<value_type>(*x1_begin++) + 
-                alpha2 * static_cast<value_type>(*x2_begin++) + 
-                alpha3 * static_cast<value_type>(*x3_begin++) +
-                alpha4 * static_cast<value_type>(*x4_begin++);
+                alpha1 * (*x1_begin++) + 
+                alpha2 * (*x2_begin++) + 
+                alpha3 * (*x3_begin++) +
+                alpha4 * (*x4_begin++);
     }
 
     // computes y = x1 + alpha2*x2 + alpha3*x3 + alpha4*x4 + alpha5*x5
@@ -205,14 +199,13 @@ namespace it_algebra { // iterator algebra
                            T alpha5 ,
                            InputIterator5 x5_begin )
     {
-        typedef typename std::iterator_traits<InputIterator1>::value_type value_type;
         while( y_begin != y_end )
             (*y_begin++) = 
-                alpha1 * static_cast<value_type>(*x1_begin++) + 
-                alpha2 * static_cast<value_type>(*x2_begin++) + 
-                alpha3 * static_cast<value_type>(*x3_begin++) +
-                alpha4 * static_cast<value_type>(*x4_begin++) +
-                alpha5 * static_cast<value_type>(*x5_begin++);
+                alpha1 * (*x1_begin++) + 
+                alpha2 * (*x2_begin++) + 
+                alpha3 * (*x3_begin++) +
+                alpha4 * (*x4_begin++) +
+                alpha5 * (*x5_begin++);
     }
 
 
@@ -243,15 +236,14 @@ namespace it_algebra { // iterator algebra
                            T alpha6 ,
                            InputIterator6 x6_begin )
     {
-        typedef typename std::iterator_traits<InputIterator1>::value_type value_type;
         while( y_begin != y_end )
             (*y_begin++) = 
-                alpha1 * static_cast<value_type>(*x1_begin++) + 
-                alpha2 * static_cast<value_type>(*x2_begin++) + 
-                alpha3 * static_cast<value_type>(*x3_begin++) +
-                alpha4 * static_cast<value_type>(*x4_begin++) +
-                alpha5 * static_cast<value_type>(*x5_begin++) +
-                alpha6 * static_cast<value_type>(*x6_begin++);
+                alpha1 * (*x1_begin++) + 
+                alpha2 * (*x2_begin++) + 
+                alpha3 * (*x3_begin++) +
+                alpha4 * (*x4_begin++) +
+                alpha5 * (*x5_begin++) +
+                alpha6 * (*x6_begin++);
     }
 
 
@@ -286,16 +278,15 @@ namespace it_algebra { // iterator algebra
                            InputIterator7 x7_begin )
 
     {
-        typedef typename std::iterator_traits<InputIterator1>::value_type value_type;
         while( y_begin != y_end )
             (*y_begin++) = 
-                alpha1 * static_cast<value_type>(*x1_begin++) + 
-                alpha2 * static_cast<value_type>(*x2_begin++) + 
-                alpha3 * static_cast<value_type>(*x3_begin++) +
-                alpha4 * static_cast<value_type>(*x4_begin++) +
-                alpha5 * static_cast<value_type>(*x5_begin++) +
-                alpha6 * static_cast<value_type>(*x6_begin++) +
-                alpha7 * static_cast<value_type>(*x7_begin++) ;
+                alpha1 * (*x1_begin++) + 
+                alpha2 * (*x2_begin++) + 
+                alpha3 * (*x3_begin++) +
+                alpha4 * (*x4_begin++) +
+                alpha5 * (*x5_begin++) +
+                alpha6 * (*x6_begin++) +
+                alpha7 * (*x7_begin++) ;
     }
 
 
@@ -333,17 +324,16 @@ namespace it_algebra { // iterator algebra
                            T alpha8 ,
                            InputIterator8 x8_begin )
     {
-        typedef typename std::iterator_traits<InputIterator1>::value_type value_type;
         while( y_begin != y_end )
             (*y_begin++) = 
-                alpha1 * static_cast<value_type>(*x1_begin++) + 
-                alpha2 * static_cast<value_type>(*x2_begin++) + 
-                alpha3 * static_cast<value_type>(*x3_begin++) +
-                alpha4 * static_cast<value_type>(*x4_begin++) +
-                alpha5 * static_cast<value_type>(*x5_begin++) +
-                alpha6 * static_cast<value_type>(*x6_begin++) +
-                alpha7 * static_cast<value_type>(*x7_begin++) +
-                alpha8 * static_cast<value_type>(*x8_begin++);
+                alpha1 * (*x1_begin++) + 
+                alpha2 * (*x2_begin++) + 
+                alpha3 * (*x3_begin++) +
+                alpha4 * (*x4_begin++) +
+                alpha5 * (*x5_begin++) +
+                alpha6 * (*x6_begin++) +
+                alpha7 * (*x7_begin++) +
+                alpha8 * (*x8_begin++);
     }
 
     // computes y = x1 + alpha2*x2 + alpha3*x3 + alpha4*x4 + alpha5*x5
@@ -382,18 +372,17 @@ namespace it_algebra { // iterator algebra
                            T alpha9 ,
                            InputIterator9 x9_begin )
     {
-        typedef typename std::iterator_traits<InputIterator1>::value_type value_type;
         while( y_begin != y_end )
             (*y_begin++) = 
-                alpha1 * static_cast<value_type>(*x1_begin++) + 
-                alpha2 * static_cast<value_type>(*x2_begin++) + 
-                alpha3 * static_cast<value_type>(*x3_begin++) +
-                alpha4 * static_cast<value_type>(*x4_begin++) +
-                alpha5 * static_cast<value_type>(*x5_begin++) +
-                alpha6 * static_cast<value_type>(*x6_begin++) +
-                alpha7 * static_cast<value_type>(*x7_begin++) +
-                alpha8 * static_cast<value_type>(*x8_begin++) +
-                alpha9 * static_cast<value_type>(*x9_begin++);
+                alpha1 * (*x1_begin++) + 
+                alpha2 * (*x2_begin++) + 
+                alpha3 * (*x3_begin++) +
+                alpha4 * (*x4_begin++) +
+                alpha5 * (*x5_begin++) +
+                alpha6 * (*x6_begin++) +
+                alpha7 * (*x7_begin++) +
+                alpha8 * (*x8_begin++) +
+                alpha9 * (*x9_begin++);
     }
 
 
@@ -439,19 +428,18 @@ namespace it_algebra { // iterator algebra
                            InputIterator10 x10_begin 
         )
     {
-        typedef typename std::iterator_traits<InputIterator1>::value_type value_type;
         while( y_begin != y_end )
             (*y_begin++) = 
-                alpha1 * static_cast<value_type>(*x1_begin++) + 
-                alpha2 * static_cast<value_type>(*x2_begin++) + 
-                alpha3 * static_cast<value_type>(*x3_begin++) +
-                alpha4 * static_cast<value_type>(*x4_begin++) +
-                alpha5 * static_cast<value_type>(*x5_begin++) +
-                alpha6 * static_cast<value_type>(*x6_begin++) +
-                alpha7 * static_cast<value_type>(*x7_begin++) +
-                alpha8 * static_cast<value_type>(*x8_begin++) +
-                alpha9 * static_cast<value_type>(*x9_begin++) +
-                alpha10 * static_cast<value_type>(*x10_begin++);
+                alpha1 * (*x1_begin++) + 
+                alpha2 * (*x2_begin++) + 
+                alpha3 * (*x3_begin++) +
+                alpha4 * (*x4_begin++) +
+                alpha5 * (*x5_begin++) +
+                alpha6 * (*x6_begin++) +
+                alpha7 * (*x7_begin++) +
+                alpha8 * (*x8_begin++) +
+                alpha9 * (*x9_begin++) +
+                alpha10 * (*x10_begin++);
     }
 
 
