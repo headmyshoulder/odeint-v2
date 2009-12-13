@@ -21,10 +21,8 @@
 #include <exception>
 #include <cmath> // for pow( ) and abs()
 #include <limits>
-#include <boost/concept_check.hpp>
 
-#include <boost/numeric/odeint/concepts/state_concept.hpp>
-#include <boost/numeric/odeint/resizer.hpp>
+#include <boost/numeric/odeint/container_traits.hpp>
 
 
 namespace boost {
@@ -52,7 +50,7 @@ namespace odeint {
     template<
         class Container ,
         class Time = double ,
-        class Resizer = resizer< Container >
+        class Traits = container_traits< Container >
         >
     class stepper_rk_generic
     {
@@ -61,21 +59,15 @@ namespace odeint {
         // provide basic typedefs
     public:
 
-        typedef Container container_type;
-        typedef Resizer resizer_type;
-        typedef Time time_type;
         typedef const unsigned short order_type;
-        typedef typename container_type::value_type value_type;
-        typedef typename container_type::iterator iterator;
+        typedef Container container_type;
+        typedef Time time_type;
+        typedef Traits traits_type;
+        typedef typename traits_type::value_type value_type;
+        typedef typename traits_type::iterator iterator;
+        typedef typename traits_type::const_iterator const_iterator;
 
 
-
-
-        // check the concept of the ContainerType
-    private:
-
-        BOOST_CLASS_REQUIRE( container_type ,
-                             boost::numeric::odeint, Container );
 
 
 
@@ -96,7 +88,6 @@ namespace odeint {
 
         order_type m_q;
 
-        resizer_type m_resizer;
 
 
 	// private member functions
@@ -201,10 +192,10 @@ namespace odeint {
 
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
-                        container_type &x ,
-                        container_type &dxdt ,
-                        time_type t ,
-                        time_type dt )
+                      container_type &x ,
+                      container_type &dxdt ,
+                      time_type t ,
+                      time_type dt )
         {
             using namespace detail::it_algebra;
             typename container_vector::iterator x_iter = m_xvec.begin();
@@ -215,10 +206,10 @@ namespace odeint {
 
             while( x_iter != m_xvec.end() )
             {
-                m_resizer.adjust_size(x, (*x_iter));
+                traits_type::adjust_size(x, (*x_iter));
                 (*xiter_iter++) = (*x_iter++).begin();
             }
-            m_resizer.adjust_size(x, m_xtmp);
+            traits_type::adjust_size(x, m_xtmp);
             
             x_iter = m_xvec.begin()+1;
             
@@ -247,7 +238,7 @@ namespace odeint {
                         time_type t ,
                         time_type dt )
         {
-            m_resizer.adjust_size(x, m_xtmp);
+            traits_type::adjust_size(x, m_xtmp);
             system(x, m_xtmp, t);
             do_step( system, x, m_xtmp, t, dt);
         }
@@ -399,10 +390,10 @@ namespace odeint {
 
             while( x_iter != m_xvec.end() )
 	    {
-                m_resizer.adjust_size(x, (*x_iter));
+                traits_type::adjust_size(x, (*x_iter));
                 (*xiter_iter++) = (*x_iter++).begin();
             }
-            m_resizer.adjust_size(x, m_xtmp);
+            traits_type::adjust_size(x, m_xtmp);
             
             x_iter = m_xvec.begin()+1;
             
@@ -435,7 +426,7 @@ namespace odeint {
                         time_type t ,
                         time_type dt )
         {
-            m_resizer.adjust_size(x, m_xtmp);
+            traits_type::adjust_size(x, m_xtmp);
             system(x, m_xtmp, t);
             do_step( system, x, m_xtmp, t, dt);
         }

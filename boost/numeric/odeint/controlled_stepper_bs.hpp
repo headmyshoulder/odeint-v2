@@ -19,13 +19,11 @@
 
 #include <limits>
 
-#include <boost/concept_check.hpp>
-
 #include <boost/numeric/odeint/detail/iterator_algebra.hpp>
 #include <boost/numeric/odeint/concepts/state_concept.hpp>
-#include <boost/numeric/odeint/resizer.hpp>
 #include <boost/numeric/odeint/stepper_midpoint.hpp>
 #include <boost/numeric/odeint/error_checker_standard.hpp>
+#include <boost/numeric/odeint/container_traits.hpp>
 
 #include <iostream>
 
@@ -33,38 +31,32 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-    //    typedef enum{success, step_size_decreased, step_size_increased} controlled_step_result;
 
     template<
         class Container ,
         class Time = double ,
-        class Resizer = resizer< Container >
+        class Traits = container_traits< Container >
         >
     class controlled_stepper_bs
     {
         // provide basic typedefs
     public:
 
-        typedef Container container_type;
-        typedef Resizer resizer_type;
+        typedef unsigned short order_type;
         typedef Time time_type;
-        typedef const unsigned short order_type;
-        typedef typename container_type::value_type value_type;
-        typedef typename container_type::iterator iterator;
+        typedef Traits traits_type;
+        typedef typename traits_type::container_type container_type;
+        typedef typename traits_type::value_type value_type;
+        typedef typename traits_type::iterator iterator;
+        typedef typename traits_type::const_iterator const_iterator;
 
-
-        // check the concept of the ContainerType
-    private:
-
-        BOOST_CLASS_REQUIRE( container_type ,
-			     boost::numeric::odeint, Container );
 
         
         // private memebers
     private:
-        stepper_midpoint< Container, Time, Resizer > m_stepper_mp;
-        resizer_type m_resizer;
-        error_checker_standard<container_type, time_type> m_error_checker;
+
+        stepper_midpoint< container_type, time_type, traits_type > m_stepper_mp;
+        error_checker_standard< container_type, time_type > m_error_checker;
         
         const unsigned short m_k_max;
 
@@ -141,9 +133,9 @@ namespace odeint {
                 time_type &t ,
                 time_type &dt )
         {
-            m_resizer.adjust_size(x, m_xerr);
-            m_resizer.adjust_size(x, m_x_mp);
-            m_resizer.adjust_size(x, m_x_scale);
+            traits_type::adjust_size(x, m_xerr);
+            traits_type::adjust_size(x, m_x_mp);
+            traits_type::adjust_size(x, m_x_scale);
 
             // get error scale
             m_error_checker.fill_scale(x, dxdt, dt, m_x_scale);
@@ -275,7 +267,7 @@ namespace odeint {
                 time_type &t,
                 time_type &dt )
         {
-            m_resizer.adjust_size(x, m_dxdt);
+            traits_type::adjust_size(x, m_dxdt);
             system(x, m_dxdt, t);
             return try_step(system, x, m_dxdt, t, dt );
         }
@@ -318,10 +310,10 @@ namespace odeint {
                 container_type &x, 
                 container_type &x_err )
         {
-            //m_resizer.adjust_size(x, m_c);
+            //traits_type::adjust_size(x, m_c);
             //std::vector< container_type > m_d_iter = m_d.begin();
             //while( m_d_iter != m_d.end() )
-            //    m_resizer.adjust_size(x, (*m_d_iter++));
+            //    traits_type::adjust_size(x, (*m_d_iter++));
             
             m_times[k_est] = t_est;
             x_err = x = x_est;
@@ -331,7 +323,8 @@ namespace odeint {
             if( k_est == 0 )
             {
                 m_d[0] = x_est;
-            } else 
+            }
+            else 
             {
                m_c = x_est;
                for( unsigned short k=0; k<k_est; k++ )

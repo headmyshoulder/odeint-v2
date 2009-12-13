@@ -29,24 +29,20 @@ namespace numeric {
 namespace odeint {
 
 
-    template<
-	class Stepper
-	>
+    template< class Stepper >
     class stepper_half_step
     {
         // provide basic typedefs
     public:
 
         typedef Stepper stepper_type;
-        typedef typename Stepper::container_type container_type;
-        typedef typename Stepper::resizer_type resizer_type;
-        typedef typename Stepper::time_type time_type;
-	typedef typename Stepper::order_type order_type;
-        typedef typename container_type::value_type value_type;
-        typedef typename container_type::iterator iterator;
-
-
-
+        typedef typename stepper_type::container_type container_type;
+        typedef typename stepper_type::traits_type traits_type;
+        typedef typename stepper_type::time_type time_type;
+	typedef typename stepper_type::order_type order_type;
+        typedef typename stepper_type::value_type value_type;
+        typedef typename stepper_type::iterator iterator;
+        typedef typename stepper_type::const_iterator const_iterator;
 
 
 
@@ -56,7 +52,6 @@ namespace odeint {
 
         container_type m_dxdt;
         container_type m_xtemp;
-        resizer_type m_resizer;
         stepper_type m_stepper;
 	
 
@@ -99,7 +94,7 @@ namespace odeint {
                         time_type dt ,
                         container_type &xerr )
         {
-            m_resizer.adjust_size( x , xerr );
+            traits_type::adjust_size( x , xerr );
 
             m_xtemp = x;
             time_type dt2 = static_cast<time_type>(0.5) * dt;
@@ -108,10 +103,10 @@ namespace odeint {
             do_step( system , x , dxdt , t , dt2 );
             do_step( system , x , t+dt2 , dt2 );
 
-            detail::it_algebra::assign_diff( xerr.begin() ,
-                                             xerr.end() ,
-                                             m_xtemp.begin() ,
-                                             x.begin() );
+            detail::it_algebra::assign_diff( traits_type::begin(xerr) ,
+                                             traits_type::begin(xerr) ,
+                                             traits_type::begin(m_xtemp) ,
+                                             traits_type::begin(x) );
         }
 
 
@@ -123,7 +118,7 @@ namespace odeint {
                         time_type dt ,
                         container_type &xerr )
         {
-            m_resizer.adjust_size( x , m_dxdt );
+            traits_type::adjust_size( x , m_dxdt );
             system( x , m_dxdt , t );
             do_step( system , x , m_dxdt , t , dt , xerr );
         }

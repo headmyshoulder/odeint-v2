@@ -18,12 +18,8 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_EULER_HPP
 #define BOOST_NUMERIC_ODEINT_STEPPER_EULER_HPP
 
-#include <boost/concept_check.hpp>
-
 #include <boost/numeric/odeint/detail/iterator_algebra.hpp>
-#include <boost/numeric/odeint/concepts/state_concept.hpp>
-#include <boost/numeric/odeint/resizer.hpp>
-
+#include <boost/numeric/odeint/container_traits.hpp>
 
 
 namespace boost {
@@ -33,29 +29,20 @@ namespace odeint {
     template<
         class Container ,
         class Time = double ,
-        class Resizer = resizer< Container >
+        class Traits = container_traits< Container >
         >
     class stepper_euler
     {
         // provide basic typedefs
     public:
 
-        typedef Container container_type;
-        typedef Resizer resizer_type;
+        typedef unsigned short order_type;
         typedef Time time_type;
-        typedef const unsigned short order_type;
-        typedef typename container_type::value_type value_type;
-        typedef typename container_type::iterator iterator;
-
-
-
-
-        // check the concept of the ContainerType
-    private:
-
-        BOOST_CLASS_REQUIRE( container_type ,
-			     boost::numeric::odeint, Container );
-
+        typedef Traits traits_type;
+        typedef typename traits_type::container_type container_type;
+        typedef typename traits_type::value_type value_type;
+        typedef typename traits_type::iterator iterator;
+        typedef typename traits_type::const_iterator const_iterator;
 
 
 
@@ -63,8 +50,6 @@ namespace odeint {
     private:
 
         container_type m_dxdt;
-        resizer_type m_resizer;
-
 
 
 
@@ -77,13 +62,16 @@ namespace odeint {
 
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
-                        container_type &x ,
-                        const container_type &dxdt ,
-                        time_type t ,
-                        time_type dt )
+		      container_type &x ,
+		      const container_type &dxdt ,
+		      time_type t ,
+		      time_type dt )
         {
             //x = x + dt*dxdt
-            detail::it_algebra::increment( x.begin() , x.end() , dxdt.begin() , dt );
+            detail::it_algebra::increment( traits_type::begin(x) ,
+                                           traits_type::end(x) ,
+                                           traits_type::begin(dxdt) , 
+                                           dt );
         }
 
         template< class DynamicalSystem >
@@ -92,7 +80,7 @@ namespace odeint {
                         time_type t ,
                         time_type dt )
         {
-            m_resizer.adjust_size( x , m_dxdt );
+            traits_type::adjust_size( x , m_dxdt );
             system( x , m_dxdt , t );
             do_step( system , x , m_dxdt , t , dt );
         }

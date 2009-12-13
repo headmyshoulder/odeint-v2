@@ -21,7 +21,7 @@
 
 #include <boost/numeric/odeint/detail/iterator_algebra.hpp>
 #include <boost/numeric/odeint/concepts/state_concept.hpp>
-#include <boost/numeric/odeint/resizer.hpp>
+#include <boost/numeric/odeint/container_traits.hpp>
 
 namespace boost {
 namespace numeric {
@@ -32,6 +32,7 @@ namespace odeint {
         step_size_decreased ,
         step_size_increased
     } controlled_step_result;
+
 
     /*
        The initial state is given in x.
@@ -55,27 +56,27 @@ namespace odeint {
        the increase factor to 5.0.
     */
 
-    template< 
-        class ErrorStepper,
-	class ResizeType = resizer< typename ErrorStepper::container_type > >
+    template< class ErrorStepper >
     class controlled_stepper_standard
     {
 
     public:
 
         // forward types from ErrorStepper
-        typedef typename ErrorStepper::container_type container_type;
-        typedef typename ErrorStepper::resizer_type resizer_type;
-        typedef typename ErrorStepper::time_type time_type;
-        typedef typename container_type::value_type value_type;
-        typedef typename container_type::iterator iterator;
+        typedef ErrorStepper stepper_type;
+        typedef typename stepper_type::order_type order_type;
+        typedef typename stepper_type::container_type container_type;
+        typedef typename stepper_type::time_type time_type;
+        typedef typename stepper_type::traits_type traits_type;
+        typedef typename stepper_type::value_type value_type;
+        typedef typename stepper_type::iterator iterator;
+        typedef typename stepper_type::const_iterator const_iterator;
 
-        typedef unsigned short order_type;
 
         // private members
     private:
 
-        ErrorStepper &m_stepper;
+        stepper_type &m_stepper;
 
 	time_type m_eps_abs;
 	time_type m_eps_rel;
@@ -84,8 +85,6 @@ namespace odeint {
 	container_type m_dxdt;
 	container_type m_x_tmp;
 	container_type m_x_err;
-	resizer_type m_resizer;
-
 
 
         // private methods
@@ -145,8 +144,8 @@ namespace odeint {
                 time_type &t, 
                 time_type &dt )
 	{
-	    m_resizer.adjust_size( x , m_x_err );
-            m_resizer.adjust_size( x , m_dxdt );
+            traits_type::adjust_size( x , m_x_err );
+            traits_type::adjust_size( x , m_dxdt );
 
 	    m_x_tmp = x;
 	    system( x , m_dxdt , t ); 

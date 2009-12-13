@@ -14,7 +14,6 @@
 #define BOOST_NUMERIC_ODEINT_INTEGRATOR_ADAPTIVE_STEPSIZE_HPP
 
 #include <boost/numeric/odeint/controlled_stepper_standard.hpp>
-#include <boost/numeric/odeint/resizer.hpp>
 #include <boost/numeric/odeint/observer.hpp>
 #include <vector>
 #include <limits>
@@ -117,7 +116,8 @@ namespace odeint {
         if( times.empty() ) return 0;
         else
         {
-            state_copy_observer<InsertIterator, TimeSequence> observer(times, state_inserter);
+            state_copy_observer<InsertIterator, TimeSequence>
+                observer(times, state_inserter);
             return integrate_adaptive(stepper, system, state, 
                                       times.front() , times.back(), dt , observer);
         }
@@ -149,10 +149,11 @@ namespace odeint {
             T a_dxdt = 1.0
                      )
     {
+        typedef stepper_euler< ContainerType , T > stepper_type;
         // we use cash karp stepper as base stepper
-        stepper_rk5_ck< ContainerType > stepper_cash_karp;
+        stepper_type stepper_cash_karp;
         // we use the standard controller for this adaptive integrator
-        controlled_stepper_standard< ContainerType, T> 
+        controlled_stepper_standard< stepper_type > 
             controlled_stepper(stepper_cash_karp, eps_abs, eps_rel, a_x, a_dxdt ); 
         // initialized with values from above
         

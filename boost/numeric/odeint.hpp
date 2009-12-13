@@ -15,14 +15,23 @@
 #ifndef BOOST_NUMERIC_ODEINT_HPP
 #define BOOST_NUMERIC_ODEINT_HPP
 
+#include <boost/config.hpp>
+
+#include <boost/numeric/odeint/container_traits.hpp>
+#include <boost/numeric/odeint/container_traits_tr1_array.hpp>
+
 #include <boost/numeric/odeint/stepper_euler.hpp>
+#include <boost/numeric/odeint/stepper_half_step.hpp>
 #include <boost/numeric/odeint/stepper_rk4.hpp>
 #include <boost/numeric/odeint/stepper_rk4_classical.hpp>
 #include <boost/numeric/odeint/stepper_rk5_ck.hpp>
-#include <boost/numeric/odeint/stepper_rk_generic.hpp>
-#include <boost/numeric/odeint/stepper_half_step.hpp>
+//#include <boost/numeric/odeint/stepper_rk_generic.hpp>
 #include <boost/numeric/odeint/stepper_midpoint.hpp>
 #include <boost/numeric/odeint/stepper_rk78_fehlberg.hpp>
+
+#include <boost/numeric/odeint/hamiltonian_stepper_euler.hpp>
+#include <boost/numeric/odeint/hamiltonian_stepper_rk.hpp>
+
 
 #include <boost/numeric/odeint/controlled_stepper_standard.hpp>
 #include <boost/numeric/odeint/controlled_stepper_bs.hpp>

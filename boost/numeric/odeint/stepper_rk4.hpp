@@ -17,10 +17,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_RK4_HPP
 #define BOOST_NUMERIC_ODEINT_STEPPER_RK4_HPP
 
-#include <boost/concept_check.hpp>
-
-#include <boost/numeric/odeint/concepts/state_concept.hpp>
-#include <boost/numeric/odeint/resizer.hpp>
+#include <boost/numeric/odeint/container_traits.hpp>
 
 namespace boost {
 namespace numeric {
@@ -29,7 +26,7 @@ namespace odeint {
     template<
         class Container ,
         class Time = double ,
-        class Resizer = resizer< Container >
+        class Traits = container_traits< Container >
         >
     class stepper_rk4
     {
@@ -37,22 +34,15 @@ namespace odeint {
         // provide basic typedefs
     public:
 
-        typedef Container container_type;
-        typedef Resizer resizer_type;
-        typedef Time time_type;
         typedef const unsigned short order_type;
-        typedef typename container_type::value_type value_type;
-        typedef typename container_type::iterator iterator;
+        typedef Container container_type;
+        typedef Time time_type;
+        typedef Traits traits_type;
+        typedef typename traits_type::value_type value_type;
+        typedef typename traits_type::iterator iterator;
+        typedef typename traits_type::const_iterator const_iterator;
 
 
-
-
-
-        // check the concept of the ContainerType
-    private:
-
-        BOOST_CLASS_REQUIRE( container_type ,
-                             boost::numeric::odeint, Container );
 
 
 
@@ -65,7 +55,6 @@ namespace odeint {
         container_type m_dxm;
         container_type m_dxh;
         container_type m_xt;
-        resizer_type m_resizer;
 
 
 	// private member functions
@@ -75,61 +64,66 @@ namespace odeint {
         // public interface
     public:
 
-        stepper_rk4( void )
-        {
-        }
 
         order_type order() const { return 4; }
 
+
+
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
-                        container_type &x ,
-                        container_type &dxdt ,
-                        time_type t ,
-                        time_type dt )
+                      container_type &x ,
+                      container_type &dxdt ,
+                      time_type t ,
+                      time_type dt )
         {
             using namespace detail::it_algebra;
 
             const time_type val1 = static_cast<time_type>( 1.0 );
 
-            m_resizer.adjust_size( x , m_dxt );
-            m_resizer.adjust_size( x , m_dxm );
-            m_resizer.adjust_size( x , m_xt );
-            m_resizer.adjust_size( x , m_dxh );
+            traits_type::adjust_size( x , m_dxt );
+            traits_type::adjust_size( x , m_dxm );
+            traits_type::adjust_size( x , m_xt );
+            traits_type::adjust_size( x , m_dxh );
 
             time_type  dh = static_cast<time_type>( 0.5 ) * dt;
             time_type th = t + dh;
 
             // dt * dxdt = k1
             // m_xt = x + dh*dxdt
-            scale_sum( m_xt.begin(), m_xt.end(),
-                       val1, x.begin(),
-                       dh, dxdt.begin() );
+            scale_sum( traits_type::begin(m_xt),
+                       traits_type::end(m_xt),
+                       val1, traits_type::begin(x),
+                       dh, traits_type::begin(dxdt) );
 
 	    // dt * m_dxt = k2
             system( m_xt , m_dxt , th );
             //m_xt = x + dh*m_dxt
-            scale_sum( m_xt.begin(), m_xt.end(),
-                       val1, x.begin(),
-                       dh, m_dxt.begin() );
+            scale_sum( traits_type::begin(m_xt) ,
+                       traits_type::end(m_xt) ,
+                       val1, traits_type::begin(x) ,
+                       dh, traits_type::begin(m_dxt) );
 
             // dt * m_dxm = k3
             system( m_xt , m_dxm , th ); 
             //m_xt = x + dt*m_dxm
-            scale_sum( m_xt.begin(), m_xt.end(),
-                       val1, x.begin(),
-                       dt, m_dxm.begin() );
+            scale_sum( traits_type::begin(m_xt), traits_type::end(m_xt),
+                       val1, traits_type::begin(x) ,
+                       dt, traits_type::begin(m_dxm) );
 
 	    // dt * m_dxh = k4
             system( m_xt , m_dxh , t + dt );  
             //x += dt/6 * ( m_dxdt + m_dxt + val2*m_dxm )
-            scale_sum( x.begin(), x.end(),
-                       val1, x.begin(),
-                       dt / static_cast<time_type>( 6.0 ), dxdt.begin(),
-                       dt / static_cast<time_type>( 3.0 ), m_dxt.begin(),
-                       dt / static_cast<time_type>( 3.0 ), m_dxm.begin(),
-                       dt / static_cast<time_type>( 6.0 ), m_dxh.begin() );
+            time_type dt6 = dt / static_cast<time_type>( 6.0 );
+            time_type dt3 = dt / static_cast<time_type>( 3.0 );
+            scale_sum( traits_type::begin(x) , traits_type::end(x),
+                       val1, traits_type::begin(x),
+                       dt6 , traits_type::begin(dxdt),
+                       dt3 , traits_type::begin(m_dxt),
+                       dt3 , traits_type::begin(m_dxm),
+                       dt6 , traits_type::begin(m_dxh) );
         }
+
+
 
 
 
@@ -139,7 +133,7 @@ namespace odeint {
                         time_type t ,
                         time_type dt )
         {
-            m_resizer.adjust_size( x , m_dxdt );
+            traits_type::adjust_size( x , m_dxdt );
             system( x , m_dxdt , t );
             do_step( system , x , m_dxdt , t , dt );
         }
