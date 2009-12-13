@@ -1,3 +1,4 @@
+
 /* Boost odeint/resizer.hpp header file
  
  Copyright 2009 Karsten Ahnert

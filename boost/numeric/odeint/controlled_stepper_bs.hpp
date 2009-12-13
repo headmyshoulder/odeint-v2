@@ -86,9 +86,9 @@ namespace odeint {
         typedef std::vector< std::vector< time_type > > value_matrix;
         typedef std::vector< unsigned short > us_vector;
 
-        value_vector m_error;
-        value_vector m_a;
-        value_matrix m_alpha;
+        value_vector m_error; // errors of repeated midpoint steps and extrapolations
+        value_vector m_a; // stores the work (number of f calls) required for the orders
+        value_matrix m_alpha; // stores convergence factor for stepsize adjustment
         us_vector m_interval_sequence;
 
         value_vector m_times;
@@ -160,7 +160,7 @@ namespace odeint {
             unsigned short k_conv = 0;
             
             for( unsigned short k=0; k<=m_current_k_max; k++ )
-            {
+            {  // loop through interval numbers
                 unsigned short stepcount = m_interval_sequence[k];
                 //out-of-place midpoint step
                 m_stepper_mp.set_stepcount(stepcount);
@@ -207,7 +207,7 @@ namespace odeint {
                     }
                 }
             }
-            if( !converged ) { // dt was too large - no converge up to order k_max
+            if( !converged ) { // dt was too large - no convergence up to order k_max
 
                 // step_scale is always > 1 
                 step_scale = std::max(step_scale, m_min_step_scale); // at least m_min ...
