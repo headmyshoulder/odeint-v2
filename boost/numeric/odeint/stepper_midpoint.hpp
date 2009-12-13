@@ -100,7 +100,7 @@ namespace odeint {
 
             using namespace detail::it_algebra;
 
-            // m_x0 = x + h*dxdt
+            // m_x1 = x + h*dxdt
             scale_sum( traits_type::begin(m_x1), traits_type::end(m_x1),
                        t_1, traits_type::begin(x),
                        h, traits_type::begin(dxdt) );
@@ -114,7 +114,7 @@ namespace odeint {
             while( i != m_stepcount )
             {   // general step
                 //tmp = m_x1; m_x1 = m_x0 + h2*m_dxdt; m_x0 = tmp
-                scale_sum_swap( traits_type::begin(m_x1), traits_type::begin(m_x1), 
+                scale_sum_swap( traits_type::begin(m_x1), traits_type::end(m_x1), 
                                 traits_type::begin(m_x0),
                                 h2, traits_type::begin(m_dxdt) );
                 th += h;

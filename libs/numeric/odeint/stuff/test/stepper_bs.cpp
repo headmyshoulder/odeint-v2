@@ -37,9 +37,9 @@ int main( int argc , char **argv )
     clog.precision(16);
     for( size_t step=0; step < step_count; step++ )
     {
-        stepper_bs.try_step(harmonic_oscillator, x1, t, dt);
+        controlled_step_result res = stepper_bs.try_step(harmonic_oscillator, x1, t, dt);
         //clog << " ####################################################### " << endl;
-        cout << t << tab << dt << tab << x1[0] << tab << x1[1] << endl;
+        cout << t << tab << dt << tab << x1[0] << tab << x1[1] << tab << res << endl;
         //clog << " ####################################################### " << endl;
     }
 }

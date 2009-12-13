@@ -35,9 +35,9 @@ namespace odeint {
 
     private:
        	time_type m_eps_abs;
-	time_type m_eps_rel;
-	time_type m_a_x;
-	time_type m_a_dxdt;
+        time_type m_eps_rel;
+        time_type m_a_x;
+        time_type m_a_dxdt;
 
     public:
         // constructor
