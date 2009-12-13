@@ -8,12 +8,17 @@ project
     : requirements 
       <include>../../../..
       <include>$BOOST_ROOT
+      <include>$BLITZ_ROOT
+      <include>$MTL4_ROOT
       <define>BOOST_ALL_NO_LIB=1
     : build-dir .
     ;
 
 exe harmonic_oscillator : harmonic_oscillator.cpp ;
-exe lorenz_cmp_rk4_rk_generic : lorenz_cmp_rk4_rk_generic.cpp ;
+exe test_container_and_stepper : test_container_and_stepper.cpp ;
+exe hamiltonian_test : hamiltonian_test.cpp ;
+
+# exe lorenz_cmp_rk4_rk_generic : lorenz_cmp_rk4_rk_generic.cpp ;
 exe lorenz_controlled : lorenz_controlled.cpp ;
 exe lorenz_integrate_constant_step : lorenz_integrate_constant_step.cpp ;
 exe lorenz_integrator : lorenz_integrator.cpp ;
