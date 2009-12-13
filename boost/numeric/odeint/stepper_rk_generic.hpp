@@ -97,7 +97,7 @@ namespace odeint {
         {
             typename container_vector::iterator x_iter = m_xvec.begin();
             while( x_iter != m_xvec.end() ) {
-                (*xiter_iter++) = (*x_iter++).begin();
+                (*xiter_iter++) = traits_type::begin(*x_iter++);
             }
         }
 
@@ -202,12 +202,12 @@ namespace odeint {
             typename container_iterator_vector::iterator xiter_iter = m_xiter_vec.begin();
 
             (*x_iter) = dxdt;
-            (*xiter_iter++) = (*x_iter++).begin();
+            (*xiter_iter++) = traits_type::begin(*x_iter++);
 
             while( x_iter != m_xvec.end() )
             {
                 traits_type::adjust_size(x, (*x_iter));
-                (*xiter_iter++) = (*x_iter++).begin();
+                (*xiter_iter++) = traits_type::begin(*x_iter++);
             }
             traits_type::adjust_size(x, m_xtmp);
             
@@ -218,18 +218,18 @@ namespace odeint {
             while( x_iter != m_xvec.end() )
             {
                 reset_iter(m_xiter_vec.begin());
-                scale_sum_generic( m_xtmp.begin(), m_xtmp.end(),
+                scale_sum_generic( traits_type::begin(m_xtmp), traits_type::end(m_xtmp),
                                    (*b_iter).begin(), (*b_iter).end(), dt,
-                                   x.begin(), m_xiter_vec.begin() );
+                                   traits_type::begin(x), m_xiter_vec.begin() );
                 system( m_xtmp, *x_iter++ , t + dt*(*a_iter++) );
                 b_iter++;
             }
 
             reset_iter(m_xiter_vec.begin());
             typename parameter_vector::const_iterator c_iter = m_c.begin();
-            scale_sum_generic( x.begin(), x.end(),
+            scale_sum_generic( traits_type::begin(x), traits_type::end(x),
                                m_c.begin(), m_c.end(), dt,
-                               x.begin(), m_xiter_vec.begin() );
+                               traits_type::begin(x), m_xiter_vec.begin() );
         }
 
         template< class DynamicalSystem >
@@ -262,31 +262,30 @@ namespace odeint {
     template<
         class Container ,
         class Time = double ,
-        class Resizer = resizer< Container >
+        class Traits = container_traits< Container >
         >
-    class stepper_rk_generic_ptr {
+    class stepper_rk_generic_ptr
+    {
+
 
         // provide basic typedefs
     public:
 
-        typedef Container container_type;
-        typedef Resizer resizer_type;
-        typedef Time time_type;
         typedef const unsigned short order_type;
-        typedef typename container_type::value_type value_type;
-        typedef typename container_type::iterator iterator;
-
-
-        // check the concept of the ContainerType
-    private:
-
-        BOOST_CLASS_REQUIRE( container_type ,
-                             boost::numeric::odeint, Container );
+        typedef Container container_type;
+        typedef Time time_type;
+        typedef Traits traits_type;
+        typedef typename traits_type::value_type value_type;
+        typedef typename traits_type::iterator iterator;
+        typedef typename traits_type::const_iterator const_iterator;
 
         // private variables
     private:
+
         typedef std::vector< container_type > container_vector;
         typedef std::vector< iterator > container_iterator_vector;
+        typedef std::vector< time_type > parameter_vector;
+        typedef std::vector< parameter_vector > parameter_matrix;
 
         container_vector m_xvec;
         container_iterator_vector m_xiter_vec;
@@ -297,14 +296,13 @@ namespace odeint {
 
         order_type m_q;
 
-        resizer_type m_resizer;
 
     private:
         void reset_iter(typename container_iterator_vector::iterator xiter_iter)
         {
             typename container_vector::iterator x_iter = m_xvec.begin();
             while( x_iter != m_xvec.end() ) {
-                (*xiter_iter++) = (*x_iter++).begin();
+                (*xiter_iter++) = traits_type::begin(*x_iter++);
             }
         }
 
@@ -386,10 +384,10 @@ namespace odeint {
             typename container_iterator_vector::iterator xiter_iter = m_xiter_vec.begin();
 
             (*x_iter) = dxdt;
-            (*xiter_iter++) = (*x_iter++).begin();
+            (*xiter_iter++) = traits_type::begin(*x_iter++);
 
             while( x_iter != m_xvec.end() )
-	    {
+            {
                 traits_type::adjust_size(x, (*x_iter));
                 (*xiter_iter++) = (*x_iter++).begin();
             }
@@ -401,21 +399,21 @@ namespace odeint {
             const time_type* b_iter = &m_b[0];
             unsigned short b_len= 1;
             while( x_iter != m_xvec.end() )
-	    {
+            {
                 reset_iter(m_xiter_vec.begin());
                 const time_type* b_end = b_iter + b_len;
-                scale_sum_generic( m_xtmp.begin(), m_xtmp.end(),
+                scale_sum_generic( traits_type::begin(m_xtmp), traits_type::end(m_xtmp),
                                    b_iter, b_end, dt,
-                                   x.begin(), m_xiter_vec.begin() );
+                                   traits_type::begin(x), m_xiter_vec.begin() );
                 system( m_xtmp, *x_iter++ , t + dt*(*a_iter++) );
                 b_iter = b_end;
                 b_len++;
             }
 
             reset_iter(m_xiter_vec.begin());
-            scale_sum_generic( x.begin(), x.end(),
+            scale_sum_generic( traits_type::begin(x), traits_type::end(x),
                                &m_c[0], &m_c[m_q], dt,
-                               x.begin(), m_xiter_vec.begin() );
+                               traits_type::begin(x), m_xiter_vec.begin() );
         }
 
 

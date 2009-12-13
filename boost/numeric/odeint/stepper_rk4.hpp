@@ -95,7 +95,7 @@ namespace odeint {
                        val1, traits_type::begin(x),
                        dh, traits_type::begin(dxdt) );
 
-	    // dt * m_dxt = k2
+            // dt * m_dxt = k2
             system( m_xt , m_dxt , th );
             //m_xt = x + dh*m_dxt
             scale_sum( traits_type::begin(m_xt) ,
@@ -110,13 +110,12 @@ namespace odeint {
                        val1, traits_type::begin(x) ,
                        dt, traits_type::begin(m_dxm) );
 
-	    // dt * m_dxh = k4
+            // dt * m_dxh = k4
             system( m_xt , m_dxh , t + dt );  
             //x += dt/6 * ( m_dxdt + m_dxt + val2*m_dxm )
             time_type dt6 = dt / static_cast<time_type>( 6.0 );
             time_type dt3 = dt / static_cast<time_type>( 3.0 );
-            scale_sum( traits_type::begin(x) , traits_type::end(x),
-                       val1, traits_type::begin(x),
+            scale_sum_inplace( traits_type::begin(x) , traits_type::end(x),
                        dt6 , traits_type::begin(dxdt),
                        dt3 , traits_type::begin(m_dxt),
                        dt3 , traits_type::begin(m_dxm),

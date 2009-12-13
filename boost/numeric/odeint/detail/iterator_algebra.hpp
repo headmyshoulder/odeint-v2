@@ -118,9 +118,10 @@ namespace it_algebra { // iterator algebra
                            InputIterator2 x2_begin )
     {
         while( y_begin != y_end )
-            (*y_begin++) = 
-                alpha1 * (*x1_begin++) + 
+        {
+            (*y_begin++) = alpha1 * (*x1_begin++) +
                 alpha2 * (*x2_begin++);
+        }
     }
 
 
@@ -483,6 +484,35 @@ namespace it_algebra { // iterator algebra
         //std::clog<<std::endl;
     }
 
+
+    // computes y += alpha1*x1 + alpha2*x2 + alpha3*x3 + alpha4*x4
+    template <
+        class OutputIterator,
+        class InputIterator1,
+        class InputIterator2,
+        class InputIterator3,
+        class InputIterator4,
+        class T
+        >
+    inline void scale_sum_inplace(
+            OutputIterator y_begin,
+            OutputIterator y_end,
+            T alpha1,
+            InputIterator1 x1_begin,
+            T alpha2,
+            InputIterator2 x2_begin,
+            T alpha3,
+            InputIterator3 x3_begin,
+            T alpha4,
+            InputIterator4 x4_begin )
+    {   
+        while( y_begin != y_end )
+            (*y_begin++) += 
+                alpha1 * (*x1_begin++) + 
+                alpha2 * (*x2_begin++) + 
+                alpha3 * (*x3_begin++) +
+                alpha4 * (*x4_begin++);
+    }
 
     /* calculates tmp = y, y = x1 + alpha*x2, x1 = tmp */
     template <

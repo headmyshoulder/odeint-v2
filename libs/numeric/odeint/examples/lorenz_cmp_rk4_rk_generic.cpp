@@ -21,6 +21,7 @@
 #include <tr1/array>
 
 #include <boost/numeric/odeint.hpp>
+#include <boost/numeric/odeint/stepper_rk_generic.hpp>
 
 #define tab "\t"
 
