@@ -318,7 +318,7 @@ namespace odeint {
             m_times[k_est] = t_est;
             x_err = x = x_est;
 
-            const iterator x_end = x.end();
+            const iterator x_end = traits_type::end(x);
 
             if( k_est == 0 )
             {
@@ -336,8 +336,8 @@ namespace odeint {
 
                    //std::clog << " values: " << delta << '\t' << val1 << '\t' << val2 << std::endl; 
 
-                   iterator x_iter = x.begin();
-                   iterator x_err_iter = x_err.begin();
+                   iterator x_iter = traits_type::begin(x);
+                   iterator x_err_iter = traits_type::begin(x_err);
                    iterator d_k_iter = m_d[k].begin();
                    iterator c_iter = m_c.begin();
                    while( x_iter != x_end )

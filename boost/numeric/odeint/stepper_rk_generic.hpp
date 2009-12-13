@@ -389,7 +389,7 @@ namespace odeint {
             while( x_iter != m_xvec.end() )
             {
                 traits_type::adjust_size(x, (*x_iter));
-                (*xiter_iter++) = (*x_iter++).begin();
+                (*xiter_iter++) = traits_type::begin(*x_iter++);
             }
             traits_type::adjust_size(x, m_xtmp);
             
