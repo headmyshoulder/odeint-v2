@@ -21,7 +21,7 @@
 
 #include <boost/numeric/odeint/detail/iterator_algebra.hpp>
 #include <boost/numeric/odeint/concepts/state_concept.hpp>
-#include <boost/numeric/odeint/resizer.hpp>
+#include <boost/numeric/odeint/container_traits.hpp>
 
 namespace boost {
 namespace numeric {
@@ -32,6 +32,7 @@ namespace odeint {
         step_size_decreased ,
         step_size_increased
     } controlled_step_result;
+
 
     /*
        The initial state is given in x.

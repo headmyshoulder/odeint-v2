@@ -14,7 +14,6 @@
 #define BOOST_NUMERIC_ODEINT_INTEGRATOR_ADAPTIVE_STEPSIZE_HPP
 
 #include <boost/numeric/odeint/controlled_stepper_standard.hpp>
-#include <boost/numeric/odeint/resizer.hpp>
 #include <boost/numeric/odeint/observer.hpp>
 #include <vector>
 #include <limits>
