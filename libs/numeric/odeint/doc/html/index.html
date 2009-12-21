@@ -1,0 +1,214 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Chapter 1. boost.sandbox.numeric.odeint</title>
+<link rel="stylesheet" href="boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Chapter 1. boost.sandbox.numeric.odeint">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../boost.png"></td>
+<td align="center"><a href="../../index.html">Home</a></td>
+<td align="center"><a href="libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"></div>
+<div class="chapter" lang="en">
+<div class="titlepage"><div>
+<div><h2 class="title">
+<a name="odeint"></a>Chapter 1. boost.sandbox.numeric.odeint</h2></div>
+<div><div class="author"><h3 class="author">
+<span class="firstname">Karsten</span> <span class="surname">Ahnert</span>
+</h3></div></div>
+<div><div class="author"><h3 class="author">
+<span class="firstname">Mario</span> <span class="surname">Mulansky</span>
+</h3></div></div>
+<div><p class="copyright">Copyright © 2009 Karsten Ahnert and Mario Mulansky</p></div>
+<div><div class="legalnotice">
+<a name="id357871"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></div>
+</div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl><dt><span class="section"><a href="index.html#odeint.overview">Overview</a></span></dt></dl>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="odeint.overview"></a><a class="link" href="index.html#odeint.overview" title="Overview">Overview</a>
+</h2></div></div></div>
+<p>
+      Odeint is a library for solving initial value problems (IVP) of ordinary differential
+      equations. Mathematically, these problems are formulated as follows: <span class="bold"><strong>x'(t) = f(x,t)</strong></span>, <span class="bold"><strong>x(0) = x0</strong></span>.
+      <span class="bold"><strong>x</strong></span> and <span class="bold"><strong>f</strong></span> can
+      be vectors and the solution is some function <span class="bold"><strong>x(t)</strong></span>
+      fullfilling both equations above. Numerical approximations for the solution
+      x(t) are calculated iteratively. The easiest algorithm is the <span class="emphasis"><em>Euler-Scheme</em></span>,
+      where starting at x(0) one finds x(dt) = x(0) + dt*f(x(0),0). Now one can use
+      x(dt) and obtain x(2dt) in a similar way and so on. The Euler method is of
+      order 1, that means the error at each step is ~ dt[superscript 2]. This is,
+      of course, not very satisfying, which is why the Euler method is merely used
+      for real life problems and serves just as illustrative example. In <span class="bold"><strong>odeint</strong></span>, the following algorithms are implemented:
+    </p>
+<div class="table">
+<a name="id326926"></a><p class="title"><b>Table 1.1. Stepper Algorithms</b></p>
+<div class="table-contents"><table class="table" summary="Stepper Algorithms">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+          <p>
+            Method
+          </p>
+          </th>
+<th>
+          <p>
+            Class
+          </p>
+          </th>
+<th>
+          <p>
+            Order
+          </p>
+          </th>
+<th>
+          <p>
+            Error Estimation
+          </p>
+          </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+          <p>
+            Euler
+          </p>
+          </td>
+<td>
+          <p>
+            stepper_euler
+          </p>
+          </td>
+<td>
+          <p>
+            1
+          </p>
+          </td>
+<td>
+          <p>
+            No
+          </p>
+          </td>
+</tr>
+<tr>
+<td>
+          <p>
+            Runge-Kutta 4
+          </p>
+          </td>
+<td>
+          <p>
+            stepper_rk4
+          </p>
+          </td>
+<td>
+          <p>
+            4
+          </p>
+          </td>
+<td>
+          <p>
+            No
+          </p>
+          </td>
+</tr>
+<tr>
+<td>
+          <p>
+            Runge-Kutta Cash-Karp
+          </p>
+          </td>
+<td>
+          <p>
+            stepper_rk5_ck
+          </p>
+          </td>
+<td>
+          <p>
+            5
+          </p>
+          </td>
+<td>
+          <p>
+            Yes (Order 4)
+          </p>
+          </td>
+</tr>
+<tr>
+<td>
+          <p>
+            Runge-Kutta Fehlberg
+          </p>
+          </td>
+<td>
+          <p>
+            stepper_rk78_fehlberg
+          </p>
+          </td>
+<td>
+          <p>
+            7
+          </p>
+          </td>
+<td>
+          <p>
+            Yes (Order 5)
+          </p>
+          </td>
+</tr>
+<tr>
+<td>
+          <p>
+            Midpoint
+          </p>
+          </td>
+<td>
+          <p>
+            stepper_midpoint
+          </p>
+          </td>
+<td>
+          <p>
+            variable
+          </p>
+          </td>
+<td>
+          <p>
+            No
+          </p>
+          </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: December 21, 2009 at 15:25:21 GMT</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"></div>
+</body>
+</html>

@@ -15,7 +15,29 @@
      ]
 ]
 
-[section Introduction]
-Some Introduction.
+[section Overview]
+Odeint is a library for solving  initial value problems (IVP) of ordinary 
+differential equations.
+Mathematically, these problems are formulated as follows: [*x'(t) = f(x,t)], 
+[*x(0) = x0]. [*x] and [*f] can
+be vectors and the solution is some function [*x(t)] fullfilling both equations
+above.
+Numerical approximations for the solution x(t) are calculated iteratively.
+The easiest algorithm is the /Euler-Scheme/, where starting at x(0) one 
+finds x(dt) = x(0) + dt*f(x(0),0).
+Now one can use x(dt) and obtain x(2dt) in a similar way and so on.
+The Euler method is of order 1, that means the error at each step is ~ dt[superscript 2].
+This is, of course, not very satisfying, which is why the Euler method is 
+merely used for real life problems and serves just as illustrative example.
+In [*odeint], the following algorithms are implemented:
+
+[table Stepper Algorithms
+  [[Method] [Class] [Order] [Error Estimation]]
+  [[Euler]  [stepper_euler] [1] [No]]
+  [[Runge-Kutta 4] [stepper_rk4] [4] [No]]
+  [[Runge-Kutta Cash-Karp] [stepper_rk5_ck] [5] [Yes (Order 4)]]
+  [[Runge-Kutta Fehlberg] [stepper_rk78_fehlberg] [7] [Yes (Order 5)]]
+  [[Midpoint] [stepper_midpoint] [variable] [No]]
+]
 
 [endsect]

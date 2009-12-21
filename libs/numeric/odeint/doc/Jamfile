@@ -1,17 +1,14 @@
 import quickbook ;
 
-xml odeint
-  :
-    odeint.qbk
-  ;
+xml odeint : odeint.qbk ;
 
-boostbook doc
-  :
-    odeint
-  ;
+boostbook standalone
+	:
+	  odeint
+	;
 
 install html
-  :
-    /boost//doc/html/boostbook.css
-  ;
-
+	:
+	  /boost//doc/html/boostbook.css
+	;
+	
