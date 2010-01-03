@@ -14,7 +14,6 @@
 #define BOOST_NUMERIC_ODEINT_HAMILTONIAN_STEPPER_RK_HPP_INCLUDED
 
 #include <stdexcept>
-#include <tr1/array>
 
 #include <boost/numeric/odeint/detail/iterator_algebra.hpp>
 #include <boost/numeric/odeint/container_traits.hpp>
@@ -70,22 +69,23 @@ namespace odeint {
 		      time_type dt )
         {
 	    const size_t order = 6;
-	    const std::tr1::array< time_type , order > rk_a = {{
+
+	    const time_type rk_a[order] = {
 		    static_cast<time_type>( 0.40518861839525227722 ) ,
 		    static_cast<time_type>( -0.28714404081652408900 ) ,
 		    static_cast<time_type>( 0.3819554224212718118 ) ,
 		    static_cast<time_type>( 0.3819554224212718118 ) ,
 		    static_cast<time_type>( -0.28714404081652408900 ) ,
  		    static_cast<time_type>( 0.40518861839525227722 )
-		}};
-	    const std::tr1::array< time_type , order > rk_b = {{
+		};
+	    const time_type rk_b[order] = {
 		    static_cast<time_type>( -3.0/73.0 ) ,
 		    static_cast<time_type>( 17.0/59.0 ) ,
 		    static_cast<time_type>( 0.50592059438123984212 ) ,
 		    static_cast<time_type>( 17.0/59.0 ) ,
 		    static_cast<time_type>( -3.0/73.0 ) ,
 		    static_cast<time_type>( 0.0 )
-		}};
+		};
 
 
 

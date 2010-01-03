@@ -16,12 +16,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_HALF_STEP_HPP
 #define BOOST_NUMERIC_ODEINT_STEPPER_HALF_STEP_HPP
 
-#include <boost/concept_check.hpp>
-
 #include <boost/numeric/odeint/detail/iterator_algebra.hpp>
-#include <boost/numeric/odeint/concepts/state_concept.hpp>
-#include <boost/numeric/odeint/resizer.hpp>
-
 
 
 namespace boost {
