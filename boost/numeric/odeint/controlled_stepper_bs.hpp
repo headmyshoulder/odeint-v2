@@ -18,6 +18,7 @@
 #define BOOST_NUMERIC_ODEINT_CONTROLLED_STEPPER_BS_HPP
 
 #include <limits>
+#include <vector>
 
 #include <boost/numeric/odeint/detail/iterator_algebra.hpp>
 #include <boost/numeric/odeint/concepts/state_concept.hpp>
