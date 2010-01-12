@@ -20,47 +20,37 @@ namespace numeric {
 namespace odeint {
 
 
-    template< class Time , class Container , class System >
+    template< class Time, class Container , class System >
     inline void do_nothing_observer( Time , Container& , System& )
     {
     }
     
 
 
-    template< class InsertIterator, class TimeSequence = std::vector<double> >
+    template< class TimeInsertIterator, class StateInsertIterator >
     class state_copy_observer
     {
         
     private:
 
-        TimeSequence &m_times;
-        InsertIterator m_state_inserter;
-        typename TimeSequence::iterator m_time_iter;
-
-        typedef typename TimeSequence::value_type time_type;
-
+        TimeInsertIterator m_time_inserter;
+        StateInsertIterator m_state_inserter;
 
     public:
 
-        state_copy_observer( TimeSequence &times ,
-			     InsertIterator state_inserter ) 
-            : m_times(times),
-	      m_state_inserter(state_inserter),
-	      m_time_iter(m_times.begin()) 
+        state_copy_observer( TimeInsertIterator time_inserter ,
+			     StateInsertIterator state_inserter ) 
+            : m_time_inserter(time_inserter),
+	      m_state_inserter(state_inserter)
         {  }
 
-	void reset( void ) { m_time_iter = m_times.begin(); }
+	void reset( void ) { }
         
-        template< class Container, class System >
-        void operator () (time_type t, Container &state, System &system )
+        template< class Time, class Container, class System >
+        void operator () (Time t, Container &state, System &system )
 	{
-            if( ( m_time_iter != m_times.end() ) &&
-		( t >= *m_time_iter ) )
-	    {
-		// we've reached the next time point
-                *m_state_inserter++ = state; // insert the state
-                m_time_iter++; // next time point
-            }
+            *m_time_inserter++ = t; // insert time
+            *m_state_inserter++ = state; // insert state
         }
     };
 

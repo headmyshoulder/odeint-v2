@@ -15,6 +15,7 @@
 #define BOOST_NUMERIC_ODEINT_CONTROLLED_STEPPER_STANDARD_HPP
 
 #include <cmath> // for pow( ) and abs()
+#include <algorithm>
 #include <complex>
 
 #include <boost/concept_check.hpp>
@@ -107,7 +108,7 @@ namespace odeint {
                 err = m_eps_abs + m_eps_rel * (
                     m_a_x * std::abs(*x_start++) + 
                     m_a_dxdt * dt * std::abs(*dxdt_start++) );
-                max_rel_err = max( std::abs(*x_err_start++)/err , max_rel_err );
+                max_rel_err = std::max( std::abs(*x_err_start++)/err , max_rel_err );
 	    }
             return max_rel_err;
         }
@@ -160,8 +161,8 @@ namespace odeint {
             { 
                 // error too large - decrease dt
                 // limit scaling factor to 0.2
-                dt *= max( 0.9*pow(max_rel_err , -1.0/(m_stepper.order_error()-1.0)),
-                           0.2 );
+                dt *= std::max( 0.9*pow(max_rel_err , -1.0/(m_stepper.order_error()-1.0)),
+                                0.2 );
 
                 // reset state
                 x = m_x_tmp;
@@ -174,7 +175,7 @@ namespace odeint {
                     //error too small - increase dt and keep the evolution
                     t += dt;
                     // limit scaling factor to 5.0
-                    dt *= min( 0.9*pow(max_rel_err , -1.0/m_stepper.order()), 5.0 );
+                    dt *= std::min( 0.9*pow(max_rel_err , -1.0/m_stepper.order()), 5.0 );
                     return step_size_increased;
                 }
                 else

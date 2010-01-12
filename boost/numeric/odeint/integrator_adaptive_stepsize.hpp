@@ -75,7 +75,7 @@ namespace odeint {
     {
         return integrate_adaptive(
                 stepper, system ,
-                state, start_time , end_time,
+                state, start_time , end_time, dt, 
                 do_nothing_observer<
 		    typename ControlledStepper::time_type ,
 		    typename ControlledStepper::container_type ,
@@ -102,25 +102,23 @@ namespace odeint {
     template< 
         class ControlledStepper,
         class DynamicalSystem,
-        class TimeSequence,
-        class InsertIterator
+        class TimeInsertIterator,
+        class StateInsertIterator
 	>
     size_t integrate(
             ControlledStepper &stepper,
             DynamicalSystem &system,
             typename ControlledStepper::container_type &state, 
-            TimeSequence &times, 
+            typename ControlledStepper::time_type start,
+            typename ControlledStepper::time_type end,
             typename ControlledStepper::time_type dt, 
-            InsertIterator state_inserter)
+            TimeInsertIterator time_inserter,
+            StateInsertIterator state_inserter)
     {
-        if( times.empty() ) return 0;
-        else
-        {
-            state_copy_observer<InsertIterator, TimeSequence>
-                observer(times, state_inserter);
-            return integrate_adaptive(stepper, system, state, 
-                                      times.front() , times.back(), dt , observer);
-        }
+        state_copy_observer<TimeInsertIterator, StateInsertIterator>
+            observer(time_inserter, state_inserter);
+        return integrate_adaptive(stepper, system, state, 
+                                  start , end, dt , observer);
     }
 
 
@@ -133,15 +131,17 @@ namespace odeint {
     template< 
             class DynamicalSystem,
             class ContainerType,
-            class InsertIterator,
-            class TimeSequence,
+            class TimeInsertIterator,
+            class StateInsertIterator,
             class T
             >
     size_t integrate(
             DynamicalSystem &system, 
-            ContainerType &x, 
-            TimeSequence &times, 
-            InsertIterator state_inserter,
+            ContainerType &x,
+            T start ,
+            T end ,
+            TimeInsertIterator time_inserter,
+            StateInsertIterator state_inserter,
             T dt = 1E-4, 
             T eps_abs = 1E-6, 
             T eps_rel = 1E-7, 
@@ -149,7 +149,7 @@ namespace odeint {
             T a_dxdt = 1.0
                      )
     {
-        typedef stepper_euler< ContainerType , T > stepper_type;
+        typedef stepper_rk5_ck< ContainerType , T > stepper_type;
         // we use cash karp stepper as base stepper
         stepper_type stepper_cash_karp;
         // we use the standard controller for this adaptive integrator
@@ -158,7 +158,8 @@ namespace odeint {
         // initialized with values from above
         
         // call the normal integrator
-        return integrate(controlled_stepper, system, x, times, dt, state_inserter);
+        return integrate(controlled_stepper, system, x, 
+                         start, end, dt, time_inserter, state_inserter);
     }
     
 

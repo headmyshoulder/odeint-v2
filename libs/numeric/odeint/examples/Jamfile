@@ -25,3 +25,5 @@ exe lorenz_integrator : lorenz_integrator.cpp ;
 exe lorenz_stepper : lorenz_stepper.cpp ;
 exe pendulum_vibrating_pivot : pendulum_vibrating_pivot.cpp ;
 exe dnls_stepper_compare : dnls_stepper_compare.cpp ;
+
+exe doc_harm_osc : doc_harm_osc.cpp ;
