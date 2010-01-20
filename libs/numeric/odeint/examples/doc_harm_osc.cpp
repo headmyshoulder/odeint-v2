@@ -16,6 +16,22 @@ void harmonic_oscillator(const state_type &x, state_type &dxdt, const double t)
 }
 //]
 
+//[ rhs_class
+class harm_osc {
+
+    double m_gam;
+
+public:
+    harm_osc( double gam ) : m_gam(gam) { }
+
+    void operator() (const state_type &x, state_type &dxdt, const double t)
+    {
+        dxdt[0] = x[1];
+        dxdt[1] = -x[0] - m_gam*x[1];
+    }
+};
+//]
+
 int main(int argc, char **argv)
 {
     using namespace std;
@@ -36,6 +52,15 @@ int main(int argc, char **argv)
                               back_inserter( times ) ,
                               back_inserter( x_t_vec ) );
     //]
+
+    /* the same as above using the class */
+    /*
+    harm_osc ho(0.15);
+    steps = integrate( ho , 
+                       x , 0.0 , 10.0 , 
+                       back_inserter( times ) ,
+                       back_inserter( x_t_vec ) );
+    */
 
     //[ output
     for( size_t i=0; i<=steps; i++ ) { //initial state is 0th entry

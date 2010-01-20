@@ -27,3 +27,4 @@ exe pendulum_vibrating_pivot : pendulum_vibrating_pivot.cpp ;
 exe dnls_stepper_compare : dnls_stepper_compare.cpp ;
 
 exe doc_harm_osc : doc_harm_osc.cpp ;
+exe doc_integrate_const : doc_integrate_const.cpp ;

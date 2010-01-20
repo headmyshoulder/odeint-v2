@@ -60,25 +60,28 @@ int main( int argc , char **argv )
 
 
     vector<state_type> x1_t_vec;
+    vector<double> t1_vec;
     vector<state_type> x2_t_vec;
+    vector<double> t2_vec;
     vector<state_type> x3_t_vec;
-    vector<double> times(time_points);
-    for( size_t i=0; i<time_points; i++ ) {
-        times[i] = 0.1*i;
-    }
+    vector<double> t3_vec;
 
     stepper_half_step< stepper_euler< state_type > > euler;
     controlled_stepper_standard< stepper_half_step< stepper_euler< state_type > > >
         euler_controlled( euler , eps_abs, eps_rel, 1.0, 1.0);
     size_t steps = integrate( euler_controlled, lorenz, x1, 
-                              times, 1E-4, back_inserter(x1_t_vec));
+                              0.0, 10.0, 1E-4, 
+                              back_inserter(t1_vec),
+                              back_inserter(x1_t_vec));
 
     clog << "Euler Half Step: #steps " << steps << endl;
 
     stepper_half_step< stepper_rk4< state_type > > rk4;
     controlled_stepper_standard< stepper_half_step< stepper_rk4< state_type > > >
         rk4_controlled( rk4 , eps_abs, eps_rel, 1.0, 1.0);
-    steps = integrate( rk4_controlled, lorenz, x2, times, 1E-4, back_inserter(x2_t_vec));
+    steps = integrate( rk4_controlled, lorenz, x2, 0.0, 10.0, 1E-4, 
+                       back_inserter(t2_vec),
+                       back_inserter(x2_t_vec));
 
     clog << "RK4 Half Step: #steps " << steps << endl;
 
@@ -86,21 +89,22 @@ int main( int argc , char **argv )
     stepper_rk5_ck< state_type > rk5;
     controlled_stepper_standard< stepper_rk5_ck< state_type > > 
         rk5_controlled( rk5 , eps_abs, eps_rel, 1.0, 1.0);
-    steps = integrate( rk5_controlled, lorenz, x3, times, 1E-4, back_inserter(x3_t_vec));
+    steps = integrate( rk5_controlled, lorenz, x3, 0.0, 10.0, 1E-4, 
+                       back_inserter(t3_vec),
+                       back_inserter(x3_t_vec));
     
     clog << "RK5 Cash-Karp: #steps: " << steps << endl;
 
     cout.precision(16);
     cout.setf(ios::fixed,ios::floatfield);
+
+    cout << t1_vec.size() << tab << t2_vec.size() << tab << t3_vec.size() << endl;
     
 
-    for( size_t i=0; i<time_points; i++ ) {
-        //cout << "current state: " ;
-        cout << times[i] << tab;
-        cout << x1_t_vec[i][0] << tab << x1_t_vec[i][1] << tab << x1_t_vec[i][2] << tab;
-        cout << x2_t_vec[i][0] << tab << x2_t_vec[i][1] << tab << x2_t_vec[i][2] << tab;
-        cout << x3_t_vec[i][0] << tab << x3_t_vec[i][1] << tab << x3_t_vec[i][2] << endl;
-    }
+    //cout << "current state: " ;
+    cout << (x1_t_vec.back())[0] << tab << (x1_t_vec.back())[1] << tab << (x1_t_vec.back())[2] << tab;
+    cout << x2_t_vec.back()[0] << tab << x2_t_vec.back()[1] << tab << x2_t_vec.back()[2] << tab;
+    cout << x3_t_vec.back()[0] << tab << x3_t_vec.back()[1] << tab << x3_t_vec.back()[2] << endl;
 
     return 0;
 }

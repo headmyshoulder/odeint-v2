@@ -33,9 +33,8 @@ using namespace boost::numeric::odeint;
 typedef std::tr1::array< double , 2 > state_type;
 
 const double alpha = 0.1;
-const double omega = 10;
+const double omega = 20;
 const double a = 0.1;
-const size_t time_points = 1000;
 
 /* 
    Defines the right hand side f(x,t) of the dynamical equations dx/dt = f(x,t) 
@@ -51,10 +50,7 @@ int main( int argc , char **argv )
 {
     state_type x = {{ 1.0, 0.0 }};
 
-    vector<double> times(time_points);
-    for( size_t i=0; i<time_points; i++ ) {
-        times[i] = 0.1*i;
-    }
+    vector<double> times;
     vector<state_type> x_t_vec;
     
     stepper_half_step< stepper_rk4< state_type > > stepper;
@@ -62,7 +58,10 @@ int main( int argc , char **argv )
     controlled_stepper_standard< stepper_half_step< stepper_rk4< state_type > > >
         controlled_stepper( stepper, 1E-6 , 1E-7 , 1.0 , 1.0 );
 
-    size_t steps = integrate( controlled_stepper, my_system, x, times, 1E-4, back_inserter(x_t_vec)); \
+    size_t steps = integrate( controlled_stepper, my_system, x, 
+                              0.0, 100.0,1E-4, 
+                              back_inserter(times),
+                              back_inserter(x_t_vec));
 
         clog << "Steps: " << steps << endl;
 
@@ -70,10 +69,10 @@ int main( int argc , char **argv )
     cout.setf(ios::fixed,ios::floatfield);
     
 
-    for( size_t i=0; i<time_points; i++ ) {
+    for( size_t i=0; i<times.size(); i++ ) {
         //cout << "current state: " ;
         cout << times[i] << tab;
-        cout << x_t_vec[i][0] << tab << x_t_vec[i][1] << tab << x_t_vec[i][2] << endl;
+        cout << x_t_vec[i][0] << tab << x_t_vec[i][1] << endl;
     }
 
     return 0;
