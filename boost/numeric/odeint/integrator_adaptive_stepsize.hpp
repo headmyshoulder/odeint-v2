@@ -46,6 +46,7 @@ namespace odeint {
         
         while( t < end_time )
         {
+            if( (end_time - t) < dt ) dt = end_time - t;
             // do a controlled step
             result = stepper.try_step( system, state, t, dt_ );
 
