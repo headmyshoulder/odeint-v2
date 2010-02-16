@@ -182,3 +182,13 @@ in `x`. The result, ['x(t=10)] is stored in `x` (in-place).
 [endsect]
 
 [endsect]
+
+
+
+[include tutorial.qbk]
+
+[include steppers.qbk]
+
+[include integrate_functions.qbk]
+
+[include container_traits.qbk]

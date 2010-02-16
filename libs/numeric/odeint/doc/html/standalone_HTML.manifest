@@ -1,3 +1,7 @@
 index.html
 odeint/short_example.html
 odeint/tutorial.html
+boost_sandbox_numeric_odeint/tutorial2.html
+boost_sandbox_numeric_odeint/stepper.html
+boost_sandbox_numeric_odeint/integration_functions.html
+boost_sandbox_numeric_odeint/container_traits.html

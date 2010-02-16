@@ -54,6 +54,7 @@ namespace odeint {
         }
     };
 
+
 } // odeint
 } // numeric
 } // boost

@@ -1,0 +1,65 @@
+= Features and Coding issues: =
+
+Karsten:
+* Resizer functionality should be called explicitly and not in every call of do_step or try_step
+* Add new order function (because we need three orders for rk78)
+* deriv every stepper from stepper_base< stepper >, because do_step( system , x , t , dt ) is only implemented ones ( and calls the special do_step( system , x , dxdt , t , dt ) 
+* In all steppers:
+  * const unsigned short -> short
+  * typedef typename traits_type::container_type container_type statt typedef Container container_type 
+
+Mario:
+* code cleanup:
+  * error_checker in controlled_stepper_standard
+  * all iterator functionality in iterator_algebra
+  * cleanup iterator algebra 
+
+* all std::vector should given explictly the allocator
+
+* numeric_traits or something similar for pow, abs, norm, sqrt ...
+
+Karsten: check
+* hamiltonian solvers with input std::pair< container_type , container_type >, than it can be used in integrate_const.
+
+Mario: check
+* change integrate_const to use number of steps instead of end_time and remove integrate_const_step 
+* same order of parameters in the integration functions
+* Observer the observer should be able to tell the integrate function at which times it wants to analyze the state and the integrator should adapt (decrease) the stepsize accordingly to exactly hit these times - at least for adaptive methods - for constant stepsize integration the observers can remain as is. 
+
+Mario:
+* state_copy_observer : statt der inserter die container direkt uebergeben
+
+
+= container_traits for =
+
+* boost::ublas  / funktioniert
+* mtl4, implementing real iterators  / funktioniert so gehackt, nicht submitten
+* blitz++ / funktioniert , nicht submitten
+* boost::multi_array / muss gemacht werden
+
+
+= Unit testing =
+
+Karsten:
+* aufsetzen des Frameworks
+
+= Documentation =
+
+* eventuell ein graph typ fürs tutorial
+
+
+= Examples and perforance testing =
+
+* cleanup examples directory, only one example per system
+* create performance directory/project 
+* one example with complex types, cgle, mit spiral waves und multi_array (grisha)
+
+
+= Headers =
+
+* header cleanup, every header should include all header it needs
+* <tr1/array> ist not always present, on many systems it is <array> 
+
+
+
+
