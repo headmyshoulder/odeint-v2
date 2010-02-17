@@ -91,7 +91,7 @@ namespace odeint {
 
 	    if( !traits_type::same_size( q , p ) )
 	    {
-		std::string msg( "hamiltonian_stepper_euler::do_step(): " );
+		std::string msg( "hamiltonian_stepper_rk::do_step(): " );
 		msg += "q and p have different sizes";
 		throw std::invalid_argument( msg );
 	    }

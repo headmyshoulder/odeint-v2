@@ -14,6 +14,8 @@
 #ifndef BOOST_NUMERIC_ODEINT_DETAIL_ACCUMULATORS_HPP
 #define BOOST_NUMERIC_ODEINT_DETAIL_ACCUMULATORS_HPP
 
+#include <cmath>
+
 #include <iostream>
 
 namespace boost {
@@ -39,42 +41,6 @@ namespace it_algebra { // iterator algebra
         while( first1 != last1 )
             (*first1++) += alpha * (*first2++);
     }
-
-    // computes y = x1 - x2
-    template <
-        class OutputIterator ,
-        class InputIterator1 ,
-        class InputIterator2
-        >
-    void assign_diff(
-                     OutputIterator first1 ,
-                     OutputIterator last1 ,
-                     InputIterator1 first2 ,
-                     InputIterator2 first3 )
-    {
-        while( first1 != last1 )
-            (*first1++) = (*first2++) - (*first3++);
-    }
-
-
-    // computes y = x1 + alpha * x2
-    template <
-        class OutputIterator ,
-        class InputIterator1 ,
-        class InputIterator2 ,
-        class T
-        >
-    void assign_sum(
-                    OutputIterator first1 ,
-                    OutputIterator last1 ,
-                    InputIterator1 first2 ,
-                    InputIterator2 first3 ,
-                    T alpha )
-    {
-        while( first1 != last1 )
-            (*first1++) = (*first2++) + alpha * (*first3++);
-    }
-
 
 
     // computes y = alpha1 * ( x1 + x2 + alpha2*x3 )
@@ -560,6 +526,47 @@ namespace it_algebra { // iterator algebra
                 (*first3++) += (*first4++);
           }
     }
+
+    template<
+        class OutputIterator,
+        class InputIterator1,
+        class InputIterator2,
+        class T >
+    void weighted_error( OutputIterator y_begin,
+                         OutputIterator y_end,
+                         InputIterator1 x1_begin,
+                         InputIterator2 x2_begin,
+                         T eps_abs,
+                         T eps_rel,
+                         T a_x,
+                         T a_dxdt )
+    {
+        while( y_begin != y_end ) 
+        {
+            *y_begin++ = eps_abs + 
+                eps_rel * (a_x * std::abs(*x1_begin++) + 
+                           a_dxdt * std::abs(*x2_begin++));
+        }
+    }
+
+    
+    template<
+        class InputIterator1,
+        class InputIterator2,
+        class T >
+    T max_ratio( InputIterator1 x1_begin,
+                 InputIterator1 x1_end,
+                 InputIterator2 x2_begin,
+                 T initial_max )
+    {
+        while( x1_begin != x1_end ) 
+        {
+            initial_max = std::max( static_cast<T>(std::abs(*x1_begin++)/(*x2_begin++)),
+                                    initial_max);
+        }
+        return initial_max;
+    }
+    
 
     
     

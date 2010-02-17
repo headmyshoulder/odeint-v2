@@ -10,11 +10,12 @@ Karsten:
 
 Mario:
 * code cleanup:
-  * error_checker in controlled_stepper_standard
-  * all iterator functionality in iterator_algebra
-  * cleanup iterator algebra 
+  * error_checker in controlled_stepper_standard - DONE
+  * all iterator functionality in iterator_algebra - DONE (where I found it)
+  * cleanup iterator algebra - DONE
+  * add scale_sum_inplace for different iterators numbers
 
-* all std::vector should given explictly the allocator
+* all std::vector should given explictly the allocator - that requires 4 additional template parameters in stepper_rk_generic?
 
 * numeric_traits or something similar for pow, abs, norm, sqrt ...
 
@@ -34,7 +35,7 @@ Mario:
 
 * boost::ublas  / funktioniert
 * mtl4, implementing real iterators  / funktioniert so gehackt, nicht submitten
-* blitz++ / funktioniert , nicht submitten
+* blitz++ / nicht submitten -- BUGGY, da copy constructor nur referenz erzeugt!
 * boost::multi_array / muss gemacht werden
 
 

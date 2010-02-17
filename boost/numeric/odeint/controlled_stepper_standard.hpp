@@ -22,6 +22,7 @@
 
 #include <boost/numeric/odeint/detail/iterator_algebra.hpp>
 #include <boost/numeric/odeint/concepts/state_concept.hpp>
+#include <boost/numeric/odeint/error_checker_standard.hpp>
 #include <boost/numeric/odeint/container_traits.hpp>
 
 namespace boost {
@@ -78,6 +79,7 @@ namespace odeint {
     private:
 
         stepper_type &m_stepper;
+        error_checker_standard< container_type, time_type , traits_type > m_error_checker;
 
 	time_type m_eps_abs;
 	time_type m_eps_rel;
@@ -86,33 +88,7 @@ namespace odeint {
 	container_type m_dxdt;
 	container_type m_x_tmp;
 	container_type m_x_err;
-
-
-        // private methods
-
-        time_type calc_max_rel_err(
-                iterator x_start ,
-                iterator x_end ,
-                iterator dxdt_start ,
-                iterator x_err_start ,
-                time_type dt
-            )
-        {
-	    time_type max_rel_err = 0.0;
-            time_type err;
-
-	    while( x_start != x_end )
-            {
-                // get the maximal value of x_err/D where 
-                // D = eps_abs + eps_rel * (a_x*|x| + a_dxdt*|dxdt|);
-                err = m_eps_abs + m_eps_rel * (
-                    m_a_x * std::abs(*x_start++) + 
-                    m_a_dxdt * dt * std::abs(*dxdt_start++) );
-                max_rel_err = std::max( std::abs(*x_err_start++)/err , max_rel_err );
-	    }
-            return max_rel_err;
-        }
-
+        container_type m_x_scale;
 
 
         // public functions
@@ -123,6 +99,7 @@ namespace odeint {
                 time_type abs_err, time_type rel_err, 
                 time_type factor_x, time_type factor_dxdt )
 	    : m_stepper(stepper), 
+              m_error_checker( abs_err, rel_err, factor_x, factor_dxdt ),
               m_eps_abs(abs_err),
               m_eps_rel(rel_err),
               m_a_x(factor_x),
@@ -142,20 +119,19 @@ namespace odeint {
 	controlled_step_result try_step( 
                 DynamicalSystem &system, 
                 container_type &x, 
+                container_type &dxdt,
                 time_type &t, 
                 time_type &dt )
 	{
             traits_type::adjust_size( x , m_x_err );
-            traits_type::adjust_size( x , m_dxdt );
+            traits_type::adjust_size( x , m_x_scale );
+
+            m_error_checker.fill_scale( x , dxdt , dt , m_x_scale );
 
 	    m_x_tmp = x;
-	    system( x , m_dxdt , t ); 
-	    m_stepper.do_step( system , x , m_dxdt, t , dt , m_x_err );
+	    m_stepper.do_step( system , x , dxdt, t , dt , m_x_err );
 
-            time_type max_rel_err = calc_max_rel_err(
-                m_x_tmp.begin() , m_x_tmp.end() ,
-                m_dxdt.begin() , m_x_err.begin() , dt );
-
+            time_type max_rel_err = m_error_checker.get_max_error_ratio(m_x_err, m_x_scale);
 
 	    if( max_rel_err > 1.1 )
             { 
@@ -185,6 +161,19 @@ namespace odeint {
                 }
             }
 	}
+
+	template< class DynamicalSystem >
+	controlled_step_result try_step( 
+                DynamicalSystem &system, 
+                container_type &x, 
+                time_type &t, 
+                time_type &dt )
+	{
+            traits_type::adjust_size( x , m_dxdt );
+            system( x , m_dxdt , t );
+            return try_step( system , x , m_dxdt , t , dt );
+        }
+
     };
 
 } // namespace odeint

@@ -59,7 +59,7 @@ namespace odeint {
         // provide basic typedefs
     public:
 
-        typedef const unsigned short order_type;
+        typedef unsigned short order_type;
         typedef Container container_type;
         typedef Time time_type;
         typedef Traits traits_type;

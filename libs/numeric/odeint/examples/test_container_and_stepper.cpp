@@ -179,7 +179,7 @@ int main( int argc , char **argv )
     stepper_euler< state_type5 > s5;
 
     test_stepper( s1 , deriv1 , x1 , dxdt1 );
-
+    
 
     {
         stepper_euler< state_type1 > s1;
@@ -189,7 +189,7 @@ int main( int argc , char **argv )
         stepper_euler< state_type5 > s5;
         test_steppers( s1 , s2 , s3 , s4 , s5 );
     }
-
+    cout << "Euler Stepper OK!" << endl;
 
 
     {
@@ -201,7 +201,7 @@ int main( int argc , char **argv )
         test_steppers( s1 , s2 , s3 , s4 , s5 );
         test_error_steppers( s1 , s2 , s3 , s4 , s5 );
     }
-
+    cout << "Half Step Stepper OK!" << endl;
 
 
     {
@@ -212,7 +212,7 @@ int main( int argc , char **argv )
         stepper_rk4< state_type5 > s5;
         test_steppers( s1 , s2 , s3 , s4 , s5 );
     }
-
+    cout << "RK4 Stepper OK!" << endl;
 
 
 
@@ -225,7 +225,7 @@ int main( int argc , char **argv )
         stepper_rk4_classical< state_type5 > s5;
         test_steppers( s1 , s2 , s3 , s4 , s5 );
     }
-
+    cout << "RK4 Classical Stepper OK!" << endl;
 
 
 
@@ -237,6 +237,7 @@ int main( int argc , char **argv )
         stepper_rk5_ck< state_type5 > s5;
         test_error_steppers( s1 , s2 , s3 , s4 , s5 );
     }
+    cout << "RK5 CK Stepper OK!" << endl;
 
 
     {
@@ -247,7 +248,7 @@ int main( int argc , char **argv )
         stepper_midpoint< state_type5 > s5;
         test_steppers( s1 , s2 , s3 , s4 , s5 );
     }
-
+    cout << "Midpoint Stepper OK!" << endl;
 
 
     {
@@ -258,6 +259,7 @@ int main( int argc , char **argv )
         stepper_rk78_fehlberg< state_type5 > s5;
         test_steppers( s1 , s2 , s3 , s4 , s5 );
     }
+    cout << "RK78 Stepper OK!" << endl;
 
 
     cout << "Everything is allright!" << endl;

@@ -18,6 +18,7 @@
 
 #include <boost/numeric/odeint/detail/iterator_algebra.hpp>
 
+#include <iostream>
 
 namespace boost {
 namespace numeric {
@@ -91,17 +92,24 @@ namespace odeint {
         {
             traits_type::adjust_size( x , xerr );
 
-            m_xtemp = x;
+            /*** BUG FOR BLITZ ARRAYS ***/
+            /* for blitzz arrays, the copy constructor creates a REFERENCE and not a copy!!! */
+            traits_type::adjust_size( x , m_xtemp );
+            m_xtemp = container_type(x);
+            /*** END BUG ***/
+
             time_type dt2 = static_cast<time_type>(0.5) * dt;
 
             do_step( system , m_xtemp , dxdt , t , dt );
             do_step( system , x , dxdt , t , dt2 );
             do_step( system , x , t+dt2 , dt2 );
 
-            detail::it_algebra::assign_diff( traits_type::begin(xerr) ,
-                                             traits_type::end(xerr) ,
-                                             traits_type::begin(m_xtemp) ,
-                                             traits_type::begin(x) );
+            detail::it_algebra::scale_sum( traits_type::begin(xerr) ,
+                                           traits_type::end(xerr) ,
+                                           static_cast< value_type >(1.0),
+                                           traits_type::begin(m_xtemp) ,
+                                           static_cast< value_type >(-1.0),
+                                           traits_type::begin(x) );
         }
 
 

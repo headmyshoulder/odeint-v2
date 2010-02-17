@@ -57,7 +57,7 @@ namespace odeint {
     private:
 
         stepper_midpoint< container_type, time_type, traits_type > m_stepper_mp;
-        error_checker_standard< container_type, time_type > m_error_checker;
+        error_checker_standard< container_type, time_type , traits_type > m_error_checker;
         
         const unsigned short m_k_max;
 
@@ -172,7 +172,7 @@ namespace odeint {
                 //std::clog << "Error: " << k << '\t' << m_xerr[0] << '\t' << m_xerr[1] << std::endl;
                 if( k != 0 ) 
                 {
-                    value_type max_err = m_error_checker.get_max_error_ratio(m_xerr, m_x_scale);
+                    time_type max_err = m_error_checker.get_max_error_ratio(m_xerr, m_x_scale);
                     m_error[k-1] = std::pow( max_err/m_safety1, 1.0/(2*k+1) );
                     if( (k >= m_current_k_opt-1) || !continuous_call )
                     { //we're in the order window where convergence is expected

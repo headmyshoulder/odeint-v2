@@ -84,13 +84,24 @@ namespace odeint {
             time_type th = t + dh;
 
             //m_xt = x + dh*dxdt
-            assign_sum( traits_type::begin(m_xt) , traits_type::end(m_xt) ,
-                        traits_type::begin(x) , traits_type::begin(dxdt) , dh );
+            /*assign_sum( traits_type::begin(m_xt) , traits_type::end(m_xt) ,
+              traits_type::begin(x) , traits_type::begin(dxdt) , dh );*/
+            scale_sum( traits_type::begin(m_xt) , traits_type::end(m_xt) ,
+                       static_cast< time_type >(1.0) ,
+                       traits_type::begin(x) , 
+                       dh, 
+                       traits_type::begin(dxdt) );
 
             system( m_xt , m_dxt , th );
             //m_xt = x + dh*m_dxdt
-            assign_sum( traits_type::begin(m_xt) , traits_type::end(m_xt) ,
+            /*assign_sum( traits_type::begin(m_xt) , traits_type::end(m_xt) ,
                         traits_type::begin(x) , traits_type::begin(m_dxt) , dh );
+            */
+            scale_sum( traits_type::begin(m_xt) , traits_type::end(m_xt) ,
+                        static_cast< time_type >(1.0),
+                        traits_type::begin(x) , 
+                        dh ,
+                        traits_type::begin(m_dxt) );
 
             system( m_xt , m_dxm , th );
             //m_xt = x + dt*m_dxm ; m_dxm += m_dxt
