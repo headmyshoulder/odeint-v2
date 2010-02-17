@@ -37,7 +37,7 @@ int main(int argc, char **argv)
     //]
 
     //[ integrate_const
-    integrate_const( rk4, harmonic_oscillator, 0.0, 0.01, x, 10.0 );
+    integrate_const( rk4, harmonic_oscillator, x , 0.0, 10.0 , 0.01);
     //]
 
 
@@ -52,7 +52,7 @@ int main(int argc, char **argv)
 
     //[ integrate_adapt
     integrate_adaptive( make_controlled_stepper_standard( rk5 , 1E-6 , 1E-7 , 1.0 , 1.0 ),
-                        harmonic_oscillator, 0.0, 0.01, x, 10.0 );
+                        harmonic_oscillator, x, 0.0, 10.0, 0.01  );
     //]
     
     cout << x[0] << '\t' << x[1] << endl;
