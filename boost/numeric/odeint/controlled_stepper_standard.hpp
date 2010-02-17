@@ -176,6 +176,18 @@ namespace odeint {
 
     };
 
+    template< class ErrorStepper >
+    controlled_stepper_standard< ErrorStepper > make_controlled_stepper_standard(
+            ErrorStepper &stepper,
+            ErrorStepper::time_type abs_err, ErrorStepper::time_type rel_err, 
+            ErrorStepper::time_type factor_x, ErrorStepper::time_type factor_dxdt )
+    {
+        return controlled_stepper_standard< ErrorStepper >(
+                stepper , abs_err , rel_err , factor_x , factor_dxdt );
+    };
+        
+            
+
 } // namespace odeint
 } // namespace numeric
 } // namespace boost

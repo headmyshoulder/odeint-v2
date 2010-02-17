@@ -32,12 +32,27 @@ int main(int argc, char **argv)
 
     harm_osc harmonic_oscillator(0.15);
 
-    //[ define_stepper
+    //[ define_const_stepper
     stepper_rk4< state_type > rk4;
     //]
 
-    //[ integrate
+    //[ integrate_const
     integrate_const( rk4, harmonic_oscillator, 0.0, 0.01, x, 10.0 );
+    //]
+
+
+    //[ define_adapt_stepper
+    stepper_rk5_ck< state_type > rk5;
+    //]
+
+    //[ define_conntrolled_stepper
+    controlled_stepper_standard< stepper_rk5_ck< state_type > > 
+        controlled_rk5( rk5 , 1E-6 , 1E-7 , 1.0 , 1.0 );
+    //]
+
+    //[ integrate_adapt
+    integrate_adaptive( make_controlled_stepper_standard( rk5 , 1E-6 , 1E-7 , 1.0 , 1.0 ),
+                        harmonic_oscillator, 0.0, 0.01, x, 10.0 );
     //]
     
     cout << x[0] << '\t' << x[1] << endl;

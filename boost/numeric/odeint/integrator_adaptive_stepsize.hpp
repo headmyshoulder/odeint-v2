@@ -138,9 +138,9 @@ namespace odeint {
             >
     size_t integrate(
             DynamicalSystem &system, 
-            ContainerType &x,
-            T start ,
-            T end ,
+            ContainerType &state,
+            T start_time ,
+            T end_time ,
             TimeInsertIterator time_inserter,
             StateInsertIterator state_inserter,
             T dt = 1E-4, 
@@ -159,8 +159,8 @@ namespace odeint {
         // initialized with values from above
         
         // call the normal integrator
-        return integrate(controlled_stepper, system, x, 
-                         start, end, dt, time_inserter, state_inserter);
+        return integrate(controlled_stepper, system, state, 
+                         start_time, end_time, dt, time_inserter, state_inserter);
     }
     
 

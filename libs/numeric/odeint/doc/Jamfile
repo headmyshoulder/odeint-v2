@@ -1,6 +1,8 @@
 import quickbook ;
 
-xml odeint : odeint.qbk ;
+xml odeint : 
+	odeint.qbk
+	;
 
 boostbook standalone
 	:

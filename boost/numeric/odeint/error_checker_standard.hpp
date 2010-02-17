@@ -59,7 +59,7 @@ namespace odeint {
                 time_type dt, 
                 container_type &scale )
         {
-            detail::it_algebra::weighted_error( traits_type::begin(scale),
+            detail::it_algebra::weighted_scale( traits_type::begin(scale),
                                                 traits_type::end(scale),
                                                 traits_type::begin(x),
                                                 traits_type::end(dxdt),

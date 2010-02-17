@@ -532,7 +532,7 @@ namespace it_algebra { // iterator algebra
         class InputIterator1,
         class InputIterator2,
         class T >
-    void weighted_error( OutputIterator y_begin,
+    void weighted_scale( OutputIterator y_begin,
                          OutputIterator y_end,
                          InputIterator1 x1_begin,
                          InputIterator2 x2_begin,
