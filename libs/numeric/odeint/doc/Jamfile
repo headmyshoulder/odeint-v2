@@ -4,13 +4,11 @@ xml odeint :
 	odeint.qbk
 	;
 
-boostbook standalone
-	:
+boostbook standalone :
 	  odeint
 	;
 
-install html
-	:
+install html :
 	  /boost//doc/html/boostbook.css
 	;
 	

@@ -3,10 +3,21 @@
 Karsten:
 * Resizer functionality should be called explicitly and not in every call of do_step or try_step
 * Add new order function (because we need three orders for rk78)
-* deriv every stepper from stepper_base< stepper >, because do_step( system , x , t , dt ) is only implemented ones ( and calls the special do_step( system , x , dxdt , t , dt ) 
+* deriv every stepper from stepper_base< stepper >, because do_step( system , x , t , dt ) is only implemented once ( and calls the special do_step( system , x , dxdt , t , dt ) 
 * In all steppers:
   * const unsigned short -> short
   * typedef typename traits_type::container_type container_type statt typedef Container container_type 
+* in iterator algebra die funktionen welche maximas suchen durch die entsprechenden boost funktionen ersetzen
+* Concept checks, für vernünftige Fehlermeldungen
+  * auch für checks ob abs() vorhanden ist
+* controlled stepper standard noncopyable machen
+* controlled stepper bs noncopyable
+* all stepper noncopyable
+* check in all steppers the order
+* rk78 die fehler implementieren
+
+
+
 
 Mario:
 * code cleanup:
@@ -64,3 +75,31 @@ Karsten:
 
 
 
+
+
+
+
+
+
+= Wish list =
+
+* dense output
+* replacable iterator algebra, with specialized algebras for parallelized calculations / cuda ...
+* implicit methods
+* Dormand Prince methods 54 und 8
+* error methods for symplectic integrators
+
+
+
+
+
+
+
+
+
+
+
+
+= Some issues =
+
+* zip iterator is slow, hence writing the iterator algebra with zip iterators is not an option

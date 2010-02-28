@@ -61,6 +61,8 @@ namespace odeint {
 
         order_type order() const { return 7; }
 
+	order_type order_error() const { return 8; }
+
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
                         container_type &x ,

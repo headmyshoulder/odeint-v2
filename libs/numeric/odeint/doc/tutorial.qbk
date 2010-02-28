@@ -126,11 +126,94 @@ also be stored in x (in-place).
 [endsect]
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 [section Solar system]
 
-define point types via operators
+[section Gravitation and energy conservation]
 
-define the system
+The next example in this tutorial is a simulation of the solar system. In the
+solar system each planet, and of course also the sun will be represented by
+mass points. The interaction force between each object is the gravitational
+force which can be written as
+Fij = - gamma m M / (qi-qj)^3 * (qi-qj)
+
+where gamma is the gravitational constant, mi and mj are the masses and qi and
+qj are the locations of the two objects.
+
+dqi = pi
+dpi = 1/m sumj\newi Fij
+
+where pi is the momenta of object i. The equations of motion can also be
+derived from the Hamiltonian
+
+H = sum over i pi^2 / 2 + sum j V( qi , qj ) 
+
+via dqi = dH / dpi, dpi = - dH / dq1. V(qi,qj) is the interaction
+potential.
+
+In time independent Hamiltonian system the energy is conserved and special
+integration methods have to be applied in order to ensure energy
+conservation. The odeint library provides two stepper classes for Hamiltonian
+systems, which are separable and can be written in the form H = sum pi^2/2 +
+Hq.
+
+hamiltonian_stepper_euler
+hamiltonian_stepper_rk
+
+Alltough this functional form might look a bit arbitrary it covers nearly all
+classical mechanical systems with inertia and without dissipation, or where
+the equations of motion can be written in the form dqi=pi dpi=f(qi).
+
+
+
+
+
+[section Define the system function]
+
+To implement this system we define a point type which will represent the space
+as well as the velocity. Therefore, we use the operators from
+<boost/operator.hpp>:
+
+show the code 
+
+
+The next step is to define the state type and the system (derivative)
+function. As state type we use std::tr1::array and a state type represents all
+space coordinates q or all momenta coordinates p. As system function we have
+to provide f(q)
+
+show the code
+
+Note, that we have allready define the masses of all planets in the solar
+system.
+
+In general a three body-system is chaotic, hence we can not expect that
+arbitray initial conditions of the system will lead to a dynamic which is
+comparable with the solar system. That is we have to define proper initial
+conditions.
+
+show the code
+
+Now, we use the rk stepper to integrate the solar system. To visualize the
+motion we save the trajectory of each planet in a circular buffer. The output
+can be piped directly into gnuplot and a very nice visualization of the motion
+appears.
+
+[endsect]
+
+
 
 usage of the steppers
 

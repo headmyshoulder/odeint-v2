@@ -41,4 +41,6 @@
 #include <boost/numeric/odeint/integrator_adaptive_stepsize.hpp>
 #include <boost/numeric/odeint/integrator_constant_stepsize.hpp>
 
+#include <boost/numeric/odeint/gram_schmitt.hpp>
+
 #endif // BOOST_NUMERIC_ODEINT_HPP

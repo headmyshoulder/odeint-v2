@@ -541,11 +541,13 @@ namespace it_algebra { // iterator algebra
                          T a_x,
                          T a_dxdt )
     {
+	using std::abs;
+
         while( y_begin != y_end ) 
         {
             *y_begin++ = eps_abs + 
-                eps_rel * (a_x * std::abs(*x1_begin++) + 
-                           a_dxdt * std::abs(*x2_begin++));
+                eps_rel * (a_x * abs(*x1_begin++) + 
+                           a_dxdt * abs(*x2_begin++));
         }
     }
 
@@ -559,10 +561,13 @@ namespace it_algebra { // iterator algebra
                  InputIterator2 x2_begin,
                  T initial_max )
     {
+	using std::abs;
+
         while( x1_begin != x1_end ) 
         {
-            initial_max = std::max( static_cast<T>(std::abs(*x1_begin++)/(*x2_begin++)),
-                                    initial_max);
+            initial_max = std::max(
+		static_cast<T>( abs(*x1_begin++)/abs(*x2_begin++)),
+		initial_max );
         }
         return initial_max;
     }
