@@ -68,7 +68,7 @@ namespace odeint {
 		      time_type dt )
 	{
             system( x , m_dxdt , t );
-            stepper.do_step_with_deriv( system , x , m_dxdt , t , dt );
+            stepper.do_step( system , x , m_dxdt , t , dt );
 	}
 
 	void adjust_size( container_type &x )

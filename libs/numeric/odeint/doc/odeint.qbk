@@ -16,6 +16,7 @@
 ]
 
 [section Overview]
+
 Odeint is a library for solving  initial value problems (IVP) of ordinary 
 differential equations.
 Mathematically, these problems are formulated as follows: [*x'(t) = f(x,t)], 
@@ -96,6 +97,7 @@ must then be defined as the ()-operator:
 [endsect]
 
 [import ../examples/doc_integrate.cpp]
+
 [include tutorial.qbk]
 
 [include steppers.qbk]

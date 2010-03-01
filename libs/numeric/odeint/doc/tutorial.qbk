@@ -147,13 +147,13 @@ The next example in this tutorial is a simulation of the solar system. In the
 solar system each planet, and of course also the sun will be represented by
 mass points. The interaction force between each object is the gravitational
 force which can be written as
-Fij = - gamma m M / (qi-qj)^3 * (qi-qj)
+Fij = - gamma m M / (qi-qj)3 * (qi-qj)
 
 where gamma is the gravitational constant, mi and mj are the masses and qi and
 qj are the locations of the two objects.
 
 dqi = pi
-dpi = 1/m sumj\newi Fij
+dpi = 1/m sum ji Fij
 
 where pi is the momenta of object i. The equations of motion can also be
 derived from the Hamiltonian
@@ -177,7 +177,7 @@ classical mechanical systems with inertia and without dissipation, or where
 the equations of motion can be written in the form dqi=pi dpi=f(qi).
 
 
-
+[endsect]
 
 
 [section Define the system function]
@@ -212,7 +212,6 @@ can be piped directly into gnuplot and a very nice visualization of the motion
 appears.
 
 [endsect]
-
 
 
 usage of the steppers

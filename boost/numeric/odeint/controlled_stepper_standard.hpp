@@ -177,7 +177,7 @@ namespace odeint {
     };
 
     template< class ErrorStepper >
-    controlled_stepper_standard< ErrorStepper >& make_controlled_stepper_standard(
+    controlled_stepper_standard< ErrorStepper > make_controlled_stepper_standard(
             ErrorStepper &stepper,
             typename ErrorStepper::time_type abs_err, typename ErrorStepper::time_type rel_err, 
             typename ErrorStepper::time_type factor_x, typename ErrorStepper::time_type factor_dxdt )

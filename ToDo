@@ -15,7 +15,7 @@ Karsten:
 * all stepper noncopyable
 * check in all steppers the order
 * rk78 die fehler implementieren
-
+* reference entfernen
 
 
 
