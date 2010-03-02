@@ -38,10 +38,10 @@ namespace odeint {
         // provide basic typedefs
     public:
 
-        typedef const unsigned short order_type;
-        typedef Container container_type;
+        typedef unsigned short order_type;
         typedef Time time_type;
         typedef Traits traits_type;
+        typedef typename traits_type::container_type container_type;
         typedef typename traits_type::value_type value_type;
         typedef typename traits_type::iterator iterator;
         typedef typename traits_type::const_iterator const_iterator;

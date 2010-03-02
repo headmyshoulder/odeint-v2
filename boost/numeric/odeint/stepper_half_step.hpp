@@ -54,10 +54,15 @@ namespace odeint {
 	// public interface
     public:
 
-        order_type order() const { return m_stepper.order(); }
+        order_type order() const
+        {
+            /*  */
+            return m_stepper.order();
+        }
 
         order_type order_error() const 
-        {   /* Order of the error term is the order of the underlying stepper + 1 */
+        {
+            /* Order of the error term is the order of the underlying stepper + 1 */
             return m_stepper.order() + 1; 
         }
 

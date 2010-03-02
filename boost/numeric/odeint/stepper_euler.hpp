@@ -35,14 +35,12 @@ namespace odeint {
         >
     class stepper_euler
     {
+
         // provide basic typedefs
     public:
 
-
-
         typedef unsigned short order_type;
         typedef Time time_type;
-
         typedef Traits traits_type;
         typedef typename traits_type::container_type container_type;
         typedef typename traits_type::value_type value_type;
@@ -62,7 +60,6 @@ namespace odeint {
     public:
 
         order_type order() const { return 1; }
-
 
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
