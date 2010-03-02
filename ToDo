@@ -10,9 +10,7 @@ Karsten:
 * In all steppers:
   * const unsigned short -> short - DONE
   * typedef typename traits_type::container_type container_type statt typedef Container container_type  - DONE
-* in iterator algebra die funktionen welche maximas suchen durch die entsprechenden boost funktionen ersetzen
-* Concept checks, für vernünftige Fehlermeldungen
-  * auch für checks ob abs() vorhanden ist
+* in iterator algebra die funktionen welche maximas suchen durch die entsprechenden boost funktionen ersetzen - it not possible , DONE
 * check in all steppers the order
 * rk78 die fehler implementieren
 * references entfernen
@@ -30,6 +28,10 @@ Mario:
 
 * numeric_traits or something similar for pow, abs, norm, sqrt ...
 
+* Concept checks, für vernünftige Fehlermeldungen
+  * auch für checks ob abs() vorhanden ist
+
+
 Karsten: check
 * hamiltonian solvers with input std::pair< container_type , container_type >, than it can be used in integrate_const.
 
@@ -42,6 +44,8 @@ Mario:
 * state_copy_observer : statt der inserter die container direkt uebergeben
 
 
+
+
 = container_traits for =
 
 * boost::ublas  / funktioniert
@@ -50,14 +54,22 @@ Mario:
 * boost::multi_array / muss gemacht werden
 
 
+
+
 = Unit testing =
 
 Karsten:
 * aufsetzen des Frameworks
 
+
+
+
 = Documentation =
 
 * eventuell ein graph typ fürs tutorial
+
+
+
 
 
 = Examples and perforance testing =
@@ -67,15 +79,13 @@ Karsten:
 * one example with complex types, cgle, mit spiral waves und multi_array (grisha)
 
 
+
+
+
 = Headers =
 
 * header cleanup, every header should include all header it needs
 * <tr1/array> ist not always present, on many systems it is <array> 
-
-
-
-
-
 
 
 

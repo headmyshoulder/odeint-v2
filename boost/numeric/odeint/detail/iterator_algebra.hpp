@@ -546,8 +546,8 @@ namespace it_algebra { // iterator algebra
         while( y_begin != y_end ) 
         {
             *y_begin++ = eps_abs + 
-                eps_rel * (a_x * abs(*x1_begin++) + 
-                           a_dxdt * abs(*x2_begin++));
+                eps_rel * ( a_x * abs(*x1_begin++) + 
+                            a_dxdt * abs(*x2_begin++) );
         }
     }
 
@@ -566,7 +566,7 @@ namespace it_algebra { // iterator algebra
         while( x1_begin != x1_end ) 
         {
             initial_max = std::max(
-		static_cast<T>( abs(*x1_begin++)/abs(*x2_begin++)),
+		static_cast<T>( abs(*x1_begin++) / abs(*x2_begin++) ) ,
 		initial_max );
         }
         return initial_max;
