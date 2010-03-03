@@ -34,7 +34,9 @@ namespace odeint {
         >
     class stepper_midpoint
     {
+        //
         // provide basic typedefs
+        //
     public:
 
         typedef unsigned short order_type;
@@ -90,8 +92,8 @@ namespace odeint {
             const time_type t_1 = static_cast<time_type>( 1.0 );
             const time_type t_05 = static_cast<time_type>( 0.5 );
 
-            const time_type h = dt/static_cast<time_type>( m_stepcount );
-            const time_type h2 = static_cast<time_type>( 2.0 )*h;
+            const time_type h = dt / static_cast<time_type>( m_stepcount );
+            const time_type h2 = static_cast<time_type>( 2.0 ) * h;
             time_type th = t + h;
 
             traits_type::adjust_size(x, m_x0);

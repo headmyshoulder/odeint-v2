@@ -10,10 +10,21 @@ Karsten:
 * In all steppers:
   * const unsigned short -> short - DONE
   * typedef typename traits_type::container_type container_type statt typedef Container container_type  - DONE
-* in iterator algebra die funktionen welche maximas suchen durch die entsprechenden boost funktionen ersetzen - it not possible , DONE
+* Concept checks, für vernünftige Fehlermeldungen
+  * auch für checks ob abs() vorhanden ist
 * check in all steppers the order
 * rk78 die fehler implementieren
 * references entfernen
+
+* check: orders and adjust_size() in :
+  * stepper_euler.hpp - DONE
+  * stepper_half_step.hpp - DONE
+  * stepper_midpoint.hpp
+  * stepper_rk4_classical.hpp
+  * stepper_rk4.hpp
+  * stepper_rk5_ck.hpp
+  * stepper_rk78_fehlberg.hpp
+  * stepper_rk_generic.hpp
 
 
 
@@ -59,7 +70,7 @@ Mario:
 = Unit testing =
 
 Karsten:
-* aufsetzen des Frameworks
+* aufsetzen des Frameworks - DONE
 
 
 

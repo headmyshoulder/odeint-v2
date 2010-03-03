@@ -12,6 +12,7 @@ project odeint
      <include>$BOOST_ROOT ;
 
 build-project libs/numeric/odeint/examples ;
+build-project libs/numeric/odeint/test ;
 # build-project libs/numeric/odeint/doc ;
 
 
