@@ -71,7 +71,7 @@ Mario:
 
 Karsten:
 * aufsetzen des Frameworks - DONE
-
+* checken zwischen autonomous and non-autonomous integration, with constant time
 
 
 
@@ -88,7 +88,9 @@ Karsten:
 * cleanup examples directory, only one example per system
 * create performance directory/project 
 * one example with complex types, cgle, mit spiral waves und multi_array (grisha)
-
+* solar system
+  * http://ssd.jpl.nasa.gov/
+  * masses: http://ssd.jpl.nasa.gov/?planet_phys_par
 
 
 
