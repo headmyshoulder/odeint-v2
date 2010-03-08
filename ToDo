@@ -43,7 +43,7 @@ Mario:
   * auch für checks ob abs() vorhanden ist
 
 
-Karsten: check
+Karsten:
 * hamiltonian solvers with input std::pair< container_type , container_type >, than it can be used in integrate_const.
 
 Mario: check
@@ -91,7 +91,7 @@ Karsten:
 * solar system
   * http://ssd.jpl.nasa.gov/
   * masses: http://ssd.jpl.nasa.gov/?planet_phys_par
-
+  * other examples in the Hairer book
 
 
 
@@ -102,6 +102,18 @@ Karsten:
 
 
 
+
+= Hamiltonian solvers =
+
+* we use a symmetric composition RK method, see Leimkuhler / Reich pp.145
+* we use sb3a in http://www.massey.ac.nz/~rmclachl/sisc95.pdf
+* see also
+  * http://physics.hardwire.cz/mirror/Yoshida-symplectic-PLA00.pdf
+  * http://personales.upv.es/~serblaza/publications.html, 2002
+  * http://www.massey.ac.nz/~rmclachl/pubs.html , 1995 On numerical integration ...
+  * http://math-www.uni-paderborn.de/~walter/publications/
+  * http://arxiv.org/abs/astro-ph/0005074
+* check other methods, Nystrom ...
 
 
 = Wish list =
