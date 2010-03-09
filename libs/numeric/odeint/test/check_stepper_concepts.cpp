@@ -17,6 +17,9 @@
 
 #include <boost/numeric/odeint/stepper_euler.hpp>
 #include <boost/numeric/odeint/stepper_half_step.hpp>
+#include <boost/numeric/odeint/stepper_midpoint.hpp>
+#include <boost/numeric/odeint/stepper_rk4_classical.hpp>
+#include <boost/numeric/odeint/stepper_rk4.hpp>
 
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
@@ -119,6 +122,27 @@ void test_half_step_euler_concept()
     check_error_stepper_concept( stepper , 1 , 2 );
 }
 
+void test_midpoint_concept()
+{
+    stepper_midpoint< std::vector< double > > stepper;
+    stepper.set_step_number( 4 );
+    unsigned short step_number = stepper.get_step_number();
+    step_number = 5; // no warnings
+    check_stepper_concept( stepper , 2 );
+}
+
+void test_rk4_classical_concept()
+{
+    stepper_rk4_classical< std::vector<double> > stepper;
+    check_stepper_concept( stepper , 4 );
+}
+
+void test_rk4_concept()
+{
+    stepper_rk4< std::vector<double> > stepper;
+    check_stepper_concept( stepper , 4 );
+}
+
 
 
 
@@ -128,6 +152,9 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
 
     test->add( BOOST_TEST_CASE( &test_euler_concept ) );
     test->add( BOOST_TEST_CASE( &test_half_step_euler_concept ) );
+    test->add( BOOST_TEST_CASE( &test_midpoint_concept ) );
+    test->add( BOOST_TEST_CASE( &test_rk4_classical_concept ) );
+    test->add( BOOST_TEST_CASE( &test_rk4_concept ) );
 
     return test;
 }

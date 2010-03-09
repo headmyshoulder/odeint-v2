@@ -44,8 +44,8 @@ namespace odeint {
         typedef Traits traits_type;
         typedef typename traits_type::container_type container_type;
         typedef typename traits_type::value_type value_type;
-        typedef typename traits_type::iterator iterator;
-        typedef typename traits_type::const_iterator const_iterator;
+//        typedef typename traits_type::iterator iterator;
+//        typedef typename traits_type::const_iterator const_iterator;
 
 
 
@@ -54,7 +54,7 @@ namespace odeint {
         // private memebers
     private:
 
-        unsigned short m_stepcount;
+        unsigned short m_step_number;
 
         container_type m_x0;
         container_type m_x1;
@@ -65,23 +65,45 @@ namespace odeint {
 
     public:
 
-        stepper_midpoint( unsigned short stepcount = 2 ) { }
-        
-        order_type order() const { return 2; }
+        order_type order_step() const { return 2; }
 
-        void set_stepcount( unsigned short stepcount )
+	// standard constructor, the size of the internal container is not set
+        stepper_midpoint( unsigned short step_number = 2 ) 
+	{
+	    set_step_number( step_number );
+	}
+
+	// constructor, which adjusts the size of the internal containers
+	stepper_midpoint( const container_type &x , unsigned short step_number = 2 )
+	{
+	    adjust_size( x );
+	    set_step_number( step_number );
+	}
+
+	// adjusts the size of the internal containers
+	void adjust_size( const container_type &x )
+	{
+	    traits_type::adjust_size( x , m_x0 );
+	    traits_type::adjust_size( x , m_x1 );
+	    traits_type::adjust_size( x , m_dxdt );
+	}
+
+        void set_step_number( unsigned short step_number )
         {
-            if( stepcount > 1 )
-                m_stepcount = stepcount;
+            if( step_number > 1 )
+                m_step_number = step_number;
         }
 
-        unsigned short get_stepcount() const { return m_stepcount; }
+        unsigned short get_step_number() const
+	{
+	    return m_step_number;
+	}
 
 
 
-
+	// performs a midpoint step
         template< class DynamicalSystem >
-        void do_step( 
+        void midpoint_step( 
                 DynamicalSystem &system ,
                 container_type &x ,
                 container_type &dxdt ,
@@ -89,34 +111,33 @@ namespace odeint {
                 time_type dt ,
                 container_type &x_out )
         {
+            using namespace detail::it_algebra;
+
             const time_type t_1 = static_cast<time_type>( 1.0 );
             const time_type t_05 = static_cast<time_type>( 0.5 );
 
-            const time_type h = dt / static_cast<time_type>( m_stepcount );
+            const time_type h = dt / static_cast<time_type>( m_step_number );
             const time_type h2 = static_cast<time_type>( 2.0 ) * h;
+
+
             time_type th = t + h;
 
-            traits_type::adjust_size(x, m_x0);
-            traits_type::adjust_size(x, m_x1);
-            traits_type::adjust_size(x, m_dxdt);
-
-            using namespace detail::it_algebra;
-
             // m_x1 = x + h*dxdt
-            scale_sum( traits_type::begin(m_x1), traits_type::end(m_x1),
+            scale_sum( traits_type::begin(m_x1),
+		       traits_type::end(m_x1),
                        t_1, traits_type::begin(x),
                        h, traits_type::begin(dxdt) );
             system( m_x1, m_dxdt, th );
 
             m_x0 = x;
             
-            //std::clog<< "mp: " << 0 << '\t' << m_x1[0] << '\t' << m_x1[1] << '\t' << m_dxdt[0] << '\t' << m_dxdt[1] << std::endl;
-
             unsigned short i = 1;
-            while( i != m_stepcount )
-            {   // general step
+            while( i != m_step_number )
+            {
+                // general step
                 //tmp = m_x1; m_x1 = m_x0 + h2*m_dxdt; m_x0 = tmp
-                scale_sum_swap( traits_type::begin(m_x1), traits_type::end(m_x1), 
+                scale_sum_swap( traits_type::begin(m_x1),
+				traits_type::end(m_x1), 
                                 traits_type::begin(m_x0),
                                 h2, traits_type::begin(m_dxdt) );
                 th += h;
@@ -124,8 +145,6 @@ namespace odeint {
                 i++;
             }
 
-            //std::clog<< "mp: " << i << '\t' << m_x1[0] << '\t' << m_x1[1] << '\t' << m_dxdt[0] << '\t' << m_dxdt[1] << std::endl;
-            
             // last step
             // x = 0.5*( m_x0 + m_x1 + h*m_dxdt )
             scale_sum( traits_type::begin(x_out), traits_type::end(x_out),
@@ -146,7 +165,7 @@ namespace odeint {
                 time_type t ,
                 time_type dt )
         {
-            do_step( system, x, dxdt, t, dt, x );
+            midpoint_step( system, x, dxdt, t, dt, x );
         }
 
 
@@ -160,7 +179,6 @@ namespace odeint {
                 time_type t ,
                 time_type dt )
         {
-            traits_type::adjust_size(x, m_dxdt);
             system( x, m_dxdt, t );
             do_step( system , x, m_dxdt, t, dt );
         }

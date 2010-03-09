@@ -39,8 +39,8 @@ namespace odeint {
         typedef Traits traits_type;
         typedef typename traits_type::container_type container_type;
         typedef typename traits_type::value_type value_type;
-        typedef typename traits_type::iterator iterator;
-        typedef typename traits_type::const_iterator const_iterator;
+//        typedef typename traits_type::iterator iterator;
+//        typedef typename traits_type::const_iterator const_iterator;
 
 
 
@@ -53,7 +53,6 @@ namespace odeint {
         container_type m_dxdt;
         container_type m_dxt;
         container_type m_dxm;
-        container_type m_dxh;
         container_type m_xt;
 
         
@@ -63,7 +62,26 @@ namespace odeint {
         // public interface
     public:
 
-        order_type order() const { return 4; }
+        order_type order_step() const { return 4; }
+
+	// standard constructor, internal containers are not initialized
+	stepper_rk4_classical( void )
+	{
+	}
+
+	// constructor, which adjusts the internal containers
+	stepper_rk4_classical( const container_type &x )
+	{
+	    adjust_size( x );
+	}
+
+	void adjust_size( const container_type &x )
+	{
+	    traits_type::adjust_size( x , m_dxdt );
+	    traits_type::adjust_size( x , m_dxt );
+	    traits_type::adjust_size( x , m_dxm );
+	    traits_type::adjust_size( x , m_xt );
+	}
 
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
@@ -76,41 +94,36 @@ namespace odeint {
 
             const time_type val2 = time_type( 2.0 );
 
-            traits_type::adjust_size( x , m_dxt );
-            traits_type::adjust_size( x , m_dxm );
-            traits_type::adjust_size( x , m_xt );
 
             time_type  dh = time_type( 0.5 ) * dt;
             time_type th = t + dh;
 
             //m_xt = x + dh*dxdt
-            /*assign_sum( traits_type::begin(m_xt) , traits_type::end(m_xt) ,
-              traits_type::begin(x) , traits_type::begin(dxdt) , dh );*/
             scale_sum( traits_type::begin(m_xt) , traits_type::end(m_xt) ,
                        static_cast< time_type >(1.0) ,
                        traits_type::begin(x) , 
                        dh, 
                        traits_type::begin(dxdt) );
 
-            system( m_xt , m_dxt , th );
+
             //m_xt = x + dh*m_dxdt
-            /*assign_sum( traits_type::begin(m_xt) , traits_type::end(m_xt) ,
-                        traits_type::begin(x) , traits_type::begin(m_dxt) , dh );
-            */
+            system( m_xt , m_dxt , th );
             scale_sum( traits_type::begin(m_xt) , traits_type::end(m_xt) ,
                         static_cast< time_type >(1.0),
                         traits_type::begin(x) , 
                         dh ,
                         traits_type::begin(m_dxt) );
 
-            system( m_xt , m_dxm , th );
+
             //m_xt = x + dt*m_dxm ; m_dxm += m_dxt
+            system( m_xt , m_dxm , th );
             assign_sum_increment( traits_type::begin(m_xt) , traits_type::end(m_xt) ,
                                   traits_type::begin(x) , traits_type::begin(m_dxm) ,
                                   traits_type::begin(m_dxt) , dt );
 
-            system( m_xt , m_dxt , t + dt );
+
             //x = dt/6 * ( m_dxdt + m_dxt + val2*m_dxm )
+            system( m_xt , m_dxt , t + dt );
             increment_sum_sum( traits_type::begin(x) , traits_type::end(x) , 
                                traits_type::begin(dxdt) ,
                                traits_type::begin(m_dxt) ,
@@ -126,7 +139,6 @@ namespace odeint {
                         time_type t ,
                         time_type dt )
         {
-            traits_type::adjust_size( x , m_dxdt );
             system( x , m_dxdt , t );
             do_step( system , x , m_dxdt , t , dt );
         }

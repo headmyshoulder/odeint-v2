@@ -71,8 +71,8 @@ namespace odeint {
         typedef typename stepper_type::time_type time_type;
         typedef typename stepper_type::traits_type traits_type;
         typedef typename stepper_type::value_type value_type;
-        typedef typename stepper_type::iterator iterator;
-        typedef typename stepper_type::const_iterator const_iterator;
+//        typedef typename stepper_type::iterator iterator;
+//        typedef typename stepper_type::const_iterator const_iterator;
 
 
         // private members

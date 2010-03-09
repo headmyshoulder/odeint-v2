@@ -162,12 +162,12 @@ namespace odeint {
             
             for( unsigned short k=0; k<=m_current_k_max; k++ )
             {  // loop through interval numbers
-                unsigned short stepcount = m_interval_sequence[k];
+                unsigned short step_number = m_interval_sequence[k];
                 //out-of-place midpoint step
-                m_stepper_mp.set_stepcount(stepcount);
-                m_stepper_mp.do_step(system, m_x0, dxdt, t, dt, m_x_mp); 
+                m_stepper_mp.set_step_number(step_number);
+                m_stepper_mp.midpoint_step(system, m_x0, dxdt, t, dt, m_x_mp); 
                 //std::clog << "x_mp: " << k << '\t' << m_x_mp[0] << '\t' << m_x_mp[1] << std::endl;
-                time_type t_est = (dt/stepcount)*(dt/stepcount);
+                time_type t_est = (dt/step_number)*(dt/step_number);
                 extrapolate(k, t_est, m_x_mp, x, m_xerr);
                 //std::clog << "Error: " << k << '\t' << m_xerr[0] << '\t' << m_xerr[1] << std::endl;
                 if( k != 0 ) 

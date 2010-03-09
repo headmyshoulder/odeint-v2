@@ -19,13 +19,13 @@ Karsten:
 * check: orders and adjust_size() in :
   * stepper_euler.hpp - DONE
   * stepper_half_step.hpp - DONE
-  * stepper_midpoint.hpp
-  * stepper_rk4_classical.hpp
-  * stepper_rk4.hpp
+  * stepper_midpoint.hpp - DONE, changed stepcount -> step_number
+  * stepper_rk4_classical.hpp - DONE
+  * stepper_rk4.hpp - DONE
   * stepper_rk5_ck.hpp
   * stepper_rk78_fehlberg.hpp
   * stepper_rk_generic.hpp
-
+* die auskommentierten Iteratoren typedefs entfernen
 
 
 Mario:
