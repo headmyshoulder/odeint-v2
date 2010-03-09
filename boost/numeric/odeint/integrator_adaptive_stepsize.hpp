@@ -37,10 +37,13 @@ namespace odeint {
             typename ControlledStepper::time_type dt,
             Observer &observer )
     {
+        typedef typename ControlledStepper::time_type time_type;
+
+        stepper.adjust_size( state );
+
         controlled_step_result result;
         size_t iterations = 0;
-        typename ControlledStepper::time_type t = start_time;
-        typename ControlledStepper::time_type dt_ = dt;
+        time_type t = start_time , dt_ = dt;
 
         observer(t, state, system);
         
@@ -150,12 +153,12 @@ namespace odeint {
             T a_dxdt = 1.0
                      )
     {
-        typedef stepper_rk5_ck< ContainerType , T > stepper_type;
         // we use cash karp stepper as base stepper
-        stepper_type stepper_cash_karp;
+        typedef stepper_rk5_ck< ContainerType , T > stepper_type;
+
         // we use the standard controller for this adaptive integrator
-        controlled_stepper_standard< stepper_type > 
-            controlled_stepper(stepper_cash_karp, eps_abs, eps_rel, a_x, a_dxdt ); 
+        controlled_stepper_standard< stepper_type >
+            controlled_stepper( eps_abs, eps_rel, a_x, a_dxdt ); 
         // initialized with values from above
         
         // call the normal integrator

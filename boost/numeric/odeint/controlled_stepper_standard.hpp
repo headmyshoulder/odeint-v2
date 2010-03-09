@@ -18,18 +18,19 @@
 #include <algorithm>
 #include <complex>
 
-#include <boost/concept_check.hpp>
-
-#include <boost/numeric/odeint/detail/iterator_algebra.hpp>
-#include <boost/numeric/odeint/concepts/state_concept.hpp>
 #include <boost/numeric/odeint/error_checker_standard.hpp>
 #include <boost/numeric/odeint/container_traits.hpp>
+
+#include <boost/numeric/odeint/detail/iterator_algebra.hpp>
+
+
 
 namespace boost {
 namespace numeric {
 namespace odeint {
 
-    typedef enum{
+    typedef enum
+    {
         success ,
         step_size_decreased ,
         step_size_increased
@@ -74,17 +75,22 @@ namespace odeint {
 //        typedef typename stepper_type::iterator iterator;
 //        typedef typename stepper_type::const_iterator const_iterator;
 
+        typedef error_checker_standard<
+            container_type, time_type , traits_type
+            > error_checker_type;
+
 
         // private members
     private:
 
-        stepper_type &m_stepper;
-        error_checker_standard< container_type, time_type , traits_type > m_error_checker;
+        stepper_type m_stepper;
+        error_checker_type m_error_checker;
 
 	time_type m_eps_abs;
 	time_type m_eps_rel;
 	time_type m_a_x;
 	time_type m_a_dxdt;
+
 	container_type m_dxdt;
 	container_type m_x_tmp;
 	container_type m_x_err;
@@ -93,20 +99,43 @@ namespace odeint {
 
         // public functions
     public:
+
+        order_type order_error_step() { return m_stepper.order_error_step(); }
 	
 	controlled_stepper_standard( 
-                ErrorStepper &stepper, 
-                time_type abs_err, time_type rel_err, 
-                time_type factor_x, time_type factor_dxdt )
-	    : m_stepper(stepper), 
-              m_error_checker( abs_err, rel_err, factor_x, factor_dxdt ),
+            time_type abs_err, time_type rel_err, 
+            time_type factor_x, time_type factor_dxdt )
+	    : m_error_checker( abs_err, rel_err, factor_x, factor_dxdt ),
               m_eps_abs(abs_err),
               m_eps_rel(rel_err),
               m_a_x(factor_x),
               m_a_dxdt(factor_dxdt)
-	{ }
+	{
+        }
 
-        order_type order() { return m_stepper.order(); }
+        controlled_stepper_standard(
+            const container_type &x ,
+            time_type abs_err, time_type rel_err, 
+            time_type factor_x, time_type factor_dxdt )
+	    : m_error_checker( abs_err, rel_err, factor_x, factor_dxdt ),
+              m_eps_abs(abs_err),
+              m_eps_rel(rel_err),
+              m_a_x(factor_x),
+              m_a_dxdt(factor_dxdt)
+	{
+            adjust_size( x );
+        }
+
+        void adjust_size( const container_type &x )
+        {
+            traits_type::adjust_size( x , m_x_err );
+            traits_type::adjust_size( x , m_x_scale );
+            traits_type::adjust_size( x , m_dxdt );
+            m_stepper.adjust_size( x );
+        }
+
+
+
 
         /* Tries a controlled step with the given stepsize dt. If dt is too large,
            x remains unchanged, an appropriate stepsize is assigned to dt and 
@@ -119,13 +148,10 @@ namespace odeint {
 	controlled_step_result try_step( 
                 DynamicalSystem &system, 
                 container_type &x, 
-                container_type &dxdt,
+                const container_type &dxdt,
                 time_type &t, 
                 time_type &dt )
 	{
-            traits_type::adjust_size( x , m_x_err );
-            traits_type::adjust_size( x , m_x_scale );
-
             m_error_checker.fill_scale( x , dxdt , dt , m_x_scale );
 
 	    m_x_tmp = x;
@@ -137,7 +163,7 @@ namespace odeint {
             { 
                 // error too large - decrease dt
                 // limit scaling factor to 0.2
-                dt *= std::max( 0.9*pow(max_rel_err , -1.0/(m_stepper.order_error()-1.0)),
+                dt *= std::max( 0.9 * pow(max_rel_err , -1.0/(m_stepper.order_error()-1.0)),
                                 0.2 );
 
                 // reset state
@@ -151,7 +177,7 @@ namespace odeint {
                     //error too small - increase dt and keep the evolution
                     t += dt;
                     // limit scaling factor to 5.0
-                    dt *= std::min( 0.9*pow(max_rel_err , -1.0/m_stepper.order()), 5.0 );
+                    dt *= std::min( 0.9*pow(max_rel_err , -1.0/m_stepper.order_error_step()), 5.0 );
                     return step_size_increased;
                 }
                 else
@@ -169,23 +195,12 @@ namespace odeint {
                 time_type &t, 
                 time_type &dt )
 	{
-            traits_type::adjust_size( x , m_dxdt );
             system( x , m_dxdt , t );
             return try_step( system , x , m_dxdt , t , dt );
         }
 
     };
 
-    template< class ErrorStepper >
-    controlled_stepper_standard< ErrorStepper > make_controlled_stepper_standard(
-            ErrorStepper &stepper,
-            typename ErrorStepper::time_type abs_err, typename ErrorStepper::time_type rel_err, 
-            typename ErrorStepper::time_type factor_x, typename ErrorStepper::time_type factor_dxdt )
-    {
-        controlled_stepper_standard< ErrorStepper > controlled_stepper(
-                stepper , abs_err , rel_err , factor_x , factor_dxdt );
-        return controlled_stepper;
-    };
         
             
 

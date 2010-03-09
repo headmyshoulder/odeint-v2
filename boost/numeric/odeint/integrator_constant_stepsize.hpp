@@ -35,6 +35,7 @@ namespace odeint {
 	Observer &observer
 	)
     {
+        stepper.adjust_size( state );
 	size_t iteration = 0;
         while( start_time < end_time )
 	{
@@ -89,6 +90,7 @@ namespace odeint {
 	Observer &observer
 	)
     {
+        stepper.adjust_size( state );
 	size_t iteration = 0;
         while( iteration < num_of_steps )
 	{

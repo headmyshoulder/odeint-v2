@@ -75,6 +75,7 @@ namespace odeint {
 	// constructor, which adjusts the internal containers
 	stepper_rk4( const container_type &x )
 	{
+            adjust_size( x );
 	}
 
 	void adjust_size( const container_type &x )
@@ -91,7 +92,7 @@ namespace odeint {
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
                       container_type &x ,
-                      container_type &dxdt ,
+                      const container_type &dxdt ,
                       time_type t ,
                       time_type dt )
         {

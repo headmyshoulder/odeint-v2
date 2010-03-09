@@ -20,13 +20,11 @@
 #include <limits>
 #include <vector>
 
-#include <boost/numeric/odeint/detail/iterator_algebra.hpp>
-#include <boost/numeric/odeint/concepts/state_concept.hpp>
 #include <boost/numeric/odeint/stepper_midpoint.hpp>
 #include <boost/numeric/odeint/error_checker_standard.hpp>
 #include <boost/numeric/odeint/container_traits.hpp>
 
-#include <iostream>
+#include <boost/numeric/odeint/detail/iterator_algebra.hpp>
 
 namespace boost {
 namespace numeric {
@@ -126,6 +124,16 @@ namespace odeint {
         }
 
 
+        void adjust_size( const container_type &x )
+        {
+            traits_type::adjust_size(x, m_xerr);
+            traits_type::adjust_size(x, m_x_mp);
+            traits_type::adjust_size(x, m_x_scale);
+            traits_type::adjust_size(x, m_dxdt);
+            m_stepper_mp.adjust_size( x );
+        }
+
+
         template< class DynamicalSystem >
         controlled_step_result try_step(
                 DynamicalSystem &system ,
@@ -134,9 +142,6 @@ namespace odeint {
                 time_type &t ,
                 time_type &dt )
         {
-            traits_type::adjust_size(x, m_xerr);
-            traits_type::adjust_size(x, m_x_mp);
-            traits_type::adjust_size(x, m_x_scale);
 
             // get error scale
             m_error_checker.fill_scale(x, dxdt, dt, m_x_scale);
@@ -268,7 +273,6 @@ namespace odeint {
                 time_type &t,
                 time_type &dt )
         {
-            traits_type::adjust_size(x, m_dxdt);
             system(x, m_dxdt, t);
             return try_step(system, x, m_dxdt, t, dt );
         }

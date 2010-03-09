@@ -12,20 +12,25 @@ Karsten:
   * typedef typename traits_type::container_type container_type statt typedef Container container_type  - DONE
 * Concept checks, für vernünftige Fehlermeldungen
   * auch für checks ob abs() vorhanden ist
-* check in all steppers the order
-* rk78 die fehler implementieren
-* references entfernen
 
-* check: orders and adjust_size() in :
+* check: orders and adjust_size() and something more in :
   * stepper_euler.hpp - DONE
   * stepper_half_step.hpp - DONE
   * stepper_midpoint.hpp - DONE, changed stepcount -> step_number
   * stepper_rk4_classical.hpp - DONE
   * stepper_rk4.hpp - DONE
   * stepper_rk5_ck.hpp - DONE
-  * stepper_rk78_fehlberg.hpp
-  * stepper_rk_generic.hpp
+    * check the error orders
+  * stepper_rk78_fehlberg.hpp - DONE
+    * rk78 die fehler implementieren - DONE
+    * check the error orders
+  * controlled_stepper_standard.hpp - DONE
+    * contruction of the internal stepper from its standard constructor - DONE
+  * controlled_stepper_bs.hpp
+
+
 * die auskommentierten Iteratoren typedefs entfernen
+
 
 
 Mario:

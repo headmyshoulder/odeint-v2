@@ -156,7 +156,7 @@ void test_rk78_fehlberg_concept()
 {
     stepper_rk78_fehlberg< std::vector<double> > stepper;
     check_stepper_concept( stepper , 8 );
-//    check_error_stepper_concept( stepper , 7 , 8 );
+    check_error_stepper_concept( stepper , 7 , 8 );
 }
 
 

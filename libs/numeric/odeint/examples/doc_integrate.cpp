@@ -47,11 +47,11 @@ int main(int argc, char **argv)
 
     //[ define_conntrolled_stepper
     controlled_stepper_standard< stepper_rk5_ck< state_type > > 
-        controlled_rk5( rk5 , 1E-6 , 1E-7 , 1.0 , 1.0 );
+        controlled_rk5( 1E-6 , 1E-7 , 1.0 , 1.0 );
     //]
 
     //[ integrate_adapt
-    integrate_adaptive( make_controlled_stepper_standard( rk5 , 1E-6 , 1E-7 , 1.0 , 1.0 ),
+    integrate_adaptive( controlled_rk5 ,
                         harmonic_oscillator, x, 0.0, 10.0, 0.01  );
     //]
     

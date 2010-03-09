@@ -68,7 +68,7 @@ int main( int argc , char **argv )
 
     stepper_half_step< stepper_euler< state_type > > euler;
     controlled_stepper_standard< stepper_half_step< stepper_euler< state_type > > >
-        euler_controlled( euler , eps_abs, eps_rel, 1.0, 1.0);
+        euler_controlled( eps_abs, eps_rel, 1.0, 1.0);
     size_t steps = integrate( euler_controlled, lorenz, x1, 
                               0.0, 10.0, 1E-4, 
                               back_inserter(t1_vec),
@@ -78,7 +78,7 @@ int main( int argc , char **argv )
 
     stepper_half_step< stepper_rk4< state_type > > rk4;
     controlled_stepper_standard< stepper_half_step< stepper_rk4< state_type > > >
-        rk4_controlled( rk4 , eps_abs, eps_rel, 1.0, 1.0);
+        rk4_controlled( eps_abs, eps_rel, 1.0, 1.0);
     steps = integrate( rk4_controlled, lorenz, x2, 0.0, 10.0, 1E-4, 
                        back_inserter(t2_vec),
                        back_inserter(x2_t_vec));
@@ -88,7 +88,7 @@ int main( int argc , char **argv )
 
     stepper_rk5_ck< state_type > rk5;
     controlled_stepper_standard< stepper_rk5_ck< state_type > > 
-        rk5_controlled( rk5 , eps_abs, eps_rel, 1.0, 1.0);
+        rk5_controlled( eps_abs, eps_rel, 1.0, 1.0);
     steps = integrate( rk5_controlled, lorenz, x3, 0.0, 10.0, 1E-4, 
                        back_inserter(t3_vec),
                        back_inserter(x3_t_vec));

@@ -127,6 +127,9 @@ int main(int argc, char **argv)
   odeint::stepper_euler<harm_osc::state_type> euler;
   odeint::stepper_rk4<harm_osc::state_type> rk4;
 
+  euler.adjust_size( x_euler );
+  rk4.adjust_size( x_rk4 );
+
   
   // Write the output header. The '#' symbol creates a comment in gnuplot
   cout << "# Output from the simple harmonic oscillator example." << endl;

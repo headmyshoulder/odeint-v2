@@ -106,7 +106,7 @@ namespace odeint {
         void midpoint_step( 
                 DynamicalSystem &system ,
                 container_type &x ,
-                container_type &dxdt ,
+                const container_type &dxdt ,
                 time_type t ,
                 time_type dt ,
                 container_type &x_out )
@@ -161,7 +161,7 @@ namespace odeint {
         void do_step( 
                 DynamicalSystem &system ,
                 container_type &x ,
-                container_type &dxdt ,
+                const container_type &dxdt ,
                 time_type t ,
                 time_type dt )
         {

@@ -99,7 +99,7 @@ namespace odeint {
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
                         container_type &x ,
-                        container_type &dxdt ,
+                        const container_type &dxdt ,
                         time_type t ,
                         time_type dt )
         {
@@ -359,8 +359,6 @@ namespace odeint {
         }
 
 
-/*
-
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
                       container_type &x ,
@@ -372,26 +370,29 @@ namespace odeint {
             const time_type cc01 = static_cast<time_type>( 41.0 / 840.0 );
             const time_type cc06 = static_cast<time_type>( 34.0 / 105.0 );
             const time_type cc07 = static_cast<time_type>( 9.0 / 35.0 );
-            const time_type cc08 = static_cast<time_type>( cc08 );
+            const time_type cc08 = static_cast<time_type>( cc07 );
             const time_type cc09 = static_cast<time_type>( 9.0 / 280.0 );
             const time_type cc10 = static_cast<time_type>( cc09 );
             const time_type cc11 = static_cast<time_type>( cc01 );
+
+            using namespace detail::it_algebra;
 
             xerr = x;
             do_step( system , xerr , dxdt , t , dt );
 
             // now, k1-k13 are calculated and stored in m_k01 - m_k13
-            scale_sum( x.begin() , x.end() ,
-                       static_cast<time_type>(1.0) , x.begin(),
-                       dt * cc01 , dxdt ,
-                       dt * cc06 , m_k06 ,
-                       dt * cc07 , m_k07 ,
-                       dt * cc08 , m_k08 ,
-                       dt * cc09 , m_k09 ,
-                       dt * cc10 , m_k10 ,
-                       dt * cc11 , m_k11 );
+            scale_sum( traits_type::begin(x) , traits_type::end(x) ,
+                       static_cast<time_type>(1.0) , traits_type::begin(x) ,
+                       dt * cc01 , traits_type::begin(dxdt) ,
+                       dt * cc06 , traits_type::begin(m_k06) ,
+                       dt * cc07 , traits_type::begin(m_k07) ,
+                       dt * cc08 , traits_type::begin(m_k08) ,
+                       dt * cc09 , traits_type::begin(m_k09) ,
+                       dt * cc10 , traits_type::begin(m_k10) ,
+                       dt * cc11 , traits_type::begin(m_k11) );
 
-            increment( xerr.begin() , xerr.end() , x.begin() , static_cast<time_type>(-1.0) );
+            increment( traits_type::begin(xerr) , traits_type::end(xerr) ,
+                       traits_type::begin(x) , static_cast<time_type>(-1.0) );
         }
 
         template< class DynamicalSystem >
@@ -401,11 +402,9 @@ namespace odeint {
                       time_type dt ,
                       container_type &xerr )
         {
-            traits_type::adjust_size( x , m_dxdt );
             system( x , m_dxdt , t );
             do_step( system , x , m_dxdt , t , dt , xerr );
         }
-*/
     };
 
 } // namespace odeint
