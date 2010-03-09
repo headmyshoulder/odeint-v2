@@ -22,7 +22,7 @@ Karsten:
   * stepper_midpoint.hpp - DONE, changed stepcount -> step_number
   * stepper_rk4_classical.hpp - DONE
   * stepper_rk4.hpp - DONE
-  * stepper_rk5_ck.hpp
+  * stepper_rk5_ck.hpp - DONE
   * stepper_rk78_fehlberg.hpp
   * stepper_rk_generic.hpp
 * die auskommentierten Iteratoren typedefs entfernen

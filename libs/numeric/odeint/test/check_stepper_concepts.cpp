@@ -20,6 +20,8 @@
 #include <boost/numeric/odeint/stepper_midpoint.hpp>
 #include <boost/numeric/odeint/stepper_rk4_classical.hpp>
 #include <boost/numeric/odeint/stepper_rk4.hpp>
+#include <boost/numeric/odeint/stepper_rk5_ck.hpp>
+#include <boost/numeric/odeint/stepper_rk78_fehlberg.hpp>
 
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
@@ -37,6 +39,7 @@ struct constant_system
 };
 
 
+const double eps = 1.0e-14;
 
 template< class Stepper >
 void check_stepper_concept( Stepper &stepper ,
@@ -56,11 +59,11 @@ void check_stepper_concept( Stepper &stepper ,
     container_type x( 1 , 0.0 ) ;
     stepper.adjust_size( x );
     stepper.do_step( con , x , 0.0 , 0.1 );
-    BOOST_CHECK_CLOSE( x[0] , 0.1 , 1.0e-14 );
+    BOOST_CHECK_SMALL( fabs( x[0] - 0.1 ) , eps );
 
     container_type dxdt( 1 , 1.0 );
     stepper.do_step( con , x , dxdt , 0.0 , 0.1 );
-    BOOST_CHECK_CLOSE( x[0] , 0.2 , 1.0e-14 );
+    BOOST_CHECK_SMALL( fabs( x[0] - 0.2 ) , eps );
 
     stepper_type stepper2( x );
     stepper_type stepper3;
@@ -91,13 +94,13 @@ void check_error_stepper_concept(
     stepper.adjust_size( x );
 
     stepper.do_step( con , x , 0.0 , 0.1 , xerr );
-    BOOST_CHECK_CLOSE( x[0] , 0.1 , 1.0e-14 );
-    BOOST_CHECK_CLOSE( xerr[0] , 0.0 , 1.0e-14 );
+    BOOST_CHECK_SMALL( fabs( x[0] - 0.1 ) , eps );
+    BOOST_CHECK_SMALL( fabs( xerr[0] ) , eps );
 
     container_type dxdt( 1 , 1.0 );
     stepper.do_step( con , x , dxdt , 0.0 , 0.1 , xerr );
-    BOOST_CHECK_CLOSE( x[0] , 0.2 , 1.0e-14 );
-    BOOST_CHECK_CLOSE( xerr[0] , 0.0 , 1.0e-14 );
+    BOOST_CHECK_SMALL( fabs( x[0] - 0.2 ) , eps );
+    BOOST_CHECK_SMALL( fabs( xerr[0] ) , eps );
 
     stepper_type stepper2( x );
     stepper_type stepper3;
@@ -143,6 +146,19 @@ void test_rk4_concept()
     check_stepper_concept( stepper , 4 );
 }
 
+void test_rk5_ck_concept()
+{
+    stepper_rk5_ck< std::vector<double> > stepper;
+    check_error_stepper_concept( stepper , 5 , 5 );
+}
+
+void test_rk78_fehlberg_concept()
+{
+    stepper_rk78_fehlberg< std::vector<double> > stepper;
+    check_stepper_concept( stepper , 8 );
+//    check_error_stepper_concept( stepper , 7 , 8 );
+}
+
 
 
 
@@ -155,6 +171,8 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     test->add( BOOST_TEST_CASE( &test_midpoint_concept ) );
     test->add( BOOST_TEST_CASE( &test_rk4_classical_concept ) );
     test->add( BOOST_TEST_CASE( &test_rk4_concept ) );
+    test->add( BOOST_TEST_CASE( &test_rk5_ck_concept ) );
+    test->add( BOOST_TEST_CASE( &test_rk78_fehlberg_concept ) );
 
     return test;
 }

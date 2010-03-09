@@ -60,16 +60,39 @@ namespace odeint {
     public:
 
 
+        // the order of the step if a normal step is performed
+        order_type order_step( void ) const
+        {
+            return m_stepper.order_step();
+        }
+
+
+        // the order of the step if an error step is performed
+        order_type order_error_step( void ) const
+        {
+            return m_stepper.order_step();
+        }
+
+
+        // the order of the error term if the error step is performed
+        order_type order_error( void ) const 
+        {
+            return m_stepper.order_step() + 1; 
+        }
+
+
         // standard constructor
         stepper_half_step( void )
         {
         }
+
 
         // contructor, which adjust the size of internal containers
         stepper_half_step( const container_type &x )
         {
             adjust_size( x );
         }
+
 
         // adjust the size of m_dxdt , m_xtemp und m_stepper
         void adjust_size( const container_type &x )
@@ -79,26 +102,6 @@ namespace odeint {
             traits_type::adjust_size( x , m_xtemp );
         }
 
-        // the order of the step if a normal step is performed
-        order_type order_step( void ) const
-        {
-
-            return m_stepper.order_step();
-        }
-
-        // the order of the step if an error step is performed
-        order_type order_error_step( void ) const
-        {
-
-            return m_stepper.order_step();
-        }
-
-        // the order of the error term if the error step is performed
-        order_type order_error( void ) const 
-        {
-
-            return m_stepper.order_step() + 1; 
-        }
 
 
         // performs a normal step, without error calculation
