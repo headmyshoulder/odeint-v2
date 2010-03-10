@@ -213,7 +213,10 @@ int main( int argc , char **argv )
 
   quark with gcc-4.4, kann verfaelscht sein
 
-   0.1574          0.1629          0.1686          0.1731          0.1732
+  0.1574          0.1629          0.1686          0.1731          0.1732
 
+  at home with gcc-4.4
+
+  0.1004          0.1001          0.1021          0.1009          0.1009 
 */
   
