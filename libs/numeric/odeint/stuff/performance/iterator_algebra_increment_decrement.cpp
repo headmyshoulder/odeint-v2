@@ -252,20 +252,3 @@ int main( int argc , char **argv )
 
     return 0;
 }
-
-
-/*
-int main( int argc , char **argv )
-{
-    const size_t n = 1000000;
-    vector<double> eins( n ) , zwei( n ) , drei( n );
-    generate( eins.begin() , eins.end() , drand48 );
-    generate( zwei.begin() , zwei.end() , drand48 );
-    generate( drei.begin() , drei.end() , drand48 );
-
-    increment( eins.begin() , eins.end() , zwei.begin() , 0.5*_1 );
-    increment( eins.begin() , eins.end() , zwei.begin() , drei.begin() , _1 + 0.5*_2 );
-
-    return 0;
-}
-*/

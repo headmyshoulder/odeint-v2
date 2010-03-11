@@ -23,6 +23,8 @@
 #include <boost/numeric/odeint/stepper_rk5_ck.hpp>
 #include <boost/numeric/odeint/stepper_rk78_fehlberg.hpp>
 
+#include <boost/numeric/odeint/controlled_stepper_standard.hpp>
+
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
 
@@ -110,6 +112,28 @@ void check_error_stepper_concept(
 
 
 
+template< class ControlledErrorStepper >
+void check_controlled_stepper_concept(
+    ControlledErrorStepper &stepper
+    )
+{
+    typedef ControlledErrorStepper stepper_type;
+    typedef typename stepper_type::container_type container_type;
+    typedef typename stepper_type::traits_type traits_type;
+    typedef typename stepper_type::value_type value_type;
+    typedef typename stepper_type::order_type order_type;
+    typedef typename stepper_type::time_type time_type;
+
+//    constant_system< container_type > con;
+
+    container_type x( 1 , 0.0 );
+    stepper.adjust_size( x );
+}
+
+
+
+
+
 void test_euler_concept()
 {
     stepper_euler< std::vector<double> > stepper;
@@ -159,6 +183,15 @@ void test_rk78_fehlberg_concept()
     check_error_stepper_concept( stepper , 7 , 8 );
 }
 
+void test_controlled_stepper_standard_concept()
+{
+    typedef stepper_rk5_ck< std::vector< double > > stepper_type;
+    typedef controlled_stepper_standard< stepper_type > controlled_stepper_type;
+    
+    controlled_stepper_type stepper( 1.0 , 1.0 , 1.0 , 1.0 );
+    check_controlled_stepper_concept( stepper );
+}
+
 
 
 
@@ -173,6 +206,7 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     test->add( BOOST_TEST_CASE( &test_rk4_concept ) );
     test->add( BOOST_TEST_CASE( &test_rk5_ck_concept ) );
     test->add( BOOST_TEST_CASE( &test_rk78_fehlberg_concept ) );
+    test->add( BOOST_TEST_CASE( &test_controlled_stepper_standard_concept ) );
 
     return test;
 }

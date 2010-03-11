@@ -15,7 +15,7 @@ project
     ;
 
 exe harmonic_oscillator : harmonic_oscillator.cpp ;
-exe hamiltonian_test : hamiltonian_test.cpp ;
+
 
 exe lorenz_cmp_rk4_rk_generic : lorenz_cmp_rk4_rk_generic.cpp ;
 exe lorenz_controlled : lorenz_controlled.cpp ;
@@ -23,7 +23,7 @@ exe lorenz_integrate_constant_step : lorenz_integrate_constant_step.cpp ;
 exe lorenz_integrator : lorenz_integrator.cpp ;
 exe lorenz_stepper : lorenz_stepper.cpp ;
 exe pendulum_vibrating_pivot : pendulum_vibrating_pivot.cpp ;
-exe dnls_stepper_compare : dnls_stepper_compare.cpp ;
+exe dnls : dnls.cpp ;
 
 exe doc_harm_osc : doc_harm_osc.cpp ;
 exe doc_integrate : doc_integrate.cpp ;

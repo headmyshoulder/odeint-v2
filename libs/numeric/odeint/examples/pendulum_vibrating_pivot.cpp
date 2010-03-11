@@ -55,21 +55,23 @@ int main( int argc , char **argv )
     
     stepper_half_step< stepper_rk4< state_type > > stepper;
 
-    controlled_stepper_standard< stepper_half_step< stepper_rk4< state_type > > >
-        controlled_stepper( 1E-6 , 1E-7 , 1.0 , 1.0 );
+    controlled_stepper_standard
+        < stepper_half_step< stepper_rk4< state_type > >
+        > controlled_stepper( 1E-6 , 1E-7 , 1.0 , 1.0 );
 
     size_t steps = integrate( controlled_stepper, my_system, x, 
                               0.0, 100.0,1E-4, 
                               back_inserter(times),
                               back_inserter(x_t_vec));
 
-        clog << "Steps: " << steps << endl;
+    clog << "Steps: " << steps << endl;
 
     cout.precision(5);
     cout.setf(ios::fixed,ios::floatfield);
     
 
-    for( size_t i=0; i<times.size(); i++ ) {
+    for( size_t i=0; i<times.size(); i++ )
+    {
         //cout << "current state: " ;
         cout << times[i] << tab;
         cout << x_t_vec[i][0] << tab << x_t_vec[i][1] << endl;

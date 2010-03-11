@@ -1,17 +1,20 @@
 = Features and Coding issues: =
 
 Karsten:
+
 * Resizer functionality should be called explicitly and not in every call of do_step or try_step
+
 * Add new order function (because we need three orders for rk78)
   suggestion: * order_step()
               * order_error_step()
               * order_error()
+
 * deriv every stepper from stepper_base< stepper >, because do_step( system , x , t , dt ) is only implemented once ( and calls the special do_step( system , x , dxdt , t , dt ) 
+  * is not possible
+
 * In all steppers:
   * const unsigned short -> short - DONE
   * typedef typename traits_type::container_type container_type statt typedef Container container_type  - DONE
-* Concept checks, für vernünftige Fehlermeldungen
-  * auch für checks ob abs() vorhanden ist
 
 * check: orders and adjust_size() and something more in :
   * stepper_euler.hpp - DONE
@@ -26,7 +29,9 @@ Karsten:
     * check the error orders
   * controlled_stepper_standard.hpp - DONE
     * contruction of the internal stepper from its standard constructor - DONE
+    * concecpt check
   * controlled_stepper_bs.hpp
+    * concecpt check
 
 
 * die auskommentierten Iteratoren typedefs entfernen
@@ -48,8 +53,6 @@ Mario:
   * auch für checks ob abs() vorhanden ist
 
 
-Karsten:
-* hamiltonian solvers with input std::pair< container_type , container_type >, than it can be used in integrate_const.
 
 Mario: check
 * change integrate_const to use number of steps instead of end_time and remove integrate_const_step 
@@ -72,10 +75,12 @@ Mario:
 
 
 
-= Unit testing =
+= Testing =
 
 Karsten:
+
 * aufsetzen des Frameworks - DONE
+
 * checken zwischen autonomous and non-autonomous integration, with constant time
 
 
@@ -91,8 +96,12 @@ Karsten:
 = Examples and perforance testing =
 
 * cleanup examples directory, only one example per system
-* create performance directory/project 
+  * combine all lorenz examples
+
+* create performance directory/project - DONE
+
 * one example with complex types, cgle, mit spiral waves und multi_array (grisha)
+
 * solar system
   * http://ssd.jpl.nasa.gov/
   * masses: http://ssd.jpl.nasa.gov/?planet_phys_par
@@ -103,6 +112,7 @@ Karsten:
 = Headers =
 
 * header cleanup, every header should include all header it needs
+
 * <tr1/array> ist not always present, on many systems it is <array> 
 
 
@@ -119,6 +129,13 @@ Karsten:
   * http://math-www.uni-paderborn.de/~walter/publications/
   * http://arxiv.org/abs/astro-ph/0005074
 * check other methods, Nystrom ...
+* hamiltonian solvers with input std::pair< container_type , container_type >, than it can be used in integrate_const.
+
+
+
+
+
+
 
 
 = Wish list =
@@ -142,4 +159,6 @@ Karsten:
 
 = Some issues =
 
-* zip iterator is slow, hence writing the iterator algebra with zip iterators is not an option
+* iterator algebra
+  * zip_iterators are a possibility
+  * transform functions with more iterators are a possibility

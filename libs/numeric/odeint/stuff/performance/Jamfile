@@ -1,0 +1,27 @@
+# Copyright 2009 Karsten Ahnert and Mario Mulansky.
+# Distributed under the Boost Software License, Version 1.0. (See
+# accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+
+project
+    : requirements 
+      <include>../../../../..
+      <include>$BOOST_ROOT
+      <include>$BLITZ_ROOT
+      <include>$MTL4_ROOT
+      <define>BOOST_ALL_NO_LIB=1
+    : build-dir .
+    ;
+
+lib libgsl : : <name>gsl ;
+lib libgslcblas : : <name>gslcblas ;
+
+exe transform_zip_iterators_cmp
+    : transform_zip_iterators_cmp.cpp ;
+
+exe iterator_algebra_increment_decrement
+    : iterator_algebra_increment_decrement.cpp ;
+
+exe gsl_compare_lorenz :
+    gsl_compare_lorenz.cpp libgsl libgslcblas ;

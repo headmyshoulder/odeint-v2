@@ -292,4 +292,3 @@ int harm_osc::parse_command_line(int ac, char ** av)
   return 0;
 }
 #endif
-
