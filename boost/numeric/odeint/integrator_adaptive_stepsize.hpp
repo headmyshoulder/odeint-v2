@@ -37,15 +37,19 @@ namespace odeint {
             typename ControlledStepper::time_type dt,
             Observer &observer )
     {
+        typedef typename ControlledStepper::time_type time_type;
+
+        stepper.adjust_size( state );
+
         controlled_step_result result;
         size_t iterations = 0;
-        typename ControlledStepper::time_type t = start_time;
-        typename ControlledStepper::time_type dt_ = dt;
+        time_type t = start_time , dt_ = dt;
 
         observer(t, state, system);
         
         while( t < end_time )
         {
+            if( (end_time - t) < dt ) dt = end_time - t;
             // do a controlled step
             result = stepper.try_step( system, state, t, dt_ );
 
@@ -75,7 +79,7 @@ namespace odeint {
     {
         return integrate_adaptive(
                 stepper, system ,
-                state, start_time , end_time,
+                state, start_time , end_time, dt, 
                 do_nothing_observer<
 		    typename ControlledStepper::time_type ,
 		    typename ControlledStepper::container_type ,
@@ -102,25 +106,23 @@ namespace odeint {
     template< 
         class ControlledStepper,
         class DynamicalSystem,
-        class TimeSequence,
-        class InsertIterator
+        class TimeInsertIterator,
+        class StateInsertIterator
 	>
     size_t integrate(
             ControlledStepper &stepper,
             DynamicalSystem &system,
             typename ControlledStepper::container_type &state, 
-            TimeSequence &times, 
+            typename ControlledStepper::time_type start,
+            typename ControlledStepper::time_type end,
             typename ControlledStepper::time_type dt, 
-            InsertIterator state_inserter)
+            TimeInsertIterator time_inserter,
+            StateInsertIterator state_inserter)
     {
-        if( times.empty() ) return 0;
-        else
-        {
-            state_copy_observer<InsertIterator, TimeSequence>
-                observer(times, state_inserter);
-            return integrate_adaptive(stepper, system, state, 
-                                      times.front() , times.back(), dt , observer);
-        }
+        state_copy_observer<TimeInsertIterator, StateInsertIterator>
+            observer(time_inserter, state_inserter);
+        return integrate_adaptive(stepper, system, state, 
+                                  start , end, dt , observer);
     }
 
 
@@ -133,15 +135,17 @@ namespace odeint {
     template< 
             class DynamicalSystem,
             class ContainerType,
-            class InsertIterator,
-            class TimeSequence,
+            class TimeInsertIterator,
+            class StateInsertIterator,
             class T
             >
     size_t integrate(
             DynamicalSystem &system, 
-            ContainerType &x, 
-            TimeSequence &times, 
-            InsertIterator state_inserter,
+            ContainerType &state,
+            T start_time ,
+            T end_time ,
+            TimeInsertIterator time_inserter,
+            StateInsertIterator state_inserter,
             T dt = 1E-4, 
             T eps_abs = 1E-6, 
             T eps_rel = 1E-7, 
@@ -149,16 +153,17 @@ namespace odeint {
             T a_dxdt = 1.0
                      )
     {
-        typedef stepper_euler< ContainerType , T > stepper_type;
         // we use cash karp stepper as base stepper
-        stepper_type stepper_cash_karp;
+        typedef stepper_rk5_ck< ContainerType , T > stepper_type;
+
         // we use the standard controller for this adaptive integrator
-        controlled_stepper_standard< stepper_type > 
-            controlled_stepper(stepper_cash_karp, eps_abs, eps_rel, a_x, a_dxdt ); 
+        controlled_stepper_standard< stepper_type >
+            controlled_stepper( eps_abs, eps_rel, a_x, a_dxdt ); 
         // initialized with values from above
         
         // call the normal integrator
-        return integrate(controlled_stepper, system, x, times, dt, state_inserter);
+        return integrate(controlled_stepper, system, state, 
+                         start_time, end_time, dt, time_inserter, state_inserter);
     }
     
 

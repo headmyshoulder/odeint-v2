@@ -18,14 +18,13 @@
 #define BOOST_NUMERIC_ODEINT_CONTROLLED_STEPPER_BS_HPP
 
 #include <limits>
+#include <vector>
 
-#include <boost/numeric/odeint/detail/iterator_algebra.hpp>
-#include <boost/numeric/odeint/concepts/state_concept.hpp>
 #include <boost/numeric/odeint/stepper_midpoint.hpp>
 #include <boost/numeric/odeint/error_checker_standard.hpp>
 #include <boost/numeric/odeint/container_traits.hpp>
 
-#include <iostream>
+#include <boost/numeric/odeint/detail/iterator_algebra.hpp>
 
 namespace boost {
 namespace numeric {
@@ -56,7 +55,7 @@ namespace odeint {
     private:
 
         stepper_midpoint< container_type, time_type, traits_type > m_stepper_mp;
-        error_checker_standard< container_type, time_type > m_error_checker;
+        error_checker_standard< container_type, time_type , traits_type > m_error_checker;
         
         const unsigned short m_k_max;
 
@@ -125,6 +124,16 @@ namespace odeint {
         }
 
 
+        void adjust_size( const container_type &x )
+        {
+            traits_type::adjust_size(x, m_xerr);
+            traits_type::adjust_size(x, m_x_mp);
+            traits_type::adjust_size(x, m_x_scale);
+            traits_type::adjust_size(x, m_dxdt);
+            m_stepper_mp.adjust_size( x );
+        }
+
+
         template< class DynamicalSystem >
         controlled_step_result try_step(
                 DynamicalSystem &system ,
@@ -133,9 +142,6 @@ namespace odeint {
                 time_type &t ,
                 time_type &dt )
         {
-            traits_type::adjust_size(x, m_xerr);
-            traits_type::adjust_size(x, m_x_mp);
-            traits_type::adjust_size(x, m_x_scale);
 
             // get error scale
             m_error_checker.fill_scale(x, dxdt, dt, m_x_scale);
@@ -161,17 +167,17 @@ namespace odeint {
             
             for( unsigned short k=0; k<=m_current_k_max; k++ )
             {  // loop through interval numbers
-                unsigned short stepcount = m_interval_sequence[k];
+                unsigned short step_number = m_interval_sequence[k];
                 //out-of-place midpoint step
-                m_stepper_mp.set_stepcount(stepcount);
-                m_stepper_mp.do_step(system, m_x0, dxdt, t, dt, m_x_mp); 
+                m_stepper_mp.set_step_number(step_number);
+                m_stepper_mp.midpoint_step(system, m_x0, dxdt, t, dt, m_x_mp); 
                 //std::clog << "x_mp: " << k << '\t' << m_x_mp[0] << '\t' << m_x_mp[1] << std::endl;
-                time_type t_est = (dt/stepcount)*(dt/stepcount);
+                time_type t_est = (dt/step_number)*(dt/step_number);
                 extrapolate(k, t_est, m_x_mp, x, m_xerr);
                 //std::clog << "Error: " << k << '\t' << m_xerr[0] << '\t' << m_xerr[1] << std::endl;
                 if( k != 0 ) 
                 {
-                    value_type max_err = m_error_checker.get_max_error_ratio(m_xerr, m_x_scale);
+                    time_type max_err = m_error_checker.get_max_error_ratio(m_xerr, m_x_scale);
                     m_error[k-1] = std::pow( max_err/m_safety1, 1.0/(2*k+1) );
                     if( (k >= m_current_k_opt-1) || !continuous_call )
                     { //we're in the order window where convergence is expected
@@ -267,7 +273,6 @@ namespace odeint {
                 time_type &t,
                 time_type &dt )
         {
-            traits_type::adjust_size(x, m_dxdt);
             system(x, m_dxdt, t);
             return try_step(system, x, m_dxdt, t, dt );
         }
@@ -318,7 +323,7 @@ namespace odeint {
             m_times[k_est] = t_est;
             x_err = x = x_est;
 
-            const iterator x_end = x.end();
+            const iterator x_end = traits_type::end(x);
 
             if( k_est == 0 )
             {
@@ -336,8 +341,8 @@ namespace odeint {
 
                    //std::clog << " values: " << delta << '\t' << val1 << '\t' << val2 << std::endl; 
 
-                   iterator x_iter = x.begin();
-                   iterator x_err_iter = x_err.begin();
+                   iterator x_iter = traits_type::begin(x);
+                   iterator x_err_iter = traits_type::begin(x_err);
                    iterator d_k_iter = m_d[k].begin();
                    iterator c_iter = m_c.begin();
                    while( x_iter != x_end )

@@ -15,19 +15,22 @@
 #define BOOST_NUMERIC_ODEINT_CONTROLLED_STEPPER_STANDARD_HPP
 
 #include <cmath> // for pow( ) and abs()
+#include <algorithm>
 #include <complex>
 
-#include <boost/concept_check.hpp>
+#include <boost/numeric/odeint/error_checker_standard.hpp>
+#include <boost/numeric/odeint/container_traits.hpp>
 
 #include <boost/numeric/odeint/detail/iterator_algebra.hpp>
-#include <boost/numeric/odeint/concepts/state_concept.hpp>
-#include <boost/numeric/odeint/container_traits.hpp>
+
+
 
 namespace boost {
 namespace numeric {
 namespace odeint {
 
-    typedef enum{
+    typedef enum
+    {
         success ,
         step_size_decreased ,
         step_size_increased
@@ -69,66 +72,70 @@ namespace odeint {
         typedef typename stepper_type::time_type time_type;
         typedef typename stepper_type::traits_type traits_type;
         typedef typename stepper_type::value_type value_type;
-        typedef typename stepper_type::iterator iterator;
-        typedef typename stepper_type::const_iterator const_iterator;
+//        typedef typename stepper_type::iterator iterator;
+//        typedef typename stepper_type::const_iterator const_iterator;
+
+        typedef error_checker_standard<
+            container_type, time_type , traits_type
+            > error_checker_type;
 
 
         // private members
     private:
 
-        stepper_type &m_stepper;
+        stepper_type m_stepper;
+        error_checker_type m_error_checker;
 
 	time_type m_eps_abs;
 	time_type m_eps_rel;
 	time_type m_a_x;
 	time_type m_a_dxdt;
+
 	container_type m_dxdt;
 	container_type m_x_tmp;
 	container_type m_x_err;
-
-
-        // private methods
-
-        time_type calc_max_rel_err(
-                iterator x_start ,
-                iterator x_end ,
-                iterator dxdt_start ,
-                iterator x_err_start ,
-                time_type dt
-            )
-        {
-	    time_type max_rel_err = 0.0;
-            time_type err;
-
-	    while( x_start != x_end )
-            {
-                // get the maximal value of x_err/D where 
-                // D = eps_abs + eps_rel * (a_x*|x| + a_dxdt*|dxdt|);
-                err = m_eps_abs + m_eps_rel * (
-                    m_a_x * std::abs(*x_start++) + 
-                    m_a_dxdt * dt * std::abs(*dxdt_start++) );
-                max_rel_err = max( std::abs(*x_err_start++)/err , max_rel_err );
-	    }
-            return max_rel_err;
-        }
-
+        container_type m_x_scale;
 
 
         // public functions
     public:
+
+        order_type order_error_step() { return m_stepper.order_error_step(); }
 	
 	controlled_stepper_standard( 
-                ErrorStepper &stepper, 
-                time_type abs_err, time_type rel_err, 
-                time_type factor_x, time_type factor_dxdt )
-	    : m_stepper(stepper), 
+            time_type abs_err, time_type rel_err, 
+            time_type factor_x, time_type factor_dxdt )
+	    : m_error_checker( abs_err, rel_err, factor_x, factor_dxdt ),
               m_eps_abs(abs_err),
               m_eps_rel(rel_err),
               m_a_x(factor_x),
               m_a_dxdt(factor_dxdt)
-	{ }
+	{
+        }
 
-        order_type order() { return m_stepper.order(); }
+        controlled_stepper_standard(
+            const container_type &x ,
+            time_type abs_err, time_type rel_err, 
+            time_type factor_x, time_type factor_dxdt )
+	    : m_error_checker( abs_err, rel_err, factor_x, factor_dxdt ),
+              m_eps_abs(abs_err),
+              m_eps_rel(rel_err),
+              m_a_x(factor_x),
+              m_a_dxdt(factor_dxdt)
+	{
+            adjust_size( x );
+        }
+
+        void adjust_size( const container_type &x )
+        {
+            traits_type::adjust_size( x , m_x_err );
+            traits_type::adjust_size( x , m_x_scale );
+            traits_type::adjust_size( x , m_dxdt );
+            m_stepper.adjust_size( x );
+        }
+
+
+
 
         /* Tries a controlled step with the given stepsize dt. If dt is too large,
            x remains unchanged, an appropriate stepsize is assigned to dt and 
@@ -141,27 +148,23 @@ namespace odeint {
 	controlled_step_result try_step( 
                 DynamicalSystem &system, 
                 container_type &x, 
+                const container_type &dxdt,
                 time_type &t, 
                 time_type &dt )
 	{
-            traits_type::adjust_size( x , m_x_err );
-            traits_type::adjust_size( x , m_dxdt );
+            m_error_checker.fill_scale( x , dxdt , dt , m_x_scale );
 
 	    m_x_tmp = x;
-	    system( x , m_dxdt , t ); 
-	    m_stepper.do_step( system , x , m_dxdt, t , dt , m_x_err );
+	    m_stepper.do_step( system , x , dxdt, t , dt , m_x_err );
 
-            time_type max_rel_err = calc_max_rel_err(
-                m_x_tmp.begin() , m_x_tmp.end() ,
-                m_dxdt.begin() , m_x_err.begin() , dt );
-
+            time_type max_rel_err = m_error_checker.get_max_error_ratio(m_x_err, m_x_scale);
 
 	    if( max_rel_err > 1.1 )
             { 
                 // error too large - decrease dt
                 // limit scaling factor to 0.2
-                dt *= max( 0.9*pow(max_rel_err , -1.0/(m_stepper.order_error()-1.0)),
-                           0.2 );
+                dt *= std::max( 0.9 * pow(max_rel_err , -1.0/(m_stepper.order_error()-1.0)),
+                                0.2 );
 
                 // reset state
                 x = m_x_tmp;
@@ -174,7 +177,7 @@ namespace odeint {
                     //error too small - increase dt and keep the evolution
                     t += dt;
                     // limit scaling factor to 5.0
-                    dt *= min( 0.9*pow(max_rel_err , -1.0/m_stepper.order()), 5.0 );
+                    dt *= std::min( 0.9*pow(max_rel_err , -1.0/m_stepper.order_error_step()), 5.0 );
                     return step_size_increased;
                 }
                 else
@@ -184,7 +187,22 @@ namespace odeint {
                 }
             }
 	}
+
+	template< class DynamicalSystem >
+	controlled_step_result try_step( 
+                DynamicalSystem &system, 
+                container_type &x, 
+                time_type &t, 
+                time_type &dt )
+	{
+            system( x , m_dxdt , t );
+            return try_step( system , x , m_dxdt , t , dt );
+        }
+
     };
+
+        
+            
 
 } // namespace odeint
 } // namespace numeric

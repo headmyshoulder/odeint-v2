@@ -14,6 +14,8 @@
 #ifndef BOOST_NUMERIC_ODEINT_DETAIL_ACCUMULATORS_HPP
 #define BOOST_NUMERIC_ODEINT_DETAIL_ACCUMULATORS_HPP
 
+#include <cmath>
+
 #include <iostream>
 
 namespace boost {
@@ -39,42 +41,6 @@ namespace it_algebra { // iterator algebra
         while( first1 != last1 )
             (*first1++) += alpha * (*first2++);
     }
-
-    // computes y = x1 - x2
-    template <
-        class OutputIterator ,
-        class InputIterator1 ,
-        class InputIterator2
-        >
-    void assign_diff(
-                     OutputIterator first1 ,
-                     OutputIterator last1 ,
-                     InputIterator1 first2 ,
-                     InputIterator2 first3 )
-    {
-        while( first1 != last1 )
-            (*first1++) = (*first2++) - (*first3++);
-    }
-
-
-    // computes y = x1 + alpha * x2
-    template <
-        class OutputIterator ,
-        class InputIterator1 ,
-        class InputIterator2 ,
-        class T
-        >
-    void assign_sum(
-                    OutputIterator first1 ,
-                    OutputIterator last1 ,
-                    InputIterator1 first2 ,
-                    InputIterator2 first3 ,
-                    T alpha )
-    {
-        while( first1 != last1 )
-            (*first1++) = (*first2++) + alpha * (*first3++);
-    }
-
 
 
     // computes y = alpha1 * ( x1 + x2 + alpha2*x3 )
@@ -118,9 +84,10 @@ namespace it_algebra { // iterator algebra
                            InputIterator2 x2_begin )
     {
         while( y_begin != y_end )
-            (*y_begin++) = 
-                alpha1 * (*x1_begin++) + 
+        {
+            (*y_begin++) = alpha1 * (*x1_begin++) +
                 alpha2 * (*x2_begin++);
+        }
     }
 
 
@@ -484,6 +451,35 @@ namespace it_algebra { // iterator algebra
     }
 
 
+    // computes y += alpha1*x1 + alpha2*x2 + alpha3*x3 + alpha4*x4
+    template <
+        class OutputIterator,
+        class InputIterator1,
+        class InputIterator2,
+        class InputIterator3,
+        class InputIterator4,
+        class T
+        >
+    inline void scale_sum_inplace(
+            OutputIterator y_begin,
+            OutputIterator y_end,
+            T alpha1,
+            InputIterator1 x1_begin,
+            T alpha2,
+            InputIterator2 x2_begin,
+            T alpha3,
+            InputIterator3 x3_begin,
+            T alpha4,
+            InputIterator4 x4_begin )
+    {   
+        while( y_begin != y_end )
+            (*y_begin++) += 
+                alpha1 * (*x1_begin++) + 
+                alpha2 * (*x2_begin++) + 
+                alpha3 * (*x3_begin++) +
+                alpha4 * (*x4_begin++);
+    }
+
     /* calculates tmp = y, y = x1 + alpha*x2, x1 = tmp */
     template <
         class OutputIterator,
@@ -530,6 +526,52 @@ namespace it_algebra { // iterator algebra
                 (*first3++) += (*first4++);
           }
     }
+
+    template<
+        class OutputIterator,
+        class InputIterator1,
+        class InputIterator2,
+        class T >
+    void weighted_scale( OutputIterator y_begin,
+                         OutputIterator y_end,
+                         InputIterator1 x1_begin,
+                         InputIterator2 x2_begin,
+                         T eps_abs,
+                         T eps_rel,
+                         T a_x,
+                         T a_dxdt )
+    {
+	using std::abs;
+
+        while( y_begin != y_end ) 
+        {
+            *y_begin++ = eps_abs + 
+                eps_rel * ( a_x * abs(*x1_begin++) + 
+                            a_dxdt * abs(*x2_begin++) );
+        }
+    }
+
+    
+    template<
+        class InputIterator1,
+        class InputIterator2,
+        class T >
+    T max_ratio( InputIterator1 x1_begin,
+                 InputIterator1 x1_end,
+                 InputIterator2 x2_begin,
+                 T initial_max )
+    {
+	using std::abs;
+
+        while( x1_begin != x1_end ) 
+        {
+            initial_max = std::max(
+		static_cast<T>( abs(*x1_begin++) / abs(*x2_begin++) ) ,
+		initial_max );
+        }
+        return initial_max;
+    }
+    
 
     
     

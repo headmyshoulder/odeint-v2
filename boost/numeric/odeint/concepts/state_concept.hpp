@@ -26,6 +26,7 @@ namespace odeint {
 
     public:
         typedef typename X::iterator iterator; // requires iterator typedef
+	typedef typename X::value_type value_type; // requires value_type typedef
 
         // requires iterator being ForwardIterator
         BOOST_CONCEPT_ASSERT((ForwardIterator<iterator>));

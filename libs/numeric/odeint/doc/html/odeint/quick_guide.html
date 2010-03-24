@@ -1,0 +1,159 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Quick Guide</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Chapter 1. boost.sandbox.numeric.odeint">
+<link rel="up" href="../index.html" title="Chapter 1. boost.sandbox.numeric.odeint">
+<link rel="prev" href="../index.html" title="Chapter 1. boost.sandbox.numeric.odeint">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="odeint.quick_guide"></a><a class="link" href="quick_guide.html" title="Quick Guide">Quick Guide</a>
+</h2></div></div></div>
+<p>
+      This section gives a quick introduction to the most important features of the
+      library using a number of instructive examples. Image, for example, you want
+      to numerically integrate a harmonic oscillator with friction. The equations
+      of motion are given by x'' = -x + gamma x'. This can be transformed to a system
+      of two first-order differential equations with new variables x and p=x'. To
+      apply numerical integration one first has to design the right hand side of
+      the equation w' = f(w) where in this case w = (x,p):
+    </p>
+<p>
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="comment">/* The type of container used to hold the state vector */</span>
+<span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
+
+<span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">gam</span> <span class="special">=</span> <span class="number">0.15</span><span class="special">;</span>
+
+<span class="comment">/* The rhs of x' = f(x) */</span>
+<span class="keyword">void</span> <span class="identifier">harmonic_oscillator</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span><span class="special">,</span> <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">t</span><span class="special">)</span>
+<span class="special">{</span>
+    <span class="identifier">dxdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">];</span>
+    <span class="identifier">dxdt</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="special">-</span><span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">-</span> <span class="identifier">gam</span><span class="special">*</span><span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">];</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+    </p>
+<p>
+      Here we chose <span class="bold"><strong>vector&lt;double&gt;</strong></span> as the
+      state type, but others are also possible, for example <span class="bold"><strong>tr1/array&lt;double,2&gt;</strong></span>.
+      Odeint is designed in such a way that it works with basically any container
+      that can be accessed via iterators. The parameter structure of the function
+      is crucial: the integration methods will always call them in the form <span class="bold"><strong>f(x, dxdt, t)</strong></span>. So even if there is no explicit time
+      dependence, one has to define <span class="bold"><strong>t</strong></span> as a function
+      parameter.
+    </p>
+<p>
+      Now, we have to define the initial state from which the integration should
+      start:
+    </p>
+<p>
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="identifier">state_type</span> <span class="identifier">x</span><span class="special">(</span><span class="number">2</span><span class="special">);</span>
+<span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span> <span class="comment">// start at x=1.0, p=0.0
+</span><span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
+</pre>
+<p>
+      </p>
+<p>
+    </p>
+<p>
+      For the integration itself we'll use the <code class="computeroutput">integrate</code>
+      function, which is a convenient way to get quick results. It is based on the
+      error-controlled <code class="computeroutput">runge_kutta_rk5_ck</code>
+      stepper (5th order) and uses adaptive stepsize. The results are stored into
+      two InsertIterators (time and state) that must be provided.
+    </p>
+<p>
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">times</span><span class="special">;</span>
+<span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">state_type</span><span class="special">&gt;</span> <span class="identifier">x_t_vec</span><span class="special">;</span>
+
+<span class="identifier">size_t</span> <span class="identifier">steps</span> <span class="special">=</span> <span class="identifier">integrate</span><span class="special">(</span> <span class="identifier">harmonic_oscillator</span> <span class="special">,</span> 
+                          <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> 
+                          <span class="identifier">back_inserter</span><span class="special">(</span> <span class="identifier">times</span> <span class="special">)</span> <span class="special">,</span>
+                          <span class="identifier">back_inserter</span><span class="special">(</span> <span class="identifier">x_t_vec</span> <span class="special">)</span> <span class="special">);</span>
+</pre>
+<p>
+      </p>
+<p>
+    </p>
+<p>
+      The integrate function expects as parameters the rhs of the ode as defined
+      above, the initial state x, the start- and end-time of the integration and
+      two InsertIterators for the times and states where the current time and the
+      current state after each timestep is stored. Note, that <code class="computeroutput">integrate</code>
+      uses an adaptive stepsize during the integration steps so the time points will
+      not be equally spaced. The integration returns the number of steps that were
+      applied. Note, that in total steps+1 elements will be inserted into times and
+      x_t_vec as the initial time and state are inserted before the first step.
+    </p>
+<p>
+      It is, of course, also possible to implement the ode system as a class. The
+      rhs must then be defined as the ()-operator:
+    </p>
+<p>
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">harm_osc</span> <span class="special">{</span>
+
+    <span class="keyword">double</span> <span class="identifier">m_gam</span><span class="special">;</span>
+
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">harm_osc</span><span class="special">(</span> <span class="keyword">double</span> <span class="identifier">gam</span> <span class="special">)</span> <span class="special">:</span> <span class="identifier">m_gam</span><span class="special">(</span><span class="identifier">gam</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span><span class="special">,</span> <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">t</span><span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">dxdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">];</span>
+        <span class="identifier">dxdt</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="special">-</span><span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">-</span> <span class="identifier">m_gam</span><span class="special">*</span><span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">];</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+      </p>
+<p>
+    </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Karsten Ahnert and Mario Mulansky<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a>
+</div>
+</body>
+</html>

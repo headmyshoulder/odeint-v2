@@ -24,7 +24,8 @@
 #include <tr1/array>
 
 #include <boost/numeric/odeint.hpp>
-#include <boost/numeric/odeint/controlled_stepper_bs.hpp>
+#include <boost/numeric/odeint/container_traits_tr1_array.hpp>
+ // #include <boost/numeric/odeint/controlled_stepper_bs.hpp>
 
 #define tab "\t"
 
@@ -86,7 +87,7 @@ int main( int argc , char **argv )
     x[2] = 20.0;
 
     stepper_rk5_ck< state_type > rk5;
-    controlled_stepper_standard< stepper_rk5_ck< state_type > > controlled_rk5( rk5, eps_abs , eps_rel, 1.0, 1.0 );
+    controlled_stepper_standard< stepper_rk5_ck< state_type > > controlled_rk5( eps_abs , eps_rel, 1.0, 1.0 );
     output_observer rk5_obs("lorenz_rk5.dat");
     size_t steps = integrate_adaptive( controlled_rk5, lorenz, x, 0.0, end_time, 1E-2, rk5_obs );
 

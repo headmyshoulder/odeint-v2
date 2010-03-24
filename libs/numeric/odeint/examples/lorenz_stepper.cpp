@@ -69,8 +69,8 @@ int main( int argc , char **argv )
     x1[2] = 0.0;
     state_type2 x2 = {{ 1.0 , 0.0 , 0.0 }};
 
-    stepper_rk4< state_type1 > stepper1;
-    stepper_rk4< state_type2 > stepper2;
+    stepper_rk4< state_type1 > stepper1( x1 );
+    stepper_rk4< state_type2 > stepper2( x2 );
 
     clock_t start , end;
     double t;
@@ -78,8 +78,7 @@ int main( int argc , char **argv )
     start= clock();
     t = 0.0;
     for( size_t oi=0 ; oi<olen ; ++oi,t+=dt )
-        stepper1.do_step
-( lorenz1 , x1 , t , dt );
+        stepper1.do_step( lorenz1 , x1 , t , dt );
     end = clock();
     cout << "vector : " << double ( end - start ) / double( CLOCKS_PER_SEC ) << endl;
     cout << "x: "<<x1[0]<<tab<<x1[1]<<tab<<x1[2]<<endl;

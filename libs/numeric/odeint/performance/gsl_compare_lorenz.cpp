@@ -112,7 +112,7 @@ int main( int argc , char **argv )
     start= clock();
     t = 0.0;
     for( size_t oi=0 ; oi<olen ; ++oi,t+=dt )
-        stepper.next_step( lorenz , x1 , t , dt , x1_err );
+        stepper.do_step( lorenz , x1 , t , dt , x1_err );
     end = clock();
     clog << "odeint half step array : " << double ( end - start ) / double( CLOCKS_PER_SEC ) << endl;
 
@@ -122,7 +122,7 @@ int main( int argc , char **argv )
     start = clock();
     t = 0.0;
     for( size_t oi=0 ; oi<olen ; ++oi,t+=dt )
-        stepper_cash_karp.next_step( lorenz , x1 , t , dt , x1_err );
+        stepper_cash_karp.do_step( lorenz , x1 , t , dt , x1_err );
     end = clock();
     clog << "odeint Cash-Karp array : " << double ( end - start ) / double( CLOCKS_PER_SEC ) << endl;
 
@@ -169,13 +169,13 @@ int main( int argc , char **argv )
     t = 0.0;
     for( size_t i=0 ; i<tslen ; ++i,t+=dt )
     {
-        stepper.next_step( lorenz , x1 , t , dt , x1_err );
+        stepper.do_step( lorenz , x1 , t , dt , x1_err );
         gsl_odeiv_step_apply ( s , t , dt , x2 , x2_err , 0 , 0 , &sys );
         rk4_lorenz( x3 , 0.5*dt );
         rk4_lorenz( x3 , 0.5*dt );
         cout << t << tab << x1[0] << tab <<  x2[0] << tab << x3[0] << tab;
         // compare cash-karp methods
-        stepper_cash_karp.next_step( lorenz , x_odeint_rkck , t , dt , x1_err );
+        stepper_cash_karp.do_step( lorenz , x_odeint_rkck , t , dt , x1_err );
         gsl_odeiv_step_apply ( s_rkck , t , dt , x_gsl_rkck , x2_err , 0 , 0 , &sys );
         cout << x_odeint_rkck[0] << tab << x_gsl_rkck[0] << endl;
     }

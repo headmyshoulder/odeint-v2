@@ -28,13 +28,14 @@ namespace odeint {
     size_t integrate_const(
 	Stepper &stepper ,
 	DynamicalSystem &system ,
-	typename Stepper::time_type start_time ,
-	typename Stepper::time_type dt ,
 	typename Stepper::container_type &state ,
+	typename Stepper::time_type start_time ,
 	typename Stepper::time_type end_time ,
+	typename Stepper::time_type dt ,
 	Observer &observer
 	)
     {
+        stepper.adjust_size( state );
 	size_t iteration = 0;
         while( start_time < end_time )
 	{
@@ -57,19 +58,19 @@ namespace odeint {
     size_t integrate_const(
 	Stepper &stepper ,
 	DynamicalSystem &system ,
-	typename Stepper::time_type start_time ,
-	typename Stepper::time_type dt ,
 	typename Stepper::container_type &state ,
-	typename Stepper::time_type end_time
+	typename Stepper::time_type start_time ,
+	typename Stepper::time_type end_time ,
+	typename Stepper::time_type dt 
 	)
     {
 	return integrate_const(
-	    stepper , system , start_time , dt , state , end_time ,
-	    do_nothing_observer<
-	    typename Stepper::time_type ,
-	    typename Stepper::container_type ,
-	    DynamicalSystem >
-	    );
+                stepper , system , state, start_time , end_time , dt ,
+                do_nothing_observer<
+                typename Stepper::time_type ,
+                typename Stepper::container_type ,
+                DynamicalSystem >
+                               );
     }
 
 
@@ -82,13 +83,14 @@ namespace odeint {
     typename Stepper::time_type integrate_const_steps(
 	Stepper &stepper ,
 	DynamicalSystem &system ,
+	typename Stepper::container_type &state ,
 	typename Stepper::time_type start_time ,
 	typename Stepper::time_type dt ,
-	typename Stepper::container_type &state ,
 	size_t num_of_steps ,
 	Observer &observer
 	)
     {
+        stepper.adjust_size( state );
 	size_t iteration = 0;
         while( iteration < num_of_steps )
 	{
@@ -110,19 +112,19 @@ namespace odeint {
     typename Stepper::time_type integrate_const_steps(
 	Stepper &stepper ,
 	DynamicalSystem &system ,
+	typename Stepper::container_type &state ,
 	typename Stepper::time_type start_time ,
 	typename Stepper::time_type dt ,
-	typename Stepper::container_type &state ,
 	size_t num_of_steps 
 	)
     {
 	return integrate_const_steps(
-	    stepper , system , start_time , dt , state , num_of_steps ,
-	    do_nothing_observer<
-	    typename Stepper::time_type ,
-	    typename Stepper::container_type ,
-	    DynamicalSystem >
-	    );
+                stepper , system , state , start_time , dt , num_of_steps ,
+                do_nothing_observer<
+                typename Stepper::time_type ,
+                typename Stepper::container_type ,
+                DynamicalSystem >
+                                     );
     }
 
     
