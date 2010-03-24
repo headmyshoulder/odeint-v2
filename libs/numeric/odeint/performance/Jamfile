@@ -6,10 +6,10 @@
 
 project
     : requirements 
-      <include>../../../../..
-      <include>$BOOST_ROOT
-      <include>$BLITZ_ROOT
-      <include>$MTL4_ROOT
+      <include>../../../..
+      <include>$(BOOST_ROOT)
+      <include>$(BLITZ_ROOT)
+      <include>$(MTL4_ROOT)
       <define>BOOST_ALL_NO_LIB=1
     : build-dir .
     ;
@@ -25,3 +25,6 @@ exe iterator_algebra_increment_decrement
 
 exe gsl_compare_lorenz :
     gsl_compare_lorenz.cpp libgsl libgslcblas ;
+
+exe const_vs_nonconst_time :
+    const_vs_nonconst_time.cpp ;
