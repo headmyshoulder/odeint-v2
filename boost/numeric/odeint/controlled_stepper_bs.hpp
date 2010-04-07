@@ -98,7 +98,7 @@ namespace odeint {
     public:
         
         // constructor
-	controlled_stepper_bs( 
+        controlled_stepper_bs( 
                 time_type abs_err, time_type rel_err, 
                 time_type factor_x, time_type factor_dxdt )
 	    : m_error_checker( abs_err, rel_err, factor_x, factor_dxdt ),
@@ -122,6 +122,17 @@ namespace odeint {
             m_times.resize(m_k_max);
             m_d.resize(m_k_max);
         }
+
+        //constructor
+        controlled_stepper_bs( 
+                const container_type &x,
+                time_type abs_err, time_type rel_err, 
+                time_type factor_x, time_type factor_dxdt )
+        {
+            adjust_size(x);
+            this(abs_err , rel_err , factor_x , factor_dxdt);
+        }
+
 
 
         void adjust_size( const container_type &x )
