@@ -1,108 +1,36 @@
+/* Boost libs/numeric/odeint/examples/solar_system.cpp
+
+ Copyright 2009 Karsten Ahnert
+ Copyright 2009 Mario Mulansky
+
+ solar system example for Hamiltonian stepper
+
+ Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+*/
+
+
 #include <bits/stdc++.h>
 #include <bits/stdtr1c++.h>
 
-#include <boost/operators.hpp>
 #include <boost/circular_buffer.hpp>
 #include <boost/numeric/odeint.hpp>
+
+#include "solar_system.hpp"
 
 #define tab "\t" 
 
 using namespace std;
 using namespace boost::numeric::odeint;
 
-template< class T >
-class point :
-    boost::additive1< point< T > ,
-    boost::additive2< point< T > , T ,
-    boost::multiplicative2< point< T > , T 
-    > > >
-{
-public:
-
-    typedef T value_type;
-    typedef point< value_type > point_type;
-
-    value_type x , y , z;
-
-    point( void ) : x(0.0) , y(0.0) , z(0.0) { }
-
-    point( value_type val ) : x(val) , y(val) , z(val) { }
-
-    point( value_type _x , value_type _y , value_type _z )
-	: x(_x) , y(_y) , z(_z) { }
-
-
-    point_type& operator+=( const point_type& p ) 
-    {
-	x += p.x ; y += p.y ; z += p.z;
-	return *this;
-    }
-
-    point_type& operator-=( const point_type& p )
-    {
-	x -= p.x ; y -= p.y ; z -= p.z;
-	return *this;
-    }
-
-    point_type& operator+=( const value_type& val )
-    {
-	x += val ; y += val ; z += val;
-	return *this;
-    }
-
-    point_type& operator-=( const value_type& val )
-    {
-	x -= val ; y -= val ; z -= val;
-	return *this;
-    }
-
-    point_type& operator*=( const value_type &val )
-    {
-	x *= val ; y *= val ; z *= val;
-	return *this;
-    }
-
-    point_type& operator/=( const value_type &val )
-    {
-	x /= val ; y /= val ; z /= val;
-	return *this;
-    }
-};
-
-template< class T >
-T inner_product( const point< T > &p1 , const point< T > &p2 )
-{
-    return p1.x*p2.x + p1.y*p2.y + p1.z*p2.z;
-}
-
-template< class T >
-T norm( const point< T > &p )
-{
-    return inner_product( p , p );
-}
-
-template< class T >
-T abs( const point< T > &p )
-{
-    return sqrt( norm( p ) );
-}
-
-template< class T >
-ostream& operator<<( ostream &out , const point< T > &p )
-{
-    out << p.x << tab << p.y << tab << p.z;
-    return out;
-}
-
-
 
 const size_t n = 3;
-typedef point< double > point_type;
+typedef point< double ,3 > point_type;
 typedef std::tr1::array< point_type , n > state_type;
 typedef std::tr1::array< double , n > mass_type;
 
 typedef hamiltonian_stepper_rk< state_type > stepper_type;
-
 typedef boost::circular_buffer< point_type > buffer_type;
 
 

@@ -26,5 +26,7 @@ exe lorenz_stepper : lorenz_stepper.cpp ;
 exe pendulum_vibrating_pivot : pendulum_vibrating_pivot.cpp ;
 exe dnls : dnls.cpp ;
 
+exe solar_system : solar_system.cpp ;
+
 exe doc_harm_osc : doc_harm_osc.cpp ;
 exe doc_integrate : doc_integrate.cpp ;
