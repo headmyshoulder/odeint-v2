@@ -31,15 +31,6 @@ If state types with variable size are used (e.g. `vector`), it has to be assured
 that the stepper gets informed about any change of the state size by calling its
 `adjust_size` method.
 
-[*Template Parameters]
-
-[table
-    [[Parameter] [] [default value] [description]]
-    [[class Container] [required] [-] [Type of container that stores the state of the system]]
-    [[class Time] [optional] [double] [Type of the time variable in the ode]]
-    [[class Traits] [optional] [container_traits< Container >] [container_traits used by the stepper]]
-]
-
 [*Associated Types]
 [table
     [[] [] [Description]]
@@ -111,10 +102,6 @@ intermediate function call results. If state types with variable size are used
 (e.g. `vector`), it has to be assured that the stepper gets informed about any 
 change of the state size by calling its `adjust_size` method.
 
-[*Template Parameters]
-
-Same as for /basic steppers/ above.
-
 [*Associated Types]
 
 Same as for /basic steppers/ above.
@@ -183,10 +170,6 @@ If the estimated error of the obtained solution is too big, the result is
 rejected and a new stepsize is proposed.
 If the error is small enough the timestep is accepted and possibly an increased
 stepsize is proposed.
-
-[*Template Parameters]
-
-Same as for /basic steppers/ above.
 
 [*Associated Types]
 
@@ -281,11 +264,21 @@ Returns the order of the result *x(t+dt)* of the algorithm.
 
 [section stepper_euler]
 
-[*Concept:] Basic stepper
+[*Concept:] [link boost_sandbox_numeric_odeint.stepper.concepts.basic_stepper Basic stepper]
 
-[*Accuracy:] That means the produced solution is accurate up to order 1.
+[*Accuracy:] The produced solution is accurate up to order 1.
 
 [*Complexity:] This method uses 1 function evaluation.
+
+[*Template Parameters:]
+[template tpl_parameter_table_[]
+[table
+    [[Parameter] [Default Value] [Description]]
+    [[class Container] [no default value] [Type of container that stores the state of the system]]
+    [[class Time] [double] [Type of the time variable in the ode]]
+    [[class Traits] [container_traits< Container >] [container_traits used by the stepper]]
+]]
+[tpl_parameter_table_]
 
 The Euler algorithm used in this class performs one integration
 step according to the formula:
@@ -298,11 +291,15 @@ reasons - use more sophisticated steppers for real life problems.
 
 [section stepper_rk4]
 
-[*Concept:] Basic stepper
+[*Concept:] [link boost_sandbox_numeric_odeint.stepper.concepts.basic_stepper Basic stepper]
 
 [*Accuracy:] The produced solution is accurate up to order 4.
 
 [*Complexity:] This method uses 4 function evaluations.
+
+[*Template Parameters:]
+
+[tpl_parameter_table_]
 
 The Runge-Kutta 4 algorithm is /the/ classical method to integrate odes.
 The [@http://en.wikipedia.org/wiki/Runge–Kutta_methods#Explicit_Runge.E2.80.93Kutta_methods 
@@ -325,12 +322,16 @@ for more reliable calculations.
 
 [section stepper_rk5_ck]
 
-[*Concept:] Error stepper
+[*Concept:] [link boost_sandbox_numeric_odeint.stepper.concepts.error_stepper Error stepper]
 
 [*Accuracy:] The produced solution is accurate up to order 5 and the estimated 
 error is also of order 5.
 
 [*Complexity:] This method uses 6 function evaluation.
+
+[*Template Parameters:]
+
+[tpl_parameter_table_]
 
 The Runge-Kutta method of order 5 with Cash-Karp coefficients is a good trade-off
 between numerical effort and obtained accuracy with error estimation.
@@ -342,12 +343,16 @@ the Butcher tableau.
 
 [section stepper_rk78_fehlberg]
 
-[*Concept:] Error Stepper
+[*Concept:] [link boost_sandbox_numeric_odeint.stepper.concepts.error_stepper Error Stepper]
 
 [*Accuracy:] The produced solution is accurate up to order 7 and the estimated 
 error is of order 8.
 
 [*Complexity:] This method uses 13 function evaluations.
+
+[*Template Parameters:]
+
+[tpl_parameter_table_]
 
 The Runge-Kutta 78 Fehlberg method is a high-order algorithm that produces very
 good accuracy but for the cost of high numerical effort.
