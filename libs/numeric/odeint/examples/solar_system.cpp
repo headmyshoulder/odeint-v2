@@ -17,25 +17,24 @@
 #include <boost/circular_buffer.hpp>
 #include <boost/numeric/odeint.hpp>
 
-#include "solar_system.hpp"
+#include "point_type.hpp"
 
 #define tab "\t" 
 
 using namespace std;
 using namespace boost::numeric::odeint;
 
+// we simulate 5 planets and the sun
+const size_t n = 6;
 
-const size_t n = 3;
-typedef point< double ,3 > point_type;
+typedef point< double , 3 > point_type;
 typedef std::tr1::array< point_type , n > state_type;
 typedef std::tr1::array< double , n > mass_type;
-
 typedef hamiltonian_stepper_rk< state_type > stepper_type;
-typedef boost::circular_buffer< point_type > buffer_type;
 
 
-const mass_type masses = {{ 1.0e9 , 1.0e9 , 1.0e12}};
-const double gravitational_constant = 6.657e-20;
+const double gravitational_constant = 2.95912208286e-4;
+
 
 ostream& operator<<( ostream &out , const state_type &x )
 {
@@ -45,98 +44,112 @@ ostream& operator<<( ostream &out , const state_type &x )
     return out;
 }
 
-point_type get_mean( const state_type &x )
-{
-    point_type mean( 0.0 );
-    if( x.empty() ) return mean;
-    for( size_t i=0 ; i<x.size() ; ++i ) mean += x[i];
-    mean /= double( x.size() );
-    return mean;
-}
 
-point_type get_center_of_mass( const state_type &x ,
-			       const mass_type &m )
+point_type center_of_mass( const state_type &x , const mass_type &m )
 {
-    point_type mean( 0.0 );
-    if( x.empty() ) return mean;
     double overall_mass = 0.0;
+    point_type mean( 0.0 );
     for( size_t i=0 ; i<x.size() ; ++i )
     {
 	overall_mass += m[i];
 	mean += m[i] * x[i];
     }
-    mean /= overall_mass;
+    if( x.size() != 0 ) mean /= overall_mass;
     return mean;
-
-}
-
-void center_system( state_type &x , point_type mean )
-{
-    for( size_t i=0 ; i<x.size() ; ++i ) x[i] -= mean;
 }
 
 
-void solar_system( state_type &q , state_type &dpdt )
+double energy( const state_type &q , const state_type &p ,
+               const mass_type &masses )
 {
-    point_type diff , tmp;
-    fill( dpdt.begin() , dpdt.end() , 0.0 );
+    const size_t n = q.size();
+    double e = 0.0;
     for( size_t i=0 ; i<n ; ++i )
     {
-	for( size_t j=i+1 ; j<n ; ++j )
-	{
-	    diff = q[j] - q[i];
-	    tmp = gravitational_constant * diff / pow( abs( diff ) , 3.0 );
-	    dpdt[i] += tmp * masses[j];
-	    dpdt[j] -= tmp * masses[i];
-	}
+        e += 0.5 * norm( p[i] );
+        for( size_t j=i+1 ; j<n ; ++j )
+        {
+            double diff = abs( q[j] - q[i] );
+            e += gravitational_constant * masses[j] / diff;
+        }
     }
+    return e;
 }
+
+struct solar_system
+{
+    const mass_type &m_masses;
+
+    solar_system( const mass_type &masses ) : m_masses( masses ) { }
+
+    void operator()( state_type &q , state_type &dpdt )
+    {
+        const size_t n = q.size();
+        fill( dpdt.begin() , dpdt.end() , 0.0 );
+        for( size_t i=0 ; i<n ; ++i )
+        {
+            for( size_t j=i+1 ; j<n ; ++j )
+            {
+                point_type diff = q[j] - q[i];
+                diff = gravitational_constant * diff / pow( abs( diff ) , 3.0 );
+                dpdt[i] += diff * m_masses[j];
+                dpdt[j] -= diff * m_masses[i];
+            }
+        }
+    }
+};
 
 
 int main( int argc , char **argv )
 {
-    state_type q , p;
+    mass_type masses = {{
+            1.00000597682 ,      // sun
+            0.000954786104043 ,  // jupiter
+            0.000285583733151 ,  // saturn
+            0.0000437273164546 , // uranus
+            0.0000517759138449 , // neptune
+            1.0 / ( 1.3e8 )      // pluto
+        }};
+
+    state_type q = {{
+            point_type( 0.0 , 0.0 , 0.0 ) ,                        // sun
+            point_type( -3.5023653 , -3.8169847 , -1.5507963 ) ,   // jupiter
+            point_type( 9.0755314 , -3.0458353 , -1.6483708 ) ,    // saturn
+            point_type( 8.3101420 , -16.2901086 , -7.2521278 ) ,   // uranus
+            point_type( 11.4707666 , -25.7294829 , -10.8169456 ) , // neptune
+            point_type( -15.5387357 , -25.2225594 , -3.1902382 )   // pluto
+        }};
+
+    state_type p = {{
+            point_type( 0.0 , 0.0 , 0.0 ) ,                        // sun
+            point_type( 0.00565429 , -0.00412490 , -0.00190589 ) , // jupiter
+            point_type( 0.00168318 , 0.00483525 , 0.00192462 ) ,   // saturn
+            point_type( 0.00354178 , 0.00137102 , 0.00055029 ) ,   // uranus
+            point_type( 0.00288930 , 0.00114527 , 0.00039677 ) ,   // neptune
+            point_type( 0.00276725 , -0.00170702 , -0.00136504 )   // pluto
+        }};
+
+    point_type qmean = center_of_mass( q , masses );
+    point_type pmean = center_of_mass( p , masses );
+    for( size_t i=0 ; i<n ; ++i ) { q[i] -= qmean ; p[i] -= pmean; }
+
     stepper_type stepper;
+    solar_system sol( masses );
 
-    fill( q.begin() , q.end() , 0.0 );
-    fill( p.begin() , p.end() , 0.0 );
-    q[0] = point_type( 0.0 , 1.0 , 0.0 );
-    p[0] = point_type( 0.00001 , 0.0 , 0.0 );
-    q[2] = point_type( 1.0 , 0.0 , 0.0 );
 
-    center_system( q , get_center_of_mass( q , masses ) );
-    center_system( p , get_center_of_mass( p , masses ) );
-
-    const double dt = 1.0;
-
-    buffer_type buffers[n];
-    for( size_t i=0 ; i<n ; ++i ) buffers[i].set_capacity( 100 );
-
-    cout << "unset key\n";
-    const size_t ilen = 1000;
+    const double dt = 0.001;
     double t = 0.0;
-    while( true )
+    while( t < 100000.0 )
     {
-	clog << get_mean( p ) << tab << get_mean( q ) << endl;
-	for( size_t i=0 ; i<n ; ++i ) buffers[i].push_back( q[i] );
+	clog << t << tab << energy( q , p , masses ) << tab;
+        clog << center_of_mass( q , masses ) << tab;
+        clog << center_of_mass( p , masses ) << endl;
 
-	cout << "p [-20:20][-20:20] '-' u 1:2 w l\n";
-	for( size_t i=0 ; i<n ; ++i )
-	{
-	    copy( buffers[i].begin() , buffers[i].end() ,
-		  ostream_iterator<point_type>( cout , "\n" ) );
-	    cout << "\n";
-	}
-	cout << "e" << endl;
+        for( size_t i=0 ; i<n ; ++i )
+            cout << t << tab << q[i] << tab << p[i] << endl;
 
-//	getchar();
-
-//	cout << "p [-2:2][-2:2] '-' u 1:2 pt 7 ps 5 \n" << q << "e" << endl;
-
-	for( size_t ii=0 ; ii<ilen ; ++ii,t+=dt )
-	{
-	    stepper.do_step( solar_system , q , p , dt );
-	}
+        for( size_t i=0 ; i<1000 ; ++i ) stepper.do_step( sol , q , p , dt );
+        t += dt;
     }
 
     return 0;
