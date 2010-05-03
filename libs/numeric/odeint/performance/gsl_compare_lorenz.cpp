@@ -95,7 +95,7 @@ void rk4_lorenz( double *x , double h )
 int main( int argc , char **argv )
 {
     const double dt = 0.01;
-    const size_t olen = 10000000;
+    const size_t olen = 100000000;
 
 
     state_type x_start = {{ -13.90595 , -15.54127 , 32.48918 }};
@@ -156,7 +156,7 @@ int main( int argc , char **argv )
 
 
     // just check, if rk4 is working correctly
-    const size_t tslen = 10000;
+    const size_t tslen = 1000;
     x1 = x_start;
     copy( x_start.begin() , x_start.end() , x2 );
     double x3[3] = { x_start[0] , x_start[1] , x_start[2] };

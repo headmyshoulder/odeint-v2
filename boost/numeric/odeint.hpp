@@ -15,7 +15,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_HPP
 #define BOOST_NUMERIC_ODEINT_HPP
 
-#include <boost/config.hpp>
+// #include <boost/config.hpp>
 
 #include <boost/numeric/odeint/container_traits.hpp>
 #include <boost/numeric/odeint/container_traits_tr1_array.hpp>

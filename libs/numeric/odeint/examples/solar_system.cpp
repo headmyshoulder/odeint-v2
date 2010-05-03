@@ -15,6 +15,7 @@
 #include <bits/stdtr1c++.h>
 
 #include <boost/circular_buffer.hpp>
+#include <boost/ref.hpp>
 #include <boost/numeric/odeint.hpp>
 
 #include "point_type.hpp"
@@ -30,7 +31,7 @@ const size_t n = 6;
 typedef point< double , 3 > point_type;
 typedef std::tr1::array< point_type , n > state_type;
 typedef std::tr1::array< double , n > mass_type;
-typedef hamiltonian_stepper_rk< state_type > stepper_type;
+typedef hamiltonian_stepper_euler< state_type > stepper_type;
 
 
 const double gravitational_constant = 2.95912208286e-4;
@@ -63,26 +64,26 @@ double energy( const state_type &q , const state_type &p ,
                const mass_type &masses )
 {
     const size_t n = q.size();
-    double e = 0.0;
+    double en = 0.0;
     for( size_t i=0 ; i<n ; ++i )
     {
-        e += 0.5 * norm( p[i] );
-        for( size_t j=i+1 ; j<n ; ++j )
+        en += 0.5 * norm( p[i] ) / masses[i];
+	for( size_t j=0 ; j<i ; ++j )
         {
-            double diff = abs( q[j] - q[i] );
-            e += gravitational_constant * masses[j] / diff;
+            double diff = abs( q[i] - q[j] );
+            en -= gravitational_constant * masses[j] * masses[i] / diff;
         }
     }
-    return e;
+    return en;
 }
 
 struct solar_system
 {
-    const mass_type &m_masses;
+    mass_type &m_masses;
 
-    solar_system( const mass_type &masses ) : m_masses( masses ) { }
+    solar_system( mass_type &masses ) : m_masses( masses ) { }
 
-    void operator()( state_type &q , state_type &dpdt )
+    void operator()( const state_type &q , state_type &dpdt )
     {
         const size_t n = q.size();
         fill( dpdt.begin() , dpdt.end() , 0.0 );
@@ -91,7 +92,8 @@ struct solar_system
             for( size_t j=i+1 ; j<n ; ++j )
             {
                 point_type diff = q[j] - q[i];
-                diff = gravitational_constant * diff / pow( abs( diff ) , 3.0 );
+		double d = abs( diff );
+                diff = gravitational_constant * diff / d / d / d;
                 dpdt[i] += diff * m_masses[j];
                 dpdt[j] -= diff * m_masses[i];
             }
@@ -129,28 +131,35 @@ int main( int argc , char **argv )
             point_type( 0.00276725 , -0.00170702 , -0.00136504 )   // pluto
         }};
 
+
     point_type qmean = center_of_mass( q , masses );
     point_type pmean = center_of_mass( p , masses );
     for( size_t i=0 ; i<n ; ++i ) { q[i] -= qmean ; p[i] -= pmean; }
 
     stepper_type stepper;
-    solar_system sol( masses );
 
-
-    const double dt = 0.001;
+    const double dt = 100.0;
     double t = 0.0;
-    while( t < 100000.0 )
+    while( t < 10000000.0 )
     {
 	clog << t << tab << energy( q , p , masses ) << tab;
         clog << center_of_mass( q , masses ) << tab;
         clog << center_of_mass( p , masses ) << endl;
 
-        for( size_t i=0 ; i<n ; ++i )
-            cout << t << tab << q[i] << tab << p[i] << endl;
+	cout << t;
+        for( size_t i=0 ; i<n ; ++i ) cout << tab << q[i];
+	cout << endl;
 
-        for( size_t i=0 ; i<1000 ; ++i ) stepper.do_step( sol , q , p , dt );
+        for( size_t i=0 ; i<1 ; ++i,t+=dt )
+	    stepper.do_step( solar_system( masses ) , q , p , dt );
         t += dt;
     }
 
     return 0;
 }
+
+
+/*
+Plot with gnuplot:
+p "solar_system.dat" u 2:4 w l,"solar_system.dat" u 5:7 w l,"solar_system.dat" u 8:10 w l,"solar_system.dat" u 11:13 w l,"solar_system.dat" u 14:16 w l,"solar_system.dat" u 17:19 w l
+*/

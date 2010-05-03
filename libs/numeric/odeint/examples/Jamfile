@@ -6,7 +6,7 @@
 
 project
     : requirements 
-      <include>../../../..
+      <include>../../../.. 
       <include>$BOOST_ROOT
       <include>$BLITZ_ROOT
       <include>$MTL4_ROOT

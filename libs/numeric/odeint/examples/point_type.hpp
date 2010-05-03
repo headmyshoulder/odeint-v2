@@ -49,17 +49,6 @@ public:
         if( dim > 2 ) m_val[2] = z;
     }
 
-/*    template< size_t i > T get( void ) const
-        {
-	    BOOST_STATIC_ASSERT( i < dim );
-	    return m_val[i];
-	}
-    template< size_t i > T& get( void )
-	{
-	    BOOST_STATIC_ASSERT( i < dim );
-	    return m_val[i];
-            }*/
-
     T operator[]( size_t i ) const { return m_val[i]; }
     T& operator[]( size_t i ) { return m_val[i]; }
     

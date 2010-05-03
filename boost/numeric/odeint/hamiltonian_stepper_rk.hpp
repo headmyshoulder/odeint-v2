@@ -63,7 +63,7 @@ namespace odeint {
     public:
 
 	template< class CoordinateFunction >
-	void do_step( CoordinateFunction &qfunc ,
+	void do_step( CoordinateFunction qfunc ,
 		      container_type &q ,
 		      container_type &p ,
 		      time_type dt )
