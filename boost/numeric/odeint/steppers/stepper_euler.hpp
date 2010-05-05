@@ -18,11 +18,8 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_EULER_HPP
 #define BOOST_NUMERIC_ODEINT_STEPPER_EULER_HPP
 
-#include <boost/numeric/odeint/detail/iterator_algebra.hpp>
-#include <boost/numeric/odeint/container_traits.hpp>
-
-// #include <boost/numeric/odeint/stepper_base.hpp>
-
+#include <boost/numeric/odeint/steppers/detail/iterator_algebra.hpp>
+#include <boost/numeric/odeint/container_traits/container_traits.hpp>
 
 namespace boost {
 namespace numeric {
@@ -45,8 +42,6 @@ namespace odeint {
         typedef Traits traits_type;
         typedef typename traits_type::container_type container_type;
         typedef typename traits_type::value_type value_type;
-//        typedef typename traits_type::iterator iterator;
-//        typedef typename traits_type::const_iterator const_iterator;
 
 
         //

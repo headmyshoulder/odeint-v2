@@ -13,8 +13,8 @@
 #ifndef BOOST_NUMERIC_ODEINT_INTEGRATOR_ADAPTIVE_STEPSIZE_HPP
 #define BOOST_NUMERIC_ODEINT_INTEGRATOR_ADAPTIVE_STEPSIZE_HPP
 
-#include <boost/numeric/odeint/controlled_stepper_standard.hpp>
-#include <boost/numeric/odeint/observer.hpp>
+#include <boost/numeric/odeint/steppers/controlled_stepper_standard.hpp>
+#include <boost/numeric/odeint/integrate_functions/observer.hpp>
 #include <vector>
 #include <limits>
 
@@ -154,7 +154,8 @@ namespace odeint {
                      )
     {
         // we use cash karp stepper as base stepper
-        typedef stepper_rk5_ck< ContainerType , T > stepper_type;
+//        typedef stepper_rk5_ck< ContainerType , T > stepper_type;
+        typedef stepper_half_step< stepper_euler< ContainerType , T > > stepper_type;
 
         // we use the standard controller for this adaptive integrator
         controlled_stepper_standard< stepper_type >

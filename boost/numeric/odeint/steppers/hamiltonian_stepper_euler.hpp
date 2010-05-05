@@ -15,8 +15,8 @@
 
 #include <stdexcept>
 
-#include <boost/numeric/odeint/detail/iterator_algebra.hpp>
-#include <boost/numeric/odeint/container_traits.hpp>
+#include <boost/numeric/odeint/steppers/detail/iterator_algebra.hpp>
+#include <boost/numeric/odeint/container_traits/container_traits.hpp>
 
 namespace boost {
 namespace numeric {
@@ -49,7 +49,7 @@ namespace odeint {
     public:
 
 	template< class CoordinateFunction >
-	void do_step( CoordinateFunction &qfunc ,
+	void do_step( CoordinateFunction qfunc ,
 		      container_type &q ,
 		      container_type &p ,
 		      time_type dt )

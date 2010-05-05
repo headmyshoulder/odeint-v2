@@ -13,7 +13,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_INTEGRATOR_CONSTANT_STEPSIZE_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_INTEGRATOR_CONSTANT_STEPSIZE_HPP_INCLUDED
 
-#include <boost/numeric/odeint/observer.hpp>
+#include <boost/numeric/odeint/integrate_functions/observer.hpp>
 
 namespace boost {
 namespace numeric {
