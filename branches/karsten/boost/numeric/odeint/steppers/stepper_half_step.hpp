@@ -16,7 +16,8 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_HALF_STEP_HPP
 #define BOOST_NUMERIC_ODEINT_STEPPER_HALF_STEP_HPP
 
-#include <boost/numeric/odeint/detail/iterator_algebra.hpp>
+#include <boost/numeric/odeint/container_traits/container_traits.hpp>
+#include <boost/numeric/odeint/steppers/detail/iterator_algebra.hpp>
 
 #include <iostream>
 

@@ -18,10 +18,10 @@
 #include <algorithm>
 #include <complex>
 
-#include <boost/numeric/odeint/error_checker_standard.hpp>
-#include <boost/numeric/odeint/container_traits.hpp>
+#include <boost/numeric/odeint/steppers/error_checker_standard.hpp>
+#include <boost/numeric/odeint/container_traits/container_traits.hpp>
 
-#include <boost/numeric/odeint/detail/iterator_algebra.hpp>
+#include <boost/numeric/odeint/steppers/detail/iterator_algebra.hpp>
 
 
 

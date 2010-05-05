@@ -33,20 +33,21 @@ int main(int argc, char **argv)
     harm_osc harmonic_oscillator(0.15);
 
     //[ define_const_stepper
-    stepper_rk4< state_type > rk4;
+    stepper_euler< state_type > euler;
     //]
 
     //[ integrate_const
-    integrate_const( rk4, harmonic_oscillator, x , 0.0, 10.0 , 0.01);
+    integrate_const( euler, harmonic_oscillator, x , 0.0, 10.0 , 0.01);
     //]
 
 
     //[ define_adapt_stepper
-    stepper_rk5_ck< state_type > rk5;
+    stepper_half_step< stepper_euler< state_type > > half_stepper;
     //]
 
     //[ define_conntrolled_stepper
-    controlled_stepper_standard< stepper_rk5_ck< state_type > > 
+    controlled_stepper_standard<
+        stepper_half_step< stepper_euler< state_type > > > 
         controlled_rk5( 1E-6 , 1E-7 , 1.0 , 1.0 );
     //]
 
