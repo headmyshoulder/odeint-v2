@@ -35,7 +35,7 @@ namespace odeint {
             typename ControlledStepper::time_type start_time,
             typename ControlledStepper::time_type end_time,
             typename ControlledStepper::time_type dt,
-            Observer observer )
+            Observer &observer )
     {
         typedef typename ControlledStepper::time_type time_type;
 

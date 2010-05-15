@@ -21,9 +21,6 @@
 #include <boost/numeric/odeint/detail/iterator_algebra.hpp>
 #include <boost/numeric/odeint/container_traits.hpp>
 
-// #include <boost/numeric/odeint/stepper_base.hpp>
-
-
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -45,8 +42,6 @@ namespace odeint {
         typedef Traits traits_type;
         typedef typename traits_type::container_type container_type;
         typedef typename traits_type::value_type value_type;
-//        typedef typename traits_type::iterator iterator;
-//        typedef typename traits_type::const_iterator const_iterator;
 
 
         //
@@ -108,15 +103,15 @@ namespace odeint {
 
 
         // performs one step
-	template< class DynamicalSystem >
-	void do_step( DynamicalSystem &system ,
-		      container_type &x ,
-		      time_type t ,
-		      time_type dt )
-	{
-            system( x , m_dxdt , t );
+        template< class DynamicalSystem >
+        void do_step( DynamicalSystem &system ,
+					  container_type &x ,
+					  time_type t ,
+					  time_type dt )
+        {
+        	system( x , m_dxdt , t );
             do_step( system , x , m_dxdt , t , dt );
-	}
+        }
 
     };
 
