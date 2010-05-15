@@ -22,6 +22,7 @@
 #include <vector>
 #include <list>
 #include <tr1/array>
+#include <tr1/functional>
 
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/container_traits_tr1_array.hpp>
@@ -56,6 +57,7 @@ class output_observer
     ofstream m_file;
 
 public:
+
     output_observer( const char* file_name )
         : m_file( file_name )
     { 
@@ -89,7 +91,7 @@ int main( int argc , char **argv )
     stepper_rk5_ck< state_type > rk5;
     controlled_stepper_standard< stepper_rk5_ck< state_type > > controlled_rk5( eps_abs , eps_rel, 1.0, 1.0 );
     output_observer rk5_obs("lorenz_rk5.dat");
-    size_t steps = integrate_adaptive( controlled_rk5, lorenz, x, 0.0, end_time, 1E-2, rk5_obs );
+    size_t steps = integrate_adaptive( controlled_rk5, lorenz, x, 0.0, end_time, 1E-2, ref(rk5_obs) );
 
     clog << "RK5: " << steps << " steps. (" << function_calls << " function calls)" << endl;
 
@@ -102,7 +104,7 @@ int main( int argc , char **argv )
     controlled_stepper_bs< state_type > controlled_bs(eps_abs, eps_rel, 1.0, 1.0);
     
     output_observer bs_obs("lorenz_bs.dat");
-    steps = integrate_adaptive( controlled_bs, lorenz, x, 0.0, end_time, 1E-2, bs_obs );
+    steps = integrate_adaptive( controlled_bs, lorenz, x, 0.0, end_time, 1E-2, ref(bs_obs) );
 
     clog << "BS: " << steps << " steps. (" << function_calls << " function calls)" << endl;
 

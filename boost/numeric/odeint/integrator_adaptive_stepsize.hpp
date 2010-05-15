@@ -35,7 +35,7 @@ namespace odeint {
             typename ControlledStepper::time_type start_time,
             typename ControlledStepper::time_type end_time,
             typename ControlledStepper::time_type dt,
-            Observer &observer )
+            Observer observer )
     {
         typedef typename ControlledStepper::time_type time_type;
 
@@ -43,23 +43,25 @@ namespace odeint {
 
         controlled_step_result result;
         size_t iterations = 0;
-        time_type t = start_time , dt_ = dt;
+        time_type t = start_time ;
 
         observer(t, state, system);
         
         while( t < end_time )
         {
             if( (end_time - t) < dt ) dt = end_time - t;
+
             // do a controlled step
-            result = stepper.try_step( system, state, t, dt_ );
+            result = stepper.try_step( system, state, t, dt );
 
             if( result != step_size_decreased )
-            { // we actually did a step forward (dt was small enough)
+            {
+                // we actually did a step forward (dt was small enough)
                 observer(t, state, system);
                 iterations++;
             }
 
-            if( !( t+dt_ > t) ) 
+            if( !( t+dt > t) ) 
                 throw; // we've reached machine precision with dt - no advancing in t
         }
         return iterations;

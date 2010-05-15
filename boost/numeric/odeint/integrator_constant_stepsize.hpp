@@ -32,7 +32,7 @@ namespace odeint {
 	typename Stepper::time_type start_time ,
 	typename Stepper::time_type end_time ,
 	typename Stepper::time_type dt ,
-	Observer &observer
+	Observer observer
 	)
     {
         stepper.adjust_size( state );
