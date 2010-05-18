@@ -17,6 +17,7 @@
 #include <boost/circular_buffer.hpp>
 #include <boost/ref.hpp>
 #include <boost/numeric/odeint.hpp>
+#include <boost/numeric/odeint/container_traits_tr1_array.hpp>
 
 #include "point_type.hpp"
 
@@ -137,6 +138,7 @@ int main( int argc , char **argv )
     for( size_t i=0 ; i<n ; ++i ) { q[i] -= qmean ; p[i] -= pmean; }
 
     stepper_type stepper;
+    solar_system sol( masses );
 
     const double dt = 100.0;
     double t = 0.0;
@@ -151,7 +153,7 @@ int main( int argc , char **argv )
 	cout << endl;
 
         for( size_t i=0 ; i<1 ; ++i,t+=dt )
-	    stepper.do_step( solar_system( masses ) , q , p , dt );
+	    stepper.do_step( sol , q , p , dt );
         t += dt;
     }
 

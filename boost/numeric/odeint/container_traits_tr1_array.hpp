@@ -13,7 +13,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_CONTAINER_TRAITS_TR1_ARRAY_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_CONTAINER_TRAITS_TR1_ARRAY_HPP_INCLUDED
 
-#include <tr1/array>
+// #include <boost/tr1/tr1/array>
 #include <boost/numeric/odeint/container_traits.hpp>
 
 namespace boost {
