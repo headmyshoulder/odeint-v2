@@ -24,6 +24,7 @@
 #include <tr1/array>
 
 #include <boost/numeric/odeint.hpp>
+#include <boost/numeric/odeint/container_traits_tr1_array.hpp>
 
 #define tab "\t"
 
