@@ -63,6 +63,7 @@ namespace odeint {
         typedef Time time_type;
         typedef Traits traits_type;
         typedef typename traits_type::container_type container_type;
+        typedef container_type state_type;
         typedef typename traits_type::value_type value_type;
         typedef typename traits_type::iterator iterator;
         typedef typename traits_type::const_iterator const_iterator;
@@ -74,14 +75,14 @@ namespace odeint {
         // private variables
     private:
 
-        typedef std::vector< container_type > container_vector;
+        typedef std::vector< state_type > container_vector;
         typedef std::vector< iterator > container_iterator_vector;
         typedef std::vector< time_type > parameter_vector;
         typedef std::vector< parameter_vector > parameter_matrix;
 
         container_vector m_xvec;
         container_iterator_vector m_xiter_vec;
-        container_type m_xtmp;
+        state_type m_xtmp;
         const parameter_vector m_a;
         const parameter_matrix m_b;
         const parameter_vector m_c;
@@ -192,8 +193,8 @@ namespace odeint {
 
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
-                      container_type &x ,
-                      container_type &dxdt ,
+                      state_type &x ,
+                      state_type &dxdt ,
                       time_type t ,
                       time_type dt )
         {
@@ -234,7 +235,7 @@ namespace odeint {
 
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
-                        container_type &x ,
+                        state_type &x ,
                         time_type t ,
                         time_type dt )
         {
@@ -275,6 +276,7 @@ namespace odeint {
         typedef Time time_type;
         typedef Traits traits_type;
         typedef typename traits_type::container_type container_type;
+        typedef container_type state_type;
         typedef typename traits_type::value_type value_type;
         typedef typename traits_type::iterator iterator;
         typedef typename traits_type::const_iterator const_iterator;
@@ -282,14 +284,14 @@ namespace odeint {
         // private variables
     private:
 
-        typedef std::vector< container_type > container_vector;
+        typedef std::vector< state_type > container_vector;
         typedef std::vector< iterator > container_iterator_vector;
         typedef std::vector< time_type > parameter_vector;
         typedef std::vector< parameter_vector > parameter_matrix;
 
         container_vector m_xvec;
         container_iterator_vector m_xiter_vec;
-        container_type m_xtmp;
+        state_type m_xtmp;
         const time_type* m_a;
         const time_type* m_b;
         const time_type* m_c;
@@ -374,8 +376,8 @@ namespace odeint {
 
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
-                        container_type &x ,
-                        container_type &dxdt ,
+                        state_type &x ,
+                        state_type &dxdt ,
                         time_type t ,
                         time_type dt )
         {
@@ -420,7 +422,7 @@ namespace odeint {
 
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
-                        container_type &x ,
+                        state_type &x ,
                         time_type t ,
                         time_type dt )
         {

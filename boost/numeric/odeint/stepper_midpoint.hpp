@@ -43,6 +43,7 @@ namespace odeint {
         typedef Time time_type;
         typedef Traits traits_type;
         typedef typename traits_type::container_type container_type;
+        typedef container_type state_type;
         typedef typename traits_type::value_type value_type;
 //        typedef typename traits_type::iterator iterator;
 //        typedef typename traits_type::const_iterator const_iterator;
@@ -56,9 +57,9 @@ namespace odeint {
 
         unsigned short m_step_number;
 
-        container_type m_x0;
-        container_type m_x1;
-        container_type m_dxdt;
+        state_type m_x0;
+        state_type m_x1;
+        state_type m_dxdt;
 
 
 
@@ -74,14 +75,14 @@ namespace odeint {
 	}
 
 	// constructor, which adjusts the size of the internal containers
-	stepper_midpoint( const container_type &x , unsigned short step_number = 2 )
+	stepper_midpoint( const state_type &x , unsigned short step_number = 2 )
 	{
 	    adjust_size( x );
 	    set_step_number( step_number );
 	}
 
 	// adjusts the size of the internal containers
-	void adjust_size( const container_type &x )
+	void adjust_size( const state_type &x )
 	{
 	    traits_type::adjust_size( x , m_x0 );
 	    traits_type::adjust_size( x , m_x1 );
@@ -105,11 +106,11 @@ namespace odeint {
         template< class DynamicalSystem >
         void midpoint_step( 
                 DynamicalSystem &system ,
-                container_type &x ,
-                const container_type &dxdt ,
+                state_type &x ,
+                const state_type &dxdt ,
                 time_type t ,
                 time_type dt ,
-                container_type &x_out )
+                state_type &x_out )
         {
             using namespace detail::it_algebra;
 
@@ -160,8 +161,8 @@ namespace odeint {
         template< class DynamicalSystem >
         void do_step( 
                 DynamicalSystem &system ,
-                container_type &x ,
-                const container_type &dxdt ,
+                state_type &x ,
+                const state_type &dxdt ,
                 time_type t ,
                 time_type dt )
         {
@@ -175,7 +176,7 @@ namespace odeint {
         template< class DynamicalSystem >
         void do_step( 
                 DynamicalSystem &system ,
-                container_type &x ,
+                state_type &x ,
                 time_type t ,
                 time_type dt )
         {

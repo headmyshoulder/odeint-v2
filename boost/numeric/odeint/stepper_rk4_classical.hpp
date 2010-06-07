@@ -38,6 +38,7 @@ namespace odeint {
         typedef Time time_type;
         typedef Traits traits_type;
         typedef typename traits_type::container_type container_type;
+        typedef container_type state_type;
         typedef typename traits_type::value_type value_type;
 //        typedef typename traits_type::iterator iterator;
 //        typedef typename traits_type::const_iterator const_iterator;
@@ -50,10 +51,10 @@ namespace odeint {
         // private members
     private:
 
-        container_type m_dxdt;
-        container_type m_dxt;
-        container_type m_dxm;
-        container_type m_xt;
+        state_type m_dxdt;
+        state_type m_dxt;
+        state_type m_dxm;
+        state_type m_xt;
 
         
 
@@ -70,12 +71,12 @@ namespace odeint {
 	}
 
 	// constructor, which adjusts the internal containers
-	stepper_rk4_classical( const container_type &x )
+	stepper_rk4_classical( const state_type &x )
 	{
 	    adjust_size( x );
 	}
 
-	void adjust_size( const container_type &x )
+	void adjust_size( const state_type &x )
 	{
 	    traits_type::adjust_size( x , m_dxdt );
 	    traits_type::adjust_size( x , m_dxt );
@@ -85,8 +86,8 @@ namespace odeint {
 
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
-                      container_type &x ,
-                      const container_type &dxdt ,
+                      state_type &x ,
+                      const state_type &dxdt ,
                       time_type t ,
                       time_type dt )
         {
@@ -135,7 +136,7 @@ namespace odeint {
 
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
-                        container_type &x ,
+                        state_type &x ,
                         time_type t ,
                         time_type dt )
         {

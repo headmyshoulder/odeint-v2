@@ -69,6 +69,7 @@ namespace odeint {
         typedef ErrorStepper stepper_type;
         typedef typename stepper_type::order_type order_type;
         typedef typename stepper_type::container_type container_type;
+        typedef container_type state_type;
         typedef typename stepper_type::time_type time_type;
         typedef typename stepper_type::traits_type traits_type;
         typedef typename stepper_type::value_type value_type;
@@ -76,7 +77,7 @@ namespace odeint {
 //        typedef typename stepper_type::const_iterator const_iterator;
 
         typedef error_checker_standard<
-            container_type, time_type , traits_type
+            state_type, time_type , traits_type
             > error_checker_type;
 
 
@@ -91,10 +92,10 @@ namespace odeint {
 	time_type m_a_x;
 	time_type m_a_dxdt;
 
-	container_type m_dxdt;
-	container_type m_x_tmp;
-	container_type m_x_err;
-        container_type m_x_scale;
+	state_type m_dxdt;
+	state_type m_x_tmp;
+	state_type m_x_err;
+        state_type m_x_scale;
 
 
         // public functions
@@ -114,7 +115,7 @@ namespace odeint {
         }
 
         controlled_stepper_standard(
-            const container_type &x ,
+            const state_type &x ,
             time_type abs_err, time_type rel_err, 
             time_type factor_x, time_type factor_dxdt )
 	    : m_error_checker( abs_err, rel_err, factor_x, factor_dxdt ),
@@ -126,7 +127,7 @@ namespace odeint {
             adjust_size( x );
         }
 
-        void adjust_size( const container_type &x )
+        void adjust_size( const state_type &x )
         {
             traits_type::adjust_size( x , m_x_err );
             traits_type::adjust_size( x , m_x_scale );
@@ -147,8 +148,8 @@ namespace odeint {
 	template< class DynamicalSystem >
 	controlled_step_result try_step( 
                 DynamicalSystem &system, 
-                container_type &x, 
-                const container_type &dxdt,
+                state_type &x, 
+                const state_type &dxdt,
                 time_type &t, 
                 time_type &dt )
 	{
@@ -191,7 +192,7 @@ namespace odeint {
 	template< class DynamicalSystem >
 	controlled_step_result try_step( 
                 DynamicalSystem &system, 
-                container_type &x, 
+                state_type &x, 
                 time_type &t, 
                 time_type &dt )
 	{

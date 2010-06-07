@@ -33,6 +33,7 @@ namespace odeint {
         typedef Time time_type;
         typedef Traits traits_type;
         typedef typename traits_type::container_type container_type;
+        typedef container_type state_type;
         typedef typename traits_type::value_type value_type;
 //        typedef typename traits_type::iterator iterator;
 //        typedef typename traits_type::const_iterator const_iterator;
@@ -43,9 +44,9 @@ namespace odeint {
         // private members
     private:
 
-        container_type m_dxdt;
-        container_type m_xt;
-        container_type m_k02 , m_k03 , m_k04 , m_k05 , m_k06 , m_k07 ,
+        state_type m_dxdt;
+        state_type m_xt;
+        state_type m_k02 , m_k03 , m_k04 , m_k05 , m_k06 , m_k07 ,
             m_k08 , m_k09 , m_k10 , m_k11 , m_k12 , m_k13;
 
 
@@ -72,13 +73,13 @@ namespace odeint {
 
 
 	// constructor, which adjusts the internal containers
-	stepper_rk78_fehlberg( const container_type &x )
+	stepper_rk78_fehlberg( const state_type &x )
 	{
 	    adjust_size( x );
 	}
 
 
-	void adjust_size( const container_type &x )
+	void adjust_size( const state_type &x )
 	{
             traits_type::adjust_size( x , m_dxdt );
             traits_type::adjust_size( x , m_xt );
@@ -98,8 +99,8 @@ namespace odeint {
 
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
-                        container_type &x ,
-                        const container_type &dxdt ,
+                        state_type &x ,
+                        const state_type &dxdt ,
                         time_type t ,
                         time_type dt )
         {
@@ -350,7 +351,7 @@ namespace odeint {
 
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
-                      container_type &x ,
+                      state_type &x ,
                       time_type t ,
                       time_type dt )
         {
@@ -361,11 +362,11 @@ namespace odeint {
 
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
-                      container_type &x ,
-                      const container_type &dxdt ,
+                      state_type &x ,
+                      const state_type &dxdt ,
                       time_type t ,
                       time_type dt ,
-                      container_type &xerr )
+                      state_type &xerr )
         {
             const time_type cc01 = static_cast<time_type>( 41.0 / 840.0 );
             const time_type cc06 = static_cast<time_type>( 34.0 / 105.0 );
@@ -397,10 +398,10 @@ namespace odeint {
 
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
-                      container_type &x ,
+                      state_type &x ,
                       time_type t ,
                       time_type dt ,
-                      container_type &xerr )
+                      state_type &xerr )
         {
             system( x , m_dxdt , t );
             do_step( system , x , m_dxdt , t , dt , xerr );

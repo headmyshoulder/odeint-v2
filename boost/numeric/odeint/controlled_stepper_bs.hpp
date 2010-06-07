@@ -45,6 +45,7 @@ namespace odeint {
         typedef Time time_type;
         typedef Traits traits_type;
         typedef typename traits_type::container_type container_type;
+        typedef container_type state_type;
         typedef typename traits_type::value_type value_type;
         typedef typename traits_type::iterator iterator;
         typedef typename traits_type::const_iterator const_iterator;
@@ -54,8 +55,8 @@ namespace odeint {
         // private memebers
     private:
 
-        stepper_midpoint< container_type, time_type, traits_type > m_stepper_mp;
-        error_checker_standard< container_type, time_type , traits_type > m_error_checker;
+        stepper_midpoint< state_type, time_type, traits_type > m_stepper_mp;
+        error_checker_standard< state_type, time_type , traits_type > m_error_checker;
         
         const unsigned short m_k_max;
 
@@ -75,11 +76,11 @@ namespace odeint {
         unsigned short m_current_k_max;
         unsigned short m_current_k_opt;
 
-        container_type m_x0;
-        container_type m_xerr;
-        container_type m_x_mp;
-        container_type m_x_scale;
-        container_type m_dxdt;
+        state_type m_x0;
+        state_type m_xerr;
+        state_type m_x_mp;
+        state_type m_x_scale;
+        state_type m_dxdt;
 
         typedef std::vector< time_type > value_vector;
         typedef std::vector< std::vector< time_type > > value_matrix;
@@ -91,8 +92,8 @@ namespace odeint {
         us_vector m_interval_sequence;
 
         value_vector m_times;
-        std::vector< container_type > m_d;
-        container_type m_c;
+        std::vector< state_type > m_d;
+        state_type m_c;
         
         // public functions
     public:
@@ -125,7 +126,7 @@ namespace odeint {
 
         //constructor
         controlled_stepper_bs( 
-                const container_type &x,
+                const state_type &x,
                 time_type abs_err, time_type rel_err, 
                 time_type factor_x, time_type factor_dxdt )
         {
@@ -135,7 +136,7 @@ namespace odeint {
 
 
 
-        void adjust_size( const container_type &x )
+        void adjust_size( const state_type &x )
         {
             traits_type::adjust_size(x, m_xerr);
             traits_type::adjust_size(x, m_x_mp);
@@ -148,8 +149,8 @@ namespace odeint {
         template< class DynamicalSystem >
         controlled_step_result try_step(
                 DynamicalSystem &system ,
-                container_type &x ,
-                container_type &dxdt ,
+                state_type &x ,
+                state_type &dxdt ,
                 time_type &t ,
                 time_type &dt )
         {
@@ -280,7 +281,7 @@ namespace odeint {
         template< class System >
         controlled_step_result try_step( 
                 System &system,
-                container_type &x,
+                state_type &x,
                 time_type &t,
                 time_type &dt )
         {
@@ -322,12 +323,12 @@ namespace odeint {
         void extrapolate(
                 unsigned short k_est, 
                 time_type t_est, 
-                container_type &x_est, 
-                container_type &x, 
-                container_type &x_err )
+                state_type &x_est, 
+                state_type &x, 
+                state_type &x_err )
         {
             //traits_type::adjust_size(x, m_c);
-            //std::vector< container_type > m_d_iter = m_d.begin();
+            //std::vector< state_type > m_d_iter = m_d.begin();
             //while( m_d_iter != m_d.end() )
             //    traits_type::adjust_size(x, (*m_d_iter++));
             
