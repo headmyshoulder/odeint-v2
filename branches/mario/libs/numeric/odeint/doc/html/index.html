@@ -1,0 +1,265 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Chapter&#160;1.&#160;boost.sandbox.numeric.odeint</title>
+<link rel="stylesheet" href="boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
+<link rel="next" href="odeint/short_example.html" title="Short Example">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../boost.png"></td>
+<td align="center"><a href="../../index.html">Home</a></td>
+<td align="center"><a href="libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="odeint/short_example.html"><img src="../../doc/html/images/next.png" alt="Next"></a></div>
+<div class="chapter" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
+<div class="titlepage"><div>
+<div><h2 class="title">
+<a name="odeint"></a>Chapter&#160;1.&#160;boost.sandbox.numeric.odeint</h2></div>
+<div><div class="author"><h3 class="author">
+<span class="firstname">Karsten</span> <span class="surname">Ahnert</span>
+</h3></div></div>
+<div><div class="author"><h3 class="author">
+<span class="firstname">Mario</span> <span class="surname">Mulansky</span>
+</h3></div></div>
+<div><p class="copyright">Copyright &#169; 2009 Karsten Ahnert and Mario Mulansky</p></div>
+<div><div class="legalnotice" title="Legal Notice">
+<a name="id366480"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></div>
+</div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="index.html#odeint.overview">Overview</a></span></dt>
+<dt><span class="section"><a href="odeint/short_example.html">Short Example</a></span></dt>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/tutorial.html">Tutorial</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/tutorial.html#boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator">Harmonic
+      oscillator</a></span></dt>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/tutorial.html#boost_sandbox_numeric_odeint.tutorial.solar_system">Solar
+      system</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/stepper.html">Stepper</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/stepper.html#boost_sandbox_numeric_odeint.stepper.concepts">Concepts</a></span></dt>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/stepper.html#boost_sandbox_numeric_odeint.stepper.stepper_classes">Stepper
+      classes</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/integration_functions.html">Integration
+    functions</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/integration_functions.html#boost_sandbox_numeric_odeint.integration_functions.constant_step_size_functions">Constant
+      step-size functions</a></span></dt>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/integration_functions.html#boost_sandbox_numeric_odeint.integration_functions.adaptive_step_size_functions">Adaptive
+      step-size functions</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/container_traits.html">Container
+    traits</a></span></dt>
+<dd><dl><dt><span class="section"><a href="boost_sandbox_numeric_odeint/container_traits.html#boost_sandbox_numeric_odeint.container_traits.define_your_own_traits">Define
+      your own traits</a></span></dt></dl></dd>
+</dl>
+</div>
+<div class="section" title="Overview">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="odeint.overview"></a><a class="link" href="index.html#odeint.overview" title="Overview">Overview</a>
+</h2></div></div></div>
+<p>
+      Odeint is a library for solving initial value problems (IVP) of ordinary differential
+      equations. Mathematically, these problems are formulated as follows: <span class="bold"><strong>x'(t) = f(x,t)</strong></span>, <span class="bold"><strong>x(0) = x0</strong></span>.
+      <span class="bold"><strong>x</strong></span> and <span class="bold"><strong>f</strong></span> can
+      be vectors and the solution is some function <span class="bold"><strong>x(t)</strong></span>
+      fullfilling both equations above. Numerical approximations for the solution
+      x(t) are calculated iteratively. The easiest algorithm is the <span class="emphasis"><em>Euler-Scheme</em></span>,
+      where starting at x(0) one finds x(dt) = x(0) + dt*f(x(0),0). Now one can use
+      x(dt) and obtain x(2dt) in a similar way and so on. The Euler method is of
+      order 1, that means the error at each step is ~ dt[superscript 2]. This is,
+      of course, not very satisfying, which is why the Euler method is merely used
+      for real life problems and serves just as illustrative example. In <span class="bold"><strong>odeint</strong></span>, the following algorithms are implemented:
+    </p>
+<div class="table">
+<a name="id335508"></a><p class="title"><b>Table&#160;1.1.&#160;Stepper Algorithms</b></p>
+<div class="table-contents"><table class="table" summary="Stepper Algorithms">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+          <p>
+            Method
+          </p>
+          </th>
+<th>
+          <p>
+            Class
+          </p>
+          </th>
+<th>
+          <p>
+            Order
+          </p>
+          </th>
+<th>
+          <p>
+            Error Estimation
+          </p>
+          </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+          <p>
+            Euler
+          </p>
+          </td>
+<td>
+          <p>
+            stepper_euler
+          </p>
+          </td>
+<td>
+          <p>
+            1
+          </p>
+          </td>
+<td>
+          <p>
+            No
+          </p>
+          </td>
+</tr>
+<tr>
+<td>
+          <p>
+            Runge-Kutta 4
+          </p>
+          </td>
+<td>
+          <p>
+            stepper_rk4
+          </p>
+          </td>
+<td>
+          <p>
+            4
+          </p>
+          </td>
+<td>
+          <p>
+            No
+          </p>
+          </td>
+</tr>
+<tr>
+<td>
+          <p>
+            Runge-Kutta Cash-Karp
+          </p>
+          </td>
+<td>
+          <p>
+            stepper_rk5_ck
+          </p>
+          </td>
+<td>
+          <p>
+            5
+          </p>
+          </td>
+<td>
+          <p>
+            Yes (Order 4)
+          </p>
+          </td>
+</tr>
+<tr>
+<td>
+          <p>
+            Runge-Kutta Fehlberg
+          </p>
+          </td>
+<td>
+          <p>
+            stepper_rk78_fehlberg
+          </p>
+          </td>
+<td>
+          <p>
+            7
+          </p>
+          </td>
+<td>
+          <p>
+            Yes (Order 8)
+          </p>
+          </td>
+</tr>
+<tr>
+<td>
+          <p>
+            Midpoint
+          </p>
+          </td>
+<td>
+          <p>
+            stepper_midpoint
+          </p>
+          </td>
+<td>
+          <p>
+            variable
+          </p>
+          </td>
+<td>
+          <p>
+            No
+          </p>
+          </td>
+</tr>
+<tr>
+<td>
+          <p>
+            Bulirsch-Stoer
+          </p>
+          </td>
+<td>
+          <p>
+            controlled_stepper_bs
+          </p>
+          </td>
+<td>
+          <p>
+            variable
+          </p>
+          </td>
+<td>
+          <p>
+            Controlled
+          </p>
+          </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: March 01, 2010 at 12:26:11 GMT</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="odeint/short_example.html"><img src="../../doc/html/images/next.png" alt="Next"></a></div>
+</body>
+</html>

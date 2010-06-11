@@ -1,0 +1,107 @@
+[library boost.sandbox.numeric.odeint
+     [quickbook 1.3]
+     [authors [Ahnert, Karsten], [Mulansky, Mario]]
+     [copyright 2009 Karsten Ahnert and Mario Mulansky]
+     [category math]
+     [id odeint]
+     [dirname odeint]
+     [purpose 
+        Numerical integration of ordinary differential equations.
+     ]
+     [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+     ]
+]
+
+[section Overview]
+
+Odeint is a library for solving  initial value problems (IVP) of ordinary 
+differential equations.
+Mathematically, these problems are formulated as follows: [*x'(t) = f(x,t)], 
+[*x(0) = x0]. [*x] and [*f] can
+be vectors and the solution is some function [*x(t)] fullfilling both equations
+above.
+Numerical approximations for the solution x(t) are calculated iteratively.
+The easiest algorithm is the /Euler-Scheme/, where starting at x(0) one 
+finds x(dt) = x(0) + dt*f(x(0),0).
+Now one can use x(dt) and obtain x(2dt) in a similar way and so on.
+The Euler method is of order 1, that means the error at each step is ~ dt[superscript 2].
+This is, of course, not very satisfying, which is why the Euler method is 
+merely used for real life problems and serves just as illustrative example.
+In [*odeint], the following algorithms are implemented:
+
+[table Stepper Algorithms
+  [[Method] [Class] [Order] [Error Estimation]]
+  [[Euler]  [stepper_euler] [1] [No]]
+  [[Runge-Kutta 4] [stepper_rk4] [4] [No]]
+  [[Runge-Kutta Cash-Karp] [stepper_rk5_ck] [5] [Yes (Order 4)]]
+  [[Runge-Kutta Fehlberg] [stepper_rk78_fehlberg] [7] [Yes (Order 8)]]
+  [[Midpoint] [stepper_midpoint] [variable] [No]]
+  [[Bulirsch-Stoer] [controlled_stepper_bs] [variable] [Controlled]]
+]
+
+[endsect]
+
+[section Short Example]
+This section gives a quick introduction to the most important features of the 
+library using a number of instructive examples.
+Image, for example, you want to numerically integrate a harmonic oscillator 
+with friction. The equations of motion are given by x'' = -x + gamma x'.
+This can be transformed to a system of two first-order differential equations 
+with new variables x and p=x'. To apply numerical integration one first has to 
+design the right hand side of the equation w' = f(w) where in this case 
+w = (x,p):
+
+[import ../examples/doc_harm_osc.cpp]
+[rhs_function]
+
+Here we chose [*vector<double>] as the state type, but others are also possible,
+for example [*tr1/array<double,2>]. Odeint is designed in such a way that it 
+works with basically any container that can be accessed via iterators.
+The parameter structure of the function is crucial: the integration methods will
+always call them in the form [*f(x, dxdt, t)]. So even if there is no explicit
+time dependence, one has to define [*t] as a function parameter.
+
+Now, we have to define the initial state from which the integration should start:
+
+[state_initialization]
+
+For the integration itself we'll use the 
+[funcref boost::numeric::odeint::integrate integrate] function, which is a 
+convenient way to get quick results. It is based on the error-controlled
+[classref boost::numeric::odeint::runge_kutta_rk5_ck runge_kutta_rk5_ck] stepper
+(5th order) and uses adaptive stepsize.
+The results are stored into two InsertIterators (time and state) that must be 
+provided.
+
+[integration]
+
+The integrate function expects as parameters the rhs of the ode as defined 
+above, the initial state x, the start- and end-time of the integration and two
+InsertIterators for the times and states where the current time and the current
+state after each timestep is stored.
+Note, that [funcref boost::numeric::odeint::integrate integrate] uses an 
+adaptive stepsize during the integration steps so the time points will not be
+equally spaced.
+The integration returns the number of steps that were applied.
+Note, that in total steps+1 elements will be inserted into times and x_t_vec as 
+the initial time and state are inserted before the first step.
+
+It is, of course, also possible to implement the ode system as a class. The rhs
+must then be defined as the ()-operator:
+
+[rhs_class]
+
+[endsect]
+
+[import ../examples/doc_integrate.cpp]
+
+[include tutorial.qbk]
+
+[include steppers.qbk]
+
+[include integrate_functions.qbk]
+
+[include container_traits.qbk]
