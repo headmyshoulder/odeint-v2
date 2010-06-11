@@ -18,6 +18,7 @@
 #include <boost/ref.hpp>
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/container_traits_tr1_array.hpp>
+#include <utility>
 
 #include "point_type.hpp"
 
@@ -31,6 +32,9 @@ const size_t n = 6;
 
 typedef point< double , 3 > point_type;
 typedef std::tr1::array< point_type , n > state_type;
+
+typedef std::pair< state_type , state_type > state_pair;
+
 typedef std::tr1::array< double , n > mass_type;
 typedef hamiltonian_stepper_euler< state_type > stepper_type;
 
@@ -114,24 +118,24 @@ int main( int argc , char **argv )
             1.0 / ( 1.3e8 )      // pluto
         }};
 
-    state_type q = {{
-            point_type( 0.0 , 0.0 , 0.0 ) ,                        // sun
-            point_type( -3.5023653 , -3.8169847 , -1.5507963 ) ,   // jupiter
-            point_type( 9.0755314 , -3.0458353 , -1.6483708 ) ,    // saturn
-            point_type( 8.3101420 , -16.2901086 , -7.2521278 ) ,   // uranus
-            point_type( 11.4707666 , -25.7294829 , -10.8169456 ) , // neptune
-            point_type( -15.5387357 , -25.2225594 , -3.1902382 )   // pluto
-        }};
+    state_pair state;
+    state_type &q = state.first;
+    state_type &p = state.second;
 
-    state_type p = {{
-            point_type( 0.0 , 0.0 , 0.0 ) ,                        // sun
-            point_type( 0.00565429 , -0.00412490 , -0.00190589 ) , // jupiter
-            point_type( 0.00168318 , 0.00483525 , 0.00192462 ) ,   // saturn
-            point_type( 0.00354178 , 0.00137102 , 0.00055029 ) ,   // uranus
-            point_type( 0.00288930 , 0.00114527 , 0.00039677 ) ,   // neptune
-            point_type( 0.00276725 , -0.00170702 , -0.00136504 )   // pluto
-        }};
+    q[0] = point_type( 0.0 , 0.0 , 0.0 );                         // sun
+    q[1] = point_type( -3.5023653 , -3.8169847 , -1.5507963 );    // jupiter
+    q[2] = point_type( 9.0755314 , -3.0458353 , -1.6483708 );     // saturn
+    q[3] = point_type( 8.3101420 , -16.2901086 , -7.2521278 );    // uranus
+    q[4] = point_type( 11.4707666 , -25.7294829 , -10.8169456 );  // neptune
+    q[5] = point_type( -15.5387357 , -25.2225594 , -3.1902382 );  // pluto
+    
 
+    p[0] = point_type( 0.0 , 0.0 , 0.0 );                        // sun
+    p[1] = point_type( 0.00565429 , -0.00412490 , -0.00190589 ); // jupiter
+    p[2] = point_type( 0.00168318 , 0.00483525 , 0.00192462 );   // saturn
+    p[3] = point_type( 0.00354178 , 0.00137102 , 0.00055029 );   // uranus
+    p[4] = point_type( 0.00288930 , 0.00114527 , 0.00039677 );   // neptune
+    p[5] = point_type( 0.00276725 , -0.00170702 , -0.00136504 ); // pluto
 
     point_type qmean = center_of_mass( q , masses );
     point_type pmean = center_of_mass( p , masses );
@@ -153,7 +157,7 @@ int main( int argc , char **argv )
 	cout << endl;
 
         for( size_t i=0 ; i<1 ; ++i,t+=dt )
-	    stepper.do_step( sol , q , p , dt );
+	    stepper.do_step( sol , state , t , dt );
         t += dt;
     }
 

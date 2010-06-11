@@ -14,6 +14,7 @@
 #define BOOST_NUMERIC_ODEINT_HAMILTONIAN_STEPPER_EULER_HPP_INCLUDED
 
 #include <stdexcept>
+#include <utility>
 
 #include <boost/numeric/odeint/detail/iterator_algebra.hpp>
 #include <boost/numeric/odeint/container_traits.hpp>
@@ -36,6 +37,7 @@ namespace odeint {
         typedef Time time_type;
         typedef Traits traits_type;
         typedef typename traits_type::container_type container_type;
+        typedef std::pair< container_type , container_type > state_type;
         typedef typename traits_type::value_type value_type;
         typedef typename traits_type::iterator iterator;
         typedef typename traits_type::const_iterator const_iterator;
@@ -50,10 +52,14 @@ namespace odeint {
 
 	template< class CoordinateFunction >
 	void do_step( CoordinateFunction qfunc ,
-		      container_type &q ,
-		      container_type &p ,
+                      state_type &x ,
+                      time_type t ,
 		      time_type dt )
         {
+            
+            container_type &q = x.first;
+            container_type &p = x.second;
+
 	    if( !traits_type::same_size( q , p ) )
 	    {
 		std::string msg( "hamiltonian_stepper_euler::do_step(): " );

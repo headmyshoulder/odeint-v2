@@ -106,9 +106,9 @@ namespace odeint {
         // performs one step
         template< class DynamicalSystem >
         void do_step( DynamicalSystem &system ,
-					  state_type &x ,
-					  time_type t ,
-					  time_type dt )
+                      state_type &x ,
+                      time_type t ,
+                      time_type dt )
         {
         	system( x , m_dxdt , t );
             do_step( system , x , m_dxdt , t , dt );
