@@ -152,12 +152,11 @@ int main( int argc , char **argv )
             point_type( 0.00288930 , 0.00114527 , 0.00039677 ) ,   // neptune
             point_type( 0.00276725 , -0.00170702 , -0.00136504 )   // pluto
         }};
+
+    // remove center of mass velocity
+    point_type com = center_of_mass( p , masses );
+    for( size_t i=0 ; i<n ; ++i ) p[i] -= com;
     for( size_t i=0 ; i<n ; ++i ) p[i] *= masses[i];
-
-
-/*
- * ToDo : remove center of mass velocity
-*/
 
     stepper_type stepper;
     const double dt = 1.0;

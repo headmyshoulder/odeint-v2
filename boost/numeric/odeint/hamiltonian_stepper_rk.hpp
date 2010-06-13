@@ -67,7 +67,7 @@ namespace odeint {
 	template< class CoordinateFunction >
 	void do_step( CoordinateFunction qfunc ,
 		      state_type &x ,
-                      time_type t ,
+              time_type t ,
 		      time_type dt )
         {
 	    const size_t order = 6;
@@ -89,8 +89,8 @@ namespace odeint {
 		    static_cast<time_type>( 0.0 )
 		};
 
-            container_type &q = x.first;
-            container_type &p = x.second;
+        container_type &q = x.first;
+        container_type &p = x.second;
 
 	    if( !traits_type::same_size( q , p ) )
 	    {

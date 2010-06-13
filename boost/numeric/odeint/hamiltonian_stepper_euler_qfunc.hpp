@@ -1,5 +1,5 @@
 /*
- boost header: numeric/odeint/hamiltonian_stepper_euler.hpp
+ boost header: numeric/odeint/hamiltonian_stepper_qfunc_euler.hpp
 
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky
@@ -10,11 +10,10 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
-#ifndef BOOST_NUMERIC_ODEINT_HAMILTONIAN_STEPPER_EULER_HPP_INCLUDED
-#define BOOST_NUMERIC_ODEINT_HAMILTONIAN_STEPPER_EULER_HPP_INCLUDED
+#ifndef BOOST_NUMERIC_ODEINT_HAMILTONIAN_STEPPER_QFUNC_EULER_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_HAMILTONIAN_STEPPER_QFUNC_EULER_HPP_INCLUDED
 
 #include <stdexcept>
-#include <utility>
 
 #include <boost/numeric/odeint/detail/iterator_algebra.hpp>
 #include <boost/numeric/odeint/container_traits.hpp>
@@ -28,53 +27,50 @@ namespace odeint {
         class Time = double ,
         class Traits = container_traits< Container >
         >
-    class hamiltonian_stepper_euler
+    class hamiltonian_stepper_qfunc_euler
     {
         // provide basic typedefs
     public:
-
+        
         typedef unsigned short order_type;
         typedef Time time_type;
         typedef Traits traits_type;
         typedef typename traits_type::container_type container_type;
-        typedef std::pair< container_type , container_type > state_type;
         typedef typename traits_type::value_type value_type;
         typedef typename traits_type::iterator iterator;
         typedef typename traits_type::const_iterator const_iterator;
 
     private:
 
-        state_type m_dxdt;
-        container_type m_dqdt , m_dpdt ;
+	container_type m_dpdt;
+
+
 
     public:
 
-        template< class SystemFunction >
-        void do_step( SystemFunction func , state_type &state ,
-                      time_type t , time_type dt )
+        template< class CoordinateFunction >
+        void do_step( CoordinateFunction &qfunc ,
+                  container_type &q ,
+                  container_type &p ,
+                  time_type dt )
         {
-            if( !traits_type::same_size( state.first , state.second ) )
+            if( !traits_type::same_size( q , p ) )
             {
                 std::string msg( "hamiltonian_stepper_euler::do_step(): " );
                 msg += "q and p have different sizes";
                 throw std::invalid_argument( msg );
             }
             
-            container_type &q = state.first , &p = state.second;
-            container_type &dqdt = m_dxdt.first , &dpdt = m_dxdt.second;
-
-            traits_type::adjust_size( q , dqdt );
-            traits_type::adjust_size( p , dpdt );
-
-            func.first( p , dqdt );
+            traits_type::adjust_size( p , m_dpdt );
+            
             detail::it_algebra::increment( traits_type::begin(q) ,
                                            traits_type::end(q) ,
-                                           traits_type::begin(dqdt) ,
+                                           traits_type::begin(p) ,
                                            dt );
-            func.second( q , dpdt );
+            qfunc( q , m_dpdt );
             detail::it_algebra::increment( traits_type::begin(p) ,
                                            traits_type::end(p) ,
-                                           traits_type::begin(dpdt) ,
+                                           traits_type::begin(m_dpdt) ,
                                            dt );
         }
 
@@ -89,4 +85,4 @@ namespace odeint {
 
 
 
-#endif //BOOST_NUMERIC_ODEINT_HAMILTONIAN_STEPPER_EULER_HPP_INCLUDED
+#endif //BOOST_NUMERIC_ODEINT_HAMILTONIAN_STEPPER_QFUNC_EULER_HPP_INCLUDED
