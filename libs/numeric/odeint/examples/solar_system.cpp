@@ -16,10 +16,9 @@
 
 #include <boost/circular_buffer.hpp>
 #include <boost/ref.hpp>
-#include <boost/numeric/odeint.hpp>
-#include <boost/numeric/odeint/container_traits_tr1_array.hpp>
-#include <utility>
 
+#include <boost/numeric/odeint/container_traits_tr1_array.hpp>
+#include <boost/numeric/odeint/hamiltonian_stepper_euler.hpp>
 #include "point_type.hpp"
 
 #define tab "\t" 
@@ -32,9 +31,6 @@ const size_t n = 6;
 
 typedef point< double , 3 > point_type;
 typedef std::tr1::array< point_type , n > state_type;
-
-typedef std::pair< state_type , state_type > state_pair;
-
 typedef std::tr1::array< double , n > mass_type;
 typedef hamiltonian_stepper_euler< state_type > stepper_type;
 
@@ -57,23 +53,30 @@ point_type center_of_mass( const state_type &x , const mass_type &m )
     point_type mean( 0.0 );
     for( size_t i=0 ; i<x.size() ; ++i )
     {
-	overall_mass += m[i];
-	mean += m[i] * x[i];
+        overall_mass += m[i];
+        mean += m[i] * x[i];
     }
     if( x.size() != 0 ) mean /= overall_mass;
     return mean;
 }
 
+point_type center( const state_type &x )
+{
+    point_type mean( 0.0 );
+    for( size_t i=0 ; i<x.size() ; ++i ) mean += x[i];
+    if( !x.empty() ) mean /= x.size();
+    return mean;
+}
 
-double energy( const state_type &q , const state_type &p ,
-               const mass_type &masses )
+
+double energy( const state_type &q , const state_type &p , const mass_type &masses )
 {
     const size_t n = q.size();
     double en = 0.0;
     for( size_t i=0 ; i<n ; ++i )
     {
         en += 0.5 * norm( p[i] ) / masses[i];
-	for( size_t j=0 ; j<i ; ++j )
+        for( size_t j=0 ; j<i ; ++j )
         {
             double diff = abs( q[i] - q[j] );
             en -= gravitational_constant * masses[j] * masses[i] / diff;
@@ -84,32 +87,46 @@ double energy( const state_type &q , const state_type &p ,
 
 struct solar_system
 {
-    mass_type &m_masses;
+    const mass_type &m_masses;
 
-    solar_system( mass_type &masses ) : m_masses( masses ) { }
+    solar_system( const mass_type &masses ) : m_masses( masses ) { }
 
-    void operator()( const state_type &q , state_type &dpdt )
+    void operator()( const state_type &q , state_type &dpdt ) const
     {
         const size_t n = q.size();
-        fill( dpdt.begin() , dpdt.end() , 0.0 );
+        fill( dpdt.begin() , dpdt.end() , point_type( 0.0 , 0.0 , 0.0 ) );
         for( size_t i=0 ; i<n ; ++i )
         {
             for( size_t j=i+1 ; j<n ; ++j )
             {
                 point_type diff = q[j] - q[i];
-		double d = abs( diff );
-                diff = gravitational_constant * diff / d / d / d;
-                dpdt[i] += diff * m_masses[j];
-                dpdt[j] -= diff * m_masses[i];
+                double d = abs( diff );
+                diff *= ( gravitational_constant / d / d / d * m_masses[i] * m_masses[j] ) ;
+                dpdt[i] += diff ;
+                dpdt[j] -= diff ;
             }
         }
     }
 };
 
+struct solar_system_momentum
+{
+    const mass_type &m_masses;
+
+    solar_system_momentum( const mass_type &masses ) : m_masses( masses ) { }
+
+    void operator()( const state_type &p , state_type &dqdt ) const
+    {
+        for( size_t i=0 ; i<p.size() ; ++i ) dqdt[i] = p[i] / m_masses[i];
+    }
+};
+
+
+
 
 int main( int argc , char **argv )
 {
-    mass_type masses = {{
+    const mass_type masses = {{
             1.00000597682 ,      // sun
             0.000954786104043 ,  // jupiter
             0.000285583733151 ,  // saturn
@@ -118,46 +135,50 @@ int main( int argc , char **argv )
             1.0 / ( 1.3e8 )      // pluto
         }};
 
-    state_pair state;
-    state_type &q = state.first;
-    state_type &p = state.second;
+    state_type q = {{
+            point_type( 0.0 , 0.0 , 0.0 ) ,                        // sun
+            point_type( -3.5023653 , -3.8169847 , -1.5507963 ) ,   // jupiter
+            point_type( 9.0755314 , -3.0458353 , -1.6483708 ) ,    // saturn
+            point_type( 8.3101420 , -16.2901086 , -7.2521278 ) ,   // uranus
+            point_type( 11.4707666 , -25.7294829 , -10.8169456 ) , // neptune
+            point_type( -15.5387357 , -25.2225594 , -3.1902382 )   // pluto
+        }};
 
-    q[0] = point_type( 0.0 , 0.0 , 0.0 );                         // sun
-    q[1] = point_type( -3.5023653 , -3.8169847 , -1.5507963 );    // jupiter
-    q[2] = point_type( 9.0755314 , -3.0458353 , -1.6483708 );     // saturn
-    q[3] = point_type( 8.3101420 , -16.2901086 , -7.2521278 );    // uranus
-    q[4] = point_type( 11.4707666 , -25.7294829 , -10.8169456 );  // neptune
-    q[5] = point_type( -15.5387357 , -25.2225594 , -3.1902382 );  // pluto
-    
+    state_type p = {{
+            point_type( 0.0 , 0.0 , 0.0 ) ,                        // sun
+            point_type( 0.00565429 , -0.00412490 , -0.00190589 ) , // jupiter
+            point_type( 0.00168318 , 0.00483525 , 0.00192462 ) ,   // saturn
+            point_type( 0.00354178 , 0.00137102 , 0.00055029 ) ,   // uranus
+            point_type( 0.00288930 , 0.00114527 , 0.00039677 ) ,   // neptune
+            point_type( 0.00276725 , -0.00170702 , -0.00136504 )   // pluto
+        }};
+    for( size_t i=0 ; i<n ; ++i ) p[i] *= masses[i];
 
-    p[0] = point_type( 0.0 , 0.0 , 0.0 );                        // sun
-    p[1] = point_type( 0.00565429 , -0.00412490 , -0.00190589 ); // jupiter
-    p[2] = point_type( 0.00168318 , 0.00483525 , 0.00192462 );   // saturn
-    p[3] = point_type( 0.00354178 , 0.00137102 , 0.00055029 );   // uranus
-    p[4] = point_type( 0.00288930 , 0.00114527 , 0.00039677 );   // neptune
-    p[5] = point_type( 0.00276725 , -0.00170702 , -0.00136504 ); // pluto
 
-    point_type qmean = center_of_mass( q , masses );
-    point_type pmean = center_of_mass( p , masses );
-    for( size_t i=0 ; i<n ; ++i ) { q[i] -= qmean ; p[i] -= pmean; }
+/*
+ * ToDo : remove center of mass velocity
+*/
 
     stepper_type stepper;
-    solar_system sol( masses );
-
-    const double dt = 100.0;
+    const double dt = 1.0;
     double t = 0.0;
-    while( t < 10000000.0 )
+
+
+    pair< state_type , state_type > state = make_pair( q , p );
+    for( size_t c = 0 ; c<2000 ; ++c )
     {
-	clog << t << tab << energy( q , p , masses ) << tab;
-        clog << center_of_mass( q , masses ) << tab;
-        clog << center_of_mass( p , masses ) << endl;
+        clog << t << tab << energy( state.first , state.second , masses ) << tab;
+        clog << center_of_mass( state.first , masses ) << tab;
+        clog << center_of_mass( state.second , masses ) << endl;
 
-	cout << t;
-        for( size_t i=0 ; i<n ; ++i ) cout << tab << q[i];
-	cout << endl;
+        cout << t;
+        for( size_t i=0 ; i<n ; ++i ) cout << tab << state.first[i];
+        cout << endl;
 
-        for( size_t i=0 ; i<1 ; ++i,t+=dt )
-	    stepper.do_step( sol , state , t , dt );
+        for( size_t i=0 ; i<100 ; ++i,t+=dt )
+            stepper.do_step( make_pair( solar_system_momentum( masses ) ,
+                                        solar_system( masses ) ) ,
+                             state , t , dt );
         t += dt;
     }
 

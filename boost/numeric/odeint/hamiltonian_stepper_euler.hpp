@@ -44,42 +44,64 @@ namespace odeint {
 
     private:
 
-	container_type m_dpdt;
-
-
+        state_type m_dxdt;
+        container_type m_dqdt , m_dpdt ;
 
     public:
 
-	template< class CoordinateFunction >
-	void do_step( CoordinateFunction qfunc ,
-                      state_type &x ,
-                      time_type t ,
-		      time_type dt )
+        template< class SystemFunction >
+        void do_step( SystemFunction func , state_type &state ,
+                      time_type t , time_type dt )
         {
+            if( !traits_type::same_size( state.first , state.second ) )
+            {
+                std::string msg( "hamiltonian_stepper_euler::do_step(): " );
+                msg += "q and p have different sizes";
+                throw std::invalid_argument( msg );
+            }
             
-            container_type &q = x.first;
-            container_type &p = x.second;
+            container_type &q = state.first , &p = state.second;
+            container_type &dqdt = m_dxdt.first , &dpdt = m_dxdt.second;
 
-	    if( !traits_type::same_size( q , p ) )
-	    {
-		std::string msg( "hamiltonian_stepper_euler::do_step(): " );
-		msg += "q and p have different sizes";
-		throw std::invalid_argument( msg );
-	    }
+            traits_type::adjust_size( q , dqdt );
+            traits_type::adjust_size( p , dpdt );
 
+            func.first( p , dqdt );
+            detail::it_algebra::increment( traits_type::begin(q) ,
+                                           traits_type::end(q) ,
+                                           traits_type::begin(dqdt) ,
+                                           dt );
+            func.second( q , dpdt );
+            detail::it_algebra::increment( traits_type::begin(p) ,
+                                           traits_type::end(p) ,
+                                           traits_type::begin(dpdt) ,
+                                           dt );
+
+        }
+
+        template< class CoordinateFunction , class MomentumFunction >
+        void do_step( CoordinateFunction dqdt_func ,
+                      MomentumFunction dpdt_func ,
+                      container_type &q ,
+                      container_type &p ,
+                      time_type dt )
+        {
+            if( !traits_type::same_size( q , p ) )
+            {
+                std::string msg( "hamiltonian_stepper_euler::do_step(): " );
+                msg += "q and p have different sizes";
+                throw std::invalid_argument( msg );
+            }
+            
+            traits_type::adjust_size( p , m_dqdt );
             traits_type::adjust_size( p , m_dpdt );
-
-	    detail::it_algebra::increment( traits_type::begin(q) ,
-					   traits_type::end(q) ,
-					   traits_type::begin(p) ,
-					   dt );
-	    qfunc( q , m_dpdt );
-	    detail::it_algebra::increment( traits_type::begin(p) ,
-					   traits_type::end(p) ,
-					   traits_type::begin(m_dpdt) ,
-					   dt );
-	}
-
+            
+            dqdt_func( p , m_dqdt );
+            detail::it_algebra::increment( traits_type::begin(q) ,
+                                           traits_type::end(q) ,
+                                           traits_type::begin(m_dqdt) ,
+                                           dt );
+        }
     };
 
 
