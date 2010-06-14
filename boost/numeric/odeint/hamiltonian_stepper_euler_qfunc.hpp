@@ -27,7 +27,7 @@ namespace odeint {
         class Time = double ,
         class Traits = container_traits< Container >
         >
-    class hamiltonian_stepper_qfunc_euler
+    class hamiltonian_stepper_euler_qfunc
     {
         // provide basic typedefs
     public:

@@ -13,6 +13,7 @@ project odeint
 
 build-project libs/numeric/odeint/examples ;
 build-project libs/numeric/odeint/test ;
+build-project libs/numeric/odeint/stuff ;
 # build-project libs/numeric/odeint/doc ;
 
 
