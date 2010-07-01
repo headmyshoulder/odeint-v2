@@ -3,7 +3,7 @@
 #include <boost/numeric/odeint.hpp>
 
 //[ rhs_function
-/* The type of container used to hold the state vector */
+/* The state type used to hold the state vector */
 typedef std::vector<double> state_type;
 
 const double gam = 0.15;
