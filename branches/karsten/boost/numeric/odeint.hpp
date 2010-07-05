@@ -17,8 +17,5 @@
 
 #include <boost/config.hpp>
 
-#include <boost/numeric/odeint/container_traits.hpp>
-#include <boost/numeric/odeint/steppers.hpp>
-#include <boost/numeric/odeint/integrate_functions.hpp>
 
 #endif // BOOST_NUMERIC_ODEINT_HPP
