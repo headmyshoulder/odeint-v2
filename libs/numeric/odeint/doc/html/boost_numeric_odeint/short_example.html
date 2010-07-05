@@ -21,11 +21,11 @@
 </h2></div></div></div>
 <p>
       This section gives a quick introduction to the most important features of the
-      library. Image, for example, you want to numerically integrate a harmonic oscillator
-      with friction. The equations of motion are given by x'' = -x + gamma x'. This
-      can be transformed to a system of two first-order differential equations design
-      the right hand side of the equation w' = f(w) where in this case with new variables
-      x and p=x'. To apply numerical integration one first has to w = (x,p):
+      library. Imagine, for example, you want to numerically integrate a harmonic
+      oscillator with friction. The equations of motion are given by x'' = -x + gamma
+      x'. This can be transformed to a system of two first-order differential equations
+      by introducing the new variable p = x'. If we now use w = (x,p) the equation
+      of motion above can be written as w' = f(w):
     </p>
 <p>
       </p>
@@ -52,10 +52,12 @@
       Here we chose <span class="bold"><strong>vector&lt;double&gt;</strong></span> as the
       state type, but others are also possible, for example <span class="bold"><strong>tr1/array&lt;double,2&gt;</strong></span>.
       Odeint is designed in such a way that it works with basically any container
-      that can be accessed via iterators. The parameter structure of the function
-      is crucial: the integration methods will always call them in the form <span class="bold"><strong>f(x, dxdt, t)</strong></span>. So even if there is no explicit time
-      dependence, one has to define <span class="bold"><strong>t</strong></span> as a function
-      parameter.
+      that can be accessed via iterators. Moreover, any structure can be used as
+      state type, provided vector-space operations are provided for them. The parameter
+      structure of the function is crucial: the integration methods will always call
+      them in the form <span class="bold"><strong>f(x, dxdt, t)</strong></span>. So even if
+      there is no explicit time dependence, one has to define <span class="bold"><strong>t</strong></span>
+      as a function parameter.
     </p>
 <p>
       Now, we have to define the initial state from which the integration should

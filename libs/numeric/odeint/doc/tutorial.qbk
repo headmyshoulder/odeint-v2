@@ -157,23 +157,23 @@ dpi = 1/m sum ji Fij
 where pi is the momenta of object i. The equations of motion can also be
 derived from the Hamiltonian
 
-H = sum over i pi^2 / 2 + sum j V( qi , qj ) 
+H = sum over i pi^2 / 2 m_i + sum j V( qi , qj ) 
 
 via dqi = dH / dpi, dpi = - dH / dq1. V(qi,qj) is the interaction
 potential.
 
 In time independent Hamiltonian system the energy is conserved and special
 integration methods have to be applied in order to ensure energy
-conservation. The odeint library provides two stepper classes for Hamiltonian
-systems, which are separable and can be written in the form H = sum pi^2/2 +
-Hq.
+conservation. The odeint library provides classes for Hamiltonian
+systems, which are separable and can be written in the form H = sum pi^2/2 mi +
+Hq(q), where Hq(q) only depends on the coordinates.
 
 hamiltonian_stepper_euler
 hamiltonian_stepper_rk
 
 Alltough this functional form might look a bit arbitrary it covers nearly all
 classical mechanical systems with inertia and without dissipation, or where
-the equations of motion can be written in the form dqi=pi dpi=f(qi).
+the equations of motion can be written in the form dqi=mi pi dpi=f(qi).
 
 
 [endsect]
@@ -185,35 +185,38 @@ To implement this system we define a point type which will represent the space
 as well as the velocity. Therefore, we use the operators from
 <boost/operator.hpp>:
 
-show the code 
+[import ../examples/point_type.hpp]
+[point_type]
 
 
-The next step is to define the state type and the system (derivative)
-function. As state type we use std::tr1::array and a state type represents all
-space coordinates q or all momenta coordinates p. As system function we have
-to provide f(q)
+The next step is to define a container type storing the values of q and p and
+to define systems (derivative) functions. As container type we use
+std::tr1::array and the state type is then simply 
 
-show the code
+[import ../examples/solar_system.cpp]
+[state_type_definition]
 
-Note, that we have allready define the masses of all planets in the solar
-system.
+and represents all space coordinates q or all momenta coordinates p. As system
+function we have to provide f(p) = dq and f(q) = -dp, which acts only on p or q:
+
+
+[momentum_function]
+
+[coordinate_function]
 
 In general a three body-system is chaotic, hence we can not expect that
 arbitray initial conditions of the system will lead to a dynamic which is
 comparable with the solar system. That is we have to define proper initial
-conditions.
-
-show the code
+conditions, which are taken from the book of Hairer, Wannier, Lubich.
 
 Now, we use the rk stepper to integrate the solar system. To visualize the
 motion we save the trajectory of each planet in a circular buffer. The output
 can be piped directly into gnuplot and a very nice visualization of the motion
 appears.
 
+[integration_solar_system]
+
 [endsect]
-
-
-usage of the steppers
 
 [endsect]
 

@@ -29,25 +29,28 @@ using namespace boost::numeric::odeint;
 // we simulate 5 planets and the sun
 const size_t n = 6;
 
+//[ state_type_definition
 typedef point< double , 3 > point_type;
-typedef std::tr1::array< point_type , n > state_type;
+typedef std::tr1::array< point_type , n > container_type;
 typedef std::tr1::array< double , n > mass_type;
-typedef hamiltonian_stepper_euler< state_type > stepper_type;
+typedef pair< container_type , container_type > state_type;
+//]
+
 
 
 const double gravitational_constant = 2.95912208286e-4;
 
 
-ostream& operator<<( ostream &out , const state_type &x )
+ostream& operator<<( ostream &out , const container_type &x )
 {
-    typedef state_type::value_type value_type;
+    typedef container_type::value_type value_type;
     copy( x.begin() , x.end() ,
 	  ostream_iterator< value_type >( out , "\n" ) );
     return out;
 }
 
 
-point_type center_of_mass( const state_type &x , const mass_type &m )
+point_type center_of_mass( const container_type &x , const mass_type &m )
 {
     double overall_mass = 0.0;
     point_type mean( 0.0 );
@@ -60,7 +63,7 @@ point_type center_of_mass( const state_type &x , const mass_type &m )
     return mean;
 }
 
-point_type center( const state_type &x )
+point_type center( const container_type &x )
 {
     point_type mean( 0.0 );
     for( size_t i=0 ; i<x.size() ; ++i ) mean += x[i];
@@ -69,7 +72,7 @@ point_type center( const state_type &x )
 }
 
 
-double energy( const state_type &q , const state_type &p , const mass_type &masses )
+double energy( const container_type &q , const container_type &p , const mass_type &masses )
 {
     const size_t n = q.size();
     double en = 0.0;
@@ -85,13 +88,15 @@ double energy( const state_type &q , const state_type &p , const mass_type &mass
     return en;
 }
 
+
+//[ coordinate_function
 struct solar_system
 {
     const mass_type &m_masses;
 
     solar_system( const mass_type &masses ) : m_masses( masses ) { }
 
-    void operator()( const state_type &q , state_type &dpdt ) const
+    void operator()( const container_type &q , container_type &dpdt ) const
     {
         const size_t n = q.size();
         fill( dpdt.begin() , dpdt.end() , point_type( 0.0 , 0.0 , 0.0 ) );
@@ -108,19 +113,21 @@ struct solar_system
         }
     }
 };
+//]
 
+//[ momentum_function
 struct solar_system_momentum
 {
     const mass_type &m_masses;
 
     solar_system_momentum( const mass_type &masses ) : m_masses( masses ) { }
 
-    void operator()( const state_type &p , state_type &dqdt ) const
+    void operator()( const container_type &p , container_type &dqdt ) const
     {
         for( size_t i=0 ; i<p.size() ; ++i ) dqdt[i] = p[i] / m_masses[i];
     }
 };
-
+//]
 
 
 
@@ -135,7 +142,7 @@ int main( int argc , char **argv )
             1.0 / ( 1.3e8 )      // pluto
         }};
 
-    state_type q = {{
+    container_type q = {{
             point_type( 0.0 , 0.0 , 0.0 ) ,                        // sun
             point_type( -3.5023653 , -3.8169847 , -1.5507963 ) ,   // jupiter
             point_type( 9.0755314 , -3.0458353 , -1.6483708 ) ,    // saturn
@@ -144,7 +151,7 @@ int main( int argc , char **argv )
             point_type( -15.5387357 , -25.2225594 , -3.1902382 )   // pluto
         }};
 
-    state_type p = {{
+    container_type p = {{
             point_type( 0.0 , 0.0 , 0.0 ) ,                        // sun
             point_type( 0.00565429 , -0.00412490 , -0.00190589 ) , // jupiter
             point_type( 0.00168318 , 0.00483525 , 0.00192462 ) ,   // saturn
@@ -162,8 +169,9 @@ int main( int argc , char **argv )
     const double dt = 1.0;
     double t = 0.0;
 
-
-    pair< state_type , state_type > state = make_pair( q , p );
+//[ integration_solar_system
+    typedef hamiltonian_stepper_euler< container_type > stepper_type;
+    state_type state = make_pair( q , p );
     for( size_t c = 0 ; c<2000 ; ++c )
     {
         clog << t << tab << energy( state.first , state.second , masses ) << tab;
@@ -180,6 +188,7 @@ int main( int argc , char **argv )
                              state , t , dt );
         t += dt;
     }
+//]
 
     return 0;
 }

@@ -70,9 +70,10 @@
       x(t) are calculated iteratively. The easiest algorithm is the <span class="emphasis"><em>Euler-Scheme</em></span>,
       where starting at x(0) one finds x(dt) = x(0) + dt*f(x(0),0). Now one can use
       x(dt) and obtain x(2dt) in a similar way and so on. The Euler method is of
-      order 1, that means the error at each step is ~ dt[superscript 2]. This is,
-      of course, not very satisfying, which is why the Euler method is merely used
-      for real life problems and serves just as illustrative example. In <span class="bold"><strong>odeint</strong></span>, the following algorithms are implemented:
+      order 1, that means the error at each step is ~ dt^2. This is, of course, not
+      very satisfying, which is why the Euler method is merely used for real life
+      problems and serves just as illustrative example. In <span class="bold"><strong>odeint</strong></span>,
+      the following algorithms are implemented:
     </p>
 <div class="table">
 <a name="boost_numeric_odeint.overview.stepper_algorithms"></a><p class="title"><b>Table&#160;1.1.&#160;Stepper Algorithms</b></p>
@@ -245,7 +246,7 @@
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: July 05, 2010 at 13:27:18 GMT</small></p></td>
+<td align="left"><p><small>Last revised: July 05, 2010 at 14:50:52 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>

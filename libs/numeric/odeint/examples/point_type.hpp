@@ -21,6 +21,8 @@
 //
 // the point type
 //
+
+//[ point_type
 template< class T , size_t Dim >
 class point :
     boost::additive1< point< T , Dim > ,
@@ -28,7 +30,10 @@ class point :
     boost::multiplicative2< point< T , Dim > , T
     > > >
 {
+    // ...
+//<-
 public:
+
 
     const static size_t dim = Dim;
     typedef T value_type;
@@ -99,7 +104,12 @@ public:
 private:
 
     T m_val[dim];
+
+//->
 };
+
+// define the scalar_prod(), norm() and abs()
+//]
 
 
 //
