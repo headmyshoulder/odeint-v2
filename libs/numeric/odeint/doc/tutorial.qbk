@@ -7,13 +7,12 @@ First of all, you have to specify the datatype that represents a state of your
 system [*x]. Mathematically, this usually is an n-dimensional vector with 
 real numbers or complex numbers as scalar objects. For odeint the most natural
 way is to use `vector< double >` or `vector< complex< double > >` to represent
-the system state. However, odeint can deal with other container types than 
-vector as well, e.g. `tr1/array< double , N >` as long as it is able to obtain
+the system state. However, odeint can deal with other container types as well, e.g. `tr1/array< double , N >` as long as it is able to obtain
 a ForwardIterator going through all of the container's elements. The scalar type
-must have several operators ( +, -, +=, -= ) and the `abs()`-fcuntion defined . 
+must have several operations ( + , - , += , -= ) and the `abs()`-function defined. 
 Furthermore, one can choose the datatype of the time (that is, the parameter to 
 which respect the differentiation is done). The standard type for this is 
-`double`, but one might be able to choose, for example, `complex< double >` as
+`double`, but it should be possible to use, for example, `complex< double >` as
 well (untested). It must be possible to multiply the time type and the scalar 
 type of the vector. For the most cases `vector< double >` as state type and the
 standard `double` for the time type should be sufficient.
@@ -41,7 +40,7 @@ allows for cleaner code.
 [endsect]
 
 [section Stepper Types]
-Numerical integration works iteratevly, that means you start at a state ['x(t)] 
+Numerical integration works iteratively, that means you start at a state ['x(t)] 
 and performs a timestep of length ['dt] to obtain the approximate state 
 ['x(t+dt)]. There exist many different methods to perform such a timestep each 
 of which has a certain order ['q]. If the order of a method is ['q] than it is 
@@ -102,7 +101,7 @@ In odeint, this is done by *ControlledSteppers*.
 The usual way to create a controlled stepper is via the 
 `make_controlled_stepper_standard( ErrorStepper , eps_abs , eps_rel , a_x , a_dxdt )` 
 function that takes an error stepper as parameter and four values defining the maximal
-absolute and relative error allowed for on integration step.
+absolute and relative error allowed for one integration step.
 The standard controlled stepper created by this method ensures that the error ['err]
 of the solution fulfills 
 ['err < eps_abs + eps_rel * ( a_x * |x| + a_dxdt * dt * |dxdt| ) ]

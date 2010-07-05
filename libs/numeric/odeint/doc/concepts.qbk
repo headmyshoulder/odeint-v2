@@ -102,7 +102,7 @@ means the error made by the time discretization is of order *dt^(n+1)*.
 Error steppers execute one timestep of a specific order with a given stepsize.
 Additionally, an error estimation of the obtained result is computed that can 
 be used to control the error introduced by the time discretization.
-As the basic steppers, error steppers usually allocate internal memory to store
+Like the basic steppers, error steppers usually allocate internal memory to store
 intermediate function call results. If state types with variable size are used 
 (e.g. `vector`), it has to be assured that the stepper gets informed about any 
 change of the state size by calling its `adjust_size` method.

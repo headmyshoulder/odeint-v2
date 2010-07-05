@@ -23,7 +23,7 @@ Numerical approximations for the solution x(t) are calculated iteratively.
 The easiest algorithm is the /Euler-Scheme/, where starting at x(0) one 
 finds x(dt) = x(0) + dt*f(x(0),0).
 Now one can use x(dt) and obtain x(2dt) in a similar way and so on.
-The Euler method is of order 1, that means the error at each step is ~ dt[superscript 2].
+The Euler method is of order 1, that means the error at each step is ~ dt^2.
 This is, of course, not very satisfying, which is why the Euler method is 
 merely used for real life problems and serves just as illustrative example.
 In [*odeint], the following algorithms are implemented:
@@ -43,11 +43,9 @@ In [*odeint], the following algorithms are implemented:
 [section Short Example]
 
 This section gives a quick introduction to the most important features of the 
-library. Image, for example, you want to numerically integrate a harmonic oscillator with friction. The equations of motion are given by x'' = -x + gamma x'.
+library. Imagine, for example, you want to numerically integrate a harmonic oscillator with friction. The equations of motion are given by x'' = -x + gamma x'.
 This can be transformed to a system of two first-order differential equations 
-design the right hand side of the equation w' = f(w) where in this case 
-with new variables x and p=x'. To apply numerical integration one first has to 
-w = (x,p):
+by introducing the new variable p = x'. If we now use w = (x,p) the equation of motion above can be written as w' = f(w):
 
 [import ../examples/doc_harm_osc.cpp]
 [rhs_function]
@@ -55,6 +53,8 @@ w = (x,p):
 Here we chose [*vector<double>] as the state type, but others are also possible,
 for example [*tr1/array<double,2>]. Odeint is designed in such a way that it 
 works with basically any container that can be accessed via iterators.
+Moreover, any structure can be used as state type, provided vector-space operations
+are provided for them.
 The parameter structure of the function is crucial: the integration methods will
 always call them in the form [*f(x, dxdt, t)]. So even if there is no explicit
 time dependence, one has to define [*t] as a function parameter.
