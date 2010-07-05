@@ -12,6 +12,5 @@ project
     : build-dir .
     ;
 
-exe doc_harm_osc : doc_harm_osc.cpp ;
-exe doc_integrate : doc_integrate.cpp ;
-exe solar_system : solar_system.cpp point_type.hpp ;
+# exe harmonic_oscillator : harmonic_oscillator.cpp ;
+# exe solar_system : solar_system.cpp point_type.hpp ;
