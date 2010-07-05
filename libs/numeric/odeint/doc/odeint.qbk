@@ -41,10 +41,9 @@ In [*odeint], the following algorithms are implemented:
 [endsect]
 
 [section Short Example]
+
 This section gives a quick introduction to the most important features of the 
-library using a number of instructive examples.
-Image, for example, you want to numerically integrate a harmonic oscillator 
-with friction. The equations of motion are given by x'' = -x + gamma x'.
+library. Image, for example, you want to numerically integrate a harmonic oscillator with friction. The equations of motion are given by x'' = -x + gamma x'.
 This can be transformed to a system of two first-order differential equations 
 design the right hand side of the equation w' = f(w) where in this case 
 with new variables x and p=x'. To apply numerical integration one first has to 
@@ -94,8 +93,7 @@ must then be defined as the ()-operator:
 
 [include tutorial.qbk]
 
-[include steppers.qbk]
+[include concepts.qbk]
 
-[include integrate_functions.qbk]
+[include reference.qbk]
 
-[include container_traits.qbk]

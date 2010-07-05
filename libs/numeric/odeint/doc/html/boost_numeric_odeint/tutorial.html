@@ -7,20 +7,13 @@
 <link rel="start" href="../index.html" title="Chapter&#160;1.&#160;boost.numeric.odeint">
 <link rel="up" href="../index.html" title="Chapter&#160;1.&#160;boost.numeric.odeint">
 <link rel="prev" href="short_example.html" title="Short Example">
-<link rel="next" href="stepper.html" title="Stepper">
+<link rel="next" href="concepts.html" title="Concepts">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table cellpadding="2" width="100%"><tr>
-<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
-<td align="center"><a href="../../../index.html">Home</a></td>
-<td align="center"><a href="../libraries.html">Libraries</a></td>
-<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
-<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
-<td align="center"><a href="../../../more/index.htm">More</a></td>
-</tr></table>
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="short_example.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="stepper.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="short_example.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="concepts.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
@@ -86,7 +79,7 @@
 <p>
             
 </p>
-<pre class="programlisting"><span class="comment">/* The type of container used to hold the state vector */</span>
+<pre class="programlisting"><span class="comment">/* The state type used to hold the state vector */</span>
 <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
 
 <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">gam</span> <span class="special">=</span> <span class="number">0.15</span><span class="special">;</span>
@@ -169,158 +162,158 @@
 </colgroup>
 <thead><tr>
 <th>
-              <p>
-                Method
-              </p>
-              </th>
+                  <p>
+                    Method
+                  </p>
+                </th>
 <th>
-              <p>
-                Class
-              </p>
-              </th>
+                  <p>
+                    Class
+                  </p>
+                </th>
 <th>
-              <p>
-                Order
-              </p>
-              </th>
+                  <p>
+                    Order
+                  </p>
+                </th>
 <th>
-              <p>
-                Error Estimation
-              </p>
-              </th>
+                  <p>
+                    Error Estimation
+                  </p>
+                </th>
 </tr></thead>
 <tbody>
 <tr>
 <td>
-              <p>
-                Euler
-              </p>
-              </td>
+                  <p>
+                    Euler
+                  </p>
+                </td>
 <td>
-              <p>
-                stepper_euler
-              </p>
-              </td>
+                  <p>
+                    stepper_euler
+                  </p>
+                </td>
 <td>
-              <p>
-                1
-              </p>
-              </td>
+                  <p>
+                    1
+                  </p>
+                </td>
 <td>
-              <p>
-                No
-              </p>
-              </td>
+                  <p>
+                    No
+                  </p>
+                </td>
 </tr>
 <tr>
 <td>
-              <p>
-                Runge-Kutta 4
-              </p>
-              </td>
+                  <p>
+                    Runge-Kutta 4
+                  </p>
+                </td>
 <td>
-              <p>
-                stepper_rk4
-              </p>
-              </td>
+                  <p>
+                    stepper_rk4
+                  </p>
+                </td>
 <td>
-              <p>
-                4
-              </p>
-              </td>
+                  <p>
+                    4
+                  </p>
+                </td>
 <td>
-              <p>
-                No
-              </p>
-              </td>
+                  <p>
+                    No
+                  </p>
+                </td>
 </tr>
 <tr>
 <td>
-              <p>
-                Runge-Kutta Cash-Karp
-              </p>
-              </td>
+                  <p>
+                    Runge-Kutta Cash-Karp
+                  </p>
+                </td>
 <td>
-              <p>
-                stepper_rk5_ck
-              </p>
-              </td>
+                  <p>
+                    stepper_rk5_ck
+                  </p>
+                </td>
 <td>
-              <p>
-                5
-              </p>
-              </td>
+                  <p>
+                    5
+                  </p>
+                </td>
 <td>
-              <p>
-                Yes (Order 4)
-              </p>
-              </td>
+                  <p>
+                    Yes (Order 4)
+                  </p>
+                </td>
 </tr>
 <tr>
 <td>
-              <p>
-                Runge-Kutta Fehlberg
-              </p>
-              </td>
+                  <p>
+                    Runge-Kutta Fehlberg
+                  </p>
+                </td>
 <td>
-              <p>
-                stepper_rk78_fehlberg
-              </p>
-              </td>
+                  <p>
+                    stepper_rk78_fehlberg
+                  </p>
+                </td>
 <td>
-              <p>
-                7
-              </p>
-              </td>
+                  <p>
+                    7
+                  </p>
+                </td>
 <td>
-              <p>
-                Yes (Order 8)
-              </p>
-              </td>
+                  <p>
+                    Yes (Order 8)
+                  </p>
+                </td>
 </tr>
 <tr>
 <td>
-              <p>
-                Midpoint
-              </p>
-              </td>
+                  <p>
+                    Midpoint
+                  </p>
+                </td>
 <td>
-              <p>
-                stepper_midpoint
-              </p>
-              </td>
+                  <p>
+                    stepper_midpoint
+                  </p>
+                </td>
 <td>
-              <p>
-                variable
-              </p>
-              </td>
+                  <p>
+                    variable
+                  </p>
+                </td>
 <td>
-              <p>
-                No
-              </p>
-              </td>
+                  <p>
+                    No
+                  </p>
+                </td>
 </tr>
 <tr>
 <td>
-              <p>
-                Bulirsch-Stoer
-              </p>
-              </td>
+                  <p>
+                    Bulirsch-Stoer
+                  </p>
+                </td>
 <td>
-              <p>
-                controlled_stepper_bs
-              </p>
-              </td>
+                  <p>
+                    controlled_stepper_bs
+                  </p>
+                </td>
 <td>
-              <p>
-                variable
-              </p>
-              </td>
+                  <p>
+                    variable
+                  </p>
+                </td>
 <td>
-              <p>
-                Controlled
-              </p>
-              </td>
+                  <p>
+                    Controlled
+                  </p>
+                </td>
 </tr>
 </tbody>
 </table></div>
@@ -564,7 +557,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="short_example.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="stepper.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="short_example.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="concepts.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

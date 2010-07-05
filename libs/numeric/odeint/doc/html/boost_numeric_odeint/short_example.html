@@ -10,14 +10,7 @@
 <link rel="next" href="tutorial.html" title="Tutorial">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table cellpadding="2" width="100%"><tr>
-<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
-<td align="center"><a href="../../../index.html">Home</a></td>
-<td align="center"><a href="../libraries.html">Libraries</a></td>
-<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
-<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
-<td align="center"><a href="../../../more/index.htm">More</a></td>
-</tr></table>
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
 <hr>
 <div class="spirit-nav">
 <a accesskey="p" href="../index.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="tutorial.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
@@ -28,19 +21,18 @@
 </h2></div></div></div>
 <p>
       This section gives a quick introduction to the most important features of the
-      library using a number of instructive examples. Image, for example, you want
-      to numerically integrate a harmonic oscillator with friction. The equations
-      of motion are given by x'' = -x + gamma x'. This can be transformed to a system
-      of two first-order differential equations design the right hand side of the
-      equation w' = f(w) where in this case with new variables x and p=x'. To apply
-      numerical integration one first has to w = (x,p):
+      library. Image, for example, you want to numerically integrate a harmonic oscillator
+      with friction. The equations of motion are given by x'' = -x + gamma x'. This
+      can be transformed to a system of two first-order differential equations design
+      the right hand side of the equation w' = f(w) where in this case with new variables
+      x and p=x'. To apply numerical integration one first has to w = (x,p):
     </p>
 <p>
       </p>
 <p>
         
 </p>
-<pre class="programlisting"><span class="comment">/* The type of container used to hold the state vector */</span>
+<pre class="programlisting"><span class="comment">/* The state type used to hold the state vector */</span>
 <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
 
 <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">gam</span> <span class="special">=</span> <span class="number">0.15</span><span class="special">;</span>

@@ -8,14 +8,7 @@
 <link rel="next" href="boost_numeric_odeint/short_example.html" title="Short Example">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table cellpadding="2" width="100%"><tr>
-<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../boost.png"></td>
-<td align="center"><a href="../../index.html">Home</a></td>
-<td align="center"><a href="libraries.html">Libraries</a></td>
-<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
-<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
-<td align="center"><a href="../../more/index.htm">More</a></td>
-</tr></table>
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
 <hr>
 <div class="spirit-nav"><a accesskey="n" href="boost_numeric_odeint/short_example.html"><img src="../../doc/html/images/next.png" alt="Next"></a></div>
 <div class="chapter" lang="en">
@@ -30,7 +23,7 @@
 </h3></div></div>
 <div><p class="copyright">Copyright &#169; 2009 Karsten Ahnert and Mario Mulansky</p></div>
 <div><div class="legalnotice">
-<a name="id325394"></a><p>
+<a name="id358088"></a><p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -48,23 +41,20 @@
 <dt><span class="section"><a href="boost_numeric_odeint/tutorial.html#boost_numeric_odeint.tutorial.solar_system">Solar system</a></span></dt>
 <dt><span class="section"><a href="boost_numeric_odeint/tutorial.html#boost_numeric_odeint.tutorial.references">References</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="boost_numeric_odeint/stepper.html">Stepper</a></span></dt>
+<dt><span class="section"><a href="boost_numeric_odeint/concepts.html">Concepts</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="boost_numeric_odeint/stepper.html#boost_numeric_odeint.stepper.concepts">Concepts</a></span></dt>
-<dt><span class="section"><a href="boost_numeric_odeint/stepper.html#boost_numeric_odeint.stepper.stepper_classes">Stepper
+<dt><span class="section"><a href="boost_numeric_odeint/concepts.html#boost_numeric_odeint.concepts.basic_stepper">Basic stepper</a></span></dt>
+<dt><span class="section"><a href="boost_numeric_odeint/concepts.html#boost_numeric_odeint.concepts.error_stepper">Error stepper</a></span></dt>
+<dt><span class="section"><a href="boost_numeric_odeint/concepts.html#boost_numeric_odeint.concepts.controlled_stepper">Controlled
+      stepper</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_numeric_odeint/reference.html">Reference</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_numeric_odeint/reference.html#boost_numeric_odeint.reference.stepper_classes">Stepper
       classes</a></span></dt>
+<dt><span class="section"><a href="boost_numeric_odeint/reference.html#boost_numeric_odeint.reference.integration_functions">Integration
+      functions</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="boost_numeric_odeint/integration_functions.html">Integration
-    functions</a></span></dt>
-<dd><dl>
-<dt><span class="section"><a href="boost_numeric_odeint/integration_functions.html#boost_numeric_odeint.integration_functions.constant_step_size_functions">Constant
-      step-size functions</a></span></dt>
-<dt><span class="section"><a href="boost_numeric_odeint/integration_functions.html#boost_numeric_odeint.integration_functions.adaptive_step_size_functions">Adaptive
-      step-size functions</a></span></dt>
-</dl></dd>
-<dt><span class="section"><a href="boost_numeric_odeint/container_traits.html">Container traits</a></span></dt>
-<dd><dl><dt><span class="section"><a href="boost_numeric_odeint/container_traits.html#boost_numeric_odeint.container_traits.define_your_own_traits">Define
-      your own traits</a></span></dt></dl></dd>
 </dl>
 </div>
 <div class="section" lang="en">
@@ -85,10 +75,8 @@
       for real life problems and serves just as illustrative example. In <span class="bold"><strong>odeint</strong></span>, the following algorithms are implemented:
     </p>
 <div class="table">
-<a name="boost_numeric_odeint.overview.stepper_algorithms"></a><p class="title"><b>Table&#160;1.1.&#160;Stepper
-    Algorithms</b></p>
-<div class="table-contents"><table class="table" summary="Stepper
-    Algorithms">
+<a name="boost_numeric_odeint.overview.stepper_algorithms"></a><p class="title"><b>Table&#160;1.1.&#160;Stepper Algorithms</b></p>
+<div class="table-contents"><table class="table" summary="Stepper Algorithms">
 <colgroup>
 <col>
 <col>
@@ -97,158 +85,158 @@
 </colgroup>
 <thead><tr>
 <th>
-          <p>
-            Method
-          </p>
-          </th>
+              <p>
+                Method
+              </p>
+            </th>
 <th>
-          <p>
-            Class
-          </p>
-          </th>
+              <p>
+                Class
+              </p>
+            </th>
 <th>
-          <p>
-            Order
-          </p>
-          </th>
+              <p>
+                Order
+              </p>
+            </th>
 <th>
-          <p>
-            Error Estimation
-          </p>
-          </th>
+              <p>
+                Error Estimation
+              </p>
+            </th>
 </tr></thead>
 <tbody>
 <tr>
 <td>
-          <p>
-            Euler
-          </p>
-          </td>
+              <p>
+                Euler
+              </p>
+            </td>
 <td>
-          <p>
-            stepper_euler
-          </p>
-          </td>
+              <p>
+                stepper_euler
+              </p>
+            </td>
 <td>
-          <p>
-            1
-          </p>
-          </td>
+              <p>
+                1
+              </p>
+            </td>
 <td>
-          <p>
-            No
-          </p>
-          </td>
+              <p>
+                No
+              </p>
+            </td>
 </tr>
 <tr>
 <td>
-          <p>
-            Runge-Kutta 4
-          </p>
-          </td>
+              <p>
+                Runge-Kutta 4
+              </p>
+            </td>
 <td>
-          <p>
-            stepper_rk4
-          </p>
-          </td>
+              <p>
+                stepper_rk4
+              </p>
+            </td>
 <td>
-          <p>
-            4
-          </p>
-          </td>
+              <p>
+                4
+              </p>
+            </td>
 <td>
-          <p>
-            No
-          </p>
-          </td>
+              <p>
+                No
+              </p>
+            </td>
 </tr>
 <tr>
 <td>
-          <p>
-            Runge-Kutta Cash-Karp
-          </p>
-          </td>
+              <p>
+                Runge-Kutta Cash-Karp
+              </p>
+            </td>
 <td>
-          <p>
-            stepper_rk5_ck
-          </p>
-          </td>
+              <p>
+                stepper_rk5_ck
+              </p>
+            </td>
 <td>
-          <p>
-            5
-          </p>
-          </td>
+              <p>
+                5
+              </p>
+            </td>
 <td>
-          <p>
-            Yes (Order 4)
-          </p>
-          </td>
+              <p>
+                Yes (Order 4)
+              </p>
+            </td>
 </tr>
 <tr>
 <td>
-          <p>
-            Runge-Kutta Fehlberg
-          </p>
-          </td>
+              <p>
+                Runge-Kutta Fehlberg
+              </p>
+            </td>
 <td>
-          <p>
-            stepper_rk78_fehlberg
-          </p>
-          </td>
+              <p>
+                stepper_rk78_fehlberg
+              </p>
+            </td>
 <td>
-          <p>
-            7
-          </p>
-          </td>
+              <p>
+                7
+              </p>
+            </td>
 <td>
-          <p>
-            Yes (Order 8)
-          </p>
-          </td>
+              <p>
+                Yes (Order 8)
+              </p>
+            </td>
 </tr>
 <tr>
 <td>
-          <p>
-            Midpoint
-          </p>
-          </td>
+              <p>
+                Midpoint
+              </p>
+            </td>
 <td>
-          <p>
-            stepper_midpoint
-          </p>
-          </td>
+              <p>
+                stepper_midpoint
+              </p>
+            </td>
 <td>
-          <p>
-            variable
-          </p>
-          </td>
+              <p>
+                variable
+              </p>
+            </td>
 <td>
-          <p>
-            No
-          </p>
-          </td>
+              <p>
+                No
+              </p>
+            </td>
 </tr>
 <tr>
 <td>
-          <p>
-            Bulirsch-Stoer
-          </p>
-          </td>
+              <p>
+                Bulirsch-Stoer
+              </p>
+            </td>
 <td>
-          <p>
-            controlled_stepper_bs
-          </p>
-          </td>
+              <p>
+                controlled_stepper_bs
+              </p>
+            </td>
 <td>
-          <p>
-            variable
-          </p>
-          </td>
+              <p>
+                variable
+              </p>
+            </td>
 <td>
-          <p>
-            Controlled
-          </p>
-          </td>
+              <p>
+                Controlled
+              </p>
+            </td>
 </tr>
 </tbody>
 </table></div>
@@ -257,7 +245,7 @@
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: May 18, 2010 at 08:09:50 GMT</small></p></td>
+<td align="left"><p><small>Last revised: July 05, 2010 at 13:27:18 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>
