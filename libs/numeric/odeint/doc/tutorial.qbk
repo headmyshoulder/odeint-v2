@@ -146,26 +146,31 @@ The next example in this tutorial is a simulation of the solar system. In the
 solar system each planet, and of course also the sun will be represented by
 mass points. The interaction force between each object is the gravitational
 force which can be written as
-Fij = - gamma m M / (qi-qj)3 * (qi-qj)
 
-where gamma is the gravitational constant, mi and mj are the masses and qi and
-qj are the locations of the two objects.
+F_ij = -gamma m_i m_j (q_i-q_j)/|q_i-q_j|^3
 
-dqi = pi
-dpi = 1/m sum ji Fij
+where gamma is the gravitational constant, m_i and m_j are the masses and q_i
+and q_j are the locations of the two objects. The equations of motion are then
+
+dq_i/dt = p_i
+dp_i/dt = 1/m_i sum_ji F_ij
 
 where pi is the momenta of object i. The equations of motion can also be
 derived from the Hamiltonian
 
-H = sum over i pi^2 / 2 m_i + sum j V( qi , qj ) 
+H = sum_i p_i^2/(2m_i) + sum_j V( qi , qj ) 
 
-via dqi = dH / dpi, dpi = - dH / dq1. V(qi,qj) is the interaction
-potential.
+with the interaction potential V(q_i,q_j). The Hamiltonian equations give the
+equations of motion
+
+dq_i/dt = dH/dp_i
+
+dp_i = -dH/dq_i.
 
 In time independent Hamiltonian system the energy is conserved and special
 integration methods have to be applied in order to ensure energy
 conservation. The odeint library provides classes for Hamiltonian
-systems, which are separable and can be written in the form H = sum pi^2/2 mi +
+systems, which are separable and can be written in the form H = sum p_i^2/2m_i +
 Hq(q), where Hq(q) only depends on the coordinates.
 
 hamiltonian_stepper_euler
