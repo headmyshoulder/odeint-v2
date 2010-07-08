@@ -12,7 +12,10 @@ project
       <include>../../../..
       <include>$BOOST_ROOT
     ;
+    
+lib libgsl : : <name>gsl ;
+lib libgslcblas : : <name>gslcblas ;
 
 test-suite "odeint"
-    : [ run check_stepper_concepts.cpp ]
+    : [ run check_stepper_concepts.cpp libgsl libgslcblas ] 
     ;

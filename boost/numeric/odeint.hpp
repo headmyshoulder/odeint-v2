@@ -17,5 +17,6 @@
 
 #include <boost/config.hpp>
 
+#include <boost/numeric/odeint/stepper/explicit_euler.hpp>
 
 #endif // BOOST_NUMERIC_ODEINT_HPP

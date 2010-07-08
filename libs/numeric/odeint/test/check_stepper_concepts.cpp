@@ -11,59 +11,68 @@
 */
 
 #include <vector>
+#include <cmath>
 #include <tr1/array>
 
 #include <boost/test/unit_test.hpp>
 
+#include <boost/numeric/odeint.hpp>
+#include <boost/numeric/odeint/algebra/tr1_array_resize.hpp>
+
+#include "vector_space_1d.hpp"
+#include "gsl_vector_adaptor.hpp"
+
+using std::vector;
+
 using namespace boost::unit_test;
-// using namespace boost::numeric::odeint;
+using namespace boost::numeric::odeint;
 
+typedef std::vector< double > state_type1;
+typedef gsl_vector state_type2;
+typedef vector_space_1d< double > state_type3;
+typedef std::tr1::array< double , 1 > state_type4;
 
-
-
-template< class Container >
-struct constant_system
+void constant_system1( const state_type1 &x , state_type1 &dxdt , double t )
 {
-    void operator()( const Container &x , Container &dxdt , double t )
-    {
-        dxdt[0] = 1.0;
-    }
-};
+	dxdt[0] = 1.0;
+}
+
+void constant_system2( const state_type2 &x , state_type2 &dxdt , double t )
+{
+	gsl_vector_set( &dxdt , 0 , 1.0 );
+}
+
+void constant_system3( const state_type3 &x , state_type3 &dxdt , double t )
+{
+	dxdt.m_x = 1.0;
+}
+
+void constant_system4( const state_type4 &x , state_type4 &dxdt , double t )
+{
+	dxdt[0] = 1.0;
+}
+
 
 
 const double eps = 1.0e-14;
 
-//template< class Stepper >
-//void check_stepper_concept( Stepper &stepper ,
-//                            typename Stepper::order_type order_step )
-//{
-//    typedef Stepper stepper_type;
-//    typedef typename stepper_type::container_type container_type;
-//    typedef typename stepper_type::traits_type traits_type;
-//    typedef typename stepper_type::value_type value_type;
-//    typedef typename stepper_type::order_type order_type;
-//    typedef typename stepper_type::time_type time_type;
-//
-//    constant_system< container_type > con;
-//
-//    BOOST_CHECK_EQUAL( order_step , stepper.order_step() );
-//
-//    container_type x( 1 , 0.0 ) ;
-//    stepper.adjust_size( x );
-//    stepper.do_step( con , x , 0.0 , 0.1 );
-//    BOOST_CHECK_SMALL( fabs( x[0] - 0.1 ) , eps );
-//
-//    container_type dxdt( 1 , 1.0 );
-//    stepper.do_step( con , x , dxdt , 0.0 , 0.1 );
-//    BOOST_CHECK_SMALL( fabs( x[0] - 0.2 ) , eps );
-//
-//    stepper_type stepper2( x );
-//    stepper_type stepper3;
-//}
-//
-//
-//
-//
+
+template< class Stepper , class System >
+void check_stepper_concept( Stepper &stepper , System system , typename Stepper::state_type &x )
+{
+    typedef Stepper stepper_type;
+    typedef typename stepper_type::state_type container_type;
+    typedef typename stepper_type::order_type order_type;
+    typedef typename stepper_type::time_type time_type;
+
+    stepper.do_step( system , x , 0.0 , 0.1 );
+    double xval = * boost::begin( x );
+    BOOST_CHECK_SMALL( fabs( xval - 0.1 ) , eps );
+}
+
+
+
+
 //template< class ErrorStepper >
 //void check_error_stepper_concept(
 //    ErrorStepper &stepper ,
@@ -186,9 +195,28 @@ const double eps = 1.0e-14;
 //
 
 
+void test_euler_with_vector( void )
+{
+	state_type1 x( 1 , 0.0 );
+	explicit_euler< state_type1 > euler;
+	check_stepper_concept( euler , constant_system1 , x );
+}
+
+void test_euler_with_array( void )
+{
+	state_type4 x;
+	x[0] = 0.0;
+	explicit_euler< state_type4 > euler;
+	check_stepper_concept( euler , constant_system4 , x );
+}
+
 test_suite* init_unit_test_suite( int argc, char* argv[] )
 {
     test_suite *test = BOOST_TEST_SUITE("check stepper concepts");
+
+
+
+    test->add( BOOST_TEST_CASE( &test_euler_with_vector ) );
 
 //    test->add( BOOST_TEST_CASE( &test_euler_concept ) );
 

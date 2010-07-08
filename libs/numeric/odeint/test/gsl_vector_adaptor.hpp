@@ -15,6 +15,8 @@
 
 #include <gsl/gsl_vector.h>
 
+#include <boost/range.hpp>
+
 namespace boost
 {
 	// ToDo define gsl_vector_iterator which increments x by stride
@@ -26,16 +28,18 @@ namespace boost
 	};
 
 	template<>
-	range_iterator< gsl_vector > begin( gsl_vector &r )
+	range_iterator< gsl_vector >::type begin( gsl_vector &r )
 	{
 		return r.data;
 	}
 
 	template<>
-	range_iterator< gsl_vector > end( gsl_vector &r )
+	range_iterator< gsl_vector >::type end( gsl_vector &r )
 	{
 		return r.data + r.size;
 	}
+
+
 
 }
 
