@@ -18,6 +18,7 @@ namespace numeric {
 namespace odeint {
 
 
+// ToDo : make default false and
 template< class Container >
 struct is_resizeable
 {
