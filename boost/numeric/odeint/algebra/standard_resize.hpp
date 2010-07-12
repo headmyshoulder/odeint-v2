@@ -40,7 +40,7 @@ bool same_size( const Container &x1 , const Container &x2 )
 }
 
 template< class Container >
-void adjust_size2( const Container &x1 , Container &x2 )
+void adjust_size( const Container &x1 , Container &x2 )
 {
 	if( !same_size( x1 , x2 ) ) resize( x1 , x2 );
 }

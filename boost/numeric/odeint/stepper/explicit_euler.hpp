@@ -73,7 +73,7 @@ private:
 
 	void adjust_size_impl( const state_type &x )
 	{
-		adjust_size2( x , m_dxdt );
+		adjust_size( x , m_dxdt );
 	}
 
 

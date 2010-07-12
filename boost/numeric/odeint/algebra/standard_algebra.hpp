@@ -45,6 +45,33 @@ struct standard_algebra
 		for( ; first1 != last1 ; )
 			op( *first1++ , *first2++ );
 	}
+
+
+	template< class StateType1 , class StateType2 , class StateType3 , class Operation >
+	static void transform3( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , Operation op )
+	{
+		// ToDo : check that number of arguments of the operation is equal 3
+
+		// ToDo : generate macro
+		BOOST_STATIC_ASSERT(( boost::is_same< typename boost::remove_const< StateType1 >::type , container_type >::value ));
+		BOOST_STATIC_ASSERT(( boost::is_same< typename boost::remove_const< StateType2 >::type , container_type >::value ));
+		BOOST_STATIC_ASSERT(( boost::is_same< typename boost::remove_const< StateType3 >::type , container_type >::value ));
+
+		// ToDo : pack into detail namespace
+		transform2(	boost::begin( s1 ) , boost::end( s1 ) ,
+					boost::begin( s2 ) ,
+					boost::begin( s3 ) ,
+					op	);
+	}
+
+	// ToDo : pack into namespace detail
+	template< class Iterator1 , class Iterator2 , class Iterator3 , class Operation >
+	static void transform3( Iterator1 first1 , Iterator1 last1 , Iterator2 first2 , Iterator3 first3, Operation op )
+	{
+		for( ; first1 != last1 ; )
+			op( *first1++ , *first2++ , *first3++ );
+	}
+
 };
 
 } // odeint
