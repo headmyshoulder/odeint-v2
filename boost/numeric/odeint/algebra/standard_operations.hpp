@@ -52,6 +52,63 @@ struct standard_operations
 			t1 = m_alpha1 * t2 + m_alpha2 * t3;
 		}
 	};
+
+	struct scale_sum3
+	{
+		time_type m_alpha1 , m_alpha2 , m_alpha3;
+
+		scale_sum3( time_type alpha1 , time_type alpha2 , time_type alpha3 )
+			: m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) { }
+
+		template< class T1 , class T2 , class T3 , class T4 >
+		void operator()( T1 &t1 , const T2 &t2 , const T3 &t3 , const T4 &t4 ) const
+		{
+			t1 = m_alpha1 * t2 + m_alpha2 * t3 + m_alpha3 * t4;
+		}
+	};
+
+	struct scale_sum4
+	{
+		time_type m_alpha1 , m_alpha2 , m_alpha3 , m_alpha4;
+
+		scale_sum4( time_type alpha1 , time_type alpha2 , time_type alpha3 , time_type alpha4)
+				: m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) , m_alpha4( alpha4 ) { }
+
+		template< class T1 , class T2 , class T3 , class T4 , class T5 >
+		void operator()( T1 &t1 , const T2 &t2 , const T3 &t3 , const T4 &t4 , const T5 &t5) const
+		{
+			t1 = m_alpha1 * t2 + m_alpha2 * t3 + m_alpha3 * t4 + m_alpha4 * t5;
+		}
+	};
+
+	struct scale_sum5
+	{
+		time_type m_alpha1 , m_alpha2 , m_alpha3 , m_alpha4 , m_alpha5;
+
+		scale_sum5( time_type alpha1 , time_type alpha2 , time_type alpha3 , time_type alpha4 , time_type alpha5)
+			: m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) , m_alpha4( alpha4 ) , m_alpha5( alpha5 ) { }
+
+		template< class T1 , class T2 , class T3 , class T4 , class T5 , class T6 >
+		void operator()( T1 &t1 , const T2 &t2 , const T3 &t3 , const T4 &t4 , const T5 &t5 , const T6 &t6) const
+		{
+			t1 = m_alpha1 * t2 + m_alpha2 * t3 + m_alpha3 * t4 + m_alpha4 * t5 + m_alpha5 * t6;
+		}
+	};
+
+	struct scale_sum6
+	{
+		time_type m_alpha1 , m_alpha2 , m_alpha3 , m_alpha4 , m_alpha5 , m_alpha6;
+
+		scale_sum6( time_type alpha1 , time_type alpha2 , time_type alpha3 , time_type alpha4 , time_type alpha5 , time_type alpha6 )
+			: m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) , m_alpha4( alpha4 ) , m_alpha5( alpha5 ) , m_alpha6( alpha6 ){ }
+
+			template< class T1 , class T2 , class T3 , class T4 , class T5 , class T6 , class T7 >
+			void operator()( T1 &t1 , const T2 &t2 , const T3 &t3 , const T4 &t4 , const T5 &t5 , const T6 &t6 ,const T7 &t7) const
+			{
+				t1 = m_alpha1 * t2 + m_alpha2 * t3 + m_alpha3 * t4 + m_alpha4 * t5 + m_alpha5 * t6 + m_alpha6 * t7;
+			}
+		};
+
 };
 
 

@@ -70,7 +70,19 @@ void check_stepper_concept( Stepper &stepper , System system , typename Stepper:
     BOOST_CHECK_SMALL( fabs( xval - 0.1 ) , eps );
 }
 
+template< class Stepper , class System >
+void check_error_stepper_concept( Stepper &stepper , System system ,
+									  typename Stepper::state_type &x , typename Stepper::state_type &xerr )
+{
+    typedef Stepper stepper_type;
+    typedef typename stepper_type::state_type container_type;
+    typedef typename stepper_type::order_type order_type;
+    typedef typename stepper_type::time_type time_type;
 
+    stepper.do_step( system , x , 0.0 , 0.1 , xerr);
+    double xval = * boost::begin( x );
+    BOOST_CHECK_SMALL( fabs( xval - 0.1 ) , eps );
+}
 
 
 //template< class ErrorStepper >
@@ -208,6 +220,14 @@ void test_euler_with_array( void )
 	x[0] = 0.0;
 	explicit_euler< state_type4 > euler;
 	check_stepper_concept( euler , constant_system4 , x );
+}
+
+void test_runge_kutta_error_ck_with_vector( void )
+{
+	state_type1 x( 1 , 0.0 );
+	state_type1 xerr( 1 , 0.0 );
+	runge_kutta_error_ck< state_type1 > rk_ck;
+	check_error_stepper_concept( rk_ck , constant_system1 , x , xerr );
 }
 
 test_suite* init_unit_test_suite( int argc, char* argv[] )
