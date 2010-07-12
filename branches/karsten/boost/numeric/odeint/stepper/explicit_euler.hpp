@@ -63,7 +63,7 @@ public :
 	template< class System >
 	void do_step( System system , state_type &x , const state_type &dxdt , time_type t , time_type dt )
 	{
-		algebra_type::transform2( x , dxdt , typename operations_type::increment( dt ) );
+		algebra_type::for_each2( x , dxdt , typename operations_type::increment( dt ) );
 	}
 
 
