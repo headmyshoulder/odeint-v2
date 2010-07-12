@@ -38,6 +38,20 @@ struct standard_operations
 			t1 += m_dt * t2;
 		}
 	};
+
+	struct scale_sum2
+	{
+		time_type m_alpha1;
+		time_type m_alpha2;
+
+		scale_sum2( time_type alpha1 , time_type alpha2 ) : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) { }
+
+		template< class T1 , class T2 , class T3 >
+		void operator()( T1 &t1 , const T2 &t2 , const T3 &t3) const
+		{
+			t1 = m_alpha1 * t2 + m_alpha2 * t3;
+		}
+	};
 };
 
 
