@@ -13,14 +13,41 @@
 #ifndef BOOST_BOOST_NUMERIC_ODEINT_STANDARD_RESIZE_HPP_INCLUDED
 #define BOOST_BOOST_NUMERIC_ODEINT_STANDARD_RESIZE_HPP_INCLUDED
 
+#include <vector>
+#include <list>
+
 namespace boost {
 namespace numeric {
 namespace odeint {
 
 
-// ToDo : make default false and
+
+/*
+ * by default any type is not resizable
+ */
 template< class Container >
 struct is_resizeable
+{
+	struct type : public boost::false_type { };
+	const static bool value = type::value;
+};
+
+/*
+ * specialization for std::vector
+ */
+template< class V, class A >
+struct is_resizeable< std::vector< V , A  > >
+{
+	struct type : public boost::true_type { };
+	const static bool value = type::value;
+};
+
+
+/*
+ * specialization for std::list
+ */
+template< class V , class A >
+struct is_resizeable< std::list< V , A > >
 {
 	struct type : public boost::true_type { };
 	const static bool value = type::value;
