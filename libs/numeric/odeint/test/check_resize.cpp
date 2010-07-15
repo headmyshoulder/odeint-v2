@@ -14,6 +14,8 @@
 #include <cmath>
 #include <boost/array.hpp>
 
+#include <boost/bind.hpp>
+
 #include <boost/test/unit_test.hpp>
 
 #include <boost/numeric/odeint.hpp>
@@ -57,38 +59,19 @@ void constant_system( const test_array_type &x , test_array_type &dxdt , double 
 	dxdt[0] = 1.0;
 }
 
-
-void test_manual_resize( void )
+template< class Stepper >
+void test_resize( Stepper &stepper , size_t multiplicity , size_t resize_calls )
 {
 	adjust_size_count = 0;
 
 	test_array_type x;
-	explicit_euler< test_array_type , double , standard_algebra< test_array_type > , standard_operations< double > , adjust_size_manually_tag > euler;
-	euler.do_step( constant_system , x , 0.0 , 0.1 );
+	stepper.do_step( constant_system , x , 0.0 , 0.1 );
+	stepper.do_step( constant_system , x , 0.0 , 0.1 );
+	stepper.do_step( constant_system , x , 0.0 , 0.1 );
 
-	BOOST_CHECK( adjust_size_count == 0 );
-}
+	BOOST_TEST_MESSAGE( "adjust_size_count : " << adjust_size_count );
 
-void test_initially_resize( void )
-{
-	adjust_size_count = 0;
-	test_array_type x;
-	explicit_euler< test_array_type , double , standard_algebra< test_array_type > , standard_operations< double > , adjust_size_initially_tag > euler;
-	euler.do_step( constant_system , x , 0.0 , 0.1 );
-	euler.do_step( constant_system , x , 0.0 , 0.1 );
-	euler.do_step( constant_system , x , 0.0 , 0.1 );
-	BOOST_CHECK( adjust_size_count == 1 );
-}
-
-void test_always_resize( void )
-{
-	adjust_size_count = 0;
-	test_array_type x;
-	explicit_euler< test_array_type , double , standard_algebra< test_array_type > , standard_operations< double > , adjust_size_always_tag > euler;
-	euler.do_step( constant_system , x , 0.0 , 0.1 );
-	euler.do_step( constant_system , x , 0.0 , 0.1 );
-	euler.do_step( constant_system , x , 0.0 , 0.1 );
-	BOOST_CHECK( adjust_size_count == 3 );
+	BOOST_CHECK_MESSAGE( adjust_size_count == resize_calls * multiplicity , "adjust_size_count : " << adjust_size_count );
 }
 
 
@@ -97,9 +80,31 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
 {
     test_suite *test = BOOST_TEST_SUITE( "check resize functionality" );
 
-    test->add( BOOST_TEST_CASE( &test_manual_resize ) );
-    test->add( BOOST_TEST_CASE( &test_initially_resize ) );
-    test->add( BOOST_TEST_CASE( &test_always_resize ) );
+    typedef explicit_euler< test_array_type , double , standard_algebra< test_array_type > , standard_operations< double > , adjust_size_manually_tag > euler_manual_type;
+    typedef explicit_euler< test_array_type , double , standard_algebra< test_array_type > , standard_operations< double > , adjust_size_initially_tag > euler_initially_type;
+    typedef explicit_euler< test_array_type , double , standard_algebra< test_array_type > , standard_operations< double > , adjust_size_always_tag > euler_always_type;
+
+    typedef explicit_rk4< test_array_type , double , standard_algebra< test_array_type > , standard_operations< double > , adjust_size_manually_tag > rk4_manual_type;
+    typedef explicit_rk4< test_array_type , double , standard_algebra< test_array_type > , standard_operations< double > , adjust_size_initially_tag > rk4_initially_type;
+    typedef explicit_rk4< test_array_type , double , standard_algebra< test_array_type > , standard_operations< double > , adjust_size_always_tag > rk4_always_type;
+
+
+    euler_manual_type euler_manual;
+    euler_initially_type euler_initially;
+    euler_always_type euler_always;
+
+    rk4_manual_type rk4_manual;
+    rk4_initially_type rk4_initially;
+    rk4_always_type rk4_always;
+
+
+    test->add( BOOST_TEST_CASE( boost::bind( &test_resize< euler_manual_type > , euler_manual , 1 , 0 ) ) );
+    test->add( BOOST_TEST_CASE( boost::bind( &test_resize< euler_initially_type > , euler_initially , 1 , 1 ) ) );
+    test->add( BOOST_TEST_CASE( boost::bind( &test_resize< euler_always_type > , euler_always , 1 , 3 ) ) );
+
+    test->add( BOOST_TEST_CASE( boost::bind( &test_resize< rk4_manual_type > , rk4_manual , 5 , 0 ) ) );
+    test->add( BOOST_TEST_CASE( boost::bind( &test_resize< rk4_initially_type > , rk4_initially , 5 , 1 ) ) );
+    test->add( BOOST_TEST_CASE( boost::bind( &test_resize< rk4_always_type > , rk4_always , 5 , 3 ) ) );
 
     return test;
 }

@@ -13,14 +13,17 @@
 #ifndef BOOST_NUMERIC_ODEINT_GSL_VECTOR_ADAPTOR_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_GSL_VECTOR_ADAPTOR_HPP_INCLUDED
 
-#include <gsl/gsl_vector.h>
-#include <boost/range.hpp>
+#include <new>
+#include <iostream>
 
+#include <gsl/gsl_vector.h>
+
+#include <boost/range.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 
-namespace boost {
-namespace numeric {
-namespace odeint {
+using namespace std;
+
+
 
 
 class const_gsl_vector_iterator;
@@ -57,7 +60,7 @@ private :
 /*
  * defines an const iterator for gsl_vector
  */
-class const_gsl_vector_iterator : public boost::iterator_facade< const_gsl_vector_iterator , double , boost::random_access_traversal_tag >
+class const_gsl_vector_iterator : public boost::iterator_facade< const_gsl_vector_iterator , const double , boost::random_access_traversal_tag >
 {
 public :
 
@@ -101,9 +104,8 @@ const_gsl_vector_iterator end_iterator( const gsl_vector &x )
 }
 
 
-} // namespace odeint
-} // namespace numeric
-} // namespace boost
+
+
 
 
 namespace boost
@@ -111,15 +113,46 @@ namespace boost
 	template<>
 	struct range_mutable_iterator< gsl_vector >
 	{
-		typedef boost::numeric::odeint::gsl_vector_iterator type;
+		typedef gsl_vector_iterator type;
 	};
 
 	template<>
 	struct range_const_iterator< gsl_vector >
 	{
-		typedef boost::numeric::odeint::const_gsl_vector_iterator type;
+		typedef const_gsl_vector_iterator type;
 	};
 } // namespace boost
+
+
+
+
+// template<>
+inline gsl_vector_iterator range_begin( gsl_vector &x )
+{
+	return gsl_vector_iterator( x );
+}
+
+// template<>
+inline const_gsl_vector_iterator range_begin( const gsl_vector &x )
+{
+	return const_gsl_vector_iterator( x );
+}
+
+// template<>
+inline gsl_vector_iterator range_end( gsl_vector &x )
+{
+	return end_iterator( x );
+}
+
+// template<>
+inline const_gsl_vector_iterator range_end( const gsl_vector &x )
+{
+	return end_iterator( x );
+}
+
+
+
+
 
 
 
@@ -128,32 +161,52 @@ namespace numeric {
 namespace odeint {
 
 
-inline gsl_vector_iterator range_begin( gsl_vector &x )
+template<>
+struct is_resizeable< gsl_vector >
 {
-	return gsl_vector_iterator( x );
+	struct type : public boost::true_type { };
+	const static bool value = type::value;
+};
+
+
+template<>
+void resize( const gsl_vector &x , gsl_vector &dxdt )
+{
+	// ToDo : the vector could be uninitialized
+	if( dxdt.owner != 0 )
+	{
+		gsl_block_free( dxdt.block );
+	}
+	dxdt.size = 0;
+
+	if( x.size == 0 ) return;
+
+	gsl_block *block = gsl_block_alloc( x.size );
+	if( block == 0 ) throw std::bad_alloc( );
+
+	dxdt.data = block->data ;
+	dxdt.size = x.size;
+	dxdt.stride = 1;
+	dxdt.block = block;
+	dxdt.owner = 1;
 }
 
-inline const_gsl_vector_iterator range_begin( const gsl_vector &x )
+template<>
+bool same_size( const gsl_vector &x1 , const gsl_vector &x2 )
 {
-	return const_gsl_vector_iterator( x );
+	return x1.size == x2.size;
 }
 
-inline gsl_vector_iterator range_end( gsl_vector &x )
+template<>
+void adjust_size( const gsl_vector &x1 , gsl_vector &x2 )
 {
-	return end_iterator( x );
-}
-
-inline const_gsl_vector_iterator range_end( const gsl_vector &x )
-{
-	return end_iterator( x );
+	if( !same_size( x1 , x2 ) ) resize( x1 , x2 );
 }
 
 
-} // namespace odeint
-} // namespace numeric
-} // namespace boost
-
-
+} // odeint
+} // numeric
+} // boost
 
 
 
