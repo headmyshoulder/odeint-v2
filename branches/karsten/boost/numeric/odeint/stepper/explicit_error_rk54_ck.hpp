@@ -1,16 +1,18 @@
 /*
- boost header: BOOST_NUMERIC_ODEINT/runge_kutta_error.hpp
+ boost header: NUMERIC_ODEINT_STEPPER/explicit_error_rk54_ck.hpp
 
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky
+ Copyright 2009 Andre Bergner
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
-#ifndef BOOST_BOOST_NUMERIC_ODEINT_RUNGE_KUTTA_ERROR_HPP_INCLUDED
-#define BOOST_BOOST_NUMERIC_ODEINT_RUNGE_KUTTA_ERROR_HPP_INCLUDED
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_EXPLICIT_ERROR_RK54_CK_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STEPPER_EXPLICIT_ERROR_RK54_CK_HPP_INCLUDED
+
 
 #include <boost/numeric/odeint/algebra/standard_algebra.hpp>
 #include <boost/numeric/odeint/algebra/standard_operations.hpp>
@@ -23,10 +25,13 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-/*
- * ToDO: write error_stepper_base
- */
 
+
+
+
+/*
+ * ToDo: Check orders rk_ckc
+ */
 template<
     class State ,
     class Time = double ,
@@ -34,37 +39,50 @@ template<
 	class Operations = standard_operations< Time > ,
 	class AdjustSizePolicy = adjust_size_initially_tag
 	>
-class runge_kutta_error_ck
-: public explicit_stepper_base<
-	  runge_kutta_error_ck< State , Time , Algebra , Operations , AdjustSizePolicy > ,
-	  5 , State , Time , Algebra , Operations , AdjustSizePolicy >
+class explicit_error_rk54_ck
+: public explicit_stepper_and_error_stepper_base<
+	  explicit_error_rk54_ck< State , Time , Algebra , Operations , AdjustSizePolicy > ,
+	  5 , 5 , 4 , State , Time , Algebra , Operations , AdjustSizePolicy >
 {
 
 public :
 
-	BOOST_ODEINT_EXPLICIT_STEPPERS_TYPEDEFS( runge_kutta_error_ck , 5 );
+	BOOST_ODEINT_EXPLICIT_STEPPERS_AND_ERROR_STEPPERS_TYPEDEFS( explicit_error_rk54_ck , 5 , 5 , 4);
 
-	friend class explicit_stepper_base< runge_kutta_error_ck< State , Time , Algebra , Operations , AdjustSizePolicy > ,
-		  5 , State , Time , Algebra , Operations , AdjustSizePolicy >;
-
-	runge_kutta_error_ck( void ) : m_dxdt() , m_x1() , m_x2() , m_x3() , m_x4() , m_x5() , m_x6()
+	explicit_error_rk54_ck( void ) : m_size_adjuster( *this ) , m_x1() , m_x2() , m_x3() , m_x4() , m_x5() , m_x6()
 	{ }
 
 
 	template< class System >
-	void do_step( System system , state_type &x , time_type t , time_type dt , state_type &xerr)
+	void do_step_impl( System system , state_type &x , const state_type &dxdt , time_type t , time_type dt , state_type &xerr )
 	{
-		this->adjust_size_by_policy( x , adjust_size_policy() );
-		system( x , m_dxdt ,t );
-		do_step( system , x , m_dxdt , t , dt , xerr);
+
+		const time_type c1 = static_cast<time_type> ( 37.0 ) / static_cast<time_type>( 378.0 );
+		const time_type c3 = static_cast<time_type> ( 250.0 ) / static_cast<time_type>( 621.0 );
+		const time_type c4 = static_cast<time_type> ( 125.0 ) / static_cast<time_type>( 594.0 );
+		const time_type c6 = static_cast<time_type> ( 512.0 ) / static_cast<time_type>( 1771.0 );
+
+		const time_type dc1 = c1 - static_cast<time_type> ( 2825.0 ) / static_cast<time_type>( 27648 );
+		const time_type dc3 = c3 - static_cast<time_type> ( 18575.0 ) / static_cast<time_type>( 48384.0 );
+		const time_type dc4 = c4 - static_cast<time_type> ( 13525.0 ) / static_cast<time_type>( 55296.0 );
+		const time_type dc5 = static_cast<time_type> ( -277.0 ) / static_cast<time_type>( 14336.0 );
+		const time_type dc6 = c6 - static_cast<time_type> ( 0.25 );
+
+		do_step_impl( system , x , dxdt , t , dt );
+
+		//error estimate
+		algebra_type::for_each6( xerr , dxdt , m_x3 , m_x4 , m_x5 , m_x6 ,
+					typename operations_type::scale_sum5( dt*dc1 , dt*dc3 , dt*dc4 , dt*dc5 , dt*dc6 ));
+
 	}
 
 
+
 	template< class System >
-	void do_step( System system , state_type &x , const state_type &dxdt , time_type t , time_type dt , state_type &xerr )
+	void do_step_impl( System system , state_type &x , const state_type &dxdt , time_type t , time_type dt )
 	{
 		/* ToDo: separate resize m_dxdt and m_x1..6 */
-		this->adjust_size_by_policy( x , adjust_size_policy() );
+		m_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
 
 		const time_type a2 = static_cast<time_type> ( 0.2 );
 		const time_type a3 = static_cast<time_type> ( 0.3 );
@@ -93,12 +111,6 @@ public :
 		const time_type c4 = static_cast<time_type> ( 125.0 ) / static_cast<time_type>( 594.0 );
 		const time_type c6 = static_cast<time_type> ( 512.0 ) / static_cast<time_type>( 1771.0 );
 
-		const time_type dc1 = c1 - static_cast<time_type> ( 2825.0 ) / static_cast<time_type>( 27648 );
-		const time_type dc3 = c3 - static_cast<time_type> ( 18575.0 ) / static_cast<time_type>( 48384.0 );
-		const time_type dc4 = c4 - static_cast<time_type> ( 13525.0 ) / static_cast<time_type>( 55296.0 );
-		const time_type dc5 = static_cast<time_type> ( -277.0 ) / static_cast<time_type>( 14336.0 );
-		const time_type dc6 = c6 - static_cast<time_type> ( 0.25 );
-
 		//m_x1 = x + dt*b21*dxdt
 		algebra_type::for_each3( m_x1 , x , dxdt ,
 					typename operations_type::scale_sum2( 1.0 , dt*b21 ) );
@@ -121,39 +133,54 @@ public :
 		algebra_type::for_each7( m_x1 , x , dxdt , m_x2 , m_x3 , m_x4 , m_x5 ,
 							typename operations_type::scale_sum6( 1.0 , dt*b61 , dt*b62 , dt*b63 , dt*b64 , dt*b65 ));
 
+		/*
+		 * ToDo: use increment5
+		 */
 		system( m_x1 , m_x6 , t + dt*a6 );
 		algebra_type::for_each6( x , x , dxdt , m_x3 , m_x4 , m_x6 ,
 					typename operations_type::scale_sum5( 1.0 , dt*c1 , dt*c3 , dt*c4 , dt*c6 ));
 
-		//error estimate
-		algebra_type::for_each6( xerr , dxdt , m_x3 , m_x4 , m_x5 , m_x6 ,
-					typename operations_type::scale_sum5( dt*dc1 , dt*dc3 , dt*dc4 , dt*dc5 , dt*dc6 ));
 	}
 
+
+	void adjust_size( const state_type &x )
+	{
+		m_size_adjuster.adjust_size( x );
+		stepper_base_type::adjust_size( x );
+	}
 
 
 private:
 
+	typedef size_adjuster< state_type , stepper_type > size_adjuster_type;
+	friend class size_adjuster< state_type , stepper_type >;
+
 	void adjust_size_impl( const state_type &x )
 	{
-		adjust_size( x , m_dxdt );
-		adjust_size( x , m_x1 );
-		adjust_size( x , m_x2 );
-		adjust_size( x , m_x3 );
-		adjust_size( x , m_x4 );
-		adjust_size( x , m_x5 );
-		adjust_size( x , m_x6 );
+		boost::numeric::odeint::adjust_size( x , m_x1 );
+		boost::numeric::odeint::adjust_size( x , m_x2 );
+		boost::numeric::odeint::adjust_size( x , m_x3 );
+		boost::numeric::odeint::adjust_size( x , m_x4 );
+		boost::numeric::odeint::adjust_size( x , m_x5 );
+		boost::numeric::odeint::adjust_size( x , m_x6 );
 	}
 
-    state_type m_dxdt;
+    size_adjuster_type m_size_adjuster;
     state_type m_x1, m_x2, m_x3, m_x4, m_x5, m_x6;
 
-
 };
+
+
+
+
+
 
 
 } // odeint
 } // numeric
 } // boost
 
-#endif //BOOST_BOOST_NUMERIC_ODEINT_RUNGE_KUTTA_ERROR_HPP_INCLUDED
+
+
+
+#endif //BOOST_NUMERIC_ODEINT_STEPPER_EXPLICIT_ERROR_RK54_CK_HPP_INCLUDED

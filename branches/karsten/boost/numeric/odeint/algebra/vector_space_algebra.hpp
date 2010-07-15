@@ -21,11 +21,47 @@ namespace odeint {
 struct vector_space_algebra
 {
 	template< class StateType1 , class StateType2 , class Operation >
-	void transform2( StateType1 &s1 , StateType2 &s2 , Operation op )
+	static void for_each2( StateType1 &s1 , StateType2 &s2 , Operation op )
 	{
 		// ToDo : build checks, that the +-*/ operators are well defined
 		op( s1 , s2 );
 	}
+
+
+	template< class StateType1 , class StateType2 , class StateType3 , class Operation >
+	static void for_each3( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , Operation op )
+	{
+		op( s1 , s2 , s3 );
+	}
+
+
+	template< class StateType1 , class StateType2 , class StateType3 , class StateType4 , class Operation >
+	static void for_each4( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , StateType4 &s4 , Operation op )
+	{
+		op( s1 , s2 , s3 , s4 );
+	}
+
+
+	template< class StateType1 , class StateType2 , class StateType3 , class StateType4 , class StateType5 , class Operation >
+	static void for_each5( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , StateType4 &s4 , StateType5 &s5 , Operation op )
+	{
+		op( s1 , s2 , s3 , s4 , s5 );
+	}
+
+
+	template< class StateType1 , class StateType2 , class StateType3 , class StateType4 , class StateType5 , class StateType6 , class Operation >
+	static void for_each6( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , StateType4 &s4 , StateType5 &s5 , StateType6 &s6 , Operation op )
+	{
+		op( s1 , s2 , s3 , s4 , s5 , s6 );
+	}
+
+
+	template< class StateType1 , class StateType2 , class StateType3 , class StateType4 , class StateType5 , class StateType6 ,class StateType7 , class Operation >
+	static void for_each7( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , StateType4 &s4 , StateType5 &s5 , StateType6 &s6 , StateType7 &s7 , Operation op )
+	{
+		op( s1 , s2 , s3 , s4 , s5 , s6 , s7 );
+	}
+
 };
 
 

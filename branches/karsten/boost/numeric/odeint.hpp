@@ -18,7 +18,10 @@
 #include <boost/config.hpp>
 
 #include <boost/numeric/odeint/stepper/explicit_euler.hpp>
+#include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
 
-// #include <boost/numeric/odeint/stepper/runge_kutta_error_ck.hpp>
+#include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
+
+#include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 
 #endif // BOOST_NUMERIC_ODEINT_HPP
