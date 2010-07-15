@@ -50,6 +50,7 @@ public :
 	runge_kutta_error_ck( void ) : m_dxdt() , m_x1() , m_x2() , m_x3() , m_x4() , m_x5() , m_x6()
 	{ }
 
+
 	template< class System >
 	void do_step( System system , state_type &x , time_type t , time_type dt , state_type &xerr)
 	{
@@ -127,7 +128,6 @@ public :
 		//error estimate
 		algebra_type::for_each6( xerr , dxdt , m_x3 , m_x4 , m_x5 , m_x6 ,
 					typename operations_type::scale_sum5( dt*dc1 , dt*dc3 , dt*dc4 , dt*dc5 , dt*dc6 ));
-
 	}
 
 

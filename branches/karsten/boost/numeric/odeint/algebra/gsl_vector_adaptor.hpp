@@ -34,7 +34,7 @@ public :
 
 	gsl_vector_iterator( void ): m_p(0) , m_stride( 0 ) { }
 	explicit gsl_vector_iterator( gsl_vector &p ) : m_p( p.data ) , m_stride( p.stride ) { }
-	gsl_vector_iterator( gsl_vector_iterator &p ) : m_p( p.m_p ) , m_stride( p.m_stride ) { }
+	friend gsl_vector_iterator end_iterator( gsl_vector & );
 
 private :
 
@@ -52,8 +52,10 @@ private :
 	size_t m_stride;
 };
 
+
+
 /*
- * defines an iterator for gsl_vector
+ * defines an const iterator for gsl_vector
  */
 class const_gsl_vector_iterator : public boost::iterator_facade< const_gsl_vector_iterator , double , boost::random_access_traversal_tag >
 {
@@ -61,13 +63,13 @@ public :
 
 	const_gsl_vector_iterator( void ): m_p(0) , m_stride( 0 ) { }
 	explicit const_gsl_vector_iterator( const gsl_vector &p ) : m_p( p.data ) , m_stride( p.stride ) { }
-	const_gsl_vector_iterator( const const_gsl_vector_iterator &p ) : m_p( p.m_p ) , m_stride( p.m_stride ) { }
 	const_gsl_vector_iterator( const gsl_vector_iterator &p ) : m_p( p.m_p ) , m_stride( p.m_stride ) { }
 
 private :
 
 	friend class boost::iterator_core_access;
 	friend class gsl_vector_iterator;
+	friend const_gsl_vector_iterator end_iterator( const gsl_vector & );
 
 	void increment( void ) { m_p += m_stride; }
 	void decrement( void ) { m_p -= m_stride; }
@@ -80,7 +82,23 @@ private :
 	size_t m_stride;
 };
 
+
 bool gsl_vector_iterator::equal( const const_gsl_vector_iterator &other ) const { return this->m_p == other.m_p; }
+
+
+gsl_vector_iterator end_iterator( gsl_vector &x )
+{
+	gsl_vector_iterator iter( x );
+	iter.m_p += iter.m_stride * x.size;
+	return iter;
+}
+
+const_gsl_vector_iterator end_iterator( const gsl_vector &x )
+{
+	const_gsl_vector_iterator iter( x );
+	iter.m_p += iter.m_stride * x.size;
+	return iter;
+}
 
 
 } // namespace odeint
@@ -88,68 +106,55 @@ bool gsl_vector_iterator::equal( const const_gsl_vector_iterator &other ) const 
 } // namespace boost
 
 
-namespace boost {
-
-
-
-/*
- * specialization of range_iterator for gsl_vector_iterator
- */
-template<>
-struct range_iterator< gsl_vector >
+namespace boost
 {
-	typedef boost::numeric::odeint::gsl_vector_iterator type;
-};
+	template<>
+	struct range_mutable_iterator< gsl_vector >
+	{
+		typedef boost::numeric::odeint::gsl_vector_iterator type;
+	};
 
-/*
- * specialization of range_iterator for const_gsl_vector_iterator
- */
-template<>
-struct range_iterator< const gsl_vector >
-{
-	typedef boost::numeric::odeint::const_gsl_vector_iterator type;
-};
-
-
-/*
- * specialization of begin for gsl_vector
- */
-template<>
-range_iterator< gsl_vector >::type begin( gsl_vector &r )
-{
-	return boost::numeric::odeint::gsl_vector_iterator( r );
-}
-
-/*
- * specialization of begin for const gsl_vector
- */
-template<>
-range_iterator< const gsl_vector >::type begin( const gsl_vector &r )
-{
-	return boost::numeric::odeint::const_gsl_vector_iterator( r );
-}
-
-
-/*
- * specialization of end for gsl_vector
- */
-template<>
-range_iterator< gsl_vector >::type end( gsl_vector &r )
-{
-	return boost::numeric::odeint::gsl_vector_iterator( r ) + r.size * r.stride ;
-}
-
-/*
- * specialization of end for const gsl_vector
- */
-template<>
-range_iterator< const gsl_vector >::type end( const gsl_vector &r )
-{
-	return boost::numeric::odeint::const_gsl_vector_iterator( r ) + r.size * r.stride ;
-}
-
-
+	template<>
+	struct range_const_iterator< gsl_vector >
+	{
+		typedef boost::numeric::odeint::const_gsl_vector_iterator type;
+	};
 } // namespace boost
+
+
+
+namespace boost {
+namespace numeric {
+namespace odeint {
+
+
+inline gsl_vector_iterator range_begin( gsl_vector &x )
+{
+	return gsl_vector_iterator( x );
+}
+
+inline const_gsl_vector_iterator range_begin( const gsl_vector &x )
+{
+	return const_gsl_vector_iterator( x );
+}
+
+inline gsl_vector_iterator range_end( gsl_vector &x )
+{
+	return end_iterator( x );
+}
+
+inline const_gsl_vector_iterator range_end( const gsl_vector &x )
+{
+	return end_iterator( x );
+}
+
+
+} // namespace odeint
+} // namespace numeric
+} // namespace boost
+
+
+
 
 
 
