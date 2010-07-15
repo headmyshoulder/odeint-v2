@@ -87,35 +87,36 @@ void check_error_stepper_concept( Stepper &stepper , System system ,
     BOOST_CHECK_SMALL( fabs( xval - 0.1 ) , eps );
 }
 
-//void test_euler_with_vector( void )
-//{
-//	state_type1 x( 1 , 0.0 );
-//	explicit_euler< state_type1 > euler;
-//	check_stepper_concept( euler , constant_system1 , x );
-//}
+void test_euler_with_vector( void )
+{
+	state_type1 x( 1 , 0.0 );
+	explicit_euler< state_type1 > euler;
+	check_stepper_concept( euler , constant_system1 , x );
+}
 
 void test_euler_with_gsl_vector( void )
 {
 	state_type2 *x = gsl_vector_alloc( 1 );
 	explicit_euler< state_type2 > euler;
-	check_stepper_concept( euler , constant_system2 , *x );
+//	check_stepper_concept( euler , constant_system2 , *x );
+	gsl_vector_free( x );
 }
 
-//void test_euler_with_array( void )
-//{
-//	state_type4 x;
-//	x[0] = 0.0;
-//	explicit_euler< state_type4 > euler;
-//	check_stepper_concept( euler , constant_system4 , x );
-//}
-
-void test_runge_kutta_error_ck_with_vector( void )
+void test_euler_with_array( void )
 {
-	state_type1 x( 1 , 0.0 );
-	state_type1 xerr( 1 , 0.0 );
-	runge_kutta_error_ck< state_type1 > rk_ck;
-	check_error_stepper_concept( rk_ck , constant_system1 , x , xerr );
+	state_type4 x;
+	x[0] = 0.0;
+	explicit_euler< state_type4 > euler;
+	check_stepper_concept( euler , constant_system4 , x );
 }
+
+//void test_runge_kutta_error_ck_with_vector( void )
+//{
+//	state_type1 x( 1 , 0.0 );
+//	state_type1 xerr( 1 , 0.0 );
+//	runge_kutta_error_ck< state_type1 > rk_ck;
+//	check_error_stepper_concept( rk_ck , constant_system1 , x , xerr );
+//}
 
 test_suite* init_unit_test_suite( int argc, char* argv[] )
 {
@@ -123,9 +124,10 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
 
 
 
-//    test->add( BOOST_TEST_CASE( &test_euler_with_vector ) );
-//    test->add( BOOST_TEST_CASE( &test_euler_with_array ) );
-    test->add( BOOST_TEST_CASE( &test_euler_with_gsl_vector ) );
+    test->add( BOOST_TEST_CASE( &test_euler_with_vector ) );
+    test->add( BOOST_TEST_CASE( &test_euler_with_array ) );
+
+//    test->add( BOOST_TEST_CASE( &test_euler_with_gsl_vector ) );
 
 
 

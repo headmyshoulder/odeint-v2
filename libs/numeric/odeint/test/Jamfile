@@ -17,5 +17,6 @@ lib libgsl : : <name>gsl ;
 lib libgslcblas : : <name>gslcblas ;
 
 test-suite "odeint"
-    : [ run check_stepper_concepts.cpp libgsl libgslcblas ] 
+    : [ run check_stepper_concepts.cpp  libgsl libgslcblas ] 
+    [ run check_resize.cpp ]
     ;
