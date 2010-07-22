@@ -44,7 +44,13 @@ public :
 	BOOST_ODEINT_EXPLICIT_STEPPERS_TYPEDEFS( explicit_rk4 , 1 );
 
 
-	explicit_rk4( void ) : m_size_adjuster( *this ) { }
+	explicit_rk4( void ) : m_size_adjuster() , m_dxt() , m_dxm() , m_dxh() , m_xt()
+	{
+		m_size_adjuster.register_state( 0 , m_dxt );
+		m_size_adjuster.register_state( 1 , m_dxm );
+		m_size_adjuster.register_state( 2 , m_dxh );
+		m_size_adjuster.register_state( 3 , m_xt );
+	}
 
 	template< class System >
 	void do_step_impl( System system , state_type &x , const state_type &dxdt , time_type t , time_type dt )
@@ -92,18 +98,7 @@ public :
 
 private:
 
-	typedef size_adjuster< state_type , stepper_type > size_adjuster_type;
-	friend class size_adjuster< state_type , stepper_type >;
-
-	void adjust_size_impl( const state_type &x )
-	{
-		boost::numeric::odeint::adjust_size( x , m_dxt );
-		boost::numeric::odeint::adjust_size( x , m_dxm );
-		boost::numeric::odeint::adjust_size( x , m_dxh );
-		boost::numeric::odeint::adjust_size( x , m_xt );
-	}
-
-	size_adjuster_type m_size_adjuster;
+	size_adjuster< state_type , 4 > m_size_adjuster;
 
     state_type m_dxt;
     state_type m_dxm;

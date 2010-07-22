@@ -1,0 +1,16 @@
+* Controlled stepper
+* Dense output for euler
+* Integrate functions
+* Implicit euler
+* skript for setting the include defines according to the position in file system an writing a general copyright comment at the beginning
+
+
+* Adaptoren
+  * GMP
+  * gsl_complex, gsl_complex_vector
+  
+  
+* Examples
+  * Lyapunov exponents
+  * Thrust example with a parameter study
+  * A test with boost.graph, phase oscillators on a complex network
