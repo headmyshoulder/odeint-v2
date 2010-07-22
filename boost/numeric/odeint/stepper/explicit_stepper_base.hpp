@@ -14,82 +14,18 @@
 #define BOOST_BOOST_NUMERIC_ODEINT_EXPLICIT_STEPPER_BASE_HPP_INCLUDED
 
 
+#include <boost/mem_fn.hpp>
+#include <boost/bind.hpp>
+
+#include <boost/numeric/odeint/stepper/adjust_size.hpp>
 #include <boost/numeric/odeint/algebra/standard_resize.hpp>
+
 
 
 
 namespace boost {
 namespace numeric {
 namespace odeint {
-
-
-
-
-
-/*
- * Tags to specify resize behavior of steppers
- */
-struct adjust_size_manually_tag {};
-struct adjust_size_initially_tag {};
-struct adjust_size_always_tag {};
-
-
-
-
-/*
- * Adjust size functionality with policies and resizeability
- */
-template< class State , class Stepper >
-class size_adjuster
-{
-public:
-
-	size_adjuster( Stepper &stepper ) : m_is_initialized( false ) , m_stepper( stepper ) { }
-
-	void adjust_size( const State &x )
-	{
-		adjust_size_by_resizeability( x , typename is_resizeable< State >::type() );
-	}
-
-	void adjust_size_by_policy( const State &x , adjust_size_manually_tag )
-	{
-	}
-
-	void adjust_size_by_policy( const State &x , adjust_size_initially_tag )
-	{
-		if( !m_is_initialized )
-		{
-			adjust_size_by_resizeability( x , typename is_resizeable< State >::type() );
-			m_is_initialized = true;
-		}
-	}
-
-	void adjust_size_by_policy( const State &x , adjust_size_always_tag )
-	{
-		adjust_size_by_resizeability( x , typename is_resizeable< State >::type() );
-	}
-
-
-private:
-
-
-	void adjust_size_by_resizeability( const State &x , boost::true_type )
-	{
-		m_stepper.adjust_size_impl( x );
-	}
-
-	void adjust_size_by_resizeability( const State &x , boost::false_type )
-	{
-	}
-
-
-private :
-
-	bool m_is_initialized;
-	Stepper &m_stepper;
-};
-
-
 
 
 
@@ -122,13 +58,18 @@ public:
 	typedef AdjustSizePolicy adjust_size_policy;
 	typedef Stepper stepper_type;
 
+	typedef explicit_stepper_base< Stepper , Order , State , Time , Algebra , Operations , AdjustSizePolicy > internal_stepper_base_type;
+
 	typedef unsigned short order_type;
 	static const order_type order_value = Order;
 
     order_type order( void ) const { return order_value; }
 
 
-	explicit_stepper_base( void ) : m_size_adjuster( *this ) { }
+	explicit_stepper_base( void ) : m_size_adjuster() , m_dxdt()
+	{
+		m_size_adjuster.register_state( 0 , m_dxdt );
+	}
 
 
     stepper_type& stepper( void ) { return *static_cast< stepper_type* >( this ); }
@@ -144,6 +85,13 @@ public:
 		this->stepper().do_step_impl( system , x , m_dxdt , t , dt );
 	}
 
+	template< class System >
+	void do_step( System system , state_type &x , const state_type dxdt , time_type t , time_type dt )
+	{
+		this->stepper().do_step_impl( system , x , dxdt , t , dt );
+	}
+
+
 
 	void adjust_size( const state_type &x )
 	{
@@ -153,18 +101,8 @@ public:
 
 private:
 
-	typedef explicit_stepper_base< Stepper , Order , State , Time , Algebra , Operations , AdjustSizePolicy > internal_stepper_base_type;
-	typedef size_adjuster< state_type , internal_stepper_base_type > base_size_adjuster_type;
-	friend class size_adjuster< state_type , internal_stepper_base_type >;
-
-	void adjust_size_impl( const state_type &x )
-	{
-		boost::numeric::odeint::adjust_size( x , m_dxdt );
-	}
-
-
+	size_adjuster< state_type , 1 > m_size_adjuster;
 	state_type m_dxdt;
-	base_size_adjuster_type m_size_adjuster;
 };
 
 
@@ -213,7 +151,10 @@ public:
     order_type error_order( void ) const { return error_order_value; }
 
 
-	explicit_error_stepper_base( void ) : m_size_adjuster( *this ) { }
+	explicit_error_stepper_base( void ) : m_size_adjuster() , m_dxdt()
+	{
+		m_size_adjuster.register_state( 0 , m_dxdt );
+	}
 
 
     stepper_type& stepper( void ) { return *static_cast< stepper_type* >( this ); }
@@ -229,6 +170,13 @@ public:
 		this->stepper().do_step_impl( system , x , m_dxdt , t , dt , xerr );
 	}
 
+	template< class System >
+	void do_step( System system , state_type &x , const state_type &dxdt , time_type t , time_type dt , state_type &xerr )
+	{
+		this->stepper().do_step_impl( system , x , dxdt , t , dt , xerr );
+	}
+
+
 
 	void adjust_size( const state_type &x )
 	{
@@ -238,17 +186,8 @@ public:
 
 private:
 
-	typedef explicit_error_stepper_base< ErrorStepper , StepperOrder , ErrorOrder , State , Time , Algebra , Operations , AdjustSizePolicy > internal_stepper_base_type;
-	typedef size_adjuster< state_type , internal_stepper_base_type > base_size_adjuster_type;
-	friend class size_adjuster< state_type , internal_stepper_base_type >;
-
-	void adjust_size_impl( const state_type &x )
-	{
-		boost::numeric::odeint::adjust_size( x , m_dxdt );
-	}
-
+	size_adjuster< state_type , 1 > m_size_adjuster;
 	state_type m_dxdt;
-	base_size_adjuster_type m_size_adjuster;
 };
 
 
@@ -305,7 +244,10 @@ public:
     order_type error_order( void ) const { return error_order_value; }
 
 
-	explicit_stepper_and_error_stepper_base( void ) : m_size_adjuster( *this ) { }
+	explicit_stepper_and_error_stepper_base( void ) : m_size_adjuster() , m_dxdt()
+	{
+		m_size_adjuster.register_state( 0 , m_dxdt );
+	}
 
 
     stepper_type& stepper( void ) { return *static_cast< stepper_type* >( this ); }
@@ -340,17 +282,9 @@ public:
 
 private:
 
-	typedef explicit_stepper_and_error_stepper_base< Stepper , Order , StepperOrder , ErrorOrder , State , Time , Algebra , Operations , AdjustSizePolicy > internal_stepper_base_type;
-	typedef size_adjuster< state_type , internal_stepper_base_type > base_size_adjuster_type;
-	friend class size_adjuster< state_type , internal_stepper_base_type >;
-
-	void adjust_size_impl( const state_type &x )
-	{
-		boost::numeric::odeint::adjust_size( x , m_dxdt );
-	}
-
+	size_adjuster< state_type , 1 > m_size_adjuster;
 	state_type m_dxdt;
-	base_size_adjuster_type m_size_adjuster;
+
 };
 
 

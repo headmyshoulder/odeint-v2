@@ -49,8 +49,15 @@ public :
 
 	BOOST_ODEINT_EXPLICIT_STEPPERS_AND_ERROR_STEPPERS_TYPEDEFS( explicit_error_rk54_ck , 5 , 5 , 4);
 
-	explicit_error_rk54_ck( void ) : m_size_adjuster( *this ) , m_x1() , m_x2() , m_x3() , m_x4() , m_x5() , m_x6()
-	{ }
+	explicit_error_rk54_ck( void ) : m_size_adjuster() , m_x1() , m_x2() , m_x3() , m_x4() , m_x5() , m_x6()
+	{
+		m_size_adjuster.register_state( 0 , m_x1 );
+		m_size_adjuster.register_state( 1 , m_x2 );
+		m_size_adjuster.register_state( 2 , m_x3 );
+		m_size_adjuster.register_state( 3 , m_x4 );
+		m_size_adjuster.register_state( 4 , m_x5 );
+		m_size_adjuster.register_state( 5 , m_x6 );
+	}
 
 
 	template< class System >
@@ -152,20 +159,7 @@ public :
 
 private:
 
-	typedef size_adjuster< state_type , stepper_type > size_adjuster_type;
-	friend class size_adjuster< state_type , stepper_type >;
-
-	void adjust_size_impl( const state_type &x )
-	{
-		boost::numeric::odeint::adjust_size( x , m_x1 );
-		boost::numeric::odeint::adjust_size( x , m_x2 );
-		boost::numeric::odeint::adjust_size( x , m_x3 );
-		boost::numeric::odeint::adjust_size( x , m_x4 );
-		boost::numeric::odeint::adjust_size( x , m_x5 );
-		boost::numeric::odeint::adjust_size( x , m_x6 );
-	}
-
-    size_adjuster_type m_size_adjuster;
+    size_adjuster< state_type , 6 > m_size_adjuster;
     state_type m_x1, m_x2, m_x3, m_x4, m_x5, m_x6;
 
 };

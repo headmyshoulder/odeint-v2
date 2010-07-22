@@ -43,7 +43,6 @@ struct standard_algebra
 	template< class StateType1 , class StateType2 , class StateType3 , class Operation >
 	static void for_each3( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , Operation op )
 	{
-		// ToDo : check that number of arguments of the operation is equal 3
 		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType1 , container_type );
 		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType2 , container_type );
 		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType3 , container_type );
@@ -60,7 +59,6 @@ struct standard_algebra
 	template< class StateType1 , class StateType2 , class StateType3 , class StateType4 , class Operation >
 	static void for_each4( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , StateType4 &s4 , Operation op )
 	{
-		// ToDo : check that number of arguments of the operation is equal 4
 		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType1 , container_type );
 		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType2 , container_type );
 		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType3 , container_type );
@@ -79,7 +77,6 @@ struct standard_algebra
 	template< class StateType1 , class StateType2 , class StateType3 , class StateType4 , class StateType5 , class Operation >
 	static void for_each5( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , StateType4 &s4 , StateType5 &s5 , Operation op )
 	{
-		// ToDo : check that number of arguments of the operation is equal 5
 		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType1 , container_type );
 		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType2 , container_type );
 		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType3 , container_type );
@@ -100,7 +97,6 @@ struct standard_algebra
 	template< class StateType1 , class StateType2 , class StateType3 , class StateType4 , class StateType5 , class StateType6 , class Operation >
 	static void for_each6( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , StateType4 &s4 , StateType5 &s5 , StateType6 &s6 , Operation op )
 	{
-		// ToDo : check that number of arguments of the operation is equal 6
 		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType1 , container_type );
 		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType2 , container_type );
 		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType3 , container_type );
@@ -122,7 +118,6 @@ struct standard_algebra
 	template< class StateType1 , class StateType2 , class StateType3 , class StateType4 , class StateType5 , class StateType6 ,class StateType7 , class Operation >
 	static void for_each7( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , StateType4 &s4 , StateType5 &s5 , StateType6 &s6 , StateType7 &s7 , Operation op )
 	{
-		// ToDo : check that number of arguments of the operation is equal 7
 		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType1 , container_type );
 		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType2 , container_type );
 		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType3 , container_type );
