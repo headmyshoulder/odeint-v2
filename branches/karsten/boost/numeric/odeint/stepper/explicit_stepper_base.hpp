@@ -68,7 +68,13 @@ public:
 
 	explicit_stepper_base( void ) : m_size_adjuster() , m_dxdt()
 	{
+		boost::numeric::odeint::construct( m_dxdt );
 		m_size_adjuster.register_state( 0 , m_dxdt );
+	}
+
+	~explicit_stepper_base( void )
+	{
+		boost::numeric::odeint::destruct( m_dxdt );
 	}
 
 
@@ -153,8 +159,15 @@ public:
 
 	explicit_error_stepper_base( void ) : m_size_adjuster() , m_dxdt()
 	{
+		boost::numeric::odeint::construct( m_dxdt );
 		m_size_adjuster.register_state( 0 , m_dxdt );
 	}
+
+	~explicit_error_stepper_base( void )
+	{
+		boost::numeric::odeint::destruct( m_dxdt );
+	}
+
 
 
     stepper_type& stepper( void ) { return *static_cast< stepper_type* >( this ); }
@@ -246,8 +259,15 @@ public:
 
 	explicit_stepper_and_error_stepper_base( void ) : m_size_adjuster() , m_dxdt()
 	{
+		boost::numeric::odeint::construct( m_dxdt );
 		m_size_adjuster.register_state( 0 , m_dxdt );
 	}
+
+	~explicit_stepper_and_error_stepper_base( void )
+	{
+		boost::numeric::odeint::destruct( m_dxdt );
+	}
+
 
 
     stepper_type& stepper( void ) { return *static_cast< stepper_type* >( this ); }
@@ -262,6 +282,12 @@ public:
 		this->stepper().do_step_impl( system , x , m_dxdt , t , dt );
 	}
 
+	template< class System >
+	void do_step( System system , state_type &x , const state_type &dxdt , time_type t , time_type dt )
+	{
+		this->stepper().do_step_impl( system , x , dxdt , t , dt );
+	}
+
 
 	template< class System >
 	void do_step( System system , state_type &x , time_type t , time_type dt , state_type &xerr )
@@ -271,6 +297,12 @@ public:
 		this->stepper().do_step_impl( system , x , m_dxdt , t , dt , xerr );
 	}
 
+
+	template< class System >
+	void do_step( System system , state_type &x , const state_type &dxdt , time_type t , time_type dt , state_type &xerr )
+	{
+		this->stepper().do_step_impl( system , x , dxdt , t , dt , xerr );
+	}
 
 
 

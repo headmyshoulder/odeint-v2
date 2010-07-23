@@ -46,10 +46,22 @@ public :
 
 	explicit_rk4( void ) : m_size_adjuster() , m_dxt() , m_dxm() , m_dxh() , m_xt()
 	{
+		boost::numeric::odeint::construct( m_dxt );
+		boost::numeric::odeint::construct( m_dxm );
+		boost::numeric::odeint::construct( m_dxh );
+		boost::numeric::odeint::construct( m_xt );
 		m_size_adjuster.register_state( 0 , m_dxt );
 		m_size_adjuster.register_state( 1 , m_dxm );
 		m_size_adjuster.register_state( 2 , m_dxh );
 		m_size_adjuster.register_state( 3 , m_xt );
+	}
+
+	~explicit_rk4( void )
+	{
+		boost::numeric::odeint::destruct( m_dxt );
+		boost::numeric::odeint::destruct( m_dxm );
+		boost::numeric::odeint::destruct( m_dxh );
+		boost::numeric::odeint::destruct( m_xt );
 	}
 
 	template< class System >

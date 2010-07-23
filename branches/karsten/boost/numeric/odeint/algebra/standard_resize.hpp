@@ -54,6 +54,18 @@ struct is_resizeable< std::list< V , A > >
 };
 
 
+
+
+template< class Container >
+void construct( Container &x )
+{
+}
+
+template< class Container >
+void destruct( Container &x )
+{
+}
+
 template< class Container >
 void resize( const Container &x , Container &dxdt )
 {
@@ -70,6 +82,13 @@ template< class Container >
 void adjust_size( const Container &x1 , Container &x2 )
 {
 	if( !same_size( x1 , x2 ) ) resize( x1 , x2 );
+}
+
+
+template< class Container >
+void copy( const Container &from , Container &to )
+{
+	to = from;
 }
 
 
