@@ -17,6 +17,7 @@
 
 #include <boost/numeric/odeint/algebra/detail/macros.hpp>
 #include <boost/numeric/odeint/algebra/detail/for_each.hpp>
+#include <boost/numeric/odeint/algebra/detail/reduce.hpp>
 
 namespace boost {
 namespace numeric {
@@ -136,6 +137,11 @@ struct standard_algebra
 						   op	);
 	}
 
+	template< class ValueType , class StateType , class Reduction >
+	static ValueType reduce( StateType &s , Reduction red , ValueType init)
+	{
+		return detail::reduce( boost::begin( s ) , boost::end( s ) , red , init );
+	}
 
 };
 

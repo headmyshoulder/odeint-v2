@@ -19,8 +19,9 @@ template< class T >
 struct vector_space_1d :
     boost::additive1< vector_space_1d< T > ,
     boost::additive2< vector_space_1d< T > , T ,
+    boost::multiplicative1< vector_space_1d< T > ,
     boost::multiplicative2< vector_space_1d< T > , T
-    > > >
+    > > > >
 {
 	typedef T value_type;
 
@@ -38,6 +39,18 @@ struct vector_space_1d :
 	{
     	m_x -= p.m_x;
 	    return *this;
+	}
+
+    vector_space_1d& operator*=( const vector_space_1d& p )
+   	{
+       	m_x *= p.m_x;
+   	    return *this;
+   	}
+
+    vector_space_1d& operator/=( const vector_space_1d& p )
+	{
+       	m_x /= p.m_x;
+        return *this;
 	}
 
     vector_space_1d& operator+=( const value_type& val )
@@ -64,5 +77,21 @@ struct vector_space_1d :
 	    return *this;
 	}
 };
+
+
+template< class T >
+vector_space_1d< T > abs( const vector_space_1d< T > &v)
+{
+	vector_space_1d< T > tmp;
+	tmp.m_x = std::abs( v.m_x );
+	return tmp;
+}
+
+
+template< class T >
+T max( const vector_space_1d< T > &v )
+{
+	return v.m_x;
+}
 
 #endif // VECTOR_SPACE_1D_HPP_INCLUDED
