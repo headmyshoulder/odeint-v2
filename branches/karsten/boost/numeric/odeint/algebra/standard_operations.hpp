@@ -118,11 +118,54 @@ struct standard_operations
 		scale_sum6( time_type alpha1 , time_type alpha2 , time_type alpha3 , time_type alpha4 , time_type alpha5 , time_type alpha6 )
 			: m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) , m_alpha4( alpha4 ) , m_alpha5( alpha5 ) , m_alpha6( alpha6 ){ }
 
-			template< class T1 , class T2 , class T3 , class T4 , class T5 , class T6 , class T7 >
-			void operator()( T1 &t1 , const T2 &t2 , const T3 &t3 , const T4 &t4 , const T5 &t5 , const T6 &t6 ,const T7 &t7) const
-			{
-				t1 = m_alpha1 * t2 + m_alpha2 * t3 + m_alpha3 * t4 + m_alpha4 * t5 + m_alpha5 * t6 + m_alpha6 * t7;
-			}
+		template< class T1 , class T2 , class T3 , class T4 , class T5 , class T6 , class T7 >
+		void operator()( T1 &t1 , const T2 &t2 , const T3 &t3 , const T4 &t4 , const T5 &t5 , const T6 &t6 ,const T7 &t7) const
+		{
+			t1 = m_alpha1 * t2 + m_alpha2 * t3 + m_alpha3 * t4 + m_alpha4 * t5 + m_alpha5 * t6 + m_alpha6 * t7;
+		}
+	};
+
+
+
+
+
+
+
+	struct rel_error
+	{
+		time_type m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt;
+
+		rel_error( time_type eps_abs , time_type eps_rel , time_type a_x , time_type a_dxdt )
+			: m_eps_abs( eps_abs ) , m_eps_rel( eps_rel ) , m_a_x( a_x ) , m_a_dxdt( a_dxdt ) { }
+
+
+		template< class T1 , class T2 , class T3 >
+		void operator()( const T1 &t1 , const T2 &t2 , T3 &t3 )
+		{
+			using std::abs;
+			t3 = abs( t3 ) / ( m_eps_abs + m_eps_rel * ( m_a_x * abs( t1 ) + m_a_dxdt * abs( t2 ) ) );
+		}
+
+	};
+
+
+	/* ToDo : this is a reduction-operation so it needs 2 arguments for usage in reduce() functions,
+	 * but for vector spaces only one argument should be supplied - this should be rethought in details.
+	 */
+	struct maximum
+	{
+		template< class T1 , class T2 >
+		time_type operator()( const T1 &t1 , const T2 &t2 )
+		{
+			using std::max;
+			return max( t1 , t2 );
+		}
+
+		template< class T >
+		time_type operator()( const T &t1 )
+		{ // for the vector space algebra
+			return max( t1 );
+		}
 	};
 
 

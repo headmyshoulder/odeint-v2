@@ -32,7 +32,10 @@ typedef enum
 
 template<
 	class ErrorStepper ,
-	class ErrorChecker = error_checker_standard< typename ErrorStepper::state_type , typename ErrorStepper::time_type >
+	class ErrorChecker = error_checker_standard< typename ErrorStepper::state_type ,
+												   typename ErrorStepper::time_type ,
+												   typename ErrorStepper::algebra_type ,
+												   typename ErrorStepper::operations_type >
 	>
 class controlled_error_stepper
 {
@@ -83,6 +86,7 @@ public:
 		boost::numeric::odeint::copy( x , m_x_old );
 		m_stepper.do_step( sys , x , dxdt , t , dt , m_x_err );
 
+		// this potentially overwrites m_x_err! (standard_error_checker does, at least)
 		time_type max_rel_err = m_error_checker.error( m_x_old , dxdt , m_x_err , dt );
 
 		if( max_rel_err > 1.1 )

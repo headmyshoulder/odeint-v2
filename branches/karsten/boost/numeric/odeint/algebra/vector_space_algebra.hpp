@@ -62,6 +62,13 @@ struct vector_space_algebra
 		op( s1 , s2 , s3 , s4 , s5 , s6 , s7 );
 	}
 
+
+	/* ToDo : get ValueType from Container? */
+	template< class ValueType , class StateType , class Reduction>
+	static ValueType reduce( StateType &s , Reduction red , ValueType init)
+	{
+		return red( s );
+	}
 };
 
 
