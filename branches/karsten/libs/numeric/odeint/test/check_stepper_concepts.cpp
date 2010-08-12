@@ -357,7 +357,6 @@ template< class State > class controlled_stepper_methods : public mpl::vector<
 
 typedef mpl::insert_range<	mpl::vector0<> , mpl::end< mpl::vector0<> >::type ,	controlled_stepper_methods< vector_type > >::type first_controlled_stepper_type;
 typedef mpl::insert_range<	first_controlled_stepper_type , mpl::end< first_controlled_stepper_type >::type , controlled_stepper_methods< gsl_vector_type > >::type second_controlled_stepper_type;
-//typedef mpl::insert_range<	second_controlled_stepper_type , mpl::end< second_controlled_stepper_type >::type , controlled_stepper_methods< array_type > >::type all_controlled_stepper_methods;
 typedef mpl::insert_range<	second_controlled_stepper_type , mpl::end< second_controlled_stepper_type >::type , controlled_stepper_methods< vector_space_type > >::type third_controlled_stepper_type;
 typedef mpl::insert_range<	third_controlled_stepper_type , mpl::end< third_controlled_stepper_type >::type , controlled_stepper_methods< array_type > >::type all_controlled_stepper_methods;
 
