@@ -10,30 +10,47 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
+#define BOOST_TEST_MODULE test_gmp
 
-#include <vector>
+#include <gmpxx.h>
 
 #include <boost/test/unit_test.hpp>
+#include <boost/array.hpp>
 
 #include <boost/numeric/odeint.hpp>
 
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
 
+const int precision = 1024;
 
-//#define BOOST_TEST_DYN_LINK
+typedef mpf_class value_type;
+typedef boost::array< value_type , 1 > state_type;
 
-void test_gmp()
+
+void constant_system( state_type &x , state_type &dxdt , value_type t )
 {
-    //BOOST_CHECK( 1 == 0 );
+	dxdt[0] = value_type( 1.0 , precision );
 }
 
-test_suite* init_unit_test_suite( int argc , char* argv[] )
+
+BOOST_AUTO_TEST_CASE( test_gmp )
 {
-    test_suite *test = BOOST_TEST_SUITE( "check gmp" );
+	/* We have to specify the desired precision in advance! */
+	mpf_set_default_prec( precision );
 
-    test->add( BOOST_TEST_CASE(test_gmp) );
+	mpf_t eps_ , unity;
+	mpf_init( eps_ ); mpf_init( unity );
+	mpf_set_d( unity , 1.0 );
+	mpf_div_2exp( eps_ , unity , precision-1 ); // 2^(-precision+1) : smallest number that can be represented with used precision
+	value_type eps( eps_ );
 
-    return test;
+	explicit_rk4< state_type , value_type > stepper;
+	state_type x;
+	x[0] = 0.0;
+
+	stepper.do_step( constant_system , x , 0.0 , 0.1 );
+
+	BOOST_MESSAGE( eps );
+	BOOST_CHECK_MESSAGE( abs( x[0] - value_type( 0.1 , precision ) ) < eps , x[0] - 0.1 );
 }
-

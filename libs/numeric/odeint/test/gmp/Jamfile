@@ -6,23 +6,26 @@
 
 import testing ;
 
-#project
-#    : requirements
-#      <define>blub=1
-#      <library>/boost/test//boost_unit_test_framework
+project
+    : requirements
+      <library>/boost/test//boost_unit_test_framework
+#      <link>static
 #      <link>shared:<define>BOOST_TEST_DYN_LINK=1
-#      <link>static 
-#      <include>../../../..
-#      <include>$BOOST_ROOT
-#    ;
-
+      <include>../../../../..
+      <include>$BOOST_ROOT
+    ;
+    
+    
 lib libgmp : : <name>gmp <link>shared ;
 lib libgmpxx : : <name>gmpxx <link>shared ;
-#lib libgmpxx : :  <file>/usr/lib64/libgmpxx.so ;
 
 test-suite "gmp"
     : 
-      [ run check_gmp.cpp libgmpxx libgmp ] 
+      [ run check_gmp.cpp libgmpxx libgmp 
+      :
+      :
+      : <link>shared:<define>BOOST_TEST_DYN_LINK=1
+      ] 
     ;
 
 
