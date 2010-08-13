@@ -3,6 +3,7 @@
 	<name>karsten</name>
 	<comment></comment>
 	<projects>
+		<project>boost</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

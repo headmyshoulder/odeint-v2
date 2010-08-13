@@ -40,6 +40,11 @@ test-suite "odeint"
       	: 
       	: <link>static
       ]
+      [ run check_implicit_euler.cpp
+        :
+        :
+        : <link>static
+      ]
     ;
 
 
