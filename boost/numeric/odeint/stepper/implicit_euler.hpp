@@ -1,0 +1,106 @@
+/*
+ boost header: BOOST_NUMERIC_ODEINT/implicit_euler.hpp
+
+ Copyright 2009 Karsten Ahnert
+ Copyright 2009 Mario Mulansky
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+*/
+
+#ifndef BOOST_BOOST_NUMERIC_ODEINT_IMPLICIT_EULER_HPP_INCLUDED
+#define BOOST_BOOST_NUMERIC_ODEINT_IMPLICIT_EULER_HPP_INCLUDED
+
+#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/lu.hpp>
+
+namespace boost {
+namespace numeric {
+namespace odeint {
+
+
+template< class ValueType >
+class implicit_euler
+{
+
+public:
+
+    typedef ValueType value_type;
+    typedef boost::numeric::ublas::vector< value_type > state_type;
+    typedef boost::numeric::ublas::matrix< value_type > matrix_type;
+    typedef boost::numeric::ublas::permutation_matrix< std::size_t > pmatrix_type;
+
+    implicit_euler( const value_type epsilon = 1E-6 ) : m_epsilon( epsilon )
+    { }
+
+    template< class System , class Jacobi >
+    void do_step( System &system , Jacobi &jacobi , state_type &x , value_type t , value_type dt )
+    {
+        m_dxdt.resize( x.size() );
+        m_x.resize( x.size() );
+        m_b.resize( x.size() );
+        m_jacobi.resize( x.size() , x.size() );
+        m_pm.resize( x.size() );
+
+        t += dt;
+
+        // apply first Newton step
+        system( x , m_dxdt , t );
+
+        m_b = dt * m_dxdt;
+
+        jacobi( x , m_jacobi  , t );
+        m_jacobi *= dt;
+        m_jacobi -= boost::numeric::ublas::identity_matrix< value_type >( x.size() );
+
+        solve( m_b , m_jacobi );
+
+        m_x = x - m_b;
+
+        // iterate Newton until some precision is reached
+        while( boost::numeric::ublas::norm_2( m_b ) > m_epsilon )
+        {
+            system( m_x , m_dxdt , t );
+            m_b = x - m_x - dt*m_dxdt;
+
+            jacobi( m_x , m_jacobi , t );
+            m_jacobi *= dt;
+            m_jacobi -= boost::numeric::ublas::identity_matrix< value_type >( x.size() );
+
+            solve( m_b , m_jacobi );
+
+            m_x -= m_b;
+        }
+
+    }
+
+private:
+
+    void solve( state_type &x , matrix_type &m )
+    {
+        int res = boost::numeric::ublas::lu_factorize( m , m_pm );
+        if( res != 0 ) exit(0);
+
+        boost::numeric::ublas::lu_substitute( m , m_pm , x );
+    }
+
+private:
+    state_type m_dxdt;
+    state_type m_x;
+    state_type m_b;
+    matrix_type m_jacobi;
+    pmatrix_type m_pm;
+
+    const value_type m_epsilon;
+
+};
+
+
+} // odeint
+} // numeric
+} // boost
+
+
+#endif //BOOST_BOOST_NUMERIC_ODEINT_IMPLICIT_EULER_HPP_INCLUDED
