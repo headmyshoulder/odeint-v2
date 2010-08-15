@@ -21,7 +21,7 @@ project
 #      <link>static
 #      <link>shared:<define>BOOST_TEST_DYN_LINK=1
       <include>../../../..
-      <include>$BOOST_ROOT
+      <include>$(BOOST_ROOT)
     ;
 
     

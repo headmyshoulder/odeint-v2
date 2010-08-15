@@ -15,6 +15,8 @@
 
 #include <vector>
 #include <list>
+/* ToDo: boost ublas dependency here? */
+#include <boost/numeric/ublas/vector.hpp>
 
 namespace boost {
 namespace numeric {
@@ -53,7 +55,15 @@ struct is_resizeable< std::list< V , A > >
 	const static bool value = type::value;
 };
 
-
+/*
+ * specialization for boost::numeric::ublas::vector
+ */
+template< class T >
+struct is_resizeable< boost::numeric::ublas::vector< T > >
+{
+	struct type : public boost::true_type { };
+	const static bool value = type::value;
+};
 
 
 template< class Container >
