@@ -16,6 +16,9 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/lu.hpp>
 
+#include <iostream>
+#include <boost/numeric/ublas/io.hpp>
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -30,9 +33,9 @@ public:
     typedef ValueType value_type;
     typedef boost::numeric::ublas::vector< value_type > state_type;
     typedef boost::numeric::ublas::matrix< value_type > matrix_type;
-    typedef boost::numeric::ublas::permutation_matrix< std::size_t > pmatrix_type;
+    typedef boost::numeric::ublas::permutation_matrix< size_t > pmatrix_type;
 
-    implicit_euler( const value_type epsilon = 1E-6 ) : m_epsilon( epsilon )
+    implicit_euler( const value_type epsilon = 1E-6 ) : m_epsilon( epsilon ) , m_pm( 1 )
     { }
 
     template< class System , class Jacobi >
@@ -42,7 +45,7 @@ public:
         m_x.resize( x.size() );
         m_b.resize( x.size() );
         m_jacobi.resize( x.size() , x.size() );
-        m_pm.resize( x.size() );
+        m_pm = pmatrix_type( x.size() ); // no resize because we also need default filling
 
         t += dt;
 
@@ -55,25 +58,38 @@ public:
         m_jacobi *= dt;
         m_jacobi -= boost::numeric::ublas::identity_matrix< value_type >( x.size() );
 
-        solve( m_b , m_jacobi );
+        std::clog << m_jacobi << std::endl;
+        std::clog << m_b << std::endl;
+
+        matrix_type jacobi_tmp( m_jacobi );
+
+        solve( m_b , jacobi_tmp );
+
+        std::clog << m_b << std::endl;
 
         m_x = x - m_b;
 
         // iterate Newton until some precision is reached
+        // ToDo: maybe we should apply only one Newton step -> linear implicit one-step scheme
         while( boost::numeric::ublas::norm_2( m_b ) > m_epsilon )
         {
             system( m_x , m_dxdt , t );
-            m_b = x - m_x - dt*m_dxdt;
+            m_b = x - m_x + dt*m_dxdt;
 
+            /* we use simplified newton where the jacobi matrix is evaluated only once
             jacobi( m_x , m_jacobi , t );
             m_jacobi *= dt;
             m_jacobi -= boost::numeric::ublas::identity_matrix< value_type >( x.size() );
+            */
+            jacobi_tmp = m_jacobi;
 
-            solve( m_b , m_jacobi );
+            solve( m_b , jacobi_tmp );
+
+            std::clog << m_b << std::endl;
 
             m_x -= m_b;
         }
-
+        x = m_x;
     }
 
 private:
@@ -87,13 +103,13 @@ private:
     }
 
 private:
+    const value_type m_epsilon;
+
     state_type m_dxdt;
     state_type m_x;
     state_type m_b;
     matrix_type m_jacobi;
     pmatrix_type m_pm;
-
-    const value_type m_epsilon;
 
 };
 

@@ -10,6 +10,7 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
+#define BOOST_TEST_MODULE test_implicit_euler
 
 #include <boost/test/unit_test.hpp>
 
@@ -27,7 +28,7 @@ typedef boost::numeric::ublas::vector< value_type > state_type;
 typedef boost::numeric::ublas::matrix< value_type > matrix_type;
 
 
-void system( state_type &x , state_type &dxdt , const value_type t )
+void sys( state_type &x , state_type &dxdt , const value_type t )
 {
     dxdt( 0 ) = x( 0 ) + 2 * x( 1 );
     dxdt( 1 ) = x( 1 );
@@ -38,7 +39,7 @@ void jacobi( state_type &x , matrix_type &jacobi , const value_type t )
     jacobi( 0 , 0 ) = 1;
     jacobi( 0 , 1 ) = 2;
     jacobi( 1 , 0 ) = 0;
-    jacobi( 1 , 1 ) = 1;
+    jacobi( 1 , 1 ) = 3;
 }
 
 
@@ -50,7 +51,7 @@ BOOST_AUTO_TEST_CASE( test_euler )
 
     value_type eps = 1E-12;
 
-    stepper.do_step( system , jacobi , x , 0.0 , 0.1 );
+    stepper.do_step( sys , jacobi , x , 0.0 , 0.1 );
 
     BOOST_CHECK_MESSAGE( abs( x(0) - 0.1 ) < eps , x[0] - 0.1 );
 

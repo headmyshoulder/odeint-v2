@@ -7,7 +7,7 @@
 project
     : requirements 
       <include>../../../..
-      <include>$BOOST_ROOT
+      <include>$(BOOST_ROOT)
       <define>BOOST_ALL_NO_LIB=1
     : build-dir .
     ;
@@ -15,3 +15,4 @@ project
 # exe harmonic_oscillator : harmonic_oscillator.cpp ;
 # exe solar_system : solar_system.cpp point_type.hpp ;
 
+exe stiff_system : stiff_system.cpp ;
