@@ -13,9 +13,10 @@
 //#include <boost/test/unit_test.hpp>
 
 #include <boost/numeric/odeint.hpp>
-#include <boost/numeric/odeint/algebra/thrust_algebra.hpp>
-#include <boost/numeric/odeint/algebra/thrust_operations.hpp>
-#include <boost/numeric/odeint/algebra/thrust_resize.hpp>
+#include <boost/numeric/odeint/algebra/external/thrust_algebra.hpp>
+#include <boost/numeric/odeint/algebra/external/thrust_operations.hpp>
+#include <boost/numeric/odeint/algebra/external/thrust_resize.hpp>
+
 #include <thrust/device_vector.h>
 #include <thrust/fill.h>
 
