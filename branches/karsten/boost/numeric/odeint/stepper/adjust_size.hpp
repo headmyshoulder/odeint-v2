@@ -71,7 +71,7 @@ public:
 
 	void register_state( size_t idx , State &x )
 	{
-		states.replace( idx , &x );
+		m_states.replace( idx , &x );
 	}
 
 
@@ -79,7 +79,7 @@ private:
 
 	void adjust_size_by_resizeability( const State &x , boost::true_type )
 	{
-		for( size_t i=0 ; i<Dim ; ++i ) boost::numeric::odeint::adjust_size( x , states[i] );
+		for( size_t i=0 ; i<Dim ; ++i ) boost::numeric::odeint::adjust_size( x , m_states[i] );
 		//		adjust_size_impl( x );
 	}
 
@@ -91,7 +91,7 @@ private:
 private :
 
 	bool m_is_initialized;
-	boost::ptr_array< State , Dim ,  boost::view_clone_allocator > states;
+	boost::ptr_array< State , Dim ,  boost::view_clone_allocator > m_states;
 };
 
 
