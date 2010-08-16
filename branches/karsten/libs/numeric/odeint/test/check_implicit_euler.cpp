@@ -16,6 +16,7 @@
 
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/stepper/implicit_euler.hpp>
+#include <boost/numeric/odeint/algebra/external/ublas_resize.hpp>
 
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix.hpp>

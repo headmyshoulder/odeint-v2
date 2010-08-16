@@ -13,6 +13,8 @@
 #ifndef BOOST_BOOST_NUMERIC_ODEINT_STANDARD_OPERATIONS_HPP_INCLUDED
 #define BOOST_BOOST_NUMERIC_ODEINT_STANDARD_OPERATIONS_HPP_INCLUDED
 
+#include <algorithm> // for std::max
+
 namespace boost {
 namespace numeric {
 namespace odeint {

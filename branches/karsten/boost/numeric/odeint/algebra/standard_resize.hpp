@@ -10,13 +10,13 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
-#ifndef BOOST_BOOST_NUMERIC_ODEINT_STANDARD_RESIZE_HPP_INCLUDED
-#define BOOST_BOOST_NUMERIC_ODEINT_STANDARD_RESIZE_HPP_INCLUDED
+#ifndef BOOST_NUMERIC_ODEINT_STANDARD_RESIZE_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STANDARD_RESIZE_HPP_INCLUDED
 
 #include <vector>
 #include <list>
-/* ToDo: boost ublas dependency here? */
-#include <boost/numeric/ublas/vector.hpp>
+
+#include <boost/type_traits/integral_constant.hpp> //for true_type and false_type
 
 namespace boost {
 namespace numeric {
@@ -55,15 +55,6 @@ struct is_resizeable< std::list< V , A > >
 	const static bool value = type::value;
 };
 
-/*
- * specialization for boost::numeric::ublas::vector
- */
-template< class T >
-struct is_resizeable< boost::numeric::ublas::vector< T > >
-{
-	struct type : public boost::true_type { };
-	const static bool value = type::value;
-};
 
 
 template< class Container >
@@ -108,4 +99,4 @@ void copy( const Container &from , Container &to )
 } // boost
 
 
-#endif //BOOST_BOOST_NUMERIC_ODEINT_STANDARD_RESIZE_HPP_INCLUDED
+#endif //BOOST_NUMERIC_ODEINT_STANDARD_RESIZE_HPP_INCLUDED

@@ -24,11 +24,11 @@ struct thrust_operations
 {
 	typedef Time time_type;
 
-	struct increment
+	struct increment1
 	{
 		time_type m_dt;
 
-		increment( time_type dt ) : m_dt( dt ) { }
+		increment1( time_type dt ) : m_dt( dt ) { }
 
 		template< class Tuple >
 		__host__ __device__
