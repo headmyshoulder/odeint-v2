@@ -16,7 +16,7 @@
 #include <boost/numeric/odeint/algebra/standard_resize.hpp>
 
 #include <boost/ptr_container/ptr_array.hpp>
-#include <boost/utility.hpp>
+//#include <boost/utility.hpp>
 
 namespace boost {
 namespace numeric {

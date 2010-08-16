@@ -24,7 +24,7 @@ namespace odeint {
 struct thrust_algebra
 {
 	template< class StateType1 , class StateType2 , class Operation >
-	static void transform2( StateType1 &s1 , StateType2 &s2 , Operation op )
+	static void for_each2( StateType1 &s1 , StateType2 &s2 , Operation op )
 	{
 		thrust::for_each( thrust::make_zip_iterator( thrust::make_tuple( boost::begin(s1) , boost::begin(s2) ) ) ,
 						  thrust::make_zip_iterator( thrust::make_tuple( boost::end(s1) , boost::end(s2) ) ) ,

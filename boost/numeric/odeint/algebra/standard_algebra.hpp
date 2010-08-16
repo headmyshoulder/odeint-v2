@@ -13,7 +13,10 @@
 #ifndef BOOST_BOOST_NUMERIC_ODEINT_STANDARD_ALGEBRA_HPP_INCLUDED
 #define BOOST_BOOST_NUMERIC_ODEINT_STANDARD_ALGEBRA_HPP_INCLUDED
 
+//boost range does not work with nvcc
+#ifndef __CUDACC__
 #include <boost/range.hpp>
+#endif
 
 #include <boost/numeric/odeint/algebra/detail/macros.hpp>
 #include <boost/numeric/odeint/algebra/detail/for_each.hpp>
@@ -26,7 +29,10 @@ namespace odeint {
 template< class Container >
 struct standard_algebra
 {
-	typedef Container container_type;
+    // leave standard algebra empty when using nvcc cause we don't habe boost::range then
+    // for using thrust and compiling with nvcc thrust_algebra should be used
+#ifndef __CUDACC__
+    typedef Container container_type;
 
 	template< class StateType1 , class StateType2 , class Operation >
 	static void for_each2( StateType1 &s1 , StateType2 &s2 , Operation op )
@@ -143,6 +149,7 @@ struct standard_algebra
 		return detail::reduce( boost::begin( s ) , boost::end( s ) , red , init );
 	}
 
+#endif
 };
 
 } // odeint

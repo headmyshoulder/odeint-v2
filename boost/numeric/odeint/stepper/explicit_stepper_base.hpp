@@ -14,8 +14,8 @@
 #define BOOST_BOOST_NUMERIC_ODEINT_EXPLICIT_STEPPER_BASE_HPP_INCLUDED
 
 
-#include <boost/mem_fn.hpp>
-#include <boost/bind.hpp>
+//#include <boost/mem_fn.hpp>
+//#include <boost/bind.hpp>
 
 #include <boost/numeric/odeint/stepper/adjust_size.hpp>
 #include <boost/numeric/odeint/algebra/standard_resize.hpp>
