@@ -28,35 +28,6 @@ struct standard_operations
 {
 	typedef Time time_type;
 
-//	struct increment1
-//	{
-//		time_type m_dt;
-//
-//		increment1( time_type dt ) : m_dt( dt ) { }
-//
-//		template< class T1 , class T2 >
-//		void operator()( T1 &t1 , const T2 &t2 ) const
-//		{
-//			t1 += m_dt * t2;
-//		}
-//	};
-//
-//
-//	struct increment4
-//	{
-//		time_type m_alpha1 , m_alpha2 , m_alpha3 , m_alpha4;
-//
-//		increment4( time_type alpha1 , time_type alpha2 , time_type alpha3 , time_type alpha4 )
-//		: m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 )  , m_alpha4( alpha4 ) { }
-//
-//		template< class T1 , class T2 , class T3 , class T4 , class T5 >
-//		void operator()( T1 &t1 , const T2 &t2 , const T3 &t3 , const T4 &t4 , const T5 &t5 )
-//		{
-//			t1 += m_alpha1 * t2 + m_alpha2 * t3 + m_alpha3 * t4 + m_alpha4 * t5;
-//		}
-//	};
-
-
 	struct scale_sum2
 	{
 		time_type m_alpha1;
