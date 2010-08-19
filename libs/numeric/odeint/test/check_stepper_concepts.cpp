@@ -109,10 +109,10 @@ struct perform_stepper_test< Stepper , vector_type >
 {
 	void operator()( void )
 	{
-		vector_type x( 1 , 0.0 );
+		vector_type x( 1 , 2.0 );
 		Stepper stepper;
 		check_stepper_concept( stepper , constant_system1 , x );
-		BOOST_CHECK_SMALL( fabs( x[0] - 0.1 ) , eps );
+		BOOST_CHECK_SMALL( fabs( x[0] - 2.1 ) , eps );
 	}
 };
 
@@ -122,10 +122,10 @@ struct perform_stepper_test< Stepper , gsl_vector_type >
 	void operator()( void ) const
 	{
 		gsl_vector_type *x = gsl_vector_alloc( 1 );
-		gsl_vector_set( x , 0 , 0.0 );
+		gsl_vector_set( x , 0 , 2.0 );
 		Stepper stepper;
 		check_stepper_concept( stepper , constant_system2 , *x );
-		BOOST_CHECK_SMALL( fabs( gsl_vector_get( x , 0 ) - 0.1 ) , eps );
+		BOOST_CHECK_SMALL( fabs( gsl_vector_get( x , 0 ) - 2.1 ) , eps );
 		gsl_vector_free( x );
 	}
 };
@@ -136,10 +136,10 @@ struct perform_stepper_test< Stepper , vector_space_type >
 	void operator()( void ) const
 	{
 		vector_space_type x;
-		x.m_x = 0.0;
+		x.m_x = 2.0;
 		Stepper stepper;
 		check_stepper_concept( stepper , constant_system3 , x );
-		BOOST_CHECK_SMALL( fabs( x.m_x - 0.1 ) , eps );
+		BOOST_CHECK_SMALL( fabs( x.m_x - 2.1 ) , eps );
 	}
 };
 
@@ -149,10 +149,10 @@ struct perform_stepper_test< Stepper , array_type >
 	void operator()( void )
 	{
 		array_type x;
-		x[0] = 0.0;
+		x[0] = 2.0;
 		Stepper stepper;
 		check_stepper_concept( stepper , constant_system4 , x );
-		BOOST_CHECK_SMALL( fabs( x[0] - 0.1 ) , eps );
+		BOOST_CHECK_SMALL( fabs( x[0] - 2.1 ) , eps );
 	}
 };
 
@@ -205,10 +205,10 @@ struct perform_error_stepper_test< Stepper , vector_type >
 {
 	void operator()( void )
 	{
-		vector_type x( 1 , 0.0 ) , xerr( 1 );
+		vector_type x( 1 , 2.0 ) , xerr( 1 );
 		Stepper stepper;
 		check_error_stepper_concept( stepper , constant_system1 , x , xerr );
-		BOOST_CHECK_SMALL( fabs( x[0] - 0.1 ) , eps );
+		BOOST_CHECK_SMALL( fabs( x[0] - 2.1 ) , eps );
 	}
 };
 
@@ -218,10 +218,10 @@ struct perform_error_stepper_test< Stepper , gsl_vector_type >
 	void operator()( void ) const
 	{
 		gsl_vector_type *x = gsl_vector_alloc( 1 ) , *xerr = gsl_vector_alloc( 1 );
-		gsl_vector_set( x , 0 , 0.0 );
+		gsl_vector_set( x , 0 , 2.0 );
 		Stepper stepper;
 		check_error_stepper_concept( stepper , constant_system2 , *x , *xerr );
-		BOOST_CHECK_SMALL( fabs( gsl_vector_get( x , 0 ) - 0.1 ) , eps );
+		BOOST_CHECK_SMALL( fabs( gsl_vector_get( x , 0 ) - 2.1 ) , eps );
 		gsl_vector_free( x ); gsl_vector_free( xerr );
 	}
 };
@@ -232,10 +232,10 @@ struct perform_error_stepper_test< Stepper , vector_space_type >
 	void operator()( void ) const
 	{
 		vector_space_type x , xerr;
-		x.m_x = 0.0;
+		x.m_x = 2.0;
 		Stepper stepper;
 		check_error_stepper_concept( stepper , constant_system3 , x , xerr );
-		BOOST_CHECK_SMALL( fabs( x.m_x - 0.1 ) , eps );
+		BOOST_CHECK_SMALL( fabs( x.m_x - 2.1 ) , eps );
 	}
 };
 
@@ -245,10 +245,10 @@ struct perform_error_stepper_test< Stepper , array_type >
 	void operator()( void )
 	{
 		array_type x , xerr;
-		x[0] = 0.0;
+		x[0] = 2.0;
 		Stepper stepper;
 		check_error_stepper_concept( stepper , constant_system4 , x , xerr );
-		BOOST_CHECK_SMALL( fabs( x[0] - 0.1 ) , eps );
+		BOOST_CHECK_SMALL( fabs( x[0] - 2.1 ) , eps );
 	}
 };
 
@@ -295,12 +295,12 @@ struct perform_controlled_stepper_test< ControlledStepper , vector_type >
 {
 	void operator()( void )
 	{
-		vector_type x( 1 , 0.0 );
+		vector_type x( 1 , 2.0 );
 		typename ControlledStepper::error_stepper_type error_stepper;
 		error_checker_standard< typename ControlledStepper::state_type , typename ControlledStepper::time_type > error_checker;
 		ControlledStepper controlled_stepper( error_stepper , error_checker );
 		check_controlled_stepper_concept( controlled_stepper , constant_system1 , x );
-		//BOOST_CHECK_SMALL( fabs( x[0] - 0.1 ) , eps );
+		BOOST_CHECK_SMALL( fabs( x[0] - 2.1 ) , eps );
 	}
 };
 
@@ -310,12 +310,12 @@ struct perform_controlled_stepper_test< ControlledStepper , gsl_vector_type >
 	void operator()( void ) const
 	{
 		gsl_vector_type *x = gsl_vector_alloc( 1 );
-		gsl_vector_set( x , 0 , 0.0 );
+		gsl_vector_set( x , 0 , 2.0 );
 		typename ControlledStepper::error_stepper_type error_stepper;
 		error_checker_standard< typename ControlledStepper::state_type , typename ControlledStepper::time_type > error_checker;
 		ControlledStepper controlled_stepper( error_stepper , error_checker );
 		check_controlled_stepper_concept( controlled_stepper , constant_system2 , *x );
-		//BOOST_CHECK_SMALL( fabs( gsl_vector_get( x , 0 ) - 0.1 ) , eps );
+		BOOST_CHECK_SMALL( fabs( gsl_vector_get( x , 0 ) - 2.1 ) , eps );
 		gsl_vector_free( x );
 	}
 };
@@ -326,12 +326,12 @@ struct perform_controlled_stepper_test< ControlledStepper , vector_space_type >
 	void operator()( void ) const
 	{
 		vector_space_type x;
-		x.m_x = 0.0;
+		x.m_x = 2.0;
 		typename ControlledStepper::error_stepper_type error_stepper;
 		error_checker_standard< typename ControlledStepper::state_type , typename ControlledStepper::time_type , vector_space_algebra > error_checker;
 		ControlledStepper controlled_stepper( error_stepper , error_checker );
 		check_controlled_stepper_concept( controlled_stepper , constant_system3 , x );
-		//BOOST_CHECK_SMALL( fabs( x.m_x - 0.1 ) , eps );
+		BOOST_CHECK_SMALL( fabs( x.m_x - 2.1 ) , eps );
 	}
 };
 
@@ -341,12 +341,12 @@ struct perform_controlled_stepper_test< ControlledStepper , array_type >
 	void operator()( void )
 	{
 		array_type x;
-		x[0] = 0.0;
+		x[0] = 2.0;
 		typename ControlledStepper::error_stepper_type error_stepper;
 		error_checker_standard< typename ControlledStepper::state_type , typename ControlledStepper::time_type > error_checker;
 		ControlledStepper controlled_stepper( error_stepper , error_checker );
 		check_controlled_stepper_concept( controlled_stepper , constant_system4 , x );
-		//BOOST_CHECK_SMALL( fabs( x[0] - 0.1 ) , eps );
+		BOOST_CHECK_SMALL( fabs( x[0] - 2.1 ) , eps );
 	}
 };
 
