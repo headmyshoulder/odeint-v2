@@ -13,10 +13,11 @@
 #ifndef BOOST_NUMERIC_ODEINT_ADJUST_SIZE_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_ADJUST_SIZE_HPP_INCLUDED
 
+#include <boost/noncopyable.hpp>
+#include <boost/ptr_container/ptr_array.hpp>
+
 #include <boost/numeric/odeint/algebra/standard_resize.hpp>
 
-#include <boost/ptr_container/ptr_array.hpp>
-//#include <boost/utility.hpp>
 
 namespace boost {
 namespace numeric {
@@ -40,7 +41,7 @@ struct adjust_size_always_tag {};
  * Adjust size functionality with policies and resizeability
  */
 template< class State , size_t Dim >
-class size_adjuster
+class size_adjuster : boost::noncopyable
 {
 public:
 

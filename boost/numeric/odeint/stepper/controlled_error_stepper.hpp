@@ -15,6 +15,8 @@
 
 #include <cmath>
 
+#include <boost/noncopyable.hpp>
+
 #include <boost/numeric/odeint/stepper/adjust_size.hpp>
 #include <boost/numeric/odeint/stepper/error_checker.hpp>
 
@@ -37,7 +39,7 @@ template<
 												   typename ErrorStepper::algebra_type ,
 												   typename ErrorStepper::operations_type >
 	>
-class controlled_error_stepper
+class controlled_error_stepper : boost::noncopyable
 {
 public:
 
