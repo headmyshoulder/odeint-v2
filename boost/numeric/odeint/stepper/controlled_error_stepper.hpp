@@ -82,6 +82,7 @@ public:
 	controlled_step_result try_step( System &sys , state_type &x , const state_type &dxdt , time_type &t , time_type &dt )
 	{
 		using std::max;
+		using std::min;
 		using std::pow;
 
 		m_xerr_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );

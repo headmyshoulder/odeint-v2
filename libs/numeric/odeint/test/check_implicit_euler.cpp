@@ -10,8 +10,6 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
-#define BOOST_TEST_MODULE test_implicit_euler
-
 #include <boost/test/unit_test.hpp>
 
 #include <boost/numeric/odeint.hpp>
@@ -43,6 +41,7 @@ void jacobi( state_type &x , matrix_type &jacobi , const value_type t )
     jacobi( 1 , 1 ) = 3;
 }
 
+BOOST_AUTO_TEST_SUITE( implicit_euler_test )
 
 BOOST_AUTO_TEST_CASE( test_euler )
 {
@@ -57,3 +56,5 @@ BOOST_AUTO_TEST_CASE( test_euler )
     BOOST_CHECK_MESSAGE( abs( x(0) - 0.1 ) < eps , x[0] - 0.1 );
 
 }
+
+BOOST_AUTO_TEST_SUITE_END()
