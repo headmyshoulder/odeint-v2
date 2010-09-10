@@ -18,33 +18,20 @@ project
     : requirements
       <define>BOOST_ALL_NO_LIB=1
       <library>/boost/test//boost_unit_test_framework
-#      <link>static
-#      <link>shared:<define>BOOST_TEST_DYN_LINK=1
       <include>../../../..
       <include>$(BOOST_ROOT)
     ;
 
     
-lib libgsl : : <name>gsl <link>shared ;
-lib libgslcblas : : <name>gslcblas <link>shared ;
 
-test-suite "odeint"
-    : 
-      [ run check_stepper_concepts.cpp  libgsl libgslcblas
-        : 
-        : 
-      	: <link>shared:<define>BOOST_TEST_DYN_LINK=1
-      ] 
-      [ run check_resize.cpp 
-      	: 
-      	: 
-      	: <link>static
-      ]
-      [ run check_implicit_euler.cpp
-        :
-        :
-        : <link>static
-      ]
-    ;
+unit-test basic_test 
+	: check_stepper_concepts.cpp 
+#	  check_resize.cpp 
+	  check_implicit_euler.cpp
+	:
+	: <link>static
+	; 
+
+
 
 

@@ -14,7 +14,7 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
-#define BOOST_TEST_MODULE test_stepper_concepts
+#define BOOST_TEST_MODULE odeint_basic_test
 
 #include <vector>
 #include <cmath>
@@ -27,13 +27,15 @@
 #include <boost/mpl/for_each.hpp>
 #include <boost/mpl/insert_range.hpp>
 #include <boost/mpl/end.hpp>
+#include <boost/mpl/copy.hpp>
+#include <boost/mpl/placeholders.hpp>
+#include <boost/mpl/inserter.hpp>
 
 #include <boost/bind.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
-#include <boost/numeric/odeint/algebra/external/gsl_vector_adaptor.hpp>
 
 #include "vector_space_1d.hpp"
 
@@ -46,18 +48,19 @@ namespace mpl = boost::mpl;
 
 
 typedef std::vector< double > vector_type;
-typedef gsl_vector gsl_vector_type;
 typedef vector_space_1d< double > vector_space_type;
 typedef std::tr1::array< double , 1 > array_type;
+
+typedef mpl::vector< vector_type , vector_space_type , array_type >::type container_types;
+
 
 template< class State > struct algebra_dispatcher { typedef standard_algebra< State > type; };
 template<> struct algebra_dispatcher< vector_space_type > { typedef vector_space_algebra type; };
 
 
-void constant_system1( const vector_type &x , vector_type &dxdt , double t ) { dxdt[0] = 1.0; }
-void constant_system2( const gsl_vector_type &x , gsl_vector_type &dxdt , double t ) { gsl_vector_set( &dxdt , 0 , 1.0 ); }
-void constant_system3( const vector_space_type &x , vector_space_type &dxdt , double t ) { dxdt.m_x = 1.0; }
-void constant_system4( const array_type &x , array_type &dxdt , double t ) { dxdt[0] = 1.0; }
+void constant_system_vector( const vector_type &x , vector_type &dxdt , double t ) { dxdt[0] = 1.0; }
+void constant_system_vector_space( const vector_space_type &x , vector_space_type &dxdt , double t ) { dxdt.m_x = 1.0; }
+void constant_system_array( const array_type &x , array_type &dxdt , double t ) { dxdt[0] = 1.0; }
 
 
 
@@ -111,22 +114,8 @@ struct perform_stepper_test< Stepper , vector_type >
 	{
 		vector_type x( 1 , 2.0 );
 		Stepper stepper;
-		check_stepper_concept( stepper , constant_system1 , x );
+		check_stepper_concept( stepper , constant_system_vector , x );
 		BOOST_CHECK_SMALL( fabs( x[0] - 2.1 ) , eps );
-	}
-};
-
-template< class Stepper >
-struct perform_stepper_test< Stepper , gsl_vector_type >
-{
-	void operator()( void ) const
-	{
-		gsl_vector_type *x = gsl_vector_alloc( 1 );
-		gsl_vector_set( x , 0 , 2.0 );
-		Stepper stepper;
-		check_stepper_concept( stepper , constant_system2 , *x );
-		BOOST_CHECK_SMALL( fabs( gsl_vector_get( x , 0 ) - 2.1 ) , eps );
-		gsl_vector_free( x );
 	}
 };
 
@@ -138,7 +127,7 @@ struct perform_stepper_test< Stepper , vector_space_type >
 		vector_space_type x;
 		x.m_x = 2.0;
 		Stepper stepper;
-		check_stepper_concept( stepper , constant_system3 , x );
+		check_stepper_concept( stepper , constant_system_vector_space , x );
 		BOOST_CHECK_SMALL( fabs( x.m_x - 2.1 ) , eps );
 	}
 };
@@ -151,7 +140,7 @@ struct perform_stepper_test< Stepper , array_type >
 		array_type x;
 		x[0] = 2.0;
 		Stepper stepper;
-		check_stepper_concept( stepper , constant_system4 , x );
+		check_stepper_concept( stepper , constant_system_array , x );
 		BOOST_CHECK_SMALL( fabs( x[0] - 2.1 ) , eps );
 	}
 };
@@ -166,12 +155,25 @@ template< class State > class stepper_methods : public mpl::vector<
 > { };
 
 
-typedef mpl::insert_range<	mpl::vector0<> , mpl::end< mpl::vector0<> >::type ,	stepper_methods< vector_type > >::type first_stepper_type;
-typedef mpl::insert_range<	first_stepper_type , mpl::end< first_stepper_type >::type , stepper_methods< gsl_vector_type > >::type second_stepper_type;
-typedef mpl::insert_range<	second_stepper_type , mpl::end< second_stepper_type >::type , stepper_methods< vector_space_type > >::type third_stepper_type;
-typedef mpl::insert_range<	third_stepper_type , mpl::end< third_stepper_type >::type , stepper_methods< array_type > >::type all_stepper_methods;
+
+typedef mpl::copy
+<
+  container_types ,
+  mpl::inserter
+  <
+    mpl::vector0<> ,
+    mpl::insert_range
+    <
+      mpl::_1 ,
+      mpl::end< mpl::_1 > ,
+      stepper_methods< mpl::_2 >
+    >
+  >
+>::type all_stepper_methods;
 
 
+
+BOOST_AUTO_TEST_SUITE( stepper_concept_test )
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_test , Stepper, all_stepper_methods )
 {
@@ -180,7 +182,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_test , Stepper, all_stepper_methods )
 }
 
 
-
+BOOST_AUTO_TEST_SUITE_END()
 
 
 
@@ -207,24 +209,11 @@ struct perform_error_stepper_test< Stepper , vector_type >
 	{
 		vector_type x( 1 , 2.0 ) , xerr( 1 );
 		Stepper stepper;
-		check_error_stepper_concept( stepper , constant_system1 , x , xerr );
+		check_error_stepper_concept( stepper , constant_system_vector , x , xerr );
 		BOOST_CHECK_SMALL( fabs( x[0] - 2.1 ) , eps );
 	}
 };
 
-template< class Stepper >
-struct perform_error_stepper_test< Stepper , gsl_vector_type >
-{
-	void operator()( void ) const
-	{
-		gsl_vector_type *x = gsl_vector_alloc( 1 ) , *xerr = gsl_vector_alloc( 1 );
-		gsl_vector_set( x , 0 , 2.0 );
-		Stepper stepper;
-		check_error_stepper_concept( stepper , constant_system2 , *x , *xerr );
-		BOOST_CHECK_SMALL( fabs( gsl_vector_get( x , 0 ) - 2.1 ) , eps );
-		gsl_vector_free( x ); gsl_vector_free( xerr );
-	}
-};
 
 template< class Stepper >
 struct perform_error_stepper_test< Stepper , vector_space_type >
@@ -234,7 +223,7 @@ struct perform_error_stepper_test< Stepper , vector_space_type >
 		vector_space_type x , xerr;
 		x.m_x = 2.0;
 		Stepper stepper;
-		check_error_stepper_concept( stepper , constant_system3 , x , xerr );
+		check_error_stepper_concept( stepper , constant_system_vector_space , x , xerr );
 		BOOST_CHECK_SMALL( fabs( x.m_x - 2.1 ) , eps );
 	}
 };
@@ -247,7 +236,7 @@ struct perform_error_stepper_test< Stepper , array_type >
 		array_type x , xerr;
 		x[0] = 2.0;
 		Stepper stepper;
-		check_error_stepper_concept( stepper , constant_system4 , x , xerr );
+		check_error_stepper_concept( stepper , constant_system_array , x , xerr );
 		BOOST_CHECK_SMALL( fabs( x[0] - 2.1 ) , eps );
 	}
 };
@@ -258,17 +247,32 @@ template< class State > class error_stepper_methods : public mpl::vector<
 	explicit_error_rk54_ck< State , double , typename algebra_dispatcher< State >::type >
 > { };
 
-typedef mpl::insert_range<	mpl::vector0<> , mpl::end< mpl::vector0<> >::type ,	error_stepper_methods< vector_type > >::type first_error_stepper_type;
-typedef mpl::insert_range<	first_error_stepper_type , mpl::end< first_error_stepper_type >::type , error_stepper_methods< gsl_vector_type > >::type second_error_stepper_type;
-typedef mpl::insert_range<	second_error_stepper_type , mpl::end< second_error_stepper_type >::type , error_stepper_methods< vector_space_type > >::type third_error_stepper_type;
-typedef mpl::insert_range<	third_error_stepper_type , mpl::end< third_error_stepper_type >::type , error_stepper_methods< array_type > >::type all_error_stepper_methods;
 
+typedef mpl::copy
+<
+  container_types ,
+  mpl::inserter
+  <
+    mpl::vector0<> ,
+    mpl::insert_range
+    <
+      mpl::_1 ,
+      mpl::end< mpl::_1 > ,
+      error_stepper_methods< mpl::_2 >
+    >
+  >
+>::type all_error_stepper_methods;
+
+
+BOOST_AUTO_TEST_SUITE( error_stepper_concept_test )
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( error_stepper_test , Stepper , all_error_stepper_methods )
 {
 	perform_error_stepper_test< Stepper , typename Stepper::state_type > tester;
 	tester();
 }
+
+BOOST_AUTO_TEST_SUITE_END()
 
 
 
@@ -299,24 +303,8 @@ struct perform_controlled_stepper_test< ControlledStepper , vector_type >
 		typename ControlledStepper::error_stepper_type error_stepper;
 		error_checker_standard< typename ControlledStepper::state_type , typename ControlledStepper::time_type > error_checker;
 		ControlledStepper controlled_stepper( error_stepper , error_checker );
-		check_controlled_stepper_concept( controlled_stepper , constant_system1 , x );
+		check_controlled_stepper_concept( controlled_stepper , constant_system_vector , x );
 		BOOST_CHECK_SMALL( fabs( x[0] - 2.1 ) , eps );
-	}
-};
-
-template< class ControlledStepper >
-struct perform_controlled_stepper_test< ControlledStepper , gsl_vector_type >
-{
-	void operator()( void ) const
-	{
-		gsl_vector_type *x = gsl_vector_alloc( 1 );
-		gsl_vector_set( x , 0 , 2.0 );
-		typename ControlledStepper::error_stepper_type error_stepper;
-		error_checker_standard< typename ControlledStepper::state_type , typename ControlledStepper::time_type > error_checker;
-		ControlledStepper controlled_stepper( error_stepper , error_checker );
-		check_controlled_stepper_concept( controlled_stepper , constant_system2 , *x );
-		BOOST_CHECK_SMALL( fabs( gsl_vector_get( x , 0 ) - 2.1 ) , eps );
-		gsl_vector_free( x );
 	}
 };
 
@@ -330,7 +318,7 @@ struct perform_controlled_stepper_test< ControlledStepper , vector_space_type >
 		typename ControlledStepper::error_stepper_type error_stepper;
 		error_checker_standard< typename ControlledStepper::state_type , typename ControlledStepper::time_type , vector_space_algebra > error_checker;
 		ControlledStepper controlled_stepper( error_stepper , error_checker );
-		check_controlled_stepper_concept( controlled_stepper , constant_system3 , x );
+		check_controlled_stepper_concept( controlled_stepper , constant_system_vector_space , x );
 		BOOST_CHECK_SMALL( fabs( x.m_x - 2.1 ) , eps );
 	}
 };
@@ -345,7 +333,7 @@ struct perform_controlled_stepper_test< ControlledStepper , array_type >
 		typename ControlledStepper::error_stepper_type error_stepper;
 		error_checker_standard< typename ControlledStepper::state_type , typename ControlledStepper::time_type > error_checker;
 		ControlledStepper controlled_stepper( error_stepper , error_checker );
-		check_controlled_stepper_concept( controlled_stepper , constant_system4 , x );
+		check_controlled_stepper_concept( controlled_stepper , constant_system_array , x );
 		BOOST_CHECK_SMALL( fabs( x[0] - 2.1 ) , eps );
 	}
 };
@@ -355,13 +343,30 @@ template< class State > class controlled_stepper_methods : public mpl::vector<
 	controlled_error_stepper< explicit_error_rk54_ck< State , double , typename algebra_dispatcher< State >::type > >
 > { };
 
-typedef mpl::insert_range<	mpl::vector0<> , mpl::end< mpl::vector0<> >::type ,	controlled_stepper_methods< vector_type > >::type first_controlled_stepper_type;
-typedef mpl::insert_range<	first_controlled_stepper_type , mpl::end< first_controlled_stepper_type >::type , controlled_stepper_methods< gsl_vector_type > >::type second_controlled_stepper_type;
-typedef mpl::insert_range<	second_controlled_stepper_type , mpl::end< second_controlled_stepper_type >::type , controlled_stepper_methods< vector_space_type > >::type third_controlled_stepper_type;
-typedef mpl::insert_range<	third_controlled_stepper_type , mpl::end< third_controlled_stepper_type >::type , controlled_stepper_methods< array_type > >::type all_controlled_stepper_methods;
+typedef mpl::copy
+<
+  container_types ,
+  mpl::inserter
+  <
+    mpl::vector0<> ,
+    mpl::insert_range
+    <
+      mpl::_1 ,
+      mpl::end< mpl::_1 > ,
+      controlled_stepper_methods< mpl::_2 >
+    >
+  >
+>::type all_controlled_stepper_methods;
+
+
+
+
+BOOST_AUTO_TEST_SUITE( controlled_stepper_concept_test )
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( controlled_stepper_test , ControlledStepper , all_controlled_stepper_methods )
 {
 	perform_controlled_stepper_test< ControlledStepper , typename ControlledStepper::state_type > tester;
 	tester();
 }
+
+BOOST_AUTO_TEST_SUITE_END()
