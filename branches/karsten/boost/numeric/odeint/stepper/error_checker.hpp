@@ -43,7 +43,7 @@ public:
 		algebra_type::for_each3( x_old , dxdt_old , x_err ,
 					             typename operations_type::rel_error( m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt*dt ) );
 
-		return algebra_type::template reduce< time_type >( x_err , typename operations_type::maximum() , 100.0 );
+		return algebra_type::template reduce< time_type >( x_err , typename operations_type::maximum() , 0.0 );
 	}
 
 private:

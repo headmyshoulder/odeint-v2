@@ -5,7 +5,6 @@
  
  This file tests the use of the all different steppers with several state types:
  std::vector< double >
- gsl_vector
  vector_space_1d< double >  (see vector_space_1d.hpp)
  std::tr1::array< double , 1 >
   
@@ -98,7 +97,8 @@ void check_controlled_stepper_concept( Stepper &stepper , System system , typena
     typedef typename stepper_type::time_type time_type;
 
     time_type t = 0.0 , dt = 0.1;
-    stepper.try_step( system , x , t , dt );
+    controlled_step_result step_result = stepper.try_step( system , x , t , dt );
+    BOOST_CHECK( step_result == success_step_size_increased ); // error = 0 for constant system -> step size is always too small
 }
 
 
