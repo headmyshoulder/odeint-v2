@@ -77,7 +77,7 @@ public :
 
 
 	template< class System >
-	void do_step_impl( System system , const state_type &in , const state_type &dxdt , state_type &out , time_type t , time_type dt , state_type &xerr )
+	void do_step_impl( System system , const state_type &in , const state_type &dxdt , time_type t , state_type &out , time_type dt , state_type &xerr )
 	{
 
 		const time_type c1 = static_cast<time_type> ( 37.0 ) / static_cast<time_type>( 378.0 );
@@ -91,7 +91,7 @@ public :
 		const time_type dc5 = static_cast<time_type> ( -277.0 ) / static_cast<time_type>( 14336.0 );
 		const time_type dc6 = c6 - static_cast<time_type> ( 0.25 );
 
-		do_step_impl( system , in , dxdt , out , t , dt );
+		do_step_impl( system , in , dxdt , t , out , dt );
 
 		//error estimate
 		algebra_type::for_each6( xerr , dxdt , m_x3 , m_x4 , m_x5 , m_x6 ,
@@ -102,9 +102,8 @@ public :
 
 
 	template< class System >
-	void do_step_impl( System system , const state_type &in , const state_type &dxdt , state_type &out , time_type t , time_type dt )
+	void do_step_impl( System system , const state_type &in , const state_type &dxdt , time_type t , state_type &out , time_type dt )
 	{
-		/* ToDo: separate resize m_dxdt and m_x1..6 */
 		m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
 
 		const time_type a2 = static_cast<time_type> ( 0.2 );
