@@ -16,7 +16,7 @@
 #include <boost/numeric/odeint/algebra/standard_algebra.hpp>
 #include <boost/numeric/odeint/algebra/standard_operations.hpp>
 
-#include <boost/numeric/odeint/stepper/explicit_stepper_base.hpp>
+#include <boost/numeric/odeint/stepper/base/explicit_stepper_base.hpp>
 #include <boost/numeric/odeint/stepper/detail/macros.hpp>
 
 namespace boost {
