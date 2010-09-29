@@ -95,6 +95,7 @@ public:
 		if( max_rel_err > 1.1 )
 		{
 			// error too large - decrease dt ,limit scaling factor to 0.2 and reset state
+		    /* ToDo: for fsal steppers we have to do some resetting of dxdt */
 			dt *= max( 0.9 * pow( max_rel_err , -1.0 / ( m_stepper.error_order() - 1.0 ) ) , 0.2 );
 			boost::numeric::odeint::copy( m_x_old , x );
 			return step_size_decreased;

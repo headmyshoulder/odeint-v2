@@ -30,10 +30,10 @@ struct standard_operations
 
 	struct scale_sum2
 	{
-		time_type m_alpha1;
-		time_type m_alpha2;
+		const time_type m_alpha1;
+		const time_type m_alpha2;
 
-		scale_sum2( time_type alpha1 , time_type alpha2 ) : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) { }
+		scale_sum2( const time_type alpha1 , const time_type alpha2 ) : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) { }
 
 		template< class T1 , class T2 , class T3 >
 		void operator()( T1 &t1 , const T2 &t2 , const T3 &t3) const
@@ -44,9 +44,9 @@ struct standard_operations
 
 	struct scale_sum3
 	{
-		time_type m_alpha1 , m_alpha2 , m_alpha3;
+		const time_type m_alpha1 , m_alpha2 , m_alpha3;
 
-		scale_sum3( time_type alpha1 , time_type alpha2 , time_type alpha3 )
+		scale_sum3( const time_type alpha1 , const time_type alpha2 , const time_type alpha3 )
 			: m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) { }
 
 		template< class T1 , class T2 , class T3 , class T4 >
@@ -58,9 +58,9 @@ struct standard_operations
 
 	struct scale_sum4
 	{
-		time_type m_alpha1 , m_alpha2 , m_alpha3 , m_alpha4;
+		const time_type m_alpha1 , m_alpha2 , m_alpha3 , m_alpha4;
 
-		scale_sum4( time_type alpha1 , time_type alpha2 , time_type alpha3 , time_type alpha4)
+		scale_sum4( const time_type alpha1 , const time_type alpha2 , const time_type alpha3 , const time_type alpha4)
 				: m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) , m_alpha4( alpha4 ) { }
 
 		template< class T1 , class T2 , class T3 , class T4 , class T5 >
@@ -72,9 +72,9 @@ struct standard_operations
 
 	struct scale_sum5
 	{
-		time_type m_alpha1 , m_alpha2 , m_alpha3 , m_alpha4 , m_alpha5;
+		const time_type m_alpha1 , m_alpha2 , m_alpha3 , m_alpha4 , m_alpha5;
 
-		scale_sum5( time_type alpha1 , time_type alpha2 , time_type alpha3 , time_type alpha4 , time_type alpha5)
+		scale_sum5( const time_type alpha1 , const time_type alpha2 , const time_type alpha3 , const time_type alpha4 , const time_type alpha5)
 			: m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) , m_alpha4( alpha4 ) , m_alpha5( alpha5 ) { }
 
 		template< class T1 , class T2 , class T3 , class T4 , class T5 , class T6 >
@@ -86,9 +86,9 @@ struct standard_operations
 
 	struct scale_sum6
 	{
-		time_type m_alpha1 , m_alpha2 , m_alpha3 , m_alpha4 , m_alpha5 , m_alpha6;
+		const time_type m_alpha1 , m_alpha2 , m_alpha3 , m_alpha4 , m_alpha5 , m_alpha6;
 
-		scale_sum6( time_type alpha1 , time_type alpha2 , time_type alpha3 , time_type alpha4 , time_type alpha5 , time_type alpha6 )
+		scale_sum6( const time_type alpha1 , const time_type alpha2 , const time_type alpha3 , const time_type alpha4 , const time_type alpha5 , const time_type alpha6 )
 			: m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) , m_alpha4( alpha4 ) , m_alpha5( alpha5 ) , m_alpha6( alpha6 ){ }
 
 		template< class T1 , class T2 , class T3 , class T4 , class T5 , class T6 , class T7 >
@@ -106,14 +106,14 @@ struct standard_operations
 
 	struct rel_error
 	{
-		time_type m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt;
+		const time_type m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt;
 
-		rel_error( time_type eps_abs , time_type eps_rel , time_type a_x , time_type a_dxdt )
+		rel_error( const time_type eps_abs , const time_type eps_rel , const time_type a_x , const time_type a_dxdt )
 			: m_eps_abs( eps_abs ) , m_eps_rel( eps_rel ) , m_a_x( a_x ) , m_a_dxdt( a_dxdt ) { }
 
 
 		template< class T1 , class T2 , class T3 >
-		void operator()( const T1 &t1 , const T2 &t2 , T3 &t3 )
+		void operator()( const T1 &t1 , const T2 &t2 , T3 &t3 ) const
 		{
 			using std::abs;
 			t3 = abs( t3 ) / ( m_eps_abs + m_eps_rel * ( m_a_x * abs( t1 ) + m_a_dxdt * abs( t2 ) ) );
@@ -128,14 +128,14 @@ struct standard_operations
 	struct maximum
 	{
 		template< class T1 , class T2 >
-		time_type operator()( const T1 &t1 , const T2 &t2 )
+		time_type operator()( const T1 &t1 , const T2 &t2 ) const
 		{
 			using std::max;
 			return max( t1 , t2 );
 		}
 
 		template< class T >
-		time_type operator()( const T &t1 )
+		time_type operator()( const T &t1 ) const
 		{ // for the vector space algebra
 			return max( t1 );
 		}

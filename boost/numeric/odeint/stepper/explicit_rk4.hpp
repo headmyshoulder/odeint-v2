@@ -65,7 +65,7 @@ public :
 	}
 
 	template< class System >
-	void do_step_impl( System &system , const state_type &in , const state_type &dxdt , time_type t , state_type &out , time_type dt )
+	void do_step_impl( System &system , const state_type &in , const state_type &dxdt , const time_type t , state_type &out , const time_type dt )
 	{
 		m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
 		// ToDo : check if size of in,dxdt,out are equal?
