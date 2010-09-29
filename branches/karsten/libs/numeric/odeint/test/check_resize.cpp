@@ -45,9 +45,10 @@ namespace boost { namespace numeric { namespace odeint {
 	};
 
 
-	template<> void adjust_size( const test_array_type &x1 , test_array_type &x2 )
+	template<> bool adjust_size( const test_array_type &x1 , test_array_type &x2 )
 	{
 		adjust_size_count++;
+		return false;
 	}
 
 } } }

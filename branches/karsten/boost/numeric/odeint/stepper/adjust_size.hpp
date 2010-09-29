@@ -47,27 +47,29 @@ public:
 
 	size_adjuster() : m_is_initialized( false ) { }
 
-	void adjust_size( const State &x )
+	bool adjust_size( const State &x )
 	{
-		adjust_size_by_resizeability( x , typename is_resizeable< State >::type() );
+		return adjust_size_by_resizeability( x , typename is_resizeable< State >::type() );
 	}
 
-	void adjust_size_by_policy( const State &x , adjust_size_manually_tag )
+	bool adjust_size_by_policy( const State &x , adjust_size_manually_tag )
 	{
+	    return false;
 	}
 
-	void adjust_size_by_policy( const State &x , adjust_size_initially_tag )
+	bool adjust_size_by_policy( const State &x , adjust_size_initially_tag )
 	{
 		if( !m_is_initialized )
 		{
-			adjust_size_by_resizeability( x , typename is_resizeable< State >::type() );
 			m_is_initialized = true;
-		}
+			return adjust_size_by_resizeability( x , typename is_resizeable< State >::type() );
+		} else
+		    return false;
 	}
 
-	void adjust_size_by_policy( const State &x , adjust_size_always_tag )
+	bool adjust_size_by_policy( const State &x , adjust_size_always_tag )
 	{
-		adjust_size_by_resizeability( x , typename is_resizeable< State >::type() );
+		return adjust_size_by_resizeability( x , typename is_resizeable< State >::type() );
 	}
 
 	void register_state( size_t idx , State &x )
@@ -78,14 +80,20 @@ public:
 
 private:
 
-	void adjust_size_by_resizeability( const State &x , boost::true_type )
+	bool adjust_size_by_resizeability( const State &x , boost::true_type )
 	{
-		for( size_t i=0 ; i<Dim ; ++i ) boost::numeric::odeint::adjust_size( x , m_states[i] );
-		//		adjust_size_impl( x );
+	    bool changed = false;
+		for( size_t i=0 ; i<Dim ; ++i )
+		{
+            boost::numeric::odeint::adjust_size( x , m_states[i] );
+            changed = true;
+		}
+		return changed;
 	}
 
-	void adjust_size_by_resizeability( const State &x , boost::false_type )
+	bool adjust_size_by_resizeability( const State &x , boost::false_type )
 	{
+	    return false;
 	}
 
 
