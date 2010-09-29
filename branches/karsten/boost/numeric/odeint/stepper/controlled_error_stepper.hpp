@@ -79,7 +79,7 @@ public:
 
 
 	template< class System >
-	controlled_step_result try_step( System &sys , state_type &x , const state_type &dxdt , time_type &t , time_type &dt )
+	controlled_step_result try_step( System &sys , state_type &x , state_type &dxdt , time_type &t , time_type &dt )
 	{
 		using std::max;
 		using std::min;
