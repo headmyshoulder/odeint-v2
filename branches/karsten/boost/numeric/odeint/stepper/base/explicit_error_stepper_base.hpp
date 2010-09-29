@@ -78,31 +78,31 @@ public:
 
 
 	template< class System >
-	void do_step( System &system , state_type &x , time_type t , time_type dt , state_type &xerr )
+	void do_step( System &system , state_type &x , const time_type t , const time_type dt , state_type &xerr )
 	{
 		m_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
 		system( x , m_dxdt ,t );
-		this->stepper().do_step_impl( system , x , m_dxdt , x , t , dt , xerr );
+		this->stepper().do_step_impl( system , x , m_dxdt , t , x , dt , xerr );
 	}
 
 	template< class System >
-	void do_step( System &system , state_type &x , const state_type &dxdt , time_type t , time_type dt , state_type &xerr )
+	void do_step( System &system , state_type &x , const state_type &dxdt , const time_type t , const time_type dt , state_type &xerr )
 	{
-		this->stepper().do_step_impl( system , x , dxdt , x , t , dt , xerr );
+		this->stepper().do_step_impl( system , x , dxdt , t , x , dt , xerr );
 	}
 
 	template< class System >
-	void do_step( System &system , const state_type &in , state_type &out , time_type t , time_type dt , state_type &xerr )
+	void do_step( System &system , const state_type &in , const time_type t , state_type &out , const time_type dt , state_type &xerr )
 	{
 		m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
 		system( in , m_dxdt ,t );
-		this->stepper().do_step_impl( system , in , m_dxdt , out , t , dt , xerr );
+		this->stepper().do_step_impl( system , in , m_dxdt , t , out , dt , xerr );
 	}
 
 	template< class System >
-	void do_step( System &system , const state_type &in , const state_type &dxdt , state_type &out , time_type t , time_type dt , state_type &xerr )
+	void do_step( System &system , const state_type &in , const state_type &dxdt , const time_type t , state_type &out , const time_type dt , state_type &xerr )
 	{
-		this->stepper().do_step_impl( system , in , dxdt , out , t , dt , xerr );
+		this->stepper().do_step_impl( system , in , dxdt , t , out , dt , xerr );
 	}
 
 
