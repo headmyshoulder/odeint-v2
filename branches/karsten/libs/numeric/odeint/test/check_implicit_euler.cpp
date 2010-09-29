@@ -38,7 +38,7 @@ void jacobi( state_type &x , matrix_type &jacobi , const value_type t )
     jacobi( 0 , 0 ) = 1;
     jacobi( 0 , 1 ) = 2;
     jacobi( 1 , 0 ) = 0;
-    jacobi( 1 , 1 ) = 3;
+    jacobi( 1 , 1 ) = 1;
 }
 
 BOOST_AUTO_TEST_SUITE( implicit_euler_test )
@@ -53,7 +53,11 @@ BOOST_AUTO_TEST_CASE( test_euler )
 
     stepper.do_step( sys , jacobi , x , 0.0 , 0.1 );
 
-    BOOST_CHECK_MESSAGE( abs( x(0) - 0.1 ) < eps , x[0] - 0.1 );
+    using std::abs;
+
+    // compare with analytic solution of above system
+    BOOST_CHECK_MESSAGE( abs( x(0) - 20.0/81.0 ) < eps , x(0) - 20.0/81.0 );
+    BOOST_CHECK_MESSAGE( abs( x(1) - 10.0/9.0 ) < eps , x(0) - 10.0/9.0 );
 
 }
 
