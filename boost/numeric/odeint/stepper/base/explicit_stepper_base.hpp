@@ -88,7 +88,7 @@ public:
 	}
 
 	template< class System >
-	void do_step( System &system , const state_type &in , time_type t , const state_type &out , const time_type dt )
+	void do_step( System &system , const state_type &in , const time_type t , state_type &out , const time_type dt )
 	{
 		m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
 		system( in , m_dxdt ,t );
@@ -108,7 +108,7 @@ public:
 	}
 
 
-private:
+protected:
 
 	size_adjuster< state_type , 1 > m_size_adjuster;
 	state_type m_dxdt;

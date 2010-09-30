@@ -25,4 +25,6 @@
 
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 
+#include <boost/numeric/odeint/stepper/dense_output_explicit_euler.hpp>
+
 #endif // BOOST_NUMERIC_ODEINT_HPP

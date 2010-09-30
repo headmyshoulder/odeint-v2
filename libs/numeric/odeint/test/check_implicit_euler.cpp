@@ -27,13 +27,13 @@ typedef boost::numeric::ublas::vector< value_type > state_type;
 typedef boost::numeric::ublas::matrix< value_type > matrix_type;
 
 
-void sys( state_type &x , state_type &dxdt , const value_type t )
+void sys( const state_type &x , state_type &dxdt , const value_type t )
 {
     dxdt( 0 ) = x( 0 ) + 2 * x( 1 );
     dxdt( 1 ) = x( 1 );
 }
 
-void jacobi( state_type &x , matrix_type &jacobi , const value_type t )
+void jacobi( const state_type &x , matrix_type &jacobi , const value_type t )
 {
     jacobi( 0 , 0 ) = 1;
     jacobi( 0 , 1 ) = 2;
