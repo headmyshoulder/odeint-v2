@@ -50,7 +50,7 @@ public :
 
 	BOOST_ODEINT_EXPLICIT_STEPPERS_AND_ERROR_STEPPERS_TYPEDEFS( explicit_error_rk54_ck , 5 , 5 , 4);
 
-	typedef explicit_error_stepper_tag error_stepper_category;
+	typedef explicit_error_stepper_tag stepper_category;
 
 	explicit_error_rk54_ck( void ) : m_size_adjuster() , m_x1() , m_x2() , m_x3() , m_x4() , m_x5() , m_x6()
 	{

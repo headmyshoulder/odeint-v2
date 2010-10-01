@@ -40,7 +40,7 @@ template<
                                                    typename ErrorStepper::time_type ,
                                                    typename ErrorStepper::algebra_type ,
                                                    typename ErrorStepper::operations_type > ,
-    class ErrorStepperCategory = typename ErrorStepper::error_stepper_category
+    class ErrorStepperCategory = typename ErrorStepper::stepper_category
 >
 class controlled_error_stepper { };
 
