@@ -17,6 +17,7 @@
 #include <boost/numeric/odeint/algebra/standard_resize.hpp>
 
 #include <boost/numeric/odeint/stepper/base/explicit_stepper_and_error_stepper_fsal_base.hpp>
+#include <boost/numeric/odeint/stepper/base/stepper_categories.hpp>
 #include <boost/numeric/odeint/stepper/detail/macros.hpp>
 
 namespace boost {
@@ -42,6 +43,8 @@ class explicit_error_dopri5
 public :
 
 	BOOST_ODEINT_EXPLICIT_STEPPERS_AND_ERROR_STEPPERS_TYPEDEFS( explicit_error_dopri5 , 5 , 5 , 4 );
+
+	typedef explicit_error_stepper_fsal_tag error_stepper_category;
 
 	explicit_error_dopri5( void )
 	: m_size_adjuster() , m_x1() , m_x2() , m_x3() , m_x4() , m_x5() , m_x6()
@@ -168,7 +171,7 @@ public :
                     typename operations_type::scale_sum6( 1.0 , dt*c1 , dt*c3 , dt*c4 , dt*c5 , dt*c6 ));
 	}
 
-	void reset_dxdt_impl( state_type &dxdt )
+	void reset_step_impl( state_type &dxdt )
 	{
 	    boost::numeric::odeint::copy( m_x1 , dxdt );
 	}
