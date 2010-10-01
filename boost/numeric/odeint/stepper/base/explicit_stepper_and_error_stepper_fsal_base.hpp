@@ -141,14 +141,15 @@ public:
 		this->stepper().do_step_impl( system , in , dxdt , t , out , dt , xerr );
 	}
 
-	void reset_dxdt( state_type &dxdt )
+	void reset_step( state_type &dxdt )
 	{
-	    this->stepper().reset_dxdt_impl( dxdt );
+	    this->stepper().reset_step_impl( dxdt );
 	}
 
 	void adjust_size( const state_type &x )
 	{
-		m_size_adjuster.adjust_size( x );
+		if( m_size_adjuster.adjust_size( x ) )
+		    m_first_call = true;
 	}
 
 
