@@ -20,10 +20,10 @@ namespace odeint {
  * Tags to specify stepper types
  */
 
-struct explicit_error_stepper_tag {};
-struct explicit_stepper_and_error_stepper_tag {};
-struct explicit_error_stepper_fsal_tag {};
-struct explicit_stepper_and_error_stepper_fsal_tag {};
+struct error_stepper_tag {};
+
+struct explicit_error_stepper_tag : error_stepper_tag {};
+struct explicit_error_stepper_fsal_tag : error_stepper_tag {};
 
 } // odeint
 } // numeric
