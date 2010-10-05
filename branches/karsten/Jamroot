@@ -13,7 +13,13 @@ project odeint
 
 build-project libs/numeric/odeint/examples ;
 build-project libs/numeric/odeint/test ;
+
+# additional tests with external libraries :
 build-project libs/numeric/odeint/test/gmp ;
+build-project libs/numeric/odeint/test/mkl ;
+#build-project libs/numeric/odeint/test/gsl ;
+
+# docs:
 # build-project libs/numeric/odeint/doc ;
 
 
