@@ -33,7 +33,7 @@ typedef enum
 } controlled_step_result;
 
 
-/* error stepper categroy dispatcher */
+/* error stepper category dispatcher */
 template<
     class ErrorStepper ,
     class ErrorChecker = error_checker_standard< typename ErrorStepper::state_type ,
@@ -57,19 +57,17 @@ class controlled_error_stepper< ErrorStepper , ErrorChecker , explicit_error_ste
 {
 public:
 
-	typedef ErrorStepper error_stepper_type;
-	typedef typename error_stepper_type::state_type state_type;
-	typedef typename error_stepper_type::time_type time_type;
-	typedef typename error_stepper_type::order_type order_type;
-
-	// ToDo : check if the next line can be avoided
-	typedef typename error_stepper_type::adjust_size_policy adjust_size_policy;
-
+	typedef ErrorStepper stepper_type;
+	typedef typename stepper_type::state_type state_type;
+	typedef typename stepper_type::time_type time_type;
+	typedef typename stepper_type::order_type order_type;
+	typedef typename stepper_type::adjust_size_policy adjust_size_policy;
 	typedef ErrorChecker error_checker_type;
+
 
 	// ToDo : check if stepper could be constructed by the controlled stepper
 	controlled_error_stepper(
-			error_stepper_type &stepper ,
+			stepper_type &stepper ,
 			const error_checker_type &error_checker = error_checker_type()
 			)
 	: m_stepper( stepper ) , m_error_checker( error_checker ) ,
@@ -148,10 +146,20 @@ public:
         m_stepper.adjust_size( x );
 	}
 
+	stepper_type& stepper( void )
+	{
+		return m_stepper;
+	}
+
+	const stepper_type& stepper( void ) const
+	{
+		return m_stepper;
+	}
+
 
 private:
 
-	error_stepper_type &m_stepper;
+	stepper_type &m_stepper;
 	error_checker_type m_error_checker;
 
 	size_adjuster< state_type , 1 > m_dxdt_size_adjuster;
@@ -183,19 +191,16 @@ class controlled_error_stepper< ErrorStepper , ErrorChecker , explicit_error_ste
 {
 public:
 
-    typedef ErrorStepper error_stepper_type;
-    typedef typename error_stepper_type::state_type state_type;
-    typedef typename error_stepper_type::time_type time_type;
-    typedef typename error_stepper_type::order_type order_type;
-
-    // ToDo : check if the next line can be avoided
-    typedef typename error_stepper_type::adjust_size_policy adjust_size_policy;
-
+    typedef ErrorStepper stepper_type;
+    typedef typename stepper_type::state_type state_type;
+    typedef typename stepper_type::time_type time_type;
+    typedef typename stepper_type::order_type order_type;
+    typedef typename stepper_type::adjust_size_policy adjust_size_policy;
     typedef ErrorChecker error_checker_type;
 
     // ToDo : check if stepper could be constructed by the controlled stepper
     controlled_error_stepper(
-            error_stepper_type &stepper ,
+            stepper_type &stepper ,
             const error_checker_type &error_checker = error_checker_type()
             )
     : m_stepper( stepper ) , m_error_checker( error_checker ) ,
@@ -283,10 +288,21 @@ public:
             m_first_call = true;
     }
 
+	stepper_type& stepper( void )
+	{
+		return m_stepper;
+	}
+
+	const stepper_type& stepper( void ) const
+	{
+		return m_stepper;
+	}
+
+
 
 private:
 
-    error_stepper_type &m_stepper;
+    stepper_type &m_stepper;
     error_checker_type m_error_checker;
 
     size_adjuster< state_type , 1 > m_dxdt_size_adjuster;
