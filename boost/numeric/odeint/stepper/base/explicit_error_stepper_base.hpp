@@ -54,9 +54,17 @@ public:
 	static const order_type stepper_order_value = StepperOrder;
 	static const order_type error_order_value = ErrorOrder;
 
-    order_type stepper_order( void ) const { return stepper_order_value; }
+    order_type stepper_order( void ) const
+    {
+    	return stepper_order_value;
+    }
 
-    order_type error_order( void ) const { return error_order_value; }
+    order_type error_order( void ) const
+    {
+    	return error_order_value;
+    }
+
+
 
 
 	explicit_error_stepper_base( void ) : m_size_adjuster() , m_dxdt()
@@ -72,11 +80,8 @@ public:
 
 
 
-    stepper_type& stepper( void ) { return *static_cast< stepper_type* >( this ); }
-    const stepper_type& stepper( void ) const {return *static_cast< const stepper_type* >( this );}
 
-
-
+    // do_step( system , x , t , dt , xerr )
 	template< class System >
 	void do_step( System &system , state_type &x , const time_type t , const time_type dt , state_type &xerr )
 	{
@@ -85,12 +90,14 @@ public:
 		this->stepper().do_step_impl( system , x , m_dxdt , t , x , dt , xerr );
 	}
 
+    // do_step( system , x , dxdt , t , dt , xerr )
 	template< class System >
 	void do_step( System &system , state_type &x , const state_type &dxdt , const time_type t , const time_type dt , state_type &xerr )
 	{
 		this->stepper().do_step_impl( system , x , dxdt , t , x , dt , xerr );
 	}
 
+    // do_step( system , in , t , out , dt , xerr )
 	template< class System >
 	void do_step( System &system , const state_type &in , const time_type t , state_type &out , const time_type dt , state_type &xerr )
 	{
@@ -99,11 +106,14 @@ public:
 		this->stepper().do_step_impl( system , in , m_dxdt , t , out , dt , xerr );
 	}
 
+	// do_step( system , in , dxdt , t , out , dt , xerr )
 	template< class System >
 	void do_step( System &system , const state_type &in , const state_type &dxdt , const time_type t , state_type &out , const time_type dt , state_type &xerr )
 	{
 		this->stepper().do_step_impl( system , in , dxdt , t , out , dt , xerr );
 	}
+
+
 
 
 	void adjust_size( const state_type &x )
@@ -113,6 +123,18 @@ public:
 
 
 private:
+
+	// ToDo : make the next two methods private?
+    stepper_type& stepper( void )
+    {
+    	return *static_cast< stepper_type* >( this );
+    }
+
+    const stepper_type& stepper( void ) const
+    {
+    	return *static_cast< const stepper_type* >( this );
+    }
+
 
 	size_adjuster< state_type , 1 > m_size_adjuster;
 	state_type m_dxdt;

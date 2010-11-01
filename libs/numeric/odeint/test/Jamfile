@@ -29,6 +29,7 @@ unit-test basic_test
 	  check_resize.cpp 
 	  check_implicit_euler.cpp
 	  check_dense_output_explicit_euler.cpp
+	  check_dense_output_dopri5.cpp
 	:
 	: <link>static
 	; 
