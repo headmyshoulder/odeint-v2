@@ -74,37 +74,6 @@ public :
 	}
 
 
-	template< class System >
-	void do_step_impl( System system , const state_type &in , state_type &dxdt , const time_type t , state_type &out , const time_type dt , state_type &xerr )
-	{
-
-        const time_type c1 = static_cast<time_type> ( 35.0 ) / static_cast<time_type>( 384.0 );
-        const time_type c3 = static_cast<time_type> ( 500.0 ) / static_cast<time_type>( 1113.0 );
-        const time_type c4 = static_cast<time_type> ( 125.0 ) / static_cast<time_type>( 192.0 );
-        const time_type c5 = static_cast<time_type> ( -2187.0 ) / static_cast<time_type>( 6784.0 );
-        const time_type c6 = static_cast<time_type> ( 11.0 ) / static_cast<time_type>( 84.0 );
-
-        const time_type dc1 = c1 - static_cast<time_type> ( 5179.0 ) / static_cast<time_type>( 57600.0 );
-        const time_type dc3 = c3 - static_cast<time_type> ( 7571.0 ) / static_cast<time_type>( 16695.0 );
-        const time_type dc4 = c4 - static_cast<time_type> ( 393.0 ) / static_cast<time_type>( 640.0 );
-        const time_type dc5 = c5 - static_cast<time_type> ( -92097.0 ) / static_cast<time_type>( 339200.0 );
-        const time_type dc6 = c6 - static_cast<time_type> ( 187.0 ) / static_cast<time_type>( 2100.0 );
-        const time_type dc7 = static_cast<time_type>( -0.025 );
-
-        do_step_impl( system , in , dxdt , t , out , dt );
-
-        // we need to copy the old dxdt
-        boost::numeric::odeint::copy( dxdt , m_x1 );
-
-        // store the new result in dxdt
-        system( out , dxdt , t + dt );
-
-        //error estimate
-        algebra_type::for_each7( xerr , m_x1 , m_x3 , m_x4 , m_x5 , m_x6 , dxdt ,
-                    typename operations_type::scale_sum6( dt*dc1 , dt*dc3 , dt*dc4 , dt*dc5 , dt*dc6 , dt*dc7 ) );
-
-
-	}
 
 
 
@@ -170,6 +139,67 @@ public :
         algebra_type::for_each7( out , in , dxdt , m_x3 , m_x4 , m_x5 , m_x6 ,
                     typename operations_type::scale_sum6( 1.0 , dt*c1 , dt*c3 , dt*c4 , dt*c5 , dt*c6 ));
 	}
+
+	template< class System >
+	void do_step_impl( System system , const state_type &in , state_type &dxdt , const time_type t , state_type &out , const time_type dt , state_type &xerr )
+	{
+
+        const time_type c1 = static_cast<time_type> ( 35.0 ) / static_cast<time_type>( 384.0 );
+        const time_type c3 = static_cast<time_type> ( 500.0 ) / static_cast<time_type>( 1113.0 );
+        const time_type c4 = static_cast<time_type> ( 125.0 ) / static_cast<time_type>( 192.0 );
+        const time_type c5 = static_cast<time_type> ( -2187.0 ) / static_cast<time_type>( 6784.0 );
+        const time_type c6 = static_cast<time_type> ( 11.0 ) / static_cast<time_type>( 84.0 );
+
+        const time_type dc1 = c1 - static_cast<time_type> ( 5179.0 ) / static_cast<time_type>( 57600.0 );
+        const time_type dc3 = c3 - static_cast<time_type> ( 7571.0 ) / static_cast<time_type>( 16695.0 );
+        const time_type dc4 = c4 - static_cast<time_type> ( 393.0 ) / static_cast<time_type>( 640.0 );
+        const time_type dc5 = c5 - static_cast<time_type> ( -92097.0 ) / static_cast<time_type>( 339200.0 );
+        const time_type dc6 = c6 - static_cast<time_type> ( 187.0 ) / static_cast<time_type>( 2100.0 );
+        const time_type dc7 = static_cast<time_type>( -0.025 );
+
+        do_step_impl( system , in , dxdt , t , out , dt );
+
+        // we need to copy the old dxdt
+        boost::numeric::odeint::copy( dxdt , m_x1 );
+
+        // store the new result in dxdt
+        system( out , dxdt , t + dt );
+
+        //error estimate
+        algebra_type::for_each7( xerr , m_x1 , m_x3 , m_x4 , m_x5 , m_x6 , dxdt ,
+                    typename operations_type::scale_sum6( dt*dc1 , dt*dc3 , dt*dc4 , dt*dc5 , dt*dc6 , dt*dc7 ) );
+	}
+
+//	template< class System >
+//	void do_step_impl( System system , const state_type &in , const state_type &dxdt_in , const time_type t , state_type &out , state_type &dxdt_out , const time_type dt , state_type &xerr )
+//	{
+//
+//        const time_type c1 = static_cast<time_type> ( 35.0 ) / static_cast<time_type>( 384.0 );
+//        const time_type c3 = static_cast<time_type> ( 500.0 ) / static_cast<time_type>( 1113.0 );
+//        const time_type c4 = static_cast<time_type> ( 125.0 ) / static_cast<time_type>( 192.0 );
+//        const time_type c5 = static_cast<time_type> ( -2187.0 ) / static_cast<time_type>( 6784.0 );
+//        const time_type c6 = static_cast<time_type> ( 11.0 ) / static_cast<time_type>( 84.0 );
+//
+//        const time_type dc1 = c1 - static_cast<time_type> ( 5179.0 ) / static_cast<time_type>( 57600.0 );
+//        const time_type dc3 = c3 - static_cast<time_type> ( 7571.0 ) / static_cast<time_type>( 16695.0 );
+//        const time_type dc4 = c4 - static_cast<time_type> ( 393.0 ) / static_cast<time_type>( 640.0 );
+//        const time_type dc5 = c5 - static_cast<time_type> ( -92097.0 ) / static_cast<time_type>( 339200.0 );
+//        const time_type dc6 = c6 - static_cast<time_type> ( 187.0 ) / static_cast<time_type>( 2100.0 );
+//        const time_type dc7 = static_cast<time_type>( -0.025 );
+//
+//        do_step_impl( system , in , dxdt_in , t , out , dt );
+//
+//        // store the new result in dxdt
+//        system( out , dxdt_out , t + dt );
+//
+//        //error estimate
+//        algebra_type::for_each7( xerr , m_x1 , m_x3 , m_x4 , m_x5 , m_x6 , dxdt_out ,
+//                    typename operations_type::scale_sum6( dt*dc1 , dt*dc3 , dt*dc4 , dt*dc5 , dt*dc6 , dt*dc7 ) );
+//	}
+
+
+
+
 
 	void reset_step_impl( state_type &dxdt )
 	{

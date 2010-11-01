@@ -1,14 +1,9 @@
-/* Boost check_implicit_euler.cpp test file
-
- Copyright 2009 Karsten Ahnert
- Copyright 2009 Mario Mulansky
-
- This file tests the use of the euler stepper
-
- Distributed under the Boost Software License, Version 1.0.
- (See accompanying file LICENSE_1_0.txt or
- copy at http://www.boost.org/LICENSE_1_0.txt)
-*/
+/*
+ * check_dense_output_dopri5.cpp
+ *
+ *  Created on: Nov 1, 2010
+ *      Author: karsten
+ */
 
 #include <tr1/array>
 #include <fstream>
@@ -38,13 +33,18 @@ inline void sys( const state_type &x , state_type &dxdt , const value_type t )
 }
 
 
-BOOST_AUTO_TEST_SUITE( dense_output_explicit_euler_test )
+BOOST_AUTO_TEST_SUITE( dense_output_dopri5_test )
 
-BOOST_AUTO_TEST_CASE( test_euler )
+BOOST_AUTO_TEST_CASE( test_dopri5 )
 {
     using std::abs;
 
-    dense_output_explicit_euler< state_type > stepper;
+    typedef explicit_error_dopri5< state_type > dopri5_type;
+    typedef controlled_error_stepper< dopri5_type > controlled_stepper_type;
+    dopri5_type dopri5;
+    controlled_stepper_type controlled_stepper( dopri5 );
+    dense_output_dopri5< controlled_stepper_type > stepper( controlled_stepper );
+
     state_type x0;
     x0[0] = 0.0;
     x0[1] = 1.0;
@@ -52,8 +52,8 @@ BOOST_AUTO_TEST_CASE( test_euler )
     stepper.initialize( x0 , 0.0 , 0.1 );
 //    stepper.do_step( sys );
 
-    std::ofstream stepper_out( "stepper_states.dat" );
-    std::ofstream states_out( "states.dat" );
+    std::ofstream stepper_out( "dopri5_stepper_states.dat" );
+    std::ofstream states_out( "dopri5_states.dat" );
 
 
     double t = stepper.current_time();

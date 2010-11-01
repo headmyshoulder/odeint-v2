@@ -55,18 +55,17 @@ public:
 		boost::numeric::odeint::destruct( m_x2 );
 	}
 
-	void adjust_size( const state_type &x )
-	{
-		m_size_adjuster.adjust_size( x );
-		m_euler.adjust_size( x );
-	}
 
-	void initialize( const state_type x0 , const time_type t0 , const time_type dt0 )
+
+
+	void initialize( const state_type &x0 , const time_type t0 , const time_type dt0 )
 	{
 		boost::numeric::odeint::copy( x0 , *m_current_state );
 		m_t = t0;
 		m_dt = dt0;
 	}
+
+
 
 	template< class System >
 	std::pair< time_type , time_type > do_step( System &system )
@@ -83,6 +82,13 @@ public:
 		time_type delta = t - m_t_old;
 		algebra_type::for_each3( x , *m_old_state , m_euler.m_dxdt , typename operations_type::scale_sum2( 1.0 , delta ) );
 	}
+
+	void adjust_size( const state_type &x )
+	{
+		m_size_adjuster.adjust_size( x );
+		m_euler.adjust_size( x );
+	}
+
 
 	const state_type& current_state( void ) const { return *m_current_state; }
 	const time_type& current_time( void ) const { return m_t; }
