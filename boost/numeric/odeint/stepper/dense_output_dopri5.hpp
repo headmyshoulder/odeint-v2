@@ -12,12 +12,12 @@
 #ifndef BOOST_BOOST_NUMERIC_ODEINT_DENSE_OUTPUT_DOPRI5_HPP_INCLUDED
 #define BOOST_BOOST_NUMERIC_ODEINT_DENSE_OUTPUT_DOPRI5_HPP_INCLUDED
 
-#include <iostream>
-#define tab "\t"
-using std::cout;
-using std::cerr;
-using std::clog;
-using std::endl;
+//#include <iostream>
+//#define tab "\t"
+//using std::cout;
+//using std::cerr;
+//using std::clog;
+//using std::endl;
 
 #include <stdexcept>
 
@@ -52,25 +52,35 @@ public:
 
 	dense_output_dopri5( stepper_type &stepper )
 	: m_stepper( stepper ) , m_size_adjuster() ,
-	  m_x1() , m_x2() , m_current_state( &m_x1 ) , m_old_state( &m_x2 ) ,
-	  m_t( 0.0 ) , m_t_old( 0.0 ) , m_dt( 1.0 )
+	  m_x1() , m_x2() , m_dxdt1() , m_dxdt2() ,
+	  m_current_state( &m_x1 ) , m_old_state( &m_x2 ) ,
+	  m_current_deriv( &m_dxdt1 ) , m_old_deriv( &m_dxdt2 ) ,
+	  m_t( 0.0 ) , m_t_old( 0.0 ) , m_dt( 1.0 ) ,
+	  m_is_deriv_initialized( false )
 	{
 		boost::numeric::odeint::construct( m_x1 );
 		boost::numeric::odeint::construct( m_x2 );
+		boost::numeric::odeint::construct( m_dxdt1 );
+		boost::numeric::odeint::construct( m_dxdt2 );
 		m_size_adjuster.register_state( 0 , m_x1 );
 		m_size_adjuster.register_state( 1 , m_x2 );
+		m_size_adjuster.register_state( 1 , m_dxdt1);
+		m_size_adjuster.register_state( 1 , m_dxdt2 );
 	}
 
 	~dense_output_dopri5( void )
 	{
 		boost::numeric::odeint::destruct( m_x1 );
 		boost::numeric::odeint::destruct( m_x2 );
+		boost::numeric::odeint::destruct( m_dxdt1 );
+		boost::numeric::odeint::destruct( m_dxdt2 );
 	}
 
 	void adjust_size( const state_type &x )
 	{
 		m_size_adjuster.adjust_size( x );
 		m_stepper.adjust_size( x );
+		m_is_deriv_initialized = false;
 	}
 
 	void initialize( const state_type &x0 , const time_type t0 , const time_type dt0 )
@@ -78,23 +88,29 @@ public:
 		boost::numeric::odeint::copy( x0 , *m_current_state );
 		m_t = t0;
 		m_dt = dt0;
+		m_is_deriv_initialized = false;
 	}
 
 	template< class System >
 	std::pair< time_type , time_type > do_step( System &system )
 	{
 		const size_t max_count = 1000;
-		controlled_step_result res;
+
+		if( !m_is_deriv_initialized )
+			system( *m_current_state , *m_current_deriv , m_t );
+
+		controlled_step_result res = step_size_decreased;
 		m_t_old = m_t;
 		size_t count = 0;
 		do
 		{
-			res = m_stepper.try_step( system , *m_current_state , m_t , *m_old_state , m_dt );
+			res = m_stepper.try_step( system , *m_current_state , *m_current_deriv , m_t , *m_old_state , *m_old_deriv , m_dt );
 			if( count++ == max_count )
 				throw std::overflow_error( "dense_output_dopri5 : too much iterations!");
 		}
 		while( res == step_size_decreased );
 		std::swap( m_current_state , m_old_state );
+		std::swap( m_current_deriv , m_old_deriv );
 		return std::make_pair( m_t_old , m_t );
 
 	}
@@ -122,27 +138,27 @@ public:
 	void calc_state( time_type t , state_type &x )
 	{
 
-		const time_type b1 = static_cast<time_type> ( 35.0 ) / static_cast<time_type>( 384.0 );
-		const time_type b3 = static_cast<time_type> ( 500.0 ) / static_cast<time_type>( 1113.0 );
-		const time_type b4 = static_cast<time_type> ( 125.0 ) / static_cast<time_type>( 192.0 );
-		const time_type b5 = static_cast<time_type> ( -2187.0 ) / static_cast<time_type>( 6784.0 );
-		const time_type b6 = static_cast<time_type> ( 11.0 ) / static_cast<time_type>( 84.0 );
-
-
-		time_type theta = t - m_t_old;
-		time_type X1 = static_cast< time_type >( 5.0 ) * ( static_cast< time_type >( 2558722523.0 ) - static_cast< time_type >( 31403016.0 ) * theta ) / static_cast< time_type >( 11282082432.0 );
-		time_type X3 = static_cast< time_type >( 100.0 ) * ( static_cast< time_type >( 882725551.0 ) - static_cast< time_type >( 15701508.0 ) * theta ) / static_cast< time_type >( 32700410799.0 );
-		time_type X4 = static_cast< time_type >( 25.0 ) * ( static_cast< time_type >( 443332067.0 ) - static_cast< time_type >( 31403016.0 ) * theta ) / static_cast< time_type >( 1880347072.0 ) ;
-		time_type X5 = static_cast< time_type >( 32805.0 ) * ( static_cast< time_type >( 23143187.0 ) - static_cast< time_type >( 3489224.0 ) * theta ) / static_cast< time_type >( 199316789632.0 );
-		time_type X6 = static_cast< time_type >( 55.0 ) * ( static_cast< time_type >( 29972135.0 ) - static_cast< time_type >( 7076736.0 ) * theta ) / static_cast< time_type >( 822651844.0 );
-		time_type X7 = static_cast< time_type >( 10.0 ) * ( static_cast< time_type >( 7414447.0 ) - static_cast< time_type >( 829305.0 ) * theta ) / static_cast< time_type >( 29380423.0 );
-
-		time_type theta_m_1 = theta - static_cast< time_type >( 1.0 );
-		time_type theta_sq = theta * theta;
-		time_type A = theta_sq * ( static_cast< time_type >( 3.0 ) - static_cast< time_type >( 2.0 ) * theta );
-		time_type B = theta_sq * theta_m_1;
-		time_type C = theta_sq * theta_m_1 * theta_m_1;
-		time_type D = theta * theta_m_1 * theta_m_1;
+//		const time_type b1 = static_cast<time_type> ( 35.0 ) / static_cast<time_type>( 384.0 );
+//		const time_type b3 = static_cast<time_type> ( 500.0 ) / static_cast<time_type>( 1113.0 );
+//		const time_type b4 = static_cast<time_type> ( 125.0 ) / static_cast<time_type>( 192.0 );
+//		const time_type b5 = static_cast<time_type> ( -2187.0 ) / static_cast<time_type>( 6784.0 );
+//		const time_type b6 = static_cast<time_type> ( 11.0 ) / static_cast<time_type>( 84.0 );
+//
+//
+//		time_type theta = t - m_t_old;
+//		time_type X1 = static_cast< time_type >( 5.0 ) * ( static_cast< time_type >( 2558722523.0 ) - static_cast< time_type >( 31403016.0 ) * theta ) / static_cast< time_type >( 11282082432.0 );
+//		time_type X3 = static_cast< time_type >( 100.0 ) * ( static_cast< time_type >( 882725551.0 ) - static_cast< time_type >( 15701508.0 ) * theta ) / static_cast< time_type >( 32700410799.0 );
+//		time_type X4 = static_cast< time_type >( 25.0 ) * ( static_cast< time_type >( 443332067.0 ) - static_cast< time_type >( 31403016.0 ) * theta ) / static_cast< time_type >( 1880347072.0 ) ;
+//		time_type X5 = static_cast< time_type >( 32805.0 ) * ( static_cast< time_type >( 23143187.0 ) - static_cast< time_type >( 3489224.0 ) * theta ) / static_cast< time_type >( 199316789632.0 );
+//		time_type X6 = static_cast< time_type >( 55.0 ) * ( static_cast< time_type >( 29972135.0 ) - static_cast< time_type >( 7076736.0 ) * theta ) / static_cast< time_type >( 822651844.0 );
+//		time_type X7 = static_cast< time_type >( 10.0 ) * ( static_cast< time_type >( 7414447.0 ) - static_cast< time_type >( 829305.0 ) * theta ) / static_cast< time_type >( 29380423.0 );
+//
+//		time_type theta_m_1 = theta - static_cast< time_type >( 1.0 );
+//		time_type theta_sq = theta * theta;
+//		time_type A = theta_sq * ( static_cast< time_type >( 3.0 ) - static_cast< time_type >( 2.0 ) * theta );
+//		time_type B = theta_sq * theta_m_1;
+//		time_type C = theta_sq * theta_m_1 * theta_m_1;
+//		time_type D = theta * theta_m_1 * theta_m_1;
 
 //		time_type b1_theta = A *
 
@@ -164,10 +180,12 @@ private:
 
 
 	stepper_type &m_stepper;
-	size_adjuster< state_type , 2 > m_size_adjuster;
-	state_type m_x1 , m_x2;
+	size_adjuster< state_type , 4 > m_size_adjuster;
+	state_type m_x1 , m_x2 , m_dxdt1 , m_dxdt2;
 	state_type *m_current_state , *m_old_state;
+	state_type *m_current_deriv , *m_old_deriv;
 	time_type m_t , m_t_old , m_dt;
+	bool m_is_deriv_initialized;
 
 
 };
