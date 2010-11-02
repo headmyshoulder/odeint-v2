@@ -95,32 +95,41 @@ public:
 	template< class System >
 	void do_step( System &system , state_type &x , const time_type t , const time_type dt )
 	{
-	    m_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
-	    system( x , m_dxdt ,t );
-		this->stepper().do_step_impl( system , x , m_dxdt , t , x , dt );
+	    if( m_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() ) || m_first_call )
+	    {
+	        system( x , m_dxdt ,t );
+	        m_first_call = false;
+	    }
+		this->stepper().do_step_impl( system , x , m_dxdt , t , x , m_dxdt , dt );
 	}
 
 	// do_step( sys , x , dxdt , t , dt )
 	template< class System >
-	void do_step( System &system , state_type &x , const state_type &dxdt , const time_type t , const time_type dt )
+	void do_step( System &system , state_type &x , state_type &dxdt , const time_type t , const time_type dt )
 	{
-		this->stepper().do_step_impl( system , x , dxdt , t , x , dt );
+		m_first_call = true;
+		this->stepper().do_step_impl( system , x , dxdt , t , x , dxdt , dt );
 	}
 
 	// do_step( sys , in , t , out , dt )
 	template< class System >
 	void do_step( System &system , const state_type &in , const time_type t , state_type &out , const time_type dt )
 	{
-	    m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
-	    system( in , m_dxdt ,t );
-		this->stepper().do_step_impl( system , in , m_dxdt , t , out , dt );
+		if( m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() ) || m_first_call )
+		{
+			system( in , m_dxdt ,t );
+			m_first_call = false;
+		}
+		this->stepper().do_step_impl( system , in , m_dxdt , t , out , m_dxdt , dt );
 	}
 
-	// do_step( sys , in , dxdt , t , out , dt )
+	// do_step( sys , in , dxdt_in , t , out , dxdt_out , dt )
 	template< class System >
-	void do_step( System &system , const state_type &in , const state_type &dxdt , const time_type t , state_type &out , const time_type dt )
+	void do_step( System &system , const state_type &in , const state_type &dxdt_in , const time_type t ,
+			state_type &out , state_type &dxdt_out , const time_type dt )
 	{
-		this->stepper().do_step_impl( system , in , dxdt , t , out , dt );
+		m_first_call = true;
+		this->stepper().do_step_impl( system , in , dxdt_in , t , out , dxdt_out , dt );
 	}
 
 
@@ -137,14 +146,15 @@ public:
 	        system( x , m_dxdt ,t );
 	        m_first_call = false;
 	    }
-		this->stepper().do_step_impl( system , x , m_dxdt , t , x , dt , xerr );
+		this->stepper().do_step_impl( system , x , m_dxdt , t , x , m_dxdt , dt , xerr );
 	}
 
 	// do_step( sys , x , dxdt , t , dt , xerr )
 	template< class System >
 	void do_step( System &system , state_type &x , state_type &dxdt , const time_type t , const time_type dt , state_type &xerr )
 	{
-		this->stepper().do_step_impl( system , x , dxdt , t , x , dt , xerr );
+		m_first_call = true;
+		this->stepper().do_step_impl( system , x , dxdt , t , x , dxdt , dt , xerr );
 	}
 
 	// do_step( sys , in , t , out , dt , xerr )
@@ -156,22 +166,20 @@ public:
 	        system( in , m_dxdt ,t );
 	        m_first_call = false;
 	    }
-		this->stepper().do_step_impl( system , in , m_dxdt , t , out , dt , xerr );
+		this->stepper().do_step_impl( system , in , m_dxdt , t , out , m_dxdt , dt , xerr );
 	}
 
-	// do_step( sys , in , dxdt , t , out , dt , xerr )
+	// do_step( sys , in , dxdt_in , t , out , dxdt_out , dt )
 	template< class System >
-	void do_step( System &system , const state_type &in , state_type &dxdt , const time_type t , state_type &out , const time_type dt , state_type &xerr )
+	void do_step( System &system , const state_type &in , const state_type &dxdt_in , const time_type t ,
+			state_type &out , state_type &dxdt_out , const time_type dt , state_type &xerr )
 	{
-		this->stepper().do_step_impl( system , in , dxdt , t , out , dt , xerr );
+		m_first_call = true;
+		this->stepper().do_step_impl( system , in , dxdt_in , t , out , dxdt_out , dt , xerr );
 	}
 
 
 
-	void reset_step( state_type &dxdt )
-	{
-	    this->stepper().reset_step_impl( dxdt );
-	}
 
 
 
