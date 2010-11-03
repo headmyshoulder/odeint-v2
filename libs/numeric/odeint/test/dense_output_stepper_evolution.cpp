@@ -60,12 +60,16 @@ void evolution( Stepper &stepper , double t_end , const state_type &x0 , const s
     		state_type orig = sys_solution( t , x0 );
     		state_type diff = {{ orig[0] - x[0] , orig[1] - x[1] }};
     		double diff_abs = sqrt( diff[0] * diff[0] + diff[1] * diff[1] );
-    		state_out << t << tab << x << tab << orig << tab << diff << diff_abs << endl;
+    		state_out << t << tab << x << tab << orig << tab << diff << tab << diff_abs << endl;
     	}
     	else
     	{
     		stepper.do_step( sys );
-    		stepper_out << stepper.current_time() << "\t" << stepper.current_state() << std::endl;
+    		state_type orig = sys_solution( stepper.current_time() , x0 );
+    		const state_type &xx = stepper.current_state();
+    		state_type diff = {{ orig[0] - xx[0] , orig[1] - xx[1] }};
+    		double diff_abs = sqrt( diff[0] * diff[0] + diff[1] * diff[1] );
+    		stepper_out << stepper.current_time() << "\t" << xx << tab << orig << tab << diff << tab << diff_abs << std::endl;
     		continue;
     	}
     	t += dt;

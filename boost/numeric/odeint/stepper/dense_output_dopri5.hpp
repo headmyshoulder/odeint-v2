@@ -127,55 +127,87 @@ public:
 	 * C = theta^2 * ( theta - 1 )^2
 	 * D = theta   * ( theta - 1 )^2
 	 *
-	 * b_1( theta ) = A * b_1 + C * X1( theta ) + D
+	 * b_1( theta ) = A * b_1 - C * X1( theta ) + D
 	 * b_2( theta ) = 0
 	 * b_3( theta ) = A * b_3 + C * X3( theta )
-	 * b_4( theta ) = A * b_4 + C * X4( theta )
+	 * b_4( theta ) = A * b_4 - C * X4( theta )
 	 * b_5( theta ) = A * b_5 + C * X5( theta )
-	 * b_6( theta ) = A * b_6 + C * X6( theta )
+	 * b_6( theta ) = A * b_6 - C * X6( theta )
 	 * b_7( theta ) = B + C * X7( theta )
+	 *
+	 * An alternative Method is described in:
+	 *
+	 * www-m2.ma.tum.de/homepages/simeon/numerik3/kap3.ps
 	 */
 	void calc_state( time_type t , state_type &x )
 	{
+		const time_type b1 = static_cast<time_type> ( 35.0 ) / static_cast<time_type>( 384.0 );
+		const time_type b3 = static_cast<time_type> ( 500.0 ) / static_cast<time_type>( 1113.0 );
+		const time_type b4 = static_cast<time_type> ( 125.0 ) / static_cast<time_type>( 192.0 );
+		const time_type b5 = static_cast<time_type> ( -2187.0 ) / static_cast<time_type>( 6784.0 );
+		const time_type b6 = static_cast<time_type> ( 11.0 ) / static_cast<time_type>( 84.0 );
 
-//		const time_type b1 = static_cast<time_type> ( 35.0 ) / static_cast<time_type>( 384.0 );
-//		const time_type b3 = static_cast<time_type> ( 500.0 ) / static_cast<time_type>( 1113.0 );
-//		const time_type b4 = static_cast<time_type> ( 125.0 ) / static_cast<time_type>( 192.0 );
-//		const time_type b5 = static_cast<time_type> ( -2187.0 ) / static_cast<time_type>( 6784.0 );
-//		const time_type b6 = static_cast<time_type> ( 11.0 ) / static_cast<time_type>( 84.0 );
-//
-//
-//		time_type theta = t - m_t_old;
-//		time_type X1 = static_cast< time_type >( 5.0 ) * ( static_cast< time_type >( 2558722523.0 ) - static_cast< time_type >( 31403016.0 ) * theta ) / static_cast< time_type >( 11282082432.0 );
-//		time_type X3 = static_cast< time_type >( 100.0 ) * ( static_cast< time_type >( 882725551.0 ) - static_cast< time_type >( 15701508.0 ) * theta ) / static_cast< time_type >( 32700410799.0 );
-//		time_type X4 = static_cast< time_type >( 25.0 ) * ( static_cast< time_type >( 443332067.0 ) - static_cast< time_type >( 31403016.0 ) * theta ) / static_cast< time_type >( 1880347072.0 ) ;
-//		time_type X5 = static_cast< time_type >( 32805.0 ) * ( static_cast< time_type >( 23143187.0 ) - static_cast< time_type >( 3489224.0 ) * theta ) / static_cast< time_type >( 199316789632.0 );
-//		time_type X6 = static_cast< time_type >( 55.0 ) * ( static_cast< time_type >( 29972135.0 ) - static_cast< time_type >( 7076736.0 ) * theta ) / static_cast< time_type >( 822651844.0 );
-//		time_type X7 = static_cast< time_type >( 10.0 ) * ( static_cast< time_type >( 7414447.0 ) - static_cast< time_type >( 829305.0 ) * theta ) / static_cast< time_type >( 29380423.0 );
-//
-//		time_type theta_m_1 = theta - static_cast< time_type >( 1.0 );
-//		time_type theta_sq = theta * theta;
-//		time_type A = theta_sq * ( static_cast< time_type >( 3.0 ) - static_cast< time_type >( 2.0 ) * theta );
-//		time_type B = theta_sq * theta_m_1;
-//		time_type C = theta_sq * theta_m_1 * theta_m_1;
-//		time_type D = theta * theta_m_1 * theta_m_1;
+		time_type dt = ( m_t - m_t_old );
+		time_type theta = ( t - m_t_old ) / dt;
+		time_type X1 = static_cast< time_type >( 5.0 ) * ( static_cast< time_type >( 2558722523.0 ) - static_cast< time_type >( 31403016.0 ) * theta ) / static_cast< time_type >( 11282082432.0 );
+		time_type X3 = static_cast< time_type >( 100.0 ) * ( static_cast< time_type >( 882725551.0 ) - static_cast< time_type >( 15701508.0 ) * theta ) / static_cast< time_type >( 32700410799.0 );
+		time_type X4 = static_cast< time_type >( 25.0 ) * ( static_cast< time_type >( 443332067.0 ) - static_cast< time_type >( 31403016.0 ) * theta ) / static_cast< time_type >( 1880347072.0 ) ;
+		time_type X5 = static_cast< time_type >( 32805.0 ) * ( static_cast< time_type >( 23143187.0 ) - static_cast< time_type >( 3489224.0 ) * theta ) / static_cast< time_type >( 199316789632.0 );
+		time_type X6 = static_cast< time_type >( 55.0 ) * ( static_cast< time_type >( 29972135.0 ) - static_cast< time_type >( 7076736.0 ) * theta ) / static_cast< time_type >( 822651844.0 );
+		time_type X7 = static_cast< time_type >( 10.0 ) * ( static_cast< time_type >( 7414447.0 ) - static_cast< time_type >( 829305.0 ) * theta ) / static_cast< time_type >( 29380423.0 );
 
-//		time_type b1_theta = A *
+		time_type theta_m_1 = theta - static_cast< time_type >( 1.0 );
+		time_type theta_sq = theta * theta;
+		time_type A = theta_sq * ( static_cast< time_type >( 3.0 ) - static_cast< time_type >( 2.0 ) * theta );
+		time_type B = theta_sq * theta_m_1;
+		time_type C = theta_sq * theta_m_1 * theta_m_1;
+		time_type D = theta * theta_m_1 * theta_m_1;
 
+		time_type b1_theta = A * b1 - C * X1 + D;
+		time_type b3_theta = A * b3 + C * X3;
+		time_type b4_theta = A * b4 - C * X4;
+		time_type b5_theta = A * b5 + C * X5;
+		time_type b6_theta = A * b6 - C * X6;
+		time_type b7_theta = B + C * X7;
 
+		const state_type &k1 = *m_old_deriv;
+		const state_type &k3 = dopri5().m_x3;
+		const state_type &k4 = dopri5().m_x4;
+		const state_type &k5 = dopri5().m_x5;
+		const state_type &k6 = dopri5().m_x6;
+		const state_type &k7 = *m_current_deriv;
 
-
-
-//		algebra_type::for_each3( x , *m_old_state , m_euler.m_dxdt , typename operations_type::scale_sum2( 1.0 , delta ) );
+		algebra_type::for_each8( x , *m_old_state , k1 , k3 , k4 , k5 , k6 , k7 ,
+				typename operations_type::scale_sum7( 1.0 , dt * b1_theta , dt * b3_theta , dt * b4_theta , dt * b5_theta , dt * b6_theta , dt * b7_theta ) );
+//		algebra_type::for_each3( x , *m_old_state , k1 ,
+//				typename operations_type::scale_sum2( 1.0 , dt * theta ) );
 	}
 
-	const state_type& current_state( void ) const { return *m_current_state; }
-	const time_type& current_time( void ) const { return m_t; }
-	const time_type& previous_state( void ) const { return *m_old_state; }
-	const time_type& previous_time( void ) const { return m_t_old; }
+	const state_type& current_state( void ) const
+	{
+		return *m_current_state;
+	}
+
+	const time_type& current_time( void ) const
+	{
+		return m_t;
+	}
+
+	const time_type& previous_state( void ) const
+	{
+		return *m_old_state;
+	}
+
+	const time_type& previous_time( void ) const
+	{
+		return m_t_old;
+	}
 
 
 private:
+
+	dopri5_type& dopri5( void ) { return m_stepper.stepper(); }
+	const dopri5_type& dopri5( void ) const { return m_stepper.stepper(); }
 
 
 

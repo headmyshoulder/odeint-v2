@@ -98,6 +98,22 @@ struct standard_operations
 		}
 	};
 
+	struct scale_sum7
+	{
+		const time_type m_alpha1 , m_alpha2 , m_alpha3 , m_alpha4 , m_alpha5 , m_alpha6 , m_alpha7;
+
+		scale_sum7( const time_type alpha1 , const time_type alpha2 , const time_type alpha3 , const time_type alpha4 ,
+				const time_type alpha5 , const time_type alpha6 , const time_type alpha7 )
+			: m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) , m_alpha4( alpha4 ) , m_alpha5( alpha5 ) , m_alpha6( alpha6 ) , m_alpha7( alpha7 ) { }
+
+		template< class T1 , class T2 , class T3 , class T4 , class T5 , class T6 , class T7 , class T8 >
+		void operator()( T1 &t1 , const T2 &t2 , const T3 &t3 , const T4 &t4 , const T5 &t5 , const T6 &t6 , const T7 &t7 , const T8 &t8 ) const
+		{
+			t1 = m_alpha1 * t2 + m_alpha2 * t3 + m_alpha3 * t4 + m_alpha4 * t5 + m_alpha5 * t6 + m_alpha6 * t7 + m_alpha7 * t8;
+		}
+	};
+
+
 
 
 
