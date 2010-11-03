@@ -16,9 +16,6 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/lu.hpp>
 
-#include <iostream>
-#include <boost/numeric/ublas/io.hpp>
-
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -58,14 +55,9 @@ public:
         m_jacobi *= dt;
         m_jacobi -= boost::numeric::ublas::identity_matrix< value_type >( x.size() );
 
-        std::clog << m_jacobi << std::endl;
-        std::clog << m_b << std::endl;
-
         matrix_type jacobi_tmp( m_jacobi );
 
         solve( m_b , jacobi_tmp );
-
-        std::clog << m_b << std::endl;
 
         m_x = x - m_b;
 
@@ -84,8 +76,6 @@ public:
             jacobi_tmp = m_jacobi;
 
             solve( m_b , jacobi_tmp );
-
-            std::clog << m_b << std::endl;
 
             m_x -= m_b;
         }

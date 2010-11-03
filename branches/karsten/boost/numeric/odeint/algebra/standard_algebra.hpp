@@ -143,6 +143,30 @@ struct standard_algebra
 						   op	);
 	}
 
+	template< class StateType1 , class StateType2 , class StateType3 , class StateType4 , class StateType5 , class StateType6 ,class StateType7 , class StateType8 , class Operation >
+	static void for_each8( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , StateType4 &s4 , StateType5 &s5 , StateType6 &s6 , StateType7 &s7 , StateType8 &s8 , Operation op )
+	{
+		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType1 , container_type );
+		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType2 , container_type );
+		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType3 , container_type );
+		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType4 , container_type );
+		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType5 , container_type );
+		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType6 , container_type );
+		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType7 , container_type );
+		BOOST_ODEINT_CHECK_CONTAINER_TYPE( StateType8 , container_type );
+
+		detail::for_each8( boost::begin( s1 ) , boost::end( s1 ) ,
+						   boost::begin( s2 ) ,
+						   boost::begin( s3 ) ,
+						   boost::begin( s4 ) ,
+						   boost::begin( s5 ) ,
+						   boost::begin( s6 ) ,
+						   boost::begin( s7 ) ,
+						   boost::begin( s8 ) ,
+						   op	);
+	}
+
+
 	template< class ValueType , class StateType , class Reduction >
 	static ValueType reduce( StateType &s , Reduction red , ValueType init)
 	{

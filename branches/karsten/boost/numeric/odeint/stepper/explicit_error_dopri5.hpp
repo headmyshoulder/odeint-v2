@@ -42,6 +42,9 @@ class explicit_error_dopri5
 
 public :
 
+	template< class ControlledStepper >
+	friend class dense_output_dopri5;
+
 	BOOST_ODEINT_EXPLICIT_STEPPERS_AND_ERROR_STEPPERS_TYPEDEFS( explicit_error_dopri5 , 5 , 5 , 4 );
 
 	typedef explicit_error_stepper_fsal_tag stepper_category;
