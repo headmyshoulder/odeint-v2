@@ -72,10 +72,10 @@ public:
 		System &system;
 		state_type &x , &x_tmp;
 		state_type *k_vector;
-		double t;
-		double dt;
+		const double t;
+		const double dt;
 
-		calculate_stage( System &_system , state_type &_x , state_type &_x_tmp , state_type *_k_vector , double _t , double _dt )
+		calculate_stage( System &_system , state_type &_x , state_type &_x_tmp , state_type *_k_vector , const double _t , const double _dt )
 		: system( _system ) , x( _x ) , x_tmp( _x_tmp ) , k_vector( _k_vector ) , t( _t ) , dt( _dt )
 		{}
 
@@ -116,7 +116,7 @@ public:
 	}
 
 	template< class System >
-	void do_step( System &system , state_type &x , double t , double dt )
+	void do_step( System &system , state_type &x , double t , const double dt )
 	{
 		mpl::for_each< butcher_tableau >( calculate_stage< System >( system , x , m_x_tmp , m_k_vector , t , dt ) );
 	}

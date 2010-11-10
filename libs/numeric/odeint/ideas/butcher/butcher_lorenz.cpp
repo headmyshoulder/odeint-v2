@@ -20,7 +20,7 @@ using namespace std;
 
 typedef std::tr1::array< double , 3 > state_type;
 typedef mpl_rk4_stepper< state_type > stepper_type;
-typedef boost::numeric::odeint::stepper_rk4< state_type > stepper_std_type;
+typedef boost::numeric::odeint::explicit_rk4< state_type > stepper_std_type;
 
 
 const double sigma = 10.0;
