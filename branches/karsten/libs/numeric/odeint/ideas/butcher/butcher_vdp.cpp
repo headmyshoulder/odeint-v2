@@ -20,7 +20,7 @@ using namespace std;
 
 typedef std::tr1::array< double , 2 > state_type;
 typedef mpl_rk4_stepper< state_type > stepper_type;
-typedef boost::numeric::odeint::stepper_rk4< state_type > stepper_std_type;
+typedef boost::numeric::odeint::explicit_rk4< state_type > stepper_std_type;
 
 void vdp( const state_type &x , state_type &dxdt , double t )
 {
@@ -29,8 +29,6 @@ void vdp( const state_type &x , state_type &dxdt , double t )
 	dxdt[1] = -x[0] + mu * ( 1.0 - x[0]*x[0] ) * x[1];
 }
 
-typedef mpl_rk4_stepper< state_type > stepper_type;
-typedef boost::numeric::odeint::stepper_rk4< state_type > stepper_std_type;
 
 
 
