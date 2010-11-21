@@ -9,12 +9,13 @@
 #include <vector>
 #include <tr1/array>
 
-#include "generic_stepper.hpp"
+#include "fusion_stepper.hpp"
 
 using namespace std;
 
 typedef tr1::array< double , 3 > state_type;
 typedef runge_kutta_stepper< state_type , 1 > euler_stepper;
+typedef runge_kutta_stepper< state_type , 2 > midpoint_stepper;
 
 
 const double sigma = 10.0;
@@ -37,9 +38,17 @@ int main( void )
 	vector< double > c( 1 , 0.0 );
 	euler_stepper euler( a , b , c );
 
+	vector< vector< double > > a2( 1 , vector<double>( 1 , 0.5 ) );
+	vector< double > b2( 2 , 0.0 ); b2[1] = 0.5;
+	vector< double > c2( 1 , 0.0 ); c2[1] = 1.0;
+	midpoint_stepper midpoint( a2 , b2 , c2 );
+
 	state_type x = {{ 1.0 , 1.0 , 2.0 }};
+	state_type x2 = {{ 1.0 , 1.0 , 2.0 }};
 	double t = 0.0;
 	euler.do_step( lorenz , x , t , dt );
+	midpoint.do_step( lorenz , x2 , t , dt );
 
 	cout << x[0] << " , " << x[1] << " , " << x[2] << endl;
+	cout << x2[0] << " , " << x2[1] << " , " << x2[2] << endl;
 }
