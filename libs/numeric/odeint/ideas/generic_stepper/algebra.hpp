@@ -42,4 +42,19 @@ struct algebra< state_type , 1 >
 };
 
 
+template< typename state_type>
+struct algebra< state_type , 2 >
+{
+
+	typedef typename boost::numeric::odeint::standard_algebra< state_type > std_algebra;
+	typedef typename boost::numeric::odeint::standard_operations< double > std_op;
+
+	static void foreach( state_type &x_tmp , const state_type &x , const std::vector< double > &a , const state_type *k_vector , const double dt )
+	{
+		std_algebra::for_each4( x_tmp , x ,  k_vector[0] , k_vector[1] , std_op::scale_sum3( 1.0 , a[0]*dt , a[1]*dt ) );
+	}
+
+};
+
+
 #endif /* ALGEBRA_HPP_ */
