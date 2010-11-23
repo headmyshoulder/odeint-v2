@@ -20,10 +20,13 @@
 #include <boost/mpl/insert_range.hpp>
 
 #include <vector>
+#include <algorithm>
 
 #include <boost/fusion/container.hpp>
 #include <boost/fusion/algorithm.hpp>
 #include <boost/fusion/include/mpl.hpp>
+
+#include <boost/array.hpp>
 
 #include <typeinfo>
 
@@ -49,7 +52,7 @@ public:
 
     void init( const parameter_array_type2D &a , const parameter_array_type1D &c )
     {
-        m_a_row = a[stage-1];
+        copy( a[stage-1].begin() , a[stage-1].end() , &m_a_row[0] );
         m_c = c[stage-1];
     }
 
@@ -63,7 +66,7 @@ public:
 
 private:
 
-    vector< value_type > m_a_row;
+    boost::array< value_type , stage > m_a_row;
     value_type m_c;
 
 };
@@ -82,7 +85,7 @@ public:
 
     void init( const parameter_array_type2D &a , const parameter_array_type1D &c )
     {
-    	m_a_row = a[0];
+    	copy( a[0].begin() , a[0].end() , &m_a_row[0] );
         m_c = c[0];
     }
 
@@ -96,7 +99,7 @@ public:
 
 private:
 
-    vector< value_type > m_a_row;
+    boost::array< value_type , 1 > m_a_row;
     value_type m_c;
 
 };
@@ -116,12 +119,13 @@ public:
 
     void init( const parameter_array_type1D &b , const parameter_array_type1D &c )
     {
-        m_b = b;
+        copy( b.begin() , b.end() , &m_b[0] );
         m_c = c[stage-1];
     }
 
     template< typename System >
-    void operator() ( System &system , state_type &x_tmp , state_type &x , state_type *k_vector , double t , const double dt )
+    void operator() ( System &system , state_type &x_tmp , state_type &x , state_type *k_vector ,
+                        double t , const double dt ) const
     {
         system( x_tmp , k_vector[stage-1] , t + m_c * dt );
         algebra<state_type , stage>::foreach( x , x , m_b , k_vector , dt);
@@ -129,7 +133,7 @@ public:
 
 private:
 
-    vector< value_type > m_b;
+    boost::array< value_type , stage > m_b;
     value_type m_c;
 
 };
@@ -149,12 +153,13 @@ public:
 
     void init( const parameter_array_type1D &b , const parameter_array_type1D &c )
     {
-        m_b = b;
+        copy( b.begin() , b.end() , &m_b[0] );
         m_c = c[0];
     }
 
     template< typename System >
-    void operator() ( System &system , state_type &x_tmp , state_type &x , state_type k_vector[1] , double t , const double dt )
+    void operator() ( System &system , state_type &x_tmp , state_type &x , state_type k_vector[1] ,
+                        double t , const double dt ) const
     {
         system( x , k_vector[0] , t + m_c * dt );
         algebra<state_type , 1>::foreach( x , x , m_b , k_vector , dt);
@@ -162,7 +167,7 @@ public:
 
 private:
 
-    vector< value_type > m_b;
+    boost::array< value_type , 1 > m_b;
     value_type m_c;
 
 };
