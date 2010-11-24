@@ -195,8 +195,23 @@ class runge_kutta_stepper
 {
 
 	typedef State state_type;
-	typedef vector< vector< double > > parameter_array_type2D;
-	typedef vector< double > parameter_array_type1D;
+
+
+	typedef typename fusion::result_of::as_vector
+    <
+        typename mpl::copy
+        <
+            mpl::range_c< size_t , 1 , N > ,
+            mpl::inserter
+            <
+                mpl::vector0<> ,
+                mpl::push_back< mpl::_1 , array_wrapper< double , mpl::_2 > >
+            >
+        >::type
+    >::type coef_a_type;
+	typedef boost::array< double , N > coef_b_type;
+	typedef boost::array< double , N > coef_c_type;
+
 
     template< class System >
     struct calculate_stage
@@ -252,9 +267,9 @@ public:
     >::type stage_vector;
     typedef stepper_last_stage< State , stage_count > last_stage_type;
 
-    runge_kutta_stepper( const parameter_array_type2D &a ,
-							const parameter_array_type1D &b ,
-							const parameter_array_type1D &c )
+    runge_kutta_stepper( const coef_a_type &a ,
+							const coef_b_type &b ,
+							const coef_c_type &c )
     {
     	fusion::for_each( m_stages , init_stage( a , c ) );
     	m_last_stage.init( b , c );
@@ -266,6 +281,7 @@ public:
         fusion::for_each( m_stages , calculate_stage< System >( system , x , m_x_tmp , m_k_vector , t , dt ) );
         m_last_stage( system , m_x_tmp , x , m_k_vector , t , dt );
     }
+
 
 private:
 
