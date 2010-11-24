@@ -17,6 +17,11 @@
 #include <boost/fusion/container.hpp>
 #include <boost/fusion/algorithm.hpp>
 #include <boost/fusion/include/mpl.hpp>
+#include <boost/fusion/view/zip_view.hpp>
+#include <boost/fusion/include/zip_view.hpp>
+#include <boost/fusion/algorithm/transformation/push_back.hpp>
+#include <boost/fusion/include/push_back.hpp>
+
 
 #include <boost/array.hpp>
 
@@ -37,11 +42,22 @@ struct array_wrapper
     typedef typename boost::array< T , Constant::value > type;
 };
 
+struct first_stage {};
+struct intermediate_stage {};
+struct last_stage {};
 
-template< class T , class Constant >
-struct stage_wrapper
+template< typename T , size_t N , typename StageCategory >
+struct stage_fusion
 {
-    typedef typename  fusion::result_of::as_vector< mpl::vector< size_t , T , boost::array< T , Constant::value > > >::type type;
+    //typedef typename fusion::result_of::as_vector< mpl::vector< size_t , T , boost::array< T , N > , StageCategory > >::type type;
+    typedef fusion::vector4< size_t , T , boost::array< T , N > , StageCategory > type;
+    typedef fusion::vector4< size_t , T , boost::array< T , N > , StageCategory >& ref_type;
+};
+
+template< class T , class Constant , class StageCategory >
+struct stage_fusion_wrapper
+{
+    typedef typename stage_fusion< T , Constant::value , StageCategory >::type type;
 };
 
 struct print_stage
@@ -49,7 +65,10 @@ struct print_stage
     template< typename Stage >
     void operator() ( const Stage &stage ) const
     {
-        std::cout<< fusion::at_c<0>( stage ) << " " << fusion::at_c<1>( stage ) << " " << std::endl;
+        std::cout<< "stage: " << fusion::at_c<0>( stage ) << " c:" << fusion::at_c<1>( stage ) << " ";
+        for( size_t i=0 ; i < fusion::at_c<2>( stage ).size() ; ++i )
+            std::cout << "a["<<i<<"]:" <<  fusion::at_c<2>( stage )[i] << " ";
+        std::cout << std::endl;
     }
 };
 
@@ -71,7 +90,7 @@ public:
             stage_indices ,
             mpl::inserter
             <
-                mpl::vector0<> ,
+                mpl::vector0< > ,
                 mpl::push_back< mpl::_1 , array_wrapper< double , mpl::_2 > >
             >
         >::type
@@ -82,36 +101,45 @@ public:
     typedef boost::array< double , stage_count > coef_c_type;
 
 
-    typedef typename fusion::result_of::as_vector<
+    typedef //typename fusion::result_of::as_vector<
         typename mpl::copy<
             stage_indices,
             mpl::inserter
               <
                 mpl::vector0<> ,
-                mpl::push_back< mpl::_1 , stage_wrapper< double , mpl::_2 > >
+                mpl::push_back< mpl::_1 , stage_fusion_wrapper< double , mpl::_2 , intermediate_stage > >
               >
-            >::type
-        >::type stage_vector_base;
+            >::type stage_vector_base0;
+        //>::type
+
+    typedef typename fusion::result_of::as_vector<
+        typename mpl::push_back<
+            stage_vector_base0 ,
+            typename stage_fusion_wrapper< double , mpl::integral_c< size_t , stage_count > , last_stage >::type
+        >::type
+    >::type stage_vector_base;
 
 
     struct stage_vector_type : public stage_vector_base
     {
         struct init_stage{
 
-            const coef_a_type &m_a;
-            const coef_b_type &m_c;
+            const coef_c_type &m_c;
 
-            init_stage( const coef_a_type &a , const coef_b_type &b , const coef_c_type &c )
-                : m_a( a ) , m_c( c ) {}
+            init_stage( const coef_b_type &b , const coef_c_type &c )
+                : m_c( c ) {}
 
 
-            template< typename Stage >
-            void operator() ( const Stage &stage ) const
+            template< typename T , size_t N , typename StageCategory>
+            void operator() (
+                    fusion::vector2< fusion::vector4< size_t , T , boost::array< T , N > , StageCategory >& ,
+                                     //stage_fusion< T , N , StageCategory >::ref_type ,
+                                     boost::array< T , N > > stage ) const
             {
-                const size_t n = fusion::at_c<2>( stage ).size();
-                fusion::at_c<0>( stage ) = n;
-                fusion::at_c<1>( stage ) = m_c[n];
-                fusion::at_c<2>( stage ) = m_a[n];
+                std::cout << N << std::endl;
+                fusion::at_c<0>( fusion::at_c<0>(stage) ) = N;
+                fusion::at_c<1>( fusion::at_c<0>(stage) ) = m_c[N-1];
+                fusion::at_c<2>( fusion::at_c<0>(stage) ) = fusion::at_c<1>( stage );
             }
 
         };
@@ -119,7 +147,14 @@ public:
 
         stage_vector_type( const coef_a_type &a , const coef_b_type &b , const coef_c_type &c )
         {
-            fusion::for_each( static_cast< stage_vector_base& >( *this ) , init_stage( a , b , c ) );
+            //typedef typename fusion::result_of::push_back< const coef_a_type , const coef_b_type >::type ab_type;
+            typedef fusion::joint_view< const coef_a_type , const fusion::single_view< coef_b_type > > ab_type;
+            const ab_type ab = fusion::push_back( a , b );
+            // iterate stage and c in parallel
+            typedef fusion::vector< stage_vector_base& , const ab_type& > zipped_stage;
+
+            fusion::for_each( fusion::zip_view<zipped_stage>( zipped_stage( static_cast< stage_vector_base& >( *this ) , ab ) ) ,
+                              init_stage( b , c ) );
         }
     };
 

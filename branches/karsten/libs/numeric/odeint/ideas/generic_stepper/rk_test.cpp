@@ -41,16 +41,17 @@ int main( void )
 
     euler_stepper euler( fusion::vector0<>() , b , c  );
     euler.print_vals();
+    cout << typeid(euler_stepper::stage_vector_base).name() << endl;
 
-    boost::array< double , 1 > a2 = {{ 0.5 }};
-    boost::array< double , 2 > b2 = {{ 0.0 , 0.5 }};
-    boost::array< double , 2 > c2 = {{ 0.0 , 1.0 }};
-
-    cout << typeid(midpoint_stepper::coef_a_type).name() << endl;
-    cout << typeid(midpoint_stepper::coef_b_type).name() << endl;
-    cout << typeid(midpoint_stepper::coef_c_type).name() << endl;
-    cout << typeid(midpoint_stepper::stage_vector_base).name() << endl;
-
+//    boost::array< double , 1 > a2 = {{ 0.5 }};
+//    boost::array< double , 2 > b2 = {{ 0.0 , 1.0 }};
+//    boost::array< double , 2 > c2 = {{ 0.0 , 0.5 }};
+//
+//    cout << typeid(midpoint_stepper::coef_a_type).name() << endl;
+//    cout << typeid(midpoint_stepper::coef_b_type).name() << endl;
+//    cout << typeid(midpoint_stepper::coef_c_type).name() << endl;
+//    cout << typeid(midpoint_stepper::stage_vector_base).name() << endl;
+//
 //    midpoint_stepper midpoint( fusion::make_vector( a2 ) , b2 , c2  );
 //    midpoint.print_vals();
 
