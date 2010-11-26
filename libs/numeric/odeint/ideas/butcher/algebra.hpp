@@ -38,14 +38,14 @@ struct algebra< state_type , coef_type , mpl::int_< 0 > >
 	{
 		const static double a1 = dt * convert_value< typename mpl::at< coef_type , mpl::int_< 0 > >::type >::get_value();
 
-		iterator first1 = x_tmp.begin() , last1 = x_tmp.end();
-		const_iterator first2 = x.begin() , first3 = k_vector[0].begin();
-		while( first1 != last1 )
-			*first1++ = *first2++ + a1 * *first3++ ;
+//		iterator first1 = x_tmp.begin() , last1 = x_tmp.end();
+//		const_iterator first2 = x.begin() , first3 = k_vector[0].begin();
+//		while( first1 != last1 )
+//			*first1++ = *first2++ + a1 * *first3++ ;
 
 
-//		std_algebra::for_each3( x_tmp , x ,  k_vector[0] ,
-//				std_op::scale_sum2( 1.0 , a1 ) );
+		std_algebra::for_each3( x_tmp , x ,  k_vector[0] ,
+				std_op::scale_sum2( 1.0 , a1 ) );
 
 
 //		for( size_t i=0 ; i<x.size() ; ++i )

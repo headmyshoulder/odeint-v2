@@ -37,8 +37,8 @@ typedef boost::timer timer_type;
 
 
 typedef std::tr1::array< double , 3 > state_type;
-typedef mpl_rk4_stepper< state_type > stepper_type;
-typedef boost::numeric::odeint::explicit_rk4< state_type > stepper_std_type;
+typedef mpl_euler_stepper< state_type > stepper_type;
+typedef boost::numeric::odeint::explicit_euler< state_type > stepper_std_type;
 
 
 void lorenz( const state_type &x , state_type &dxdt , double t )

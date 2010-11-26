@@ -15,9 +15,9 @@ project
       <include>$(BOOST_ROOT)
     ;
 
-exe test 
-	: test.cpp
-	;
+#exe test 
+#	: test.cpp
+#	;
 
 exe rk_test
     : rk_test.cpp
