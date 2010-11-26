@@ -155,25 +155,23 @@ public:
     typedef boost::array< double , stage_count > coef_b_type;
     typedef boost::array< double , stage_count > coef_c_type;
 
-
-    typedef typename mpl::copy
-        <
-            stage_indices,
-            mpl::inserter
-            <
-                mpl::vector0<> ,
-                mpl::push_back< mpl::_1 , stage_fusion_wrapper< double , mpl::_2 , intermediate_stage > >
-            >
-        >::type base_of_stage_vector_base;
-
     typedef typename fusion::result_of::as_vector
     <
         typename mpl::push_back
         <
-            base_of_stage_vector_base ,
+			typename mpl::copy
+            <
+				stage_indices,
+                mpl::inserter
+                <
+                    mpl::vector0<> ,
+                    mpl::push_back< mpl::_1 , stage_fusion_wrapper< double , mpl::_2 , intermediate_stage > >
+                >
+            >::type ,
             typename stage_fusion_wrapper< double , mpl::size_t< stage_count > , last_stage >::type
         >::type
     >::type stage_vector_base;
+
 
     struct stage_vector : public stage_vector_base
     {
