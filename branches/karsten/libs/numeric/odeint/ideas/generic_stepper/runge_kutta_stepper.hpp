@@ -61,17 +61,10 @@ struct array_wrapper
     typedef typename boost::array< T , Constant::value > type;
 };
 
-
-template< typename T , size_t N , typename StageCategory >
-struct stage_fusion
-{
-    typedef fusion::vector4< size_t , T , boost::array< T , N > , StageCategory > type;
-};
-
 template< class T , class Constant , class StageCategory >
 struct stage_fusion_wrapper
 {
-    typedef typename stage_fusion< T , Constant::value , StageCategory >::type type;
+    typedef typename fusion::vector< size_t , T , boost::array< T , Constant::value > , StateCategory > type;
 };
 
 struct print_stage
