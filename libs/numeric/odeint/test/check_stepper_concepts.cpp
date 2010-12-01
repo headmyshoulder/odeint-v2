@@ -53,7 +53,7 @@ typedef std::tr1::array< double , 1 > array_type;
 typedef mpl::vector< vector_type , vector_space_type , array_type >::type container_types;
 
 
-template< class State > struct algebra_dispatcher { typedef standard_algebra< State > type; };
+template< class State > struct algebra_dispatcher { typedef standard_algebra type; };
 template<> struct algebra_dispatcher< vector_space_type > { typedef vector_space_algebra type; };
 
 

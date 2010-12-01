@@ -36,7 +36,7 @@ namespace odeint {
 template<
     class State ,
     class Time = double ,
-	class Algebra = standard_algebra< State > ,
+	class Algebra = standard_algebra ,
 	class Operations = standard_operations< Time > ,
 	class AdjustSizePolicy = adjust_size_initially_tag
 	>
