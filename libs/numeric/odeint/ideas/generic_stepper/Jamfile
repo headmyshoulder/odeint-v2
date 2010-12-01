@@ -12,6 +12,8 @@ project
     : requirements
       <define>BOOST_ALL_NO_LIB=1
       <include>../../../../..
+      <include>../butcher
+      <include>$(HOME)/boost_sandbox/chrono
       <include>$(BOOST_ROOT)
     ;
 
@@ -21,4 +23,8 @@ project
 
 exe rk_test
     : rk_test.cpp
+    ;
+    
+exe performance
+    : performance.cpp
     ;
