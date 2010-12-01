@@ -13,7 +13,7 @@ project
       <define>BOOST_ALL_NO_LIB=1
       <include>../../../../..
       <include>$(BOOST_ROOT)
-      <include>$(HOME)/boost/chrono
+      <include>$(HOME)/boost_sandbox/chrono
     ;
 
 exe butcher_performance 
