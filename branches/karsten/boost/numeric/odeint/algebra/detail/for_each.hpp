@@ -19,6 +19,13 @@ namespace odeint {
 namespace detail {
 
 
+template< class Iterator1 , class Operation >
+inline void for_each1( Iterator1 first1 , Iterator1 last1 , Operation op )
+{
+	for( ; first1 != last1 ; )
+		op( *first1++ );
+}
+
 
 template< class Iterator1 , class Iterator2 , class Operation >
 inline void for_each2( Iterator1 first1 , Iterator1 last1 , Iterator2 first2 , Operation op )

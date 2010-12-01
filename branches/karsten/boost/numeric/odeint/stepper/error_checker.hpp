@@ -23,7 +23,7 @@ namespace odeint {
 
 template< class State ,
 		   class Time ,
-		   class Algebra = standard_algebra< State > ,
+		   class Algebra = standard_algebra ,
 		   class Operations = standard_operations< Time > >
 class error_checker_standard
 {
