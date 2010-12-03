@@ -16,11 +16,14 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+
 /*
  * Tags to specify stepper types
  */
 
+struct stepper_tag {};
 struct error_stepper_tag {};
+struct dense_output_stepper_tag {} ;
 
 struct explicit_error_stepper_tag : error_stepper_tag {};
 struct explicit_error_stepper_fsal_tag : error_stepper_tag {};
