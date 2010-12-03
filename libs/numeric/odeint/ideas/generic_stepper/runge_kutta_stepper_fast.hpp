@@ -31,25 +31,6 @@ struct first_stage {};
 struct intermediate_stage {};
 struct last_stage {};
 
-ostream& operator<<( ostream& out , const first_stage& )
-{
-	out << "first stage";
-	return out;
-}
-
-ostream& operator<<( ostream& out , const intermediate_stage& )
-{
-	out << "intermediate stage";
-	return out;
-}
-
-ostream& operator<<( ostream& out , const last_stage& )
-{
-	out << "last stage";
-	return out;
-}
-
-
 
 template< class T , class Constant >
 struct array_wrapper
@@ -62,64 +43,6 @@ struct stage_fusion_wrapper
 {
     typedef typename fusion::vector< size_t , T , boost::array< T , Constant::value > , StageCategory > type;
 };
-
-struct print_stage
-{
-    template< typename Stage >
-    void operator() ( const Stage &stage ) const
-    {
-        std::cout<< "stage: " << fusion::at_c<0>( stage ) << " c:" << fusion::at_c<1>( stage ) << " ";
-        for( size_t i=0 ; i < fusion::at_c<2>( stage ).size() ; ++i )
-            std::cout << "a["<<i<<"]:" <<  fusion::at_c<2>( stage )[i] << " ";
-        std::cout << std::endl;
-    }
-};
-
-struct print_sequence
-{
-	size_t m_indent;
-
-	print_sequence( size_t indent = 0 )
-	: m_indent( indent ) { }
-
-	template< typename T >
-	void operator()( T ) const
-	{
-		string in;
-		for( size_t i=0 ; i<m_indent ; ++i ) in += "  ";
-		cout << in << typeid(T).name() << endl;
-	}
-};
-
-struct print_values
-{
-	size_t m_indent;
-
-	print_values( size_t indent = 0 )
-	: m_indent( indent ) { }
-
-	template< typename T >
-	void operator()( const T &t ) const
-	{
-		typedef typename fusion::traits::is_sequence< T >::type seq_type;
-		print_val( t , seq_type() );
-	}
-
-	template< class R >
-	void print_val( const R &r , mpl::false_ ) const
-	{
-		string in;
-		for( size_t i=0 ; i<m_indent ; ++i ) in += "  ";
-		cout << in << r << endl;
-	}
-
-	template< class S >
-	void print_val( const S &s , mpl::true_ ) const
-	{
-		fusion::for_each( s , print_values( m_indent + 1 ) );
-	}
-};
-
 
 template< class StateType , size_t stage_count >
 class runge_kutta_stepper
@@ -213,7 +136,7 @@ public:
 
 
         template< typename T , size_t stage_number >
-        void operator()( fusion::vector< size_t , T , boost::array< T , stage_number > , intermediate_stage > const &stage ) const
+        inline void operator()( fusion::vector< size_t , T , boost::array< T , stage_number > , intermediate_stage > const &stage ) const
         //typename stage_fusion_wrapper< T , mpl::size_t< stage_number > , intermediate_stage >::type const &stage ) const
         {
             double c = fusion::at_c< 1 >( stage );
@@ -228,7 +151,7 @@ public:
 
 
         template< typename T , size_t stage_number >
-        void operator()( fusion::vector< size_t , T , boost::array< T , stage_number > , last_stage > const &stage ) const
+        inline void operator()( fusion::vector< size_t , T , boost::array< T , stage_number > , last_stage > const &stage ) const
         //void operator()( typename stage_fusion_wrapper< T , mpl::size_t< stage_number > , last_stage >::type const &stage ) const
         {
             double c = fusion::at_c< 1 >( stage );
@@ -259,29 +182,11 @@ public:
 
 
     template< class System >
-    void do_step( System &system , state_type &x , double t , const double dt )
+    inline void do_step( System &system , state_type &x , double t , const double dt )
     {
         fusion::for_each( m_stages , calculate_stage< System >( system , x , m_x_tmp , m_k_vector , t , dt ) );
     }
 
-
-    void print_vals()
-    {
-    	cout << "Typeof state_vector_base : " << endl;
-    	mpl::for_each< stage_vector_base >( print_sequence( 1 ) );
-
-    	cout << "m_a : " << endl;
-    	fusion::for_each( m_a , print_values( 1 ) );
-
-    	cout << "m_b : " << endl;
-    	fusion::for_each( m_b , print_values( 1 ) );
-
-    	cout << "m_c : " << endl;
-    	fusion::for_each( m_c , print_values( 1 ) );
-
-    	cout << "m_stages : " << endl;
-    	fusion::for_each( m_stages , print_values( 1 ) );
-    }
 
 
 

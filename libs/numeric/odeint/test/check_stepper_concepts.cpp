@@ -36,6 +36,8 @@
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 
+#include <boost/type_traits/add_reference.hpp>
+
 #include "vector_space_1d.hpp"
 
 
@@ -55,14 +57,12 @@ typedef mpl::vector< vector_type , vector_space_type , array_type >::type contai
 
 template< class State > struct algebra_dispatcher { typedef standard_algebra type; };
 template<> struct algebra_dispatcher< vector_space_type > { typedef vector_space_algebra type; };
+template<> struct algebra_dispatcher< double > { typedef vector_space_algebra type; };
 
 
 void constant_system_vector( const vector_type &x , vector_type &dxdt , double t ) { dxdt[0] = 1.0; }
 void constant_system_vector_space( const vector_space_type &x , vector_space_type &dxdt , double t ) { dxdt.m_x = 1.0; }
 void constant_system_array( const array_type &x , array_type &dxdt , double t ) { dxdt[0] = 1.0; }
-
-
-
 
 const double eps = 1.0e-14;
 
@@ -85,7 +85,7 @@ void check_error_stepper_concept( Stepper &stepper , System system , typename St
     typedef typename stepper_type::order_type order_type;
     typedef typename stepper_type::time_type time_type;
 
-    stepper.do_step( system , x , 0.0 , 0.1 , xerr );
+    stepper.do_step( system , typename boost::add_reference< container_type>::type( x ), 0.0 , 0.1 ,  typename boost::add_reference< container_type>::type( xerr ) );
 }
 
 template< class Stepper , class System >
@@ -144,8 +144,6 @@ struct perform_stepper_test< Stepper , array_type >
 		BOOST_CHECK_SMALL( fabs( x[0] - 2.1 ) , eps );
 	}
 };
-
-
 
 
 template< class State > class stepper_methods : public mpl::vector<
@@ -243,7 +241,6 @@ struct perform_error_stepper_test< Stepper , array_type >
 };
 
 
-
 template< class State > class error_stepper_methods : public mpl::vector<
 	explicit_error_rk54_ck< State , double , typename algebra_dispatcher< State >::type > ,
 	explicit_error_dopri5< State , double , typename algebra_dispatcher< State >::type >
@@ -339,7 +336,6 @@ struct perform_controlled_stepper_test< ControlledStepper , array_type >
 		BOOST_CHECK_SMALL( fabs( x[0] - 2.1 ) , eps );
 	}
 };
-
 
 template< class State > class controlled_stepper_methods : public mpl::vector<
 	controlled_error_stepper< explicit_error_rk54_ck< State , double , typename algebra_dispatcher< State >::type > > ,

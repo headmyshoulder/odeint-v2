@@ -28,3 +28,15 @@ exe rk_test
 exe performance
     : performance.cpp
     ;
+    
+exe performance_fusion
+    : performance_fusion.cpp runge_kutta_stepper_fast.hpp
+    ;
+    
+exe performance_mpl
+    : performance_mpl.cpp
+    ;
+    
+exe performance_odeint
+    : performance_odeint.cpp
+    ;
