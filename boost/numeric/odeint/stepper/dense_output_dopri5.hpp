@@ -97,7 +97,10 @@ public:
 		const size_t max_count = 1000;
 
 		if( !m_is_deriv_initialized )
+		{
 			system( *m_current_state , *m_current_deriv , m_t );
+			m_is_deriv_initialized = true;
+		}
 
 		controlled_step_result res = step_size_decreased;
 		m_t_old = m_t;
@@ -112,7 +115,6 @@ public:
 		std::swap( m_current_state , m_old_state );
 		std::swap( m_current_deriv , m_old_deriv );
 		return std::make_pair( m_t_old , m_t );
-
 	}
 
 	/*
@@ -178,9 +180,7 @@ public:
 		const state_type &k7 = *m_current_deriv;
 
 		algebra_type::for_each8( x , *m_old_state , k1 , k3 , k4 , k5 , k6 , k7 ,
-				typename operations_type::scale_sum7( 1.0 , dt * b1_theta , dt * b3_theta , dt * b4_theta , dt * b5_theta , dt * b6_theta , dt * b7_theta ) );
-//		algebra_type::for_each3( x , *m_old_state , k1 ,
-//				typename operations_type::scale_sum2( 1.0 , dt * theta ) );
+			typename operations_type::scale_sum7( 1.0 , dt * b1_theta , dt * b3_theta , dt * b4_theta , dt * b5_theta , dt * b6_theta , dt * b7_theta ) );
 	}
 
 	const state_type& current_state( void ) const

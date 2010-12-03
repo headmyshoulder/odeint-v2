@@ -19,7 +19,7 @@
 
 #include <boost/numeric/odeint/stepper/adjust_size.hpp>
 #include <boost/numeric/odeint/stepper/error_checker.hpp>
-#include <boost/numeric/odeint/stepper/base/stepper_categories.hpp>
+#include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
 namespace boost {
 namespace numeric {
