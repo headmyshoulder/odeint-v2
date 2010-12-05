@@ -7,13 +7,14 @@ import modules ;
 import path ; 
 
 path-constant HOME : [ os.environ HOME ] ;
+path-constant CHRONO_ROOT : [ os.environ CHRONO_ROOT ] ; 
 
 project
     : requirements
       <define>BOOST_ALL_NO_LIB=1
       <include>../../../../..
       <include>$(BOOST_ROOT)
-      <include>$(HOME)/boost_sandbox/chrono
+      <include>$(CHRONO_ROOT)
     ;
 
 exe butcher_performance 
