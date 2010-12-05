@@ -13,6 +13,8 @@ project odeint
 
 build-project libs/numeric/odeint/examples ;
 build-project libs/numeric/odeint/test ;
+build-project libs/numeric/odeint/ideas/butcher ;
+build-project libs/numeric/odeint/ideas/generic_stepper ;
 
 # additional tests with external libraries :
 build-project libs/numeric/odeint/test/gmp ;
