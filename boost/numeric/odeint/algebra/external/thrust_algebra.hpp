@@ -16,6 +16,8 @@
 #include <thrust/for_each.h>
 #include <thrust/iterator/zip_iterator.h>
 
+#include <boost/range.hpp>
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -23,6 +25,12 @@ namespace odeint {
 
 struct thrust_algebra
 {
+	template< class StateType , class Operation >
+	static void for_each1( StateType &s , Operation op )
+	{
+		thrust::for_each( boost::begin(s) , boost::begin(s) , op );
+	}
+
 	template< class StateType1 , class StateType2 , class Operation >
 	static void for_each2( StateType1 &s1 , StateType2 &s2 , Operation op )
 	{
