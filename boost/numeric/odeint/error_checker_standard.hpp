@@ -18,6 +18,8 @@
 #define BOOST_NUMERIC_ODEINT_ERROR_CHECKER_STANDARD_HPP
 
 #include <cmath>
+#include <boost/numeric/odeint/detail/iterator_algebra.hpp>
+#include <boost/numeric/odeint/container_traits.hpp>
 
 namespace boost {
 namespace numeric {

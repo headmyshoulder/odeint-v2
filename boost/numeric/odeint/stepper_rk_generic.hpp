@@ -23,6 +23,7 @@
 #include <limits>
 
 #include <boost/numeric/odeint/container_traits.hpp>
+#include <boost/numeric/odeint/detail/iterator_algebra.hpp>
 
 
 namespace boost {

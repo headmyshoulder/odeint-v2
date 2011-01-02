@@ -10,7 +10,7 @@ project
       <library>/boost/test//boost_unit_test_framework
       <link>static
       <include>../../../..
-      <include>$BOOST_ROOT
+      <include>$(BOOST_ROOT)
     ;
 
 test-suite "odeint"

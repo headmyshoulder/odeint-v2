@@ -9,7 +9,7 @@ import path ;
 
 project odeint
    : requirements
-     <include>$BOOST_ROOT ;
+     <include>$(BOOST_ROOT) ;
 
 build-project libs/numeric/odeint/examples ;
 build-project libs/numeric/odeint/test ;
@@ -25,7 +25,7 @@ path-constant BOOST_ROOT : [ os.environ BOOST_ROOT ] ;
 ###### to get the quickbook and boostbook working ...       #####
 
 local boost-root = [ modules.peek : BOOST_ROOT ] ;
-local explore-header-include = $(top)/../.. ;
+# local explore-header-include = $(top)/../.. ;
 use-project /boost/regex : $(boost-root)/libs/regex/build ;
 
 ##################################################################

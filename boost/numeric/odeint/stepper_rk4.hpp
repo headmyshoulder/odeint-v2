@@ -18,6 +18,7 @@
 #define BOOST_NUMERIC_ODEINT_STEPPER_RK4_HPP
 
 #include <boost/numeric/odeint/container_traits.hpp>
+#include <boost/numeric/odeint/detail/iterator_algebra.hpp>
 
 namespace boost {
 namespace numeric {

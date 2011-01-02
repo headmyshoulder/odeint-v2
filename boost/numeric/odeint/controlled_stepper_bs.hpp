@@ -23,6 +23,7 @@
 #include <boost/numeric/odeint/stepper_midpoint.hpp>
 #include <boost/numeric/odeint/error_checker_standard.hpp>
 #include <boost/numeric/odeint/container_traits.hpp>
+#include <boost/numeric/odeint/controlled_stepper_standard.hpp>
 
 #include <boost/numeric/odeint/detail/iterator_algebra.hpp>
 

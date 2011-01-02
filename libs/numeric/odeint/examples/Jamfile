@@ -7,9 +7,9 @@
 project
     : requirements 
       <include>../../../.. 
-      <include>$BOOST_ROOT
-      <include>$BLITZ_ROOT
-      <include>$MTL4_ROOT
+      <include>$(BOOST_ROOT)
+      <include>$(BLITZ_ROOT)
+      <include>$(MTL4_ROOT)
       <define>BOOST_ALL_NO_LIB=1
     : build-dir .
     ;

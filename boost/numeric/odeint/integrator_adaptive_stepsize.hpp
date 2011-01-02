@@ -15,6 +15,7 @@
 
 #include <boost/numeric/odeint/controlled_stepper_standard.hpp>
 #include <boost/numeric/odeint/observer.hpp>
+#include <boost/numeric/odeint/stepper_rk5_ck.hpp>
 #include <vector>
 #include <limits>
 

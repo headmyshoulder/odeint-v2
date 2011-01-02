@@ -165,12 +165,13 @@ int main( int argc , char **argv )
     for( size_t i=0 ; i<n ; ++i ) p[i] -= com;
     for( size_t i=0 ; i<n ; ++i ) p[i] *= masses[i];
 
-    stepper_type stepper;
+
     const double dt = 1.0;
     double t = 0.0;
 
 //[ integration_solar_system
     typedef hamiltonian_stepper_euler< container_type > stepper_type;
+    stepper_type stepper;
     state_type state = make_pair( q , p );
     for( size_t c = 0 ; c<2000 ; ++c )
     {

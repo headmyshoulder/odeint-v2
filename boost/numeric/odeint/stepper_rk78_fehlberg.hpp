@@ -14,6 +14,7 @@
 #define BOOST_NUMERIC_ODEINT_STEPPER_RK78_FEHLBERG_HPP_INCLUDED
 
 #include <boost/numeric/odeint/container_traits.hpp>
+#include <boost/numeric/odeint/detail/iterator_algebra.hpp>
 
 namespace boost {
 namespace numeric {
