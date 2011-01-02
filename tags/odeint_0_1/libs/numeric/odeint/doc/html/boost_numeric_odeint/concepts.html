@@ -1,0 +1,716 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Concepts</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Chapter&#160;1.&#160;boost.numeric.odeint">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;boost.numeric.odeint">
+<link rel="prev" href="tutorial.html" title="Tutorial">
+<link rel="next" href="reference.html" title="Reference">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tutorial.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_numeric_odeint.concepts"></a><a class="link" href="concepts.html" title="Concepts">Concepts</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="concepts.html#boost_numeric_odeint.concepts.basic_stepper">Basic stepper</a></span></dt>
+<dt><span class="section"><a href="concepts.html#boost_numeric_odeint.concepts.error_stepper">Error stepper</a></span></dt>
+<dt><span class="section"><a href="concepts.html#boost_numeric_odeint.concepts.controlled_stepper">Controlled
+      stepper</a></span></dt>
+</dl></div>
+<p>
+      The odeint library defines three concepts for stepping objects.
+    </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_numeric_odeint.concepts.basic_stepper"></a><a class="link" href="concepts.html#boost_numeric_odeint.concepts.basic_stepper" title="Basic stepper">Basic stepper</a>
+</h3></div></div></div>
+<p>
+        Basic steppers execute one timestep of a specific order with a given stepsize.
+        They usually allocate internal memory to store intermediate function call
+        results. If state types with variable size are used (e.g. <code class="computeroutput"><span class="identifier">vector</span></code>),
+        it has to be assured that the stepper gets informed about any change of the
+        state size by calling its <code class="computeroutput"><span class="identifier">adjust_size</span></code>
+        method.
+      </p>
+<p>
+        <span class="bold"><strong>Associated Types</strong></span>
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                </p>
+              </th>
+<th>
+                <p>
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  Time
+                </p>
+              </td>
+<td>
+                <p>
+                  Stepper::time_type
+                </p>
+              </td>
+<td>
+                <p>
+                  Type of the time variable, e.g. <code class="computeroutput"><span class="keyword">double</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Container
+                </p>
+              </td>
+<td>
+                <p>
+                  Stepper::container_type
+                </p>
+              </td>
+<td>
+                <p>
+                  Type of the system state, e.g. <code class="computeroutput"><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Value
+                </p>
+              </td>
+<td>
+                <p>
+                  Stepper::value_type
+                </p>
+              </td>
+<td>
+                <p>
+                  Value type of the state, e.g. <code class="computeroutput"><span class="keyword">double</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Order Type
+                </p>
+              </td>
+<td>
+                <p>
+                  Stepper::order_type
+                </p>
+              </td>
+<td>
+                <p>
+                  Type of the order parameter, usually <code class="computeroutput"><span class="keyword">unsigned</span>
+                  <span class="keyword">short</span></code>
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+        <span class="bold"><strong>Methods</strong></span>
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="identifier">Stepper</span><span class="special">()</span></code>
+          Constructor.
+        </li>
+<li>
+<code class="computeroutput"><span class="identifier">Stepper</span><span class="special">(</span>
+          <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">)</span></code> Constructor
+          that allocates internal memory to store intermediate results of the same
+          size as <code class="computeroutput"><span class="identifier">x</span></code>.
+        </li>
+<li><code class="computeroutput"><span class="keyword">void</span> <span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">DynamicalSystem</span>
+          <span class="special">&amp;</span><span class="identifier">system</span>
+          <span class="special">,</span> <span class="identifier">container_type</span>
+          <span class="special">&amp;</span><span class="identifier">x</span>
+          <span class="special">,</span> <span class="identifier">time_type</span>
+          <span class="identifier">t</span> <span class="special">,</span>
+          <span class="identifier">time_type</span> <span class="identifier">dt</span>
+          <span class="special">)</span></code></li>
+</ul></div>
+<p>
+        Executes one timestep with the given parameters:
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Parameter
+                </p>
+              </th>
+<th>
+                <p>
+                  Type
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  system
+                </p>
+              </td>
+<td>
+                <p>
+                  DynamicalSystem
+                </p>
+              </td>
+<td>
+                <p>
+                  Function (callable object) that computes the rhs of the ode
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  x
+                </p>
+              </td>
+<td>
+                <p>
+                  container_type
+                </p>
+              </td>
+<td>
+                <p>
+                  The current state of the system <span class="bold"><strong>x(t)</strong></span>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  t
+                </p>
+              </td>
+<td>
+                <p>
+                  time_type
+                </p>
+              </td>
+<td>
+                <p>
+                  The current time <span class="bold"><strong>t</strong></span>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  dt
+                </p>
+              </td>
+<td>
+                <p>
+                  time_type
+                </p>
+              </td>
+<td>
+                <p>
+                  Length of the timestep to be executed
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+        The result of this method is the (approximate) state of the system <span class="bold"><strong>x(t+dt)</strong></span> and is stored in the variable <code class="computeroutput"><span class="identifier">x</span></code> (in-place). Note, that the time <code class="computeroutput"><span class="identifier">t</span></code> is not automatically increased by this
+        method.
+      </p>
+<div class="itemizedlist"><ul type="disc"><li><code class="computeroutput"><span class="keyword">void</span> <span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">DynamicalSystem</span>
+          <span class="special">&amp;</span><span class="identifier">system</span>
+          <span class="special">,</span> <span class="identifier">container_type</span>
+          <span class="special">&amp;</span><span class="identifier">x</span>
+          <span class="special">,</span> <span class="keyword">const</span>
+          <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="identifier">time_type</span> <span class="identifier">t</span>
+          <span class="special">,</span> <span class="identifier">time_type</span>
+          <span class="identifier">dt</span> <span class="special">)</span></code></li></ul></div>
+<p>
+        The same as above but with the additional parameter <code class="computeroutput"><span class="identifier">dxdt</span></code>
+        that represents the derivative <span class="bold"><strong>x'(t) = f(x,t)</strong></span>
+        at the time <span class="bold"><strong>t</strong></span>.
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="keyword">void</span> <span class="identifier">adjust_size</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">)</span></code> Adjusts
+          the internal memory to store intermediate results of the same size as
+          <code class="computeroutput"><span class="identifier">x</span></code>. This function <span class="emphasis"><em>must</em></span>
+          be called whenever the system size changes during the integration.
+        </li>
+<li>
+<code class="computeroutput"><span class="identifier">order_type</span> <span class="identifier">order_step</span><span class="special">()</span></code> Returns the order of the algorithm. If
+          <span class="bold"><strong>n</strong></span> is the order of a method, then the result
+          of one iteration with the timestep <span class="bold"><strong>dt</strong></span>
+          is accurate up to <span class="bold"><strong>dt^n</strong></span>. That means the
+          error made by the time discretization is of order <span class="bold"><strong>dt^(n+1)</strong></span>.
+        </li>
+</ul></div>
+<p>
+        <span class="bold"><strong>Stepper that model this concept</strong></span>
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li><code class="computeroutput"><span class="identifier">stepper_euler</span></code></li>
+<li><code class="computeroutput"><span class="identifier">stepper_rk4</span></code></li>
+<li><code class="computeroutput"><span class="identifier">stepper_rk78_fehlberg</span></code></li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_numeric_odeint.concepts.error_stepper"></a><a class="link" href="concepts.html#boost_numeric_odeint.concepts.error_stepper" title="Error stepper">Error stepper</a>
+</h3></div></div></div>
+<p>
+        Error steppers execute one timestep of a specific order with a given stepsize.
+        Additionally, an error estimation of the obtained result is computed that
+        can be used to control the error introduced by the time discretization. Like
+        the basic steppers, error steppers usually allocate internal memory to store
+        intermediate function call results. If state types with variable size are
+        used (e.g. <code class="computeroutput"><span class="identifier">vector</span></code>), it has
+        to be assured that the stepper gets informed about any change of the state
+        size by calling its <code class="computeroutput"><span class="identifier">adjust_size</span></code>
+        method.
+      </p>
+<p>
+        <span class="bold"><strong>Associated Types</strong></span>
+      </p>
+<p>
+        Same as for <span class="emphasis"><em>basic steppers</em></span> above.
+      </p>
+<p>
+        <span class="bold"><strong>Methods</strong></span>
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="identifier">Error_Stepper</span><span class="special">()</span></code>
+          Constructor.
+        </li>
+<li>
+<code class="computeroutput"><span class="identifier">Error_Stepper</span><span class="special">(</span>
+          <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">)</span></code> Constructor
+          that allocates internal memory to store intermediate results of the same
+          size as <code class="computeroutput"><span class="identifier">x</span></code>.
+        </li>
+<li><code class="computeroutput"><span class="keyword">void</span> <span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">DynamicalSystem</span>
+          <span class="special">&amp;</span><span class="identifier">system</span>
+          <span class="special">,</span> <span class="identifier">container_type</span>
+          <span class="special">&amp;</span><span class="identifier">x</span>
+          <span class="special">,</span> <span class="identifier">time_type</span>
+          <span class="identifier">t</span> <span class="special">,</span>
+          <span class="identifier">time_type</span> <span class="identifier">dt</span>
+          <span class="special">,</span> <span class="identifier">container_type</span>
+          <span class="special">&amp;</span><span class="identifier">xerr</span><span class="special">)</span></code></li>
+</ul></div>
+<p>
+        Executes one timestep with the given parameters:
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Parameter
+                </p>
+              </th>
+<th>
+                <p>
+                  Type
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  system
+                </p>
+              </td>
+<td>
+                <p>
+                  DynamicalSystem
+                </p>
+              </td>
+<td>
+                <p>
+                  Function (callable object) that computes the rhs of the ode
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  x
+                </p>
+              </td>
+<td>
+                <p>
+                  container_type
+                </p>
+              </td>
+<td>
+                <p>
+                  The current state of the system <span class="bold"><strong>x(t)</strong></span>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  t
+                </p>
+              </td>
+<td>
+                <p>
+                  time_type
+                </p>
+              </td>
+<td>
+                <p>
+                  The current time <span class="bold"><strong>t</strong></span>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  dt
+                </p>
+              </td>
+<td>
+                <p>
+                  time_type
+                </p>
+              </td>
+<td>
+                <p>
+                  Length of the timestep to be executed
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  xerr
+                </p>
+              </td>
+<td>
+                <p>
+                  container_type
+                </p>
+              </td>
+<td>
+                <p>
+                  Used by the method to return the error estimation of this computation
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+        The result of this method is the (approximate) state of the system <span class="bold"><strong>x(t+dt)</strong></span>, which is returned in the variable <code class="computeroutput"><span class="identifier">x</span></code> (in-place), and the corresponding error
+        estimation returned in <code class="computeroutput"><span class="identifier">xerr</span></code>.
+        Note, that the time <code class="computeroutput"><span class="identifier">t</span></code> is
+        not automatically increased by this method.
+      </p>
+<div class="itemizedlist"><ul type="disc"><li><code class="computeroutput"><span class="keyword">void</span> <span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">DynamicalSystem</span>
+          <span class="special">&amp;</span><span class="identifier">system</span>
+          <span class="special">,</span> <span class="identifier">container_type</span>
+          <span class="special">&amp;</span><span class="identifier">x</span>
+          <span class="special">,</span> <span class="keyword">const</span>
+          <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="identifier">time_type</span> <span class="identifier">t</span>
+          <span class="special">,</span> <span class="identifier">time_type</span>
+          <span class="identifier">dt</span> <span class="special">,</span>
+          <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">xerr</span><span class="special">)</span></code></li></ul></div>
+<p>
+        The same as above but with the additional parameter <code class="computeroutput"><span class="identifier">dxdt</span></code>
+        that represents the derivative <span class="bold"><strong>x'(t) = f(x,t)</strong></span>
+        at the time <span class="bold"><strong>t</strong></span>.
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="keyword">void</span> <span class="identifier">adjust_size</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">)</span></code> Adjusts
+          the internal memory to store intermediate results of the same size as
+          <code class="computeroutput"><span class="identifier">x</span></code>. This function <span class="emphasis"><em>must</em></span>
+          be called whenever the system size changes during the integration.
+        </li>
+<li>
+<code class="computeroutput"><span class="identifier">order_type</span> <span class="identifier">order_error_step</span><span class="special">()</span></code> Returns the order of the result <span class="bold"><strong>x(t+dt)</strong></span> of the algorithm.
+        </li>
+<li>
+<code class="computeroutput"><span class="identifier">order_type</span> <span class="identifier">order_error</span><span class="special">()</span></code> Returns the order of the error estimation
+          of the algorithm.
+        </li>
+</ul></div>
+<p>
+        <span class="bold"><strong>Stepper that model this concept</strong></span>
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li><code class="computeroutput"><span class="identifier">stepper_rk5_ck</span></code></li>
+<li><code class="computeroutput"><span class="identifier">stepper_rk78_fehlberg</span></code></li>
+<li><code class="computeroutput"><span class="identifier">stepper_half_step</span></code></li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_numeric_odeint.concepts.controlled_stepper"></a><a class="link" href="concepts.html#boost_numeric_odeint.concepts.controlled_stepper" title="Controlled stepper">Controlled
+      stepper</a>
+</h3></div></div></div>
+<p>
+        Controlled steppers try to execute a timestep with a given error threshold.
+        If the estimated error of the obtained solution is too big, the result is
+        rejected and a new stepsize is proposed. If the error is small enough the
+        timestep is accepted and possibly an increased stepsize is proposed.
+      </p>
+<p>
+        <span class="bold"><strong>Associated Types</strong></span>
+      </p>
+<p>
+        Same as for <span class="emphasis"><em>basic steppers</em></span> above.
+      </p>
+<p>
+        <span class="bold"><strong>Methods</strong></span>
+      </p>
+<div class="itemizedlist"><ul type="disc"><li><code class="computeroutput"><span class="identifier">Controlled_Stepper</span><span class="special">(</span>
+          <span class="identifier">time_type</span> <span class="identifier">abs_err</span><span class="special">,</span> <span class="identifier">time_type</span>
+          <span class="identifier">rel_err</span><span class="special">,</span>
+          <span class="identifier">time_type</span> <span class="identifier">factor_x</span><span class="special">,</span> <span class="identifier">time_type</span>
+          <span class="identifier">factor_dxdt</span> <span class="special">)</span></code></li></ul></div>
+<p>
+        Constructor that initializes the controlled stepper with several parameters
+        of the error control. The controlled stepper assures that the error done
+        by each individual timestep yields:
+      </p>
+<p>
+        <span class="bold"><strong>xerr &lt; 1.1 ( eps_abs + eps_rel * (factor_x |x| +
+        factor_dxdt h |x'|) ) </strong></span>
+      </p>
+<p>
+        The factor 1.1 is for safety to avoid unnecessary many stepsize adjustings.
+        The above inequality should be understand to hold for <span class="emphasis"><em>all</em></span>
+        components of the possibly more dimensional vectors <span class="bold"><strong>x</strong></span>,
+        <span class="bold"><strong>x'</strong></span> and <span class="bold"><strong>xerr</strong></span>.
+        If the estimated error is too large, a reduced stepsize will be suggested.
+        If the estimated error is less than half of the desired error, an increased
+        stepsize will be suggested.
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="identifier">Controlled_Stepper</span><span class="special">(</span>
+          <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">time_type</span>
+          <span class="identifier">abs_err</span><span class="special">,</span>
+          <span class="identifier">time_type</span> <span class="identifier">rel_err</span><span class="special">,</span> <span class="identifier">time_type</span>
+          <span class="identifier">factor_x</span><span class="special">,</span>
+          <span class="identifier">time_type</span> <span class="identifier">factor_dxdt</span>
+          <span class="special">)</span></code> Same as above, but with additional
+          allocation of the internal memory to store intermediate results of the
+          same size as <code class="computeroutput"><span class="identifier">x</span></code>.
+        </li>
+<li><code class="computeroutput"><span class="identifier">controlled_step_result</span> <span class="identifier">try_step</span><span class="special">(</span> <span class="identifier">DynamicalSystem</span> <span class="special">&amp;</span><span class="identifier">system</span><span class="special">,</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">time_type</span>
+          <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">time_type</span>
+          <span class="special">&amp;</span><span class="identifier">dt</span>
+          <span class="special">)</span></code></li>
+</ul></div>
+<p>
+        Tries one timestep with the given parameters
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Parameter
+                </p>
+              </th>
+<th>
+                <p>
+                  Type
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  system
+                </p>
+              </td>
+<td>
+                <p>
+                  DynamicalSystem
+                </p>
+              </td>
+<td>
+                <p>
+                  Function (callable object) that computes the rhs of the ode
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  x
+                </p>
+              </td>
+<td>
+                <p>
+                  container_type
+                </p>
+              </td>
+<td>
+                <p>
+                  The current state of the system <span class="bold"><strong>x(t)</strong></span>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  t
+                </p>
+              </td>
+<td>
+                <p>
+                  time_type
+                </p>
+              </td>
+<td>
+                <p>
+                  The current time <span class="bold"><strong>t</strong></span>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  dt
+                </p>
+              </td>
+<td>
+                <p>
+                  time_type
+                </p>
+              </td>
+<td>
+                <p>
+                  Length of the timestep to be executed
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+        This method has three possible outcomes represented by the returned value
+        <code class="computeroutput"><span class="identifier">result</span></code>: If <code class="computeroutput"><span class="identifier">result</span> <span class="special">=</span> <span class="identifier">success</span></code> the step has been applied and x
+        contains the new state <span class="bold"><strong>x(t)</strong></span> where the time
+        has also been increased <span class="bold"><strong>t += dt</strong></span>. If <code class="computeroutput"><span class="identifier">result</span> <span class="special">=</span> <span class="identifier">step_size_increased</span></code> the step has also been
+        accomplished, but the estimated error was so small that a new stepsize is
+        proposed in the variable <code class="computeroutput"><span class="identifier">dt</span></code>.
+        If <code class="computeroutput"><span class="identifier">result</span> <span class="special">=</span>
+        <span class="identifier">step_size_decreased</span></code> the step has
+        been rejected due to a too big error. <code class="computeroutput"><span class="identifier">x</span></code>
+        and <code class="computeroutput"><span class="identifier">t</span></code> remain unchanged and
+        <code class="computeroutput"><span class="identifier">dt</span></code> now containes the suggested
+        reduced stepsize that should give an error below the desired level.
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="identifier">controlled_step_result</span> <span class="identifier">try_step</span><span class="special">(</span> <span class="identifier">DynamicalSystem</span> <span class="special">&amp;</span><span class="identifier">system</span><span class="special">,</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span><span class="special">,</span> <span class="keyword">const</span>
+          <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">time_type</span>
+          <span class="special">&amp;</span><span class="identifier">dt</span>
+          <span class="special">)</span></code> Same as above but with the additional
+          parameter <code class="computeroutput"><span class="identifier">dxdt</span></code> that that
+          represents the derivative <span class="bold"><strong>x'(t) = f(x,t)</strong></span>
+          at the time <span class="bold"><strong>t</strong></span>.
+        </li>
+<li>
+<code class="computeroutput"><span class="keyword">void</span> <span class="identifier">adjust_size</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">)</span></code> Adjusts
+          the internal memory to store intermediate results of the same size as
+          <code class="computeroutput"><span class="identifier">x</span></code>. This function <span class="emphasis"><em>must</em></span>
+          be called whenever the system size changes during the integration.
+        </li>
+<li>
+<code class="computeroutput"><span class="identifier">order_type</span> <span class="identifier">order_error_step</span><span class="special">()</span></code> Returns the order of the result <span class="bold"><strong>x(t+dt)</strong></span> of the algorithm.
+        </li>
+</ul></div>
+<p>
+        <span class="bold"><strong>Stepper that model this concept</strong></span>
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li><code class="computeroutput"><span class="identifier">controlled_stepper_standard</span></code></li>
+<li><code class="computeroutput"><span class="identifier">controlled_stepper_bs</span></code></li>
+</ul></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 Karsten Ahnert and Mario Mulansky<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tutorial.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

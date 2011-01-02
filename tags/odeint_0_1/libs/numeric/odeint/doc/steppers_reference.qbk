@@ -1,0 +1,118 @@
+[section Stepper classes]
+
+[table Stepper Algorithms
+  [[Method] [Class] [Order] [Error Estimation]]
+  [[Euler]  [stepper_euler] [1] [No]]
+  [[Runge-Kutta 4] [stepper_rk4] [4] [No]]
+  [[Runge-Kutta Cash-Karp] [stepper_rk5_ck] [5] [Yes (Order 4)]]
+  [[Runge-Kutta Fehlberg] [stepper_rk78_fehlberg] [7] [Yes (Order 8)]]
+  [[Midpoint] [stepper_midpoint] [variable] [No]]
+  [[Bulirsch-Stoer] [controlled_stepper_bs] [variable] [Controlled]]
+]
+
+[/
+
+[section stepper_euler]
+
+[*Concept:] [link boost_sandbox_numeric_odeint.stepper.concepts.basic_stepper Basic stepper]
+
+[*Accuracy:] The produced solution is accurate up to order 1.
+
+[*Complexity:] This method uses 1 function evaluation.
+
+[*Template Parameters:]
+[template tpl_parameter_table_[]
+[table
+    [[Parameter] [Default Value] [Description]]
+    [[class Container] [no default value] [Type of container that stores the state of the system]]
+    [[class Time] [double] [Type of the time variable in the ode]]
+    [[class Traits] [container_traits< Container >] [container_traits used by the stepper]]
+]]
+[tpl_parameter_table_]
+
+The Euler algorithm used in this class performs one integration
+step according to the formula:
+[: x(t+dt) = x(t) + dt*f(x,t)]
+The Euler stepper is the most simple algorithm to integrate a 
+differential equation. It's only purpose in this library is for educational 
+reasons - use more sophisticated steppers for real life problems.
+
+[endsect]
+
+[section stepper_rk4]
+
+[*Concept:] [link boost_sandbox_numeric_odeint.stepper.concepts.basic_stepper Basic stepper]
+
+[*Accuracy:] The produced solution is accurate up to order 4.
+
+[*Complexity:] This method uses 4 function evaluations.
+
+[*Template Parameters:]
+
+[tpl_parameter_table_]
+
+The Runge-Kutta 4 algorithm is /the/ classical method to integrate odes.
+The [@http://en.wikipedia.org/wiki/Runge–Kutta_methods#Explicit_Runge.E2.80.93Kutta_methods 
+Butcher Tableau] for this method is as follows:
+
+[pre
+Butcher Tableau for Runge-Kutta 4
+   0  |
+  1/2 | 1/2
+  1/2 |  0   1/2
+   1  |  0    0    1
+  ------------------------
+      | 1/6  1/3  1/3  1/6
+]
+This method produces fast, though not too accurate solutions. Use it for quick
+preliminary results and then switch to error controlled methods like Cash-Karp
+for more reliable calculations.
+
+[endsect]
+
+[section stepper_rk5_ck]
+
+[*Concept:] [link boost_sandbox_numeric_odeint.stepper.concepts.error_stepper Error stepper]
+
+[*Accuracy:] The produced solution is accurate up to order 5 and the estimated 
+error is also of order 5.
+
+[*Complexity:] This method uses 6 function evaluation.
+
+[*Template Parameters:]
+
+[tpl_parameter_table_]
+
+The Runge-Kutta method of order 5 with Cash-Karp coefficients is a good trade-off
+between numerical effort and obtained accuracy with error estimation.
+It is the all-round method and suitable for most problems.
+See [@http://en.wikipedia.org/wiki/Cash–Karp_method wikipedia] for details and 
+the Butcher tableau.
+
+[endsect]
+
+[section stepper_rk78_fehlberg]
+
+[*Concept:] [link boost_sandbox_numeric_odeint.stepper.concepts.error_stepper Error Stepper]
+
+[*Accuracy:] The produced solution is accurate up to order 7 and the estimated 
+error is of order 8.
+
+[*Complexity:] This method uses 13 function evaluations.
+
+[*Template Parameters:]
+
+[tpl_parameter_table_]
+
+The Runge-Kutta 78 Fehlberg method is a high-order algorithm that produces very
+good accuracy but for the cost of high numerical effort.
+Whenever extra-ordinarily high precision is required, you can fall back to this
+method.
+
+[endsect]
+
+
+]
+
+[endsect]
+
