@@ -3,7 +3,6 @@
 
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky
- Copyright 2009 Andre Bergner
 
  Container traits for blitz::Array.
 

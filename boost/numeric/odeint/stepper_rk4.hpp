@@ -2,7 +2,6 @@
  
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky
- Copyright 2009 Andre Bergner
  
  This file includes the explicit 4th order runge kutta 
  solver for ordinary differential equations.

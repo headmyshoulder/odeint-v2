@@ -1,8 +1,7 @@
-/* Boost odeint/concepts/state_concept.hpp header file
+/* odeint/concepts/state_concept.hpp header file
  
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky
- Copyright 2009 Andre Bergner
 
  This file contains the concepts used in the odeint library
 

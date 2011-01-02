@@ -1,8 +1,7 @@
-/* Boost odeint/detail/accumulators.hpp header file
+/* odeint/detail/accumulators.hpp header file
  
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky
- Copyright 2009 Andre Bergner
  
  Some algebraic operations for iterators
 

@@ -1,3 +1,19 @@
+/* Boost numeric/odeint/examples/doc_integrate.cpp
+
+ Copyright 2009 Karsten Ahnert
+ Copyright 2009 Mario Mulansky
+
+ Shows the usage of boost::numeric::odeint::integrate with
+ the damped harmonic oscillator.
+
+ This code is used for the documentation.
+
+ Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+*/
+
+
 #include <iostream>
 
 #include <boost/numeric/odeint.hpp>

@@ -1,6 +1,7 @@
 /* Boost numeric/odeint/examples/lorenz_integrate_constant_step.cpp
  
  Copyright 2009 Karsten Ahnert
+ Copyright 2009 Mario Mulansky
 
  Shows the usage of odeint, and integrates the Lorenz equations,
  a deterministic chaotic system
