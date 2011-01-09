@@ -39,9 +39,10 @@ typedef enum
 template<
     class ErrorStepper ,
     class ErrorChecker = error_checker_standard< typename ErrorStepper::state_type ,
-                                                   typename ErrorStepper::time_type ,
-                                                   typename ErrorStepper::algebra_type ,
-                                                   typename ErrorStepper::operations_type > ,
+                                                 typename ErrorStepper::time_type ,
+                                                 typename ErrorStepper::algebra_type ,
+                                                 typename ErrorStepper::operations_type > ,
+    class AdjustSizePolicy = typename ErrorStepper::adjust_size_policy ,
     class ErrorStepperCategory = typename ErrorStepper::stepper_category
 >
 class controlled_error_stepper { };
@@ -54,9 +55,10 @@ class controlled_error_stepper { };
  */
 template<
 	class ErrorStepper ,
-	class ErrorChecker
+	class ErrorChecker ,
+	class AdjustSizePolicy
 	>
-class controlled_error_stepper< ErrorStepper , ErrorChecker , explicit_error_stepper_tag > : boost::noncopyable
+class controlled_error_stepper< ErrorStepper , ErrorChecker , AdjustSizePolicy , explicit_error_stepper_tag > : boost::noncopyable
 {
 public:
 
@@ -64,7 +66,7 @@ public:
 	typedef typename stepper_type::state_type state_type;
 	typedef typename stepper_type::time_type time_type;
 	typedef typename stepper_type::order_type order_type;
-	typedef typename stepper_type::adjust_size_policy adjust_size_policy;
+	typedef AdjustSizePolicy adjust_size_policy;
 	typedef ErrorChecker error_checker_type;
 
 
@@ -220,9 +222,10 @@ private:
  */
 template<
     class ErrorStepper ,
-    class ErrorChecker
+    class ErrorChecker ,
+	class AdjustSizePolicy
     >
-class controlled_error_stepper< ErrorStepper , ErrorChecker , explicit_error_stepper_fsal_tag > : boost::noncopyable
+class controlled_error_stepper< ErrorStepper , ErrorChecker , AdjustSizePolicy , explicit_error_stepper_fsal_tag > : boost::noncopyable
 {
 public:
 
@@ -230,7 +233,7 @@ public:
     typedef typename stepper_type::state_type state_type;
     typedef typename stepper_type::time_type time_type;
     typedef typename stepper_type::order_type order_type;
-    typedef typename stepper_type::adjust_size_policy adjust_size_policy;
+    typedef AdjustSizePolicy adjust_size_policy;
     typedef ErrorChecker error_checker_type;
 
     controlled_error_stepper(
