@@ -5,16 +5,24 @@
 
 import os ;
 import modules ;
-import path ; 
+import path ;
 
-project odeint
-   : requirements ;
-#     <include>$BOOST_ROOT ;
+path-constant BOOST_ROOT : [ os.environ BOOST_ROOT ] ; 
 
-build-project libs/numeric/odeint/examples ;
+project 
+   : requirements 
+     <include>$(BOOST_ROOT) ;
+
+
 build-project libs/numeric/odeint/test ;
+build-project libs/numeric/odeint/examples ;
+
+
+
+# ideas
 build-project libs/numeric/odeint/ideas/butcher ;
 build-project libs/numeric/odeint/ideas/generic_stepper ;
+build-project libs/numeric/odeint/ideas/rosenbrock4 ;
 
 # additional tests with external libraries :
 build-project libs/numeric/odeint/test/gmp ;
@@ -26,7 +34,7 @@ build-project libs/numeric/odeint/test/gsl ;
 
 
 
-path-constant BOOST_ROOT : [ os.environ BOOST_ROOT ] ;
+
 
 
 ###### The following is copied from another sandbox project #####
