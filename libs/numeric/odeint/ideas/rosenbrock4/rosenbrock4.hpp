@@ -141,7 +141,7 @@ public:
     typedef boost::numeric::ublas::permutation_matrix< size_t > pmatrix_type;
 
 	rosenbrock4_controller( time_type atol = 1.0e-6 , time_type rtol = 1.0e-6 )
-    : m_rb4() , m_atol( atol ) , m_rtol( rtol )
+    : m_rb4() , m_atol( atol ) , m_rtol( rtol ) , m_first_step( true )
 	{
 	}
 
@@ -162,49 +162,51 @@ public:
 	boost::numeric::odeint::controlled_step_result
 	try_step( System &sys , Jacobi &jacobi , state_type &x , time_type &t , time_type &dt )
 	{
-		// hier gehts weiter
-//		const size_t n = x.size();
+		static const time_type safe = 0.9 , fac1 = 5.0 , fac2 = 1.0 / 6.0;
+
+		const size_t n = x.size();
+		state_type xnew( n ) , xerr( n );
+		m_rb4.do_step( sys , jacobi , x , t , xnew , dt , xerr );
+
+		time_type err = error( xnew , xold , xerr );
+		if ( err <= 1.0 )
+		{
+			if( m_first_step )
+			{
+				m_first_step = false;
+			}
+			else
+			{
+				time_type fac_pred = ( dt_old / dt ) * pow( err * err / errold , 0.25 ) / safe;
+				fac_pred = std::max( fac2 , std::min( fac1 , fac_pred ) );
+				fac = std::max( fac , fac_pred );
+				dt_new = dt / fac;
+			}
+
+			dt_old = dt;
+			errold = std::max( 0.01 , err );
+			if( reject )
+				dt_new = ( dt >= 0.0 ? std::min( dt_new , dt ) : std::max( dt_new , dt ) );
+			dt_next = dt_new;
+			reject=false;
+		}
+		else
+		{
+			time_type fac = std::max( fac2 ,std::min( fac1 , std::pow( err , 0.25 ) / safe ) );
+			dt /= fac;
+			return step_size_decreased;
+		}
+
 		return success_step_size_unchanged;
 	}
 
-//	template <class D> stepperross.h
-//	StepperRoss<D>::Controller::Controller() : reject(false), first_step(true) {}
-//	Step size controller for fourth-order Rosenbrock method.
-//	template <class D>
-//	bool StepperRoss<D>::Controller::success(Doub err, Doub &h) {
-//	Returns true if err  1, false otherwise. If step was successful, sets hnext to the estimated
-//	optimal stepsize for the next step. If the step failed, reduces h appropriately for another try.
-//	static const Doub safe=0.9,fac1=5.0,fac2=1.0/6.0;
-//	Doub fac=MAX(fac2,MIN(fac1,pow(err,0.25)/safe));
-//	Doub hnew=h/fac; Ensure 1=fac1  hnew=h  1=fac2.
-//	if (err <= 1.0) { Step succeeded.
-//	if (!first_step) { Predictive control.
-//	Doub facpred=(hold/h)*pow(err*err/errold,0.25)/safe;
-//	facpred=MAX(fac2,MIN(fac1,facpred));
-//	fac=MAX(fac,facpred);
-//	hnew=h/fac;
-//	}
-//	first_step=false;
-//	hold=h;
-//	errold=MAX(0.01,err);
-//	if (reject) Don’t let step increase if last one was rejected.
-//	hnew=(h >= 0.0 ? MIN(hnew,h) : MAX(hnew,h));
-//	hnext=hnew;
-//	reject=false;
-//	return true;
-//	} else { Truncation error too large, reduce stepsize.
-//	h=hnew;
-//	reject=true;
-//	return false;
-//	}
-//	}
 
 
 private:
 
 	rosenbrock4< time_type > m_rb4;
 	time_type m_atol , m_rtol;
-
+	bool m_first_step;
 };
 
 
