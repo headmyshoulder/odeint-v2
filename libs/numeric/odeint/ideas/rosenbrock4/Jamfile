@@ -19,3 +19,7 @@ project
 exe rosenbrock4
     : rosenbrock4.cpp
     ;
+    
+exe rosenbrock4_stepper
+    : rosenbrock4_stepper.cpp
+    ;

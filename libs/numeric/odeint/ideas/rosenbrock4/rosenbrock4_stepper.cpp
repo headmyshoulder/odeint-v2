@@ -1,5 +1,5 @@
 /*
- * rosenbrock4.cpp
+ * rosenbrock4_stepper.cpp
  *
  *  Created on: Jan 9, 2011
  *      Author: karsten
@@ -47,6 +47,7 @@ typedef rosenbrock4_controller< time_type > controlled_stepper_type;
 //	dfdt[2] = 0.0;
 //}
 
+
 const time_type sigma = 10.0;
 const time_type R = 28.0;
 const time_type b = 8.0 / 3.0;
@@ -80,44 +81,31 @@ void jacobi( const state_type &x , matrix_type &J , time_type t , state_type &df
 
 int main( int argc , char **argv )
 {
+	const double dt = 0.01;
+	size_t steps = 1000;
+	double x0 = -12.0 , y0 = -12.0 , z0 = 20.0;
 	if( true )
 	{
 		state_type x( dim ) , xerr( dim );
-		time_type t = 0.0 , dt = 0.00001;
+		time_type t = 0.0;
 
 		stepper_type stepper;
-		stepper.do_step( system< state_type > , jacobi , x , t , dt , xerr );
-		controlled_stepper_type controlled_stepper;
-
-		x[0] = 1.0 ; x[1] = 1.0 ; x[2] = 0.0;
+		x[0] = x0 ; x[1] = y0 ; x[2] = z0;
 
 		ofstream fout( "dat/ross.dat" );
+		fout.precision( 14 );
 		size_t count = 0;
-		while( t < 50.0 )
+		while( count < steps )
 		{
-//			clog << t << "\t" << dt << "\t" << controlled_stepper.last_error() << "\n";
-			fout << t << "\t" << dt << "\t" << controlled_stepper.last_error() << "\t";
+			fout << t << "\t";
 			fout << x[0] << "\t" << x[1] << "\t" << x[2] << "\t";
-//			fout << xerr[0] << "\t" << xerr[1] << "\t" << xerr[2] << "\t";
+			fout << xerr[0] << "\t" << xerr[1] << "\t" << xerr[2] << "\t";
 			fout <<std::endl;
 
-			size_t trials = 0;
-			while( trials < 100 )
-			{
-				if( controlled_stepper.try_step( system< state_type > , jacobi , x , t , dt ) !=  step_size_decreased )
-					break;
-//				clog.precision( 14 );
-//				clog << dt << "\n";
-				++trials;
-			}
-			if( trials == 100 )
-			{
-				cerr << "Error : stepper did not converge! " << endl;
-				break;
-			}
+			stepper.do_step( system< state_type > , jacobi , x , t , dt , xerr );
 			++count;
+			t += dt;
 		}
-		clog << "Rosenbrock : " << count << endl;
 	}
 
 
@@ -128,35 +116,24 @@ int main( int argc , char **argv )
 	{
 		typedef std::tr1::array< time_type , 3 > state_type2;
 		typedef explicit_error_rk54_ck< state_type2 > stepper_type2;
-		typedef controlled_error_stepper< stepper_type2 > controlled_stepper_type2;
 		stepper_type2 rk_stepper;
-		controlled_stepper_type2 stepper( rk_stepper );
+		state_type2 x = {{ x0 , y0 , z0 }} , xerr = {{ 0.0 , 0.0 , 0.0 }};
+		time_type t = 0.0;
 
-		state_type2 x = {{ 1.0 , 1.0 , 0.0 }};
-		time_type t = 0.0 , dt = 0.00001;
 		ofstream fout( "dat/rk.dat" );
+		fout.precision( 14 );
 		size_t count = 0;
-		while( t < 50.0 )
+		while( count < steps )
 		{
-			fout << t << "\t" << dt << "\t" << stepper.last_error() << "\t";
+			fout << t << "\t";
 			fout << x[0] << "\t" << x[1] << "\t" << x[2] << "\t";
+			fout << xerr[0] << "\t" << xerr[1] << "\t" << xerr[2] << "\t";
 			fout <<std::endl;
 
-			size_t trials = 0;
-			while( trials < 100 )
-			{
-				if( stepper.try_step( system< state_type2 > , x , t , dt ) !=  step_size_decreased )
-					break;
-				++trials;
-			}
-			if( trials == 100 )
-			{
-				cerr << "Error : stepper did not converge! " << endl;
-				break;
-			}
+			rk_stepper.do_step( system< state_type2 > , x , t , dt , xerr );
 			++count;
+			t += dt;
 		}
-		clog << "RK 54 : " << count << endl;
 	}
 
 	return 0;

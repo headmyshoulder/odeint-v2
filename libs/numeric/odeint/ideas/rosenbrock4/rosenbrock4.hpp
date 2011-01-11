@@ -20,6 +20,15 @@ namespace numeric {
 namespace odeint {
 
 
+/*
+ * ToDo:
+ *
+ * 1. roll out parameters
+ * 2. how to call, with jacobi and system?
+ * 3. Introduce adjust size
+ * 4. Interfacing for odeint, check if controlled_error_stepper can be used
+ * 5. dense output
+ */
 
 template< class Value >
 class rosenbrock4
@@ -35,23 +44,26 @@ public:
 	{
 	}
 
+//	void do_step( System &system , Jacobi &jacobi , ... );
+//	void do_step( pair< System& , Jacobi& > system , ... );
+//	void do_step( pair< System , Jacobi > & , ... );
+
 
 	template< class System , class Jacobi >
 	void do_step( System &system , Jacobi &jacobi , const state_type &x , time_type t , state_type &xout , time_type dt , state_type &xerr )
 	{
-		const double gamma = 1.0;
-		const double d1 = 1.0 , d2 = 1.0 , d3 = 1.0 , d4 = 1.0;
-		const double c2 = 1.0 , c3 = 1.0 , c4 = 1.0;
-		const double c21 = 1.0;
-		const double a21 = 1.0;
-		const double c31 = 1.0 , c32 = 1.0;
-		const double a31 = 1.0 , a32 = 1.0;
-		const double c41 = 1.0 , c42 = 1.0 , c43 = 1.0;
-		const double a41 = 1.0 , a42 = 1.0 , a43 = 1.0;
-		const double c51 = 1.0 , c52 = 1.0 , c53 = 1.0 , c54 = 1.0 ;
-		const double a51 = 1.0 , a52 = 1.0 , a53 = 1.0 , a54 = 1.0 ;
-		const double c61 = 1.0 , c62 = 1.0 , c63 = 1.0 , c64 = 1.0 , c65 = 1.0;
-
+		const double gamma = 0.25;
+		const double d1 = 0.25 , d2 = -0.1043 , d3 = 0.1035 , d4 = 0.3620000000000023e-01;
+		const double c2 = 0.386 , c3 = 0.21 , c4 = 0.63;
+		const double c21 = -0.5668800000000000e+01;
+		const double a21 = 0.1544000000000000e+01;
+		const double c31 = -0.2430093356833875e+01 , c32 = -0.2063599157091915e+00;
+		const double a31 = 0.9466785280815826e+00 , a32 = 0.2557011698983284e+00;
+		const double c41 = -0.1073529058151375e+00 , c42 = -0.9594562251023355e+01 , c43 = -0.2047028614809616e+02;
+		const double a41 = 0.3314825187068521e+01 , a42 = 0.2896124015972201e+01 , a43 = 0.9986419139977817e+00;
+		const double c51 = 0.7496443313967647e+01 , c52 = -0.1024680431464352e+02 , c53 = -0.3399990352819905e+02 , c54 =  0.1170890893206160e+02;
+		const double a51 = 0.1221224509226641e+01 , a52 = 0.6019134481288629e+01 , a53 = 0.1253708332932087e+02 , a54 = -0.6878860361058950e+00 ;
+		const double c61 = 0.8083246795921522e+01 , c62 = -0.7981132988064893e+01 , c63 = -0.3152159432874371e+02 , c64 = 0.1631930543123136e+02 , c65 = -0.6058818238834054e+01;
 
 		const size_t n = x.size();
 		matrix_type jac( n , n );
@@ -157,6 +169,11 @@ public:
 			err += xerr[i] * xerr[i] / sk / sk;
 		}
 		return sqrt( err / time_type( n ) );
+	}
+
+	time_type last_error( void ) const
+	{
+		return m_err_old;
 	}
 
 
