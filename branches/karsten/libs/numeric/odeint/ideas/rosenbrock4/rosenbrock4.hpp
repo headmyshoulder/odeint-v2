@@ -141,7 +141,9 @@ public:
     typedef boost::numeric::ublas::permutation_matrix< size_t > pmatrix_type;
 
 	rosenbrock4_controller( time_type atol = 1.0e-6 , time_type rtol = 1.0e-6 )
-    : m_rb4() , m_atol( atol ) , m_rtol( rtol ) , m_first_step( true )
+    : m_rb4() , m_atol( atol ) , m_rtol( rtol ) ,
+      m_first_step( true ) , m_err_old( 0.0 ) , m_dt_old( 0.0 ) ,
+      m_last_rejected( false )
 	{
 	}
 
@@ -151,7 +153,7 @@ public:
 		time_type err = 0.0 , sk = 0.0;
 		for( size_t i=0 ; i<n ; ++i )
 		{
-			sk = m_atol + m_rtol * std::max( std::abs( x[i] ) , std::abs( xold[i] ) );
+			sk = m_atol + m_rtol * std::max( std::abs( xold[i] ) , std::abs( x[i] ) );
 			err += xerr[i] * xerr[i] / sk / sk;
 		}
 		return sqrt( err / time_type( n ) );
@@ -167,8 +169,10 @@ public:
 		const size_t n = x.size();
 		state_type xnew( n ) , xerr( n );
 		m_rb4.do_step( sys , jacobi , x , t , xnew , dt , xerr );
+		time_type err = error( xnew , x , xerr );
 
-		time_type err = error( xnew , xold , xerr );
+		time_type fac = std::max( fac2 ,std::min( fac1 , std::pow( err , 0.25 ) / safe ) );
+		time_type dt_new = dt / fac;
 		if ( err <= 1.0 )
 		{
 			if( m_first_step )
@@ -177,27 +181,28 @@ public:
 			}
 			else
 			{
-				time_type fac_pred = ( dt_old / dt ) * pow( err * err / errold , 0.25 ) / safe;
+				time_type fac_pred = ( m_dt_old / dt ) * pow( err * err / m_err_old , 0.25 ) / safe;
 				fac_pred = std::max( fac2 , std::min( fac1 , fac_pred ) );
 				fac = std::max( fac , fac_pred );
 				dt_new = dt / fac;
 			}
 
-			dt_old = dt;
-			errold = std::max( 0.01 , err );
-			if( reject )
+			m_dt_old = dt;
+			m_err_old = std::max( 0.01 , err );
+			if( m_last_rejected )
 				dt_new = ( dt >= 0.0 ? std::min( dt_new , dt ) : std::max( dt_new , dt ) );
-			dt_next = dt_new;
-			reject=false;
+			t += dt;
+			dt = dt_new;
+			m_last_rejected = false;
+			x = xnew;
+			return success_step_size_increased;
 		}
 		else
 		{
-			time_type fac = std::max( fac2 ,std::min( fac1 , std::pow( err , 0.25 ) / safe ) );
-			dt /= fac;
+			dt = dt_new;
+			m_last_rejected = true;
 			return step_size_decreased;
 		}
-
-		return success_step_size_unchanged;
 	}
 
 
@@ -207,6 +212,8 @@ private:
 	rosenbrock4< time_type > m_rb4;
 	time_type m_atol , m_rtol;
 	bool m_first_step;
+	time_type m_err_old , m_dt_old;
+	bool m_last_rejected;
 };
 
 
