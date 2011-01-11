@@ -77,7 +77,7 @@ public:
 			)
 	: m_stepper( stepper ) , m_error_checker( error_checker ) ,
 	  m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_xnew_size_adjuster() ,
-	  m_dxdt() , m_xerr() , m_xnew()
+	  m_dxdt() , m_xerr() , m_xnew() , m_max_rel_error()
 	{
 		boost::numeric::odeint::construct( m_dxdt );
 		boost::numeric::odeint::construct( m_xerr );
@@ -142,21 +142,21 @@ public:
 		// do one step with error calculation
 		m_stepper.do_step( sys , in , dxdt , t , out , dt , m_xerr );
 
-		time_type max_rel_err = m_error_checker.error( in , dxdt , m_xerr , dt );
+		m_max_rel_error = m_error_checker.error( in , dxdt , m_xerr , dt );
 
-		if( max_rel_err > 1.1 )
+		if( m_max_rel_error > 1.1 )
 		{
 			// error too large - decrease dt ,limit scaling factor to 0.2 and reset state
-			dt *= max( 0.9 * pow( max_rel_err , -1.0 / ( m_stepper.error_order() - 1.0 ) ) , 0.2 );
+			dt *= max( 0.9 * pow( m_max_rel_error , -1.0 / ( m_stepper.error_order() - 1.0 ) ) , 0.2 );
 			return step_size_decreased;
 		}
 		else
 		{
-			if( max_rel_err < 0.5 )
+			if( m_max_rel_error < 0.5 )
 			{
 				//error too small - increase dt and keep the evolution and limit scaling factor to 5.0
 				t += dt;
-				dt *= min( 0.9 * pow( max_rel_err , -1.0 / m_stepper.stepper_order() ) , 5.0 );
+				dt *= min( 0.9 * pow( m_max_rel_error , -1.0 / m_stepper.stepper_order() ) , 5.0 );
 				return success_step_size_increased;
 			}
 			else
@@ -165,6 +165,11 @@ public:
 				return success_step_size_unchanged;
 			}
 		}
+	}
+
+	time_type last_error( void ) const
+	{
+		return m_max_rel_error;
 	}
 
 
@@ -204,6 +209,7 @@ private:
 	state_type m_dxdt;
 	state_type m_xerr;
 	state_type m_xnew;
+	time_type m_max_rel_error;
 };
 
 
