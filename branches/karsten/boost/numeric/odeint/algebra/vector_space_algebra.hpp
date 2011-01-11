@@ -62,6 +62,13 @@ struct vector_space_algebra
 		op( s1 , s2 , s3 , s4 , s5 , s6 , s7 );
 	}
 
+	template< class StateType1 , class StateType2 , class StateType3 , class StateType4 , class StateType5 , class StateType6 ,class StateType7 , class StateType8 , class Operation >
+	static void for_each8( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , StateType4 &s4 , StateType5 &s5 , StateType6 &s6 , StateType7 &s7 , StateType8 &s8 , Operation op )
+	{
+		op( s1 , s2 , s3 , s4 , s5 , s6 , s7 , s8 );
+	}
+
+
 
 	/* ToDo : get ValueType from Container? */
 	template< class ValueType , class StateType , class Reduction>

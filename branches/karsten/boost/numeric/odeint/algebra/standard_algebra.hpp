@@ -24,6 +24,11 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+/*
+ * The const versions are needed for boost.range to work, i.e.
+ * it allows you to do
+ * for_each1( make_pair( vec1.begin() , vec1.begin() + 10 ) , op );
+ */
 struct standard_algebra
 {
 	template< class StateType1 , class Operation >
@@ -33,6 +38,16 @@ struct standard_algebra
 		                   op	);
 	}
 
+	template< class StateType1 , class Operation >
+	static void for_each1( const StateType1 &s1 , Operation op )
+	{
+		detail::for_each1( boost::begin( s1 ) , boost::end( s1 ) ,
+		                   op	);
+	}
+
+
+
+
 
 	template< class StateType1 , class StateType2 , class Operation >
 	static void for_each2( StateType1 &s1 , StateType2 &s2 , Operation op )
@@ -40,6 +55,15 @@ struct standard_algebra
 		detail::for_each2( boost::begin( s1 ) , boost::end( s1 ) ,
 		                   boost::begin( s2 ) , op	);
 	}
+
+	template< class StateType1 , class StateType2 , class Operation >
+	static void for_each2( const StateType1 &s1 , const StateType2 &s2 , Operation op )
+	{
+		detail::for_each2( boost::begin( s1 ) , boost::end( s1 ) ,
+		                   boost::begin( s2 ) , op	);
+	}
+
+
 
 
 
@@ -51,6 +75,17 @@ struct standard_algebra
 						   boost::begin( s3 ) ,
 						   op	);
 	}
+
+	template< class StateType1 , class StateType2 , class StateType3 , class Operation >
+	static void for_each3( const StateType1 &s1 , const StateType2 &s2 , const StateType3 &s3 , Operation op )
+	{
+		detail::for_each3( boost::begin( s1 ) , boost::end( s1 ) ,
+						   boost::begin( s2 ) ,
+						   boost::begin( s3 ) ,
+						   op	);
+	}
+
+
 
 
 
@@ -65,6 +100,17 @@ struct standard_algebra
 						   op	);
 	}
 
+	template< class StateType1 , class StateType2 , class StateType3 , class StateType4 , class Operation >
+	static void for_each4( const StateType1 &s1 , const StateType2 &s2 , const StateType3 &s3 , const StateType4 &s4 , Operation op )
+	{
+		detail::for_each4( boost::begin( s1 ) , boost::end( s1 ) ,
+						   boost::begin( s2 ) ,
+						   boost::begin( s3 ) ,
+						   boost::begin( s4 ) ,
+						   op	);
+	}
+
+
 
 
 
@@ -78,6 +124,20 @@ struct standard_algebra
 						   boost::begin( s5 ) ,
 						   op	);
 	}
+
+	template< class StateType1 , class StateType2 , class StateType3 , class StateType4 , class StateType5 , class Operation >
+	static void for_each5( const StateType1 &s1 , const StateType2 &s2 , const StateType3 &s3 , const StateType4 &s4 , const StateType5 &s5 , Operation op )
+	{
+		detail::for_each5( boost::begin( s1 ) , boost::end( s1 ) ,
+						   boost::begin( s2 ) ,
+						   boost::begin( s3 ) ,
+						   boost::begin( s4 ) ,
+						   boost::begin( s5 ) ,
+						   op	);
+	}
+
+
+
 
 
 
@@ -94,6 +154,22 @@ struct standard_algebra
 						   op	);
 	}
 
+	template< class StateType1 , class StateType2 , class StateType3 , class StateType4 , class StateType5 , class StateType6 , class Operation >
+	static void for_each6( const StateType1 &s1 , const StateType2 &s2 , const StateType3 &s3 , const StateType4 &s4 , const StateType5 &s5 , const StateType6 &s6 , Operation op )
+	{
+		detail::for_each6( boost::begin( s1 ) , boost::end( s1 ) ,
+						   boost::begin( s2 ) ,
+						   boost::begin( s3 ) ,
+						   boost::begin( s4 ) ,
+						   boost::begin( s5 ) ,
+						   boost::begin( s6 ) ,
+						   op	);
+	}
+
+
+
+
+
 
 
 	template< class StateType1 , class StateType2 , class StateType3 , class StateType4 , class StateType5 , class StateType6 ,class StateType7 , class Operation >
@@ -109,6 +185,26 @@ struct standard_algebra
 						   op	);
 	}
 
+	template< class StateType1 , class StateType2 , class StateType3 , class StateType4 , class StateType5 , class StateType6 ,class StateType7 , class Operation >
+	static void for_each7( const StateType1 &s1 , const StateType2 &s2 , const StateType3 &s3 , const StateType4 &s4 , const StateType5 &s5 , const StateType6 &s6 , const StateType7 &s7 , Operation op )
+	{
+		detail::for_each7( boost::begin( s1 ) , boost::end( s1 ) ,
+						   boost::begin( s2 ) ,
+						   boost::begin( s3 ) ,
+						   boost::begin( s4 ) ,
+						   boost::begin( s5 ) ,
+						   boost::begin( s6 ) ,
+						   boost::begin( s7 ) ,
+						   op	);
+	}
+
+
+
+
+
+
+
+
 	template< class StateType1 , class StateType2 , class StateType3 , class StateType4 , class StateType5 , class StateType6 ,class StateType7 , class StateType8 , class Operation >
 	static void for_each8( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , StateType4 &s4 , StateType5 &s5 , StateType6 &s6 , StateType7 &s7 , StateType8 &s8 , Operation op )
 	{
@@ -123,12 +219,36 @@ struct standard_algebra
 						   op	);
 	}
 
+	template< class StateType1 , class StateType2 , class StateType3 , class StateType4 , class StateType5 , class StateType6 ,class StateType7 , class StateType8 , class Operation >
+	static void for_each8( const StateType1 &s1 , const StateType2 &s2 , const StateType3 &s3 , const StateType4 &s4 , const StateType5 &s5 , const StateType6 &s6 , const StateType7 &s7 , const StateType8 &s8 , Operation op )
+	{
+		detail::for_each8( boost::begin( s1 ) , boost::end( s1 ) ,
+						   boost::begin( s2 ) ,
+						   boost::begin( s3 ) ,
+						   boost::begin( s4 ) ,
+						   boost::begin( s5 ) ,
+						   boost::begin( s6 ) ,
+						   boost::begin( s7 ) ,
+						   boost::begin( s8 ) ,
+						   op	);
+	}
+
+
+
+
 
 	template< class ValueType , class StateType , class Reduction >
 	static ValueType reduce( StateType &s , Reduction red , ValueType init)
 	{
 		return detail::reduce( boost::begin( s ) , boost::end( s ) , red , init );
 	}
+
+	template< class ValueType , class StateType , class Reduction >
+	static ValueType reduce( const StateType &s , Reduction red , ValueType init)
+	{
+		return detail::reduce( boost::begin( s ) , boost::end( s ) , red , init );
+	}
+
 };
 
 } // odeint
