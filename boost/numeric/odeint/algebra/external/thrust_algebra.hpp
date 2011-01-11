@@ -38,6 +38,14 @@ struct thrust_algebra
 						  thrust::make_zip_iterator( thrust::make_tuple( boost::end(s1) , boost::end(s2) ) ) ,
 						  op);
 	}
+
+	template< class StateType1 , class StateType2 , class StateType3 , class Operation >
+	static void for_each3( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , Operation op )
+	{
+		thrust::for_each( thrust::make_zip_iterator( thrust::make_tuple( boost::begin(s1) , boost::begin(s2) , boost::begin(s3) ) ) ,
+						  thrust::make_zip_iterator( thrust::make_tuple( boost::end(s1) , boost::end(s2) , boost::begin(s3) ) ) ,
+						  op);
+	}
 };
 
 
