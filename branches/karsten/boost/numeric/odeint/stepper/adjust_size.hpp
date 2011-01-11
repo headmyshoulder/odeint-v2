@@ -13,8 +13,10 @@
 #ifndef BOOST_NUMERIC_ODEINT_ADJUST_SIZE_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_ADJUST_SIZE_HPP_INCLUDED
 
+#include <algorithm>
+
 #include <boost/noncopyable.hpp>
-#include <boost/ptr_container/ptr_array.hpp>
+#include <boost/array.hpp>
 
 #include <boost/numeric/odeint/algebra/standard_resize.hpp>
 
@@ -45,7 +47,10 @@ class size_adjuster : boost::noncopyable
 {
 public:
 
-	size_adjuster() : m_is_initialized( false ) { }
+	size_adjuster() : m_is_initialized( false ) , m_states()
+	{
+		std::fill( m_states.begin() , m_states.end() , static_cast< State* >( 0 ) );
+	}
 
 	bool adjust_size( const State &x )
 	{
@@ -74,7 +79,7 @@ public:
 
 	void register_state( size_t idx , State &x )
 	{
-		m_states.replace( idx , &x );
+		m_states[idx] = &x;
 	}
 
 
@@ -85,7 +90,7 @@ private:
 	    bool changed = false;
 		for( size_t i=0 ; i<Dim ; ++i )
 		{
-            boost::numeric::odeint::adjust_size( x , m_states[i] );
+            boost::numeric::odeint::adjust_size( x , *(m_states[i]) );
             changed = true;
 		}
 		return changed;
@@ -100,7 +105,7 @@ private:
 private :
 
 	bool m_is_initialized;
-	boost::ptr_array< State , Dim ,  boost::view_clone_allocator > m_states;
+	boost::array< State* , Dim > m_states;
 };
 
 
@@ -111,6 +116,20 @@ private :
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+/*
+ * really old stuff
+ */
 //template< class State , class AdjustSizeImpl >
 //class size_adjuster
 //{
