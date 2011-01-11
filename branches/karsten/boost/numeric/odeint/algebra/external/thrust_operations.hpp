@@ -37,6 +37,23 @@ struct thrust_operations
 			thrust::get<0>(t) += m_dt * thrust::get<1>(t);
 		}
 	};
+
+	struct scale_sum2
+	{
+		const time_type m_alpha1;
+		const time_type m_alpha2;
+
+		scale_sum2( const time_type alpha1 , const time_type alpha2 ) : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) { }
+
+		template< class Tuple >
+		__host__ __device__
+		void operator()( Tuple t ) const
+		{
+			thrust::get<0>(t) = m_alpha1 * thrust::get<1>(t) + m_alpha2 * thrust::get<2>(t);
+		}
+	};
+
+
 };
 
 } // odeint
