@@ -65,12 +65,15 @@ int main( int argc , char **argv )
 		size_t count = 0;
 		while( t < 50.0 )
 		{
+			clog << t << "\t" << dt << "\n";
 			fout << t << "\t" << dt << "\t" << x[0] << "\t" << x[1] << "\t" << x[2] << std::endl;
 			size_t trials = 0;
 			while( trials < 100 )
 			{
 				if( controlled_stepper.try_step( system< state_type > , jacobi , x , t , dt ) !=  step_size_decreased )
 					break;
+//				clog.precision( 14 );
+//				clog << dt << "\n";
 				++trials;
 			}
 			if( trials == 100 )
