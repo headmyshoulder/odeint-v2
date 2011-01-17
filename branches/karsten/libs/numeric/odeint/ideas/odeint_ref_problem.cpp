@@ -19,6 +19,9 @@
 #include <boost/timer.hpp>
 
 #include <boost/numeric/odeint.hpp>
+#include <boost/numeric/odeint/detail/iterator_algebra.hpp>
+#include <boost/numeric/odeint/container_traits.hpp>
+
 
 #define tab "\t"
 
@@ -62,6 +65,33 @@ private:
 	state_type m_dxdt;
 };
 
+class explicit_euler_2
+{
+public:
+
+	typedef double value_type;
+	typedef std::tr1::array< double , 3 > state_type;
+	typedef boost::numeric::odeint::container_traits< state_type > traits_type;
+
+	template< class System >
+	void do_step( System system , state_type &x , value_type t , value_type dt )
+	{
+		typename boost::unwrap_reference< System >::type sys = system;
+		sys( x , m_dxdt , t );
+        // x = x + dt*dxdt
+        boost::numeric::odeint::detail::it_algebra::increment(
+        		traits_type::begin(x) ,
+        		traits_type::end(x) ,
+        		traits_type::begin(m_dxdt) ,
+        		dt );
+	};
+
+private:
+
+	state_type m_dxdt;
+};
+
+
 typedef explicit_euler::value_type value_type;
 typedef explicit_euler::state_type state_type;
 
@@ -98,18 +128,19 @@ int main()
 {
 	explicit_euler euler1;
 	boost::numeric::odeint::stepper_euler< state_type > euler2;
+	explicit_euler_2 euler3;
 	const value_type dt = 0.01;
 	lorenz_class lorenz_c;
 
 	timer_type timer;
-	accumulator_type acc1 , acc2 , acc3 , acc4 , acc5 , acc6;
+	accumulator_type acc1 , acc2 , acc3 , acc4 , acc5 , acc6 , acc7 , acc8 , acc9 , acc10;
 	double elapsed;
 	const size_t num_of_steps = 1024 * 1024 * 32;
 
 	while( true )
 	{
 		state_type x = {{ drand48() , drand48() , drand48() }};
-		state_type x1( x ) , x2( x ) , x3( x ) , x4( x ) , x5( x ) , x6( x );
+		state_type x1( x ) , x2( x ) , x3( x ) , x4( x ) , x5( x ) , x6( x ) , x7( x ) , x8( x ) , x9( x ) , x10( x );
 
 		timer.restart();
 		for( size_t i = 0 ; i<num_of_steps ; ++i )
@@ -152,10 +183,44 @@ int main()
 		elapsed = timer.elapsed();
 		acc6( elapsed );
 //		clog << "Method 2 with class reference : " << elapsed << tab << x6 << endl;
-		cout << x1 << tab << x2 << tab << x3 << tab << x4 << tab << x5 << tab << x6 << endl;
 
 
-		clog << acc1 << tab << acc2 << tab << acc3 << tab << acc4 << tab << acc5 << tab << acc6 << endl;
+		timer.restart();
+		for( size_t i = 0 ; i<num_of_steps ; ++i )
+			euler3.do_step( lorenz , x7 , 0.0 , dt );
+		elapsed = timer.elapsed();
+		acc7( elapsed );
+//		clog << "Method 3 with function pointer : " << elapsed << tab << x6 << endl;
+
+		timer.restart();
+		for( size_t i = 0 ; i<num_of_steps ; ++i )
+			euler3.do_step( lorenz_c , x8 , 0.0 , dt );
+		elapsed = timer.elapsed();
+		acc8( elapsed );
+//		clog << "Method 3 with class : " << elapsed << tab << x6 << endl;
+
+		timer.restart();
+		for( size_t i = 0 ; i<num_of_steps ; ++i )
+			euler3.do_step( lorenz_class() , x9 , 0.0 , dt );
+		elapsed = timer.elapsed();
+		acc9( elapsed );
+//		clog << "Method 3 with class : " << elapsed << tab << x6 << endl;
+
+		timer.restart();
+		for( size_t i = 0 ; i<num_of_steps ; ++i )
+			euler3.do_step( boost::ref( lorenz_c ) , x10 , 0.0 , dt );
+		elapsed = timer.elapsed();
+		acc10( elapsed );
+//		clog << "Method 3 with class reference: " << elapsed << tab << x6 << endl;
+
+
+
+
+
+		cout << x1 << tab << x2 << tab << x3 << tab << x4 << tab << x5 << tab << x6 << x7 << tab << x8 << tab << x9 << tab << x10 << endl;
+
+
+		clog << acc1 << tab << acc2 << tab << acc3 << tab << acc4 << tab << acc5 << tab << acc6 << tab << acc7 << tab << acc8 << tab << acc9 << tab << acc10 << endl;
 	}
 
 	return 0;
