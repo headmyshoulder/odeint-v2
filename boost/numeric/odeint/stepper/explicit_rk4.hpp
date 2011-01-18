@@ -13,6 +13,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_EXPLICIT_RK4_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_STEPPER_EXPLICIT_RK4_HPP_INCLUDED
 
+#include <boost/ref.hpp>
 
 #include <boost/numeric/odeint/algebra/standard_algebra.hpp>
 #include <boost/numeric/odeint/algebra/standard_operations.hpp>
@@ -65,12 +66,15 @@ public :
 	}
 
 	template< class System >
-	void do_step_impl( System &system , const state_type &in , const state_type &dxdt , const time_type t , state_type &out , const time_type dt )
+	void do_step_impl( System system , const state_type &in , const state_type &dxdt , const time_type t , state_type &out , const time_type dt )
 	{
-		m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
 		// ToDo : check if size of in,dxdt,out are equal?
 
         const time_type val1 = static_cast<time_type>( 1.0 );
+
+		m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
+
+		typename boost::unwrap_reference< System >::type &sys = system;
 
         time_type  dh = static_cast<time_type>( 0.5 ) * dt;
         time_type th = t + dh;
@@ -81,20 +85,20 @@ public :
 
 
         // dt * m_dxt = k2
-        system( m_xt , m_dxt , th );
+        sys( m_xt , m_dxt , th );
 
         // m_xt = x + dh*m_dxt
         algebra_type::for_each3( m_xt , in , m_dxt , typename operations_type::scale_sum2( val1 , dh ) );
 
 
         // dt * m_dxm = k3
-        system( m_xt , m_dxm , th );
+        sys( m_xt , m_dxm , th );
         //m_xt = x + dt*m_dxm
         algebra_type::for_each3( m_xt , in , m_dxm , typename operations_type::scale_sum2( val1 , dt ) );
 
 
         // dt * m_dxh = k4
-        system( m_xt , m_dxh , t + dt );
+        sys( m_xt , m_dxh , t + dt );
         //x += dt/6 * ( m_dxdt + m_dxt + val2*m_dxm )
         time_type dt6 = dt / static_cast<time_type>( 6.0 );
         time_type dt3 = dt / static_cast<time_type>( 3.0 );

@@ -67,32 +67,35 @@ void destruct( Container &x )
 {
 }
 
-template< class Container >
-void resize( const Container &x , Container &dxdt )
+template< class Container , class Deriv >
+void resize( const Container &x , Deriv &dxdt )
 {
 	dxdt.resize( x.size() );
 }
 
-template< class Container >
-bool same_size( const Container &x1 , const Container &x2 )
+template< class Container , class Deriv >
+bool same_size( const Container &x1 , const Deriv &x2 )
 {
 	return ( x1.size() == x2.size() );
 }
 
-template< class Container >
-bool adjust_size( const Container &x1 , Container &x2 )
+template< class Container , class Deriv >
+bool adjust_size( const Container &x1 , Deriv &x2 )
 {
 	if( !same_size( x1 , x2 ) )
 	{
 	    resize( x1 , x2 );
         return true;
-	} else
+	}
+	else
+	{
 	    return false;
+	}
 }
 
 
-template< class Container >
-void copy( const Container &from , Container &to )
+template< class Container , class Deriv >
+void copy( const Container &from , Deriv &to )
 {
 	to = from;
 }

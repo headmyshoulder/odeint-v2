@@ -68,7 +68,7 @@ public:
 
 
 	template< class System >
-	std::pair< time_type , time_type > do_step( System &system )
+	std::pair< time_type , time_type > do_step( System system )
 	{
 		m_euler.do_step( system , *m_current_state , m_t , *m_old_state , m_dt );
 		m_t_old = m_t;

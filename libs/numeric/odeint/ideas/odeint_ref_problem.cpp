@@ -76,7 +76,7 @@ public:
 	template< class System >
 	void do_step( System system , state_type &x , value_type t , value_type dt )
 	{
-		typename boost::unwrap_reference< System >::type sys = system;
+		typename boost::unwrap_reference< System >::type &sys = system;
 		sys( x , m_dxdt , t );
         // x = x + dt*dxdt
         boost::numeric::odeint::detail::it_algebra::increment(
