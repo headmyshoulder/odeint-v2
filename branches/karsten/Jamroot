@@ -20,9 +20,10 @@ build-project libs/numeric/odeint/examples ;
 
 
 # ideas
-build-project libs/numeric/odeint/ideas/butcher ;
-build-project libs/numeric/odeint/ideas/generic_stepper ;
+# build-project libs/numeric/odeint/ideas/butcher ;
+# build-project libs/numeric/odeint/ideas/generic_stepper ;
 build-project libs/numeric/odeint/ideas/rosenbrock4 ;
+build-project libs/numeric/odeint/ideas/units ;
 
 # additional tests with external libraries :
 build-project libs/numeric/odeint/test/gmp ;

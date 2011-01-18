@@ -13,6 +13,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_EXPLICIT_ERROR_RK54_CK_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_STEPPER_EXPLICIT_ERROR_RK54_CK_HPP_INCLUDED
 
+#include <boost/ref.hpp>
 
 #include <boost/numeric/odeint/algebra/standard_algebra.hpp>
 #include <boost/numeric/odeint/algebra/standard_operations.hpp>
@@ -82,7 +83,6 @@ public :
 	template< class System >
 	void do_step_impl( System system , const state_type &in , const state_type &dxdt , const time_type t , state_type &out , const time_type dt , state_type &xerr )
 	{
-
 		const time_type c1 = static_cast<time_type> ( 37.0 ) / static_cast<time_type>( 378.0 );
 		const time_type c3 = static_cast<time_type> ( 250.0 ) / static_cast<time_type>( 621.0 );
 		const time_type c4 = static_cast<time_type> ( 125.0 ) / static_cast<time_type>( 594.0 );
@@ -107,8 +107,6 @@ public :
 	template< class System >
 	void do_step_impl( System system , const state_type &in , const state_type &dxdt , const time_type t , state_type &out , const time_type dt )
 	{
-		m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
-
 		const time_type a2 = static_cast<time_type> ( 0.2 );
 		const time_type a3 = static_cast<time_type> ( 0.3 );
 		const time_type a4 = static_cast<time_type> ( 0.6 );
@@ -136,29 +134,33 @@ public :
 		const time_type c4 = static_cast<time_type> ( 125.0 ) / static_cast<time_type>( 594.0 );
 		const time_type c6 = static_cast<time_type> ( 512.0 ) / static_cast<time_type>( 1771.0 );
 
+		m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
+
+		typename boost::unwrap_reference< System >::type &sys = system;
+
 		//m_x1 = x + dt*b21*dxdt
 		algebra_type::for_each3( m_x1 , in , dxdt ,
 					typename operations_type::scale_sum2( 1.0 , dt*b21 ) );
 
-		system( m_x1 , m_x2 , t + dt*a2 );
+		sys( m_x1 , m_x2 , t + dt*a2 );
 		// m_x1 = x + dt*b31*dxdt + dt*b32*m_x2
 		algebra_type::for_each4( m_x1 , in , dxdt , m_x2 ,
 					typename operations_type::scale_sum3( 1.0 , dt*b31 , dt*b32 ));
 
-		system( m_x1 , m_x3 , t + dt*a3 );
+		sys( m_x1 , m_x3 , t + dt*a3 );
 		// m_x1 = x + dt * (b41*dxdt + b42*m_x2 + b43*m_x3)
 		algebra_type::for_each5( m_x1 , in , dxdt , m_x2 , m_x3 ,
 					typename operations_type::scale_sum4( 1.0 , dt*b41 , dt*b42 , dt*b43 ));
 
-		system( m_x1, m_x4 , t + dt*a4 );
+		sys( m_x1, m_x4 , t + dt*a4 );
 		algebra_type::for_each6( m_x1 , in , dxdt , m_x2 , m_x3 , m_x4 ,
 					typename operations_type::scale_sum5( 1.0 , dt*b51 , dt*b52 , dt*b53 , dt*b54 ));
 
-		system( m_x1 , m_x5 , t + dt*a5 );
+		sys( m_x1 , m_x5 , t + dt*a5 );
 		algebra_type::for_each7( m_x1 , in , dxdt , m_x2 , m_x3 , m_x4 , m_x5 ,
 							typename operations_type::scale_sum6( 1.0 , dt*b61 , dt*b62 , dt*b63 , dt*b64 , dt*b65 ));
 
-		system( m_x1 , m_x6 , t + dt*a6 );
+		sys( m_x1 , m_x6 , t + dt*a6 );
 		algebra_type::for_each6( out , in , dxdt , m_x3 , m_x4 , m_x6 ,
 					typename operations_type::scale_sum5( 1.0 , dt*c1 , dt*c3 , dt*c4 , dt*c6 ));
 

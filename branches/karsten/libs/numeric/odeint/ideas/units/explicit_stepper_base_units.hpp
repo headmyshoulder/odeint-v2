@@ -10,14 +10,15 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
-#ifndef BOOST_NUMERIC_ODEINT_EXPLICIT_STEPPER_BASE_HPP_INCLUDED
-#define BOOST_NUMERIC_ODEINT_EXPLICIT_STEPPER_BASE_HPP_INCLUDED
+#ifndef BOOST_NUMERIC_ODEINT_EXPLICIT_STEPPER_BASE_UNITS_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_EXPLICIT_STEPPER_BASE_UNITS_HPP_INCLUDED
 
 #include <boost/noncopyable.hpp>
 #include <boost/ref.hpp>
 
-#include <boost/numeric/odeint/stepper/adjust_size.hpp>
 #include <boost/numeric/odeint/algebra/standard_resize.hpp>
+
+#include "adjust_size_units.hpp"
 
 
 namespace boost {
@@ -31,25 +32,27 @@ namespace odeint {
 template<
 	class Stepper ,
 	unsigned short Order ,
-	class State ,
+	class Deriv ,
+	class Value ,
 	class Time ,
 	class Algebra ,
 	class Operations ,
 	class AdjustSizePolicy
 >
-class explicit_stepper_base : boost::noncopyable
+class explicit_stepper_base_units : boost::noncopyable
 {
 public:
 
 
-	typedef State state_type;
+	typedef Deriv deriv_type;
+	typedef Value value_type;
 	typedef Time time_type;
 	typedef Algebra algebra_type;
 	typedef Operations operations_type;
 	typedef AdjustSizePolicy adjust_size_policy;
 	typedef Stepper stepper_type;
 
-	typedef explicit_stepper_base< Stepper , Order , State , Time , Algebra , Operations , AdjustSizePolicy > internal_stepper_base_type;
+	typedef explicit_stepper_base_units< Stepper , Order , Deriv , Value , Time , Algebra , Operations , AdjustSizePolicy > internal_stepper_base_type;
 
 	typedef unsigned short order_type;
 	static const order_type order_value = Order;
@@ -61,13 +64,13 @@ public:
     }
 
 
-	explicit_stepper_base( void ) : m_size_adjuster() , m_dxdt()
+	explicit_stepper_base_units( void ) : m_size_adjuster() , m_dxdt()
 	{
 		boost::numeric::odeint::construct( m_dxdt );
 		m_size_adjuster.register_state( 0 , m_dxdt );
 	}
 
-	~explicit_stepper_base( void )
+	~explicit_stepper_base_units( void )
 	{
 		boost::numeric::odeint::destruct( m_dxdt );
 	}
@@ -76,8 +79,8 @@ public:
 
 
 	// do_step( sys , x , t , dt )
-	template< class System >
-	void do_step( System system , state_type &x , const time_type t , const time_type dt )
+	template< class System , class State >
+	void do_step( System system , State &x , const time_type &t , const time_type &dt )
 	{
 		typename boost::unwrap_reference< System >::type &sys = system;
 		m_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
@@ -86,15 +89,15 @@ public:
 	}
 
 	// do_step( sys , x , dxdt , t , dt )
-	template< class System >
-	void do_step( System system , state_type &x , const state_type dxdt , const time_type t , const time_type dt )
+	template< class System , class State >
+	void do_step( System system , State &x , const deriv_type dxdt , const time_type &t , const time_type &dt )
 	{
 		this->stepper().do_step_impl( system , x , dxdt , t , x , dt );
 	}
 
 	// do_step( sys , in , t , out , dt )
-	template< class System >
-	void do_step( System system , const state_type &in , const time_type t , state_type &out , const time_type dt )
+	template< class System , class State >
+	void do_step( System system , const State &in , const time_type &t , State &out , const time_type &dt )
 	{
 		typename boost::unwrap_reference< System >::type &sys = system;
 		m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
@@ -103,15 +106,16 @@ public:
 	}
 
 	// do_step( sys , in , dxdt , t , out , dt )
-	template< class System >
-	void do_step( System system , const state_type &in , const state_type &dxdt , const time_type t , state_type &out , const time_type dt )
+	template< class System , class State >
+	void do_step( System system , const State &in , const deriv_type &dxdt , const time_type &t , State &out , const time_type &dt )
 	{
 		this->stepper().do_step_impl( system , in , dxdt , t , out , dt );
 	}
 
 
 
-	void adjust_size( const state_type &x )
+	template< class State >
+	void adjust_size( const State &x )
 	{
 		m_size_adjuster.adjust_size( x );
 	}
@@ -130,8 +134,8 @@ protected:
     }
 
 
-	size_adjuster< state_type , 1 > m_size_adjuster;
-	state_type m_dxdt;
+	size_adjuster_units< deriv_type , 1 > m_size_adjuster;
+	deriv_type m_dxdt;
 };
 
 
@@ -139,4 +143,4 @@ protected:
 } // numeric
 } // boost
 
-#endif //BOOST_NUMERIC_ODEINT_EXPLICIT_STEPPER_BASE_HPP_INCLUDED
+#endif //BOOST_NUMERIC_ODEINT_EXPLICIT_STEPPER_BASE_UNITS_HPP_INCLUDED

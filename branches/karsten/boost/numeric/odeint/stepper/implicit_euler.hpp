@@ -36,8 +36,11 @@ public:
     { }
 
     template< class System , class Jacobi >
-    void do_step( System &system , Jacobi &jacobi , state_type &x , value_type t , value_type dt )
+    void do_step( System system , Jacobi jacobi , state_type &x , value_type t , value_type dt )
     {
+		typename boost::unwrap_reference< System >::type &sys = system;
+		typename boost::unwrap_reference< Jacobi >::type &jac = jacobi;
+
         m_dxdt.resize( x.size() );
         m_x.resize( x.size() );
         m_b.resize( x.size() );
@@ -47,11 +50,11 @@ public:
         t += dt;
 
         // apply first Newton step
-        system( x , m_dxdt , t );
+        sys( x , m_dxdt , t );
 
         m_b = dt * m_dxdt;
 
-        jacobi( x , m_jacobi  , t );
+        jac( x , m_jacobi  , t );
         m_jacobi *= dt;
         m_jacobi -= boost::numeric::ublas::identity_matrix< value_type >( x.size() );
 
@@ -65,7 +68,7 @@ public:
         // ToDo: maybe we should apply only one Newton step -> linear implicit one-step scheme
         while( boost::numeric::ublas::norm_2( m_b ) > m_epsilon )
         {
-            system( m_x , m_dxdt , t );
+            sys( m_x , m_dxdt , t );
             m_b = x - m_x + dt*m_dxdt;
 
             /* we use simplified newton where the jacobi matrix is evaluated only once

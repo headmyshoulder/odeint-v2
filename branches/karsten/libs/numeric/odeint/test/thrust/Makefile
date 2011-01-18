@@ -6,7 +6,7 @@ NVCC = $(CUDA_ROOT)/bin/nvcc
 
 INCLUDES += -I$(BOOST_ROOT) -I$(THRUST_ROOT) -I$(CUDA_ROOT)/include -I../../../../..
 
-NVCCFLAGS = -O3 $(INCLUDES) --compiler-bindir=/usr/bin/g++-4.3
+NVCCFLAGS = -O3 $(INCLUDES) --compiler-bindir=/usr/bin/g++-4.4
 
 LDLIBS = -lcudart
 LDFLAGS = -L$(CUDA_ROOT)/lib64

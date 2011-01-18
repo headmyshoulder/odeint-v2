@@ -14,6 +14,7 @@
 #define BOOST_NUMERIC_ODEINT_EXPLICIT_STEPPER_AND_ERROR_STEPPER_FSAL_BASE_HPP_INCLUDED
 
 #include <boost/noncopyable.hpp>
+#include <boost/ref.hpp>
 
 #include <boost/numeric/odeint/stepper/adjust_size.hpp>
 #include <boost/numeric/odeint/algebra/standard_resize.hpp>
@@ -93,11 +94,12 @@ public:
 
 	// do_step( sys , x , t , dt )
 	template< class System >
-	void do_step( System &system , state_type &x , const time_type t , const time_type dt )
+	void do_step( System system , state_type &x , const time_type t , const time_type dt )
 	{
-	    if( m_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() ) || m_first_call )
+		if( m_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() ) || m_first_call )
 	    {
-	        system( x , m_dxdt ,t );
+			typename boost::unwrap_reference< System >::type &sys = system;
+	        sys( x , m_dxdt ,t );
 	        m_first_call = false;
 	    }
 		this->stepper().do_step_impl( system , x , m_dxdt , t , x , m_dxdt , dt );
@@ -105,7 +107,7 @@ public:
 
 	// do_step( sys , x , dxdt , t , dt )
 	template< class System >
-	void do_step( System &system , state_type &x , state_type &dxdt , const time_type t , const time_type dt )
+	void do_step( System system , state_type &x , state_type &dxdt , const time_type t , const time_type dt )
 	{
 		m_first_call = true;
 		this->stepper().do_step_impl( system , x , dxdt , t , x , dxdt , dt );
@@ -113,11 +115,12 @@ public:
 
 	// do_step( sys , in , t , out , dt )
 	template< class System >
-	void do_step( System &system , const state_type &in , const time_type t , state_type &out , const time_type dt )
+	void do_step( System system , const state_type &in , const time_type t , state_type &out , const time_type dt )
 	{
 		if( m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() ) || m_first_call )
 		{
-			system( in , m_dxdt ,t );
+			typename boost::unwrap_reference< System >::type &sys = system;
+			sys( in , m_dxdt ,t );
 			m_first_call = false;
 		}
 		this->stepper().do_step_impl( system , in , m_dxdt , t , out , m_dxdt , dt );
@@ -125,7 +128,7 @@ public:
 
 	// do_step( sys , in , dxdt_in , t , out , dxdt_out , dt )
 	template< class System >
-	void do_step( System &system , const state_type &in , const state_type &dxdt_in , const time_type t ,
+	void do_step( System system , const state_type &in , const state_type &dxdt_in , const time_type t ,
 			state_type &out , state_type &dxdt_out , const time_type dt )
 	{
 		m_first_call = true;
@@ -139,11 +142,12 @@ public:
 
 	// do_step( sys , x , t , dt , xerr )
 	template< class System >
-	void do_step( System &system , state_type &x , const time_type t , const time_type dt , state_type &xerr )
+	void do_step( System system , state_type &x , const time_type t , const time_type dt , state_type &xerr )
 	{
 	    if( m_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() ) || m_first_call )
 	    {
-	        system( x , m_dxdt ,t );
+	    	typename boost::unwrap_reference< System >::type &sys = system;
+	        sys( x , m_dxdt ,t );
 	        m_first_call = false;
 	    }
 		this->stepper().do_step_impl( system , x , m_dxdt , t , x , m_dxdt , dt , xerr );
@@ -151,7 +155,7 @@ public:
 
 	// do_step( sys , x , dxdt , t , dt , xerr )
 	template< class System >
-	void do_step( System &system , state_type &x , state_type &dxdt , const time_type t , const time_type dt , state_type &xerr )
+	void do_step( System system , state_type &x , state_type &dxdt , const time_type t , const time_type dt , state_type &xerr )
 	{
 		m_first_call = true;
 		this->stepper().do_step_impl( system , x , dxdt , t , x , dxdt , dt , xerr );
@@ -159,11 +163,12 @@ public:
 
 	// do_step( sys , in , t , out , dt , xerr )
 	template< class System >
-	void do_step( System &system , const state_type &in , const time_type t , state_type &out , const time_type dt , state_type &xerr )
+	void do_step( System system , const state_type &in , const time_type t , state_type &out , const time_type dt , state_type &xerr )
 	{
 	    if( m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() ) || m_first_call )
 	    {
-	        system( in , m_dxdt ,t );
+	    	typename boost::unwrap_reference< System >::type &sys = system;
+	        sys( in , m_dxdt ,t );
 	        m_first_call = false;
 	    }
 		this->stepper().do_step_impl( system , in , m_dxdt , t , out , m_dxdt , dt , xerr );
@@ -171,7 +176,7 @@ public:
 
 	// do_step( sys , in , dxdt_in , t , out , dxdt_out , dt )
 	template< class System >
-	void do_step( System &system , const state_type &in , const state_type &dxdt_in , const time_type t ,
+	void do_step( System system , const state_type &in , const state_type &dxdt_in , const time_type t ,
 			state_type &out , state_type &dxdt_out , const time_type dt , state_type &xerr )
 	{
 		m_first_call = true;

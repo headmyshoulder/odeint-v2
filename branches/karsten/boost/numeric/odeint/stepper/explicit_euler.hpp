@@ -45,7 +45,7 @@ public :
 	BOOST_ODEINT_EXPLICIT_STEPPERS_TYPEDEFS( explicit_euler , 1 );
 
 	template< class System >
-	void do_step_impl( System &system , const state_type &in , const state_type &dxdt , const time_type t , state_type & out , const time_type dt )
+	void do_step_impl( System system , const state_type &in , const state_type &dxdt , const time_type t , state_type & out , const time_type dt )
 	{
 		algebra_type::for_each3( out , in , dxdt , typename operations_type::scale_sum2( 1.0 , dt ) );
 	}

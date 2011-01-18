@@ -20,6 +20,7 @@
 #include <iostream>
 #include <tr1/array>
 
+#include <boost/ref.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include <boost/mpl/vector.hpp>
@@ -52,6 +53,8 @@ typedef std::vector< double > vector_type;
 typedef vector_space_1d< double > vector_space_type;
 typedef std::tr1::array< double , 1 > array_type;
 
+const double result = 2.2;
+
 typedef mpl::vector< vector_type , vector_space_type , array_type >::type container_types;
 
 
@@ -59,6 +62,29 @@ template< class State > struct algebra_dispatcher { typedef standard_algebra typ
 template<> struct algebra_dispatcher< vector_space_type > { typedef vector_space_algebra type; };
 template<> struct algebra_dispatcher< double > { typedef vector_space_algebra type; };
 
+struct constant_system_vector_class
+{
+	void operator()( const vector_type &x , vector_type &dxdt , double t ) const
+	{
+		dxdt[0] = 1.0;
+	}
+};
+
+struct constant_system_vector_space_class
+{
+	void operator()( const vector_space_type &x , vector_space_type &dxdt , double t ) const
+	{
+		dxdt.m_x = 1.0;
+	}
+};
+
+struct constant_system_array_class
+{
+	void operator()( const array_type &x , array_type &dxdt , double t ) const
+	{
+		dxdt[0] = 1.0;
+	}
+};
 
 void constant_system_vector( const vector_type &x , vector_type &dxdt , double t ) { dxdt[0] = 1.0; }
 void constant_system_vector_space( const vector_space_type &x , vector_space_type &dxdt , double t ) { dxdt.m_x = 1.0; }
@@ -115,7 +141,8 @@ struct perform_stepper_test< Stepper , vector_type >
 		vector_type x( 1 , 2.0 );
 		Stepper stepper;
 		check_stepper_concept( stepper , constant_system_vector , x );
-		BOOST_CHECK_SMALL( fabs( x[0] - 2.1 ) , eps );
+		check_stepper_concept( stepper , boost::cref( constant_system_vector_class() ) , x );
+		BOOST_CHECK_SMALL( fabs( x[0] - result ) , eps );
 	}
 };
 
@@ -128,7 +155,8 @@ struct perform_stepper_test< Stepper , vector_space_type >
 		x.m_x = 2.0;
 		Stepper stepper;
 		check_stepper_concept( stepper , constant_system_vector_space , x );
-		BOOST_CHECK_SMALL( fabs( x.m_x - 2.1 ) , eps );
+		check_stepper_concept( stepper , boost::cref( constant_system_vector_space_class() ) , x );
+		BOOST_CHECK_SMALL( fabs( x.m_x - result ) , eps );
 	}
 };
 
@@ -141,7 +169,8 @@ struct perform_stepper_test< Stepper , array_type >
 		x[0] = 2.0;
 		Stepper stepper;
 		check_stepper_concept( stepper , constant_system_array , x );
-		BOOST_CHECK_SMALL( fabs( x[0] - 2.1 ) , eps );
+		check_stepper_concept( stepper , boost::cref( constant_system_array_class() ) , x );
+		BOOST_CHECK_SMALL( fabs( x[0] - result ) , eps );
 	}
 };
 
@@ -209,7 +238,8 @@ struct perform_error_stepper_test< Stepper , vector_type >
 		vector_type x( 1 , 2.0 ) , xerr( 1 );
 		Stepper stepper;
 		check_error_stepper_concept( stepper , constant_system_vector , x , xerr );
-		BOOST_CHECK_SMALL( fabs( x[0] - 2.1 ) , eps );
+		check_error_stepper_concept( stepper , boost::cref( constant_system_vector_class() ) , x , xerr );
+		BOOST_CHECK_SMALL( fabs( x[0] - result ) , eps );
 	}
 };
 
@@ -223,7 +253,8 @@ struct perform_error_stepper_test< Stepper , vector_space_type >
 		x.m_x = 2.0;
 		Stepper stepper;
 		check_error_stepper_concept( stepper , constant_system_vector_space , x , xerr );
-		BOOST_CHECK_SMALL( fabs( x.m_x - 2.1 ) , eps );
+		check_error_stepper_concept( stepper , boost::cref( constant_system_vector_space_class() ) , x , xerr );
+		BOOST_CHECK_SMALL( fabs( x.m_x - result ) , eps );
 	}
 };
 
@@ -236,7 +267,8 @@ struct perform_error_stepper_test< Stepper , array_type >
 		x[0] = 2.0;
 		Stepper stepper;
 		check_error_stepper_concept( stepper , constant_system_array , x , xerr );
-		BOOST_CHECK_SMALL( fabs( x[0] - 2.1 ) , eps );
+		check_error_stepper_concept( stepper , boost::cref( constant_system_array_class() ) , x , xerr );
+		BOOST_CHECK_SMALL( fabs( x[0] - result ) , eps );
 	}
 };
 
@@ -303,7 +335,8 @@ struct perform_controlled_stepper_test< ControlledStepper , vector_type >
 		error_checker_standard< typename ControlledStepper::state_type , typename ControlledStepper::time_type > error_checker;
 		ControlledStepper controlled_stepper( error_stepper , error_checker );
 		check_controlled_stepper_concept( controlled_stepper , constant_system_vector , x );
-		BOOST_CHECK_SMALL( fabs( x[0] - 2.1 ) , eps );
+		check_controlled_stepper_concept( controlled_stepper , boost::cref( constant_system_vector_class() ) , x );
+		BOOST_CHECK_SMALL( fabs( x[0] - result ) , eps );
 	}
 };
 
@@ -318,7 +351,8 @@ struct perform_controlled_stepper_test< ControlledStepper , vector_space_type >
 		error_checker_standard< typename ControlledStepper::state_type , typename ControlledStepper::time_type , vector_space_algebra > error_checker;
 		ControlledStepper controlled_stepper( error_stepper , error_checker );
 		check_controlled_stepper_concept( controlled_stepper , constant_system_vector_space , x );
-		BOOST_CHECK_SMALL( fabs( x.m_x - 2.1 ) , eps );
+		check_controlled_stepper_concept( controlled_stepper , boost::cref( constant_system_vector_space_class() ) , x );
+		BOOST_CHECK_SMALL( fabs( x.m_x - result ) , eps );
 	}
 };
 
@@ -333,7 +367,8 @@ struct perform_controlled_stepper_test< ControlledStepper , array_type >
 		error_checker_standard< typename ControlledStepper::state_type , typename ControlledStepper::time_type > error_checker;
 		ControlledStepper controlled_stepper( error_stepper , error_checker );
 		check_controlled_stepper_concept( controlled_stepper , constant_system_array , x );
-		BOOST_CHECK_SMALL( fabs( x[0] - 2.1 ) , eps );
+		check_controlled_stepper_concept( controlled_stepper , boost::cref( constant_system_array_class() ) , x );
+		BOOST_CHECK_SMALL( fabs( x[0] - result ) , eps );
 	}
 };
 

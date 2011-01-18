@@ -23,6 +23,7 @@
 
 #include <boost/static_assert.hpp>
 #include <boost/type_traits.hpp>
+#include <boost/ref.hpp>
 
 #include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
 
@@ -92,13 +93,14 @@ public:
 	}
 
 	template< class System >
-	std::pair< time_type , time_type > do_step( System &system )
+	std::pair< time_type , time_type > do_step( System system )
 	{
 		const size_t max_count = 1000;
 
 		if( !m_is_deriv_initialized )
 		{
-			system( *m_current_state , *m_current_deriv , m_t );
+			typename boost::unwrap_reference< System >::type &sys = system;
+			sys( *m_current_state , *m_current_deriv , m_t );
 			m_is_deriv_initialized = true;
 		}
 

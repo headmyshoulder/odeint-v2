@@ -16,6 +16,7 @@
 #include <cmath>
 
 #include <boost/noncopyable.hpp>
+#include <boost/ref.hpp>
 
 #include <boost/numeric/odeint/stepper/adjust_size.hpp>
 #include <boost/numeric/odeint/stepper/error_checker.hpp>
@@ -99,19 +100,20 @@ public:
 
 	// try_step( sys , x , t , dt )
 	template< class System >
-	controlled_step_result try_step( System &sys , state_type &x , time_type &t , time_type &dt )
+	controlled_step_result try_step( System system , state_type &x , time_type &t , time_type &dt )
 	{
+		typename boost::unwrap_reference< System >::type &sys = system;
 		m_dxdt_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
 		sys( x , m_dxdt ,t );
-		return try_step( sys , x , m_dxdt , t , dt );
+		return try_step( system , x , m_dxdt , t , dt );
 	}
 
 	// try_step( sys , x , dxdt , t , dt )
 	template< class System >
-	controlled_step_result try_step( System &sys , state_type &x , const state_type &dxdt , time_type &t , time_type &dt )
+	controlled_step_result try_step( System system , state_type &x , const state_type &dxdt , time_type &t , time_type &dt )
 	{
 		m_xnew_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
-		controlled_step_result res = try_step( sys , x , dxdt , t , m_xnew , dt );
+		controlled_step_result res = try_step( system , x , dxdt , t , m_xnew , dt );
 		if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged ) )
 		{
 			boost::numeric::odeint::copy( m_xnew , x );
@@ -121,17 +123,18 @@ public:
 
 	// try_step( sys , in , t , out , dt )
 	template< class System >
-	controlled_step_result try_step( System &sys , const state_type &in , time_type &t , state_type &out , time_type &dt )
+	controlled_step_result try_step( System system , const state_type &in , time_type &t , state_type &out , time_type &dt )
 	{
+		typename boost::unwrap_reference< System >::type &sys = system;
 		m_dxdt_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
-		sys( in , m_dxdt , t );
-		return try_step( sys , in , m_dxdt , t , out , dt );
+		system( in , m_dxdt , t );
+		return try_step( system , in , m_dxdt , t , out , dt );
 	}
 
 
 	// try_step( sys , in , dxdt , t , out , dt )
 	template< class System >
-	controlled_step_result try_step( System &sys , const state_type &in , const state_type &dxdt , time_type &t , state_type &out , time_type &dt )
+	controlled_step_result try_step( System system , const state_type &in , const state_type &dxdt , time_type &t , state_type &out , time_type &dt )
 	{
 		using std::max;
 		using std::min;
@@ -140,7 +143,7 @@ public:
 		m_xerr_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
 
 		// do one step with error calculation
-		m_stepper.do_step( sys , in , dxdt , t , out , dt , m_xerr );
+		m_stepper.do_step( system , in , dxdt , t , out , dt , m_xerr );
 
 		m_max_rel_error = m_error_checker.error( in , dxdt , m_xerr , dt );
 
@@ -275,34 +278,36 @@ public:
 
     // try_step( sys , x , t , dt )
     template< class System >
-    controlled_step_result try_step( System &sys , state_type &x , time_type &t , time_type &dt )
+    controlled_step_result try_step( System system , state_type &x , time_type &t , time_type &dt )
     {
         if( m_dxdt_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() ) || m_first_call )
         {
+    		typename boost::unwrap_reference< System >::type &sys = system;
             sys( x , m_dxdt ,t );
             m_first_call = false;
         }
-        return try_step( sys , x , m_dxdt , t , dt );
+        return try_step( system , x , m_dxdt , t , dt );
     }
 
     // try_step( sys , in , t , out , dt );
     template< class System >
-    controlled_step_result try_step( System &sys , const state_type &in , time_type &t , state_type &out , time_type &dt )
+    controlled_step_result try_step( System system , const state_type &in , time_type &t , state_type &out , time_type &dt )
     {
         if( m_dxdt_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() ) || m_first_call )
         {
+    		typename boost::unwrap_reference< System >::type &sys = system;
             sys( in , m_dxdt ,t );
             m_first_call = false;
         }
-        return try_step( sys , in , m_dxdt , t , out , dt );
+        return try_step( system , in , m_dxdt , t , out , dt );
     }
 
     // try_step( sys , x , dxdt , t , dt )
     template< class System >
-    controlled_step_result try_step( System &sys , state_type &x , state_type &dxdt , time_type &t , time_type &dt )
+    controlled_step_result try_step( System system , state_type &x , state_type &dxdt , time_type &t , time_type &dt )
     {
     	m_new_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
-    	controlled_step_result res = try_step( sys , x , dxdt , t , m_xnew , m_dxdtnew , dt );
+    	controlled_step_result res = try_step( system , x , dxdt , t , m_xnew , m_dxdtnew , dt );
     	if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged) )
     	{
     		boost::numeric::odeint::copy( m_xnew , x );
@@ -313,7 +318,7 @@ public:
 
     // try_step( sys , in , dxdt , t , out , dt )
     template< class System >
-    controlled_step_result try_step( System &sys , const state_type &in , const state_type &dxdt_in , time_type &t ,
+    controlled_step_result try_step( System system , const state_type &in , const state_type &dxdt_in , time_type &t ,
     		state_type &out , state_type &dxdt_out , time_type &dt )
     {
         using std::max;
@@ -324,7 +329,7 @@ public:
 
         //fsal: m_stepper.get_dxdt( dxdt );
         //fsal: m_stepper.do_step( sys , x , dxdt , t , dt , m_x_err );
-        m_stepper.do_step( sys , in , dxdt_in , t , out , dxdt_out , dt , m_xerr );
+        m_stepper.do_step( system , in , dxdt_in , t , out , dxdt_out , dt , m_xerr );
 
         // this potentially overwrites m_x_err! (standard_error_checker does, at least)
         time_type max_rel_err = m_error_checker.error( in , dxdt_in , m_xerr , dt );
