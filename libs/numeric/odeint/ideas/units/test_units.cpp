@@ -25,11 +25,13 @@ namespace si = boost::units::si;
 using std::cout;
 using std::endl;
 
-typedef units::derived_dimension< units::length_base_dimension , 1 , units::time_base_dimension , -1 > vel_type;
-
-typedef std::tr1::array< units::quantity< si::length > , 2 > state_type;
-typedef std::tr1::array< units::quantity< vel_type > , 2 > deriv_type;
+typedef units::quantity< si::length > length_type;
+typedef units::quantity< si::velocity > vel_type;
 typedef units::quantity< si::time > time_type;
+
+typedef std::tr1::array< length_type , 2 > state_type;
+typedef std::tr1::array< vel_type , 2 > deriv_type;
+
 
 typedef boost::numeric::odeint::explicit_euler_units< deriv_type , double , time_type > stepper_type;
 
@@ -39,7 +41,7 @@ struct lorenz
 	void operator()( const State &x , Deriv &dxdt , const Time &t )
 	{
 		dxdt[0] = ( x[0] / Time( 1.0 * si::second ) );
-		dxdt[0] = ( x[1] / Time( 1.0 * si::second ) );
+		dxdt[1] = ( x[1] / Time( 1.0 * si::second ) );
 	}
 };
 
@@ -47,17 +49,15 @@ struct lorenz
 
 int main( int argc , char **argv )
 {
-	/*
-	 * zwei faelle, erstens units, zweitens ranges
-	 */
 	state_type x = {{ 1.0 * si::meter , 1.0 * si::meter }};
 	time_type t( 0.0 * si::seconds ) , dt( 0.0 * si::seconds );
 	stepper_type stepper;
 	stepper.do_step( lorenz() , x , t , dt );
 
+	vel_type a( 1.0 * si::meter / si::seconds );
+
 //	units::quantity< si::length > x( 2.0 * si::meter );
 //	units::quantity< si::time > t( 1.0 * si::second );
-
 //	cout << x * t << endl;
 
 	return 0;
