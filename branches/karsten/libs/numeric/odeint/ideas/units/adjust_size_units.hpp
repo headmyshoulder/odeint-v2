@@ -37,8 +37,6 @@ struct adjust_size_always_tag {};
 
 
 
-
-
 /*
  * Adjust size functionality with policies and resizeability
  */
@@ -55,7 +53,7 @@ public:
 	template< class State >
 	bool adjust_size( const State &x )
 	{
-		return adjust_size_by_resizeability( x , typename is_resizeable< State >::type() );
+		return adjust_size_by_resizeability( x , typename is_resizeable< Deriv >::type() );
 	}
 
 	template< class State >
@@ -70,7 +68,7 @@ public:
 		if( !m_is_initialized )
 		{
 			m_is_initialized = true;
-			return adjust_size_by_resizeability( x , typename is_resizeable< State >::type() );
+			return adjust_size_by_resizeability( x , typename is_resizeable< Deriv >::type() );
 		}
 		else
 		{
@@ -81,7 +79,7 @@ public:
 	template< class State >
 	bool adjust_size_by_policy( const State &x , adjust_size_always_tag )
 	{
-		return adjust_size_by_resizeability( x , typename is_resizeable< State >::type() );
+		return adjust_size_by_resizeability( x , typename is_resizeable< Deriv >::type() );
 	}
 
 	void register_state( size_t idx , Deriv &x )
@@ -95,12 +93,11 @@ private:
 	template< class State >
 	bool adjust_size_by_resizeability( const State &x , boost::true_type )
 	{
-	    bool changed = ( Dim > 0 );
 		for( size_t i=0 ; i<Dim ; ++i )
 		{
             boost::numeric::odeint::adjust_size( x , *(m_states[i]) );
 		}
-		return changed;
+		return ( Dim > 0 );
 	}
 
 	template< class State >
@@ -115,78 +112,6 @@ private :
 	bool m_is_initialized;
 	boost::array< Deriv* , Dim > m_states;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
- * really old stuff
- */
-//template< class State , class AdjustSizeImpl >
-//class size_adjuster
-//{
-//public:
-//
-//	size_adjuster( AdjustSizeImpl &adjust_size_impl ) : m_is_initialized( false ) , m_adjust_size_impl( adjust_size_impl ) { }
-//
-//	void adjust_size( const State &x )
-//	{
-//		adjust_size_by_resizeability( x , typename is_resizeable< State >::type() );
-//	}
-//
-//	void adjust_size_by_policy( const State &x , adjust_size_manually_tag )
-//	{
-//	}
-//
-//	void adjust_size_by_policy( const State &x , adjust_size_initially_tag )
-//	{
-//		if( !m_is_initialized )
-//		{
-//			adjust_size_by_resizeability( x , typename is_resizeable< State >::type() );
-//			m_is_initialized = true;
-//		}
-//	}
-//
-//	void adjust_size_by_policy( const State &x , adjust_size_always_tag )
-//	{
-//		adjust_size_by_resizeability( x , typename is_resizeable< State >::type() );
-//	}
-//
-//
-//private:
-//
-//
-//	void adjust_size_by_resizeability( const State &x , boost::true_type )
-//	{
-//		m_adjust_size_impl( x );
-//	}
-//
-//	void adjust_size_by_resizeability( const State &x , boost::false_type )
-//	{
-//	}
-//
-//
-//private :
-//
-//	bool m_is_initialized;
-//	AdjustSizeImpl &m_adjust_size_impl;
-//};
 
 
 } // odeint

@@ -39,7 +39,7 @@ struct standard_operations_units
 	};
 
 	template< class Fac1 , class Fac2 >
-	scale_sum2< Fac1 , Fac2 > make_scale_sum2( const Fac1 &alpha1 , const Fac2 &alpha2 )
+	static scale_sum2< Fac1 , Fac2 > make_scale_sum2( const Fac1 &alpha1 , const Fac2 &alpha2 )
 	{
 		return scale_sum2< Fac1 , Fac2 >( alpha1 , alpha2 );
 	}
