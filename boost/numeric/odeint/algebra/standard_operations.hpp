@@ -156,6 +156,9 @@ struct standard_operations
 
 
 
+	/*
+	 * for usage in for_each2
+	 */
 	template< class Fac1 >
 	struct rel_error
 	{
@@ -175,8 +178,8 @@ struct standard_operations
 	};
 
 
-	/* ToDo : this is a reduction-operation so it needs 2 arguments for usage in reduce() functions,
-	 * but for vector spaces only one argument should be supplied - this should be rethought in details.
+	/*
+	 * for usage in reduce
 	 */
 	template< class Fac1 >
 	struct maximum
@@ -186,12 +189,6 @@ struct standard_operations
 		{
 			using std::max;
 			return max( t1 , t2 );
-		}
-
-		template< class T >
-		Fac1 operator()( const T &t1 ) const
-		{ // for the vector space algebra
-			return max( t1 );
 		}
 	};
 

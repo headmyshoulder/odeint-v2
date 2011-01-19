@@ -13,6 +13,8 @@
 #ifndef BOOST_BOOST_NUMERIC_ODEINT_VECTOR_SPACE_ALGEBRA_HPP_INCLUDED
 #define BOOST_BOOST_NUMERIC_ODEINT_VECTOR_SPACE_ALGEBRA_HPP_INCLUDED
 
+#include <boost/numeric/odeint/algebra/vector_space_reduce.hpp>
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -69,12 +71,11 @@ struct vector_space_algebra
 	}
 
 
-
-	/* ToDo : get ValueType from Container? */
 	template< class ValueType , class StateType , class Reduction>
-	static ValueType reduce( StateType &s , Reduction red , ValueType init)
+	static ValueType reduce( StateType &s , Reduction red , ValueType init )
 	{
-		return red( s );
+		boost::numeric::odeint::vector_space_reduce< StateType > r;
+		return r( s , red , init );
 	}
 };
 
