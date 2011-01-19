@@ -42,42 +42,49 @@ struct adjust_size_always_tag {};
 /*
  * Adjust size functionality with policies and resizeability
  */
-template< class State , size_t Dim >
+template< class Deriv , size_t Dim >
 class size_adjuster : boost::noncopyable
 {
 public:
 
 	size_adjuster() : m_is_initialized( false ) , m_states()
 	{
-		std::fill( m_states.begin() , m_states.end() , static_cast< State* >( 0 ) );
+		std::fill( m_states.begin() , m_states.end() , static_cast< Deriv* >( 0 ) );
 	}
 
+	template< class State >
 	bool adjust_size( const State &x )
 	{
-		return adjust_size_by_resizeability( x , typename is_resizeable< State >::type() );
+		return adjust_size_by_resizeability( x , typename is_resizeable< Deriv >::type() );
 	}
 
+	template< class State >
 	bool adjust_size_by_policy( const State &x , adjust_size_manually_tag )
 	{
 	    return false;
 	}
 
+	template< class State >
 	bool adjust_size_by_policy( const State &x , adjust_size_initially_tag )
 	{
 		if( !m_is_initialized )
 		{
 			m_is_initialized = true;
-			return adjust_size_by_resizeability( x , typename is_resizeable< State >::type() );
-		} else
+			return adjust_size_by_resizeability( x , typename is_resizeable< Deriv >::type() );
+		}
+		else
+		{
 		    return false;
+		}
 	}
 
+	template< class State >
 	bool adjust_size_by_policy( const State &x , adjust_size_always_tag )
 	{
-		return adjust_size_by_resizeability( x , typename is_resizeable< State >::type() );
+		return adjust_size_by_resizeability( x , typename is_resizeable< Deriv >::type() );
 	}
 
-	void register_state( size_t idx , State &x )
+	void register_state( size_t idx , Deriv &x )
 	{
 		m_states[idx] = &x;
 	}
@@ -85,17 +92,17 @@ public:
 
 private:
 
+	template< class State >
 	bool adjust_size_by_resizeability( const State &x , boost::true_type )
 	{
-	    bool changed = false;
 		for( size_t i=0 ; i<Dim ; ++i )
 		{
             boost::numeric::odeint::adjust_size( x , *(m_states[i]) );
-            changed = true;
 		}
-		return changed;
+		return ( Dim > 0 );
 	}
 
+	template< class State >
 	bool adjust_size_by_resizeability( const State &x , boost::false_type )
 	{
 	    return false;
@@ -105,7 +112,7 @@ private:
 private :
 
 	bool m_is_initialized;
-	boost::array< State* , Dim > m_states;
+	boost::array< Deriv* , Dim > m_states;
 };
 
 

@@ -1,7 +1,12 @@
-* Controlled stepper
-* Dense output for euler
+* operations that fit units and result_of
+* include test/thrust in jam system, use system from 
+* change stepper to stepper_units
+* change error_stepper to rrror_stepper_units
+* change stepper to stepper_units
+* include fusion_algebra in tests
+* split check_concepts into check_stepper_concept, check_error_stepper_concept, check_controlled_stepper_concept
+
 * Integrate functions
-* Implicit euler
 * skript for setting the include defines according to the position in file system an writing a general copyright comment at the beginning
 
 
