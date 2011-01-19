@@ -19,29 +19,13 @@ namespace odeint {
 #include <thrust/iterator/zip_iterator.h>
 
 
-template< class Time >
 struct thrust_operations
 {
-	typedef Time time_type;
-
-	struct increment1
-	{
-		time_type m_dt;
-
-		increment1( time_type dt ) : m_dt( dt ) { }
-
-		template< class Tuple >
-		__host__ __device__
-		void operator()( Tuple t ) const
-		{
-			thrust::get<0>(t) += m_dt * thrust::get<1>(t);
-		}
-	};
-
+	template< class Fac1 , class Fac2 >
 	struct scale_sum2
 	{
-		const time_type m_alpha1;
-		const time_type m_alpha2;
+		const Fac1 m_alpha1;
+		const Fac2 m_alpha2;
 
 		scale_sum2( const time_type alpha1 , const time_type alpha2 ) : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) { }
 
