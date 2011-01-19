@@ -27,7 +27,7 @@ struct thrust_operations
 		const Fac1 m_alpha1;
 		const Fac2 m_alpha2;
 
-		scale_sum2( const time_type alpha1 , const time_type alpha2 ) : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) { }
+		scale_sum2( const Fac1 alpha1 , const Fac2 alpha2 ) : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) { }
 
 		template< class Tuple >
 		__host__ __device__
