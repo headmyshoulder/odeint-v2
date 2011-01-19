@@ -53,7 +53,7 @@ void test_euler_with_thrust( void )
 {
 	state_type x(1);
 	thrust::fill( x.begin() , x.end() , static_cast<base_type>(0.0) );
-	explicit_euler< state_type , base_type , thrust_algebra ,thrust_operations< base_type > > euler;
+	explicit_euler< state_type , base_type , thrust_algebra ,thrust_operations > euler;
 	check_stepper_concept( euler , constant_system , x );
 
 
