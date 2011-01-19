@@ -4,8 +4,11 @@
 OK * operations that fit units
 * operations that fit result_of
 * include test/thrust in jam system, use system from 
-* change stepper to stepper_units
-* change error_stepper to rrror_stepper_units
+OK * change stepper to stepper_units
+OK * change error_stepper to error_stepper_units
+* finishing change of controlled_stepper to units
+* change error_checker to units
+* change dense_output to units
 * include fusion_algebra in tests
 * split check_concepts into check_stepper_concept, check_error_stepper_concept, check_controlled_stepper_concept
 

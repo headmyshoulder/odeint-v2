@@ -40,9 +40,9 @@ typedef enum
 template<
     class ErrorStepper ,
     class ErrorChecker = error_checker_standard< typename ErrorStepper::state_type ,
-                                                 typename ErrorStepper::time_type ,
-                                                 typename ErrorStepper::algebra_type ,
-                                                 typename ErrorStepper::operations_type > ,
+                                                   typename ErrorStepper::time_type ,
+                                                   typename ErrorStepper::algebra_type ,
+                                                   typename ErrorStepper::operations_type > ,
     class AdjustSizePolicy = typename ErrorStepper::adjust_size_policy ,
     class ErrorStepperCategory = typename ErrorStepper::stepper_category
 >
@@ -65,6 +65,8 @@ public:
 
 	typedef ErrorStepper stepper_type;
 	typedef typename stepper_type::state_type state_type;
+	typedef typename stepper_type::value_type value_type;
+	typedef typename stepper_type::deriv_type deriv_type;
 	typedef typename stepper_type::time_type time_type;
 	typedef typename stepper_type::order_type order_type;
 	typedef AdjustSizePolicy adjust_size_policy;
@@ -99,8 +101,8 @@ public:
 
 
 	// try_step( sys , x , t , dt )
-	template< class System >
-	controlled_step_result try_step( System system , state_type &x , time_type &t , time_type &dt )
+	template< class System , class StateInOut >
+	controlled_step_result try_step( System system , StateInOut &x , time_type &t , time_type &dt )
 	{
 		typename boost::unwrap_reference< System >::type &sys = system;
 		m_dxdt_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
@@ -109,8 +111,8 @@ public:
 	}
 
 	// try_step( sys , x , dxdt , t , dt )
-	template< class System >
-	controlled_step_result try_step( System system , state_type &x , const state_type &dxdt , time_type &t , time_type &dt )
+	template< class System , class StateInOut , class DerivIn >
+	controlled_step_result try_step( System system , StateInOut &x , const DerivIn &dxdt , time_type &t , time_type &dt )
 	{
 		m_xnew_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
 		controlled_step_result res = try_step( system , x , dxdt , t , m_xnew , dt );
@@ -122,8 +124,8 @@ public:
 	}
 
 	// try_step( sys , in , t , out , dt )
-	template< class System >
-	controlled_step_result try_step( System system , const state_type &in , time_type &t , state_type &out , time_type &dt )
+	template< class System , class StateIn , class StateOut >
+	controlled_step_result try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
 	{
 		typename boost::unwrap_reference< System >::type &sys = system;
 		m_dxdt_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
@@ -133,8 +135,8 @@ public:
 
 
 	// try_step( sys , in , dxdt , t , out , dt )
-	template< class System >
-	controlled_step_result try_step( System system , const state_type &in , const state_type &dxdt , time_type &t , state_type &out , time_type &dt )
+	template< class System , class StateIn , class DerivIn , class StateOut >
+	controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt , time_type &t , StateOut &out , time_type &dt )
 	{
 		using std::max;
 		using std::min;
@@ -170,15 +172,15 @@ public:
 		}
 	}
 
-	time_type last_error( void ) const
+	value_type last_error( void ) const
 	{
 		return m_max_rel_error;
 	}
 
 
 
-
-	void adjust_size( const state_type &x )
+	template< class StateType >
+	void adjust_size( const StateType &x )
 	{
         m_dxdt_size_adjuster.adjust_size( x );
         m_xerr_size_adjuster.adjust_size( x );
@@ -205,14 +207,14 @@ private:
 	stepper_type &m_stepper;
 	error_checker_type m_error_checker;
 
-	size_adjuster< state_type , 1 > m_dxdt_size_adjuster;
+	size_adjuster< deriv_type , 1 > m_dxdt_size_adjuster;
 	size_adjuster< state_type , 1 > m_xerr_size_adjuster;
 	size_adjuster< state_type , 1 > m_xnew_size_adjuster;
 
-	state_type m_dxdt;
+	deriv_type m_dxdt;
 	state_type m_xerr;
 	state_type m_xnew;
-	time_type m_max_rel_error;
+	value_type m_max_rel_error;
 };
 
 
@@ -240,6 +242,8 @@ public:
 
     typedef ErrorStepper stepper_type;
     typedef typename stepper_type::state_type state_type;
+    typedef typename stepper_type::value_type value_type;
+    typedef typename stepper_type::deriv_type deriv_type;
     typedef typename stepper_type::time_type time_type;
     typedef typename stepper_type::order_type order_type;
     typedef AdjustSizePolicy adjust_size_policy;
@@ -360,8 +364,8 @@ public:
 
 
 
-
-    void adjust_size( const state_type &x )
+    template< class StateType >
+    void adjust_size( const StateType &x )
     {
         bool changed = false;
         changed |= m_dxdt_size_adjuster.adjust_size( x );
@@ -390,14 +394,14 @@ private:
     stepper_type &m_stepper;
     error_checker_type m_error_checker;
 
-    size_adjuster< state_type , 1 > m_dxdt_size_adjuster;
+    size_adjuster< deriv_type , 1 > m_dxdt_size_adjuster;
     size_adjuster< state_type , 1 > m_xerr_size_adjuster;
     size_adjuster< state_type , 2 > m_new_size_adjuster;
 
-    state_type m_dxdt;
+    deriv_type m_dxdt;
     state_type m_xerr;
     state_type m_xnew;
-    state_type m_dxdtnew;
+    deriv_type m_dxdtnew;
     bool m_first_call;
 };
 

@@ -32,6 +32,8 @@ template<
 	class Stepper ,
 	unsigned short Order ,
 	class State ,
+	class Value ,
+	class Deriv ,
 	class Time ,
 	class Algebra ,
 	class Operations ,
@@ -43,13 +45,15 @@ public:
 
 
 	typedef State state_type;
+	typedef Value value_type;
+	typedef Deriv deriv_type;
 	typedef Time time_type;
 	typedef Algebra algebra_type;
 	typedef Operations operations_type;
 	typedef AdjustSizePolicy adjust_size_policy;
 	typedef Stepper stepper_type;
 
-	typedef explicit_stepper_base< Stepper , Order , State , Time , Algebra , Operations , AdjustSizePolicy > internal_stepper_base_type;
+	typedef explicit_stepper_base< Stepper , Order , State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy > internal_stepper_base_type;
 
 	typedef unsigned short order_type;
 	static const order_type order_value = Order;
@@ -76,8 +80,8 @@ public:
 
 
 	// do_step( sys , x , t , dt )
-	template< class System >
-	void do_step( System system , state_type &x , const time_type t , const time_type dt )
+	template< class System , class StateInOut >
+	void do_step( System system , StateInOut &x , const time_type &t , const time_type &dt )
 	{
 		typename boost::unwrap_reference< System >::type &sys = system;
 		m_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
@@ -86,15 +90,15 @@ public:
 	}
 
 	// do_step( sys , x , dxdt , t , dt )
-	template< class System >
-	void do_step( System system , state_type &x , const state_type dxdt , const time_type t , const time_type dt )
+	template< class System , class StateInOut , class DerivIn >
+	void do_step( System system , StateInOut &x , const DerivIn &dxdt , const time_type &t , const time_type &dt )
 	{
 		this->stepper().do_step_impl( system , x , dxdt , t , x , dt );
 	}
 
 	// do_step( sys , in , t , out , dt )
-	template< class System >
-	void do_step( System system , const state_type &in , const time_type t , state_type &out , const time_type dt )
+	template< class System , class StateIn , class StateOut >
+	void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt )
 	{
 		typename boost::unwrap_reference< System >::type &sys = system;
 		m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
@@ -103,15 +107,16 @@ public:
 	}
 
 	// do_step( sys , in , dxdt , t , out , dt )
-	template< class System >
-	void do_step( System system , const state_type &in , const state_type &dxdt , const time_type t , state_type &out , const time_type dt )
+	template< class System , class StateIn , class DerivIn , class StateOut >
+	void do_step( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt )
 	{
 		this->stepper().do_step_impl( system , in , dxdt , t , out , dt );
 	}
 
 
 
-	void adjust_size( const state_type &x )
+	template< class StateType >
+	void adjust_size( const StateType &x )
 	{
 		m_size_adjuster.adjust_size( x );
 	}
@@ -130,8 +135,8 @@ protected:
     }
 
 
-	size_adjuster< state_type , 1 > m_size_adjuster;
-	state_type m_dxdt;
+	size_adjuster< deriv_type , 1 > m_size_adjuster;
+	deriv_type m_dxdt;
 };
 
 

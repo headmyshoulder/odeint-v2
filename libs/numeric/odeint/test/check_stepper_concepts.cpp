@@ -94,10 +94,10 @@ void constant_system_array( const array_type &x , array_type &dxdt , double t ) 
 const double eps = 1.0e-14;
 
 template< class Stepper , class System >
-void check_stepper_concept( Stepper &stepper , System system , typename Stepper::state_type &x )
+void check_stepper_concept( Stepper &stepper , System system , typename Stepper::deriv_type &x )
 {
     typedef Stepper stepper_type;
-    typedef typename stepper_type::state_type container_type;
+    typedef typename stepper_type::deriv_type container_type;
     typedef typename stepper_type::order_type order_type;
     typedef typename stepper_type::time_type time_type;
 
@@ -108,7 +108,7 @@ template< class Stepper , class System >
 void check_error_stepper_concept( Stepper &stepper , System system , typename Stepper::state_type &x , typename Stepper::state_type &xerr )
 {
     typedef Stepper stepper_type;
-    typedef typename stepper_type::state_type container_type;
+    typedef typename stepper_type::deriv_type container_type;
     typedef typename stepper_type::order_type order_type;
     typedef typename stepper_type::time_type time_type;
 
@@ -119,7 +119,7 @@ template< class Stepper , class System >
 void check_controlled_stepper_concept( Stepper &stepper , System system , typename Stepper::state_type &x )
 {
 	typedef Stepper stepper_type;
-    typedef typename stepper_type::state_type container_type;
+    typedef typename stepper_type::deriv_type container_type;
     typedef typename stepper_type::order_type order_type;
     typedef typename stepper_type::time_type time_type;
 
@@ -177,10 +177,10 @@ struct perform_stepper_test< Stepper , array_type >
 
 
 template< class State > class stepper_methods : public mpl::vector<
-	explicit_euler< State , double , typename algebra_dispatcher< State >::type > ,
-	explicit_rk4< State , double , typename algebra_dispatcher< State >::type > ,
-	explicit_error_rk54_ck< State , double , typename algebra_dispatcher< State >::type > ,
-	explicit_error_dopri5< State , double , typename algebra_dispatcher< State >::type >
+	explicit_euler< State , double , State , double , typename algebra_dispatcher< State >::type > ,
+	explicit_rk4< State , double , State , double , typename algebra_dispatcher< State >::type > ,
+	explicit_error_rk54_ck< State , double , State , double , typename algebra_dispatcher< State >::type > ,
+	explicit_error_dopri5< State , double , State , double , typename algebra_dispatcher< State >::type >
 > { };
 
 
@@ -206,7 +206,7 @@ BOOST_AUTO_TEST_SUITE( stepper_concept_test )
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_test , Stepper, all_stepper_methods )
 {
-	perform_stepper_test< Stepper , typename Stepper::state_type > tester;
+	perform_stepper_test< Stepper , typename Stepper::deriv_type > tester;
 	tester();
 }
 
@@ -275,8 +275,8 @@ struct perform_error_stepper_test< Stepper , array_type >
 
 
 template< class State > class error_stepper_methods : public mpl::vector<
-	explicit_error_rk54_ck< State , double , typename algebra_dispatcher< State >::type > ,
-	explicit_error_dopri5< State , double , typename algebra_dispatcher< State >::type >
+	explicit_error_rk54_ck< State , double , State , double , typename algebra_dispatcher< State >::type > ,
+	explicit_error_dopri5< State , double , State , double , typename algebra_dispatcher< State >::type >
 > { };
 
 
@@ -374,8 +374,8 @@ struct perform_controlled_stepper_test< ControlledStepper , array_type >
 };
 
 template< class State > class controlled_stepper_methods : public mpl::vector<
-	controlled_error_stepper< explicit_error_rk54_ck< State , double , typename algebra_dispatcher< State >::type > > ,
-	controlled_error_stepper< explicit_error_dopri5< State , double , typename algebra_dispatcher< State >::type > >
+	controlled_error_stepper< explicit_error_rk54_ck< State , double , State , double , typename algebra_dispatcher< State >::type > > ,
+	controlled_error_stepper< explicit_error_dopri5< State , double , State , double , typename algebra_dispatcher< State >::type > >
 > { };
 
 typedef mpl::copy
