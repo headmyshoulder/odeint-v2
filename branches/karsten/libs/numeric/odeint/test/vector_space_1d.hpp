@@ -94,4 +94,22 @@ T max( const vector_space_1d< T > &v )
 	return v.m_x;
 }
 
+namespace boost {
+namespace numeric {
+namespace odeint {
+
+template< class T >
+struct vector_space_reduce< vector_space_1d< T > >
+{
+	template< class Op >
+	T operator()( const vector_space_1d< T > &v , Op op , T value )
+	{
+		return v.m_x;
+	}
+};
+
+} // odeint
+} // numeric
+} // boost
+
 #endif // VECTOR_SPACE_1D_HPP_INCLUDED
