@@ -29,15 +29,17 @@ namespace odeint {
 
 template<
     class State ,
-    class Time = double ,
+    class Value = double ,
+    class Deriv = State ,
+    class Time = Value ,
 	class Algebra = standard_algebra ,
 	class Operations = standard_operations ,
 	class AdjustSizePolicy = adjust_size_initially_tag
 	>
 class explicit_rk4
 : public explicit_stepper_base<
-	  explicit_rk4< State , Time , Algebra , Operations , AdjustSizePolicy > ,
-	  4 , State , Time , Algebra , Operations , AdjustSizePolicy >
+	  explicit_rk4< State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy > ,
+	  4 , State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy >
 {
 public :
 
@@ -45,16 +47,16 @@ public :
 	BOOST_ODEINT_EXPLICIT_STEPPERS_TYPEDEFS( explicit_rk4 , 1 );
 
 
-	explicit_rk4( void ) : m_size_adjuster() , m_dxt() , m_dxm() , m_dxh() , m_xt()
+	explicit_rk4( void ) : m_deriv_adjuster() , m_state_adjuster() , m_dxt() , m_dxm() , m_dxh() , m_x_tmp()
 	{
 		boost::numeric::odeint::construct( m_dxt );
 		boost::numeric::odeint::construct( m_dxm );
 		boost::numeric::odeint::construct( m_dxh );
-		boost::numeric::odeint::construct( m_xt );
-		m_size_adjuster.register_state( 0 , m_dxt );
-		m_size_adjuster.register_state( 1 , m_dxm );
-		m_size_adjuster.register_state( 2 , m_dxh );
-		m_size_adjuster.register_state( 3 , m_xt );
+		boost::numeric::odeint::construct( m_x_tmp );
+		m_deriv_adjuster.register_state( 0 , m_dxt );
+		m_deriv_adjuster.register_state( 1 , m_dxm );
+		m_deriv_adjuster.register_state( 2 , m_dxh );
+		m_state_adjuster.register_state( 0 , m_x_tmp );
 	}
 
 	~explicit_rk4( void )
@@ -62,69 +64,73 @@ public :
 		boost::numeric::odeint::destruct( m_dxt );
 		boost::numeric::odeint::destruct( m_dxm );
 		boost::numeric::odeint::destruct( m_dxh );
-		boost::numeric::odeint::destruct( m_xt );
+		boost::numeric::odeint::destruct( m_x_tmp );
 	}
 
-	template< class System >
-	void do_step_impl( System system , const state_type &in , const state_type &dxdt , const time_type t , state_type &out , const time_type dt )
+	template< class System , class StateIn , class DerivIn , class StateOut >
+	void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt )
 	{
 		// ToDo : check if size of in,dxdt,out are equal?
 
-        const time_type val1 = static_cast<time_type>( 1.0 );
+        const time_type val1 = static_cast< value_type >( 1.0 );
 
-		m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
+		m_deriv_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
+		m_state_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
 
 		typename boost::unwrap_reference< System >::type &sys = system;
 
-        time_type  dh = static_cast<time_type>( 0.5 ) * dt;
+        time_type dh = static_cast< value_type >( 0.5 ) * dt;
         time_type th = t + dh;
 
         // dt * dxdt = k1
-        // m_xt = x + dh*dxdt
-        algebra_type::for_each3( m_xt , in , dxdt ,
-        		typename operations_type::template scale_sum2< time_type , time_type >( val1 , dh ) );
+        // m_x_tmp = x + dh*dxdt
+        algebra_type::for_each3( m_x_tmp , in , dxdt ,
+        		typename operations_type::template scale_sum2< value_type , time_type >( val1 , dh ) );
 
 
         // dt * m_dxt = k2
-        sys( m_xt , m_dxt , th );
+        sys( m_x_tmp , m_dxt , th );
 
-        // m_xt = x + dh*m_dxt
-        algebra_type::for_each3( m_xt , in , m_dxt ,
-        		typename operations_type::template scale_sum2< time_type , time_type >( val1 , dh ) );
+        // m_x_tmp = x + dh*m_dxt
+        algebra_type::for_each3( m_x_tmp , in , m_dxt ,
+        		typename operations_type::template scale_sum2< value_type , time_type >( val1 , dh ) );
 
 
         // dt * m_dxm = k3
-        sys( m_xt , m_dxm , th );
-        //m_xt = x + dt*m_dxm
-        algebra_type::for_each3( m_xt , in , m_dxm ,
-        		typename operations_type::template scale_sum2< time_type , time_type >( val1 , dt ) );
+        sys( m_x_tmp , m_dxm , th );
+        //m_x_tmp = x + dt*m_dxm
+        algebra_type::for_each3( m_x_tmp , in , m_dxm ,
+        		typename operations_type::template scale_sum2< value_type , time_type >( val1 , dt ) );
 
 
         // dt * m_dxh = k4
-        sys( m_xt , m_dxh , t + dt );
+        sys( m_x_tmp , m_dxh , t + dt );
         //x += dt/6 * ( m_dxdt + m_dxt + val2*m_dxm )
-        time_type dt6 = dt / static_cast<time_type>( 6.0 );
-        time_type dt3 = dt / static_cast<time_type>( 3.0 );
+        time_type dt6 = dt / static_cast< value_type >( 6.0 );
+        time_type dt3 = dt / static_cast< value_type >( 3.0 );
         algebra_type::for_each6( out , in , dxdt , m_dxt , m_dxm , m_dxh ,
-        		typename operations_type::template scale_sum5< time_type , time_type , time_type , time_type , time_type >( 1.0 , dt6 , dt3 , dt3 , dt6 ) );
+        		typename operations_type::template scale_sum5< value_type , time_type , time_type , time_type , time_type >( 1.0 , dt6 , dt3 , dt3 , dt6 ) );
 	}
 
 
-	void adjust_size( const state_type &x )
+	template< class StateType >
+	void adjust_size( const StateType &x )
 	{
-		m_size_adjuster.adjust_size( x );
+		m_deriv_adjuster.adjust_size( x );
+		m_state_adjuster.adjust_size( x );
 		stepper_base_type::adjust_size( x );
 	}
 
 
 private:
 
-	size_adjuster< state_type , 4 > m_size_adjuster;
+	size_adjuster< deriv_type , 3 > m_deriv_adjuster;
+	size_adjuster< state_type , 1 > m_state_adjuster;
 
-    state_type m_dxt;
-    state_type m_dxm;
-    state_type m_dxh;
-    state_type m_xt;
+    deriv_type m_dxt;
+    deriv_type m_dxm;
+    deriv_type m_dxh;
+    state_type m_x_tmp;
 
 };
 
