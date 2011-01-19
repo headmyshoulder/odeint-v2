@@ -25,9 +25,12 @@ namespace numeric {
 namespace odeint {
 
 /*
- * The const versions are needed for boost.range to work, i.e.
+ * Hints:
+ *
+ * 1. The const versions are needed for boost.range to work, i.e.
  * it allows you to do
  * for_each1( make_pair( vec1.begin() , vec1.begin() + 10 ) , op );
+ *
  */
 struct standard_algebra
 {

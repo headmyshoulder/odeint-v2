@@ -31,7 +31,7 @@ template<
     class State ,
     class Time = double ,
 	class Algebra = standard_algebra ,
-	class Operations = standard_operations< Time > ,
+	class Operations = standard_operations ,
 	class AdjustSizePolicy = adjust_size_initially_tag
 	>
 class explicit_rk4
@@ -81,20 +81,23 @@ public :
 
         // dt * dxdt = k1
         // m_xt = x + dh*dxdt
-        algebra_type::for_each3( m_xt , in , dxdt , typename operations_type::scale_sum2( val1 , dh ) );
+        algebra_type::for_each3( m_xt , in , dxdt ,
+        		typename operations_type::template scale_sum2< time_type , time_type >( val1 , dh ) );
 
 
         // dt * m_dxt = k2
         sys( m_xt , m_dxt , th );
 
         // m_xt = x + dh*m_dxt
-        algebra_type::for_each3( m_xt , in , m_dxt , typename operations_type::scale_sum2( val1 , dh ) );
+        algebra_type::for_each3( m_xt , in , m_dxt ,
+        		typename operations_type::template scale_sum2< time_type , time_type >( val1 , dh ) );
 
 
         // dt * m_dxm = k3
         sys( m_xt , m_dxm , th );
         //m_xt = x + dt*m_dxm
-        algebra_type::for_each3( m_xt , in , m_dxm , typename operations_type::scale_sum2( val1 , dt ) );
+        algebra_type::for_each3( m_xt , in , m_dxm ,
+        		typename operations_type::template scale_sum2< time_type , time_type >( val1 , dt ) );
 
 
         // dt * m_dxh = k4
@@ -102,7 +105,8 @@ public :
         //x += dt/6 * ( m_dxdt + m_dxt + val2*m_dxm )
         time_type dt6 = dt / static_cast<time_type>( 6.0 );
         time_type dt3 = dt / static_cast<time_type>( 3.0 );
-        algebra_type::for_each6( out , in , dxdt , m_dxt , m_dxm , m_dxh , typename operations_type::scale_sum5( 1.0 , dt6 , dt3 , dt3 , dt6 ) );
+        algebra_type::for_each6( out , in , dxdt , m_dxt , m_dxm , m_dxh ,
+        		typename operations_type::template scale_sum5< time_type , time_type , time_type , time_type , time_type >( 1.0 , dt6 , dt3 , dt3 , dt6 ) );
 	}
 
 

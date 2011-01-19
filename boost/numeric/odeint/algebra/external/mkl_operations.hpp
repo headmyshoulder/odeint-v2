@@ -29,15 +29,18 @@ namespace odeint {
 /* only defined for doubles */
 struct mkl_operations
 {
+	template< class Fac1 , class Fac2 > struct scale_sum2;
 
-    typedef double time_type;
 
-    struct scale_sum2
+	template<>
+    struct scale_sum2< double , double >
     {
-        const time_type m_alpha1;
-        const time_type m_alpha2;
+		typedef double Fac1;
+		typedef double Fac2;
+		const Fac1 m_alpha1;
+        const Fac2 m_alpha2;
 
-        scale_sum2( const time_type alpha1 , const time_type alpha2 ) : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) { }
+        scale_sum2( const Fac1 alpha1 , const Fac2 alpha2 ) : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) { }
 
         template< class T1 , class T2 , class T3 >
         void operator()( T1 &t1 , const T2 &t2 , const T3 &t3) const

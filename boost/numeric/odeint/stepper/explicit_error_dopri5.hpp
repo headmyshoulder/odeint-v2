@@ -33,7 +33,7 @@ template<
     class State ,
     class Time = double ,
 	class Algebra = standard_algebra ,
-	class Operations = standard_operations< Time > ,
+	class Operations = standard_operations ,
 	class AdjustSizePolicy = adjust_size_initially_tag
 	>
 class explicit_error_dopri5
@@ -123,29 +123,29 @@ public :
 
         //m_x1 = x + dt*b21*dxdt
         algebra_type::for_each3( m_x1 , in , dxdt_in ,
-                    typename operations_type::scale_sum2( 1.0 , dt*b21 ) );
+        		typename operations_type::template scale_sum2< time_type , time_type >( 1.0 , dt*b21 ) );
 
         sys( m_x1 , m_x2 , t + dt*a2 );
         // m_x1 = x + dt*b31*dxdt + dt*b32*m_x2
         algebra_type::for_each4( m_x1 , in , dxdt_in , m_x2 ,
-                    typename operations_type::scale_sum3( 1.0 , dt*b31 , dt*b32 ));
+        		typename operations_type::template scale_sum3< time_type , time_type , time_type >( 1.0 , dt*b31 , dt*b32 ));
 
         sys( m_x1 , m_x3 , t + dt*a3 );
         // m_x1 = x + dt * (b41*dxdt + b42*m_x2 + b43*m_x3)
         algebra_type::for_each5( m_x1 , in , dxdt_in , m_x2 , m_x3 ,
-                    typename operations_type::scale_sum4( 1.0 , dt*b41 , dt*b42 , dt*b43 ));
+        		typename operations_type::template scale_sum4< time_type , time_type , time_type , time_type >( 1.0 , dt*b41 , dt*b42 , dt*b43 ));
 
         sys( m_x1, m_x4 , t + dt*a4 );
         algebra_type::for_each6( m_x1 , in , dxdt_in , m_x2 , m_x3 , m_x4 ,
-                    typename operations_type::scale_sum5( 1.0 , dt*b51 , dt*b52 , dt*b53 , dt*b54 ));
+        		typename operations_type::template scale_sum5< time_type , time_type , time_type , time_type , time_type >( 1.0 , dt*b51 , dt*b52 , dt*b53 , dt*b54 ));
 
         sys( m_x1 , m_x5 , t + dt*a5 );
         algebra_type::for_each7( m_x1 , in , dxdt_in , m_x2 , m_x3 , m_x4 , m_x5 ,
-                            typename operations_type::scale_sum6( 1.0 , dt*b61 , dt*b62 , dt*b63 , dt*b64 , dt*b65 ));
+        		typename operations_type::template scale_sum6< time_type , time_type , time_type , time_type , time_type , time_type >( 1.0 , dt*b61 , dt*b62 , dt*b63 , dt*b64 , dt*b65 ));
 
         sys( m_x1 , m_x6 , t + dt );
         algebra_type::for_each7( out , in , dxdt_in , m_x3 , m_x4 , m_x5 , m_x6 ,
-                    typename operations_type::scale_sum6( 1.0 , dt*c1 , dt*c3 , dt*c4 , dt*c5 , dt*c6 ));
+        		typename operations_type::template scale_sum6< time_type , time_type , time_type , time_type , time_type , time_type >( 1.0 , dt*c1 , dt*c3 , dt*c4 , dt*c5 , dt*c6 ));
 
         // the new derivative
         sys( out , dxdt_out , t + dt );
@@ -174,7 +174,7 @@ public :
 
         //error estimate
         algebra_type::for_each7( xerr , dxdt_in , m_x3 , m_x4 , m_x5 , m_x6 , dxdt_out ,
-                    typename operations_type::scale_sum6( dt*dc1 , dt*dc3 , dt*dc4 , dt*dc5 , dt*dc6 , dt*dc7 ) );
+                    typename operations_type::template scale_sum6< time_type , time_type , time_type , time_type , time_type , time_type >( dt*dc1 , dt*dc3 , dt*dc4 , dt*dc5 , dt*dc6 , dt*dc7 ) );
 	}
 
 

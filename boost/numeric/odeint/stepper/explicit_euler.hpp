@@ -30,7 +30,7 @@ template<
     class State ,
     class Time = double ,
 	class Algebra = standard_algebra ,
-	class Operations = standard_operations< Time > ,
+	class Operations = standard_operations ,
 	class AdjustSizePolicy = adjust_size_initially_tag
 	>
 class explicit_euler
@@ -47,7 +47,7 @@ public :
 	template< class System >
 	void do_step_impl( System system , const state_type &in , const state_type &dxdt , const time_type t , state_type & out , const time_type dt )
 	{
-		algebra_type::for_each3( out , in , dxdt , typename operations_type::scale_sum2( 1.0 , dt ) );
+		algebra_type::for_each3( out , in , dxdt , typename operations_type::template scale_sum2< time_type , time_type >( 1.0 , dt ) );
 	}
 };
 

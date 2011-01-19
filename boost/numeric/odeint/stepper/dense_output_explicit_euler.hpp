@@ -24,7 +24,7 @@ template<
     class State ,
     class Time = double ,
 	class Algebra = standard_algebra ,
-	class Operations = standard_operations< Time > ,
+	class Operations = standard_operations ,
 	class AdjustSizePolicy = adjust_size_initially_tag
 	>
 class dense_output_explicit_euler
@@ -80,7 +80,7 @@ public:
 	void calc_state( time_type t , state_type &x )
 	{
 		time_type delta = t - m_t_old;
-		algebra_type::for_each3( x , *m_old_state , m_euler.m_dxdt , typename operations_type::scale_sum2( 1.0 , delta ) );
+		algebra_type::for_each3( x , *m_old_state , m_euler.m_dxdt , typename operations_type::template scale_sum2< time_type , time_type >( 1.0 , delta ) );
 	}
 
 	void adjust_size( const state_type &x )
