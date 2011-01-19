@@ -1,8 +1,11 @@
-* operations that fit units and result_of
+* Unit test
+  * test operations
+  * test algebra
+OK * operations that fit units
+* operations that fit result_of
 * include test/thrust in jam system, use system from 
 * change stepper to stepper_units
 * change error_stepper to rrror_stepper_units
-* change stepper to stepper_units
 * include fusion_algebra in tests
 * split check_concepts into check_stepper_concept, check_error_stepper_concept, check_controlled_stepper_concept
 

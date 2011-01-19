@@ -18,10 +18,15 @@
 #include <vector>
 #include <cmath>
 #include <iostream>
+
 #include <tr1/array>
 
-#include <boost/ref.hpp>
 #include <boost/test/unit_test.hpp>
+
+#include <boost/ref.hpp>
+#include <boost/bind.hpp>
+#include <boost/utility.hpp>
+#include <boost/type_traits/add_reference.hpp>
 
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/for_each.hpp>
@@ -31,13 +36,8 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/inserter.hpp>
 
-#include <boost/bind.hpp>
-#include <boost/utility.hpp>
-
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
-
-#include <boost/type_traits/add_reference.hpp>
 
 #include "vector_space_1d.hpp"
 
@@ -52,6 +52,7 @@ namespace mpl = boost::mpl;
 typedef std::vector< double > vector_type;
 typedef vector_space_1d< double > vector_space_type;
 typedef std::tr1::array< double , 1 > array_type;
+
 
 const double result = 2.2;
 

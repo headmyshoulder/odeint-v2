@@ -23,17 +23,16 @@ namespace odeint {
 /*
  * have to be changed if thrust device_vector or gsl_vector are used
  */
-template< class Time >
 struct standard_operations
 {
-	typedef Time time_type;
 
+	template< class Fac1 , class Fac2 >
 	struct scale_sum2
 	{
-		const time_type m_alpha1;
-		const time_type m_alpha2;
+		const Fac1 m_alpha1;
+		const Fac2 m_alpha2;
 
-		scale_sum2( const time_type alpha1 , const time_type alpha2 ) : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) { }
+		scale_sum2( const Fac1 &alpha1 , const Fac2 &alpha2 ) : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) { }
 
 		template< class T1 , class T2 , class T3 >
 		void operator()( T1 &t1 , const T2 &t2 , const T3 &t3) const
@@ -42,11 +41,15 @@ struct standard_operations
 		}
 	};
 
+
+	template< class Fac1 , class Fac2 , class Fac3 >
 	struct scale_sum3
 	{
-		const time_type m_alpha1 , m_alpha2 , m_alpha3;
+		const Fac1 m_alpha1;
+		const Fac2 m_alpha2;
+		const Fac3 m_alpha3;
 
-		scale_sum3( const time_type alpha1 , const time_type alpha2 , const time_type alpha3 )
+		scale_sum3( const Fac1 &alpha1 , const Fac2 &alpha2 , const Fac3 &alpha3 )
 			: m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) { }
 
 		template< class T1 , class T2 , class T3 , class T4 >
@@ -56,11 +59,16 @@ struct standard_operations
 		}
 	};
 
+
+	template< class Fac1 , class Fac2 , class Fac3 , class Fac4 >
 	struct scale_sum4
 	{
-		const time_type m_alpha1 , m_alpha2 , m_alpha3 , m_alpha4;
+		const Fac1 m_alpha1;
+		const Fac2 m_alpha2;
+		const Fac3 m_alpha3;
+		const Fac4 m_alpha4;
 
-		scale_sum4( const time_type alpha1 , const time_type alpha2 , const time_type alpha3 , const time_type alpha4)
+		scale_sum4( const Fac1 &alpha1 , const Fac2 &alpha2 , const Fac3 &alpha3 , const Fac4 &alpha4 )
 				: m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) , m_alpha4( alpha4 ) { }
 
 		template< class T1 , class T2 , class T3 , class T4 , class T5 >
@@ -70,11 +78,17 @@ struct standard_operations
 		}
 	};
 
+
+	template< class Fac1 , class Fac2 , class Fac3 , class Fac4 , class Fac5 >
 	struct scale_sum5
 	{
-		const time_type m_alpha1 , m_alpha2 , m_alpha3 , m_alpha4 , m_alpha5;
+		const Fac1 m_alpha1;
+		const Fac2 m_alpha2;
+		const Fac3 m_alpha3;
+		const Fac4 m_alpha4;
+		const Fac5 m_alpha5;
 
-		scale_sum5( const time_type alpha1 , const time_type alpha2 , const time_type alpha3 , const time_type alpha4 , const time_type alpha5)
+		scale_sum5( const Fac1 &alpha1 , const Fac2 &alpha2 , const Fac3 &alpha3 , const Fac4 &alpha4 , const Fac5 &alpha5 )
 			: m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) , m_alpha4( alpha4 ) , m_alpha5( alpha5 ) { }
 
 		template< class T1 , class T2 , class T3 , class T4 , class T5 , class T6 >
@@ -84,11 +98,18 @@ struct standard_operations
 		}
 	};
 
+
+	template< class Fac1 , class Fac2 , class Fac3 , class Fac4 , class Fac5 , class Fac6 >
 	struct scale_sum6
 	{
-		const time_type m_alpha1 , m_alpha2 , m_alpha3 , m_alpha4 , m_alpha5 , m_alpha6;
+		const Fac1 m_alpha1;
+		const Fac2 m_alpha2;
+		const Fac3 m_alpha3;
+		const Fac4 m_alpha4;
+		const Fac5 m_alpha5;
+		const Fac6 m_alpha6;
 
-		scale_sum6( const time_type alpha1 , const time_type alpha2 , const time_type alpha3 , const time_type alpha4 , const time_type alpha5 , const time_type alpha6 )
+		scale_sum6( const Fac1 &alpha1 , const Fac2 &alpha2 , const Fac3 &alpha3 , const Fac4 &alpha4 , const Fac5 &alpha5 , const Fac6 &alpha6 )
 			: m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) , m_alpha4( alpha4 ) , m_alpha5( alpha5 ) , m_alpha6( alpha6 ){ }
 
 		template< class T1 , class T2 , class T3 , class T4 , class T5 , class T6 , class T7 >
@@ -98,12 +119,20 @@ struct standard_operations
 		}
 	};
 
+
+	template< class Fac1 , class Fac2 , class Fac3 , class Fac4 , class Fac5 , class Fac6 , class Fac7 >
 	struct scale_sum7
 	{
-		const time_type m_alpha1 , m_alpha2 , m_alpha3 , m_alpha4 , m_alpha5 , m_alpha6 , m_alpha7;
+		const Fac1 m_alpha1;
+		const Fac2 m_alpha2;
+		const Fac3 m_alpha3;
+		const Fac4 m_alpha4;
+		const Fac5 m_alpha5;
+		const Fac6 m_alpha6;
+		const Fac7 m_alpha7;
 
-		scale_sum7( const time_type alpha1 , const time_type alpha2 , const time_type alpha3 , const time_type alpha4 ,
-				const time_type alpha5 , const time_type alpha6 , const time_type alpha7 )
+		scale_sum7( const Fac1 &alpha1 , const Fac2 &alpha2 , const Fac3 &alpha3 , const Fac4 &alpha4 ,
+				    const Fac5 &alpha5 , const Fac6 &alpha6 , const Fac7 &alpha7 )
 			: m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) , m_alpha4( alpha4 ) , m_alpha5( alpha5 ) , m_alpha6( alpha6 ) , m_alpha7( alpha7 ) { }
 
 		template< class T1 , class T2 , class T3 , class T4 , class T5 , class T6 , class T7 , class T8 >
@@ -114,17 +143,25 @@ struct standard_operations
 	};
 
 
+	template< class Fac1 , class Fac2 >
+	static scale_sum2< Fac1 , Fac2 > make_scale_sum2( const Fac1 &alpha1 , const Fac2 &alpha2 )
+	{
+		return scale_sum2< Fac1 , Fac2 >( alpha1 , alpha2 );
+	}
 
 
 
 
 
 
+
+
+	template< class Fac1 >
 	struct rel_error
 	{
-		const time_type m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt;
+		const Fac1 m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt;
 
-		rel_error( const time_type eps_abs , const time_type eps_rel , const time_type a_x , const time_type a_dxdt )
+		rel_error( const Fac1 &eps_abs , const Fac1 &eps_rel , const Fac1 &a_x , const Fac1 &a_dxdt )
 			: m_eps_abs( eps_abs ) , m_eps_rel( eps_rel ) , m_a_x( a_x ) , m_a_dxdt( a_dxdt ) { }
 
 
@@ -141,17 +178,18 @@ struct standard_operations
 	/* ToDo : this is a reduction-operation so it needs 2 arguments for usage in reduce() functions,
 	 * but for vector spaces only one argument should be supplied - this should be rethought in details.
 	 */
+	template< class Fac1 >
 	struct maximum
 	{
 		template< class T1 , class T2 >
-		time_type operator()( const T1 &t1 , const T2 &t2 ) const
+		Fac1 operator()( const T1 &t1 , const T2 &t2 ) const
 		{
 			using std::max;
 			return max( t1 , t2 );
 		}
 
 		template< class T >
-		time_type operator()( const T &t1 ) const
+		Fac1 operator()( const T &t1 ) const
 		{ // for the vector space algebra
 			return max( t1 );
 		}

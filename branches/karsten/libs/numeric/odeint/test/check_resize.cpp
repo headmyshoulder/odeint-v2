@@ -61,13 +61,13 @@ void constant_system( const test_array_type &x , test_array_type &dxdt , double 
 BOOST_AUTO_TEST_SUITE( check_resize_test )
 
 
-typedef explicit_euler< test_array_type , double , standard_algebra , standard_operations< double > , adjust_size_manually_tag > euler_manual_type;
-typedef explicit_euler< test_array_type , double , standard_algebra , standard_operations< double > , adjust_size_initially_tag > euler_initially_type;
-typedef explicit_euler< test_array_type , double , standard_algebra , standard_operations< double > , adjust_size_always_tag > euler_always_type;
+typedef explicit_euler< test_array_type , double , standard_algebra , standard_operations , adjust_size_manually_tag > euler_manual_type;
+typedef explicit_euler< test_array_type , double , standard_algebra , standard_operations , adjust_size_initially_tag > euler_initially_type;
+typedef explicit_euler< test_array_type , double , standard_algebra , standard_operations , adjust_size_always_tag > euler_always_type;
 
-typedef explicit_rk4< test_array_type , double , standard_algebra , standard_operations< double > , adjust_size_manually_tag > rk4_manual_type;
-typedef explicit_rk4< test_array_type , double , standard_algebra , standard_operations< double > , adjust_size_initially_tag > rk4_initially_type;
-typedef explicit_rk4< test_array_type , double , standard_algebra , standard_operations< double > , adjust_size_always_tag > rk4_always_type;
+typedef explicit_rk4< test_array_type , double , standard_algebra , standard_operations , adjust_size_manually_tag > rk4_manual_type;
+typedef explicit_rk4< test_array_type , double , standard_algebra , standard_operations , adjust_size_initially_tag > rk4_initially_type;
+typedef explicit_rk4< test_array_type , double , standard_algebra , standard_operations , adjust_size_always_tag > rk4_always_type;
 
 
 typedef mpl::vector<
