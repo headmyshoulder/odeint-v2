@@ -18,9 +18,12 @@ template< class State > struct vector_space_reduce;
 //class vector_space_reduce
 //{
 //	template< class Value , class Op >
-//	Value operator()( const State & , Op op , Value init ) const
+//	Value operator()( const LorenzState &s , Op op , Value init ) const
 //	{
-//		// ...
+//		init = op( init , s.x );
+//		init = op( init , s.y );
+//		init = op( init , s.z );
+//		return init;
 //	}
 //};
 

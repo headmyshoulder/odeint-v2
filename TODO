@@ -6,10 +6,17 @@ OK * operations that fit units
 * include test/thrust in jam system, use system from 
 OK * change stepper to stepper_units
 OK * change error_stepper to error_stepper_units
-* finishing change of controlled_stepper to units
-* change error_checker to units
-* change dense_output to units
-* include fusion_algebra in tests
+DIFFICULT * finishing change of controlled_stepper to units
+  * DO THIS WHEN INCLUDING ROSENBROCK INTO TRUNK
+  * check if rosenbrock controller and controlled_stepper can both be used with the explicit steppers
+  * move error_checker into controlled_stepper
+DIFICULT * change dense_output to units
+  * roll out dense_output_explicit_euler::calc_state() to explicit_euler::dense_output()
+  * roll out dense_output_dopri5::calc_state() to explicit_error_dopri5::dense_output()
+  * create dense_output_explicit
+  * create dense_output_explicit_controlled
+  * create dense_output_explicit_controlled_fsal
+  * maybe remove dense_output_explicit
 * split check_concepts into check_stepper_concept, check_error_stepper_concept, check_controlled_stepper_concept
 
 * Integrate functions

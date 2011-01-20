@@ -19,18 +19,19 @@ project
 unit-test basic_test 
 	: check_stepper_concepts.cpp 
 	  check_resize.cpp 
+	  check_operations.cpp
 	  check_implicit_euler.cpp
-#	  check_dense_output_explicit_euler.cpp
-#	  check_dense_output_dopri5.cpp
+	  check_dense_output_explicit_euler.cpp
+	  check_dense_output_dopri5.cpp
 	:
 	: <library>/boost/test//boost_unit_test_framework 
 	  <link>static
 	; 
 	
-# exe controlled_stepper_evolution 
-#	: controlled_stepper_evolution.cpp
-#	;
+exe controlled_stepper_evolution 
+    : controlled_stepper_evolution.cpp
+	;
 	
-# exe dense_output_stepper_evolution
-#	: dense_output_stepper_evolution.cpp
-#	;
+exe dense_output_stepper_evolution
+	: dense_output_stepper_evolution.cpp
+	;

@@ -20,6 +20,6 @@ exe test_units
     : test_units.cpp
     ;
     
-exe test_ranges
-	: test_ranges.cpp
-	;
+# exe test_ranges
+#	: test_ranges.cpp
+#	;

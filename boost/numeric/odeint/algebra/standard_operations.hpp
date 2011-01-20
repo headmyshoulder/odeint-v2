@@ -13,7 +13,8 @@
 #ifndef BOOST_BOOST_NUMERIC_ODEINT_STANDARD_OPERATIONS_HPP_INCLUDED
 #define BOOST_BOOST_NUMERIC_ODEINT_STANDARD_OPERATIONS_HPP_INCLUDED
 
-#include <algorithm> // for std::max
+#include <algorithm>
+#include <cmath>      // for std::max
 
 namespace boost {
 namespace numeric {
@@ -143,11 +144,6 @@ struct standard_operations
 	};
 
 
-	template< class Fac1 , class Fac2 >
-	static scale_sum2< Fac1 , Fac2 > make_scale_sum2( const Fac1 &alpha1 , const Fac2 &alpha2 )
-	{
-		return scale_sum2< Fac1 , Fac2 >( alpha1 , alpha2 );
-	}
 
 
 
@@ -158,6 +154,8 @@ struct standard_operations
 
 	/*
 	 * for usage in for_each2
+	 *
+	 * ToDo : check if T1, T2, T3 are units and if so convert them to normal floats
 	 */
 	template< class Fac1 >
 	struct rel_error
@@ -174,12 +172,13 @@ struct standard_operations
 			using std::abs;
 			t3 = abs( t3 ) / ( m_eps_abs + m_eps_rel * ( m_a_x * abs( t1 ) + m_a_dxdt * abs( t2 ) ) );
 		}
-
 	};
 
 
 	/*
 	 * for usage in reduce
+	 *
+	 * ToDo : check if T1, T2 are units and if so convert them to normal floats
 	 */
 	template< class Fac1 >
 	struct maximum
