@@ -187,7 +187,8 @@ struct standard_operations
 		Fac1 operator()( const T1 &t1 , const T2 &t2 ) const
 		{
 			using std::max;
-			return max( t1 , t2 );
+			using std::abs;
+			return max( abs( t1 ) , abs( t2 ) );
 		}
 	};
 
