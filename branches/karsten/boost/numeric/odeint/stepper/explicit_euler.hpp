@@ -23,7 +23,7 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-template< class State , class Time , class Algebra , class Operations , class AdjustSizePolicy >
+template< class State , class Value , class Deriv , class Time , class Algebra , class Operations , class AdjustSizePolicy >
 class dense_output_explicit_euler;
 
 template<
@@ -42,7 +42,7 @@ class explicit_euler
 {
 public :
 
-	friend class dense_output_explicit_euler< Deriv , Time , Algebra , Operations , AdjustSizePolicy >;
+	friend class dense_output_explicit_euler< State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy >;
 
 	BOOST_ODEINT_EXPLICIT_STEPPERS_TYPEDEFS( explicit_euler , 1 );
 

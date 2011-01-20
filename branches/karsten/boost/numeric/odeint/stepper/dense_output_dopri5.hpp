@@ -41,6 +41,8 @@ public:
 
 	typedef typename stepper_type::stepper_type dopri5_type;
 	typedef typename dopri5_type::state_type state_type;
+	typedef typename dopri5_type::value_type value_type;
+	typedef typename dopri5_type::deriv_type deriv_type;
 	typedef typename dopri5_type::time_type time_type;
 	typedef typename dopri5_type::algebra_type algebra_type;
 	typedef typename dopri5_type::operations_type operations_type;
@@ -48,7 +50,7 @@ public:
 
 	BOOST_STATIC_ASSERT(( boost::is_same<
 				dopri5_type ,
-				explicit_error_dopri5< state_type , time_type , algebra_type , operations_type , adjust_size_policy >
+				explicit_error_dopri5< state_type , value_type , deriv_type , time_type , algebra_type , operations_type , adjust_size_policy >
 		>::value ));
 
 	dense_output_dopri5( stepper_type &stepper )
@@ -175,10 +177,10 @@ public:
 		time_type b7_theta = B + C * X7;
 
 		const state_type &k1 = *m_old_deriv;
-		const state_type &k3 = dopri5().m_x3;
-		const state_type &k4 = dopri5().m_x4;
-		const state_type &k5 = dopri5().m_x5;
-		const state_type &k6 = dopri5().m_x6;
+		const state_type &k3 = dopri5().m_k3;
+		const state_type &k4 = dopri5().m_k4;
+		const state_type &k5 = dopri5().m_k5;
+		const state_type &k6 = dopri5().m_k6;
 		const state_type &k7 = *m_current_deriv;
 
 		algebra_type::for_each8( x , *m_old_state , k1 , k3 , k4 , k5 , k6 , k7 ,

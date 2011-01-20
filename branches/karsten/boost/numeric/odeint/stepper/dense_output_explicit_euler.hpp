@@ -22,7 +22,9 @@ namespace odeint {
 
 template<
     class State ,
-    class Time = double ,
+    class Value = double ,
+    class Deriv = State ,
+    class Time = Value ,
 	class Algebra = standard_algebra ,
 	class Operations = standard_operations ,
 	class AdjustSizePolicy = adjust_size_initially_tag
@@ -32,11 +34,13 @@ class dense_output_explicit_euler
 public:
 
 	typedef State state_type;
+	typedef Value value_type;
+	typedef Deriv deriv_type;
 	typedef Time time_type;
 	typedef Algebra algebra_type;
 	typedef Operations operations_type;
 	typedef AdjustSizePolicy adjust_size_policy;
-	typedef explicit_euler< state_type , time_type , algebra_type , operations_type , adjust_size_policy > stepper_type;
+	typedef explicit_euler< state_type , value_type , deriv_type , time_type , algebra_type , operations_type , adjust_size_policy > stepper_type;
 
 	dense_output_explicit_euler( void )
 	: m_euler() , m_size_adjuster() ,
@@ -92,7 +96,7 @@ public:
 
 	const state_type& current_state( void ) const { return *m_current_state; }
 	const time_type& current_time( void ) const { return m_t; }
-	const time_type& previous_state( void ) const { return *m_old_state; }
+ 	const time_type& previous_state( void ) const { return *m_old_state; }
 	const time_type& previous_time( void ) const { return m_t_old; }
 
 private:
