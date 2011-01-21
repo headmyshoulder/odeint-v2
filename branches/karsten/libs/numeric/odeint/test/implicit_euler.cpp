@@ -10,6 +10,8 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
+#define BOOST_TEST_MODULE odeint_implicit_euler
+
 #include <boost/test/unit_test.hpp>
 
 #include <boost/numeric/odeint.hpp>

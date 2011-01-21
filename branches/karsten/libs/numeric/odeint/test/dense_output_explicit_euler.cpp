@@ -10,6 +10,8 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
+#define BOOST_TEST_MODULE odeint_dense_output_explicit_euler
+
 #include <tr1/array>
 #include <fstream>
 #include <iostream>

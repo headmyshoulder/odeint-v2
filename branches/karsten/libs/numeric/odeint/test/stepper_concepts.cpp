@@ -1,19 +1,19 @@
 /* Boost stepper_euler.cpp test file
- 
+
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky
- 
+
  This file tests the use of the all different steppers with several state types:
  std::vector< double >
  vector_space_1d< double >  (see vector_space_1d.hpp)
  std::tr1::array< double , 1 >
-  
+
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
-#define BOOST_TEST_MODULE odeint_basic_test
+#define BOOST_TEST_MODULE odeint_stepper_concepts
 
 #include <vector>
 #include <cmath>

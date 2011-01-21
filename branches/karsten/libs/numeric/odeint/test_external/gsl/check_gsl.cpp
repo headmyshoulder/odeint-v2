@@ -10,7 +10,7 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
-#define BOOST_TEST_MODULE test_gsl
+#define BOOST_TEST_MODULE odeint_gsl
 
 #include <gsl/gsl_vector.h>
 
@@ -23,6 +23,6 @@ using namespace boost::numeric::odeint;
 
 
 
-BOOST_AUTO_TEST_CASE( test_gsl )
+BOOST_AUTO_TEST_CASE( gsl )
 {
 }

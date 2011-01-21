@@ -6,23 +6,19 @@
 
 import testing ;
 
-project
+project gmp
     : requirements
       <library>/boost/test//boost_unit_test_framework
       <include>../../../../..
-      <include>$BOOST_ROOT
     ;
     
     
-lib libgsl : : <name>gsl <link>shared ;
-lib libgslcblas : : <name>gslcblas <link>shared ;
+lib libgmp : : <name>gmp <link>shared ;
+lib libgmpxx : : <name>gmpxx <link>shared ;
 
-test-suite "mkl"
+test-suite "gmp"
     : 
-      [ run check_gsl.cpp  libgsl libgslcblas
-      :
-      :
-      : <link>shared:<define>BOOST_TEST_DYN_LINK=1
-      ] 
+      [ run check_gmp.cpp libgmpxx libgmp : : : <link>shared:<define>BOOST_TEST_DYN_LINK=1 ] 
     ;
+
 

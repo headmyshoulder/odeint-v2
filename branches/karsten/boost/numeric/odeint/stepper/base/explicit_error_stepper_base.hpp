@@ -65,7 +65,8 @@ public:
 
     order_type error_order( void ) const
     {
-    	return error_order_value;    }
+    	return error_order_value;
+    }
 
 
 

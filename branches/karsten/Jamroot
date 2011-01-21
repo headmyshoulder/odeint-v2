@@ -16,6 +16,14 @@ project
 
 build-project libs/numeric/odeint/test ;
 build-project libs/numeric/odeint/examples ;
+build-project libs/numeric/odeint/regression_test ;
+
+
+# additional tests with external libraries :
+build-project libs/numeric/odeint/test_external/gmp ;
+# build-project libs/numeric/odeint/test_external/mkl ;
+build-project libs/numeric/odeint/test_external/gsl ;
+
 
 
 
@@ -25,10 +33,6 @@ build-project libs/numeric/odeint/examples ;
 build-project libs/numeric/odeint/ideas/rosenbrock4 ;
 build-project libs/numeric/odeint/ideas/units ;
 
-# additional tests with external libraries :
-build-project libs/numeric/odeint/test/gmp ;
-# build-project libs/numeric/odeint/test/mkl ;
-build-project libs/numeric/odeint/test/gsl ;
 
 # docs:
 # build-project libs/numeric/odeint/doc ;

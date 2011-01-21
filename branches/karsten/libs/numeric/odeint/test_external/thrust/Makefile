@@ -4,7 +4,7 @@ CC = g++
 CXX = g++
 NVCC = $(CUDA_ROOT)/bin/nvcc
 
-INCLUDES += -I$(BOOST_ROOT) -I$(THRUST_ROOT) -I$(CUDA_ROOT)/include -I../../../../..
+INCLUDES += -I$(BOOST_ROOT) -I$(THRUST_ROOT) -I$(CUDA_ROOT)/include -I../../../..
 
 NVCCFLAGS = -O3 $(INCLUDES) --compiler-bindir=/usr/bin/g++
 

@@ -5,6 +5,8 @@
  *      Author: karsten
  */
 
+#define BOOST_TEST_MODULE odeint_standard_operations
+
 #include <cmath>
 #include <complex>
 
