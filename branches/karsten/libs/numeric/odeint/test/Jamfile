@@ -23,6 +23,4 @@ test-suite "odeint"
 	 [ run standard_operations.cpp ]
 	 [ run standard_algebra.cpp ]
 	 [ run implicit_euler.cpp ]
-	 [ run dense_output_explicit_euler.cpp ]
-	 [ run dense_output_dopri5.cpp ]
 	 ;    
