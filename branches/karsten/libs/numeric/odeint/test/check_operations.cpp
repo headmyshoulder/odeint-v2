@@ -35,7 +35,22 @@ template<> struct default_eps< double > { static double def_eps( void ) { return
 template<> struct default_eps< float > { static float def_eps( void ) { return 1.0e-5; } };
 
 
-// const double eps = 1.0e-10;
+typedef units::unit< units::derived_dimension< units::time_base_dimension , 2 >::type , si::system > time_2;
+typedef units::unit< units::derived_dimension< units::time_base_dimension , 3 >::type , si::system > time_3;
+typedef units::unit< units::derived_dimension< units::time_base_dimension , 4 >::type , si::system > time_4;
+typedef units::unit< units::derived_dimension< units::time_base_dimension , 5 >::type , si::system > time_5;
+typedef units::unit< units::derived_dimension< units::time_base_dimension , 6 >::type , si::system > time_6;
+typedef units::unit< units::derived_dimension< units::time_base_dimension , 7 >::type , si::system > time_7;
+
+const time_2 second2 = si::second * si::second;
+const time_3 second3 = second2 * si::second;
+const time_4 second4 = second3 * si::second;
+const time_5 second5 = second4 * si::second;
+const time_6 second6 = second5 * si::second;
+const time_7 second7 = second6 * si::second;
+
+
+
 
 template< class Value , class Compare = typename internal_value_type< Value >::type >
 struct double_fixture
@@ -70,7 +85,15 @@ struct unit_fixture
 	typedef Value value_type;
 	typedef Compare compare_type;
 	typedef units::quantity< si::length , value_type > length_type;
+
 	typedef units::quantity< si::time , value_type > time_type;
+	typedef units::quantity< time_2 , value_type > time_2_type;
+	typedef units::quantity< time_3 , value_type > time_3_type;
+	typedef units::quantity< time_4 , value_type > time_4_type;
+	typedef units::quantity< time_5 , value_type > time_5_type;
+	typedef units::quantity< time_6 , value_type > time_6_type;
+	typedef units::quantity< time_7 , value_type > time_7_type;
+
 	typedef units::quantity< si::velocity , value_type > velocity_type;
 	typedef units::quantity< si::acceleration , value_type > acceleration_type;
 
@@ -194,12 +217,18 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( scale_sum2_units_test , T , test_types )
 	typedef unit_fixture< T > fix_type;
 	typedef typename fix_type::value_type value_type;
 	typedef typename fix_type::time_type time_type;
+	typedef typename fix_type::time_2_type time_2_type;
+	typedef typename fix_type::time_3_type time_3_type;
+	typedef typename fix_type::time_4_type time_4_type;
+	typedef typename fix_type::time_5_type time_5_type;
+	typedef typename fix_type::time_6_type time_6_type;
+	typedef typename fix_type::time_7_type time_7_type;
 
 	fix_type f;
 	typedef standard_operations::scale_sum2< value_type , time_type > Op;
-	Op op( 1.0 , time_type( 0.1 * si::second ) );
+	Op op( 1.0 , time_type( 1.0 * si::second ) );
 	op( f.res , f.x , f.d1x );
-	BOOST_CHECK_SMALL( abs( f.res.value() - T( 1.2 ) ) , f.m_eps );
+	BOOST_CHECK_SMALL( abs( f.res.value() - T( 3.0 ) ) , f.m_eps );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( scale_sum3_units_test , T , test_types )
@@ -207,12 +236,18 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( scale_sum3_units_test , T , test_types )
 	typedef unit_fixture< T > fix_type;
 	typedef typename fix_type::value_type value_type;
 	typedef typename fix_type::time_type time_type;
+	typedef typename fix_type::time_2_type time_2_type;
+	typedef typename fix_type::time_3_type time_3_type;
+	typedef typename fix_type::time_4_type time_4_type;
+	typedef typename fix_type::time_5_type time_5_type;
+	typedef typename fix_type::time_6_type time_6_type;
+	typedef typename fix_type::time_7_type time_7_type;
 
 	fix_type f;
-	typedef standard_operations::scale_sum2< value_type , time_type > Op;
-	Op op( 1.0 , time_type( 0.1 * si::second ) );
-	op( f.res , f.x , f.d1x );
-	BOOST_CHECK_SMALL( abs( f.res.value() - T( 1.2 ) ) , f.m_eps );
+	typedef standard_operations::scale_sum3< value_type , time_type , time_2_type > Op;
+	Op op( 1.0 , time_type( 1.0 * si::second ) , time_2_type( 1.0 * second2 ) );
+	op( f.res , f.x , f.d1x , f.d2x );
+	BOOST_CHECK_SMALL( abs( f.res.value() - T( 6.0 ) ) , f.m_eps );
 }
 
 
