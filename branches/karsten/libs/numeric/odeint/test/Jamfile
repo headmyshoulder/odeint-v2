@@ -20,6 +20,7 @@ unit-test basic_test
 	: check_stepper_concepts.cpp 
 	  check_resize.cpp 
 	  check_operations.cpp
+	  check_algebra.cpp
 	  check_implicit_euler.cpp
 	  check_dense_output_explicit_euler.cpp
 	  check_dense_output_dopri5.cpp
