@@ -26,8 +26,21 @@ namespace odeint {
  */
 struct standard_operations
 {
+	template< class Fac1 = double >
+	struct scale_sum1
+	{
+		const Fac1 m_alpha1;
 
-	template< class Fac1 , class Fac2 >
+		scale_sum1( const Fac1 &alpha1 ) : m_alpha1( alpha1 ) { }
+
+		template< class T1 , class T2 >
+		void operator()( T1 &t1 , const T2 &t2 )
+		{
+			t1 = m_alpha1 * t2;
+		}
+	};
+
+	template< class Fac1 = double , class Fac2 = Fac1 >
 	struct scale_sum2
 	{
 		const Fac1 m_alpha1;
@@ -43,7 +56,7 @@ struct standard_operations
 	};
 
 
-	template< class Fac1 , class Fac2 , class Fac3 >
+	template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac2 >
 	struct scale_sum3
 	{
 		const Fac1 m_alpha1;
@@ -61,7 +74,7 @@ struct standard_operations
 	};
 
 
-	template< class Fac1 , class Fac2 , class Fac3 , class Fac4 >
+	template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac1 , class Fac4 = Fac1 >
 	struct scale_sum4
 	{
 		const Fac1 m_alpha1;
@@ -80,7 +93,7 @@ struct standard_operations
 	};
 
 
-	template< class Fac1 , class Fac2 , class Fac3 , class Fac4 , class Fac5 >
+	template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac1 , class Fac4 = Fac1 , class Fac5 = Fac1 >
 	struct scale_sum5
 	{
 		const Fac1 m_alpha1;
@@ -100,7 +113,7 @@ struct standard_operations
 	};
 
 
-	template< class Fac1 , class Fac2 , class Fac3 , class Fac4 , class Fac5 , class Fac6 >
+	template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac1 , class Fac4 = Fac1 , class Fac5 = Fac1 , class Fac6 = Fac1 >
 	struct scale_sum6
 	{
 		const Fac1 m_alpha1;
@@ -121,7 +134,7 @@ struct standard_operations
 	};
 
 
-	template< class Fac1 , class Fac2 , class Fac3 , class Fac4 , class Fac5 , class Fac6 , class Fac7 >
+	template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac1 , class Fac4 = Fac1 , class Fac5 = Fac1 , class Fac6 = Fac1 , class Fac7 = Fac1 >
 	struct scale_sum7
 	{
 		const Fac1 m_alpha1;
@@ -157,7 +170,7 @@ struct standard_operations
 	 *
 	 * ToDo : check if T1, T2, T3 are units and if so convert them to normal floats
 	 */
-	template< class Fac1 >
+	template< class Fac1 = double >
 	struct rel_error
 	{
 		const Fac1 m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt;
@@ -180,7 +193,7 @@ struct standard_operations
 	 *
 	 * ToDo : check if T1, T2 are units and if so convert them to normal floats
 	 */
-	template< class Fac1 >
+	template< class Fac1 = double >
 	struct maximum
 	{
 		template< class T1 , class T2 >
