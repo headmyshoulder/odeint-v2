@@ -5,6 +5,8 @@
  *      Author: karsten
  */
 
+#define BOOST_TEST_MODULE odeint_dense_output_dopri5
+
 #include <tr1/array>
 #include <fstream>
 #include <iostream>

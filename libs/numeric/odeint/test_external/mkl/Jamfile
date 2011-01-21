@@ -9,23 +9,21 @@ import testing ;
 project
     : requirements
       <library>/boost/test//boost_unit_test_framework
-#      <link>static
-#      <link>shared:<define>BOOST_TEST_DYN_LINK=1
       <include>../../../../..
-      <include>$BOOST_ROOT
     ;
     
     
-lib libgmp : : <name>gmp <link>shared ;
-lib libgmpxx : : <name>gmpxx <link>shared ;
+lib libmkl : : <name>mkl_intel_lp64 <link>shared ;
+lib libmkl_core : : <name>mkl_core <link>shared ;
+lib libmkl_intel_thread : : <name>mkl_intel_thread ;
+lib libiomp5 : : <name>iomp5 ;
+lib libpthread : : <name>pthread ;
 
-test-suite "gmp"
+test-suite "mkl"
     : 
-      [ run check_gmp.cpp libgmpxx libgmp 
+      [ run check_mkl.cpp  libpthread libiomp5 libmkl_core libmkl_intel_thread libmkl
       :
       :
       : <link>shared:<define>BOOST_TEST_DYN_LINK=1
       ] 
     ;
-
-

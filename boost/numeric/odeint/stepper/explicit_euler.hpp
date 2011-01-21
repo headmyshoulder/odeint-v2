@@ -49,7 +49,8 @@ public :
 	template< class System , class StateIn , class DerivIn , class StateOut >
 	void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt )
 	{
-		algebra_type::for_each3( out , in , dxdt , typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , dt ) );
+		typename algebra_type::for_each3()( out , in , dxdt , typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , dt ) );
+
 	}
 };
 

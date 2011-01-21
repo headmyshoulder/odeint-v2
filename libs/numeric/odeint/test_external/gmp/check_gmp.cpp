@@ -10,7 +10,7 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
-#define BOOST_TEST_MODULE test_gmp
+#define BOOST_TEST_MODULE odeint_gmp
 
 #include <gmpxx.h>
 
@@ -34,7 +34,7 @@ void constant_system( state_type &x , state_type &dxdt , value_type t )
 }
 
 
-BOOST_AUTO_TEST_CASE( test_gmp )
+BOOST_AUTO_TEST_CASE( gmp )
 {
 	/* We have to specify the desired precision in advance! */
 	mpf_set_default_prec( precision );

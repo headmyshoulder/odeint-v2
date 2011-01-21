@@ -84,7 +84,7 @@ public:
 	void calc_state( time_type t , state_type &x )
 	{
 		time_type delta = t - m_t_old;
-		algebra_type::for_each3( x , *m_old_state , m_euler.m_dxdt , typename operations_type::template scale_sum2< time_type , time_type >( 1.0 , delta ) );
+		typename algebra_type::for_each3()( x , *m_old_state , m_euler.m_dxdt , typename operations_type::template scale_sum2< time_type , time_type >( 1.0 , delta ) );
 	}
 
 	void adjust_size( const state_type &x )

@@ -129,7 +129,7 @@ public:
 	{
 		typename boost::unwrap_reference< System >::type &sys = system;
 		m_dxdt_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
-		system( in , m_dxdt , t );
+		sys( in , m_dxdt , t );
 		return try_step( system , in , m_dxdt , t , out , dt );
 	}
 

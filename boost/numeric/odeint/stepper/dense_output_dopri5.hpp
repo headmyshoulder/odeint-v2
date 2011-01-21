@@ -183,7 +183,7 @@ public:
 		const state_type &k6 = dopri5().m_k6;
 		const state_type &k7 = *m_current_deriv;
 
-		algebra_type::for_each8( x , *m_old_state , k1 , k3 , k4 , k5 , k6 , k7 ,
+		typename algebra_type::for_each8()( x , *m_old_state , k1 , k3 , k4 , k5 , k6 , k7 ,
 			typename operations_type::template scale_sum7< time_type , time_type , time_type , time_type , time_type , time_type , time_type >( 1.0 , dt * b1_theta , dt * b3_theta , dt * b4_theta , dt * b5_theta , dt * b6_theta , dt * b7_theta ) );
 	}
 

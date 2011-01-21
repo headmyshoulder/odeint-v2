@@ -11,28 +11,18 @@ project
     : requirements
       <define>BOOST_ALL_NO_LIB=1
       <include>../../../..
-      <include>$(BOOST_ROOT)
+      <library>/boost/test//boost_unit_test_framework 
+	  <link>static
     ;
 
-    
 
-unit-test basic_test 
-	: check_stepper_concepts.cpp 
-	  check_resize.cpp 
-	  check_operations.cpp
-	  check_algebra.cpp
-	  check_implicit_euler.cpp
-	  check_dense_output_explicit_euler.cpp
-	  check_dense_output_dopri5.cpp
+test-suite "odeint"
 	:
-	: <library>/boost/test//boost_unit_test_framework 
-	  <link>static
-	; 
-	
-exe controlled_stepper_evolution 
-    : controlled_stepper_evolution.cpp
-	;
-	
-exe dense_output_stepper_evolution
-	: dense_output_stepper_evolution.cpp
-	;
+	 [ run stepper_concepts.cpp ]
+	 [ run resizing.cpp ]
+	 [ run standard_operations.cpp ]
+	 [ run standard_algebra.cpp ]
+	 [ run implicit_euler.cpp ]
+	 [ run dense_output_explicit_euler.cpp ]
+	 [ run dense_output_dopri5.cpp ]
+	 ;    

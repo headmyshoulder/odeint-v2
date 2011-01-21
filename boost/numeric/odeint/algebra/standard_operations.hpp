@@ -34,7 +34,7 @@ struct standard_operations
 		scale_sum1( const Fac1 &alpha1 ) : m_alpha1( alpha1 ) { }
 
 		template< class T1 , class T2 >
-		void operator()( T1 &t1 , const T2 &t2 )
+		void operator()( T1 &t1 , const T2 &t2 ) const
 		{
 			t1 = m_alpha1 * t2;
 		}
