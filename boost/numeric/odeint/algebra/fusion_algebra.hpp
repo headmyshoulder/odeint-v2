@@ -7,16 +7,26 @@
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
  copy at http://www.boost.org/LICENSE_1_0.txt)
-*/
+ */
 
 #ifndef BOOST_BOOST_NUMERIC_ODEINT_FUSION_ALGEBRA_HPP_INCLUDED
 #define BOOST_BOOST_NUMERIC_ODEINT_FUSION_ALGEBRA_HPP_INCLUDED
 
+
+#define BOOST_FUSION_UNFUSED_MAX_ARITY 10
+#define BOOST_FUSION_UNFUSED_TYPE_MAX_ARITY 10
+#define BOOST_FUSION_INVOKE_MAX_ARITY 10
+#define BOOST_FUSION_INVOKE_PROCEDURE_MAX_ARITY 10
+#define BOOST_FUSION_INVOKE_FUNCTION_OBJECT_MAX_ARITY 10
 #include <boost/fusion/container.hpp>
 #include <boost/fusion/sequence.hpp>
 #include <boost/fusion/algorithm.hpp>
 #include <boost/fusion/view.hpp>
 #include <boost/fusion/functional.hpp>
+
+#define BOOST_FUNCTIONAL_FORWARD_ADAPTER_MAX_ARITY 9
+#include <boost/functional/forward_adapter.hpp>
+
 
 
 namespace boost {
@@ -24,108 +34,141 @@ namespace numeric {
 namespace odeint {
 
 
-/*
- * TODO :
- * 1. testing, include int unit test
- * 2. change the standard operations, using boost::result_of. for example:
- *
- * struct increment
- * {
- *	template< class T > struct result;
- *
- *	template< class F , class T1 , class T2 >
- *	struct result< F( T1 , T2 ) >
- *	{
- *		 typedef void type;
- *	};
- *
- *	template< class T1 , class T2 >
- *	void operator()( T1 &t1 , T2 &t2 ) const
- *	{
- *		t1 += t2;
- *	}
- * };
- *
- *
- */
 struct fusion_algebra
 {
-
-	template< class StateType1 , class Operation >
-	static void for_each1( StateType1 &s1 , Operation op )
+	struct for_each1_impl
 	{
-		boost::fusion::for_each( s1 , op );
-	}
+		template< class S1 , class Op >
+		void operator()( S1 &s1 , Op op ) const
+		{
+			boost::fusion::for_each( s1 , op );
+		}
+		typedef void result_type;
+	};
 
 
-	template< class StateType1 , class StateType2 , class Operation >
-	static void for_each2( StateType1 &s1 , StateType2 &s2 , Operation op )
+	struct for_each2_impl
 	{
-		typedef boost::fusion::vector< StateType1& , StateType2& > Sequences;
-		Sequences sequences( s1 , s2 );
-		boost::fusion::for_each( boost::fusion::zip_view< Sequences >( sequences ) , boost::fusion::make_fused( op ) );
-	}
+		template< class S1 , class S2 , class Op >
+		void operator()( S1 &s1 , S2 &s2 , Op op ) const
+		{
+			typedef boost::fusion::vector< S1& , S2& > Sequences;
+			Sequences sequences( s1 , s2 );
+			boost::fusion::for_each( boost::fusion::zip_view< Sequences >( sequences ) , boost::fusion::make_fused( op ) );
+		}
+		typedef void result_type;
+	};
 
 
-	template< class StateType1 , class StateType2 , class StateType3 , class Operation >
-	static void for_each3( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , Operation op )
+	struct for_each3_impl
 	{
-		typedef boost::fusion::vector< StateType1& , StateType2& , StateType3& > Sequences;
-		Sequences sequences( s1 , s2 , s3 );
-		boost::fusion::for_each( boost::fusion::zip_view< Sequences >( sequences ) , boost::fusion::make_fused( op ) );
-	}
+		template< class S1 , class S2 , class S3 , class Op >
+		void operator()( S1 &s1 , S2 &s2 , S3 &s3 , Op op ) const
+		{
+			typedef boost::fusion::vector< S1& , S2& , S3& > Sequences;
+			Sequences sequences( s1 , s2 , s3 );
+			boost::fusion::for_each( boost::fusion::zip_view< Sequences >( sequences ) , boost::fusion::make_fused( op ) );
+		}
+		typedef void result_type;
+	};
 
-
-	template< class StateType1 , class StateType2 , class StateType3 , class StateType4 , class Operation >
-	static void for_each4( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , StateType4 &s4 , Operation op )
+	struct for_each4_impl
 	{
-		typedef boost::fusion::vector< StateType1& , StateType2& , StateType3& , StateType4& > Sequences;
-		Sequences sequences( s1 , s2 , s3 , s4 );
-		boost::fusion::for_each( boost::fusion::zip_view< Sequences >( sequences ) , boost::fusion::make_fused( op ) );
-	}
+		template< class S1 , class S2 , class S3 , class S4 , class Op >
+		void operator()( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , Op op ) const
+		{
+			typedef boost::fusion::vector< S1& , S2& , S3& , S4& > Sequences;
+			Sequences sequences( s1 , s2 , s3 , s4 );
+			boost::fusion::for_each( boost::fusion::zip_view< Sequences >( sequences ) , boost::fusion::make_fused( op ) );
+		}
+		typedef void result_type;
+	};
 
 
-	template< class StateType1 , class StateType2 , class StateType3 , class StateType4 , class StateType5 , class Operation >
-	static void for_each5( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , StateType4 &s4 , StateType5 &s5 , Operation op )
+	struct for_each5_impl
 	{
-		typedef boost::fusion::vector< StateType1& , StateType2& , StateType3& , StateType4& , StateType5& > Sequences;
-		Sequences sequences( s1 , s2 , s3 , s4 , s5 );
-		boost::fusion::for_each( boost::fusion::zip_view< Sequences >( sequences ) , boost::fusion::make_fused( op ) );
-	}
+		template< class S1 , class S2 , class S3 , class S4 , class S5 , class Op >
+		void operator()( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , S5 &s5 , Op op ) const
+		{
+			typedef boost::fusion::vector< S1& , S2& , S3& , S4& , S5& > Sequences;
+			Sequences sequences( s1 , s2 , s3 , s4 , s5 );
+			boost::fusion::for_each( boost::fusion::zip_view< Sequences >( sequences ) , boost::fusion::make_fused( op ) );
+		}
+		typedef void result_type;
+	};
 
 
-	template< class StateType1 , class StateType2 , class StateType3 , class StateType4 , class StateType5 , class StateType6 , class Operation >
-	static void for_each6( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , StateType4 &s4 , StateType5 &s5 , StateType6 &s6 , Operation op )
+	struct for_each6_impl
 	{
-		typedef boost::fusion::vector< StateType1& , StateType2& , StateType3& , StateType4& , StateType5& , StateType6& > Sequences;
-		Sequences sequences( s1 , s2 , s3 , s4 , s5 , s6 );
-		boost::fusion::for_each( boost::fusion::zip_view< Sequences >( sequences ) , boost::fusion::make_fused( op ) );
-	}
+		template< class S1 , class S2 , class S3 , class S4 , class S5 , class S6 , class Op >
+		void operator()( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , S5 &s5 , S6 &s6 , Op op ) const
+		{
+			typedef boost::fusion::vector< S1& , S2& , S3& , S4& , S5& , S6& > Sequences;
+			Sequences sequences( s1 , s2 , s3 , s4 , s5 , s6 );
+			boost::fusion::for_each( boost::fusion::zip_view< Sequences >( sequences ) , boost::fusion::make_fused( op ) );
+		}
+		typedef void result_type;
+	};
 
 
-	template< class StateType1 , class StateType2 , class StateType3 , class StateType4 , class StateType5 , class StateType6 , class StateType7 , class Operation >
-	static void for_each7( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , StateType4 &s4 , StateType5 &s5 , StateType6 &s6 , StateType7 &s7 , Operation op )
+	struct for_each7_impl
 	{
-		typedef boost::fusion::vector< StateType1& , StateType2& , StateType3& , StateType4& , StateType5& , StateType6& , StateType7& > Sequences;
-		Sequences sequences( s1 , s2 , s3 , s4 , s5 , s6 , s7 );
-		boost::fusion::for_each( boost::fusion::zip_view< Sequences >( sequences ) , boost::fusion::make_fused( op ) );
-	}
+		template< class S1 , class S2 , class S3 , class S4 , class S5 , class S6 , class S7 , class Op >
+		void operator()( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , S5 &s5 , S6 &s6 , S7 &s7 , Op op ) const
+		{
+			typedef boost::fusion::vector< S1& , S2& , S3& , S4& , S5& , S6& , S7& > Sequences;
+			Sequences sequences( s1 , s2 , s3 , s4 , s5 , s6 , s7 );
+			boost::fusion::for_each( boost::fusion::zip_view< Sequences >( sequences ) , boost::fusion::make_fused( op ) );
+		}
+		typedef void result_type;
+	};
 
 
-	template< class StateType1 , class StateType2 , class StateType3 , class StateType4 , class StateType5 , class StateType6 , class StateType7 , class StateType8 , class Operation >
-	static void for_each8( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , StateType4 &s4 , StateType5 &s5 , StateType6 &s6 , StateType7 &s7 , StateType8 &s8 , Operation op )
+	struct for_each8_impl
 	{
-		typedef boost::fusion::vector< StateType1& , StateType2& , StateType3& , StateType4& , StateType5& , StateType6& , StateType7& , StateType8& > Sequences;
-		Sequences sequences( s1 , s2 , s3 , s4 , s5 , s6 , s7 , s8 );
-		boost::fusion::for_each( boost::fusion::zip_view< Sequences >( sequences ) , boost::fusion::make_fused( op ) );
-	}
+		template< class S1 , class S2 , class S3 , class S4 , class S5 , class S6 , class S7 , class S8 , class Op >
+		void operator()( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , S5 &s5 , S6 &s6 , S7 &s7 , S8 &s8 , Op op ) const
+		{
+			typedef boost::fusion::vector< S1& , S2& , S3& , S4& , S5& , S6& , S7& , S8& > Sequences;
+			Sequences sequences( s1 , s2 , s3 , s4 , s5 , s6 , s7 , s8 );
+			boost::fusion::for_each( boost::fusion::zip_view< Sequences >( sequences ) , boost::fusion::make_fused( op ) );
+		}
+		typedef void result_type;
+	};
 
 
-	template< class ValueType , class StateType , class Reduction >
-	static ValueType reduce( StateType &s , Reduction red , ValueType init)
+	struct reduce_impl
 	{
-		return boost::fusion::accumulate( s , init , red );
-	}
+		template< class Value , class S , class Reduction >
+		Value operator()( S &s , Reduction red , Value init) const
+		{
+			return boost::fusion::accumulate( s , init , red );
+		}
+
+		template< class T > struct result;
+		template< class F , class T1 , class T2 , class T3 >
+		struct result< F( T1 , T2 , T3 ) >
+		{
+			/*
+			 * A Simple
+			 * typedef T3 type;
+			 * would result in warnings
+			 */
+			typedef typename boost::remove_reference< T3 >::type type;
+		};
+	};
+
+
+
+	typedef boost::forward_adapter< for_each1_impl , 2 > for_each1;
+	typedef boost::forward_adapter< for_each2_impl , 3 > for_each2;
+	typedef boost::forward_adapter< for_each3_impl , 4 > for_each3;
+	typedef boost::forward_adapter< for_each4_impl , 5 > for_each4;
+	typedef boost::forward_adapter< for_each5_impl , 6 > for_each5;
+	typedef boost::forward_adapter< for_each6_impl , 7 > for_each6;
+	typedef boost::forward_adapter< for_each7_impl , 8 > for_each7;
+	typedef boost::forward_adapter< for_each8_impl , 9 > for_each8;
+	typedef boost::forward_adapter< reduce_impl , 3 > reduce;
 };
 
 
