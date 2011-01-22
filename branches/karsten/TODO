@@ -1,8 +1,11 @@
 * Unit test
-  * test operations
-  * test algebra
+  OK * test operations
+  OK * test standard_algebra
+  OK * test fusion_algebra
+  * test vector_space_algebra
+* change standard_operations::rel_error in order to word with units and test it
 OK * operations that fit units
-* operations that fit result_of
+OK * operations that fit result_of
 * include test/thrust in jam system, use system from 
 OK * change stepper to stepper_units
 OK * change error_stepper to error_stepper_units

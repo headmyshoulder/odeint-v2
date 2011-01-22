@@ -17,6 +17,8 @@
 #define BOOST_FUNCTIONAL_FORWARD_ADAPTER_MAX_ARITY 9
 #include <boost/functional/forward_adapter.hpp>
 
+#include <boost/type_traits.hpp>
+
 #include <boost/numeric/odeint/algebra/detail/macros.hpp>
 #include <boost/numeric/odeint/algebra/detail/for_each.hpp>
 #include <boost/numeric/odeint/algebra/detail/reduce.hpp>
@@ -138,9 +140,16 @@ struct standard_algebra
 	};
 
 
+//	struct reduce
+//	{
+//		template< class Value , class S , class Red >
+//		Value operator()( const S &s , Red red , Value init) const
+//		{
+//			return detail::reduce( boost::begin( s ) , boost::end( s ) , red , init );
+//		}
+//	};
 
-
-	struct reduce
+	struct reduce_impl
 	{
 		template< class Value , class S , class Red >
 		Value operator()( const S &s , Red red , Value init) const
@@ -148,14 +157,17 @@ struct standard_algebra
 			return detail::reduce( boost::begin( s ) , boost::end( s ) , red , init );
 		}
 
-//		template< class T > struct result;
-//
-//		template< class F , class T1 , class T2 , class T3 >
-//		struct result< F( T1 , T2 , T3 ) >
-//		{
-//			typedef T3 type;
-//		};
+		template< class T > struct result;
+		template< class F , class T1 , class T2 , class T3 >
+		struct result< F( T1 , T2 , T3 ) >
+		{
+			/*
+			 * typedef T3 type would result in warnings
+			 */
+			typedef typename boost::remove_reference< T3 >::type type;
+		};
 	};
+
 
 
 	typedef boost::forward_adapter< for_each1_impl , 2 > for_each1;
@@ -166,7 +178,7 @@ struct standard_algebra
 	typedef boost::forward_adapter< for_each6_impl , 7 > for_each6;
 	typedef boost::forward_adapter< for_each7_impl , 8 > for_each7;
 	typedef boost::forward_adapter< for_each8_impl , 9 > for_each8;
-//	typedef boost::forward_adapter< reduce_impl , 3 > reduce;
+	typedef boost::forward_adapter< reduce_impl , 3 > reduce;
 
 };
 

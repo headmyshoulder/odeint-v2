@@ -5,7 +5,7 @@
  *      Author: karsten
  */
 
-#define BOOST_TEST_MODULE odeint_dense_output_dopri5
+#define BOOST_TEST_MODULE odeint_standard_algebra
 
 #include <cmath>
 #include <complex>

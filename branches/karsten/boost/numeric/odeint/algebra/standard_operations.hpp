@@ -16,16 +16,21 @@
 #include <algorithm>
 #include <cmath>      // for std::max
 
+#include <boost/utility/result_of.hpp>
+
 namespace boost {
 namespace numeric {
 namespace odeint {
 
 
 /*
- * have to be changed if thrust device_vector or gsl_vector are used
+ * Notes:
+ *
+ * * the results structs are needed in order to work with fusion_algebra
  */
 struct standard_operations
 {
+
 	template< class Fac1 = double >
 	struct scale_sum1
 	{
@@ -38,7 +43,10 @@ struct standard_operations
 		{
 			t1 = m_alpha1 * t2;
 		}
+
+		typedef void result_type;
 	};
+
 
 	template< class Fac1 = double , class Fac2 = Fac1 >
 	struct scale_sum2
@@ -53,6 +61,8 @@ struct standard_operations
 		{
 			t1 = m_alpha1 * t2 + m_alpha2 * t3;
 		}
+
+		typedef void result_type;
 	};
 
 
@@ -71,10 +81,12 @@ struct standard_operations
 		{
 			t1 = m_alpha1 * t2 + m_alpha2 * t3 + m_alpha3 * t4;
 		}
+
+		typedef void result_type;
 	};
 
 
-	template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac1 , class Fac4 = Fac1 >
+	template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac2 , class Fac4 = Fac3 >
 	struct scale_sum4
 	{
 		const Fac1 m_alpha1;
@@ -90,10 +102,12 @@ struct standard_operations
 		{
 			t1 = m_alpha1 * t2 + m_alpha2 * t3 + m_alpha3 * t4 + m_alpha4 * t5;
 		}
+
+		typedef void result_type;
 	};
 
 
-	template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac1 , class Fac4 = Fac1 , class Fac5 = Fac1 >
+	template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac2 , class Fac4 = Fac3 , class Fac5 = Fac4 >
 	struct scale_sum5
 	{
 		const Fac1 m_alpha1;
@@ -110,10 +124,12 @@ struct standard_operations
 		{
 			t1 = m_alpha1 * t2 + m_alpha2 * t3 + m_alpha3 * t4 + m_alpha4 * t5 + m_alpha5 * t6;
 		}
+
+		typedef void result_type;
 	};
 
 
-	template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac1 , class Fac4 = Fac1 , class Fac5 = Fac1 , class Fac6 = Fac1 >
+	template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac2 , class Fac4 = Fac3 , class Fac5 = Fac4 , class Fac6 = Fac5 >
 	struct scale_sum6
 	{
 		const Fac1 m_alpha1;
@@ -131,10 +147,12 @@ struct standard_operations
 		{
 			t1 = m_alpha1 * t2 + m_alpha2 * t3 + m_alpha3 * t4 + m_alpha4 * t5 + m_alpha5 * t6 + m_alpha6 * t7;
 		}
+
+		typedef void result_type;
 	};
 
 
-	template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac1 , class Fac4 = Fac1 , class Fac5 = Fac1 , class Fac6 = Fac1 , class Fac7 = Fac1 >
+	template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac2 , class Fac4 = Fac3 , class Fac5 = Fac4 , class Fac6 = Fac5 , class Fac7 = Fac6 >
 	struct scale_sum7
 	{
 		const Fac1 m_alpha1;
@@ -154,6 +172,8 @@ struct standard_operations
 		{
 			t1 = m_alpha1 * t2 + m_alpha2 * t3 + m_alpha3 * t4 + m_alpha4 * t5 + m_alpha5 * t6 + m_alpha6 * t7 + m_alpha7 * t8;
 		}
+
+		typedef void result_type;
 	};
 
 
