@@ -24,7 +24,7 @@ namespace numeric {
 namespace odeint {
 
 /*
- * Conversion of boost::units for use in standard_operations::rel_error
+ * Conversion of boost::units for use in standard_operations::rel_error and standard_operations::maximum
  */
 namespace detail
 {
@@ -251,24 +251,29 @@ struct standard_operations
 			using detail::set_value;
 			set_value( t3 , abs( get_value( t3 ) ) / ( m_eps_abs + m_eps_rel * ( m_a_x * abs( get_value( t1 ) ) + m_a_dxdt * abs( get_value( t2 ) ) ) ) );
 		}
+
+		typedef void result_type;
 	};
 
 
 	/*
 	 * for usage in reduce
-	 *
-	 * ToDo : check if T1, T2 are units and if so convert them to normal floats
 	 */
-	template< class Fac1 = double >
+
+	template< class Value >
 	struct maximum
 	{
-		template< class T1 , class T2 >
-		Fac1 operator()( const T1 &t1 , const T2 &t2 ) const
+		template< class Fac1 , class Fac2 >
+		Value operator()( const Fac1 &t1 , const Fac2 &t2 ) const
 		{
 			using std::max;
 			using std::abs;
-			return max( abs( t1 ) , abs( t2 ) );
+			using detail::get_value;
+			Value a1 = abs( get_value( t1 ) ) , a2 = abs( get_value( t2 ) );
+			return ( a1 < a2 ) ? a2 : a1 ;
 		}
+
+		typedef Value result_type;
 	};
 
 
