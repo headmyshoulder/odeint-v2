@@ -28,4 +28,6 @@
 #include <boost/numeric/odeint/stepper/dense_output_explicit_euler.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_dopri5.hpp>
 
+#include <boost/numeric/odeint/algebra/fusion_algebra.hpp>
+
 #endif // BOOST_NUMERIC_ODEINT_HPP

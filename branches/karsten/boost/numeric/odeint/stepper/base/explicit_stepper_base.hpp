@@ -13,7 +13,6 @@
 #ifndef BOOST_NUMERIC_ODEINT_EXPLICIT_STEPPER_BASE_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_EXPLICIT_STEPPER_BASE_HPP_INCLUDED
 
-#include <boost/noncopyable.hpp>
 #include <boost/ref.hpp>
 
 #include <boost/numeric/odeint/stepper/adjust_size.hpp>
@@ -39,7 +38,7 @@ template<
 	class Operations ,
 	class AdjustSizePolicy
 >
-class explicit_stepper_base : boost::noncopyable
+class explicit_stepper_base
 {
 public:
 
@@ -75,6 +74,20 @@ public:
 	{
 		boost::numeric::odeint::destruct( m_dxdt );
 	}
+
+	explicit_stepper_base( const explicit_stepper_base &b ) : m_size_adjuster() , m_dxdt()
+	{
+		boost::numeric::odeint::construct( m_dxdt );
+		m_size_adjuster.register_state( 0 , m_dxdt );
+		boost::numeric::odeint::copy( b.m_dxdt , m_dxdt );
+	}
+
+	explicit_stepper_base& operator=( const explicit_stepper_base &b )
+	{
+		boost::numeric::odeint::copy( b.m_dxdt , m_dxdt );
+		return *this;
+	}
+
 
 
 

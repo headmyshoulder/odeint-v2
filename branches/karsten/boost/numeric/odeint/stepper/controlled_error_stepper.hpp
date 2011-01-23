@@ -61,6 +61,23 @@ template<
 	>
 class controlled_error_stepper< ErrorStepper , ErrorChecker , AdjustSizePolicy , explicit_error_stepper_tag > : boost::noncopyable
 {
+	void initialize( void )
+	{
+		boost::numeric::odeint::construct( m_dxdt );
+		boost::numeric::odeint::construct( m_xerr );
+		boost::numeric::odeint::construct( m_xnew );
+		m_dxdt_size_adjuster.register_state( 0 , m_dxdt );
+		m_xerr_size_adjuster.register_state( 0 , m_xerr );
+		m_xnew_size_adjuster.register_state( 0 , m_xnew );
+	}
+
+	void copy( controlled_error_stepper &stepper )
+	{
+		boost::numeric::odeint::copy( stepper.m_dxdt , m_dxdt );
+		boost::numeric::odeint::copy( stepper.m_xerr , m_xerr );
+		boost::numeric::odeint::copy( stepper.m_dnew , m_xnew );
+	}
+
 public:
 
 	typedef ErrorStepper stepper_type;
@@ -75,19 +92,14 @@ public:
 
 
 	controlled_error_stepper(
-			stepper_type &stepper ,
+			const stepper_type &stepper = stepper_type() ,
 			const error_checker_type &error_checker = error_checker_type()
 			)
 	: m_stepper( stepper ) , m_error_checker( error_checker ) ,
 	  m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_xnew_size_adjuster() ,
 	  m_dxdt() , m_xerr() , m_xnew() , m_max_rel_error()
 	{
-		boost::numeric::odeint::construct( m_dxdt );
-		boost::numeric::odeint::construct( m_xerr );
-		boost::numeric::odeint::construct( m_xnew );
-		m_dxdt_size_adjuster.register_state( 0 , m_dxdt );
-		m_xerr_size_adjuster.register_state( 0 , m_xerr );
-		m_xnew_size_adjuster.register_state( 0 , m_xnew );
+		initialize();
 	}
 
 	~controlled_error_stepper( void )
@@ -95,6 +107,23 @@ public:
 		boost::numeric::odeint::destruct( m_dxdt );
 		boost::numeric::odeint::destruct( m_xerr );
 		boost::numeric::odeint::destruct( m_xnew );
+	}
+
+	controlled_error_stepper( const controlled_error_stepper &stepper )
+	: m_stepper( stepper.m_stepper ) , m_error_checker( stepper.m_error_checker ) ,
+	  m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_xnew_size_adjuster() ,
+	  m_dxdt() , m_xerr() , m_xnew() , m_max_rel_error()
+	{
+		initialize();
+		copy( stepper );
+	}
+
+	controlled_error_stepper& operator=( const controlled_error_stepper &stepper )
+	{
+		m_stepper( stepper.m_stepper );
+		m_error_checker( stepper.m_error_checker );
+		copy( stepper );
+		return *this;
 	}
 
 
@@ -204,7 +233,7 @@ public:
 
 private:
 
-	stepper_type &m_stepper;
+	stepper_type m_stepper;
 	error_checker_type m_error_checker;
 
 	size_adjuster< deriv_type , 1 > m_dxdt_size_adjuster;

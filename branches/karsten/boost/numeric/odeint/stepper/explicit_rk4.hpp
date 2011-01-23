@@ -41,13 +41,7 @@ class explicit_rk4
 	  explicit_rk4< State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy > ,
 	  4 , State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy >
 {
-public :
-
-
-	BOOST_ODEINT_EXPLICIT_STEPPERS_TYPEDEFS( explicit_rk4 , 1 );
-
-
-	explicit_rk4( void ) : m_deriv_adjuster() , m_state_adjuster() , m_dxt() , m_dxm() , m_dxh() , m_x_tmp()
+	void initialize( void )
 	{
 		boost::numeric::odeint::construct( m_dxt );
 		boost::numeric::odeint::construct( m_dxm );
@@ -59,6 +53,26 @@ public :
 		m_state_adjuster.register_state( 0 , m_x_tmp );
 	}
 
+	void copy( const explicit_rk4 &rk )
+	{
+		boost::numeric::odeint::copy( rk.m_dxt , m_dxt );
+		boost::numeric::odeint::copy( rk.m_dxm , m_dxm );
+		boost::numeric::odeint::copy( rk.m_dxh , m_dxh );
+		boost::numeric::odeint::copy( rk.m_x_tmp , m_x_tmp );
+	}
+
+public :
+
+
+	BOOST_ODEINT_EXPLICIT_STEPPERS_TYPEDEFS( explicit_rk4 , 4 );
+
+
+	explicit_rk4( void )
+	: stepper_base_type() , m_deriv_adjuster() , m_state_adjuster() , m_dxt() , m_dxm() , m_dxh() , m_x_tmp()
+	{
+		initialize();
+	}
+
 	~explicit_rk4( void )
 	{
 		boost::numeric::odeint::destruct( m_dxt );
@@ -67,12 +81,27 @@ public :
 		boost::numeric::odeint::destruct( m_x_tmp );
 	}
 
+	explicit_rk4( const explicit_rk4 &rk )
+	: stepper_base_type( rk ) , m_deriv_adjuster() , m_state_adjuster() , m_dxt() , m_dxm() , m_dxh() , m_x_tmp()
+	{
+		initialize();
+		copy( rk );
+	}
+
+	explicit_rk4& operator=( const explicit_rk4 &rk )
+	{
+		stepper_base_type::operator=( rk );
+		copy( rk );
+		return *this;
+	}
+
+
 	template< class System , class StateIn , class DerivIn , class StateOut >
 	void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt )
 	{
 		// ToDo : check if size of in,dxdt,out are equal?
 
-        const time_type val1 = static_cast< value_type >( 1.0 );
+        const value_type val1 = static_cast< value_type >( 1.0 );
 
 		m_deriv_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
 		m_state_adjuster.adjust_size_by_policy( in , adjust_size_policy() );

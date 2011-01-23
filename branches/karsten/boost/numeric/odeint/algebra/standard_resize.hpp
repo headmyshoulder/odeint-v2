@@ -93,7 +93,6 @@ bool adjust_size( const Container &x1 , Deriv &x2 )
 	}
 }
 
-
 template< class Container , class Deriv >
 void copy( const Container &from , Deriv &to )
 {

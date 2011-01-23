@@ -44,17 +44,7 @@ class explicit_error_dopri5
 	  5 , 5 , 4 , State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy >
 {
 
-public :
-
-	template< class ControlledStepper >
-	friend class dense_output_dopri5;
-
-	BOOST_ODEINT_EXPLICIT_STEPPERS_AND_ERROR_STEPPERS_TYPEDEFS( explicit_error_dopri5 , 5 , 5 , 4 );
-
-	typedef explicit_error_stepper_fsal_tag stepper_category;
-
-	explicit_error_dopri5( void )
-	: m_state_adjuster() , m_deriv_adjuster() , m_x_tmp() , m_k2() , m_k3() , m_k4() , m_k5() , m_k6()
+	void initialize( void )
 	{
 		boost::numeric::odeint::construct( m_x_tmp );
 		boost::numeric::odeint::construct( m_k2 );
@@ -70,6 +60,33 @@ public :
 		m_deriv_adjuster.register_state( 4 , m_k6 );
 	}
 
+	void copy( explicit_error_dopri5 &d )
+	{
+		boost::numeric::odeint::copy( d.m_x_tmp , m_x_tmp );
+		boost::numeric::odeint::copy( d.m_k2 , m_k2 );
+		boost::numeric::odeint::copy( d.m_k3 , m_k3 );
+		boost::numeric::odeint::copy( d.m_k4 , m_k4 );
+		boost::numeric::odeint::copy( d.m_k5 , m_k5 );
+		boost::numeric::odeint::copy( d.m_k6 , m_k6 );
+	}
+
+
+
+public :
+
+	template< class ControlledStepper >
+	friend class dense_output_dopri5;
+
+	BOOST_ODEINT_EXPLICIT_STEPPERS_AND_ERROR_STEPPERS_FSAL_TYPEDEFS( explicit_error_dopri5 , 5 , 5 , 4 );
+
+	typedef explicit_error_stepper_fsal_tag stepper_category;
+
+	explicit_error_dopri5( void )
+	: stepper_base_type() , m_state_adjuster() , m_deriv_adjuster() , m_x_tmp() , m_k2() , m_k3() , m_k4() , m_k5() , m_k6()
+	{
+		initialize();
+	}
+
 	~explicit_error_dopri5( void )
 	{
 		boost::numeric::odeint::destruct( m_x_tmp );
@@ -80,6 +97,21 @@ public :
 		boost::numeric::odeint::destruct( m_k6 );
 	}
 
+	explicit_error_dopri5( const explicit_error_dopri5 &d )
+	: stepper_base_type( d ) , m_state_adjuster() , m_deriv_adjuster() , m_x_tmp() , m_k2() , m_k3() , m_k4() , m_k5() , m_k6()
+	{
+		initialize();
+		copy( d );
+	}
+
+	explicit_error_dopri5& operator=( const explicit_error_dopri5 &d )
+	{
+		stepper_base_type::operator=( d );
+		copy( d );
+		return *this;
+	}
+
+
 
 
 
@@ -88,8 +120,8 @@ public :
 	void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt_in , const time_type &t ,
 			                           StateOut &out , DerivOut &dxdt_out , const time_type &dt )
 	{
-	    const time_type a2 = static_cast<time_type> ( 0.2 );
-        const time_type a3 = static_cast<time_type> ( 0.3 );
+	    const value_type a2 = static_cast<value_type> ( 0.2 );
+        const value_type a3 = static_cast<value_type> ( 0.3 );
         const value_type a4 = static_cast<value_type> ( 0.8 );
         const value_type a5 = static_cast<value_type> ( 8.0 )/static_cast<value_type> ( 9.0 );
 

@@ -1,9 +1,13 @@
 * Unit test
-  OK * test operations
+  NEARLY DONE * test operations
   OK * test standard_algebra
   OK * test fusion_algebra
   * test vector_space_algebra
+  * test copying
 * change standard_operations::rel_error in order to word with units and test it
+* include implicit euler
+  * call via std::pair< deriv , jacobi >
+  * resizing
 OK * operations that fit units
 OK * operations that fit result_of
 * include test/thrust in jam system, use system from 
