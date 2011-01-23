@@ -39,10 +39,9 @@ typedef enum
  */
 template<
     class ErrorStepper ,
-    class ErrorChecker = error_checker_standard< typename ErrorStepper::state_type ,
-                                                   typename ErrorStepper::time_type ,
-                                                   typename ErrorStepper::algebra_type ,
-                                                   typename ErrorStepper::operations_type > ,
+    class ErrorChecker = error_checker_standard< typename ErrorStepper::value_type ,
+                                                 typename ErrorStepper::algebra_type ,
+                                                 typename ErrorStepper::operations_type > ,
     class AdjustSizePolicy = typename ErrorStepper::adjust_size_policy ,
     class ErrorStepperCategory = typename ErrorStepper::stepper_category
 >

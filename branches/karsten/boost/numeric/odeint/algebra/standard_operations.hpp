@@ -17,10 +17,52 @@
 #include <cmath>      // for std::max
 
 #include <boost/utility/result_of.hpp>
+#include <boost/units/quantity.hpp>
 
 namespace boost {
 namespace numeric {
 namespace odeint {
+
+/*
+ * Conversion of boost::units for use in standard_operations::rel_error
+ */
+namespace detail
+{
+		template< class T >
+		struct get_value_impl
+		{
+			static T value( const T &t ) { return t; }
+			typedef T result_type;
+		};
+
+		template< class Unit , class T >
+		struct get_value_impl< boost::units::quantity< Unit , T > >
+		{
+			static T value( const boost::units::quantity< Unit , T > &t ) { return t.value(); }
+			typedef T result_type;
+		};
+
+		template< class T >
+		typename get_value_impl< T >::result_type get_value( const T &t ) { return get_value_impl< T >::value( t ); }
+
+
+
+		template< class T , class V >
+		struct set_value_impl
+		{
+			static void set_value( T &t , const V &v ) { t = v; }
+		};
+
+		template< class Unit , class T , class V >
+		struct set_value_impl< boost::units::quantity< Unit , T > , V >
+		{
+			static void set_value( boost::units::quantity< Unit , T > &t , const V &v ) { t = boost::units::quantity< Unit , T >::from_value( v ); }
+		};
+
+		template< class T , class V >
+		void set_value( T &t , const V &v ) { return set_value_impl< T , V >::set_value( t , v ); }
+}
+
 
 
 /*
@@ -185,10 +227,12 @@ struct standard_operations
 
 
 
+
+
 	/*
 	 * for usage in for_each2
 	 *
-	 * ToDo : check if T1, T2, T3 are units and if so convert them to normal floats
+	 * Works with boost::units by eliminating the unit
 	 */
 	template< class Fac1 = double >
 	struct rel_error
@@ -203,7 +247,9 @@ struct standard_operations
 		void operator()( const T1 &t1 , const T2 &t2 , T3 &t3 ) const
 		{
 			using std::abs;
-			t3 = abs( t3 ) / ( m_eps_abs + m_eps_rel * ( m_a_x * abs( t1 ) + m_a_dxdt * abs( t2 ) ) );
+			using detail::get_value;
+			using detail::set_value;
+			set_value( t3 , abs( get_value( t3 ) ) / ( m_eps_abs + m_eps_rel * ( m_a_x * abs( get_value( t1 ) ) + m_a_dxdt * abs( get_value( t2 ) ) ) ) );
 		}
 	};
 

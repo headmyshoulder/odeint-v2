@@ -185,15 +185,15 @@ void check_controlled_stepper( Stepper &stepper )
 	typedef typename stepper_type::deriv_type deriv_type;
 	typedef typename stepper_type::time_type time_type;
 	typedef typename stepper_type::order_type order_type;
-	typedef typename stepper_type::algebra_type algebra_type;
-	typedef typename stepper_type::operations_type operations_type;
+//	typedef typename stepper_type::algebra_type algebra_type;
+//	typedef typename stepper_type::operations_type operations_type;
 
 	const time_type t( 0.0 * si::second );
 	time_type dt( 0.1 * si::second );
 	state_type x( 1.0 * si::meter , 0.0 * si::meter_per_second ) , xerr;
 
 	// test call method one
-	stepper.try_step( oscillator , x , t , dt );
+//	stepper.try_step( oscillator , x , t , dt );
 }
 
 
@@ -260,8 +260,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( fsal_error_stepper_test , Stepper , fsal_error_st
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( controlled_stepper_test , Stepper , controlled_stepper_types )
 {
-//	Stepper stepper;
-//	check_controlled_stepper( stepper );
+	Stepper stepper;
+	check_controlled_stepper( stepper );
 }
 
 

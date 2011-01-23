@@ -23,8 +23,7 @@ namespace odeint {
 
 template
 <
-	class State ,
-	class Time ,
+	class Value ,
 	class Algebra = standard_algebra ,
 	class Operations = standard_operations
 >
@@ -32,8 +31,7 @@ class error_checker_standard
 {
 public:
 
-	typedef State state_type;
-	typedef Time time_type;
+	typedef Value value_type;
 	typedef Algebra algebra_type;
 	typedef Operations operations_type;
 
@@ -45,22 +43,23 @@ public:
 	/*
 	 * ToDo: implement constructor with epsilons
 	 */
-	time_type error( const state_type &x_old , const state_type &dxdt_old , state_type &x_err , const time_type &dt )
+	template< class State , class Deriv , class Err >
+	value_type error( const State &x_old , const Deriv &dxdt_old , Err &x_err , const value_type &dt )
 	{
 		// this overwrites x_err !
 		typename algebra_type::for_each3()( x_old , dxdt_old , x_err ,
-					             typename operations_type::template rel_error< time_type >( m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt*dt ) );
+					             typename operations_type::template rel_error< value_type >( m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt*dt ) );
 
-		time_type res = typename algebra_type::reduce()( x_err , typename operations_type::template maximum< time_type >() , 0.0 );
+		value_type res = typename algebra_type::reduce()( x_err , typename operations_type::template maximum< value_type >() , 0.0 );
 		return res;
 	}
 
 private:
 
-	time_type m_eps_abs;
-	time_type m_eps_rel;
-	time_type m_a_x;
-	time_type m_a_dxdt;
+	value_type m_eps_abs;
+	value_type m_eps_rel;
+	value_type m_a_x;
+	value_type m_a_dxdt;
 };
 
 } // odeint
