@@ -13,7 +13,6 @@
 #ifndef BOOST_NUMERIC_ODEINT_EXPLICIT_STEPPER_AND_ERROR_STEPPER_FSAL_BASE_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_EXPLICIT_STEPPER_AND_ERROR_STEPPER_FSAL_BASE_HPP_INCLUDED
 
-#include <boost/noncopyable.hpp>
 #include <boost/ref.hpp>
 
 #include <boost/numeric/odeint/stepper/adjust_size.hpp>
@@ -91,6 +90,20 @@ public:
 		boost::numeric::odeint::destruct( m_dxdt );
 	}
 
+    explicit_stepper_and_error_stepper_fsal_base( const explicit_stepper_and_error_stepper_fsal_base &b )
+    : m_size_adjuster() , m_dxdt() , m_first_call( true )
+	{
+		boost::numeric::odeint::construct( m_dxdt );
+		m_size_adjuster.register_state( 0 , m_dxdt );
+		boost::numeric::odeint::copy( b.m_dxdt , m_dxdt );
+	}
+
+    explicit_stepper_and_error_stepper_fsal_base& operator=( const explicit_stepper_and_error_stepper_fsal_base &b )
+    {
+    	boost::numeric::odeint::copy( b.m_dxdt , m_dxdt );
+    	m_first_call( true );
+		return *this;
+    }
 
 
 

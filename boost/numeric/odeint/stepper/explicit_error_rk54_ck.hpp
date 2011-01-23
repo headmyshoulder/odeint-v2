@@ -49,13 +49,7 @@ class explicit_error_rk54_ck
 	  5 , 5 , 4 , State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy >
 {
 
-public :
-
-	BOOST_ODEINT_EXPLICIT_STEPPERS_AND_ERROR_STEPPERS_TYPEDEFS( explicit_error_rk54_ck , 5 , 5 , 4);
-
-	typedef explicit_error_stepper_tag stepper_category;
-
-	explicit_error_rk54_ck( void ) : m_state_adjuster() , m_deriv_adjuster() , m_x_tmp() , m_k2() , m_k3() , m_k4() , m_k5() , m_k6()
+	void initialize( void )
 	{
 		boost::numeric::odeint::construct( m_x_tmp );
 		boost::numeric::odeint::construct( m_k2 );
@@ -71,6 +65,28 @@ public :
 		m_deriv_adjuster.register_state( 4 , m_k6 );
 	}
 
+	void copy( const explicit_error_rk54_ck &rk )
+	{
+		boost::numeric::odeint::copy( rk.m_x_tmp , m_x_tmp );
+		boost::numeric::odeint::copy( rk.m_k2 , m_k2 );
+		boost::numeric::odeint::copy( rk.m_k3 , m_k3 );
+		boost::numeric::odeint::copy( rk.m_k4 , m_k4 );
+		boost::numeric::odeint::copy( rk.m_k5 , m_k5 );
+		boost::numeric::odeint::copy( rk.m_k6 , m_k6 );
+	}
+
+public :
+
+	BOOST_ODEINT_EXPLICIT_STEPPERS_AND_ERROR_STEPPERS_TYPEDEFS( explicit_error_rk54_ck , 5 , 5 , 4);
+
+	typedef explicit_error_stepper_tag stepper_category;
+
+	explicit_error_rk54_ck( void )
+	: stepper_base_type() , m_state_adjuster() , m_deriv_adjuster() , m_x_tmp() , m_k2() , m_k3() , m_k4() , m_k5() , m_k6()
+	{
+		initialize();
+	}
+
 	~explicit_error_rk54_ck( void )
 	{
 		boost::numeric::odeint::destruct( m_x_tmp );
@@ -81,6 +97,19 @@ public :
 		boost::numeric::odeint::destruct( m_k6 );
 	}
 
+	explicit_error_rk54_ck( const explicit_error_rk54_ck &rk )
+	: stepper_base_type( rk ) , m_state_adjuster() , m_deriv_adjuster() , m_x_tmp() , m_k2() , m_k3() , m_k4() , m_k5() , m_k6()
+	{
+		initialize();
+		copy( rk );
+	}
+
+	explicit_error_rk54_ck& operator=( const explicit_error_rk54_ck &rk )
+	{
+		stepper_base_type::operator=( rk );
+		copy( rk );
+		return *this;
+	}
 
 	template< class System , class StateIn , class DerivIn , class StateOut , class Err >
 	void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt , Err &xerr )
