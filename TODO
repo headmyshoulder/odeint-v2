@@ -4,19 +4,20 @@
   OK * test fusion_algebra
   * test vector_space_algebra
   * test copying
-* change standard_operations::rel_error in order to word with units and test it
+OK * change standard_operations::rel_error in order to word with units and test it
 * include implicit euler
   * call via std::pair< deriv , jacobi >
   * resizing
+* include rosenbrock4 in trunk
 OK * operations that fit units
 OK * operations that fit result_of
 * include test/thrust in jam system, use system from 
 OK * change stepper to stepper_units
 OK * change error_stepper to error_stepper_units
 DIFFICULT * finishing change of controlled_stepper to units
-  * DO THIS WHEN INCLUDING ROSENBROCK INTO TRUNK
   * check if rosenbrock controller and controlled_stepper can both be used with the explicit steppers
   * move error_checker into controlled_stepper
+  * rename controlled_stepper to a more specific name
 DIFICULT * change dense_output to units
   * roll out dense_output_explicit_euler::calc_state() to explicit_euler::dense_output()
   * roll out dense_output_dopri5::calc_state() to explicit_error_dopri5::dense_output()

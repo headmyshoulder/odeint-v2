@@ -188,12 +188,12 @@ void check_controlled_stepper( Stepper &stepper )
 //	typedef typename stepper_type::algebra_type algebra_type;
 //	typedef typename stepper_type::operations_type operations_type;
 
-	const time_type t( 0.0 * si::second );
+	time_type t( 0.0 * si::second );
 	time_type dt( 0.1 * si::second );
-	state_type x( 1.0 * si::meter , 0.0 * si::meter_per_second ) , xerr;
+	state_type x( 1.0 * si::meter , 0.0 * si::meter_per_second );
 
 	// test call method one
-//	stepper.try_step( oscillator , x , t , dt );
+	stepper.try_step( oscillator , x , t , dt );
 }
 
 

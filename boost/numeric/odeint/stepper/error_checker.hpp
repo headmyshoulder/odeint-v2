@@ -21,6 +21,9 @@ namespace numeric {
 namespace odeint {
 
 
+/*
+ * ToDo: implement constructor with epsilons
+ */
 template
 <
 	class Value ,
@@ -40,15 +43,12 @@ public:
 	{}
 
 
-	/*
-	 * ToDo: implement constructor with epsilons
-	 */
-	template< class State , class Deriv , class Err >
-	value_type error( const State &x_old , const Deriv &dxdt_old , Err &x_err , const value_type &dt )
+	template< class State , class Deriv , class Err , class Time >
+	value_type error( const State &x_old , const Deriv &dxdt_old , Err &x_err , const Time &dt )
 	{
 		// this overwrites x_err !
 		typename algebra_type::for_each3()( x_old , dxdt_old , x_err ,
-					             typename operations_type::template rel_error< value_type >( m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt*dt ) );
+					             typename operations_type::template rel_error< value_type >( m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt * detail::get_value( dt ) ) );
 
 		value_type res = typename algebra_type::reduce()( x_err , typename operations_type::template maximum< value_type >() , 0.0 );
 		return res;
