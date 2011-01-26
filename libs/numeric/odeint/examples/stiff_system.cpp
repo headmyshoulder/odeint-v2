@@ -11,6 +11,7 @@
 */
 
 #include <iostream>
+#include <utility>
 
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/stepper/implicit_euler.hpp>
@@ -51,15 +52,19 @@ int main( void )
 	x1( 0 ) = 1.0; x1( 1 ) = 0.0;
 	state_type x2( x1 );
 
-	const double dt = 0.01; // for dt >= 0.01 the euler method gets unstable
+	const value_type dt = 0.01; // for dt >= 0.01 the euler method gets unstable
 	const size_t steps = 1000;
 
-	for( size_t step = 0 ; step < steps ; ++step )
+	value_type t = 0.0;
+	for( size_t step = 0 ; step < steps ; ++step , t+=dt )
 	{
-		clog << step << " of " << 100 << endl;
-		cout << step*dt << tab << x1( 0 ) << tab << x1( 1 ) << tab << x2( 0 ) << tab << x2( 1 ) << endl;
-		expl_euler.do_step( stiff_system , x1 , step*dt , dt );
-		impl_euler.do_step( stiff_system , jacobi , x2 , step*dt , dt );
+		clog << step << " of " << steps << endl;
+		cout << t << tab << x1( 0 ) << tab << x1( 1 ) << tab << x2( 0 ) << tab << x2( 1 ) << tab;
+		cout << 1.0 / 99.0 * exp( -100.0 * t ) * ( 100.0  - exp( 99.0 * t ) ) << tab;
+		cout << 1.0 / 99.0 * exp( -100.0 * t ) * ( -1.0 + exp( 99.0 * t ) ) << endl;
+
+		expl_euler.do_step( stiff_system , x1 , t , dt );
+		impl_euler.do_step( make_pair( stiff_system , jacobi ) , x2 , t , dt );
 	}
-	cout << steps*dt << tab << x1( 0 ) << tab << x1( 1 ) << tab << x2( 0 ) << tab << x2( 1 ) << endl;
+
 }

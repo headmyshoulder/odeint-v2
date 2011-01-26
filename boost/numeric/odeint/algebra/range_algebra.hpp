@@ -1,5 +1,5 @@
 /*
- boost header: BOOST_NUMERIC_ODEINT/standard_algebra.hpp
+ boost header: BOOST_NUMERIC_ODEINT/range_algebra.hpp
 
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky
@@ -17,7 +17,7 @@
 #define BOOST_FUNCTIONAL_FORWARD_ADAPTER_MAX_ARITY 9
 #include <boost/functional/forward_adapter.hpp>
 
-#include <boost/type_traits.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 
 #include <boost/numeric/odeint/algebra/detail/macros.hpp>
 #include <boost/numeric/odeint/algebra/detail/for_each.hpp>
@@ -27,7 +27,7 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-struct standard_algebra
+struct range_algebra
 {
 	struct for_each1_impl
 	{

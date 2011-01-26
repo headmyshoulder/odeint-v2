@@ -25,14 +25,14 @@
 
 #include <boost/fusion/container.hpp>
 
-#include <boost/numeric/odeint/algebra/standard_operations.hpp>
+#include <boost/numeric/odeint/algebra/default_operations.hpp>
 #include <boost/numeric/odeint/algebra/fusion_algebra.hpp>
 
 namespace units = boost::units;
 namespace si = boost::units::si;
 namespace fusion = boost::fusion;
 
-using boost::numeric::odeint::standard_operations;
+using boost::numeric::odeint::default_operations;
 using boost::numeric::odeint::fusion_algebra;
 
 typedef double value_type;
@@ -88,7 +88,7 @@ BOOST_AUTO_TEST_CASE( for_each2 )
 {
 	fusion_fixture f;
 	fusion_algebra::for_each2()( f.res , f.k1 ,
-			standard_operations::scale_sum1< time_type >( dt ) );
+			default_operations::scale_sum1< time_type >( dt ) );
 	BOOST_CHECK_CLOSE( fusion::at_c< 0 >( f.res ).value() , 0.1 , 1.0e-10 );
 	BOOST_CHECK_CLOSE( fusion::at_c< 1 >( f.res ).value() , 0.1 , 1.0e-10 );
 }
@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_CASE( for_each3 )
 {
 	fusion_fixture f;
 	fusion_algebra::for_each3()( f.res , f.x , f.k1 ,
-			standard_operations::scale_sum2< value_type , time_type >( 1.0 , dt ) );
+			default_operations::scale_sum2< value_type , time_type >( 1.0 , dt ) );
 	BOOST_CHECK_CLOSE( fusion::at_c< 0 >( f.res ).value() , 1.1 , 1.0e-10 );
 	BOOST_CHECK_CLOSE( fusion::at_c< 1 >( f.res ).value() , 1.1 , 1.0e-10 );
 }
@@ -106,7 +106,7 @@ BOOST_AUTO_TEST_CASE( for_each4 )
 {
 	fusion_fixture f;
 	fusion_algebra::for_each4()( f.res , f.x , f.k1 , f.k2 ,
-			standard_operations::scale_sum3< value_type , time_type , time_type >( 1.0 , dt , dt ) );
+			default_operations::scale_sum3< value_type , time_type , time_type >( 1.0 , dt , dt ) );
 	BOOST_CHECK_CLOSE( fusion::at_c< 0 >( f.res ).value() , 1.3 , 1.0e-10 );
 	BOOST_CHECK_CLOSE( fusion::at_c< 1 >( f.res ).value() , 1.3 , 1.0e-10 );
 }
@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE( for_each5 )
 {
 	fusion_fixture f;
 	fusion_algebra::for_each5()( f.res , f.x , f.k1 , f.k2 , f.k3 ,
-			standard_operations::scale_sum4< value_type , time_type , time_type , time_type >( 1.0 , dt , dt , dt ) );
+			default_operations::scale_sum4< value_type , time_type , time_type , time_type >( 1.0 , dt , dt , dt ) );
 	BOOST_CHECK_CLOSE( fusion::at_c< 0 >( f.res ).value() , 1.6 , 1.0e-10 );
 	BOOST_CHECK_CLOSE( fusion::at_c< 1 >( f.res ).value() , 1.6 , 1.0e-10 );
 }
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE( for_each6 )
 {
 	fusion_fixture f;
 	fusion_algebra::for_each6()( f.res , f.x , f.k1 , f.k2 , f.k3 , f.k4 ,
-			standard_operations::scale_sum5< value_type , time_type , time_type , time_type , time_type >( 1.0 , dt , dt , dt , dt ) );
+			default_operations::scale_sum5< value_type , time_type , time_type , time_type , time_type >( 1.0 , dt , dt , dt , dt ) );
 	BOOST_CHECK_CLOSE( fusion::at_c< 0 >( f.res ).value() , 2.0 , 1.0e-10 );
 	BOOST_CHECK_CLOSE( fusion::at_c< 1 >( f.res ).value() , 2.0 , 1.0e-10 );
 }
@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE( for_each7 )
 {
 	fusion_fixture f;
 	fusion_algebra::for_each7()( f.res , f.x , f.k1 , f.k2 , f.k3 , f.k4 , f.k5 ,
-			standard_operations::scale_sum6< value_type , time_type , time_type , time_type , time_type , time_type >( 1.0 , dt , dt , dt , dt , dt ) );
+			default_operations::scale_sum6< value_type , time_type , time_type , time_type , time_type , time_type >( 1.0 , dt , dt , dt , dt , dt ) );
 	BOOST_CHECK_CLOSE( fusion::at_c< 0 >( f.res ).value() , 2.5 , 1.0e-10 );
 	BOOST_CHECK_CLOSE( fusion::at_c< 1 >( f.res ).value() , 2.5 , 1.0e-10 );
 }
@@ -142,7 +142,7 @@ BOOST_AUTO_TEST_CASE( for_each8 )
 {
 	fusion_fixture f;
 	fusion_algebra::for_each8()( f.res , f.x , f.k1 , f.k2 , f.k3 , f.k4 , f.k5 , f.k6 ,
-			standard_operations::scale_sum7< value_type , time_type , time_type , time_type , time_type , time_type , time_type >( 1.0 , dt , dt , dt , dt , dt ,dt ) );
+			default_operations::scale_sum7< value_type , time_type , time_type , time_type , time_type , time_type , time_type >( 1.0 , dt , dt , dt , dt , dt ,dt ) );
 	BOOST_CHECK_CLOSE( fusion::at_c< 0 >( f.res ).value() , 3.1 , 1.0e-10 );
 	BOOST_CHECK_CLOSE( fusion::at_c< 1 >( f.res ).value() , 3.1 , 1.0e-10 );
 }

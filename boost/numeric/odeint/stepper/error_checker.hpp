@@ -13,8 +13,8 @@
 #ifndef BOOST_NUMERIC_ODEINT_ERROR_CHECKER_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_ERROR_CHECKER_HPP_INCLUDED
 
-#include <boost/numeric/odeint/algebra/standard_algebra.hpp>
-#include <boost/numeric/odeint/algebra/standard_operations.hpp>
+#include <boost/numeric/odeint/algebra/range_algebra.hpp>
+#include <boost/numeric/odeint/algebra/default_operations.hpp>
 
 namespace boost {
 namespace numeric {
@@ -27,8 +27,8 @@ namespace odeint {
 template
 <
 	class Value ,
-	class Algebra = standard_algebra ,
-	class Operations = standard_operations
+	class Algebra = range_algebra ,
+	class Operations = default_operations
 >
 class error_checker_standard
 {

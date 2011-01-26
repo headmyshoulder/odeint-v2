@@ -13,7 +13,7 @@
 #ifndef BOOST_BOOST_NUMERIC_ODEINT_EXPLICIT_EULER_UNITS_HPP_INCLUDED
 #define BOOST_BOOST_NUMERIC_ODEINT_EXPLICIT_EULER_UNITS_HPP_INCLUDED
 
-#include <boost/numeric/odeint/algebra/standard_algebra.hpp>
+#include <boost/numeric/odeint/algebra/range_algebra.hpp>
 
 #include "explicit_stepper_base_units.hpp"
 #include "standard_operations_units.hpp"
@@ -26,7 +26,7 @@ template<
     class Deriv ,
     class Value = double ,
     class Time = double ,
-	class Algebra = standard_algebra ,
+	class Algebra = range_algebra ,
 	class Operations = standard_operations_units ,
 	class AdjustSizePolicy = adjust_size_initially_tag
 	>

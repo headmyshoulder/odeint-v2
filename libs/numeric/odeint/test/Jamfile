@@ -20,8 +20,8 @@ test-suite "odeint"
 	:
 	 [ run stepper_concepts.cpp ]
 	 [ run resizing.cpp ]
-	 [ run standard_operations.cpp ]
-	 [ run standard_algebra.cpp ]
+	 [ run default_operations.cpp ]
+	 [ run range_algebra.cpp ]
 	 [ run implicit_euler.cpp ]
 	 [ run fusion_algebra.cpp ]
 	 [ run stepper_with_units.cpp ]

@@ -23,7 +23,7 @@ namespace odeint {
 template< class Container , class Time >
 struct operations_dispatcher
 {
-	typedef standard_operations< Time > type;
+	typedef default_operations< Time > type;
 };
 
 

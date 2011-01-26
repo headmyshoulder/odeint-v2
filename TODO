@@ -26,6 +26,8 @@ DIFICULT * change dense_output to units
   * create dense_output_explicit_controlled_fsal
   * maybe remove dense_output_explicit
 * split check_concepts into check_stepper_concept, check_error_stepper_concept, check_controlled_stepper_concept
+* split resizing and copy/destruct/construct in different files
+OK * change resizing concept, in order to word within the implicit steppers
 
 * Integrate functions
 * skript for setting the include defines according to the position in file system an writing a general copyright comment at the beginning

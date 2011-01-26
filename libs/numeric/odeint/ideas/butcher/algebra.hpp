@@ -28,8 +28,8 @@ struct algebra
 template< class state_type , class coef_type >
 struct algebra< state_type , coef_type , mpl::int_< 0 > >
 {
-	typedef boost::numeric::odeint::standard_algebra std_algebra;
-	typedef boost::numeric::odeint::standard_operations< double > std_op;
+	typedef boost::numeric::odeint::range_algebra std_algebra;
+	typedef boost::numeric::odeint::default_operations< double > std_op;
 
 	typedef typename state_type::iterator iterator;
 	typedef typename state_type::const_iterator const_iterator;
@@ -58,8 +58,8 @@ struct algebra< state_type , coef_type , mpl::int_< 0 > >
 template< class state_type , class coef_type >
 struct algebra< state_type , coef_type , mpl::int_< 1 > >
 {
-	typedef boost::numeric::odeint::standard_algebra std_algebra;
-	typedef boost::numeric::odeint::standard_operations< double > std_op;
+	typedef boost::numeric::odeint::range_algebra std_algebra;
+	typedef boost::numeric::odeint::default_operations< double > std_op;
 
 	typedef typename state_type::iterator iterator;
 	typedef typename state_type::const_iterator const_iterator;
@@ -89,8 +89,8 @@ struct algebra< state_type , coef_type , mpl::int_< 1 > >
 template< class state_type , class coef_type >
 struct algebra< state_type , coef_type , mpl::int_< 2 > >
 {
-	typedef boost::numeric::odeint::standard_algebra std_algebra;
-	typedef boost::numeric::odeint::standard_operations< double > std_op;
+	typedef boost::numeric::odeint::range_algebra std_algebra;
+	typedef boost::numeric::odeint::default_operations< double > std_op;
 
 	typedef typename state_type::iterator iterator;
 	typedef typename state_type::const_iterator const_iterator;
@@ -122,8 +122,8 @@ struct algebra< state_type , coef_type , mpl::int_< 2 > >
 template< class state_type , class coef_type >
 struct algebra< state_type , coef_type , mpl::int_< 3 > >
 {
-	typedef boost::numeric::odeint::standard_algebra std_algebra;
-	typedef boost::numeric::odeint::standard_operations< double > std_op;
+	typedef boost::numeric::odeint::range_algebra std_algebra;
+	typedef boost::numeric::odeint::default_operations< double > std_op;
 
 	typedef typename state_type::iterator iterator;
 	typedef typename state_type::const_iterator const_iterator;
@@ -158,8 +158,8 @@ struct algebra< state_type , coef_type , mpl::int_< 3 > >
 template< class state_type , class coef_type >
 struct algebra< state_type , coef_type , mpl::int_< 4 > >
 {
-	typedef boost::numeric::odeint::standard_algebra std_algebra;
-	typedef boost::numeric::odeint::standard_operations< double > std_op;
+	typedef boost::numeric::odeint::range_algebra std_algebra;
+	typedef boost::numeric::odeint::default_operations< double > std_op;
 
 	typedef typename state_type::iterator iterator;
 	typedef typename state_type::const_iterator const_iterator;

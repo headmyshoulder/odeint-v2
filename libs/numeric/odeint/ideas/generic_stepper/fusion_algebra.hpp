@@ -19,8 +19,8 @@ template< size_t n >
 struct fusion_algebra
 {
 
-	typedef boost::numeric::odeint::standard_algebra std_algebra;
-	typedef boost::numeric::odeint::standard_operations< double > std_op;
+	typedef boost::numeric::odeint::range_algebra std_algebra;
+	typedef boost::numeric::odeint::default_operations< double > std_op;
 
 	template< class state_type >
 	inline static void foreach( state_type &x_tmp , const state_type &x , const boost::array< double , n > &a ,
@@ -33,8 +33,8 @@ template<>
 struct fusion_algebra< 1 >
 {
 
-	typedef boost::numeric::odeint::standard_algebra std_algebra;
-	typedef boost::numeric::odeint::standard_operations< double > std_op;
+	typedef boost::numeric::odeint::range_algebra std_algebra;
+	typedef boost::numeric::odeint::default_operations< double > std_op;
 
 	template< class state_type >
 	inline static void foreach( state_type &x_tmp , const state_type &x , const boost::array< double , 1 > &a ,
@@ -50,8 +50,8 @@ template<>
 struct fusion_algebra< 2 >
 {
 
-	typedef boost::numeric::odeint::standard_algebra std_algebra;
-	typedef boost::numeric::odeint::standard_operations< double > std_op;
+	typedef boost::numeric::odeint::range_algebra std_algebra;
+	typedef boost::numeric::odeint::default_operations< double > std_op;
 
 	template< class state_type >
 	inline static void foreach( state_type &x_tmp , const state_type &x , const boost::array< double , 2 > &a ,
@@ -68,8 +68,8 @@ template<>
 struct fusion_algebra< 3 >
 {
 
-    typedef boost::numeric::odeint::standard_algebra std_algebra;
-    typedef boost::numeric::odeint::standard_operations< double > std_op;
+    typedef boost::numeric::odeint::range_algebra std_algebra;
+    typedef boost::numeric::odeint::default_operations< double > std_op;
 
     template< class state_type >
     inline static void foreach( state_type &x_tmp , const state_type &x , const boost::array< double , 3 > &a ,
@@ -87,8 +87,8 @@ template<>
 struct fusion_algebra< 4 >
 {
 
-    typedef boost::numeric::odeint::standard_algebra std_algebra;
-    typedef boost::numeric::odeint::standard_operations< double > std_op;
+    typedef boost::numeric::odeint::range_algebra std_algebra;
+    typedef boost::numeric::odeint::default_operations< double > std_op;
 
     template< class state_type >
     inline static void foreach( state_type &x_tmp , const state_type &x , const boost::array< double , 4 > &a ,
