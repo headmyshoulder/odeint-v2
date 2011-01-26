@@ -25,8 +25,8 @@ template<
     class Value = double ,
     class Deriv = State ,
     class Time = Value ,
-	class Algebra = standard_algebra ,
-	class Operations = standard_operations ,
+	class Algebra = range_algebra ,
+	class Operations = default_operations ,
 	class AdjustSizePolicy = adjust_size_initially_tag
 	>
 class dense_output_explicit_euler

@@ -27,7 +27,7 @@ struct algebra_dispatcher
 	typedef Container container_type;
 	typedef Time time_type;
 
-	typedef standard_algebra< container_type > type;
+	typedef range_algebra< container_type > type;
 };
 
 

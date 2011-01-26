@@ -18,7 +18,7 @@
 #include <boost/noncopyable.hpp>
 #include <boost/array.hpp>
 
-#include <boost/numeric/odeint/algebra/standard_resize.hpp>
+#include <boost/numeric/odeint/algebra/default_resize.hpp>
 
 
 namespace boost {
@@ -37,25 +37,37 @@ struct adjust_size_always_tag {};
 
 
 
+struct default_adjust_size_caller
+{
+	template< class Container1 , class Container2 >
+	static bool adjust_size( const Container1 &x1 , Container2 &x2 )
+	{
+		return boost::numeric::odeint::adjust_size( x1 , x2 );
+	}
+};
 
 
 /*
  * Adjust size functionality with policies and resizeability
  */
-template< class Deriv , size_t Dim >
+template< class Container , size_t Dim , class AdjustSizeCaller = default_adjust_size_caller >
 class size_adjuster : boost::noncopyable
 {
 public:
 
+	typedef Container container_type;
+	static const size_t dim = Dim;
+	typedef AdjustSizeCaller adjust_size_caller;
+
 	size_adjuster() : m_is_initialized( false ) , m_states()
 	{
-		std::fill( m_states.begin() , m_states.end() , static_cast< Deriv* >( 0 ) );
+		std::fill( m_states.begin() , m_states.end() , static_cast< container_type* >( 0 ) );
 	}
 
 	template< class State >
 	bool adjust_size( const State &x )
 	{
-		return adjust_size_by_resizeability( x , typename is_resizeable< Deriv >::type() );
+		return adjust_size_by_resizeability( x , typename is_resizeable< container_type >::type() );
 	}
 
 	template< class State >
@@ -70,7 +82,7 @@ public:
 		if( !m_is_initialized )
 		{
 			m_is_initialized = true;
-			return adjust_size_by_resizeability( x , typename is_resizeable< Deriv >::type() );
+			return adjust_size_by_resizeability( x , typename is_resizeable< container_type >::type() );
 		}
 		else
 		{
@@ -81,10 +93,10 @@ public:
 	template< class State >
 	bool adjust_size_by_policy( const State &x , adjust_size_always_tag )
 	{
-		return adjust_size_by_resizeability( x , typename is_resizeable< Deriv >::type() );
+		return adjust_size_by_resizeability( x , typename is_resizeable< container_type >::type() );
 	}
 
-	void register_state( size_t idx , Deriv &x )
+	void register_state( size_t idx , container_type &x )
 	{
 		m_states[idx] = &x;
 	}
@@ -95,11 +107,11 @@ private:
 	template< class State >
 	bool adjust_size_by_resizeability( const State &x , boost::true_type )
 	{
-		for( size_t i=0 ; i<Dim ; ++i )
+		for( size_t i=0 ; i<dim ; ++i )
 		{
-            boost::numeric::odeint::adjust_size( x , *(m_states[i]) );
+            adjust_size_caller::adjust_size( x , *(m_states[i]) );
 		}
-		return ( Dim > 0 );
+		return ( dim > 0 );
 	}
 
 	template< class State >
@@ -112,7 +124,7 @@ private:
 private :
 
 	bool m_is_initialized;
-	boost::array< Deriv* , Dim > m_states;
+	boost::array< container_type* , dim > m_states;
 };
 
 

@@ -28,6 +28,7 @@
 #include <boost/mpl/vector.hpp>
 
 #include <boost/numeric/odeint.hpp>
+#include <boost/numeric/odeint/algebra/fusion_algebra.hpp>
 
 
 using namespace boost::numeric::odeint;

@@ -13,8 +13,8 @@
 #ifndef BOOST_BOOST_NUMERIC_ODEINT_EXPLICIT_EULER_HPP_INCLUDED
 #define BOOST_BOOST_NUMERIC_ODEINT_EXPLICIT_EULER_HPP_INCLUDED
 
-#include <boost/numeric/odeint/algebra/standard_algebra.hpp>
-#include <boost/numeric/odeint/algebra/standard_operations.hpp>
+#include <boost/numeric/odeint/algebra/range_algebra.hpp>
+#include <boost/numeric/odeint/algebra/default_operations.hpp>
 
 #include <boost/numeric/odeint/stepper/base/explicit_stepper_base.hpp>
 #include <boost/numeric/odeint/stepper/detail/macros.hpp>
@@ -31,8 +31,8 @@ template<
     class Value = double ,
     class Deriv = State ,
     class Time = Value ,
-	class Algebra = standard_algebra ,
-	class Operations = standard_operations ,
+	class Algebra = range_algebra ,
+	class Operations = default_operations ,
 	class AdjustSizePolicy = adjust_size_initially_tag
 	>
 class explicit_euler

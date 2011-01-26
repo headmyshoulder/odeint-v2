@@ -13,13 +13,38 @@
 #ifndef BOOST_BOOST_NUMERIC_ODEINT_VECTOR_SPACE_ALGEBRA_HPP_INCLUDED
 #define BOOST_BOOST_NUMERIC_ODEINT_VECTOR_SPACE_ALGEBRA_HPP_INCLUDED
 
-#include <boost/numeric/odeint/algebra/vector_space_reduce.hpp>
 #define BOOST_FUNCTIONAL_FORWARD_ADAPTER_MAX_ARITY 9
 #include <boost/functional/forward_adapter.hpp>
+
+#include <boost/type_traits/remove_reference.hpp>
+
 
 namespace boost {
 namespace numeric {
 namespace odeint {
+
+
+/*
+ * This class template has to be overload in order to call vector_space_algebra::reduce
+ */
+template< class State > struct vector_space_reduce;
+
+/*
+ * Example:
+ */
+//template< class LorenzState >
+//class vector_space_reduce
+//{
+//	template< class Value , class Op >
+//	Value operator()( const LorenzState &s , Op op , Value init ) const
+//	{
+//		init = op( init , s.x );
+//		init = op( init , s.y );
+//		init = op( init , s.z );
+//		return init;
+//	}
+//};
+
 
 
 struct vector_space_algebra
@@ -112,7 +137,7 @@ struct vector_space_algebra
 	};
 
 
-	struct reduce
+	struct reduce_impl
 	{
 		template< class Value , class S , class Red >
 		Value operator()( const S &s , Red red , Value init ) const
@@ -121,12 +146,12 @@ struct vector_space_algebra
 			return r( s , red , init );
 		}
 
-//		template< class T > struct result;
-//		template< class F , class T1 , class T2 , class T3 >
-//		struct result< F( T1 , T2 , T3 ) >
-//		{
-//			typedef T3 type;
-//		};
+		template< class T > struct result;
+		template< class F , class T1 , class T2 , class T3 >
+		struct result< F( T1 , T2 , T3 ) >
+		{
+			typedef typename boost::remove_reference< T3 >::type type;
+		};
 	};
 
 
@@ -138,7 +163,7 @@ struct vector_space_algebra
 	typedef boost::forward_adapter< for_each6_impl , 7 > for_each6;
 	typedef boost::forward_adapter< for_each7_impl , 8 > for_each7;
 	typedef boost::forward_adapter< for_each8_impl , 9 > for_each8;
-//	typedef boost::forward_adapter< reduce_impl , 3 > reduce;
+	typedef boost::forward_adapter< reduce_impl , 3 > reduce;
 
 
 };

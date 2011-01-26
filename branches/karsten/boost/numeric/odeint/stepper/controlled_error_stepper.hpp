@@ -18,7 +18,7 @@
 #include <boost/noncopyable.hpp>
 #include <boost/ref.hpp>
 
-#include <boost/numeric/odeint/stepper/adjust_size.hpp>
+#include <boost/numeric/odeint/stepper/size_adjuster.hpp>
 #include <boost/numeric/odeint/stepper/error_checker.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 

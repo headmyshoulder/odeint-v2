@@ -70,7 +70,7 @@ namespace detail
  *
  * * the results structs are needed in order to work with fusion_algebra
  */
-struct standard_operations
+struct default_operations
 {
 
 	template< class Fac1 = double >
@@ -217,10 +217,6 @@ struct standard_operations
 
 		typedef void result_type;
 	};
-
-
-
-
 
 
 

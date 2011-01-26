@@ -21,12 +21,12 @@
 
 #include <boost/mpl/list.hpp>
 
-#include <boost/numeric/odeint/algebra/standard_operations.hpp>
+#include <boost/numeric/odeint/algebra/default_operations.hpp>
 
 namespace units = boost::units;
 namespace si = boost::units::si;
 namespace mpl = boost::mpl;
-using boost::numeric::odeint::standard_operations;
+using boost::numeric::odeint::default_operations;
 
 
 template< class Value > struct internal_value_type { typedef Value type; };
@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( scale_sum2_test , T , test_types )
 {
 	typedef double_fixture< T > fix_type;
 	fix_type f;
-	typedef typename standard_operations::scale_sum2< T , T > Op;
+	typedef typename default_operations::scale_sum2< T , T > Op;
 	Op op( 1.25 , 9.81 );
 	op( f.res , f.x1 , f.x2 );
 	BOOST_CHECK_SMALL( abs( f.res  - T( 20.87 ) ) , f.m_eps );
@@ -143,7 +143,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( scale_sum3_test , T , test_types )
 {
 	typedef double_fixture< T > fix_type;
 	fix_type f;
-	typedef standard_operations::scale_sum3< T , T , T > Op;
+	typedef default_operations::scale_sum3< T , T , T > Op;
 	Op op( 1.25 , 9.81 , 0.87 );
 	op( f.res , f.x1 , f.x2 , f.x3 );
 	BOOST_CHECK_SMALL( abs( f.res - T( 23.48 ) ) , f.m_eps );
@@ -153,7 +153,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( scale_sum4_test , T , test_types  )
 {
 	typedef double_fixture< T > fix_type;
 	fix_type f;
-	typedef standard_operations::scale_sum4< T , T , T , T > Op;
+	typedef default_operations::scale_sum4< T , T , T , T > Op;
 	Op op( 1.25 , 9.81 , 0.87 , -0.15 );
 	op( f.res , f.x1 , f.x2 , f.x3 , f.x4 );
 	BOOST_CHECK_SMALL( abs( f.res  - T( 22.88 ) ) , f.m_eps );
@@ -163,7 +163,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( scale_sum5_test , T , test_types )
 {
 	typedef double_fixture< T > fix_type;
 	fix_type f;
-	typedef standard_operations::scale_sum5< T , T , T , T , T > Op;
+	typedef default_operations::scale_sum5< T , T , T , T , T > Op;
 	Op op( 1.25 , 9.81 , 0.87 , -0.15 , -3.3 );
 	op( f.res , f.x1 , f.x2 , f.x3 , f.x4 , f.x5 );
 	BOOST_CHECK_SMALL( abs( f.res  - T( 6.38 ) ) , f.m_eps );
@@ -173,7 +173,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( scale_sum6_test , T , test_types )
 {
 	typedef double_fixture< T > fix_type;
 	fix_type f;
-	typedef standard_operations::scale_sum6< T , T , T , T , T , T > Op;
+	typedef default_operations::scale_sum6< T , T , T , T , T , T > Op;
 	Op op( 1.25 , 9.81 , 0.87 , -0.15 , -3.3 , 4.2 );
 	op( f.res , f.x1 , f.x2 , f.x3 , f.x4 , f.x5 , f.x6 );
 	BOOST_CHECK_SMALL( abs( f.res - T( 31.58 ) ) , f.m_eps );
@@ -183,7 +183,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( scale_sum7_test , T , test_types )
 {
 	typedef double_fixture< T > fix_type;
 	fix_type f;
-	typedef standard_operations::scale_sum7< T , T , T , T , T , T , T > Op;
+	typedef default_operations::scale_sum7< T , T , T , T , T , T , T > Op;
 	Op op( 1.25 , 9.81 , 0.87 , -0.15 , -3.3 , 4.2 , -0.22 );
 	op( f.res , f.x1 , f.x2 , f.x3 , f.x4 , f.x5 , f.x6 , f.x7 );
 	BOOST_CHECK_SMALL( abs( f.res - T( 30.04 ) ) , f.m_eps );
@@ -194,7 +194,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( rel_error_test , T , test_types )
 	typedef double_fixture< T > fix_type;
 	fix_type f;
 	f.res = -1.1;
-	typedef standard_operations::rel_error< T > Op;
+	typedef default_operations::rel_error< T > Op;
 	Op op( 0.1 , 0.2 , 0.15 , 0.12 );
 	op( -f.x1 , -f.x2 , f.res );
 	BOOST_CHECK_SMALL( abs( f.res - T( 6.17978 ) ) , typename fix_type::compare_type( 1.0e-4 ) );
@@ -204,7 +204,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( maximum_test , T , test_types )
 {
 	typedef double_fixture< T > fix_type;
 	fix_type f;
-	typedef standard_operations::maximum< typename fix_type::compare_type > Op;
+	typedef default_operations::maximum< typename fix_type::compare_type > Op;
 	Op op;
 	f.res = op( f.x1 , f.x2 );
 	BOOST_CHECK_SMALL( abs( f.res - T( 2.0 ) ) , f.m_eps );
@@ -227,7 +227,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( scale_sum2_units_test , T , test_types )
 	typedef typename fix_type::time_7_type time_7_type;
 
 	fix_type f;
-	typedef standard_operations::scale_sum2< value_type , time_type > Op;
+	typedef default_operations::scale_sum2< value_type , time_type > Op;
 	Op op( 1.0 , time_type( 1.0 * si::second ) );
 	op( f.res , f.x , f.d1x );
 	BOOST_CHECK_SMALL( abs( f.res.value() - T( 3.0 ) ) , f.m_eps );
@@ -246,7 +246,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( scale_sum3_units_test , T , test_types )
 	typedef typename fix_type::time_7_type time_7_type;
 
 	fix_type f;
-	typedef standard_operations::scale_sum3< value_type , time_type , time_2_type > Op;
+	typedef default_operations::scale_sum3< value_type , time_type , time_2_type > Op;
 	Op op( 1.0 , time_type( 1.0 * si::second ) , time_2_type( 1.0 * second2 ) );
 	op( f.res , f.x , f.d1x , f.d2x );
 	BOOST_CHECK_SMALL( abs( f.res.value() - T( 6.0 ) ) , f.m_eps );

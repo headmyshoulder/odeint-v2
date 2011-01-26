@@ -16,7 +16,7 @@
 #include <boost/noncopyable.hpp>
 #include <boost/ref.hpp>
 
-#include <boost/numeric/odeint/algebra/standard_resize.hpp>
+#include <boost/numeric/odeint/algebra/default_resize.hpp>
 
 #include "adjust_size_units.hpp"
 

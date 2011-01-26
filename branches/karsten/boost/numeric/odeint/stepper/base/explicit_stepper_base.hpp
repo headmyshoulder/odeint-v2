@@ -15,8 +15,8 @@
 
 #include <boost/ref.hpp>
 
-#include <boost/numeric/odeint/stepper/adjust_size.hpp>
-#include <boost/numeric/odeint/algebra/standard_resize.hpp>
+#include <boost/numeric/odeint/stepper/size_adjuster.hpp>
+#include <boost/numeric/odeint/algebra/default_resize.hpp>
 
 
 namespace boost {
