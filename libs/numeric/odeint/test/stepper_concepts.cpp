@@ -36,7 +36,11 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/inserter.hpp>
 
-#include <boost/numeric/odeint.hpp>
+#include <boost/numeric/odeint/stepper/explicit_euler.hpp>
+#include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
+#include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
+#include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
+#include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 
 #include "vector_space_1d.hpp"

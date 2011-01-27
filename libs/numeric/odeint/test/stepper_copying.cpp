@@ -9,8 +9,6 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <boost/numeric/odeint.hpp>
-
 BOOST_AUTO_TEST_SUITE( stepper_copying )
 
 BOOST_AUTO_TEST_CASE( explicit_euler_copying )

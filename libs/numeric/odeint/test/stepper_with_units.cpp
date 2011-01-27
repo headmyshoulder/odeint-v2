@@ -27,7 +27,11 @@
 #include <boost/fusion/container.hpp>
 #include <boost/mpl/vector.hpp>
 
-#include <boost/numeric/odeint.hpp>
+#include <boost/numeric/odeint/stepper/explicit_euler.hpp>
+#include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
+#include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
+#include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
+#include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 #include <boost/numeric/odeint/algebra/fusion_algebra.hpp>
 
 

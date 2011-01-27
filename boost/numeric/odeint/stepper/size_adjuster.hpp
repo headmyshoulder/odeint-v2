@@ -36,7 +36,12 @@ struct adjust_size_always_tag {};
 
 
 
-
+/*
+ * we need this interface in order to call matrix by vector resizing,
+ * i.e. mat.resize( vec.size() , vec.size() )
+ *
+ * See implicit_euler.hpp for usage
+ */
 struct default_adjust_size_caller
 {
 	template< class Container1 , class Container2 >

@@ -16,10 +16,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <boost/numeric/odeint.hpp>
-
 using namespace boost::unit_test;
-using namespace boost::numeric::odeint;
 
 
 
