@@ -24,6 +24,12 @@ namespace numeric {
 namespace odeint {
 
 
+
+	/*
+	 * see the Solving Ordinary Differential equations from Hairer
+	 *
+	 * Error estimation of x(t+dt) from two small steps and Richardson extrapolation
+	 */
     template< class Stepper >
     class stepper_half_step
     {
