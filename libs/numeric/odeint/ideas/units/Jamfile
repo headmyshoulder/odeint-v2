@@ -13,7 +13,6 @@ project
     : requirements
       <define>BOOST_ALL_NO_LIB=1
       <include>../../../../..
-      <include>$(BOOST_ROOT)
     ;
 
 exe test_units

@@ -1,14 +1,30 @@
+# (C) Copyright 2010 : Karsten Ahnert, Mario Mulansky
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+
 import quickbook ;
+
+project
+    : requirements
+    ;
+
 
 xml odeint : 
 	odeint.qbk
 	;
 
-boostbook standalone :
+boostbook standalone
+	:
 	  odeint
+	:
+		<xsl:param>boost.root=../../../..
+        <xsl:param>generate.section.toc.level=1
+        <xsl:param>chunk.section.depth=1
+        <xsl:param>chunk.first.sections=1
 	;
 
-install html :
-	  /boost//doc/html/boostbook.css
-	;
+# install html :
+#	  /boost//doc/src/boostbook.css
+#	;
 	

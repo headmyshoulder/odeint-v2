@@ -7,7 +7,6 @@
 project
     : requirements 
       <include>../../../..
-      <include>$(BOOST_ROOT)
       <define>BOOST_ALL_NO_LIB=1
     : build-dir .
     ;
