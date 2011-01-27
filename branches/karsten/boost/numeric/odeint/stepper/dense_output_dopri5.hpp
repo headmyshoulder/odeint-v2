@@ -25,6 +25,7 @@
 #include <boost/type_traits.hpp>
 #include <boost/ref.hpp>
 
+#include <boost/numeric/odeint/stepper/controlled_stepper_result.hpp>
 #include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
 
 namespace boost {

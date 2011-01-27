@@ -25,7 +25,8 @@
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/at.hpp>
 
-#include <boost/numeric/odeint.hpp>
+#include <boost/numeric/odeint/stepper/explicit_euler.hpp>
+#include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 
 using namespace boost::unit_test;

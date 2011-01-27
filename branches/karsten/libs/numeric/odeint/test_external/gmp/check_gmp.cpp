@@ -17,7 +17,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/array.hpp>
 
-#include <boost/numeric/odeint.hpp>
+#include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
 
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;

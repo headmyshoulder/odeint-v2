@@ -19,19 +19,65 @@
 #include <boost/ref.hpp>
 
 #include <boost/numeric/odeint/stepper/size_adjuster.hpp>
-#include <boost/numeric/odeint/stepper/error_checker.hpp>
+#include <boost/numeric/odeint/stepper/controlled_stepper_result.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
+#include <boost/numeric/odeint/algebra/range_algebra.hpp>
+#include <boost/numeric/odeint/algebra/default_operations.hpp>
+
 
 namespace boost {
 namespace numeric {
 namespace odeint {
 
-typedef enum
+
+/*
+ * Error checker for controlled_error_stepper
+ *
+ * ToDo: implement constructor with epsilons
+ */
+template
+<
+	class Value ,
+	class Algebra = range_algebra ,
+	class Operations = default_operations
+>
+class error_checker_standard
 {
-    success_step_size_unchanged ,
-    step_size_decreased ,
-    success_step_size_increased
-} controlled_step_result;
+public:
+
+	typedef Value value_type;
+	typedef Algebra algebra_type;
+	typedef Operations operations_type;
+
+
+	error_checker_standard( void ) : m_eps_abs( 1E-6 ) , m_eps_rel( 1E-6 ) , m_a_x( 1.0 ) , m_a_dxdt( 1.0 )
+	{}
+
+
+	template< class State , class Deriv , class Err , class Time >
+	value_type error( const State &x_old , const Deriv &dxdt_old , Err &x_err , const Time &dt )
+	{
+		// this overwrites x_err !
+		typename algebra_type::for_each3()( x_old , dxdt_old , x_err ,
+					             typename operations_type::template rel_error< value_type >( m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt * detail::get_value( dt ) ) );
+
+		value_type res = typename algebra_type::reduce()( x_err , typename operations_type::template maximum< value_type >() , 0.0 );
+		return res;
+	}
+
+private:
+
+	value_type m_eps_abs;
+	value_type m_eps_rel;
+	value_type m_a_x;
+	value_type m_a_dxdt;
+};
+
+
+
+
+
+
 
 
 /*

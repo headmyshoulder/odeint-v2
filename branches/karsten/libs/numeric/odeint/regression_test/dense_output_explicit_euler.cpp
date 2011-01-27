@@ -15,8 +15,9 @@
 #include <fstream>
 #include <iostream>
 
-#include <boost/numeric/odeint.hpp>
-#include <boost/numeric/odeint/stepper/implicit_euler.hpp>
+#include <boost/numeric/odeint/stepper/explicit_euler.hpp>
+#include <boost/numeric/odeint/stepper/dense_output_explicit_euler.hpp>
+
 
 using namespace boost::numeric::odeint;
 

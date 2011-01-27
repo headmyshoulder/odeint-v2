@@ -2,12 +2,13 @@
   NEARLY DONE * test operations
   OK * test standard_algebra
   OK * test fusion_algebra
-  * test vector_space_algebra
+  * test vector_space_algebra, maybe with some proto lib
   * test copying
+  * test gsl
 OK * change standard_operations::rel_error in order to word with units and test it
-* include implicit euler
-  * call via std::pair< deriv , jacobi >
-  * resizing
+OK * include implicit euler
+  OK * call via std::pair< deriv , jacobi >
+  OK * resizing
 * include rosenbrock4 in trunk
 OK * operations that fit units
 OK * operations that fit result_of
@@ -16,7 +17,7 @@ OK * change stepper to stepper_units
 OK * change error_stepper to error_stepper_units
 DIFFICULT * finishing change of controlled_stepper to units
   * check if rosenbrock controller and controlled_stepper can both be used with the explicit steppers
-  * move error_checker into controlled_stepper
+  OK * move error_checker into controlled_stepper
   * rename controlled_stepper to a more specific name
 DIFICULT * change dense_output to units
   * roll out dense_output_explicit_euler::calc_state() to explicit_euler::dense_output()
@@ -28,6 +29,7 @@ DIFICULT * change dense_output to units
 * split check_concepts into check_stepper_concept, check_error_stepper_concept, check_controlled_stepper_concept
 * split resizing and copy/destruct/construct in different files
 OK * change resizing concept, in order to word within the implicit steppers
+OK * in all tests and regression test do not include odeint.hpp, only include the headers which are really needed
 
 * Integrate functions
 * skript for setting the include defines according to the position in file system an writing a general copyright comment at the beginning

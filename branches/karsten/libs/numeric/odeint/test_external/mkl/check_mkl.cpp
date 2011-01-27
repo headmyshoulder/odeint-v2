@@ -14,7 +14,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <boost/numeric/odeint.hpp>
+#include <boost/numeric/odeint/stepper/explicit_euler.hpp>
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 #include <boost/numeric/odeint/algebra/external/mkl_operations.hpp>
 

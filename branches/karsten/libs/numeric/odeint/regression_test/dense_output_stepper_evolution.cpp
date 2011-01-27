@@ -10,7 +10,9 @@
 #include <iostream>
 #include <tr1/array>
 
-#include <boost/numeric/odeint.hpp>
+#include <boost/numeric/odeint/stepper/dense_output_dopri5.hpp>
+#include <boost/numeric/odeint/stepper/dense_output_explicit_euler.hpp>
+#include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 
 #define tab "\t"
 

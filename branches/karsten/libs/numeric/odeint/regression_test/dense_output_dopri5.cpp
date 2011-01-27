@@ -9,7 +9,9 @@
 #include <fstream>
 #include <iostream>
 
-#include <boost/numeric/odeint.hpp>
+#include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
+#include <boost/numeric/odeint/stepper/dense_output_dopri5.hpp>
+#include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 
 using namespace boost::numeric::odeint;
 
