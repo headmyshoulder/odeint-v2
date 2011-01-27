@@ -51,6 +51,7 @@ namespace odeint {
         container_type m_dxdt;
         container_type m_xtemp;
         stepper_type m_stepper;
+        const time_time m_fac;
 	
 
         //
@@ -82,6 +83,7 @@ namespace odeint {
 
         // standard constructor
         stepper_half_step( void )
+        : m_fac( 1.0 / std::pow( 2.0 , m_stepper.order_step() ) - 1.0 )
         {
         }
 
@@ -146,9 +148,9 @@ namespace odeint {
 
             detail::it_algebra::scale_sum( traits_type::begin(xerr) ,
                                            traits_type::end(xerr) ,
-                                           static_cast< value_type >(1.0),
+                                           static_cast< value_type >( m_fac ),
                                            traits_type::begin(m_xtemp) ,
-                                           static_cast< value_type >(-1.0),
+                                           static_cast< value_type >(- m_fac ),
                                            traits_type::begin(x) );
         }
 
