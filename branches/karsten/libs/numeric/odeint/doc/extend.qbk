@@ -1,0 +1,19 @@
+[section Extend odeint]
+
+[section Write own steppers]
+
+[endsect]
+
+[section Adapt your own containers]
+
+gsl_vector, gsl_matrix, ublas::matrix, blitz::matrix, thrust
+
+[endsect]
+
+[section Adapt your own operations]
+
+gsl_complex, complex, thrust
+
+[endsect]
+
+[endsect]

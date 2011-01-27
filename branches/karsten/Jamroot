@@ -14,6 +14,7 @@ project
      <include>$(BOOST_ROOT) ;
 
 
+# tests, regression tests and examples
 build-project libs/numeric/odeint/test ;
 build-project libs/numeric/odeint/examples ;
 build-project libs/numeric/odeint/regression_test ;
@@ -25,17 +26,15 @@ build-project libs/numeric/odeint/test_external/gmp ;
 build-project libs/numeric/odeint/test_external/gsl ;
 
 
-
-
 # ideas
-# build-project libs/numeric/odeint/ideas/butcher ;
-# build-project libs/numeric/odeint/ideas/generic_stepper ;
+build-project libs/numeric/odeint/ideas/butcher ;
+build-project libs/numeric/odeint/ideas/generic_stepper ;
 build-project libs/numeric/odeint/ideas/rosenbrock4 ;
 build-project libs/numeric/odeint/ideas/units ;
 
 
 # docs:
-# build-project libs/numeric/odeint/doc ;
+build-project libs/numeric/odeint/doc ;
 
 
 

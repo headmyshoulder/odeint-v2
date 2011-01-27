@@ -96,12 +96,11 @@ must then be defined as the ()-operator:
 
 [endsect]
 
-[import ../examples/doc_integrate.cpp]
-
 [include tutorial.qbk]
 
-[include steppers.qbk]
+[include extend.qbk]
 
-[include integrate_functions.qbk]
+[include concepts.qbk]
 
-[include container_traits.qbk]
+[include reference.qbk]
+

@@ -15,7 +15,6 @@ project
       <include>../../../../..
       <include>../butcher
       <include>$(CHRONO_ROOT)
-      <include>$(BOOST_ROOT)
     ;
 
 #exe test 
