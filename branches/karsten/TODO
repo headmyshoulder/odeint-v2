@@ -4,6 +4,7 @@
   OK * test fusion_algebra
   * test vector_space_algebra, maybe with some proto lib
   * test copying
+  * test, if copy construct of stepper_base is called when explicit_euler is used
   * test gsl
   * test explicit stepper with ranges
 OK * change standard_operations::rel_error in order to word with units and test it
@@ -21,20 +22,22 @@ DIFFICULT * finishing change of controlled_stepper to units
   OK * move error_checker into controlled_stepper
   * rename controlled_stepper to a more specific name
 DIFICULT * change dense_output to units
-  * roll out dense_output_explicit_euler::calc_state() to explicit_euler::dense_output()
+  OK * roll out dense_output_explicit_euler::calc_state() to explicit_euler::dense_output()
   * roll out dense_output_dopri5::calc_state() to explicit_error_dopri5::dense_output()
-  * create dense_output_explicit
-  * create dense_output_explicit_controlled
+  OK * create dense_output_explicit
   * create dense_output_explicit_controlled_fsal
-  * maybe remove dense_output_explicit
 * split check_concepts into check_stepper_concept, check_error_stepper_concept, check_controlled_stepper_concept
-* split resizing and copy/destruct/construct in different files
+* file cleanup
+   * split resizing and copy/destruct/construct in different files
+   * subfolder algebra, operations, util
 OK * change resizing concept, in order to word within the implicit steppers
 OK * in all tests and regression test do not include odeint.hpp, only include the headers which are really needed
 OK * start new doc or cleanup the old project
 * check header guards
 * check copyright note
 * documente every file in the preamble
+* include adjust_size_by_policy in all steppers and call this routine inside do_step()
+* check once more, if all contructor, destructors and assign-operators are present
 
 * Integrate functions
 * skript for setting the include defines according to the position in file system an writing a general copyright comment at the beginning

@@ -60,7 +60,7 @@ class explicit_error_dopri5
 		m_deriv_adjuster.register_state( 4 , m_k6 );
 	}
 
-	void copy( explicit_error_dopri5 &d )
+	void copy( const explicit_error_dopri5 &d )
 	{
 		boost::numeric::odeint::copy( d.m_x_tmp , m_x_tmp );
 		boost::numeric::odeint::copy( d.m_k2 , m_k2 );

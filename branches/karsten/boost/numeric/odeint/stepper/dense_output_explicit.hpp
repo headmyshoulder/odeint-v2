@@ -11,6 +11,7 @@
 #include <utility>
 
 #include <boost/numeric/odeint/stepper/size_adjuster.hpp>
+#include <boost/numeric/odeint/algebra/default_resize.hpp>
 
 namespace boost {
 namespace numeric {
@@ -35,13 +36,28 @@ private:
 
 	void copy_variables( const dense_output_explicit &dense_output )
 	{
-		/* ToDo : implement */
+		m_stepper = dense_output.m_stepper;
+		boost::numeric::odeint::copy( dense_output.m_x1 , m_x1 );
+		boost::numeric::odeint::copy( dense_output.m_x2 , m_x2 );
+		if( dense_output.m_current_state == (&dense_output.m_x1 ) )
+		{
+			m_current_state = &m_x1;
+			m_old_state = &m_x2;
+		}
+		else
+		{
+			m_current_state = &m_x2;
+			m_old_state = &m_x1;
+		}
+		m_t = dense_output.m_t;
+		m_t_old = dense_output.m_t_old;
+		m_dt = dense_output.m_dt;
 	}
 
 public:
 
 	/*
-	 * ToDo : check which types we really need
+	 * We do not need all typedefs.
 	 */
 	typedef Stepper stepper_type;
 	typedef typename stepper_type::state_type state_type;
@@ -52,8 +68,7 @@ public:
 	typedef typename stepper_type::operations_type operations_type;
 	typedef typename stepper_type::adjust_size_policy adjust_size_policy;
 
-
-	dense_output_explicit( const stepper_type &stepper )
+	dense_output_explicit( const stepper_type &stepper = stepper_type() )
 	: m_stepper( stepper ) , m_size_adjuster() ,
 	  m_x1() , m_x2() , m_current_state( &m_x1 ) , m_old_state( &m_x2 ) ,
 	  m_t( 0.0 ) , m_t_old( 0.0 ) , m_dt( 1.0 )
@@ -61,7 +76,16 @@ public:
 		initialize_variables();
 	}
 
-	dense_output_explicit( const dense_output_explicit &dense_ouput )
+	~dense_output_explicit( void )
+	{
+		boost::numeric::odeint::destruct( m_x1 );
+		boost::numeric::odeint::destruct( m_x2 );
+	}
+
+	dense_output_explicit( const dense_output_explicit &dense_output )
+	: m_stepper( dense_output.m_stepper ) , m_size_adjuster() ,
+	  m_x1() , m_x2() , m_current_state( &m_x1 ) , m_old_state( &m_x2 ) ,
+	  m_t( 0.0 ) , m_t_old( 0.0 ) , m_dt( 1.0 )
 	{
 		initialize_variables();
 		copy_variables( dense_output );
@@ -73,8 +97,10 @@ public:
 		return *this;
 	}
 
-	void initialize( const state_type &x0 , const time_type t0 , const time_type dt0 )
+	template< class StateType >
+	void initialize( const StateType &x0 , const time_type &t0 , const time_type &dt0 )
 	{
+		adjust_size_by_policy( x0 );
 		boost::numeric::odeint::copy( x0 , *m_current_state );
 		m_t = t0;
 		m_dt = dt0;
@@ -90,17 +116,24 @@ public:
 		return std::make_pair( m_t_old , m_dt );
 	}
 
-	void calc_state( time_type t , state_type &x )
+	template< class StateOut >
+	void calc_state( const time_type &t , StateOut &x )
 	{
-		m_stepper.calc_state( x , *m_old_state , t , m_t_old );
-//		time_type delta = t - m_t_old;
-//		typename algebra_type::for_each3()( x , *m_old_state , m_euler.m_dxdt , typename operations_type::template scale_sum2< time_type , time_type >( 1.0 , delta ) );
+		m_stepper.calc_state( x , t , *m_old_state , m_t_old );
 	}
 
-	void adjust_size( const state_type &x )
+	template< class StateType >
+	void adjust_size( const StateType &x )
 	{
 		m_size_adjuster.adjust_size( x );
 		m_stepper.adjust_size( x );
+	}
+
+	template< class StateType >
+	void adjust_size_by_policy( const StateType &x )
+	{
+		m_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
+		m_stepper.adjust_size_by_policy( x );
 	}
 
 

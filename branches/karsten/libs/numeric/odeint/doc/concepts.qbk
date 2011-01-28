@@ -252,4 +252,19 @@ Returns the order of the result *x(t+dt)* of the algorithm.
 
 [endsect]
 
+
+[section Dense ouput stepper]
+
+[endsect]
+
+[section Size adjusting stepper]
+
+[endsect]
+
+[section CompositeStepper]
+
+[endsect]
+
+see the wiki
+
 [endsect]
