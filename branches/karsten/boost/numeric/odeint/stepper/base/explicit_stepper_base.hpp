@@ -134,12 +134,6 @@ public:
 		m_size_adjuster.adjust_size( x );
 	}
 
-	template< class StateType >
-	void adjust_size_by_policy( const StateType &x )
-	{
-		m_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
-	}
-
 
 protected:
 

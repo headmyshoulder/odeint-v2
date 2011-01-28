@@ -126,7 +126,8 @@ public:
 	template< class StateType >
 	void initialize( const StateType &x0 , const time_type &t0 , const time_type &dt0 )
 	{
-		adjust_size_by_policy( x0 );
+		m_state_adjuster.adjust_size_by_policy( x0 , adjust_size_policy() );
+		m_deriv_adjuster.adjust_size_by_policy( x0 , adjust_size_policy() );
 		boost::numeric::odeint::copy( x0 , *m_current_state );
 		m_t = t0;
 		m_dt = dt0;
@@ -152,7 +153,7 @@ public:
 		{
 			res = m_stepper.try_step( system , *m_current_state , *m_current_deriv , m_t , *m_old_state , *m_old_deriv , m_dt );
 			if( count++ == max_count )
-				throw std::overflow_error( "dense_output_dopri5 : too much iterations!");
+				throw std::overflow_error( "dense_output_controlled_explicit_fsal : too much iterations!");
 		}
 		while( res == step_size_decreased );
 		std::swap( m_current_state , m_old_state );
@@ -163,7 +164,7 @@ public:
 	template< class StateOut >
 	void calc_state( const time_type &t , StateOut &x )
 	{
-//		m_stepper.calc_state( x , t , *m_old_state , m_t_old );
+		m_stepper.stepper().calc_state( t , x , *m_old_state , *m_old_deriv , m_t_old , *m_current_state , *m_current_deriv , m_t );
 	}
 
 	template< class StateType >
@@ -173,16 +174,6 @@ public:
 		m_deriv_adjuster.adjust_size( x );
 		m_stepper.adjust_size( x );
 	}
-
-	template< class StateType >
-	void adjust_size_by_policy( const StateType &x )
-	{
-		m_state_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
-		m_deriv_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
-		// ToDo : implement this in all stepper
-//		m_stepper.adjust_size_by_policy( x );
-	}
-
 
 	const state_type& current_state( void ) const
 	{

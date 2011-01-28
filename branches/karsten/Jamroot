@@ -34,7 +34,7 @@ build-project libs/numeric/odeint/ideas/units ;
 
 
 # docs:
-build-project libs/numeric/odeint/doc ;
+# build-project libs/numeric/odeint/doc ;
 
 
 

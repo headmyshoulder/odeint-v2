@@ -262,8 +262,6 @@ public:
 	}
 
 
-
-
 	stepper_type& stepper( void )
 	{
 		return m_stepper;
