@@ -24,3 +24,7 @@ exe dense_output_explicit_euler
 exe dense_output_stepper_evolution
 	: dense_output_stepper_evolution.cpp
 	;
+	
+exe dense_output_explict
+	: dense_output_explicit.cpp
+	;
