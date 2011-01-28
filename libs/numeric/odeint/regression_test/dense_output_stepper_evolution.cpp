@@ -10,8 +10,9 @@
 #include <iostream>
 #include <tr1/array>
 
+#include <boost/numeric/odeint/stepper/explicit_euler.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_dopri5.hpp>
-#include <boost/numeric/odeint/stepper/dense_output_explicit_euler.hpp>
+#include <boost/numeric/odeint/stepper/dense_output_explicit.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 
 #define tab "\t"
@@ -88,7 +89,7 @@ int main( int argc , char **argv )
 	dopri5_type dopri5;
 	controlled_dopri5_type controlled_dopri5( dopri5 );
 
-	dense_output_explicit_euler< state_type > dense_euler;
+	dense_output_explicit< explicit_euler< state_type > > dense_euler;
 	dense_output_dopri5< controlled_dopri5_type > dense_dopri5( controlled_dopri5 );
 
 	state_type x0 = {{ 1.25 , 0.43 }};

@@ -52,6 +52,14 @@ public :
 		typename algebra_type::for_each3()( out , in , dxdt , typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , dt ) );
 
 	}
+
+	template< class StateOut , class StateIn >
+	void calc_state( StateOut &x , const time_type &t ,  const StateIn &old_state , const time_type &t_old )
+	{
+		time_type delta = t - t_old;
+		typename algebra_type::for_each3()( x , old_state , stepper_base_type::m_dxdt , typename operations_type::template scale_sum2< time_type , time_type >( 1.0 , delta ) );
+	}
+
 };
 
 

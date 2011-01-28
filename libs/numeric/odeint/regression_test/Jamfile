@@ -17,14 +17,14 @@ exe dense_output_dopri5
 	: dense_output_dopri5.cpp
 	;
 
-exe dense_output_explicit_euler
-	: dense_output_explicit_euler.cpp
-	;
-
 exe dense_output_stepper_evolution
 	: dense_output_stepper_evolution.cpp
 	;
 	
-exe dense_output_explict
+exe dense_output_explicit
 	: dense_output_explicit.cpp
+	;
+	
+exe dense_output_controlled_explicit_fsal
+	: dense_output_controlled_explicit_fsal.cpp
 	;
