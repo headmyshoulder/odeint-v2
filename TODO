@@ -7,6 +7,7 @@
   * test, if copy construct of stepper_base is called when explicit_euler is used
   * test gsl
   * test explicit stepper with ranges
+  * test units with dense output
 OK * change standard_operations::rel_error in order to word with units and test it
 OK * include implicit euler
   OK * call via std::pair< deriv , jacobi >
@@ -36,7 +37,6 @@ OK * start new doc or cleanup the old project
 * check header guards
 * check copyright note
 * documente every file in the preamble
-* include adjust_size_by_policy in all steppers and call this routine inside do_step()
 * check once more, if all contructor, destructors and assign-operators are present
 
 * Integrate functions

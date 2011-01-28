@@ -100,7 +100,7 @@ public:
 	template< class StateType >
 	void initialize( const StateType &x0 , const time_type &t0 , const time_type &dt0 )
 	{
-		adjust_size_by_policy( x0 );
+		m_size_adjuster.adjust_size_by_policy( x0 , adjust_size_policy() );
 		boost::numeric::odeint::copy( x0 , *m_current_state );
 		m_t = t0;
 		m_dt = dt0;
@@ -119,7 +119,7 @@ public:
 	template< class StateOut >
 	void calc_state( const time_type &t , StateOut &x )
 	{
-		m_stepper.calc_state( x , t , *m_old_state , m_t_old );
+		m_stepper.calc_state( x , t , *m_old_state , m_t_old , *m_current_state , m_t );
 	}
 
 	template< class StateType >
@@ -128,14 +128,6 @@ public:
 		m_size_adjuster.adjust_size( x );
 		m_stepper.adjust_size( x );
 	}
-
-	template< class StateType >
-	void adjust_size_by_policy( const StateType &x )
-	{
-		m_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
-		m_stepper.adjust_size_by_policy( x );
-	}
-
 
 	const state_type& current_state( void ) const
 	{
