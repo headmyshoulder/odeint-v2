@@ -31,7 +31,10 @@ DIFICULT * change dense_output to units
 * split resizing and copy/destruct/construct in different files
 OK * change resizing concept, in order to word within the implicit steppers
 OK * in all tests and regression test do not include odeint.hpp, only include the headers which are really needed
-* start new doc or cleanup the old project
+OK * start new doc or cleanup the old project
+* check header guards
+* check copyright note
+* documente every file in the preamble
 
 * Integrate functions
 * skript for setting the include defines according to the position in file system an writing a general copyright comment at the beginning
