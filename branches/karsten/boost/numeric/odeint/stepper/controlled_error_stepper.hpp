@@ -115,7 +115,7 @@ class controlled_error_stepper< ErrorStepper , ErrorChecker , AdjustSizePolicy ,
 		m_xnew_size_adjuster.register_state( 0 , m_xnew );
 	}
 
-	void copy( controlled_error_stepper &stepper )
+	void copy( const controlled_error_stepper &stepper )
 	{
 		boost::numeric::odeint::copy( stepper.m_dxdt , m_dxdt );
 		boost::numeric::odeint::copy( stepper.m_xerr , m_xerr );
@@ -323,7 +323,7 @@ class controlled_error_stepper< ErrorStepper , ErrorChecker , AdjustSizePolicy ,
 		m_new_size_adjuster.register_state( 1 , m_dxdtnew );
 	}
 
-	void copy( controlled_error_stepper &stepper )
+	void copy( const controlled_error_stepper &stepper )
 	{
 		boost::numeric::odeint::copy( stepper.m_dxdt , m_dxdt );
 		boost::numeric::odeint::copy( stepper.m_xerr , m_xerr );
