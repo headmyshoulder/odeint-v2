@@ -13,10 +13,6 @@ exe controlled_stepper_evolution
 	: controlled_stepper_evolution.cpp
  	;
 
-exe dense_output_dopri5
-	: dense_output_dopri5.cpp
-	;
-
 exe dense_output_stepper_evolution
 	: dense_output_stepper_evolution.cpp
 	;

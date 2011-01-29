@@ -12,6 +12,7 @@
 #include <stdexcept>
 
 #include <boost/numeric/odeint/stepper/size_adjuster.hpp>
+#include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 
 namespace boost {
 namespace numeric {
@@ -34,8 +35,8 @@ private:
 		boost::numeric::odeint::construct( m_dxdt2 );
 		m_state_adjuster.register_state( 0 , m_x1 );
 		m_state_adjuster.register_state( 1 , m_x2 );
-		m_deriv_adjuster.register_state( 0 , m_x1 );
-		m_deriv_adjuster.register_state( 1 , m_x2 );
+		m_deriv_adjuster.register_state( 0 , m_dxdt1 );
+		m_deriv_adjuster.register_state( 1 , m_dxdt2 );
 	}
 
 	void copy_variables( const dense_output_controlled_explicit_fsal &dense_output )
@@ -193,6 +194,11 @@ public:
 	const time_type& previous_time( void ) const
 	{
 		return m_t_old;
+	}
+
+	const time_type& current_time_step( void ) const
+	{
+		return m_dt;
 	}
 
 

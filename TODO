@@ -22,11 +22,11 @@ DIFFICULT * finishing change of controlled_stepper to units
   * check if rosenbrock controller and controlled_stepper can both be used with the explicit steppers
   OK * move error_checker into controlled_stepper
   * rename controlled_stepper to a more specific name
-DIFICULT * change dense_output to units
+OK * change dense_output to units
   OK * roll out dense_output_explicit_euler::calc_state() to explicit_euler::dense_output()
-  * roll out dense_output_dopri5::calc_state() to explicit_error_dopri5::dense_output()
+  OK * roll out dense_output_dopri5::calc_state() to explicit_error_dopri5::dense_output()
   OK * create dense_output_explicit
-  * create dense_output_explicit_controlled_fsal
+  OK * create dense_output_explicit_controlled_fsal
 * split check_concepts into check_stepper_concept, check_error_stepper_concept, check_controlled_stepper_concept
 * file cleanup
    * split resizing and copy/destruct/construct in different files

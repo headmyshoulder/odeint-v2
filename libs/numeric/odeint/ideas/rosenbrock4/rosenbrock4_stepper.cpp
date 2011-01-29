@@ -10,7 +10,7 @@
 #include <tr1/array>
 
 #include "rosenbrock4.hpp"
-#include <boost/numeric/odeint.hpp>
+#include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
 
 using namespace std;
 using namespace boost::numeric::odeint;
