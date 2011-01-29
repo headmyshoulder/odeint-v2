@@ -10,7 +10,7 @@
 
 #include <tr1/array>
 
-#include <boost/numeric/odeint.hpp>
+#include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
 
 #include "predefined_steppers.hpp"
 

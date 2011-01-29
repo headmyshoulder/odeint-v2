@@ -74,9 +74,6 @@ class explicit_error_dopri5
 
 public :
 
-	template< class ControlledStepper >
-	friend class dense_output_dopri5;
-
 	BOOST_ODEINT_EXPLICIT_STEPPERS_AND_ERROR_STEPPERS_FSAL_TYPEDEFS( explicit_error_dopri5 , 5 , 5 , 4 );
 
 	typedef explicit_error_stepper_fsal_tag stepper_category;
@@ -277,7 +274,7 @@ public :
 //		const state_type &k6 = dopri5().m_k6;
 //		const state_type &k7 = *m_current_deriv;
 
-		typename algebra_type::for_each8()( x , *x_old , *deriv_old , m_k3 , m_k4 , m_k5 , m_k6 , deriv_new ,
+		typename algebra_type::for_each8()( x , x_old , deriv_old , m_k3 , m_k4 , m_k5 , m_k6 , deriv_new ,
 			typename operations_type::template scale_sum7< value_type , time_type , time_type , time_type , time_type , time_type , time_type >( 1.0 , dt * b1_theta , dt * b3_theta , dt * b4_theta , dt * b5_theta , dt * b6_theta , dt * b7_theta ) );
 	}
 

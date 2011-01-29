@@ -26,7 +26,7 @@
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 
 #include <boost/numeric/odeint/stepper/dense_output_explicit.hpp>
-#include <boost/numeric/odeint/stepper/dense_output_dopri5.hpp>
+#include <boost/numeric/odeint/stepper/dense_output_controlled_explicit_fsal.hpp>
 
 /*
  * Including this algebra slows down the compilation time

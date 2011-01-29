@@ -6,6 +6,8 @@
  */
 
 #include <iostream>
+#include <fstream>
+#include <stdexcept>
 
 #include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
@@ -40,5 +42,50 @@ struct lorenz
 int main( int argc , char **argv )
 {
 	stepper_type stepper;
+
+	state_type x_start( 3 );
+	x_start[0] = 10.0 , x_start[1] = 10.0 ; x_start[2] = 20.0;
+
+	const double dt1 = 0.025 , dt2 = 0.01;
+	stepper.initialize( x_start , 0.0 , dt1 );
+
+	ofstream fout( "test.dat" );
+	ofstream fout2( "test2.dat" );
+	state_type x( 3 );
+	double t = 0.0;
+	while( stepper.current_time() < 10.0 )
+	{
+		while( t < stepper.current_time() )
+		{
+			stepper.calc_state( t , x );
+			fout << t << " " << x[0] << " " << x[1] << " " << x[2] << endl;
+			t += dt2;
+		}
+		stepper.do_step( lorenz() );
+		const state_type &current = stepper.current_state();
+		fout2 << stepper.current_time() << " " << stepper.current_time_step() << " " << current[0] << " " << current[1] << " " << current[2] << " " << endl;
+	}
+
+
+	// compare with the controlled dopri5
+	{
+		controlled_error_stepper_type controlled_stepper;
+		ofstream fout3( "test3.dat" );
+		double t = 0.0 , dt = 0.025;
+		while( t < 10.0 )
+		{
+			controlled_step_result res = controlled_stepper.try_step( lorenz() , x_start , t , dt );
+			size_t count = 0;
+			while( ( res == step_size_decreased ) && ( count < 1000 ) )
+			{
+				res = controlled_stepper.try_step( lorenz() , x_start , t , dt );
+			}
+			if( count == 1000 )
+				throw std::runtime_error( "Maximal iterations reached!" );
+
+			fout3 << t << " " << dt << " " << x_start[0] << " " << x_start[1] << " " << x_start[2] << endl;
+		}
+	}
+
 	return 0;
 }

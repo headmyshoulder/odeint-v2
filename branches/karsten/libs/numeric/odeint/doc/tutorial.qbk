@@ -4,17 +4,60 @@
 
 [include tutorial_solar_system.qbk]
 
+[section Chaotic systems and Lyapunov exponents]
+
+blah blah
+
+[endsect]
+
 [section Stiff systems]
 
 blah blah
 
 [endsect]
 
-[section Lyapunov exponents]
+[section Different steppers]
 
-blah blah
+Explicit steppers
+
+Implicit steppers
+
+Step size controll
+
+dense output
+
+Overview and table
 
 [endsect]
+
+[section Special topics]
+
+[section Complex state types]
+
+typedef vector< complex< double > > state_type;
+
+Stuart landau
+
+DNLS
+
+[endsect]
+
+[section Lattice systems]
+
+Fermi-Pasta-Ulam system
+
+[endsect]
+
+[section Partial differential equations]
+
+Wave equation
+
+KdV
+
+Ginzburg-Landau
+
+[endsect]
+
 
 [section Using boost::units]
 
@@ -34,9 +77,9 @@ Expanding resizing
 
 [endsect]
 
+[section Ordinary differential equations on networks]
 
-
-[section Special topics]
+[endsect]
 
 [section Pass by value or by reference]
 

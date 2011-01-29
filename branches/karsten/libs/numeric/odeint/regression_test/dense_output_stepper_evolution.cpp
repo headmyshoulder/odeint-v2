@@ -10,9 +10,12 @@
 #include <iostream>
 #include <tr1/array>
 
+#include <boost/timer.hpp>
+
 #include <boost/numeric/odeint/stepper/explicit_euler.hpp>
-#include <boost/numeric/odeint/stepper/dense_output_dopri5.hpp>
+#include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_explicit.hpp>
+#include <boost/numeric/odeint/stepper/dense_output_controlled_explicit_fsal.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 
 #define tab "\t"
@@ -21,6 +24,7 @@ using namespace std;
 using namespace boost::numeric::odeint;
 
 typedef std::tr1::array< double , 2 > state_type;
+typedef boost::timer timer_type;
 
 ostream& operator<<( ostream &out , const state_type &x )
 {
@@ -86,14 +90,20 @@ int main( int argc , char **argv )
 	typedef explicit_error_dopri5< state_type > dopri5_type;
 	typedef controlled_error_stepper< dopri5_type > controlled_dopri5_type;
 
-	dopri5_type dopri5;
-	controlled_dopri5_type controlled_dopri5( dopri5 );
-
 	dense_output_explicit< explicit_euler< state_type > > dense_euler;
-	dense_output_dopri5< controlled_dopri5_type > dense_dopri5( controlled_dopri5 );
+	dense_output_controlled_explicit_fsal< controlled_dopri5_type > dense_dopri5;
 
 	state_type x0 = {{ 1.25 , 0.43 }};
-	evolution( dense_euler , 100.0 , x0 , "dense_euler_stepper.dat" , "dense_euler_state.dat" );
-	evolution( dense_dopri5 , 100.0 , x0 , "dense_dopri5_stepper.dat" , "dense_dopri5_state.dat" );
+
+	timer_type timer;
+	const double t_max = 100.0;
+
+	timer.restart();
+	evolution( dense_euler , t_max , x0 , "dense_euler_stepper.dat" , "dense_euler_state.dat" );
+	clog << timer.elapsed() << endl;
+
+	timer.restart();
+	evolution( dense_dopri5 , t_max , x0 , "dense_dopri5_stepper.dat" , "dense_dopri5_state.dat" );
+	clog << timer.elapsed() << endl;
 
 }

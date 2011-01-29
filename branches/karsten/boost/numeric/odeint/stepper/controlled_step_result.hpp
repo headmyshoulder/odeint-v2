@@ -1,5 +1,5 @@
 /*
- * controlled_stepper_result.hpp
+ * controlled_step_result.hpp
  *
  *  Created on: Jan 27, 2011
  *      Author: karsten

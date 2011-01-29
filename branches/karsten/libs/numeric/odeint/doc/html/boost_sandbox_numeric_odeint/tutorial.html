@@ -24,16 +24,12 @@
       oscillator</a></span></dt>
 <dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.solar_system">Solar
       system</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.chaotic_systems_and_lyapunov_exponents">Chaotic
+      systems and Lyapunov exponents</a></span></dt>
 <dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.stiff_systems">Stiff
       systems</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.lyapunov_exponents">Lyapunov
-      exponents</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.using_boost__units">Using
-      boost::units</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.using_cuda_and_thrust">Using
-      Cuda and Thrust</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.using_matrices_as_state_types">Using
-      matrices as state types</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.different_steppers">Different
+      steppers</a></span></dt>
 <dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics">Special
       topics</a></span></dt>
 <dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.references">References</a></span></dt>
@@ -506,6 +502,15 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sandbox_numeric_odeint.tutorial.chaotic_systems_and_lyapunov_exponents"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.chaotic_systems_and_lyapunov_exponents" title="Chaotic systems and Lyapunov exponents">Chaotic
+      systems and Lyapunov exponents</a>
+</h3></div></div></div>
+<p>
+        blah blah
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.stiff_systems"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.stiff_systems" title="Stiff systems">Stiff
       systems</a>
 </h3></div></div></div>
@@ -515,38 +520,23 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_sandbox_numeric_odeint.tutorial.lyapunov_exponents"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.lyapunov_exponents" title="Lyapunov exponents">Lyapunov
-      exponents</a>
+<a name="boost_sandbox_numeric_odeint.tutorial.different_steppers"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.different_steppers" title="Different steppers">Different
+      steppers</a>
 </h3></div></div></div>
 <p>
-        blah blah
+        Explicit steppers
       </p>
-</div>
-<div class="section">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="boost_sandbox_numeric_odeint.tutorial.using_boost__units"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.using_boost__units" title="Using boost::units">Using
-      boost::units</a>
-</h3></div></div></div>
 <p>
-        blah blah
+        Implicit steppers
       </p>
-</div>
-<div class="section">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="boost_sandbox_numeric_odeint.tutorial.using_cuda_and_thrust"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.using_cuda_and_thrust" title="Using Cuda and Thrust">Using
-      Cuda and Thrust</a>
-</h3></div></div></div>
 <p>
-        blah blah
+        Step size controll
       </p>
-</div>
-<div class="section">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="boost_sandbox_numeric_odeint.tutorial.using_matrices_as_state_types"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.using_matrices_as_state_types" title="Using matrices as state types">Using
-      matrices as state types</a>
-</h3></div></div></div>
 <p>
-        Expanding resizing
+        dense output
+      </p>
+<p>
+        Overview and table
       </p>
 </div>
 <div class="section">
@@ -554,6 +544,76 @@
 <a name="boost_sandbox_numeric_odeint.tutorial.special_topics"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics" title="Special topics">Special
       topics</a>
 </h3></div></div></div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sandbox_numeric_odeint.tutorial.special_topics.complex_state_types"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.complex_state_types" title="Complex state types">Complex
+        state types</a>
+</h4></div></div></div>
+<p>
+          typedef vector&lt; complex&lt; double &gt; &gt; state_type;
+        </p>
+<p>
+          Stuart landau
+        </p>
+<p>
+          DNLS
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sandbox_numeric_odeint.tutorial.special_topics.lattice_systems"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.lattice_systems" title="Lattice systems">Lattice
+        systems</a>
+</h4></div></div></div>
+<p>
+          Fermi-Pasta-Ulam system
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sandbox_numeric_odeint.tutorial.special_topics.partial_differential_equations"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.partial_differential_equations" title="Partial differential equations">Partial
+        differential equations</a>
+</h4></div></div></div>
+<p>
+          Wave equation
+        </p>
+<p>
+          KdV
+        </p>
+<p>
+          Ginzburg-Landau
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sandbox_numeric_odeint.tutorial.special_topics.using_boost__units"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.using_boost__units" title="Using boost::units">Using
+        boost::units</a>
+</h4></div></div></div>
+<p>
+          blah blah
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sandbox_numeric_odeint.tutorial.special_topics.using_cuda_and_thrust"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.using_cuda_and_thrust" title="Using Cuda and Thrust">Using
+        Cuda and Thrust</a>
+</h4></div></div></div>
+<p>
+          blah blah
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sandbox_numeric_odeint.tutorial.special_topics.using_matrices_as_state_types"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.using_matrices_as_state_types" title="Using matrices as state types">Using
+        matrices as state types</a>
+</h4></div></div></div>
+<p>
+          Expanding resizing
+        </p>
+</div>
+<div class="section"><div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sandbox_numeric_odeint.tutorial.special_topics.ordinary_differential_equations_on_networks"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.ordinary_differential_equations_on_networks" title="Ordinary differential equations on networks">Ordinary
+        differential equations on networks</a>
+</h4></div></div></div></div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.special_topics.pass_by_value_or_by_reference"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.pass_by_value_or_by_reference" title="Pass by value or by reference">Pass
