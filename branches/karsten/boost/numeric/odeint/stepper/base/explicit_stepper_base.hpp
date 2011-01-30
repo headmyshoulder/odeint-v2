@@ -89,18 +89,34 @@ public:
 	}
 
 
-
-
-
+	/*
+	 * test if boost::range works
+	 *
+	 * is ok, but takes many implementations of do_step() with various const
+	 */
 	// do_step( sys , x , t , dt )
 	template< class System , class StateInOut >
 	void do_step( System system , StateInOut &x , const time_type &t , const time_type &dt )
+	{
+		do_step_caller( system , x , t , dt );
+	}
+
+	template< class System , class StateInOut >
+	void do_step( System system , const StateInOut &x , const time_type &t , const time_type &dt )
+	{
+		do_step_caller( system , x , t , dt );
+	}
+
+	template< class System , class StateInOut >
+	void do_step_caller( System system , StateInOut &x , const time_type &t , const time_type &dt )
 	{
 		typename boost::unwrap_reference< System >::type &sys = system;
 		m_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
 		sys( x , m_dxdt ,t );
 		this->stepper().do_step_impl( system , x , m_dxdt , t , x , dt );
 	}
+
+
 
 	// do_step( sys , x , dxdt , t , dt )
 	template< class System , class StateInOut , class DerivIn >

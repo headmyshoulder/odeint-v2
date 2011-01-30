@@ -32,6 +32,8 @@
 #include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
 #include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
+#include <boost/numeric/odeint/stepper/dense_output_explicit.hpp>
+#include <boost/numeric/odeint/stepper/dense_output_controlled_explicit_fsal.hpp>
 #include <boost/numeric/odeint/algebra/fusion_algebra.hpp>
 
 
@@ -53,7 +55,6 @@ typedef fusion::vector< velocity_type , acceleration_type > deriv_type;
 
 void oscillator( const state_type &x , deriv_type &dxdt , time_type t )
 {
-
 }
 
 template< class Stepper >
@@ -202,6 +203,26 @@ void check_controlled_stepper( Stepper &stepper )
 }
 
 
+template< class Stepper >
+void check_dense_output_stepper( Stepper &stepper )
+{
+	typedef Stepper stepper_type;
+	typedef typename stepper_type::state_type state_type;
+	typedef typename stepper_type::value_type value_type;
+	typedef typename stepper_type::deriv_type deriv_type;
+	typedef typename stepper_type::time_type time_type;
+//	typedef typename stepper_type::order_type order_type;
+
+	time_type t( 0.0 * si::second );
+	time_type dt( 0.1 * si::second );
+	state_type x( 1.0 * si::meter , 0.0 * si::meter_per_second ) , x2;
+
+	stepper.initialize( x , t , dt );
+	stepper.do_step( oscillator );
+	stepper.calc_state( dt / 2.0 , x2 );
+}
+
+
 
 
 
@@ -230,9 +251,16 @@ class fsal_error_stepper_types : public mpl::vector
 
 class controlled_stepper_types : public mpl::vector
 <
-	controlled_error_stepper< explicit_error_rk54_ck< state_type , value_type , deriv_type , time_type , fusion_algebra > >
+	controlled_error_stepper< explicit_error_rk54_ck< state_type , value_type , deriv_type , time_type , fusion_algebra > > ,
+	controlled_error_stepper< explicit_error_dopri5< state_type , value_type , deriv_type , time_type , fusion_algebra > >
 > { };
 
+class dense_output_stepper_types : public mpl::vector
+<
+	dense_output_explicit< explicit_euler< state_type , value_type , deriv_type , time_type , fusion_algebra > > ,
+	dense_output_controlled_explicit_fsal<
+		controlled_error_stepper< explicit_error_dopri5< state_type , value_type , deriv_type , time_type , fusion_algebra > > >
+> { };
 
 
 
@@ -267,6 +295,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( controlled_stepper_test , Stepper , controlled_st
 {
 	Stepper stepper;
 	check_controlled_stepper( stepper );
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( dense_ouput_test , Stepper , dense_output_stepper_types )
+{
+	Stepper stepper;
+	check_dense_output_stepper( stepper );
 }
 
 

@@ -94,7 +94,7 @@ public:
 	  m_state_adjuster() , m_deriv_adjuster() ,
 	  m_x1() , m_x2() , m_current_state( &m_x1 ) , m_old_state( &m_x2 ) ,
 	  m_dxdt1() , m_dxdt2() , m_current_deriv( &m_dxdt1 ) , m_old_deriv( &m_dxdt2 ) ,
-	  m_t( 0.0 ) , m_t_old( 0.0 ) , m_dt( 1.0 ) , m_is_deriv_initialized( false )
+	  m_t() , m_t_old() , m_dt() , m_is_deriv_initialized( false )
 	{
 		initialize_variables();
 	}
@@ -210,7 +210,7 @@ private:
 	state_type m_x1 , m_x2;
 	state_type *m_current_state , *m_old_state;
 	deriv_type m_dxdt1 , m_dxdt2;
-	state_type *m_current_deriv , *m_old_deriv;
+	deriv_type *m_current_deriv , *m_old_deriv;
 	time_type m_t , m_t_old , m_dt;
 	bool m_is_deriv_initialized;
 

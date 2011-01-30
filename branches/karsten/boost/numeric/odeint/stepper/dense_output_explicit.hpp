@@ -71,7 +71,7 @@ public:
 	dense_output_explicit( const stepper_type &stepper = stepper_type() )
 	: m_stepper( stepper ) , m_size_adjuster() ,
 	  m_x1() , m_x2() , m_current_state( &m_x1 ) , m_old_state( &m_x2 ) ,
-	  m_t( 0.0 ) , m_t_old( 0.0 ) , m_dt( 1.0 )
+	  m_t() , m_t_old() , m_dt()
 	{
 		initialize_variables();
 	}
