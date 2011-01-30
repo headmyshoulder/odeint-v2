@@ -318,8 +318,8 @@ class controlled_error_stepper< ErrorStepper , ErrorChecker , AdjustSizePolicy ,
 		boost::numeric::odeint::construct( m_dxdtnew );
 		m_dxdt_size_adjuster.register_state( 0 , m_dxdt );
 		m_xerr_size_adjuster.register_state( 0 , m_xerr );
-		m_new_size_adjuster.register_state( 0 , m_xnew );
-		m_new_size_adjuster.register_state( 1 , m_dxdtnew );
+		m_x_new_size_adjuster.register_state( 0 , m_xnew );
+		m_dxdt_new_size_adjuster.register_state( 0 , m_dxdtnew );
 	}
 
 	void copy( const controlled_error_stepper &stepper )
@@ -347,7 +347,7 @@ public:
             const error_checker_type &error_checker = error_checker_type()
             )
     : m_stepper( stepper ) , m_error_checker( error_checker ) ,
-      m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_new_size_adjuster() ,
+      m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_x_new_size_adjuster() , m_dxdt_new_size_adjuster() ,
       m_dxdt() , m_xerr() , m_xnew() , m_dxdtnew() ,
       m_first_call( true )
     {
@@ -356,7 +356,7 @@ public:
 
     controlled_error_stepper( const controlled_error_stepper &stepper )
     : m_stepper( stepper.m_stepper ) , m_error_checker( stepper.m_error_checker ) ,
-      m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_new_size_adjuster() ,
+      m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_x_new_size_adjuster() , m_dxdt_new_size_adjuster() ,
       m_dxdt() , m_xerr() , m_xnew() , m_dxdtnew() ,
       m_first_call( true )
     {
@@ -383,8 +383,8 @@ public:
 
 
     // try_step( sys , x , t , dt )
-    template< class System >
-    controlled_step_result try_step( System system , state_type &x , time_type &t , time_type &dt )
+    template< class System , class StateInOut >
+    controlled_step_result try_step( System system , StateInOut &x , time_type &t , time_type &dt )
     {
         if( m_dxdt_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() ) || m_first_call )
         {
@@ -396,8 +396,8 @@ public:
     }
 
     // try_step( sys , in , t , out , dt );
-    template< class System >
-    controlled_step_result try_step( System system , const state_type &in , time_type &t , state_type &out , time_type &dt )
+    template< class System , class StateIn , class StateOut >
+    controlled_step_result try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
     {
         if( m_dxdt_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() ) || m_first_call )
         {
@@ -409,10 +409,11 @@ public:
     }
 
     // try_step( sys , x , dxdt , t , dt )
-    template< class System >
-    controlled_step_result try_step( System system , state_type &x , state_type &dxdt , time_type &t , time_type &dt )
+    template< class System , class StateInOut , class DerivInOut >
+    controlled_step_result try_step( System system , StateInOut &x , DerivInOut &dxdt , time_type &t , time_type &dt )
     {
-    	m_new_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
+    	m_x_new_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
+    	m_dxdt_new_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
     	controlled_step_result res = try_step( system , x , dxdt , t , m_xnew , m_dxdtnew , dt );
     	if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged) )
     	{
@@ -423,9 +424,9 @@ public:
     }
 
     // try_step( sys , in , dxdt , t , out , dt )
-    template< class System >
-    controlled_step_result try_step( System system , const state_type &in , const state_type &dxdt_in , time_type &t ,
-    		state_type &out , state_type &dxdt_out , time_type &dt )
+    template< class System , class StateIn , class DerivIn , class StateOut , class DerivOut >
+    controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt_in , time_type &t ,
+    		StateOut &out , DerivOut &dxdt_out , time_type &dt )
     {
         using std::max;
         using std::min;
@@ -438,7 +439,7 @@ public:
         m_stepper.do_step( system , in , dxdt_in , t , out , dxdt_out , dt , m_xerr );
 
         // this potentially overwrites m_x_err! (standard_error_checker does, at least)
-        time_type max_rel_err = m_error_checker.error( in , dxdt_in , m_xerr , dt );
+        value_type max_rel_err = m_error_checker.error( in , dxdt_in , m_xerr , dt );
 
         if( max_rel_err > 1.1 )
         {
@@ -472,6 +473,8 @@ public:
         bool changed = false;
         changed |= m_dxdt_size_adjuster.adjust_size( x );
         changed |= m_xerr_size_adjuster.adjust_size( x );
+        changed |= m_x_new_size_adjuster.adjust_size( x );
+        changed |= m_dxdt_new_size_adjuster.adjust_size( x );
         changed |= m_stepper.adjust_size( x );
         if( changed )
             m_first_call = true;
@@ -498,7 +501,8 @@ private:
 
     size_adjuster< deriv_type , 1 > m_dxdt_size_adjuster;
     size_adjuster< state_type , 1 > m_xerr_size_adjuster;
-    size_adjuster< state_type , 2 > m_new_size_adjuster;
+    size_adjuster< state_type , 1 > m_x_new_size_adjuster;
+    size_adjuster< deriv_type , 1 > m_dxdt_new_size_adjuster;
 
     deriv_type m_dxdt;
     state_type m_xerr;

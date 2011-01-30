@@ -93,6 +93,12 @@ blah blah
 
 [endsect]
 
+[section Using arbitrary precision floating point types]
+
+GMP
+
+[endsect]
+
 [endsect]
 
 

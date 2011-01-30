@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <utility>
 #include <tr1/array>
 
 #include "rosenbrock4.hpp"
@@ -52,30 +53,36 @@ const time_type sigma = 10.0;
 const time_type R = 28.0;
 const time_type b = 8.0 / 3.0;
 
-template< class StateType >
-void system( const StateType &x , StateType &dxdt , time_type t )
+struct lorenz
 {
-    dxdt[0] = sigma * ( x[1] - x[0] );
-    dxdt[1] = R * x[0] - x[1] - x[0] * x[2];
-    dxdt[2] = x[0] * x[1] - b * x[2];
-}
+	template< class StateType >
+	void operator()( const StateType &x , StateType &dxdt , time_type t )
+	{
+		dxdt[0] = sigma * ( x[1] - x[0] );
+		dxdt[1] = R * x[0] - x[1] - x[0] * x[2];
+		dxdt[2] = x[0] * x[1] - b * x[2];
+	}
+};
 
-void jacobi( const state_type &x , matrix_type &J , time_type t , state_type &dfdt )
+struct jacobi
 {
-	J( 0 , 0 ) = -sigma;
-	J( 0 , 1 ) = sigma;
-	J( 0 , 2 ) = 0.0;
-	J( 1 , 0 ) = R - x[2];
-	J( 1 , 1 ) = -1.0;
-	J( 1 , 2 ) = -x[0];
-	J( 2 , 0 ) = x[1];
-	J( 2 , 1 ) = x[0];
-	J( 2 , 2 ) = -b;
+	void operator()( const state_type &x , matrix_type &J , time_type t , state_type &dfdt )
+	{
+		J( 0 , 0 ) = -sigma;
+		J( 0 , 1 ) = sigma;
+		J( 0 , 2 ) = 0.0;
+		J( 1 , 0 ) = R - x[2];
+		J( 1 , 1 ) = -1.0;
+		J( 1 , 2 ) = -x[0];
+		J( 2 , 0 ) = x[1];
+		J( 2 , 1 ) = x[0];
+		J( 2 , 2 ) = -b;
 
-	dfdt[0] = 0.0;
-	dfdt[1] = 0.0;
-	dfdt[2] = 0.0;
-}
+		dfdt[0] = 0.0;
+		dfdt[1] = 0.0;
+		dfdt[2] = 0.0;
+	}
+};
 
 
 
@@ -87,7 +94,7 @@ int main( int argc , char **argv )
 		time_type t = 0.0 , dt = 0.00001;
 
 		stepper_type stepper;
-		stepper.do_step( system< state_type > , jacobi , x , t , dt , xerr );
+		stepper.do_step( make_pair( lorenz() , jacobi() ) , x , t , dt , xerr );
 		controlled_stepper_type controlled_stepper;
 
 		x[0] = 1.0 ; x[1] = 1.0 ; x[2] = 0.0;
@@ -105,7 +112,7 @@ int main( int argc , char **argv )
 			size_t trials = 0;
 			while( trials < 100 )
 			{
-				if( controlled_stepper.try_step( system< state_type > , jacobi , x , t , dt ) !=  step_size_decreased )
+				if( controlled_stepper.try_step( make_pair( lorenz() , jacobi() ) , x , t , dt ) !=  step_size_decreased )
 					break;
 //				clog.precision( 14 );
 //				clog << dt << "\n";
@@ -146,7 +153,7 @@ int main( int argc , char **argv )
 			size_t trials = 0;
 			while( trials < 100 )
 			{
-				if( stepper.try_step( system< state_type2 > , x , t , dt ) !=  step_size_decreased )
+				if( stepper.try_step( lorenz() , x , t , dt ) !=  step_size_decreased )
 					break;
 				++trials;
 			}

@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <utility>
 #include <tr1/array>
 
 #include "rosenbrock4.hpp"
@@ -52,13 +53,16 @@ const time_type sigma = 10.0;
 const time_type R = 28.0;
 const time_type b = 8.0 / 3.0;
 
-template< class StateType >
-void system( const StateType &x , StateType &dxdt , time_type t )
+struct lorenz
 {
-    dxdt[0] = sigma * ( x[1] - x[0] );
-    dxdt[1] = R * x[0] - x[1] - x[0] * x[2];
-    dxdt[2] = x[0] * x[1] - b * x[2];
-}
+	template< class StateType >
+	void operator()( const StateType &x , StateType &dxdt , time_type t )
+	{
+		dxdt[0] = sigma * ( x[1] - x[0] );
+		dxdt[1] = R * x[0] - x[1] - x[0] * x[2];
+		dxdt[2] = x[0] * x[1] - b * x[2];
+	}
+};
 
 void jacobi( const state_type &x , matrix_type &J , time_type t , state_type &dfdt )
 {
@@ -102,7 +106,7 @@ int main( int argc , char **argv )
 			fout << xerr[0] << "\t" << xerr[1] << "\t" << xerr[2] << "\t";
 			fout <<std::endl;
 
-			stepper.do_step( system< state_type > , jacobi , x , t , dt , xerr );
+			stepper.do_step( make_pair( lorenz() , jacobi ) , x , t , dt , xerr );
 			++count;
 			t += dt;
 		}
@@ -130,7 +134,7 @@ int main( int argc , char **argv )
 			fout << xerr[0] << "\t" << xerr[1] << "\t" << xerr[2] << "\t";
 			fout <<std::endl;
 
-			rk_stepper.do_step( system< state_type2 > , x , t , dt , xerr );
+			rk_stepper.do_step( lorenz() , x , t , dt , xerr );
 			++count;
 			t += dt;
 		}
