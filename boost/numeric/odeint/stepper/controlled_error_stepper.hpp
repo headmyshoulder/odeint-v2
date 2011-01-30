@@ -119,7 +119,8 @@ class controlled_error_stepper< ErrorStepper , ErrorChecker , AdjustSizePolicy ,
 	{
 		boost::numeric::odeint::copy( stepper.m_dxdt , m_dxdt );
 		boost::numeric::odeint::copy( stepper.m_xerr , m_xerr );
-		boost::numeric::odeint::copy( stepper.m_dnew , m_xnew );
+		boost::numeric::odeint::copy( stepper.m_xnew , m_xnew );
+		m_max_rel_error = stepper.m_max_rel_error;
 	}
 
 public:
@@ -164,8 +165,8 @@ public:
 
 	controlled_error_stepper& operator=( const controlled_error_stepper &stepper )
 	{
-		m_stepper( stepper.m_stepper );
-		m_error_checker( stepper.m_error_checker );
+		m_stepper = stepper.m_stepper;
+		m_error_checker = stepper.m_error_checker;
 		copy( stepper );
 		return *this;
 	}

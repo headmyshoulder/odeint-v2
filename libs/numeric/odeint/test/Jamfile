@@ -26,4 +26,5 @@ test-suite "odeint"
 	 [ run fusion_algebra.cpp ]
 	 [ run stepper_with_units.cpp ]
 	 [ run stepper_copying.cpp ]
+	 [ run stepper_with_ranges.cpp ]
 	 ;    
