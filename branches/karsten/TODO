@@ -3,8 +3,11 @@
   OK * test standard_algebra
   OK * test fusion_algebra
   * test vector_space_algebra, maybe with some proto lib
-  * test copying
-  * test, if copy construct of stepper_base is called when explicit_euler is used
+  NEARLY DONE * test copying
+    * include controlled_error_stepper_fsal
+    * include dense_output_explicit
+    * inlcude dense_output_controlled_explicit_fsal
+  OK * test, if copy construct of stepper_base is called when explicit_euler is used
   * test gsl
   * test explicit stepper with ranges
   * test units with dense output
