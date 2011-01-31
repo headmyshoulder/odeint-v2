@@ -10,6 +10,7 @@
     * discuss
   * split check_concepts into check_stepper_concept, check_error_stepper_concept, check_controlled_stepper_concept
   * include test/thrust in jam system, use system from
+* implicit euler, include dfdt
 * include rosenbrock4 in trunk
 DIFFICULT * finishing change of controlled_stepper to units
   * check if rosenbrock controller and controlled_stepper can both be used with the explicit steppers

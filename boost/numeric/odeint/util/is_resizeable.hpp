@@ -10,7 +10,7 @@
 
 #include <vector>
 
-#include <boost/type_traits/integral_constant.hpp> //for true_type and false_type
+#include <boost/type_traits/integral_constant.hpp>
 
 
 namespace boost {
