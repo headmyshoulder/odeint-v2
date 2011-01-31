@@ -28,3 +28,7 @@ exe dense_output_controlled_explicit_fsal
 exe rosenbrock4 
 	: rosenbrock4.cpp
 	;
+	
+exe integrate_functions
+	: integrate_functions.cpp
+	;

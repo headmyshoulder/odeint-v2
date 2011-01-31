@@ -15,7 +15,8 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/lu.hpp>
 
-#include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
+#include <boost/numeric/odeint/stepper/stepper_categories.hpp>
+
 #include <boost/numeric/odeint/util/size_adjuster.hpp>
 #include <boost/numeric/odeint/util/matrix_vector_adjust_size.hpp>
 #include <boost/numeric/odeint/util/ublas_resize.hpp>
@@ -123,7 +124,7 @@ public:
     typedef boost::numeric::ublas::permutation_matrix< size_t > pmatrix_type;
     typedef AdjustSizePolicy adjust_size_policy;
     typedef Coefficients rosenbrock_coefficients;
-
+	typedef stepper_tag stepper_category;
 
 	rosenbrock4( void )
 	: m_state_adjuster() , m_matrix_adjuster() , m_pmatrix_adjuster() ,

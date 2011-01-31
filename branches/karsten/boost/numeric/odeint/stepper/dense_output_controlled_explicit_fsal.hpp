@@ -17,6 +17,7 @@
 #include <boost/numeric/odeint/util/copy.hpp>
 
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
+#include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
 namespace boost {
 namespace numeric {
@@ -91,7 +92,7 @@ public:
 	typedef typename stepper_type::algebra_type algebra_type;
 	typedef typename stepper_type::operations_type operations_type;
 	typedef typename stepper_type::adjust_size_policy adjust_size_policy;
-
+	typedef dense_output_stepper_tag stepper_category;
 
 	dense_output_controlled_explicit_fsal( const controlled_stepper_type &stepper = controlled_stepper_type() )
 	: m_stepper( stepper ) ,

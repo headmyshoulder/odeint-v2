@@ -28,12 +28,10 @@ struct stepper_tag {};
 //struct implicit_stepper_tag : stepper_tag {};
 
 struct error_stepper_tag {};
-//struct explicit_error_stepper_tag : error_stepper_tag {};
-//struct explicit_error_stepper_fsal_tag : error_stepper_tag {};
+struct explicit_error_stepper_tag : error_stepper_tag {};
+struct explicit_error_stepper_fsal_tag : error_stepper_tag {};
 
 struct controlled_stepper_tag {};
-//struct controlled_explicit_stepper_tag : controlled_stepper_tag {};
-//struct controlled_implicit_stepper_tag : controlled_stepper_tag {};
 
 struct dense_output_stepper_tag {};
 

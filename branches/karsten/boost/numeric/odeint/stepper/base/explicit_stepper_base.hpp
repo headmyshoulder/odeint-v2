@@ -20,6 +20,8 @@
 #include <boost/numeric/odeint/util/destruct.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
 
+#include <boost/numeric/odeint/stepper/stepper_categories.hpp>
+
 
 namespace boost {
 namespace numeric {
@@ -53,6 +55,7 @@ public:
 	typedef Operations operations_type;
 	typedef AdjustSizePolicy adjust_size_policy;
 	typedef Stepper stepper_type;
+	typedef stepper_tag stepper_category;
 
 	typedef explicit_stepper_base< Stepper , Order , State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy > internal_stepper_base_type;
 

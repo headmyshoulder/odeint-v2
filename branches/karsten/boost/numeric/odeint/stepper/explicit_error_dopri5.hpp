@@ -74,7 +74,6 @@ public :
 
 	BOOST_ODEINT_EXPLICIT_STEPPERS_AND_ERROR_STEPPERS_FSAL_TYPEDEFS( explicit_error_dopri5 , 5 , 5 , 4 );
 
-	typedef explicit_error_stepper_fsal_tag stepper_category;
 
 	explicit_error_dopri5( void )
 	: stepper_base_type() , m_state_adjuster() , m_deriv_adjuster() , m_x_tmp() , m_k2() , m_k3() , m_k4() , m_k5() , m_k6()
