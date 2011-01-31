@@ -9,8 +9,8 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
-#ifndef BOOST_NUMERIC_ODEINT_UBLAS_RESIZE_HPP_INCLUDED
-#define BOOST_NUMERIC_ODEINT_UBLAS_RESIZE_HPP_INCLUDED
+#ifndef BOOST_NUMERIC_ODEINT_UTIL_UBLAS_RESIZE_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_UTIL_UBLAS_RESIZE_HPP_INCLUDED
 
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
@@ -64,8 +64,8 @@ struct same_size_impl< boost::numeric::ublas::matrix< T , L , A > , boost::numer
 
 
 
-} // odeint
-} // numeric
-} // boost
+} // namespace odeint
+} // namespace numeric
+} // namespace boost
 
-#endif /* BOOST_NUMERIC_ODEINT_UBLAS_RESIZE_HPP_INCLUDED */
+#endif /* BOOST_NUMERIC_ODEINT_UTIL_UBLAS_RESIZE_HPP_INCLUDED */

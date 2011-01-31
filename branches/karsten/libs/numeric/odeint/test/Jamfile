@@ -27,5 +27,6 @@ test-suite "odeint"
 	 [ run stepper_with_units.cpp ]
 	 [ run stepper_copying.cpp ]
 	 [ run stepper_with_ranges.cpp ]
+	 [ run rosenbrock4.cpp ]
 	: <testing.launcher>valgrind
 	;    

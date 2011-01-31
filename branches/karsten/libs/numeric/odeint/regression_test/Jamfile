@@ -24,3 +24,7 @@ exe dense_output_explicit
 exe dense_output_controlled_explicit_fsal
 	: dense_output_controlled_explicit_fsal.cpp
 	;
+	
+exe rosenbrock4 
+	: rosenbrock4.cpp
+	;
