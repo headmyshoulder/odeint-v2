@@ -16,7 +16,7 @@
 
 #include <boost/numeric/odeint/stepper/explicit_euler.hpp>
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
-#include <boost/numeric/odeint/algebra/external/mkl_operations.hpp>
+#include <boost/numeric/odeint/external/mkl/mkl_operations.hpp>
 
 using namespace boost::numeric::odeint;
 

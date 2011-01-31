@@ -10,7 +10,10 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <boost/numeric/odeint/algebra/default_resize.hpp>
+#include <boost/numeric/odeint/util/construct.hpp>
+#include <boost/numeric/odeint/util/destruct.hpp>
+#include <boost/numeric/odeint/util/copy.hpp>
+
 #include <boost/numeric/odeint/stepper/explicit_euler.hpp>
 #include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
 #include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
