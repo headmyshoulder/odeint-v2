@@ -139,6 +139,7 @@ public:
 	typedef typename stepper_type::order_type order_type;
 	typedef AdjustSizePolicy adjust_size_policy;
 	typedef ErrorChecker error_checker_type;
+	typedef controlled_stepper_tag stepper_category;
 
 
 

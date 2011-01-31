@@ -14,6 +14,10 @@
 
 #include <utility>
 
+#include <boost/ref.hpp>
+
+#include <boost/numeric/odeint/stepper/stepper_categories.hpp>
+
 #include <boost/numeric/odeint/util/size_adjuster.hpp>
 #include <boost/numeric/odeint/util/matrix_vector_adjust_size.hpp>
 #include <boost/numeric/odeint/util/ublas_resize.hpp>
@@ -37,6 +41,25 @@ namespace odeint {
 template< class ValueType , class AdjustSizePolicy = adjust_size_initially_tag >
 class implicit_euler
 {
+	void initialize( void )
+	{
+		m_state_adjuster.register_state( 0 , m_dxdt );
+		m_state_adjuster.register_state( 1 , m_x );
+		m_state_adjuster.register_state( 2 , m_b );
+		m_matrix_adjuster.register_state( 0 , m_jacobi );
+		m_pmatrix_adjuster.register_state( 0 , m_pm );
+
+	}
+
+	void copy( const implicit_euler &euler )
+	{
+		m_dxdt = euler.m_dxdt;
+		m_x = euler.m_x;
+		m_b = euler.m_b;
+		m_jacobi = euler.m_jacobi;
+		m_pm = euler.m_pm;
+		m_epsilon = euler.m_epsilon;
+	}
 
 public:
 
@@ -47,6 +70,7 @@ public:
     typedef boost::numeric::ublas::matrix< value_type > matrix_type;
     typedef boost::numeric::ublas::permutation_matrix< size_t > pmatrix_type;
     typedef AdjustSizePolicy adjust_size_policy;
+	typedef stepper_tag stepper_category;
 
     implicit_euler( const value_type epsilon = 1E-6 )
     : m_epsilon( epsilon ) ,
@@ -54,11 +78,22 @@ public:
       m_dxdt() , m_x() , m_b() ,
       m_jacobi() , m_pm( 1 )
     {
-    	m_state_adjuster.register_state( 0 , m_dxdt );
-    	m_state_adjuster.register_state( 1 , m_x );
-    	m_state_adjuster.register_state( 2 , m_b );
-    	m_matrix_adjuster.register_state( 0 , m_jacobi );
-    	m_pmatrix_adjuster.register_state( 0 , m_pm );
+    	initialize();
+    }
+
+    implicit_euler( const implicit_euler &euler )
+    : m_epsilon( 1.0e-6 ) ,
+      m_state_adjuster() , m_matrix_adjuster() , m_pmatrix_adjuster() ,
+      m_dxdt() , m_x() , m_b() ,
+      m_jacobi() , m_pm( 1 )
+    {
+    	initialize();
+    	copy( euler );
+    }
+
+    implicit_euler& operator=( const implicit_euler &euler )
+    {
+    	copy( euler );
     }
 
     template< class System >
@@ -133,7 +168,7 @@ private:
 
 private:
 
-    const value_type m_epsilon;
+    value_type m_epsilon;
     size_adjuster< state_type , 3 > m_state_adjuster;
     size_adjuster< matrix_type , 1 , matrix_vector_adjust_size > m_matrix_adjuster;
     size_adjuster< pmatrix_type , 1 > m_pmatrix_adjuster;

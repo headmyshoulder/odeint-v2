@@ -9,6 +9,8 @@
 #define BOOST_NUMERIC_ODEINT_STEPPER_ROSENBROCK4_CONTROLLER_HPP_
 
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
+#include <boost/numeric/odeint/stepper/stepper_categories.hpp>
+
 #include <boost/numeric/odeint/stepper/rosenbrock4.hpp>
 
 
@@ -26,6 +28,7 @@ public:
 	typedef typename stepper_type::state_type state_type;
 	typedef typename stepper_type::time_type time_type;
 	typedef typename stepper_type::deriv_type deriv_type;
+	typedef controlled_stepper_tag stepper_category;
 
 
 	rosenbrock4_controller( value_type atol = 1.0e-6 , value_type rtol = 1.0e-6 , const stepper_type &stepper = stepper_type() )

@@ -20,6 +20,7 @@
 #include <boost/numeric/odeint/util/destruct.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
 
+#include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
 namespace boost {
 namespace numeric {
@@ -55,6 +56,7 @@ public:
 	typedef Operations operations_type;
 	typedef AdjustSizePolicy adjust_size_policy;
 	typedef Stepper stepper_type;
+	typedef explicit_error_stepper_tag stepper_category;
 
 	typedef unsigned short order_type;
 	static const order_type order_value = Order;
