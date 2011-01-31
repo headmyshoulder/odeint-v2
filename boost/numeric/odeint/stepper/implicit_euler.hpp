@@ -14,8 +14,9 @@
 
 #include <utility>
 
-#include <boost/numeric/odeint/stepper/size_adjuster.hpp>
-#include <boost/numeric/odeint/algebra/external/ublas_resize.hpp>
+#include <boost/numeric/odeint/util/size_adjuster.hpp>
+#include <boost/numeric/odeint/util/matrix_vector_adjust_size.hpp>
+#include <boost/numeric/odeint/util/ublas_resize.hpp>
 
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
@@ -36,19 +37,6 @@ struct is_resizeable< boost::numeric::ublas::permutation_matrix< T > >
 
 
 
-struct matrix_vector_adjuster
-{
-	template< class Vector , class Matrix >
-	static bool adjust_size( const Vector &v , Matrix &m )
-	{
-		if( ( m.size1() != v.size() ) || ( m.size2() != v.size() ) )
-		{
-			m.resize( v.size() , v.size() );
-			return true;
-		}
-		return false;
-	}
-};
 
 
 template< class ValueType , class AdjustSizePolicy = adjust_size_initially_tag >
@@ -152,7 +140,7 @@ private:
 
     const value_type m_epsilon;
     size_adjuster< state_type , 3 > m_state_adjuster;
-    size_adjuster< matrix_type , 1 , matrix_vector_adjuster> m_matrix_adjuster;
+    size_adjuster< matrix_type , 1 , matrix_vector_adjust_size > m_matrix_adjuster;
     size_adjuster< pmatrix_type , 1 > m_pmatrix_adjuster;
     state_type m_dxdt;
     state_type m_x;

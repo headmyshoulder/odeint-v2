@@ -13,9 +13,9 @@
 //#include <boost/test/unit_test.hpp>
 
 #include <boost/numeric/odeint/stepper/explicit_euler.hpp>
-#include <boost/numeric/odeint/algebra/external/thrust_algebra.hpp>
-#include <boost/numeric/odeint/algebra/external/thrust_operations.hpp>
-#include <boost/numeric/odeint/algebra/external/thrust_resize.hpp>
+#include <boost/numeric/odeint/external/thrust/thrust_algebra.hpp>
+#include <boost/numeric/odeint/external/thrust/thrust_operations.hpp>
+#include <boost/numeric/odeint/external/thrust/thrust_resize.hpp>
 
 #include <thrust/device_vector.h>
 #include <thrust/fill.h>

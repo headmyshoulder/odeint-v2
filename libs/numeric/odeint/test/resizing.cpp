@@ -41,18 +41,30 @@ typedef boost::array< double , 1 > test_array_type;
 namespace boost { namespace numeric { namespace odeint {
 
 
-	template<>	struct is_resizeable< test_array_type >
+	template<>
+	struct is_resizeable< test_array_type >
 	{
 		struct type : public boost::true_type { };
 		const static bool value = type::value;
 	};
 
-
-	template<> bool adjust_size( const test_array_type &x1 , test_array_type &x2 )
+	template<>
+	struct same_size_impl< test_array_type , test_array_type >
 	{
-		adjust_size_count++;
-		return false;
-	}
+		static bool same_size( const test_array_type &x1 , const test_array_type &x2 )
+		{
+			adjust_size_count++;
+			return true;
+		}
+	};
+
+	template <>
+	struct resize_impl< test_array_type , test_array_type >
+	{
+		static void resize( const test_array_type &x1 , test_array_type &x2 )
+		{
+		}
+	};
 
 } } }
 

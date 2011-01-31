@@ -17,11 +17,17 @@
 
 #include <boost/ref.hpp>
 
-#include <boost/numeric/odeint/stepper/size_adjuster.hpp>
-#include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
-#include <boost/numeric/odeint/stepper/stepper_categories.hpp>
+#include <boost/numeric/odeint/util/size_adjuster.hpp>
+#include <boost/numeric/odeint/util/construct.hpp>
+#include <boost/numeric/odeint/util/destruct.hpp>
+#include <boost/numeric/odeint/util/copy.hpp>
+
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
+
+#include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
+#include <boost/numeric/odeint/stepper/stepper_categories.hpp>
+
 
 
 namespace boost {

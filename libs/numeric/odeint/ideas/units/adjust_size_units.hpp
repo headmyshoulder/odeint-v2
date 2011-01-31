@@ -18,7 +18,7 @@
 #include <boost/noncopyable.hpp>
 #include <boost/array.hpp>
 
-#include <boost/numeric/odeint/algebra/default_resize.hpp>
+#include <boost/numeric/odeint/util/default_adjust_size.hpp>
 
 
 namespace boost {
@@ -26,13 +26,6 @@ namespace numeric {
 namespace odeint {
 
 
-
-/*
- * Tags to specify resize behavior of steppers
- */
-struct adjust_size_manually_tag {};
-struct adjust_size_initially_tag {};
-struct adjust_size_always_tag {};
 
 
 
@@ -97,7 +90,7 @@ private:
 	{
 		for( size_t i=0 ; i<Dim ; ++i )
 		{
-            boost::numeric::odeint::adjust_size( x , *(m_states[i]) );
+            boost::numeric::odeint::default_adjust_size::adjust_size( x , *(m_states[i]) );
 		}
 		return ( Dim > 0 );
 	}

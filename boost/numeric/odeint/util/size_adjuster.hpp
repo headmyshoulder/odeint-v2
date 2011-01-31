@@ -18,7 +18,8 @@
 #include <boost/noncopyable.hpp>
 #include <boost/array.hpp>
 
-#include <boost/numeric/odeint/algebra/default_resize.hpp>
+#include <boost/numeric/odeint/util/is_resizeable.hpp>
+#include <boost/numeric/odeint/util/default_adjust_size.hpp>
 
 
 namespace boost {
@@ -36,26 +37,12 @@ struct adjust_size_always_tag {};
 
 
 
-/*
- * we need this interface in order to call matrix by vector resizing,
- * i.e. mat.resize( vec.size() , vec.size() )
- *
- * See implicit_euler.hpp for usage
- */
-struct default_adjust_size_caller
-{
-	template< class Container1 , class Container2 >
-	static bool adjust_size( const Container1 &x1 , Container2 &x2 )
-	{
-		return boost::numeric::odeint::adjust_size( x1 , x2 );
-	}
-};
 
 
 /*
  * Adjust size functionality with policies and resizeability
  */
-template< class Container , size_t Dim , class AdjustSizeCaller = default_adjust_size_caller >
+template< class Container , size_t Dim , class AdjustSizeCaller = default_adjust_size >
 class size_adjuster : boost::noncopyable
 {
 public:
