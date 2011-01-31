@@ -11,7 +11,7 @@
   * split check_concepts into check_stepper_concept, check_error_stepper_concept, check_controlled_stepper_concept
   * include test/thrust in jam system, use system from
 * implicit euler, include dfdt
-* include rosenbrock4 in trunk
+* same interface for implicit_euler and rosenbrock4
 DIFFICULT * finishing change of controlled_stepper to units
   * check if rosenbrock controller and controlled_stepper can both be used with the explicit steppers
   OK * move error_checker into controlled_stepper
@@ -57,3 +57,4 @@ OK * unit test
   OK * test fusion_algebra
   OK * test, if copy construct of stepper_base is called when explicit_euler is used
   OK * test units with dense output
+OK * include rosenbrock4 in trunk
