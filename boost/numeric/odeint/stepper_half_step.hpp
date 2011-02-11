@@ -96,6 +96,7 @@ namespace odeint {
 
         // contructor, which adjust the size of internal containers
         stepper_half_step( const container_type &x )
+        : m_fac( 1.0 / std::pow( 2.0 , m_stepper.order_step() ) - 1.0 )
         {
             adjust_size( x );
         }
