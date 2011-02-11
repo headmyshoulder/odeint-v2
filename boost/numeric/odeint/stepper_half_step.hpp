@@ -1,8 +1,8 @@
 /* Boost odeint/stepper_half_stepr.hpp header file
- 
+
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky
- 
+
  This file includes a stepper which calculates the
  error during one step from performing two steps with
  the halt stepsize. It works with arbitray steppers
@@ -57,8 +57,8 @@ namespace odeint {
         container_type m_dxdt;
         container_type m_xtemp;
         stepper_type m_stepper;
-        const time_time m_fac;
-	
+        const time_type m_fac;
+
 
         //
 	// public interface
@@ -81,9 +81,9 @@ namespace odeint {
 
 
         // the order of the error term if the error step is performed
-        order_type order_error( void ) const 
+        order_type order_error( void ) const
         {
-            return m_stepper.order_step() + 1; 
+            return m_stepper.order_step() + 1;
         }
 
 
