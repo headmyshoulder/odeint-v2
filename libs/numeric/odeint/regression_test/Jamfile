@@ -7,6 +7,7 @@
 project
     : requirements 
       <include>../../../..
+      <include>../../../../../..
     ;
 
 exe controlled_stepper_evolution
@@ -31,4 +32,8 @@ exe rosenbrock4
 	
 exe integrate_functions
 	: integrate_functions.cpp
+	;
+	
+exe hamiltonian_steppers
+	: hamiltonian_steppers.cpp
 	;

@@ -31,6 +31,7 @@ build-project libs/numeric/odeint/ideas/butcher ;
 build-project libs/numeric/odeint/ideas/generic_stepper ;
 build-project libs/numeric/odeint/ideas/rosenbrock4 ;
 build-project libs/numeric/odeint/ideas/units ;
+build-project libs/numeric/odeint/ideas/algebra ;
 
 
 # docs:
