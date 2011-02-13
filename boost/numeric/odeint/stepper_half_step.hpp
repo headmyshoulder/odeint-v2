@@ -59,7 +59,6 @@ namespace odeint {
         stepper_type m_stepper;
         const time_type m_fac;
 
-
         //
 	// public interface
         //

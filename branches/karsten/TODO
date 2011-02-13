@@ -25,6 +25,9 @@ DIFFICULT * finishing change of controlled_stepper to units
   * check copyright note
   * documente every file in the preamble
   * check once more, if all contructor, destructors and assign-operators are present
+* symplecit_stepper
+  * find an appropriate name, (symplectic stroemer nystroem)
+  * check is the coefficients are named good
 
 * Integrate functions
 * skript for setting the include defines according to the position in file system an writing a general copyright comment at the beginning
