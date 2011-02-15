@@ -48,9 +48,11 @@ namespace symplectic_euler_coef {
 
 
 template<
-	class State ,
+	class Coor ,
+	class Momentum = Coor ,
 	class Value = double ,
-	class Deriv = State ,
+	class CoorDeriv = Coor ,
+	class MomentumDeriv = Coor ,
 	class Time = Value ,
 	class Algebra = range_algebra ,
 	class Operations = default_operations ,
@@ -60,8 +62,8 @@ class symplectic_euler :
 	public symplectic_nystroem_stepper_base
 	<
 		1 ,
-		symplectic_euler< State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy > ,
-		State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy
+		symplectic_euler< Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , AdjustSizePolicy > ,
+		Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , AdjustSizePolicy
 	>
 {
 public:

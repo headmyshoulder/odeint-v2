@@ -76,9 +76,11 @@ namespace symplectic_rkn_sb3a_mclachlan {
 
 
 template<
-	class State ,
+	class Coor ,
+	class Momentum = Coor ,
 	class Value = double ,
-	class Deriv = State ,
+	class CoorDeriv = Coor ,
+	class MomentumDeriv = Coor ,
 	class Time = Value ,
 	class Algebra = range_algebra ,
 	class Operations = default_operations ,
@@ -88,8 +90,8 @@ class symplectic_rkn_sb3a_mclachlan :
 	public symplectic_nystroem_stepper_base
 	<
 		6 ,
-		symplectic_euler< State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy > ,
-		State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy
+		symplectic_euler< Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , AdjustSizePolicy > ,
+		Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , AdjustSizePolicy
 	>
 {
 public:
