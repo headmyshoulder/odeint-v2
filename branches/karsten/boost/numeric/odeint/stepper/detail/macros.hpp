@@ -72,20 +72,20 @@ typedef typename stepper_base_type::stepper_type stepper_type
 #define BOOST_ODEINT_SYMPLECTIC_NYSTROEM_STEPPER_TYPEDEFS( STEPPER , STAGES ) \
 	typedef symplectic_nystroem_stepper_base< \
 		STAGES , \
-		STEPPER< State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy > , \
-		State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy > stepper_base_type; \
+		STEPPER< Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , AdjustSizePolicy > , \
+		Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , AdjustSizePolicy > stepper_base_type; \
+	typedef typename stepper_base_type::coor_type coor_type; \
+	typedef typename stepper_base_type::momentum_type momentum_type; \
 	typedef typename stepper_base_type::state_type state_type; \
 	typedef typename stepper_base_type::value_type value_type; \
+	typedef typename stepper_base_type::coor_deriv_type coor_deriv_type; \
+	typedef typename stepper_base_type::momentum_deriv_type momentum_deriv_type; \
 	typedef typename stepper_base_type::deriv_type deriv_type; \
 	typedef typename stepper_base_type::time_type time_type; \
 	typedef typename stepper_base_type::algebra_type algebra_type; \
 	typedef typename stepper_base_type::operations_type operations_type; \
 	typedef typename stepper_base_type::adjust_size_policy adjust_size_policy; \
 	typedef typename stepper_base_type::stepper_type stepper_type; \
-	typedef typename stepper_base_type::coor_type coor_type; \
-	typedef typename stepper_base_type::momentum_type momentum_type; \
-	typedef typename stepper_base_type::coor_deriv_type coor_deriv_type; \
-	typedef typename stepper_base_type::momentum_deriv_type momentum_deriv_type; \
 	typedef typename stepper_base_type::coef_type coef_type
 
 

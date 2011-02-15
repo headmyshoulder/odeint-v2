@@ -27,9 +27,11 @@ namespace odeint {
 template<
 	size_t NumOfStages ,
 	class Stepper ,
-	class State ,
+	class Coor ,
+	class Momentum ,
 	class Value ,
-	class Deriv ,
+	class CoorDeriv ,
+	class MomentumDeriv ,
 	class Time ,
 	class Algebra ,
 	class Operations ,
@@ -55,21 +57,19 @@ class symplectic_nystroem_stepper_base
 public:
 
 	const static size_t num_of_stages = NumOfStages;
-	typedef State state_type;
+	typedef Coor coor_type;
+	typedef Momentum momentum_type;
+	typedef std::pair< coor_type , momentum_type > state_type;
+	typedef CoorDeriv coor_deriv_type;
+	typedef MomentumDeriv momentum_deriv_type;
+	typedef std::pair< coor_deriv_type , momentum_deriv_type > deriv_type;
 	typedef Value value_type;
-	typedef Deriv deriv_type;
 	typedef Time time_type;
 	typedef Algebra algebra_type;
 	typedef Operations operations_type;
 	typedef AdjustSizePolicy adjust_size_policy;
 	typedef Stepper stepper_type;
 	typedef stepper_tag stepper_category;
-
-	typedef typename state_type::first_type coor_type;
-	typedef typename state_type::second_type momentum_type;
-
-	typedef typename deriv_type::first_type coor_deriv_type;
-	typedef typename deriv_type::second_type momentum_deriv_type;
 
 	typedef boost::array< value_type , num_of_stages > coef_type;
 

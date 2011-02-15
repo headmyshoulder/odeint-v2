@@ -61,7 +61,7 @@ struct harm_osc
 
 void test_euler( void )
 {
-	typedef boost::numeric::odeint::symplectic_euler< state_type > stepper_type;
+	typedef boost::numeric::odeint::symplectic_euler< container_type > stepper_type;
 	stepper_type stepper;
 	stepper_type stepper2( stepper );
 	stepper_type stepper3;
@@ -80,7 +80,7 @@ void test_euler( void )
 
 void test_rkn_sb3a_mclachlan( void )
 {
-	typedef boost::numeric::odeint::symplectic_rkn_sb3a_mclachlan< state_type > stepper_type;
+	typedef boost::numeric::odeint::symplectic_rkn_sb3a_mclachlan< container_type > stepper_type;
 	stepper_type stepper;
 	stepper_type stepper2( stepper );
 	stepper_type stepper3;
@@ -99,8 +99,8 @@ void test_rkn_sb3a_mclachlan( void )
 
 void compare_euler_rkn( void )
 {
-	typedef boost::numeric::odeint::symplectic_euler< state_type > stepper_type1;
-	typedef boost::numeric::odeint::symplectic_rkn_sb3a_mclachlan< state_type > stepper_type2;
+	typedef boost::numeric::odeint::symplectic_euler< container_type > stepper_type1;
+	typedef boost::numeric::odeint::symplectic_rkn_sb3a_mclachlan< container_type > stepper_type2;
 
 	stepper_type1 stepper1;
 	stepper_type2 stepper2;
@@ -132,7 +132,7 @@ void compare_euler_rkn( void )
 void performance_compare( void )
 {
 	typedef boost::numeric::odeint::hamiltonian_stepper_rk_qfunc< container_type > stepper_type1;
-	typedef boost::numeric::odeint::symplectic_rkn_sb3a_mclachlan< state_type > stepper_type2;
+	typedef boost::numeric::odeint::symplectic_rkn_sb3a_mclachlan< container_type > stepper_type2;
 
 	state_type state1;
 	state1.first[0] = 1.0;
