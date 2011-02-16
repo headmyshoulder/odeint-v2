@@ -16,8 +16,10 @@
 #include <algorithm>
 #include <cmath>      // for std::max
 
+#ifndef __CUDACC__
 #include <boost/utility/result_of.hpp>
 #include <boost/units/quantity.hpp>
+#endif
 
 namespace boost {
 namespace numeric {
@@ -28,6 +30,7 @@ namespace odeint {
  */
 namespace detail
 {
+
 		template< class T >
 		struct get_value_impl
 		{
@@ -35,12 +38,14 @@ namespace detail
 			typedef T result_type;
 		};
 
+		#ifndef __CUDACC__
 		template< class Unit , class T >
 		struct get_value_impl< boost::units::quantity< Unit , T > >
 		{
 			static T value( const boost::units::quantity< Unit , T > &t ) { return t.value(); }
 			typedef T result_type;
 		};
+		#endif
 
 		template< class T >
 		typename get_value_impl< T >::result_type get_value( const T &t ) { return get_value_impl< T >::value( t ); }
@@ -53,14 +58,17 @@ namespace detail
 			static void set_value( T &t , const V &v ) { t = v; }
 		};
 
+		#ifndef __CUDACC__
 		template< class Unit , class T , class V >
 		struct set_value_impl< boost::units::quantity< Unit , T > , V >
 		{
 			static void set_value( boost::units::quantity< Unit , T > &t , const V &v ) { t = boost::units::quantity< Unit , T >::from_value( v ); }
 		};
+		#endif
 
 		template< class T , class V >
 		void set_value( T &t , const V &v ) { return set_value_impl< T , V >::set_value( t , v ); }
+
 }
 
 

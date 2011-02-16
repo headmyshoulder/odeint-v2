@@ -17,9 +17,6 @@
 #include <thrust/iterator/zip_iterator.h>
 
 #include <boost/range.hpp>
-#define BOOST_FUNCTIONAL_FORWARD_ADAPTER_MAX_ARITY 9
-#include <boost/functional/forward_adapter.hpp>
-
 
 namespace boost {
 namespace numeric {
@@ -35,51 +32,29 @@ namespace odeint {
 
 struct thrust_algebra
 {
-	struct for_each1_impl
+	template< class StateType , class Operation >
+	static void for_each1( StateType &s , Operation op )
 	{
-		template< class StateType , class Operation >
-		void operator()( StateType &s , Operation op ) const
-		{
-			thrust::for_each( boost::begin(s) , boost::begin(s) , op );
-		}
-		typedef void result_type;
-	};
+		thrust::for_each( boost::begin(s) , boost::begin(s) , op );
+	}
 
-
-	struct for_each2_impl
+	template< class StateType1 , class StateType2 , class Operation >
+	static void for_each2( StateType1 &s1 , StateType2 &s2 , Operation op )
 	{
+		thrust::for_each(
+				thrust::make_zip_iterator( thrust::make_tuple( boost::begin(s1) , boost::begin(s2) ) ) ,
+				thrust::make_zip_iterator( thrust::make_tuple( boost::end(s1) , boost::end(s2) ) ) ,
+				op);
+	}
 
-		template< class StateType1 , class StateType2 , class Operation >
-		void operator()( StateType1 &s1 , StateType2 &s2 , Operation op ) const
-		{
-			thrust::for_each(
-					thrust::make_zip_iterator( thrust::make_tuple( boost::begin(s1) , boost::begin(s2) ) ) ,
-					thrust::make_zip_iterator( thrust::make_tuple( boost::end(s1) , boost::end(s2) ) ) ,
-					op);
-		}
-		typedef void result_type;
-	};
-
-
-
-	struct for_each3_impl
+	template< class StateType1 , class StateType2 , class StateType3 , class Operation >
+	static void for_each3( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , Operation op )
 	{
-
-
-		template< class StateType1 , class StateType2 , class StateType3 , class Operation >
-		void operator()( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , Operation op ) const
-		{
-			thrust::for_each(
-					thrust::make_zip_iterator( thrust::make_tuple( boost::begin(s1) , boost::begin(s2) , boost::begin(s3) ) ) ,
-					thrust::make_zip_iterator( thrust::make_tuple( boost::end(s1) , boost::end(s2) , boost::begin(s3) ) ) ,
-					op);
-		}
-		typedef void result_type;
-	};
-
-	typedef boost::forward_adapter< for_each1_impl , 2 > for_each1;
-	typedef boost::forward_adapter< for_each2_impl , 3 > for_each2;
-	typedef boost::forward_adapter< for_each3_impl , 4 > for_each3;
+		thrust::for_each(
+				thrust::make_zip_iterator( thrust::make_tuple( boost::begin(s1) , boost::begin(s2) , boost::begin(s3) ) ) ,
+				thrust::make_zip_iterator( thrust::make_tuple( boost::end(s1) , boost::end(s2) , boost::begin(s3) ) ) ,
+				op);
+	}
 };
 
 

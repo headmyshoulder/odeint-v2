@@ -46,7 +46,6 @@ size_t integrate( Stepper stepper , System system , State &start_state , const T
 	{
 		return detail::integrate_const( stepper , system , start_state , start_time , end_time  , dt , observer , typename Stepper::stepper_category() );
 	}
-	return 0;
 }
 
 template< class Stepper , class System , class State , class Time , class Observer >
@@ -70,7 +69,6 @@ template< class Stepper , class System , class State , class Time , class Observ
 size_t integrate_adaptive( Stepper stepper , System system , State &start_state , const Time &start_time , const Time &end_time , Time &dt , Observer observer )
 {
 	return detail::integrate_adaptive( stepper , system , start_state , start_time , end_time , dt , observer , typename Stepper::stepper_category() );
-	return 0;
 }
 
 

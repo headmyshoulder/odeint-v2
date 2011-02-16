@@ -90,13 +90,13 @@ class symplectic_rkn_sb3a_mclachlan :
 	public symplectic_nystroem_stepper_base
 	<
 		6 ,
-		symplectic_euler< Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , AdjustSizePolicy > ,
+		symplectic_rkn_sb3a_mclachlan< Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , AdjustSizePolicy > ,
 		Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , AdjustSizePolicy
 	>
 {
 public:
 
-		BOOST_ODEINT_SYMPLECTIC_NYSTROEM_STEPPER_TYPEDEFS( symplectic_euler , 6 );
+		BOOST_ODEINT_SYMPLECTIC_NYSTROEM_STEPPER_TYPEDEFS( symplectic_rkn_sb3a_mclachlan , 6 );
 
 		symplectic_rkn_sb3a_mclachlan( void )
 		: stepper_base_type(
