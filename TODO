@@ -26,8 +26,16 @@ OK * file cleanup
   * documente every file in the preamble
   * check once more, if all contructor, destructors and assign-operators are present
 * symplecit_stepper
-  * find an appropriate name, (symplectic stroemer nystroem)
+  OK * find an appropriate name, (symplectic stroemer nystroem)
   OK * check is the coefficients are named good
+  * check ranges and call
+  * include do_step( system , q , p , t , dt )
+  
+* decrease complexity:
+  * remove construct, destruct, copy ?
+  * remove the overloads solving the forwarding problem. boost::range can not be used then anymore
+  
+
 
 * Integrate functions
 * skript for setting the include defines according to the position in file system an writing a general copyright comment at the beginning

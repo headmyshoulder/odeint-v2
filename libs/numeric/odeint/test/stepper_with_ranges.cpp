@@ -43,7 +43,6 @@ struct lorenz
 		dxdt[1] = 2.0;
 		dxdt[2] = 3.0;
 	}
-
 };
 
 struct vector_fixture
@@ -138,22 +137,16 @@ BOOST_AUTO_TEST_CASE( explicit_euler_with_range_v3 )
 BOOST_AUTO_TEST_CASE( explicit_euler_with_range_v4 )
 {
 	vector_fixture f;
-	f.euler.do_step( lorenz() , std::make_pair( f.in.begin() + 2 , f.in.begin() + 5 ) , 0.1 ,
-			std::make_pair( f.out.begin() , f.out.begin() +3 ) , 0.1 );
+	lorenz()( std::make_pair( f.in.begin() , f.in.begin() + 3 ) ,
+			  std::make_pair( f.dxdt.begin() + 3 , f.dxdt.begin() + 6 ) , 0.0 );
+	f.euler.do_step( lorenz() , std::make_pair( f.in.begin() , f.in.begin() + 3 ) ,
+								std::make_pair( f.dxdt.begin() + 3 , f.dxdt.begin() + 6 ) , 0.1 ,
+								std::make_pair( f.out.begin() , f.out.begin() + 3 ) , 0.1 );
 	CHECK_IN_DEFAULT( f.in );
-	CHECK_VALUES( f.out , 2.2 , 3.2 , 4.3 , 13.0 , 14.0 , 15.0 );
-	CHECK_DXDT_DEFAULT( f.dxdt );
+	CHECK_VALUES( f.out , 0.0 , 1.2 , 2.3 , 13.0 , 14.0 , 15.0 );
+	CHECK_VALUES( f.dxdt , 100.0 , 101.0 , 102.0 , 0.0 , 2.0 , 3.0 );
 }
 
-
-
-BOOST_AUTO_TEST_CASE( explicit_euler_with_array )
-{
-	state_type2 x;
-	boost::numeric::odeint::explicit_euler< state_type > euler;
-	euler.do_step( lorenz() , x , 0.0 , 0.1 );
-	euler.do_step( lorenz() , x , 0.1 , 0.1 );
-}
 
 
 BOOST_AUTO_TEST_SUITE_END()

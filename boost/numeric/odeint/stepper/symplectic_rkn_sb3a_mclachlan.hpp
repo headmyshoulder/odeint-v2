@@ -8,7 +8,7 @@
 #ifndef SYMPLECTIC_RKN_SB3A_MCLACHLAN_HPP_
 #define SYMPLECTIC_RKN_SB3A_MCLACHLAN_HPP_
 
-#include <boost/numeric/odeint/stepper/base/symplectic_nystroem_stepper_base.hpp>
+#include <boost/numeric/odeint/stepper/base/symplectic_rkn_stepper_base.hpp>
 
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
@@ -70,7 +70,7 @@ namespace symplectic_rkn_sb3a_mclachlan {
 		}
 	};
 
-} // namespace symplectic_euler_coef
+} // namespace symplectic_rkn_sb3a_mclachlan
 } // namespace detail
 
 

@@ -75,7 +75,11 @@ void test_euler( void )
 	const double dt = 0.1;
 	const double omega_sq = 4.0;
 
+	container_type q = { { 0.0 } } , p = { { 1.0 } };
+
 	stepper.do_step( harm_osc( omega_sq ) , state , t , dt );
+	stepper.do_step( harm_osc( omega_sq ) , q , p , t , dt );
+	stepper.do_step( harm_osc( omega_sq ) , std::make_pair( boost::ref( q ) , boost::ref( p ) ) , t , dt );
 }
 
 void test_rkn_sb3a_mclachlan( void )
