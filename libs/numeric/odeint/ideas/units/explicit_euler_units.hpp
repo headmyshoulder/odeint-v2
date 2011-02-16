@@ -52,7 +52,7 @@ public :
 	template< class System , class State >
 	void do_step_impl( System system , const State &in , const deriv_type &dxdt , const time_type t , State & out , const time_type dt )
 	{
-		typename algebra_type::for_each3()( out , in , dxdt , operations_type::make_scale_sum2( static_cast< value_type >( 1.0 ) , dt ) );
+		algebra_type::for_each3( out , in , dxdt , operations_type::make_scale_sum2( static_cast< value_type >( 1.0 ) , dt ) );
 	}
 };
 

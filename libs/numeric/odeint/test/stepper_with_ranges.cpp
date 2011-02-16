@@ -112,40 +112,6 @@ BOOST_AUTO_TEST_CASE( explicit_euler_with_range_v1 )
 	CHECK_DXDT_DEFAULT( f.dxdt );
 }
 
-BOOST_AUTO_TEST_CASE( explicit_euler_with_range_v2 )
-{
-	vector_fixture f;
-	lorenz()( std::make_pair( f.in.begin() , f.in.begin() + 3 ) ,
-			  std::make_pair( f.dxdt.begin() + 3 , f.dxdt.begin() + 6 ) , 0.0 );
-	f.euler.do_step( lorenz() , std::make_pair( f.in.begin() , f.in.begin() + 3 ) ,
-								std::make_pair( f.dxdt.begin() + 3 , f.dxdt.begin() + 6 ) , 0.1 , 0.1 );
-	CHECK_VALUES( f.in , 0.0 , 1.2 , 2.3 , 3.0 , 4.0 , 5.0 );
-	CHECK_OUT_DEFAULT( f.out );
-	CHECK_VALUES( f.dxdt , 100.0 , 101.0 , 102.0 , 0.0 , 2.0 , 3.0 );
-}
-
-BOOST_AUTO_TEST_CASE( explicit_euler_with_range_v3 )
-{
-	vector_fixture f;
-	f.euler.do_step( lorenz() , std::make_pair( f.in.begin() + 2 , f.in.begin() + 5 ) , 0.1 ,
-			std::make_pair( f.out.begin() , f.out.begin() +3 ) , 0.1 );
-	CHECK_IN_DEFAULT( f.in );
-	CHECK_VALUES( f.out , 2.2 , 3.2 , 4.3 , 13.0 , 14.0 , 15.0 );
-	CHECK_DXDT_DEFAULT( f.dxdt );
-}
-
-BOOST_AUTO_TEST_CASE( explicit_euler_with_range_v4 )
-{
-	vector_fixture f;
-	lorenz()( std::make_pair( f.in.begin() , f.in.begin() + 3 ) ,
-			  std::make_pair( f.dxdt.begin() + 3 , f.dxdt.begin() + 6 ) , 0.0 );
-	f.euler.do_step( lorenz() , std::make_pair( f.in.begin() , f.in.begin() + 3 ) ,
-								std::make_pair( f.dxdt.begin() + 3 , f.dxdt.begin() + 6 ) , 0.1 ,
-								std::make_pair( f.out.begin() , f.out.begin() + 3 ) , 0.1 );
-	CHECK_IN_DEFAULT( f.in );
-	CHECK_VALUES( f.out , 0.0 , 1.2 , 2.3 , 13.0 , 14.0 , 15.0 );
-	CHECK_VALUES( f.dxdt , 100.0 , 101.0 , 102.0 , 0.0 , 2.0 , 3.0 );
-}
 
 
 

@@ -15,8 +15,6 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/floating_point_comparison.hpp>
 
-#include <boost/range.hpp>
-
 #include <boost/units/systems/si/length.hpp>
 #include <boost/units/systems/si/time.hpp>
 #include <boost/units/systems/si/velocity.hpp>
@@ -87,7 +85,7 @@ BOOST_AUTO_TEST_SUITE( fusion_algebra_test )
 BOOST_AUTO_TEST_CASE( for_each2 )
 {
 	fusion_fixture f;
-	fusion_algebra::for_each2()( f.res , f.k1 ,
+	fusion_algebra::for_each2( f.res , f.k1 ,
 			default_operations::scale_sum1< time_type >( dt ) );
 	BOOST_CHECK_CLOSE( fusion::at_c< 0 >( f.res ).value() , 0.1 , 1.0e-10 );
 	BOOST_CHECK_CLOSE( fusion::at_c< 1 >( f.res ).value() , 0.1 , 1.0e-10 );
@@ -96,7 +94,7 @@ BOOST_AUTO_TEST_CASE( for_each2 )
 BOOST_AUTO_TEST_CASE( for_each3 )
 {
 	fusion_fixture f;
-	fusion_algebra::for_each3()( f.res , f.x , f.k1 ,
+	fusion_algebra::for_each3( f.res , f.x , f.k1 ,
 			default_operations::scale_sum2< value_type , time_type >( 1.0 , dt ) );
 	BOOST_CHECK_CLOSE( fusion::at_c< 0 >( f.res ).value() , 1.1 , 1.0e-10 );
 	BOOST_CHECK_CLOSE( fusion::at_c< 1 >( f.res ).value() , 1.1 , 1.0e-10 );
@@ -105,7 +103,7 @@ BOOST_AUTO_TEST_CASE( for_each3 )
 BOOST_AUTO_TEST_CASE( for_each4 )
 {
 	fusion_fixture f;
-	fusion_algebra::for_each4()( f.res , f.x , f.k1 , f.k2 ,
+	fusion_algebra::for_each4( f.res , f.x , f.k1 , f.k2 ,
 			default_operations::scale_sum3< value_type , time_type , time_type >( 1.0 , dt , dt ) );
 	BOOST_CHECK_CLOSE( fusion::at_c< 0 >( f.res ).value() , 1.3 , 1.0e-10 );
 	BOOST_CHECK_CLOSE( fusion::at_c< 1 >( f.res ).value() , 1.3 , 1.0e-10 );
@@ -114,7 +112,7 @@ BOOST_AUTO_TEST_CASE( for_each4 )
 BOOST_AUTO_TEST_CASE( for_each5 )
 {
 	fusion_fixture f;
-	fusion_algebra::for_each5()( f.res , f.x , f.k1 , f.k2 , f.k3 ,
+	fusion_algebra::for_each5( f.res , f.x , f.k1 , f.k2 , f.k3 ,
 			default_operations::scale_sum4< value_type , time_type , time_type , time_type >( 1.0 , dt , dt , dt ) );
 	BOOST_CHECK_CLOSE( fusion::at_c< 0 >( f.res ).value() , 1.6 , 1.0e-10 );
 	BOOST_CHECK_CLOSE( fusion::at_c< 1 >( f.res ).value() , 1.6 , 1.0e-10 );
@@ -123,7 +121,7 @@ BOOST_AUTO_TEST_CASE( for_each5 )
 BOOST_AUTO_TEST_CASE( for_each6 )
 {
 	fusion_fixture f;
-	fusion_algebra::for_each6()( f.res , f.x , f.k1 , f.k2 , f.k3 , f.k4 ,
+	fusion_algebra::for_each6( f.res , f.x , f.k1 , f.k2 , f.k3 , f.k4 ,
 			default_operations::scale_sum5< value_type , time_type , time_type , time_type , time_type >( 1.0 , dt , dt , dt , dt ) );
 	BOOST_CHECK_CLOSE( fusion::at_c< 0 >( f.res ).value() , 2.0 , 1.0e-10 );
 	BOOST_CHECK_CLOSE( fusion::at_c< 1 >( f.res ).value() , 2.0 , 1.0e-10 );
@@ -132,7 +130,7 @@ BOOST_AUTO_TEST_CASE( for_each6 )
 BOOST_AUTO_TEST_CASE( for_each7 )
 {
 	fusion_fixture f;
-	fusion_algebra::for_each7()( f.res , f.x , f.k1 , f.k2 , f.k3 , f.k4 , f.k5 ,
+	fusion_algebra::for_each7( f.res , f.x , f.k1 , f.k2 , f.k3 , f.k4 , f.k5 ,
 			default_operations::scale_sum6< value_type , time_type , time_type , time_type , time_type , time_type >( 1.0 , dt , dt , dt , dt , dt ) );
 	BOOST_CHECK_CLOSE( fusion::at_c< 0 >( f.res ).value() , 2.5 , 1.0e-10 );
 	BOOST_CHECK_CLOSE( fusion::at_c< 1 >( f.res ).value() , 2.5 , 1.0e-10 );
@@ -141,7 +139,7 @@ BOOST_AUTO_TEST_CASE( for_each7 )
 BOOST_AUTO_TEST_CASE( for_each8 )
 {
 	fusion_fixture f;
-	fusion_algebra::for_each8()( f.res , f.x , f.k1 , f.k2 , f.k3 , f.k4 , f.k5 , f.k6 ,
+	fusion_algebra::for_each8( f.res , f.x , f.k1 , f.k2 , f.k3 , f.k4 , f.k5 , f.k6 ,
 			default_operations::scale_sum7< value_type , time_type , time_type , time_type , time_type , time_type , time_type >( 1.0 , dt , dt , dt , dt , dt ,dt ) );
 	BOOST_CHECK_CLOSE( fusion::at_c< 0 >( f.res ).value() , 3.1 , 1.0e-10 );
 	BOOST_CHECK_CLOSE( fusion::at_c< 1 >( f.res ).value() , 3.1 , 1.0e-10 );
@@ -150,7 +148,7 @@ BOOST_AUTO_TEST_CASE( for_each8 )
 
 BOOST_AUTO_TEST_CASE( reduce )
 {
-	double sum = fusion_algebra::reduce()( fusion::make_vector( 1.0 , 2.0 , 3.0 ) , std::plus< double >() , 0.0 );
+	double sum = fusion_algebra::reduce( fusion::make_vector( 1.0 , 2.0 , 3.0 ) , std::plus< double >() , 0.0 );
 	BOOST_CHECK_CLOSE( sum , 6.0 , 1.0e-10 );
 }
 

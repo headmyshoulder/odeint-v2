@@ -5,7 +5,7 @@
  *      Author: karsten
  */
 
-#define BOOST_TEST_MODULE odeint_standard_algebra
+#define BOOST_TEST_MODULE odeint_is_pair
 
 #include <utility>
 
