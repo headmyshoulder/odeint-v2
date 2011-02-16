@@ -6,8 +6,7 @@
     * include dense_output_explicit
     * inlcude dense_output_controlled_explicit_fsal
   * test gsl
-  DIFFICULT * test explicit stepper with ranges
-    * discuss
+  * test explicit stepper with ranges
   * split check_concepts into check_stepper_concept, check_error_stepper_concept, check_controlled_stepper_concept
   * include test/thrust in jam system, use system from
 * implicit euler, include dfdt
@@ -16,9 +15,6 @@ DIFFICULT * finishing change of controlled_stepper to units
   * check if rosenbrock controller and controlled_stepper can both be used with the explicit steppers
   OK * move error_checker into controlled_stepper
   * rename controlled_stepper to a more specific name
-OK * file cleanup
-   OK * split resizing and copy/destruct/construct in different files
-   OK * subfolder algebra, operations, util
 * general:
   * check if everywhere static_cast< value_type > is used
   * check header guards
@@ -30,16 +26,9 @@ OK * file cleanup
   OK * check is the coefficients are named good
   * check ranges and call
   * include do_step( system , q , p , t , dt )
-  
-* decrease complexity:
-  * remove construct, destruct, copy ?
-  * remove the overloads solving the forwarding problem. boost::range can not be used then anymore
-  
-
-
+* dense output for rosenbrock
 * Integrate functions
 * skript for setting the include defines according to the position in file system an writing a general copyright comment at the beginning
-
 * Documentation
 * Tutorials 
 
@@ -47,6 +36,12 @@ OK * file cleanup
 
 DONE:
 
+OK * decrease complexity:
+  LATER * remove construct, destruct, copy ?
+  OK * remove the overloads solving the forwarding problem. boost::range can not be used then anymore
+OK * file cleanup
+   OK * split resizing and copy/destruct/construct in different files
+   OK * subfolder algebra, operations, util
 OK * change standard_operations::rel_error in order to word with units and test it
 OK * include implicit euler
   OK * call via std::pair< deriv , jacobi >

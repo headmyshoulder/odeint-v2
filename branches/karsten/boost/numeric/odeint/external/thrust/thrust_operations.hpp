@@ -16,6 +16,7 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+#include <thrust/tuple.h>
 #include <thrust/iterator/zip_iterator.h>
 
 
