@@ -1,0 +1,270 @@
+[section Concepts]
+
+The odeint library defines three concepts for stepping objects.
+
+[/
+
+[section Dynamical system]
+
+The dynamical system represents the right hand side of the differential equation:
+
+[* x'(t) = f(x(t) , t)]
+
+In this odeint library the dynamical system is realized by a callable object, 
+e.g. a function pointer, a functor or an instance of an object with an 
+appropriate `()`-operator.
+The parameter structure has to be the following:
+
+`(const container_type &x, container_type &dxdt, const time_type t)`
+
+`x` is the current state of the system and `t` is the current time. 
+The result *x' = f(x,t)* is then returned in `dxdt`.
+See the tutorial for examples on how to define the dynamical system.
+
+[endsect]
+
+]
+
+
+
+[section Basic stepper]
+
+Basic steppers execute one timestep of a specific order with a given stepsize. 
+They usually allocate internal memory to store intermediate function call 
+results.
+If state types with variable size are used (e.g. `vector`), it has to be assured
+that the stepper gets informed about any change of the state size by calling its
+`adjust_size` method.
+
+[*Associated Types]
+[table
+    [[] [] [Description]]
+    [[Time] [Stepper::time_type] [Type of the time variable, e.g. `double`]]
+    [[Container] [Stepper::container_type] [Type of the system state, e.g. `vector<double>`]]
+    [[Value] [Stepper::value_type] [Value type of the state, e.g. `double`]]
+    [[Order Type] [Stepper::order_type] [Type of the order parameter, usually `unsigned short`]]
+]
+
+[*Methods]
+
+*`Stepper()` Constructor.
+
+*`Stepper( container_type &x )` Constructor that allocates internal memory to 
+store intermediate results of the same size as `x`.
+
+*`void do_step( DynamicalSystem &system ,
+      		   container_type &x ,
+		       time_type t ,
+		       time_type dt )`
+
+Executes one timestep with the given parameters:
+[table
+    [[Parameter] [Type] [Description]]
+    [[system] [DynamicalSystem] [Function (callable object) that computes the rhs of the ode]]
+    [[x] [container_type] [The current state of the system *x(t)*]]
+    [[t] [time_type] [The current time  *t*]]
+    [[dt] [time_type] [Length of the timestep to be executed]]
+]
+The result of this method is the (approximate) state of the system *x(t+dt)* and 
+is stored in the variable `x` (in-place).
+Note, that the time `t` is not automatically increased by this method.
+
+*`void do_step( DynamicalSystem &system ,
+		      container_type &x ,
+		      const container_type &dxdt ,
+		      time_type t ,
+		      time_type dt )`
+
+The same as above but with the additional parameter `dxdt` that represents the
+derivative [*x'(t) = f(x,t)] at the time *t*.
+
+*`void adjust_size( const container_type &x )`
+Adjusts the internal memory to store intermediate results of the same size as 
+`x`.
+This function /must/ be called whenever the system size changes during the 
+integration.
+
+*`order_type order_step()`
+Returns the order of the algorithm. If *n* is the order of a method, then the
+result of one iteration with the timestep *dt* is accurate up to *dt^n*. That 
+means the error made by the time discretization is of order *dt^(n+1)*.
+
+[*Stepper that model this concept]
+
+*`stepper_euler`
+*`stepper_rk4`
+*`stepper_rk78_fehlberg`
+
+[endsect]
+
+[section Error stepper]
+
+Error steppers execute one timestep of a specific order with a given stepsize.
+Additionally, an error estimation of the obtained result is computed that can 
+be used to control the error introduced by the time discretization.
+Like the basic steppers, error steppers usually allocate internal memory to store
+intermediate function call results. If state types with variable size are used 
+(e.g. `vector`), it has to be assured that the stepper gets informed about any 
+change of the state size by calling its `adjust_size` method.
+
+[*Associated Types]
+
+Same as for /basic steppers/ above.
+
+[*Methods]
+
+*`Error_Stepper()` Constructor.
+
+*`Error_Stepper( container_type &x )` Constructor that allocates internal memory to 
+store intermediate results of the same size as `x`.
+
+*`void do_step( DynamicalSystem &system ,
+      		   container_type &x ,
+		       time_type t ,
+		       time_type dt  ,
+               container_type &xerr)`
+
+Executes one timestep with the given parameters:
+[table
+    [[Parameter] [Type] [Description]]
+    [[system] [DynamicalSystem] [Function (callable object) that computes the rhs of the ode]]
+    [[x] [container_type] [The current state of the system *x(t)*]]
+    [[t] [time_type] [The current time  *t*]]
+    [[dt] [time_type] [Length of the timestep to be executed]]
+    [[xerr] [container_type] [Used by the method to return the error estimation of this computation]]
+]
+The result of this method is the (approximate) state of the system *x(t+dt)*, 
+which is returned in the variable `x` (in-place), and the corresponding error 
+estimation returned in `xerr`.
+Note, that the time `t` is not automatically increased by this method.
+
+*`void do_step( DynamicalSystem &system ,
+		      container_type &x ,
+		      const container_type &dxdt ,
+		      time_type t ,
+		      time_type dt ,
+              container_type &xerr)`
+
+The same as above but with the additional parameter `dxdt` that represents the
+derivative [*x'(t) = f(x,t)] at the time *t*.
+
+*`void adjust_size( const container_type &x )`
+Adjusts the internal memory to store intermediate results of the same size as 
+`x`.
+This function /must/ be called whenever the system size changes during the 
+integration.
+
+*`order_type order_error_step()`
+Returns the order of the result *x(t+dt)* of the algorithm.
+
+*`order_type order_error()`
+Returns the order of the error estimation of the algorithm.
+
+[*Stepper that model this concept]
+
+*`stepper_rk5_ck`
+*`stepper_rk78_fehlberg`
+*`stepper_half_step`
+
+[endsect]
+
+[section Controlled stepper]
+
+Controlled steppers try to execute a timestep with a given error threshold.
+If the estimated error of the obtained solution is too big, the result is 
+rejected and a new stepsize is proposed.
+If the error is small enough the timestep is accepted and possibly an increased
+stepsize is proposed.
+
+[*Associated Types]
+
+Same as for /basic steppers/ above.
+
+[*Methods]
+
+*`Controlled_Stepper( time_type abs_err, time_type rel_err, 
+                      time_type factor_x, time_type factor_dxdt )`
+
+Constructor that initializes the controlled stepper with several parameters of
+the error control. The controlled stepper assures that the error done by each 
+individual timestep yields:
+
+[* xerr < 1.1 ( eps_abs + eps_rel * (factor_x |x| + factor_dxdt h |x'|) ) ]
+
+The factor 1.1 is for safety to avoid unnecessary many stepsize adjustings.
+The above inequality should be understand to hold for /all/ components of the
+possibly more dimensional vectors *x*, *x'* and *xerr*.
+If the estimated error is too large, a reduced stepsize will be suggested.
+If the estimated error is less than half of the desired error, an increased
+stepsize will be suggested.
+
+*`Controlled_Stepper( container_type &x, time_type abs_err, time_type rel_err, 
+                      time_type factor_x, time_type factor_dxdt )`
+Same as above, but with additional allocation of the internal memory to store 
+intermediate results of the same size as `x`.
+
+*`controlled_step_result try_step( 
+                DynamicalSystem &system, 
+                container_type &x, 
+                time_type &t, 
+                time_type &dt )`
+
+Tries one timestep with the given parameters
+[table
+    [[Parameter] [Type] [Description]]
+    [[system] [DynamicalSystem] [Function (callable object) that computes the rhs of the ode]]
+    [[x] [container_type] [The current state of the system *x(t)*]]
+    [[t] [time_type] [The current time  *t*]]
+    [[dt] [time_type] [Length of the timestep to be executed]]
+]
+This method has three possible outcomes represented by the returned value `result`:
+If `result = success` the step has been applied and x contains the new state 
+*x(t)* where the time has also been increased *t += dt*.
+If `result = step_size_increased` the step has also been accomplished, but the 
+estimated error was so small that a new stepsize is proposed in the variable 
+`dt`.
+If `result = step_size_decreased` the step has been rejected due to a too big 
+error. `x` and `t` remain unchanged and `dt` now containes the suggested reduced
+stepsize that should give an error below the desired level.
+
+*`controlled_step_result try_step( 
+                DynamicalSystem &system, 
+                container_type &x, 
+                const container_type &dxdt,
+                time_type &t, 
+                time_type &dt )`
+Same as above but with the additional parameter `dxdt` that that represents the
+derivative *x'(t) = f(x,t)* at the time *t*.
+
+*`void adjust_size( const container_type &x )`
+Adjusts the internal memory to store intermediate results of the same size as 
+`x`.
+This function /must/ be called whenever the system size changes during the 
+integration.
+
+*`order_type order_error_step()`
+Returns the order of the result *x(t+dt)* of the algorithm.
+
+[*Stepper that model this concept]
+
+*`controlled_stepper_standard`
+*`controlled_stepper_bs`
+
+[endsect]
+
+
+[section Dense ouput stepper]
+
+[endsect]
+
+[section Size adjusting stepper]
+
+[endsect]
+
+[section CompositeStepper]
+
+[endsect]
+
+see the wiki
+
+[endsect]

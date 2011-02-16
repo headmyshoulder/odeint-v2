@@ -1,0 +1,241 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Reference</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
+<link rel="prev" href="concepts.html" title="Concepts">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="concepts.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_sandbox_numeric_odeint.reference"></a><a class="link" href="reference.html" title="Reference">Reference</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="reference.html#boost_sandbox_numeric_odeint.reference.stepper_classes">Stepper
+      classes</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_sandbox_numeric_odeint.reference.integration_functions">Integration
+      functions</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_sandbox_numeric_odeint.reference.algebras">Algebras</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_sandbox_numeric_odeint.reference.operations">Operations</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_sandbox_numeric_odeint.reference.resizing">Resizing</a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sandbox_numeric_odeint.reference.stepper_classes"></a><a class="link" href="reference.html#boost_sandbox_numeric_odeint.reference.stepper_classes" title="Stepper classes">Stepper
+      classes</a>
+</h3></div></div></div>
+<div class="table">
+<a name="id578418"></a><p class="title"><b>Table&#160;1.3.&#160;Stepper Algorithms</b></p>
+<div class="table-contents"><table class="table" summary="Stepper Algorithms">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Method
+                </p>
+              </th>
+<th>
+                <p>
+                  Class
+                </p>
+              </th>
+<th>
+                <p>
+                  Order
+                </p>
+              </th>
+<th>
+                <p>
+                  Error Estimation
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  Euler
+                </p>
+              </td>
+<td>
+                <p>
+                  stepper_euler
+                </p>
+              </td>
+<td>
+                <p>
+                  1
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Runge-Kutta 4
+                </p>
+              </td>
+<td>
+                <p>
+                  stepper_rk4
+                </p>
+              </td>
+<td>
+                <p>
+                  4
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Runge-Kutta Cash-Karp
+                </p>
+              </td>
+<td>
+                <p>
+                  stepper_rk5_ck
+                </p>
+              </td>
+<td>
+                <p>
+                  5
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes (Order 4)
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Runge-Kutta Fehlberg
+                </p>
+              </td>
+<td>
+                <p>
+                  stepper_rk78_fehlberg
+                </p>
+              </td>
+<td>
+                <p>
+                  7
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes (Order 8)
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Midpoint
+                </p>
+              </td>
+<td>
+                <p>
+                  stepper_midpoint
+                </p>
+              </td>
+<td>
+                <p>
+                  variable
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Bulirsch-Stoer
+                </p>
+              </td>
+<td>
+                <p>
+                  controlled_stepper_bs
+                </p>
+              </td>
+<td>
+                <p>
+                  variable
+                </p>
+              </td>
+<td>
+                <p>
+                  Controlled
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sandbox_numeric_odeint.reference.integration_functions"></a><a class="link" href="reference.html#boost_sandbox_numeric_odeint.reference.integration_functions" title="Integration functions">Integration
+      functions</a>
+</h3></div></div></div>
+<div class="section"><div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sandbox_numeric_odeint.reference.integration_functions.constant_step_size_functions"></a><a class="link" href="reference.html#boost_sandbox_numeric_odeint.reference.integration_functions.constant_step_size_functions" title="Constant step-size functions">Constant
+        step-size functions</a>
+</h4></div></div></div></div>
+<div class="section"><div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sandbox_numeric_odeint.reference.integration_functions.adaptive_step_size_functions"></a><a class="link" href="reference.html#boost_sandbox_numeric_odeint.reference.integration_functions.adaptive_step_size_functions" title="Adaptive step-size functions">Adaptive
+        step-size functions</a>
+</h4></div></div></div></div>
+</div>
+<div class="section"><div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sandbox_numeric_odeint.reference.algebras"></a><a class="link" href="reference.html#boost_sandbox_numeric_odeint.reference.algebras" title="Algebras">Algebras</a>
+</h3></div></div></div></div>
+<div class="section"><div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sandbox_numeric_odeint.reference.operations"></a><a class="link" href="reference.html#boost_sandbox_numeric_odeint.reference.operations" title="Operations">Operations</a>
+</h3></div></div></div></div>
+<div class="section"><div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sandbox_numeric_odeint.reference.resizing"></a><a class="link" href="reference.html#boost_sandbox_numeric_odeint.reference.resizing" title="Resizing">Resizing</a>
+</h3></div></div></div></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 Karsten Ahnert and Mario Mulansky<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="concepts.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+# (C) Copyright 2010 : Karsten Ahnert, Mario Mulansky
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+import os ;
+import modules ;
+import path ; 
+
+path-constant HOME : [ os.environ HOME ] ;
+path-constant CHRONO_ROOT : [ os.environ CHRONO_ROOT ] ;
+
+project
+    : requirements
+      <define>BOOST_ALL_NO_LIB=1
+      <include>../../../../..
+    ;
+
+exe test_units
+    : test_units.cpp
+    ;
+    
+# exe test_ranges
+#	: test_ranges.cpp
+#	;

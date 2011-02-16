@@ -1,0 +1,148 @@
+[section Tutorial]
+
+[include tutorial_harmonic_oscillator.qbk]
+
+[include tutorial_solar_system.qbk]
+
+[section Chaotic systems and Lyapunov exponents]
+
+blah blah
+
+[endsect]
+
+[section Stiff systems]
+
+blah blah
+
+[endsect]
+
+[section Different steppers]
+
+Explicit steppers
+
+Implicit steppers
+
+Step size controll
+
+dense output
+
+Overview and table
+
+[endsect]
+
+[section Special topics]
+
+[section Complex state types]
+
+typedef vector< complex< double > > state_type;
+
+Stuart landau
+
+DNLS
+
+[endsect]
+
+[section Lattice systems]
+
+Fermi-Pasta-Ulam system
+
+[endsect]
+
+[section Partial differential equations]
+
+Wave equation
+
+KdV
+
+Ginzburg-Landau
+
+[endsect]
+
+
+[section Using boost::units]
+
+blah blah
+
+[endsect] 
+
+[section Using Cuda and Thrust]
+
+blah blah
+
+[endsect]
+
+[section Using matrices as state types]
+
+Expanding resizing
+
+[endsect]
+
+[section Ordinary differential equations on networks]
+
+[endsect]
+
+[section Pass by value or by reference]
+
+blah blah
+
+[endsect]
+
+[section Using boost::range]
+
+blah blah
+
+[endsect]
+
+[section Using arbitrary precision floating point types]
+
+GMP
+
+[endsect]
+
+[endsect]
+
+
+
+
+
+
+
+
+
+
+
+
+[section References]
+
+[*General informations about numerical integration of ordinary differential equations:]
+
+[1] Press William H et al., Numerical Recipes 3rd Edition: The Art of Scientific Computing, 3rd ed. (Cambridge University Press, 2007).
+
+[2] Ernst Hairer, Syvert P. Nørsett, and Gerhard Wanner, Solving Ordinary Differential Equations I: Nonstiff Problems, 2nd ed. (Springer, Berlin, 2009).
+
+[3] Ernst Hairer and Gerhard Wanner, Solving Ordinary Differential Equations II: Stiff and Differential-Algebraic Problems, 2nd ed. (Springer, Berlin, 2010).
+
+
+[*Symplectic integration of numerical integration:]
+
+[4] Ernst Hairer, Gerhard Wanner, and Christian Lubich, Geometric Numerical Integration: Structure-Preserving Algorithms for Ordinary Differential Equations, 2nd ed. (Springer-Verlag Gmbh, 2006).
+
+[5] Leimkuhler Benedict and Reich Sebastian, Simulating Hamiltonian Dynamics (Cambridge University Press, 2005).
+
+
+[*Special symplectic methods:]
+
+[6] Haruo Yoshida, “Construction of higher order symplectic integrators,” Physics Letters A 150, no. 5 (November 12, 1990): 262-268.
+
+[7] Robert I. McLachlan, “On the numerical integration of ordinary differential equations by symmetric composition methods,” SIAM J. Sci. Comput. 16, no. 1 (1995): 151-168.
+
+[endsect]
+
+
+
+
+
+
+
+
+[endsect]

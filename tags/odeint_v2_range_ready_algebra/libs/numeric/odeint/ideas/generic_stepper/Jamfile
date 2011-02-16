@@ -1,0 +1,42 @@
+# (C) Copyright 2010 : Karsten Ahnert, Mario Mulansky
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+import os ;
+import modules ;
+import path ; 
+
+path-constant HOME : [ os.environ HOME ] ;
+path-constant CHRONO_ROOT : [ os.environ CHRONO_ROOT ] ;
+
+project
+    : requirements
+      <define>BOOST_ALL_NO_LIB=1
+      <include>../../../../..
+      <include>../butcher
+      <include>$(CHRONO_ROOT)
+    ;
+
+#exe test 
+#	: test.cpp
+#	;
+
+exe rk_test
+    : rk_test.cpp
+    ;
+    
+exe performance
+    : performance.cpp
+    ;
+    
+exe performance_fusion
+    : performance_fusion.cpp runge_kutta_stepper_fast.hpp
+    ;
+    
+exe performance_mpl
+    : performance_mpl.cpp
+    ;
+    
+exe performance_odeint
+    : performance_odeint.cpp
+    ;

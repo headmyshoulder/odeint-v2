@@ -1,0 +1,96 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Chapter&#160;1.&#160;boost.sandbox.numeric.odeint</title>
+<link rel="stylesheet" href="boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
+<link rel="next" href="odeint/overview.html" title="Overview">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="odeint/overview.html"><img src="images/next.png" alt="Next"></a></div>
+<div class="chapter">
+<div class="titlepage"><div>
+<div><h2 class="title">
+<a name="odeint"></a>Chapter&#160;1.&#160;boost.sandbox.numeric.odeint</h2></div>
+<div><div class="author"><h3 class="author">
+<span class="firstname">Karsten</span> <span class="surname">Ahnert</span>
+</h3></div></div>
+<div><div class="author"><h3 class="author">
+<span class="firstname">Mario</span> <span class="surname">Mulansky</span>
+</h3></div></div>
+<div><p class="copyright">Copyright &#169; 2009 Karsten Ahnert and Mario Mulansky</p></div>
+<div><div class="legalnotice">
+<a name="id563832"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></div>
+</div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="odeint/overview.html">Overview</a></span></dt>
+<dt><span class="section"><a href="odeint/short_example.html">Short Example</a></span></dt>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/tutorial.html">Tutorial</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/tutorial.html#boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator">Harmonic
+      oscillator</a></span></dt>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/tutorial.html#boost_sandbox_numeric_odeint.tutorial.solar_system">Solar
+      system</a></span></dt>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/tutorial.html#boost_sandbox_numeric_odeint.tutorial.chaotic_systems_and_lyapunov_exponents">Chaotic
+      systems and Lyapunov exponents</a></span></dt>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/tutorial.html#boost_sandbox_numeric_odeint.tutorial.stiff_systems">Stiff
+      systems</a></span></dt>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/tutorial.html#boost_sandbox_numeric_odeint.tutorial.different_steppers">Different
+      steppers</a></span></dt>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics">Special
+      topics</a></span></dt>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/tutorial.html#boost_sandbox_numeric_odeint.tutorial.references">References</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/extend_odeint.html">Extend odeint</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/extend_odeint.html#boost_sandbox_numeric_odeint.extend_odeint.write_own_steppers">Write
+      own steppers</a></span></dt>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/extend_odeint.html#boost_sandbox_numeric_odeint.extend_odeint.adapt_your_own_containers">Adapt
+      your own containers</a></span></dt>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/extend_odeint.html#boost_sandbox_numeric_odeint.extend_odeint.adapt_your_own_operations">Adapt
+      your own operations</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/concepts.html">Concepts</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/concepts.html#boost_sandbox_numeric_odeint.concepts.basic_stepper">Basic
+      stepper</a></span></dt>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/concepts.html#boost_sandbox_numeric_odeint.concepts.error_stepper">Error
+      stepper</a></span></dt>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/concepts.html#boost_sandbox_numeric_odeint.concepts.controlled_stepper">Controlled
+      stepper</a></span></dt>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/concepts.html#boost_sandbox_numeric_odeint.concepts.dense_ouput_stepper">Dense
+      ouput stepper</a></span></dt>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/concepts.html#boost_sandbox_numeric_odeint.concepts.size_adjusting_stepper">Size
+      adjusting stepper</a></span></dt>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/concepts.html#boost_sandbox_numeric_odeint.concepts.compositestepper">CompositeStepper</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/reference.html">Reference</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/reference.html#boost_sandbox_numeric_odeint.reference.stepper_classes">Stepper
+      classes</a></span></dt>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/reference.html#boost_sandbox_numeric_odeint.reference.integration_functions">Integration
+      functions</a></span></dt>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/reference.html#boost_sandbox_numeric_odeint.reference.algebras">Algebras</a></span></dt>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/reference.html#boost_sandbox_numeric_odeint.reference.operations">Operations</a></span></dt>
+<dt><span class="section"><a href="boost_sandbox_numeric_odeint/reference.html#boost_sandbox_numeric_odeint.reference.resizing">Resizing</a></span></dt>
+</dl></dd>
+</dl>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: January 30, 2011 at 19:12:57 GMT</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="odeint/overview.html"><img src="images/next.png" alt="Next"></a></div>
+</body>
+</html>

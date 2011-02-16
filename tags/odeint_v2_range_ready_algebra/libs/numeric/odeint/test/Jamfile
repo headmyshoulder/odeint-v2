@@ -1,0 +1,33 @@
+# (C) Copyright 2010 : Karsten Ahnert, Mario Mulansky
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+# bring in rules for testing
+
+import testing ;
+
+
+project
+    : requirements
+      <define>BOOST_ALL_NO_LIB=1
+      <include>../../../..
+      <library>/boost/test//boost_unit_test_framework 
+	  <link>static
+    ;
+
+
+test-suite "odeint"
+	:
+	 [ run stepper_concepts.cpp ]
+	 [ run resizing.cpp ]
+	 [ run default_operations.cpp ]
+	 [ run range_algebra.cpp ]
+	 [ run implicit_euler.cpp ]
+	 [ run fusion_algebra.cpp ]
+	 [ run stepper_with_units.cpp ]
+	 [ run stepper_copying.cpp ]
+	 [ run stepper_with_ranges.cpp ]
+	 [ run rosenbrock4.cpp ]
+	 [ run is_pair.cpp ]
+	: <testing.launcher>valgrind
+	;    
