@@ -24,6 +24,10 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+
+/*
+ * Symplectic Runge Kutta Nystroem base
+ */
 template<
 	size_t NumOfStages ,
 	class Stepper ,
@@ -103,10 +107,47 @@ public:
 	}
 
 
+
+	/*
+	 * Version 1 : do_step( system , x , t , dt )
+	 *
+	 * The overloads are needed in order to solve the forwarding problem
+	 */
+	template< class System , class StateInOut >
+	void do_step( System system , const StateInOut &state , const time_type &t , const time_type &dt )
+	{
+		typedef typename boost::unwrap_reference< System >::type system_type;
+		do_step_impl( system , state , t , state , dt , typename detail::is_pair< system_type >::type() );
+	}
+
+	template< class System , class StateInOut >
+	void do_step( System system , StateInOut &state , const time_type &t , const time_type &dt )
+	{
+		typedef typename boost::unwrap_reference< System >::type system_type;
+		do_step_impl( system , state , t , state , dt , typename detail::is_pair< system_type >::type() );
+	}
+
+	// for convenience
+	template< class System , class CoorInOut , class MomentumInOut >
+	void do_step( System system , CoorInOut &q , MomentumInOut &p , const time_type &t , const time_type &dt )
+	{
+		do_step( system , std::make_pair( boost::ref( q ) , boost::ref( p ) ) , t , std::make_pair( boost::ref( q ) , boost::ref( p ) ) , dt );
+	}
+
+
+
+
+
+	/*
+	 * Version 2 : do_step( system , in , t , out , dt )
+	 *
+	 * The overloads are needed in order to solve the forwarding problem
+	 */
 	template< class System , class StateIn , class StateOut >
 	void do_step( System system , const StateIn &in , const time_type &t , const StateOut &out , const time_type &dt )
 	{
-		do_step( system , in , t , out , dt );
+		typedef typename boost::unwrap_reference< System >::type system_type;
+		do_step_impl( system , in , t , out , dt , typename detail::is_pair< system_type >::type() );
 	}
 
 
@@ -119,19 +160,6 @@ public:
 
 
 
-
-	template< class System , class StateInOut >
-	void do_step( System system , const StateInOut &state , const time_type &t , const time_type &dt )
-	{
-		do_step( system , state , t , dt );
-	}
-
-	template< class System , class StateInOut >
-	void do_step( System system , StateInOut &state , const time_type &t , const time_type &dt )
-	{
-		typedef typename boost::unwrap_reference< System >::type system_type;
-		do_step_impl( system , state , t , state , dt , typename detail::is_pair< system_type >::type() );
-	}
 
 	template< class StateType >
 	void adjust_size( const StateType &x )
@@ -156,6 +184,20 @@ private:
     	coor_deriv_func_type &coor_func = sys.first;
     	momentum_deriv_func_type &momentum_func = sys.second;
 
+    	typedef typename boost::unwrap_reference< StateIn >::type state_in_type;
+    	typedef typename boost::unwrap_reference< typename state_in_type::first_type >::type coor_in_type;
+    	typedef typename boost::unwrap_reference< typename state_in_type::second_type >::type momentum_in_type;
+    	state_in_type &state_in = in;
+    	coor_in_type &coor_in = state_in.first;
+    	momentum_in_type &momentum_in = state_in.first;
+
+    	typedef typename boost::unwrap_reference< StateOut >::type state_out_type;
+    	typedef typename boost::unwrap_reference< typename state_out_type::first_type >::type coor_out_type;
+    	typedef typename boost::unwrap_reference< typename state_out_type::second_type >::type momentum_out_type;
+    	state_out_type &state_out = out;
+    	coor_out_type &coor_out = state_out.first;
+    	momentum_out_type &momentum_out = state_out.second;
+
 
 		m_coor_deriv_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
 		m_momentum_deriv_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
@@ -166,20 +208,20 @@ private:
 		{
 			if( l == 0 )
 			{
-				coor_func( in.second , m_dqdt );
-				typename algebra_type::for_each2()( out.first , in.first , m_dqdt ,
+				coor_func( momentum_in , m_dqdt );
+				typename algebra_type::for_each2()( coor_out , coor_in , m_dqdt ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , coef_a[l] * dt ) );
-				momentum_func( out.first , m_dqdt );
-				typename algebra_type::for_each2()( out.second , in.second , m_dqdt ,
+				momentum_func( coor_out , m_dqdt );
+				typename algebra_type::for_each2()( momentum_out , momentum_in , m_dqdt ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , coef_b[l] * dt ) );
 			}
 			else
 			{
-				coor_func( out.second , m_dqdt );
-				typename algebra_type::for_each2()( out.first , out.first , m_dqdt ,
+				coor_func( momentum_out , m_dqdt );
+				typename algebra_type::for_each2()( coor_out , coor_out , m_dqdt ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , coef_a[l] * dt ) );
-				momentum_func( out.first , m_dqdt );
-				typename algebra_type::for_each2()( out.second , out.second , m_dqdt ,
+				momentum_func( coor_out , m_dqdt );
+				typename algebra_type::for_each2()( momentum_out , momentum_out , m_dqdt ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , coef_b[l] * dt ) );
 			}
 		}
@@ -193,6 +235,20 @@ private:
     	typedef typename boost::unwrap_reference< System >::type momentum_deriv_func_type;
     	momentum_deriv_func_type &momentum_func = system;
 
+    	typedef typename boost::unwrap_reference< StateIn >::type state_in_type;
+    	typedef typename boost::unwrap_reference< typename state_in_type::first_type >::type coor_in_type;
+    	typedef typename boost::unwrap_reference< typename state_in_type::second_type >::type momentum_in_type;
+    	const state_in_type &state_in = in;
+    	const coor_in_type &coor_in = state_in.first;
+    	const momentum_in_type &momentum_in = state_in.first;
+
+    	typedef typename boost::unwrap_reference< StateOut >::type state_out_type;
+    	typedef typename boost::unwrap_reference< typename state_out_type::first_type >::type coor_out_type;
+    	typedef typename boost::unwrap_reference< typename state_out_type::second_type >::type momentum_out_type;
+    	state_out_type &state_out = out;
+    	coor_out_type &coor_out = state_out.first;
+    	momentum_out_type &momentum_out = state_out.second;
+
 
 		m_coor_deriv_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
 		m_momentum_deriv_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
@@ -204,18 +260,18 @@ private:
 		{
 			if( l == 0 )
 			{
-				typename algebra_type::for_each3()( out.first , in.first , in.second ,
+				typename algebra_type::for_each3()( coor_out  , coor_in , momentum_in ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_a[l] * dt ) );
-				momentum_func( out.first , m_dqdt );
-				typename algebra_type::for_each3()( out.second , in.second , m_dqdt ,
+				momentum_func( coor_out , m_dqdt );
+				typename algebra_type::for_each3()( momentum_out , momentum_in , m_dqdt ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[l] * dt ) );
 			}
 			else
 			{
-				typename algebra_type::for_each3()( out.first , out.first , out.second ,
+				typename algebra_type::for_each3()( coor_out , coor_out , momentum_out ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_a[l] * dt ) );
-				momentum_func( out.first , m_dqdt );
-				typename algebra_type::for_each3()( out.second , out.second , m_dqdt ,
+				momentum_func( coor_out , m_dqdt );
+				typename algebra_type::for_each3()( momentum_out , momentum_out , m_dqdt ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[l] * dt ) );
 			}
 		}

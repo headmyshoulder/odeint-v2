@@ -8,7 +8,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_SYMPLECTIC_EULER_HPP_
 #define BOOST_NUMERIC_ODEINT_STEPPER_SYMPLECTIC_EULER_HPP_
 
-#include <boost/numeric/odeint/stepper/base/symplectic_nystroem_stepper_base.hpp>
+#include <boost/numeric/odeint/stepper/base/symplectic_rkn_stepper_base.hpp>
 
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
