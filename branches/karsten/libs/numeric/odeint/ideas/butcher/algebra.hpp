@@ -44,7 +44,7 @@ struct algebra< state_type , coef_type , mpl::int_< 0 > >
 //			*first1++ = *first2++ + a1 * *first3++ ;
 
 
-		std_algebra::for_each3()( x_tmp , x ,  k_vector[0] ,
+		std_algebra::for_each3( x_tmp , x ,  k_vector[0] ,
 				std_op::scale_sum2<>( 1.0 , a1 ) );
 
 
@@ -74,7 +74,7 @@ struct algebra< state_type , coef_type , mpl::int_< 1 > >
 //		while( first1 != last1 )
 //			*first1++ = *first2++ + a1 * *first3++ + a2 * *first4++;
 
-		std_algebra::for_each4()( x_tmp , x ,  k_vector[0] , k_vector[1] ,
+		std_algebra::for_each4( x_tmp , x ,  k_vector[0] , k_vector[1] ,
 		                std_op::scale_sum3<>( 1.0 , a1 , a2 ) );
 
 //		for( size_t i=0 ; i<x.size() ; ++i )
@@ -106,7 +106,7 @@ struct algebra< state_type , coef_type , mpl::int_< 2 > >
 //		while( first1 != last1 )
 //			*first1++ = *first2++ + a1 * *first3++ + a2 * *first4++ + a3 * *first5++;
 
-	    std_algebra::for_each5()( x_tmp , x ,  k_vector[0] , k_vector[1] , k_vector[2] ,
+	    std_algebra::for_each5( x_tmp , x ,  k_vector[0] , k_vector[1] , k_vector[2] ,
 	                            std_op::scale_sum4<>( 1.0 , a1 , a2 , a3 ) );
 
 //		for( size_t i=0 ; i<x.size() ; ++i )
@@ -141,7 +141,7 @@ struct algebra< state_type , coef_type , mpl::int_< 3 > >
 //		while( first1 != last1 )
 //			*first1++ = *first2++ + a1 * *first3++ + a2 * *first4++ + a3 * *first5++ + a4 * *first6++;
 
-	    std_algebra::for_each6()( x_tmp , x ,  k_vector[0] , k_vector[1] , k_vector[2] , k_vector[3] ,
+	    std_algebra::for_each6( x_tmp , x ,  k_vector[0] , k_vector[1] , k_vector[2] , k_vector[3] ,
 	                                    std_op::scale_sum5<>( 1.0 , a1 , a2 , a3 , a4 ) );
 
 //		for( size_t i=0 ; i<x.size() ; ++i )
@@ -178,7 +178,7 @@ struct algebra< state_type , coef_type , mpl::int_< 4 > >
 //		while( first1 != last1 )
 //			*first1++ = *first2++ + a1 * *first3++ + a2 * *first4++ + a3 * *first5++ + a4 * *first6++ + a5 * *first7++;
 
-        std_algebra::for_each7()( x_tmp , x ,  k_vector[0] , k_vector[1] , k_vector[2] , k_vector[3] , k_vector[4] ,
+        std_algebra::for_each7( x_tmp , x ,  k_vector[0] , k_vector[1] , k_vector[2] , k_vector[3] , k_vector[4] ,
                                         std_op::scale_sum6<>( 1.0 , a1 , a2 , a3 , a4 , a5 ) );
 
 

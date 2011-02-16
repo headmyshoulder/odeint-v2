@@ -209,19 +209,19 @@ private:
 			if( l == 0 )
 			{
 				coor_func( momentum_in , m_dqdt );
-				typename algebra_type::for_each2()( coor_out , coor_in , m_dqdt ,
+				algebra_type::for_each2( coor_out , coor_in , m_dqdt ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , coef_a[l] * dt ) );
 				momentum_func( coor_out , m_dqdt );
-				typename algebra_type::for_each2()( momentum_out , momentum_in , m_dqdt ,
+				algebra_type::for_each2( momentum_out , momentum_in , m_dqdt ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , coef_b[l] * dt ) );
 			}
 			else
 			{
 				coor_func( momentum_out , m_dqdt );
-				typename algebra_type::for_each2()( coor_out , coor_out , m_dqdt ,
+				algebra_type::for_each2( coor_out , coor_out , m_dqdt ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , coef_a[l] * dt ) );
 				momentum_func( coor_out , m_dqdt );
-				typename algebra_type::for_each2()( momentum_out , momentum_out , m_dqdt ,
+				algebra_type::for_each2( momentum_out , momentum_out , m_dqdt ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , coef_b[l] * dt ) );
 			}
 		}
@@ -260,18 +260,18 @@ private:
 		{
 			if( l == 0 )
 			{
-				typename algebra_type::for_each3()( coor_out  , coor_in , momentum_in ,
+				algebra_type::for_each3( coor_out  , coor_in , momentum_in ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_a[l] * dt ) );
 				momentum_func( coor_out , m_dqdt );
-				typename algebra_type::for_each3()( momentum_out , momentum_in , m_dqdt ,
+				algebra_type::for_each3( momentum_out , momentum_in , m_dqdt ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[l] * dt ) );
 			}
 			else
 			{
-				typename algebra_type::for_each3()( coor_out , coor_out , momentum_out ,
+				algebra_type::for_each3( coor_out , coor_out , momentum_out ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_a[l] * dt ) );
 				momentum_func( coor_out , m_dqdt );
-				typename algebra_type::for_each3()( momentum_out , momentum_out , m_dqdt ,
+				algebra_type::for_each3( momentum_out , momentum_out , m_dqdt ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[l] * dt ) );
 			}
 		}

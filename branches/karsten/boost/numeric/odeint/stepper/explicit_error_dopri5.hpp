@@ -151,29 +151,29 @@ public :
 		typename boost::unwrap_reference< System >::type &sys = system;
 
         //m_x_tmp = x + dt*b21*dxdt
-        typename algebra_type::for_each3()( m_x_tmp , in , dxdt_in ,
+        algebra_type::for_each3( m_x_tmp , in , dxdt_in ,
         		typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , dt*b21 ) );
 
         sys( m_x_tmp , m_k2 , t + dt*a2 );
         // m_x_tmp = x + dt*b31*dxdt + dt*b32*m_k2
-        typename algebra_type::for_each4()( m_x_tmp , in , dxdt_in , m_k2 ,
+        algebra_type::for_each4( m_x_tmp , in , dxdt_in , m_k2 ,
         		typename operations_type::template scale_sum3< value_type , time_type , time_type >( 1.0 , dt*b31 , dt*b32 ));
 
         sys( m_x_tmp , m_k3 , t + dt*a3 );
         // m_x_tmp = x + dt * (b41*dxdt + b42*m_k2 + b43*m_k3)
-        typename algebra_type::for_each5()( m_x_tmp , in , dxdt_in , m_k2 , m_k3 ,
+        algebra_type::for_each5( m_x_tmp , in , dxdt_in , m_k2 , m_k3 ,
         		typename operations_type::template scale_sum4< value_type , time_type , time_type , time_type >( 1.0 , dt*b41 , dt*b42 , dt*b43 ));
 
         sys( m_x_tmp, m_k4 , t + dt*a4 );
-        typename algebra_type::for_each6()( m_x_tmp , in , dxdt_in , m_k2 , m_k3 , m_k4 ,
+        algebra_type::for_each6( m_x_tmp , in , dxdt_in , m_k2 , m_k3 , m_k4 ,
         		typename operations_type::template scale_sum5< value_type , time_type , time_type , time_type , time_type >( 1.0 , dt*b51 , dt*b52 , dt*b53 , dt*b54 ));
 
         sys( m_x_tmp , m_k5 , t + dt*a5 );
-        typename algebra_type::for_each7()( m_x_tmp , in , dxdt_in , m_k2 , m_k3 , m_k4 , m_k5 ,
+        algebra_type::for_each7( m_x_tmp , in , dxdt_in , m_k2 , m_k3 , m_k4 , m_k5 ,
         		typename operations_type::template scale_sum6< value_type , time_type , time_type , time_type , time_type , time_type >( 1.0 , dt*b61 , dt*b62 , dt*b63 , dt*b64 , dt*b65 ));
 
         sys( m_x_tmp , m_k6 , t + dt );
-        typename algebra_type::for_each7()( out , in , dxdt_in , m_k3 , m_k4 , m_k5 , m_k6 ,
+        algebra_type::for_each7( out , in , dxdt_in , m_k3 , m_k4 , m_k5 , m_k6 ,
         		typename operations_type::template scale_sum6< value_type , time_type , time_type , time_type , time_type , time_type >( 1.0 , dt*c1 , dt*c3 , dt*c4 , dt*c5 , dt*c6 ));
 
         // the new derivative
@@ -201,7 +201,7 @@ public :
         do_step_impl( system , in , dxdt_in , t , out , dxdt_out , dt );
 
         //error estimate
-        typename algebra_type::for_each7()( xerr , dxdt_in , m_k3 , m_k4 , m_k5 , m_k6 , dxdt_out ,
+        algebra_type::for_each7( xerr , dxdt_in , m_k3 , m_k4 , m_k5 , m_k6 , dxdt_out ,
                     typename operations_type::template scale_sum6< time_type , time_type , time_type , time_type , time_type , time_type >( dt*dc1 , dt*dc3 , dt*dc4 , dt*dc5 , dt*dc6 , dt*dc7 ) );
 	}
 
@@ -271,7 +271,7 @@ public :
 //		const state_type &k6 = dopri5().m_k6;
 //		const state_type &k7 = *m_current_deriv;
 
-		typename algebra_type::for_each8()( x , x_old , deriv_old , m_k3 , m_k4 , m_k5 , m_k6 , deriv_new ,
+		algebra_type::for_each8( x , x_old , deriv_old , m_k3 , m_k4 , m_k5 , m_k6 , deriv_new ,
 			typename operations_type::template scale_sum7< value_type , time_type , time_type , time_type , time_type , time_type , time_type >( 1.0 , dt * b1_theta , dt * b3_theta , dt * b4_theta , dt * b5_theta , dt * b6_theta , dt * b7_theta ) );
 	}
 

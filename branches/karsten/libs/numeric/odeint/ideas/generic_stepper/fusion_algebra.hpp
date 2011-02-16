@@ -40,7 +40,7 @@ struct fusion_algebra< 1 >
 	inline static void foreach( state_type &x_tmp , const state_type &x , const boost::array< double , 1 > &a ,
                             const state_type *k_vector , const double dt )
 	{
-		std_algebra::for_each3()( x_tmp , x ,  k_vector[0] , std_op::scale_sum2<>( 1.0 , a[0]*dt ) );
+		std_algebra::for_each3( x_tmp , x ,  k_vector[0] , std_op::scale_sum2<>( 1.0 , a[0]*dt ) );
 	}
 
 };
@@ -57,7 +57,7 @@ struct fusion_algebra< 2 >
 	inline static void foreach( state_type &x_tmp , const state_type &x , const boost::array< double , 2 > &a ,
                             const state_type *k_vector , const double dt )
 	{
-		std_algebra::for_each4()( x_tmp , x ,  k_vector[0] , k_vector[1] ,
+		std_algebra::for_each4( x_tmp , x ,  k_vector[0] , k_vector[1] ,
                                 std_op::scale_sum3<>( 1.0 , a[0]*dt , a[1]*dt ) );
 	}
 
@@ -75,7 +75,7 @@ struct fusion_algebra< 3 >
     inline static void foreach( state_type &x_tmp , const state_type &x , const boost::array< double , 3 > &a ,
                             const state_type *k_vector , const double dt )
     {
-        std_algebra::for_each5()( x_tmp , x ,  k_vector[0] , k_vector[1] , k_vector[2] ,
+        std_algebra::for_each5( x_tmp , x ,  k_vector[0] , k_vector[1] , k_vector[2] ,
                                 std_op::scale_sum4<>( 1.0 , a[0]*dt , a[1]*dt , a[2]*dt) );
     }
 
@@ -94,7 +94,7 @@ struct fusion_algebra< 4 >
     inline static void foreach( state_type &x_tmp , const state_type &x , const boost::array< double , 4 > &a ,
                             const state_type *k_vector , const double dt )
     {
-        std_algebra::for_each6()( x_tmp , x ,  k_vector[0] , k_vector[1] , k_vector[2] , k_vector[3] ,
+        std_algebra::for_each6( x_tmp , x ,  k_vector[0] , k_vector[1] , k_vector[2] , k_vector[3] ,
                                 std_op::scale_sum5<>( 1.0 , a[0]*dt , a[1]*dt , a[2]*dt , a[3]*dt ) );
     }
 

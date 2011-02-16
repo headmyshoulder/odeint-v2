@@ -121,7 +121,7 @@ public:
 	/*
 	 * Version 2 : do_step( sys , x , dxdt , t , dt )
 	 *
-	 * the two overloads are needed in order to solve the forwarding problem
+	 * this version does not solve the forwarding problem, boost.range can not be used
 	 */
 	template< class System , class StateInOut , class DerivIn >
 	void do_step( System system , StateInOut &x , const DerivIn &dxdt , const time_type &t , const time_type &dt )
@@ -129,11 +129,6 @@ public:
 		this->stepper().do_step_impl( system , x , dxdt , t , x , dt );
 	}
 
-	template< class System , class StateInOut , class DerivIn >
-	void do_step( System system , const StateInOut &x , const DerivIn &dxdt , const time_type &t , const time_type &dt )
-	{
-		this->stepper().do_step_impl( system , x , dxdt , t , x , dt );
-	}
 
 
 
@@ -141,35 +136,27 @@ public:
 	/*
 	 * Version 3 : do_step( sys , in , t , out , dt )
 	 *
-	 * the two overloads are needed in order to solve the forwarding problem
+	 * this version does not solve the forwarding problem, boost.range can not be used
 	 */
 	template< class System , class StateIn , class StateOut >
 	void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt )
 	{
-		do_step_caller_v3( system , in , t , out , dt );
+		typename boost::unwrap_reference< System >::type &sys = system;
+		m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
+		sys( in , m_dxdt ,t );
+		this->stepper().do_step_impl( system , in , m_dxdt , t , out , dt );
 	}
 
-	template< class System , class StateIn , class StateOut >
-	void do_step( System system , const StateIn &in , const time_type &t , const StateOut &out , const time_type &dt )
-	{
-		do_step_caller_v3( system , in , t , out , dt );
-	}
 
 
 
 	/*
 	 * Version 4 : do_step( sys , in , dxdt , t , out , dt )
 	 *
-	 * the two overloads are needed in order to solve the forwarding problem
+	 * this version does not solve the forwarding problem, boost.range can not be used
 	 */
 	template< class System , class StateIn , class DerivIn , class StateOut >
 	void do_step( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt )
-	{
-		this->stepper().do_step_impl( system , in , dxdt , t , out , dt );
-	}
-
-	template< class System , class StateIn , class DerivIn , class StateOut >
-	void do_step( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , const StateOut &out , const time_type &dt )
 	{
 		this->stepper().do_step_impl( system , in , dxdt , t , out , dt );
 	}
@@ -194,19 +181,6 @@ private:
 		sys( x , m_dxdt ,t );
 		this->stepper().do_step_impl( system , x , m_dxdt , t , x , dt );
 	}
-
-	// do_step_caller_v2 is not needed since it calls do_step_impl directly
-
-	template< class System , class StateIn , class StateOut >
-	void do_step_caller_v3(  System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt )
-	{
-		typename boost::unwrap_reference< System >::type &sys = system;
-		m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
-		sys( in , m_dxdt ,t );
-		this->stepper().do_step_impl( system , in , m_dxdt , t , out , dt );
-	}
-
-	// do_step_caller_v4 is not needed since it calls do_step_impl directly
 
 
 protected:

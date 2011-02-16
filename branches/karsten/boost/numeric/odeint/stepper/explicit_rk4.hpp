@@ -111,7 +111,7 @@ public :
 
         // dt * dxdt = k1
         // m_x_tmp = x + dh*dxdt
-        typename algebra_type::for_each3()( m_x_tmp , in , dxdt ,
+        algebra_type::for_each3( m_x_tmp , in , dxdt ,
         		typename operations_type::template scale_sum2< value_type , time_type >( val1 , dh ) );
 
 
@@ -119,14 +119,14 @@ public :
         sys( m_x_tmp , m_dxt , th );
 
         // m_x_tmp = x + dh*m_dxt
-        typename algebra_type::for_each3()( m_x_tmp , in , m_dxt ,
+        algebra_type::for_each3( m_x_tmp , in , m_dxt ,
         		typename operations_type::template scale_sum2< value_type , time_type >( val1 , dh ) );
 
 
         // dt * m_dxm = k3
         sys( m_x_tmp , m_dxm , th );
         //m_x_tmp = x + dt*m_dxm
-        typename algebra_type::for_each3()( m_x_tmp , in , m_dxm ,
+        algebra_type::for_each3( m_x_tmp , in , m_dxm ,
         		typename operations_type::template scale_sum2< value_type , time_type >( val1 , dt ) );
 
 
@@ -135,7 +135,7 @@ public :
         //x += dt/6 * ( m_dxdt + m_dxt + val2*m_dxm )
         time_type dt6 = dt / static_cast< value_type >( 6.0 );
         time_type dt3 = dt / static_cast< value_type >( 3.0 );
-        typename algebra_type::for_each6()( out , in , dxdt , m_dxt , m_dxm , m_dxh ,
+        algebra_type::for_each6( out , in , dxdt , m_dxt , m_dxm , m_dxh ,
         		typename operations_type::template scale_sum5< value_type , time_type , time_type , time_type , time_type >( 1.0 , dt6 , dt3 , dt3 , dt6 ) );
 	}
 
