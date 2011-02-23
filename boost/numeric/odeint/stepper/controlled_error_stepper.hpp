@@ -180,8 +180,11 @@ public:
 
 
 
-
-	// try_step( sys , x , t , dt )
+	/*
+	 * Version 1 : try_step( sys , x , t , dt )
+	 *
+	 * The overloads are needed to solve the forwarding problem
+	 */
 	template< class System , class StateInOut >
 	controlled_step_result try_step( System system , StateInOut &x , time_type &t , time_type &dt )
 	{

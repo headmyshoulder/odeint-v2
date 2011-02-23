@@ -17,6 +17,7 @@
 
 #include <boost/numeric/odeint/stepper/explicit_euler.hpp>
 #include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
+#include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
 
 typedef std::vector< double > state_type;
 typedef std::tr1::array< double , 3 > state_type2;
@@ -84,14 +85,19 @@ struct vector_fixture
 {
 	const static size_t dim = 6;
 	std::tr1::array< double , dim > in;
+	state_type err;
 
 	vector_fixture( void )
 //	: in( dim )
-	: in()
+	: in() , err( 3 )
 	{
 		for( size_t i=0 ; i<dim ; ++i )
 		{
 			in[ i ] = double( i );
+		}
+		for( size_t i=0 ; i<3 ; ++i )
+		{
+			err[i] = double( i ) * 10.0;
 		}
 	}
 
@@ -128,6 +134,30 @@ BOOST_AUTO_TEST_CASE( explicit_error_k54_with_range_v1 )
 	CHECK_VALUES( f.in , 0.0 , 1.1 , 2.2 , 3.3 , 4.0 , 5.0 );
 }
 
+BOOST_AUTO_TEST_CASE( explicit_error_k54_with_range_v5 )
+{
+	vector_fixture f;
+	boost::numeric::odeint::explicit_error_rk54_ck< state_type > rk54;
+	rk54.do_step( system2() , std::make_pair( f.in.begin() + 1 , f.in.begin() + 4 ) , 0.1 , 0.1 , f.err );
+	CHECK_VALUES( f.in , 0.0 , 1.1 , 2.2 , 3.3 , 4.0 , 5.0 );
+}
+
+
+BOOST_AUTO_TEST_CASE( explicit_error_dopri5_with_range_v1 )
+{
+	vector_fixture f;
+	boost::numeric::odeint::explicit_error_dopri5< state_type > dopri5;
+	dopri5.do_step( system2() , std::make_pair( f.in.begin() + 1 , f.in.begin() + 4 ) , 0.1 , 0.1 );
+	CHECK_VALUES( f.in , 0.0 , 1.1 , 2.2 , 3.3 , 4.0 , 5.0 );
+}
+
+BOOST_AUTO_TEST_CASE( explicit_error_dopri5_with_range_v5 )
+{
+	vector_fixture f;
+	boost::numeric::odeint::explicit_error_dopri5< state_type > dopri5;
+	dopri5.do_step( system2() , std::make_pair( f.in.begin() + 1 , f.in.begin() + 4 ) , 0.1 , 0.1 , f.err );
+	CHECK_VALUES( f.in , 0.0 , 1.1 , 2.2 , 3.3 , 4.0 , 5.0 );
+}
 
 
 
