@@ -100,24 +100,38 @@ public:
 
 
 
-    // do_step( system , x , t , dt , xerr )
-	template< class System , class StateIn , class Err >
-	void do_step( System system , StateIn &x , const time_type &t , const time_type &dt , Err &xerr )
+	/*
+	 * Version 1 : do_step( system , x , t , dt , xerr )
+	 *
+	 * Solves for the forwading problem
+	 */
+	template< class System , class StateInOut , class Err >
+	void do_step( System system , StateInOut &x , const time_type &t , const time_type &dt , Err &xerr )
 	{
-		typename boost::unwrap_reference< System >::type &sys = system;
-		m_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
-		sys( x , m_dxdt ,t );
-		this->stepper().do_step_impl( system , x , m_dxdt , t , x , dt , xerr );
+		do_step_v1( system , x , t , dt , xerr );
 	}
 
-    // do_step( system , x , dxdt , t , dt , xerr )
-	template< class System , class StateIn , class DerivIn , class Err >
-	void do_step( System system , StateIn &x , const DerivIn &dxdt , const time_type &t , const time_type &dt , Err &xerr )
+	template< class System , class StateInOut , class Err >
+	void do_step( System system , StateInOut &x , const time_type &t , const time_type &dt , Err &xerr )
+	{
+		do_step_v1( system , x , t , dt , xerr );
+	}
+	/*
+	 * Version 2 : do_step( system , x , dxdt , t , dt , xerr )
+	 *
+	 * Does not solve for the forwarding problem
+	 */
+	template< class System , class StateInOut , class DerivIn , class Err >
+	void do_step( System system , StateInOut &x , const DerivIn &dxdt , const time_type &t , const time_type &dt , Err &xerr )
 	{
 		this->stepper().do_step_impl( system , x , dxdt , t , x , dt , xerr );
 	}
 
-    // do_step( system , in , t , out , dt , xerr )
+	/*
+	 * Version 2 : do_step( system , in , t , out , dt , xerr )
+	 *
+	 * Does not solve for the forwarding problem
+	 */
 	template< class System , class StateIn , class StateOut , class Err >
 	void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt , Err &xerr )
 	{
@@ -127,7 +141,11 @@ public:
 		this->stepper().do_step_impl( system , in , m_dxdt , t , out , dt , xerr );
 	}
 
-	// do_step( system , in , dxdt , t , out , dt , xerr )
+	/*
+	 * Version 2 : do_step( system , in , dxdt , t , out , dt , xerr )
+	 *
+	 * Does not solve for the forwarding problem
+	 */
 	template< class System , class StateIn , class DerivIn , class StateOut , class Err >
 	void do_step( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt , Err &xerr )
 	{
@@ -145,6 +163,17 @@ public:
 
 private:
 
+
+	template< class System , class StateInOut , class Err >
+	void do_step_v1( System system , StateInOut &x , const time_type &t , const time_type &dt , Err &xerr )
+	{
+		typename boost::unwrap_reference< System >::type &sys = system;
+		m_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
+		sys( x , m_dxdt ,t );
+		this->stepper().do_step_impl( system , x , m_dxdt , t , x , dt , xerr );
+	}
+
+
 	// ToDo : make the next two methods private?
     stepper_type& stepper( void )
     {
@@ -155,6 +184,8 @@ private:
     {
     	return *static_cast< const stepper_type* >( this );
     }
+
+    void
 
 
 	size_adjuster< deriv_type , 1 > m_size_adjuster;

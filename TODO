@@ -15,6 +15,11 @@ DIFFICULT * finishing change of controlled_stepper to units
   * check if rosenbrock controller and controlled_stepper can both be used with the explicit steppers
   OK * move error_checker into controlled_stepper
   * rename controlled_stepper to a more specific name
+* ranges:
+  * explicit_stepper_and_error_stepper_fsal_base
+  * dense_output
+  * controlled_error_stepper
+  * integrate functions
 * general:
   * check if everywhere static_cast< value_type > is used
   * check header guards
@@ -25,7 +30,7 @@ DIFFICULT * finishing change of controlled_stepper to units
   OK * find an appropriate name, (symplectic stroemer nystroem)
   OK * check is the coefficients are named good
   * check ranges and call
-  * include do_step( system , q , p , t , dt )
+  OK * include do_step( system , q , p , t , dt )
 * dense output for rosenbrock
 * Integrate functions
 * skript for setting the include defines according to the position in file system an writing a general copyright comment at the beginning
