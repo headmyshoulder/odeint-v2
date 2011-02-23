@@ -113,7 +113,7 @@ public:
 	/*
 	 * Version 1 : do_step( sys , x , t , dt )
 	 *
-	 * Does solve for the forwarding problem
+	 * the two overloads are needed in order to solve the forwarding problem
 	 */
 	template< class System , class StateInOut >
 	void do_step( System system , StateInOut &x , const time_type &t , const time_type &dt )
@@ -131,7 +131,7 @@ public:
 	/*
 	 * Version 2 : do_step( sys , x , dxdt , t , dt )
 	 *
-	 * Does NOT solve for the forwarding problem
+	 * this version does not solve the forwarding problem, boost.range can not be used
 	 */
 	template< class System , class StateInOut , class DerivIn >
 	void do_step( System system , StateInOut &x , const DerivIn &dxdt , const time_type &t , const time_type &dt )
@@ -143,7 +143,7 @@ public:
 	/*
 	 * Version 3 : do_step( sys , in , t , out , dt )
 	 *
-	 * Does NOT solve for the forwarding problem
+	 * this version does not solve the forwarding problem, boost.range can not be used
 	 */
 	template< class System , class StateIn , class StateOut >
 	void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt )
@@ -157,7 +157,7 @@ public:
 	/*
 	 * Version 4 :do_step( sys , in , dxdt , t , out , dt )
 	 *
-	 * Does NOT solve for the forwarding problem
+	 * this version does not solve the forwarding problem, boost.range can not be used
 	 */
 	template< class System , class StateIn , class DerivIn , class StateOut >
 	void do_step( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt )
@@ -172,16 +172,12 @@ public:
 	/*
 	 * Version  5 :do_step( sys , x , t , dt , xerr )
 	 *
-	 * Does solve for the forwarding problem
+	 * the two overloads are needed in order to solve the forwarding problem
 	 */
 	template< class System , class StateInOut , class Err >
 	void do_step( System system , StateInOut &x , const time_type &t , const time_type &dt , Err &xerr )
 	{
 		do_step_v5( system , x , t , dt , xerr );
-//		typename boost::unwrap_reference< System >::type &sys = system;
-//		m_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
-//		sys( x , m_dxdt ,t );
-//		this->stepper().do_step_impl( system , x , m_dxdt , t , x , dt , xerr );
 	}
 
 	template< class System , class StateInOut , class Err >
@@ -194,7 +190,7 @@ public:
 	/*
 	 * Version 6 :do_step( sys , x , dxdt , t , dt , xerr )
 	 *
-	 * Does NOT solve for the forwarding problem
+	 * this version does not solve the forwarding problem, boost.range can not be used
 	 */
 	template< class System , class StateInOut , class DerivIn , class Err >
 	void do_step( System system , StateInOut &x , const DerivIn &dxdt , const time_type &t , const time_type &dt , Err &xerr )
@@ -206,7 +202,7 @@ public:
 	/*
 	 * Version 7 : do_step( sys , in , t , out , dt , xerr )
 	 *
-	 * Does NOT solve for the forwarding problem
+	 * this version does not solve the forwarding problem, boost.range can not be used
 	 */
 	template< class System , class StateIn , class StateOut , class Err >
 	void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt , Err &xerr )
@@ -217,10 +213,11 @@ public:
 		this->stepper().do_step_impl( system , in , m_dxdt , t , out , dt , xerr );
 	}
 
+
 	/*
 	 * Version 8 : do_step( sys , in , dxdt , t , out , dt , xerr )
 	 *
-	 * Does NOT solve for the forwarding problem
+	 * this version does not solve the forwarding problem, boost.range can not be used
 	 */
 	template< class System , class StateIn , class DerivIn , class StateOut , class Err >
 	void do_step( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt , Err &xerr )

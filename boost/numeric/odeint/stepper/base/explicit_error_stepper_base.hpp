@@ -103,7 +103,7 @@ public:
 	/*
 	 * Version 1 : do_step( system , x , t , dt , xerr )
 	 *
-	 * Solves for the forwading problem
+	 * the two overloads are needed in order to solve the forwarding problem
 	 */
 	template< class System , class StateInOut , class Err >
 	void do_step( System system , StateInOut &x , const time_type &t , const time_type &dt , Err &xerr )
@@ -116,10 +116,12 @@ public:
 	{
 		do_step_v1( system , x , t , dt , xerr );
 	}
+
+
 	/*
 	 * Version 2 : do_step( system , x , dxdt , t , dt , xerr )
 	 *
-	 * Does not solve for the forwarding problem
+	 * this version does not solve the forwarding problem, boost.range can not be used
 	 */
 	template< class System , class StateInOut , class DerivIn , class Err >
 	void do_step( System system , StateInOut &x , const DerivIn &dxdt , const time_type &t , const time_type &dt , Err &xerr )
@@ -127,10 +129,11 @@ public:
 		this->stepper().do_step_impl( system , x , dxdt , t , x , dt , xerr );
 	}
 
+
 	/*
-	 * Version 2 : do_step( system , in , t , out , dt , xerr )
+	 * Version 3 : do_step( system , in , t , out , dt , xerr )
 	 *
-	 * Does not solve for the forwarding problem
+	 * this version does not solve the forwarding problem, boost.range can not be used
 	 */
 	template< class System , class StateIn , class StateOut , class Err >
 	void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt , Err &xerr )
@@ -141,10 +144,11 @@ public:
 		this->stepper().do_step_impl( system , in , m_dxdt , t , out , dt , xerr );
 	}
 
+
 	/*
-	 * Version 2 : do_step( system , in , dxdt , t , out , dt , xerr )
+	 * Version 4 : do_step( system , in , dxdt , t , out , dt , xerr )
 	 *
-	 * Does not solve for the forwarding problem
+	 * this version does not solve the forwarding problem, boost.range can not be used
 	 */
 	template< class System , class StateIn , class DerivIn , class StateOut , class Err >
 	void do_step( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt , Err &xerr )
