@@ -16,11 +16,19 @@
 #include <boost/range.hpp>
 
 #include <boost/numeric/odeint/stepper/explicit_euler.hpp>
+#include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
 
 typedef std::vector< double > state_type;
 typedef std::tr1::array< double , 3 > state_type2;
 
-struct lorenz
+
+/*
+ * The two systems are needed, since for steppers with more than
+ * one internal step it is difficult to calculate the exact result
+ *
+ * system1 is suited for euler
+ */
+struct system1
 {
 	template< class State , class Deriv >
 	void operator()( const State &x_ , Deriv &dxdt_ , double t )
@@ -45,20 +53,45 @@ struct lorenz
 	}
 };
 
+/*
+ * system2 is suited for all steppers, it allows you to calculate the result analytically.
+ */
+struct system2
+{
+	template< class State , class Deriv >
+	void operator()( const State &x_ , Deriv &dxdt_ , double t )
+	{
+		typename boost::range_iterator< Deriv >::type dxdt = boost::begin( dxdt_ );
+
+		dxdt[0] = 1.0;
+		dxdt[1] = 2.0;
+		dxdt[2] = 3.0;
+	}
+
+	template< class State , class Deriv >
+	void operator()( const State &x_ , const Deriv &dxdt_ , double t )
+	{
+		typename boost::range_iterator< Deriv >::type dxdt = boost::begin( dxdt_ );
+
+		dxdt[0] = 1.0;
+		dxdt[1] = 2.0;
+		dxdt[2] = 3.0;
+	}
+};
+
+
 struct vector_fixture
 {
 	const static size_t dim = 6;
-	std::vector< double > in , out , dxdt ;
-	boost::numeric::odeint::explicit_euler< state_type > euler;
+	std::tr1::array< double , dim > in;
 
 	vector_fixture( void )
-	: in( dim ) , out( dim ) , dxdt( dim )
+//	: in( dim )
+	: in()
 	{
 		for( size_t i=0 ; i<dim ; ++i )
 		{
 			in[ i ] = double( i );
-			out[ i ] = double( i ) + 10.0 ;
-			dxdt[ i ] = double( i ) + 100.0 ;
 		}
 	}
 
@@ -75,30 +108,6 @@ struct vector_fixture
 	BOOST_CHECK_CLOSE( x[4] , x4 , 1.0e-8 ); \
 	BOOST_CHECK_CLOSE( x[5] , x5 , 1.0e-8 )
 
-#define CHECK_IN_DEFAULT( x ) \
-	BOOST_CHECK_CLOSE( x[0] , 0.0 , 1.0e-8 ); \
-	BOOST_CHECK_CLOSE( x[1] , 1.0 , 1.0e-8 ); \
-	BOOST_CHECK_CLOSE( x[2] , 2.0 , 1.0e-8 ); \
-	BOOST_CHECK_CLOSE( x[3] , 3.0 , 1.0e-8 ); \
-	BOOST_CHECK_CLOSE( x[4] , 4.0 , 1.0e-8 ); \
-	BOOST_CHECK_CLOSE( x[5] , 5.0 , 1.0e-8 )
-
-#define CHECK_OUT_DEFAULT( x ) \
-	BOOST_CHECK_CLOSE( x[0] , 10.0 , 1.0e-8 ); \
-	BOOST_CHECK_CLOSE( x[1] , 11.0 , 1.0e-8 ); \
-	BOOST_CHECK_CLOSE( x[2] , 12.0 , 1.0e-8 ); \
-	BOOST_CHECK_CLOSE( x[3] , 13.0 , 1.0e-8 ); \
-	BOOST_CHECK_CLOSE( x[4] , 14.0 , 1.0e-8 ); \
-	BOOST_CHECK_CLOSE( x[5] , 15.0 , 1.0e-8 )
-
-#define CHECK_DXDT_DEFAULT( x ) \
-	BOOST_CHECK_CLOSE( x[0] , 100.0 , 1.0e-8 ); \
-	BOOST_CHECK_CLOSE( x[1] , 101.0 , 1.0e-8 ); \
-	BOOST_CHECK_CLOSE( x[2] , 102.0 , 1.0e-8 ); \
-	BOOST_CHECK_CLOSE( x[3] , 103.0 , 1.0e-8 ); \
-	BOOST_CHECK_CLOSE( x[4] , 104.0 , 1.0e-8 ); \
-	BOOST_CHECK_CLOSE( x[5] , 105.0 , 1.0e-8 )
-
 
 
 BOOST_AUTO_TEST_SUITE( stepper_with_ranges )
@@ -106,10 +115,17 @@ BOOST_AUTO_TEST_SUITE( stepper_with_ranges )
 BOOST_AUTO_TEST_CASE( explicit_euler_with_range_v1 )
 {
 	vector_fixture f;
-	f.euler.do_step( lorenz() , std::make_pair( f.in.begin() + 1 , f.in.begin() + 4 ) , 0.1 , 0.1 );
+	boost::numeric::odeint::explicit_euler< state_type > euler;
+	euler.do_step( system1() , std::make_pair( f.in.begin() + 1 , f.in.begin() + 4 ) , 0.1 , 0.1 );
 	CHECK_VALUES( f.in , 0.0 , 1.1 , 2.2 , 3.3 , 4.0 , 5.0 );
-	CHECK_OUT_DEFAULT( f.out );
-	CHECK_DXDT_DEFAULT( f.dxdt );
+}
+
+BOOST_AUTO_TEST_CASE( explicit_error_k54_with_range_v1 )
+{
+	vector_fixture f;
+	boost::numeric::odeint::explicit_error_rk54_ck< state_type > rk54;
+	rk54.do_step( system2() , std::make_pair( f.in.begin() + 1 , f.in.begin() + 4 ) , 0.1 , 0.1 );
+	CHECK_VALUES( f.in , 0.0 , 1.1 , 2.2 , 3.3 , 4.0 , 5.0 );
 }
 
 
