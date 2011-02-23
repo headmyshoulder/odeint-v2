@@ -16,11 +16,12 @@ DIFFICULT * finishing change of controlled_stepper to units
   OK * move error_checker into controlled_stepper
   * rename controlled_stepper to a more specific name
 * ranges:
-  * explicit_stepper_and_error_stepper_fsal_base
+  OK * explicit_stepper_and_error_stepper_fsal_base
   * dense_output
   * controlled_error_stepper
   * integrate functions
-  * check comments (spelling and if the comment is true, in some versions dxdt is already const) 
+  * test ranges in symplectic_rkn_stepper
+  OK * check comments (spelling and if the comment is true, in some versions dxdt is already const) 
   OK * check names of the impl functions
 * general:
   * check if everywhere static_cast< value_type > is used

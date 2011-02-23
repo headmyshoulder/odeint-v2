@@ -112,12 +112,6 @@ public:
 	}
 
 
-
-
-
-
-
-
 	/*
 	 * Version 2 : do_step( sys , x , dxdt , t , dt )
 	 *
@@ -128,9 +122,6 @@ public:
 	{
 		this->stepper().do_step_impl( system , x , dxdt , t , x , dt );
 	}
-
-
-
 
 
 	/*
@@ -146,8 +137,6 @@ public:
 		sys( in , m_dxdt ,t );
 		this->stepper().do_step_impl( system , in , m_dxdt , t , out , dt );
 	}
-
-
 
 
 	/*

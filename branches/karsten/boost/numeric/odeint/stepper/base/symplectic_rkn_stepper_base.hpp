@@ -127,9 +127,17 @@ public:
 		do_step_impl( system , state , t , state , dt , typename detail::is_pair< system_type >::type() );
 	}
 
+
 	// for convenience
 	template< class System , class CoorInOut , class MomentumInOut >
 	void do_step( System system , CoorInOut &q , MomentumInOut &p , const time_type &t , const time_type &dt )
+	{
+		do_step( system , std::make_pair( boost::ref( q ) , boost::ref( p ) ) , t , dt );
+	}
+
+	// for convenience
+	template< class System , class CoorInOut , class MomentumInOut >
+	void do_step( System system , const CoorInOut &q , const MomentumInOut &p , const time_type &t , const time_type &dt )
 	{
 		do_step( system , std::make_pair( boost::ref( q ) , boost::ref( p ) ) , t , dt );
 	}
