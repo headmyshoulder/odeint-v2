@@ -102,13 +102,13 @@ public:
 	template< class System , class StateInOut >
 	void do_step( System system , StateInOut &x , const time_type &t , const time_type &dt )
 	{
-		do_step_caller_v1( system , x , t , dt );
+		do_step_v1( system , x , t , dt );
 	}
 
 	template< class System , class StateInOut >
 	void do_step( System system , const StateInOut &x , const time_type &t , const time_type &dt )
 	{
-		do_step_caller_v1( system , x , t , dt );
+		do_step_v1( system , x , t , dt );
 	}
 
 
@@ -174,7 +174,7 @@ public:
 private:
 
 	template< class System , class StateInOut >
-	void do_step_caller_v1( System system , StateInOut &x , const time_type &t , const time_type &dt )
+	void do_step_v1( System system , StateInOut &x , const time_type &t , const time_type &dt )
 	{
 		typename boost::unwrap_reference< System >::type &sys = system;
 		m_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );

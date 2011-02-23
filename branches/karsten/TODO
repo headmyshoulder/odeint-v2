@@ -20,6 +20,8 @@ DIFFICULT * finishing change of controlled_stepper to units
   * dense_output
   * controlled_error_stepper
   * integrate functions
+  * check comments (spelling and if the comment is true, in some versions dxdt is already const) 
+  OK * check names of the impl functions
 * general:
   * check if everywhere static_cast< value_type > is used
   * check header guards

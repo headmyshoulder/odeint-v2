@@ -187,7 +187,7 @@ public:
 	template< class System , class StateInOut , class Err >
 	void do_step( System system , const StateInOut &x , const time_type &t , const time_type &dt , Err &xerr )
 	{
-		do_step_v5( system , x . t , dt , xerr );
+		do_step_v5( system , x , t , dt , xerr );
 	}
 
 
