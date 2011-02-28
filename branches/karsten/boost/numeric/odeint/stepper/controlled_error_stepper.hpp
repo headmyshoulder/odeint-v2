@@ -188,13 +188,22 @@ public:
 	template< class System , class StateInOut >
 	controlled_step_result try_step( System system , StateInOut &x , time_type &t , time_type &dt )
 	{
-		typename boost::unwrap_reference< System >::type &sys = system;
-		m_dxdt_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
-		sys( x , m_dxdt ,t );
-		return try_step( system , x , m_dxdt , t , dt );
+		return try_step_v1( system , x , t, dt );
 	}
 
-	// try_step( sys , x , dxdt , t , dt )
+	template< class System , class StateInOut >
+	controlled_step_result try_step( System system , const StateInOut &x , time_type &t , time_type &dt )
+	{
+		return try_step_v1( system , x , t, dt );
+	}
+
+
+
+	/*
+	 * Version 2 : try_step( sys , x , dxdt , t , dt )
+	 *
+	 * this version does not solve the forwarding problem, boost.range can not be used
+	 */
 	template< class System , class StateInOut , class DerivIn >
 	controlled_step_result try_step( System system , StateInOut &x , const DerivIn &dxdt , time_type &t , time_type &dt )
 	{
@@ -207,7 +216,11 @@ public:
 		return res;
 	}
 
-	// try_step( sys , in , t , out , dt )
+	/*
+	 * Version 3 : try_step( sys , in , t , out , dt )
+	 *
+	 * this version does not solve the forwarding problem, boost.range can not be used
+	 */
 	template< class System , class StateIn , class StateOut >
 	controlled_step_result try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
 	{
@@ -218,7 +231,11 @@ public:
 	}
 
 
-	// try_step( sys , in , dxdt , t , out , dt )
+	/*
+	 * Version 4 : try_step( sys , in , dxdt , t , out , dt )
+	 *
+	 * this version does not solve the forwarding problem, boost.range can not be used
+	 */
 	template< class System , class StateIn , class DerivIn , class StateOut >
 	controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt , time_type &t , StateOut &out , time_type &dt )
 	{
@@ -285,6 +302,17 @@ public:
 
 
 private:
+
+
+	template< class System , class StateInOut >
+	controlled_step_result try_step_v1( System system , StateInOut &x , time_type &t , time_type &dt )
+	{
+		typename boost::unwrap_reference< System >::type &sys = system;
+		m_dxdt_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
+		sys( x , m_dxdt ,t );
+		return try_step( system , x , m_dxdt , t , dt );
+	}
+
 
 	stepper_type m_stepper;
 	error_checker_type m_error_checker;
@@ -392,20 +420,30 @@ public:
 
 
 
-    // try_step( sys , x , t , dt )
+	/*
+	 * Version 1 : try_step( sys , x , t , dt )
+	 *
+	 * The two overloads are needed in order to solve the forwarding problem
+	 */
     template< class System , class StateInOut >
     controlled_step_result try_step( System system , StateInOut &x , time_type &t , time_type &dt )
     {
-        if( m_dxdt_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() ) || m_first_call )
-        {
-    		typename boost::unwrap_reference< System >::type &sys = system;
-            sys( x , m_dxdt ,t );
-            m_first_call = false;
-        }
-        return try_step( system , x , m_dxdt , t , dt );
+    	return try_step_v1( system , x , t , dt );
     }
 
-    // try_step( sys , in , t , out , dt );
+    template< class System , class StateInOut >
+    controlled_step_result try_step( System system , const StateInOut &x , time_type &t , time_type &dt )
+    {
+    	return try_step_v1( system , x , t , dt );
+    }
+
+
+
+	/*
+	 * Version 2 : try_step( sys , in , t , out , dt );
+	 *
+	 * This version does not solve the forwarding problem, boost::range can not be used.
+	 */
     template< class System , class StateIn , class StateOut >
     controlled_step_result try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
     {
@@ -418,7 +456,12 @@ public:
         return try_step( system , in , m_dxdt , t , out , dt );
     }
 
-    // try_step( sys , x , dxdt , t , dt )
+
+	/*
+	 * Version 3 : try_step( sys , x , dxdt , t , dt )
+	 *
+	 * This version does not solve the forwarding problem, boost::range can not be used.
+	 */
     template< class System , class StateInOut , class DerivInOut >
     controlled_step_result try_step( System system , StateInOut &x , DerivInOut &dxdt , time_type &t , time_type &dt )
     {
@@ -433,7 +476,12 @@ public:
     	return res;
     }
 
-    // try_step( sys , in , dxdt , t , out , dt )
+
+	/*
+	 * Version 3 : try_step( sys , in , dxdt , t , out , dt )
+	 *
+	 * This version does not solve the forwarding problem, boost::range can not be used.
+	 */
     template< class System , class StateIn , class DerivIn , class StateOut , class DerivOut >
     controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt_in , time_type &t ,
     		StateOut &out , DerivOut &dxdt_out , time_type &dt )
@@ -505,6 +553,19 @@ public:
 
 
 private:
+
+    template< class System , class StateInOut >
+    controlled_step_result try_step_v1( System system , StateInOut &x , time_type &t , time_type &dt )
+    {
+        if( m_dxdt_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() ) || m_first_call )
+        {
+    		typename boost::unwrap_reference< System >::type &sys = system;
+            sys( x , m_dxdt ,t );
+            m_first_call = false;
+        }
+        return try_step( system , x , m_dxdt , t , dt );
+    }
+
 
     stepper_type m_stepper;
     error_checker_type m_error_checker;
