@@ -167,11 +167,22 @@ public:
 		return std::make_pair( m_t_old , m_t );
 	}
 
+
+	/*
+	 * The two overloads are needed in order to solve the forwarding problem.
+	 */
 	template< class StateOut >
 	void calc_state( const time_type &t , StateOut &x )
 	{
 		m_stepper.stepper().calc_state( t , x , *m_old_state , *m_old_deriv , m_t_old , *m_current_state , *m_current_deriv , m_t );
 	}
+
+	template< class StateOut >
+	void calc_state( const time_type &t , const StateOut &x )
+	{
+		m_stepper.stepper().calc_state( t , x , *m_old_state , *m_old_deriv , m_t_old , *m_current_state , *m_current_deriv , m_t );
+	}
+
 
 	template< class StateType >
 	void adjust_size( const StateType &x )
