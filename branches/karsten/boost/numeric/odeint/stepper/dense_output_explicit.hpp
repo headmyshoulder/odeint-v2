@@ -123,8 +123,17 @@ public:
 		return std::make_pair( m_t_old , m_dt );
 	}
 
+	/*
+	 * The next two overloads are needed to solve the forwarding problem
+	 */
 	template< class StateOut >
 	void calc_state( const time_type &t , StateOut &x )
+	{
+		m_stepper.calc_state( x , t , *m_old_state , m_t_old , *m_current_state , m_t );
+	}
+
+	template< class StateOut >
+	void calc_state( const time_type &t , const StateOut &x )
 	{
 		m_stepper.calc_state( x , t , *m_old_state , m_t_old , *m_current_state , m_t );
 	}

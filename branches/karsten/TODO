@@ -16,13 +16,7 @@ DIFFICULT * finishing change of controlled_stepper to units
   OK * move error_checker into controlled_stepper
   * rename controlled_stepper to a more specific name
 * ranges:
-  * test ranges in symplectic_rkn_stepper
-  * dense_output
   * integrate functions
-  OK * explicit_stepper_and_error_stepper_fsal_base
-  OK * controlled_error_stepper
-  OK * check comments (spelling and if the comment is true, in some versions dxdt is already const) 
-  OK * check names of the impl functions
 * general:
   * check if everywhere static_cast< value_type > is used
   * check header guards
@@ -72,3 +66,10 @@ OK * unit test
   OK * test, if copy construct of stepper_base is called when explicit_euler is used
   OK * test units with dense output
 OK * include rosenbrock4 in trunk
+* ranges:
+  OK * test ranges in symplectic_rkn_stepper
+  OK * dense_output
+  OK * explicit_stepper_and_error_stepper_fsal_base
+  OK * controlled_error_stepper
+  OK * check comments (spelling and if the comment is true, in some versions dxdt is already const) 
+  OK * check names of the impl functions

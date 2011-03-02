@@ -111,7 +111,7 @@ public:
 	/*
 	 * Version 1 : do_step( system , x , t , dt )
 	 *
-	 * The overloads are needed in order to solve the forwarding problem
+	 * This version does not solve the forwarding problem, boost.range can not be used.
 	 */
 	template< class System , class StateInOut >
 	void do_step( System system , const StateInOut &state , const time_type &t , const time_type &dt )
@@ -128,7 +128,11 @@ public:
 	}
 
 
-	// for convenience
+	/*
+	 * Version 2 : do_step( system , q , p , t , dt );
+	 *
+	 * The two overloads are needed in order to solve the forwarding problem.
+	 */
 	template< class System , class CoorInOut , class MomentumInOut >
 	void do_step( System system , CoorInOut &q , MomentumInOut &p , const time_type &t , const time_type &dt )
 	{
@@ -187,9 +191,9 @@ private:
     	typedef typename boost::unwrap_reference< StateIn >::type state_in_type;
     	typedef typename boost::unwrap_reference< typename state_in_type::first_type >::type coor_in_type;
     	typedef typename boost::unwrap_reference< typename state_in_type::second_type >::type momentum_in_type;
-    	state_in_type &state_in = in;
-    	coor_in_type &coor_in = state_in.first;
-    	momentum_in_type &momentum_in = state_in.first;
+    	const state_in_type &state_in = in;
+    	const coor_in_type &coor_in = state_in.first;
+    	const momentum_in_type &momentum_in = state_in.second;
 
     	typedef typename boost::unwrap_reference< StateOut >::type state_out_type;
     	typedef typename boost::unwrap_reference< typename state_out_type::first_type >::type coor_out_type;
@@ -209,19 +213,19 @@ private:
 			if( l == 0 )
 			{
 				coor_func( momentum_in , m_dqdt );
-				algebra_type::for_each2( coor_out , coor_in , m_dqdt ,
+				algebra_type::for_each3( coor_out , coor_in , m_dqdt ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_a[l] * dt ) );
-				momentum_func( coor_out , m_dqdt );
-				algebra_type::for_each2( momentum_out , momentum_in , m_dqdt ,
+				momentum_func( coor_out , m_dpdt );
+				algebra_type::for_each3( momentum_out , momentum_in , m_dpdt ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[l] * dt ) );
 			}
 			else
 			{
 				coor_func( momentum_out , m_dqdt );
-				algebra_type::for_each2( coor_out , coor_out , m_dqdt ,
+				algebra_type::for_each3( coor_out , coor_out , m_dqdt ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_a[l] * dt ) );
-				momentum_func( coor_out , m_dqdt );
-				algebra_type::for_each2( momentum_out , momentum_out , m_dqdt ,
+				momentum_func( coor_out , m_dpdt );
+				algebra_type::for_each3( momentum_out , momentum_out , m_dpdt ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[l] * dt ) );
 			}
 		}
@@ -277,7 +281,6 @@ private:
 		}
 	}
 
-	// ToDo : check if a and b are appropriate names for the coefficients
 	const coef_type m_coef_a;
 	const coef_type m_coef_b;
 
