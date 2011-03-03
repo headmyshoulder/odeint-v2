@@ -66,7 +66,7 @@ Time integrate_n_steps( Stepper stepper , System system , State &start_state , c
 }
 
 template< class Stepper , class System , class State , class Time , class Observer >
-size_t integrate_adaptive( Stepper stepper , System system , State &start_state , const Time &start_time , const Time &end_time , Time &dt , Observer observer )
+size_t integrate_adaptive( Stepper stepper , System system , State &start_state , const Time &start_time , const Time &end_time , const Time &dt , Observer observer )
 {
 	return detail::integrate_adaptive( stepper , system , start_state , start_time , end_time , dt , observer , typename Stepper::stepper_category() );
 }

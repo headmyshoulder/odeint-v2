@@ -11,6 +11,7 @@
   * include test/thrust in jam system, use system from
 * implicit euler, include dfdt
 * same interface for implicit_euler and rosenbrock4
+* integrate functions
 DIFFICULT * finishing change of controlled_stepper to units
   * check if rosenbrock controller and controlled_stepper can both be used with the explicit steppers
   OK * move error_checker into controlled_stepper
