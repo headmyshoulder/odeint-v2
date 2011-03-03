@@ -20,6 +20,16 @@
 
 #include <boost/numeric/odeint/integrate/integrate.hpp>
 
+#include <boost/lambda/lambda.hpp>
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/if.hpp>
+#include <boost/lambda/loops.hpp>
+#include <boost/lambda/switch.hpp>
+#include <boost/lambda/construct.hpp>
+#include <boost/lambda/casts.hpp>
+#include <boost/lambda/exceptions.hpp>
+#include <boost/lambda/numeric.hpp>
+#include <boost/lambda/algorithm.hpp>
 
 
 const double sigma = 10.0;
@@ -61,12 +71,43 @@ struct lorenz_jacobi
 typedef boost::numeric::ublas::vector< double > vector_type;
 typedef std::tr1::array< double , 3 > state_type;
 
+std::ostream& operator<<( std::ostream &out , const vector_type &x )
+{
+	if( x.size() != 0 ) out << x[0];
+	for( size_t i=1 ; i<x.size() ; ++i )
+		out << " " << x[i];
+	return out;
+}
+
+std::ostream& operator<<( std::ostream &out , const state_type &x )
+{
+	if( x.size() != 0 ) out << x[0];
+	for( size_t i=1 ; i<x.size() ; ++i )
+		out << " " << x[i];
+	return out;
+}
+
+
+
+
 using namespace std;
 using namespace boost::numeric::odeint;
 
+using boost::lambda::_1;
+using namespace boost::lambda;
+
+struct tmp_func
+{
+	template< class T1 , class T2 >
+	void operator()( const T1 &t1 , const T2 &t2 ) const
+	{
+		cout << t1 << " " << t2 << "\n";
+	}
+};
+
 int main( int argc , char **argv )
 {
-	state_type x1;
+	state_type x1 = { { 10.0 , 10.0 , 10.0 } };
 	vector_type x2( 3 );
 
 //	integrate( implicit_euler< double >() , make_pair( lorenz() , lorenz_jacobi() ) , x2 , 0.0 , 10.0 , 0.1 , do_nothing_observer() );
@@ -81,13 +122,12 @@ int main( int argc , char **argv )
 //	integrate_n_steps( rosenbrock4_controller< rosenbrock4< double > >() , make_pair( lorenz() , lorenz_jacobi() ) , x2 , 0.0 , 1000 , 0.1 );
 //	integrate_adaptive( rosenbrock4_controller< rosenbrock4< double > >() , make_pair( lorenz() , lorenz_jacobi() ) , x2 , 0.0 , 10.0 , 0.1 );
 
+	integrate( explicit_euler< state_type >() , lorenz() , x1 , 0.0 , 10.0 , 0.1 , tmp_func() );
+//	integrate( explicit_euler< state_type >() , lorenz() , x1 , 0.0 , 10.0 , 0.1 , cout << _1 << "\n" );
+//	integrate_n_steps( explicit_euler< state_type >() , lorenz() , x1 , 0.0 , 0.1 , 100 , cout << _1 << "\n" );
+//	integrate_adaptive( explicit_euler< state_type >() , lorenz() , x1 , 0.0 , 10.0 , 0.1 , cout << _1 << "\n" );
 
-//#include <boost/numeric/odeint/stepper/explicit_euler.hpp>
-//#include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
-//#include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
-//#include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
-//#include <boost/numeric/odeint/stepper/dense_output_explicit.hpp>
-//#include <boost/numeric/odeint/stepper/dense_output_controlled_explicit_fsal.hpp>
+
 
 
 	return true;

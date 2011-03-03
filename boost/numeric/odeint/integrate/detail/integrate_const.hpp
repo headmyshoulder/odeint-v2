@@ -17,24 +17,28 @@ namespace detail {
 template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate_const( Stepper stepper , System system , State &start_state , const Time &start_time , const Time &end_time , const Time &dt , Observer observer , stepper_tag )
 {
+	observer( start_state , start_time );
 	return 0;
 }
 
 template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate_const( Stepper stepper , System system , State &start_state , const Time &start_time , const Time &end_time , const Time &dt , Observer observer , error_stepper_tag )
 {
+	observer( start_state , start_time );
 	return 0;
 }
 
 template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate_const( Stepper stepper , System system , State &start_state , const Time &start_time , const Time &end_time , const Time &dt , Observer observer , controlled_stepper_tag )
 {
+	observer( start_state , start_time );
 	return 0;
 }
 
 template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate_const( Stepper stepper , System system , State &start_state , const Time &start_time , const Time &end_time , const Time &dt , Observer observer , dense_output_stepper_tag )
 {
+	observer( start_state , start_time );
 	return 0;
 }
 
