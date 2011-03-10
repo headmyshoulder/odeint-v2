@@ -92,9 +92,8 @@ std::ostream& operator<<( std::ostream &out , const state_type &x )
 
 using namespace std;
 using namespace boost::numeric::odeint;
-
-using boost::lambda::_1;
 using namespace boost::lambda;
+
 
 struct tmp_func
 {
@@ -122,10 +121,12 @@ int main( int argc , char **argv )
 //	integrate_n_steps( rosenbrock4_controller< rosenbrock4< double > >() , make_pair( lorenz() , lorenz_jacobi() ) , x2 , 0.0 , 1000 , 0.1 );
 //	integrate_adaptive( rosenbrock4_controller< rosenbrock4< double > >() , make_pair( lorenz() , lorenz_jacobi() ) , x2 , 0.0 , 10.0 , 0.1 );
 
-	integrate( explicit_euler< state_type >() , lorenz() , x1 , 0.0 , 10.0 , 0.1 , tmp_func() );
-//	integrate( explicit_euler< state_type >() , lorenz() , x1 , 0.0 , 10.0 , 0.1 , cout << _1 << "\n" );
+//	integrate( explicit_euler< state_type >() , lorenz() , x1 , 0.0 , 10.0 , 0.01 , tmp_func() );
+//	integrate( explicit_euler< state_type >() , lorenz() , x1 , 0.0 , 1.0 , 0.01 , cout << _1 << "\n" );
 //	integrate_n_steps( explicit_euler< state_type >() , lorenz() , x1 , 0.0 , 0.1 , 100 , cout << _1 << "\n" );
 //	integrate_adaptive( explicit_euler< state_type >() , lorenz() , x1 , 0.0 , 10.0 , 0.1 , cout << _1 << "\n" );
+
+	integrate( controlled_error_stepper< explicit_error_rk54_ck< state_type > >() , lorenz() , x1 , 0.0 , 10.0 , 0.01 , tmp_func() );
 
 
 

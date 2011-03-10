@@ -34,6 +34,10 @@ size_t integrate_adaptive( stepper , system , start_state , start_time , end_tim
 
 
 
+
+/*
+ * Integrates with constant time step dt.
+ */
 template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate( Stepper stepper , System system , State &start_state , const Time &start_time , const Time &end_time , const Time &dt , Observer observer )
 {

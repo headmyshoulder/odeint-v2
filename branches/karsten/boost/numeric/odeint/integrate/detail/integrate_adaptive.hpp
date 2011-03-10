@@ -14,13 +14,13 @@ namespace odeint {
 namespace detail {
 
 template< class Stepper , class System , class State , class Time , class Observer >
-size_t integrate_adaptive( Stepper stepper , System system , State &start_state , Time start_time , const Time &end_time , Time dt , Observer observer , stepper_tag )
+size_t integrate_adaptive( Stepper stepper , System system , State &start_state , Time start_time , const Time &end_time , Time dt , Observer &observer , stepper_tag )
 {
 	size_t count = 0;
 	while( start_time < end_time )
 	{
 		stepper.do_step( system , start_state , start_time , dt );
-		observer( start_state , start_time );
+		observer( start_time , start_state );
 		start_time += dt;
 		++count;
 	}
@@ -28,7 +28,7 @@ size_t integrate_adaptive( Stepper stepper , System system , State &start_state 
 }
 
 template< class Stepper , class System , class State , class Time , class Observer >
-size_t integrate_adaptive( Stepper stepper , System system , State &start_state , const Time &start_time , const Time &end_time , const Time &dt , Observer observer , error_stepper_tag )
+size_t integrate_adaptive( Stepper stepper , System system , State &start_state , const Time &start_time , const Time &end_time , const Time &dt , Observer &observer , error_stepper_tag )
 {
 	return 0;
 }
