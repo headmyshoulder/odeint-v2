@@ -9,9 +9,13 @@
   * test explicit stepper with ranges
   * split check_concepts into check_stepper_concept, check_error_stepper_concept, check_controlled_stepper_concept
   * include test/thrust in jam system, use system from
+* integrate functions
+  * check forwarding problem
+  * check where exactly the observer will be called (before, after each step?)
+* Factory functions for steppers, controlled_steppers, error_checker und dense_output_stepper
+* rename error_checker_standard to default_error_checker
 * implicit euler, include dfdt
 * same interface for implicit_euler and rosenbrock4
-* integrate functions
 DIFFICULT * finishing change of controlled_stepper to units
   * check if rosenbrock controller and controlled_stepper can both be used with the explicit steppers
   OK * move error_checker into controlled_stepper

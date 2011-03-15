@@ -55,7 +55,12 @@ public:
 	typedef Operations operations_type;
 
 
-	error_checker_standard( void ) : m_eps_abs( 1E-6 ) , m_eps_rel( 1E-6 ) , m_a_x( 1.0 ) , m_a_dxdt( 1.0 )
+	error_checker_standard(
+			value_type eps_abs = static_cast< value_type >( 1.0e-6 ) ,
+			value_type eps_rel = static_cast< value_type >( 1.0e-6 ) ,
+			value_type a_x = static_cast< value_type >( 1.0 ) ,
+			value_type a_dxdt = static_cast< value_type >( 1.0 ) )
+	: m_eps_abs( eps_abs ) , m_eps_rel( eps_rel ) , m_a_x( a_x ) , m_a_dxdt( a_dxdt )
 	{}
 
 

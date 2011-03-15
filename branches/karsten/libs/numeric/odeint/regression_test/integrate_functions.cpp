@@ -126,7 +126,32 @@ int main( int argc , char **argv )
 //	integrate_n_steps( explicit_euler< state_type >() , lorenz() , x1 , 0.0 , 0.1 , 100 , cout << _1 << "\n" );
 //	integrate_adaptive( explicit_euler< state_type >() , lorenz() , x1 , 0.0 , 10.0 , 0.1 , cout << _1 << "\n" );
 
-	integrate( controlled_error_stepper< explicit_error_rk54_ck< state_type > >() , lorenz() , x1 , 0.0 , 10.0 , 0.01 , tmp_func() );
+
+
+
+	// works
+//	size_t num_of_steps = integrate(
+//			controlled_error_stepper< explicit_error_rk54_ck< state_type > >() ,
+//			lorenz() , x1 , 0.0 , 50.0 , 0.1 , tmp_func() );
+//	clog << num_of_steps << endl;
+
+	// works
+//	num_of_steps = integrate_adaptive(
+//			controlled_error_stepper< explicit_error_rk54_ck< state_type > >() ,
+//			lorenz() , x1 , 0.0 , 50.0 , 0.1 , tmp_func() );
+//	clog << num_of_steps << endl;
+
+
+	// seems to work, check
+	typedef explicit_error_dopri5< state_type > dopri5_type;
+	typedef controlled_error_stepper< dopri5_type > controlled_error_stepper_type;
+	typedef dense_output_controlled_explicit_fsal< controlled_error_stepper_type > stepper_type;
+
+	controlled_error_stepper_type controlled_stepper(
+			dopri5_type() , error_checker_standard< double >( 1.0e-1 , 0.1 ) );
+	size_t num_of_steps = integrate(
+			stepper_type( controlled_stepper ) , lorenz() , x1 , 0.0 , 50.0 , 0.001 , tmp_func() );
+	clog << num_of_steps << endl;
 
 
 

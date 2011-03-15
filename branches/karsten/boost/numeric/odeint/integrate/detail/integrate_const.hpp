@@ -8,6 +8,9 @@
 #ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_DETAIL_INTEGRATE_CONST_HPP_
 #define BOOST_NUMERIC_ODEINT_INTEGRATE_DETAIL_INTEGRATE_CONST_HPP_
 
+
+#include <boost/numeric/odeint/integrate/detail/integrate_adaptive.hpp>
+
 #include <iostream>
 using namespace std;
 
@@ -17,8 +20,14 @@ namespace numeric {
 namespace odeint {
 namespace detail {
 
+
+
 template< class Stepper , class System , class State , class Time , class Observer >
-size_t integrate_const( Stepper stepper , System system , State &start_state , Time start_time , const Time &end_time , const Time &dt , Observer &observer , stepper_tag )
+size_t integrate_const(
+		Stepper stepper , System system , State &start_state ,
+		Time start_time , Time end_time , Time dt ,
+		Observer &observer , stepper_tag
+		)
 {
 	while( start_time < end_time )
 	{
@@ -30,41 +39,65 @@ size_t integrate_const( Stepper stepper , System system , State &start_state , T
 	return 0;
 }
 
+
+
 template< class Stepper , class System , class State , class Time , class Observer >
-size_t integrate_const( Stepper stepper , System system , State &start_state , Time start_time , const Time &end_time , const Time &dt , Observer observer , controlled_stepper_tag )
+size_t integrate_const(
+		Stepper stepper , System system , State &start_state ,
+		Time &start_time , const Time &end_time , Time &dt ,
+		Observer observer , controlled_stepper_tag
+		)
 {
-	clog << "huhu" << endl;
+	size_t count = 0;
 	Time time_step = dt;
 	while( start_time < end_time )
 	{
 		observer( start_time , start_state );
-		Time next_time = start_time + dt;
-		while( start_time < next_time )
-		{
-			if( ( start_time + time_step ) > next_time )
-			{
-				time_step = next_time - start_time;
-			}
-			size_t trials = 0;
-
-			// the following loop can maybe be taken from another integrate functions
-			controlled_step_result res = success_step_size_unchanged;
-			do
-			{
-				stepper.try_step( system , start_state , start_time , time_step );
-				++trials;
-			}
-			while( ( res == step_size_decreased ) || ( trials < 1000 ) );
-		}
+		Time next_time = start_time + time_step;
+		if( next_time > end_time ) next_time = end_time;
+		detail::integrate_adaptive(
+				stepper , system , start_state , start_time , next_time , dt ,
+				do_nothing_observer() , controlled_stepper_tag() );
+		++count;
 	}
 	observer( start_time , start_state );
-
-	return 0;
+	return count;
 }
 
+
+
 template< class Stepper , class System , class State , class Time , class Observer >
-size_t integrate_const( Stepper stepper , System system , State &start_state , const Time &start_time , const Time &end_time , const Time &dt , Observer observer , dense_output_stepper_tag )
+size_t integrate_const(
+		Stepper stepper , System system , State &start_state ,
+		Time start_time , Time end_time , Time dt ,
+		Observer observer , dense_output_stepper_tag )
 {
+	clog << "dense output" << endl;
+	stepper.initialize( start_state , start_time , dt );
+
+	size_t count = 0;
+	size_t count2 = 0;
+	while( start_time < end_time )
+	{
+		while( ( start_time < stepper.current_time() ) && ( start_time < end_time ) )
+		{
+			stepper.calc_state( start_time , start_state );
+			observer( start_time , start_state );
+			start_time += dt;
+			++count;
+		}
+
+		// we have not reached the end, do another real step
+		if( start_time < end_time )
+		{
+			stepper.do_step( system );
+			++count2;
+		}
+	}
+	clog << count2 << endl;
+	return count;
+
+
 	observer( start_time , start_state );
 	return 0;
 }
