@@ -44,15 +44,13 @@ int main(int argc, char **argv)
     //]
 
 
-/*
     //[ integration
     vector<double> times;
     vector<state_type> x_t_vec;
 
-    size_t steps = integrate( harmonic_oscillator , 
-                              x , 0.0 , 10.0 , 
-                              back_inserter( times ) ,
-                              back_inserter( x_t_vec ) );
+    size_t steps = integrate( harmonic_oscillator ,
+                              x , 0.0 , 10.0 , 0.1
+                              );
     //]
 
 
@@ -65,17 +63,16 @@ int main(int argc, char **argv)
 
     //[ integration_class
     harm_osc ho(0.15);
-    steps = integrate( ho , 
-                       x , 0.0 , 10.0 , 
-                       back_inserter( times ) ,
-                       back_inserter( x_t_vec ) );
+    steps = integrate( ho ,
+                       x , 0.0 , 10.0 , 0.1
+                       );
     //]
-*/
+
 
 
     //[ define_const_stepper
     explicit_rk4< state_type > stepper;
-    integrate( stepper , harmonic_oscillator , x , 0.0 , 10.0 , 0.01 , do_nothing_observer() );
+    integrate_const( stepper , harmonic_oscillator , x , 0.0 , 10.0 , 0.01 );
     //]
 
     //[ integrate_const_loop

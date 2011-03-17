@@ -4,27 +4,29 @@
 
 
 import quickbook ;
+import boostbook ;
 
 project
     : requirements
     ;
 
 
-xml odeint : 
-	odeint.qbk
-	;
 
-boostbook standalone
+boostbook odeint
 	:
-	  odeint
+	  odeint.qbk
 	:
-		<xsl:param>boost.root=../../../..
-        <xsl:param>generate.section.toc.level=1
-        <xsl:param>chunk.section.depth=1
-        <xsl:param>chunk.first.sections=1
+          <xsl:param>navig.graphics=1
+          <xsl:param>boost.root=../../../..
+          <xsl:param>chunk.section.depth=1
+          <xsl:param>chunk.first.sections=1
+          <xsl:param>toc.section.depth=2
+          <xsl:param>toc.max.depth=2
+          <xsl:param>generate.section.toc.level=3
+#        <xsl:param>chunk.section.depth=10
+#        <xsl:param>chunk.first.sections=1
+#        <xsl:param>toc.section.depth=10
+#        <xsl:param>toc.max.depth=4
+#        <xsl:param>generate.section.toc.level=10
+        
 	;
-
-# install html :
-#	  /boost//doc/src/boostbook.css
-#	;
-	

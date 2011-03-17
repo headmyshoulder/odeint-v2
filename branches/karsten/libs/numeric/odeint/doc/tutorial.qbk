@@ -16,7 +16,9 @@ blah blah
 
 [endsect]
 
-[section Different steppers]
+[section Odeint in detail]
+
+Different steppers
 
 Explicit steppers
 
@@ -96,6 +98,10 @@ blah blah
 [section Using arbitrary precision floating point types]
 
 GMP
+
+[endsect]
+
+[section Self expanding lattices]
 
 [endsect]
 

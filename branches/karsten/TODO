@@ -11,16 +11,20 @@
   * include test/thrust in jam system, use system from
   * ranges and the integrate functions
   * symplectic intergrators and ranges
+* DOCUMENTATION
+  * include links to the source of the examples
 * GENERAL:
   * check if everywhere static_cast< value_type > is used
   * check header guards
   * check copyright note
   * documente every file in the preamble
   * check once more, if all contructor, destructors and assign-operators are present
-* integrate functions
+* INTEGRATE FUNCTIONS
   * check forwarding problem
   * check where exactly the observer will be called (before, after each step?)
   * ranges
+  * functions without obversers
+  * integrate without stepper , intelligent choice of the stepper
   OK * check function signatures
   OK * what to throw?
   OK * check lambdas, lambda is broken

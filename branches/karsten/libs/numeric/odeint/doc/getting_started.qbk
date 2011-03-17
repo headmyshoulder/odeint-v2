@@ -1,0 +1,61 @@
+[section Getting started]
+
+[section Overview]
+
+Odeint is a library for solving  initial value problems (IVP) of ordinary differential equations. Mathematically, these problems are formulated as follows: x'(t) = f(x,t), x(0) = x0. x and f can be vectors and the solution is some function x(t) fullfilling both equations above. In the following we will refer to x'(t) also `dxdt` which is also our notation for the derivative in the source code.
+
+Numerical approximations for the solution x(t) are calculated iteratively. The easiest algorithm is the Euler-Scheme, where starting at x(0) one finds x(dt) = x(0) + dt*f(x(0),0). Now one can use x(dt) and obtain x(2dt) in a similar way and so on. The Euler method is of order 1, that means the error at each step is ~ dt^2. This is, of course, not very satisfying, which is why the Euler method is  merely used for real life problems and serves just as illustrative example. In odeint, the following algorithms are implemented:
+
+[include stepper_table.qbk]
+
+Ordinary differential equations occur nearly everywhere in natural sciences. For example, the whole Newtonian mechanics are described by second order differential equations. Be sure, you will find them in every discipline. They also occur if partial differential equations (PDEs) are discretized in one coordinate. Then, a system of coupled ordinary differential occurs, sometimes also refered as lattices ODEs.
+
+[endsect]
+
+
+
+[section Usage, Compilation, Headers]
+
+Odeint is completely header-only, meaning that you do not link against any library. It can be include by
+
+``
+#include <boost/numeric/odeint.hpp>
+``
+which includes all headers in the library. All functions and classes from odeint live in the namespace
+``
+ using namespace boost::numeric::odeint;
+``
+
+
+[endsect]
+
+[section Short Example]
+
+Image, you want to numerically integrate a harmonic oscillator with friction. The equations of motion are given by x'' = -x + gamma x'. This can be transformed to a system of two coupled first-order differential equations with new variables x and p=x'. To apply numerical integration one first has to design the right hand side of the equation w' = f(w) where in this case w = (x,p):
+
+[import ../examples/harmonic_oscillator.cpp]
+[rhs_function]
+
+Here we chose `vector<double>` as the state type, but others are also possible, for example `tr1::array<double,2>`. Odeint is designed in such a way that you can easily use your own state types. Next, we define the ODE which is in this case a simple function. The parameter signature of this function is crucial: the integration methods will always call them in the form `f(x, dxdt, t)`. So, even if there is no explicit time dependence, one has to define `t` as a function parameter.
+
+Now, we have to define the initial state from which the integration should start:
+
+[state_initialization]
+
+For the integration itself we'll use the [funcref boost::numeric::odeint::integrate integrate] function, which is a  convenient way to get quick results. It is based on the error-controlled [classref boost::numeric::odeint::runge_kutta_rk5_ck runge_kutta_rk5_ck] stepper (5th order) and uses adaptive stepsize.
+
+[integration]
+
+The integrate function expects as parameters the rhs of the ode as defined above, the initial state x, the start-and end-time of the integration as well as the initial time step. Note, that [funcref boost::numeric::odeint::integrate integrate] uses an adaptive stepsize during the integration steps so the time points will not be equally spaced. The integration returns the number of steps that were applied.
+
+It is, of course, also possible to implement the ode system as a class. The rhs must then be implemented as a functor having defined the ()-operator:
+
+[rhs_class]
+
+which can be used via
+
+[integration_class]
+
+[endsect]
+
+[endsect]
