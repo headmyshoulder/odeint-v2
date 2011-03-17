@@ -16,97 +16,35 @@
  */
 
 #ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_HPP_
-#define BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_CONST_HPP_
+#define BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_HPP_
 
-#include <boost/type_traits/is_same.hpp>
-
-#include <boost/numeric/odeint/stepper/stepper_categories.hpp>
+#include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
+#include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 #include <boost/numeric/odeint/integrate/do_nothing_observer.hpp>
-#include <boost/numeric/odeint/integrate/detail/integrate_const.hpp>
-#include <boost/numeric/odeint/integrate/detail/integrate_adaptive.hpp>
+#include <boost/numeric/odeint/integrate/integrate_const.hpp>
+
+
 
 namespace boost {
 namespace numeric {
 namespace odeint {
 
 
-
-
-
-
 /*
- * Integrates with constant time step dt.
+ * ToDo :
+ *
+ * determine type of dxdt for units
  */
-template< class Stepper , class System , class State , class Time , class Observer >
-size_t integrate(
-		Stepper stepper , System system , State &start_state ,
-		Time start_time , Time end_time , Time dt ,
-		Observer observer
-		)
+template< class System , class State , class Time , class Observer >
+size_t integrate( System system , State &start_state , Time start_time , Time end_time , Time dt , Observer observer )
 {
-	// we want to get as fast as possible to the end
-	if( boost::is_same< do_nothing_observer , Observer >::value )
-	{
-		return detail::integrate_adaptive(
-				stepper , system , start_state ,
-				start_time , end_time  , dt ,
-				observer , typename Stepper::stepper_category() );
-	}
-	else
-	{
-		return detail::integrate_const(
-				stepper , system , start_state ,
-				start_time , end_time  , dt ,
-				observer , typename Stepper::stepper_category() );
-	}
+	return integrate_adaptive( controlled_error_stepper< explicit_error_rk54_ck< State > >() , system , start_state , start_time , end_time , dt , observer );
 }
 
-
-
-
-/*
- * Integrates n steps
- */
-template< class Stepper , class System , class State , class Time , class Observer >
-Time integrate_n_steps(
-		Stepper stepper , System system , State &start_state ,
-		Time start_time , Time dt , size_t num_of_steps ,
-		Observer observer )
+template< class System , class State , class Time >
+size_t integrate( System system , State &start_state , Time start_time , Time end_time , Time dt )
 {
-	Time end_time = dt * num_of_steps;
-
-	// we want to get as fast as possible to the end
-	if( boost::is_same< do_nothing_observer , Observer >::type::value )
-	{
-		detail::integrate_adaptive(
-				stepper , system , start_state ,
-				start_time , end_time  , dt ,
-				observer , typename Stepper::stepper_category() );
-	}
-	else
-	{
-		detail::integrate_const(
-				stepper , system , start_state ,
-				start_time , end_time  , dt ,
-				observer , typename Stepper::stepper_category() );
-	}
-	return end_time;
-}
-
-
-
-
-
-template< class Stepper , class System , class State , class Time , class Observer >
-size_t integrate_adaptive(
-		Stepper stepper , System system , State &start_state ,
-		Time start_time , Time end_time , Time dt ,
-		Observer observer )
-{
-	return detail::integrate_adaptive(
-			stepper , system , start_state ,
-			start_time , end_time , dt ,
-			observer , typename Stepper::stepper_category() );
+	return integrate( system , start_state , start_time , end_time , dt , do_nothing_observer() );
 }
 
 
@@ -117,4 +55,4 @@ size_t integrate_adaptive(
 
 
 
-#endif /* BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_CONST_HPP_ */
+#endif /* BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_HPP_ */

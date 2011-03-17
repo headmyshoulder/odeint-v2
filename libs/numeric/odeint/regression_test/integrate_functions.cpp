@@ -22,6 +22,9 @@
 #include <boost/numeric/odeint/stepper/dense_output_controlled_explicit_fsal.hpp>
 
 #include <boost/numeric/odeint/integrate/integrate.hpp>
+#include <boost/numeric/odeint/integrate/integrate_const.hpp>
+#include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
+#include <boost/numeric/odeint/integrate/integrate_n_steps.hpp>
 
 
 const double sigma = 10.0;
@@ -116,7 +119,7 @@ int main( int argc , char **argv )
 //	integrate_adaptive( rosenbrock4_controller< rosenbrock4< double > >() , make_pair( lorenz() , lorenz_jacobi() ) , x2 , 0.0 , 10.0 , 0.1 );
 
 
-	integrate( explicit_euler< state_type >() , lorenz() , x1 , 0.0 , 0.1001 , 0.01 , tmp_func( cout ) );
+	integrate_const( explicit_euler< state_type >() , lorenz() , x1 , 0.0 , 0.1001 , 0.01 , tmp_func( cout ) );
 //	integrate_n_steps( explicit_euler< state_type >() , lorenz() , x1 , 0.0 , 0.1 , 100 , cout << _1 << "\n" );
 //	integrate_adaptive( explicit_euler< state_type >() , lorenz() , x1 , 0.0 , 10.0 , 0.1 , cout << _1 << "\n" );
 
@@ -127,7 +130,7 @@ int main( int argc , char **argv )
 	{
 		// works
 		ofstream fout( "integrate_controlled_rk54.dat" );
-		size_t num_of_steps = integrate(
+		size_t num_of_steps = integrate_const(
 				controlled_error_stepper< explicit_error_rk54_ck< state_type > >() ,
 				lorenz() , x1 , 0.0 , 50.0 , 0.1 , tmp_func( fout ) );
 		clog << "Integrate controlled error stepper rk54 " << num_of_steps << endl;
@@ -145,7 +148,7 @@ int main( int argc , char **argv )
 				dopri5_type() , default_error_checker< double >( 1.0e-1 , 0.1 ) );
 
 		ofstream fout( "integrate_controlled_dopri5.dat" );
-		size_t num_of_steps = integrate(
+		size_t num_of_steps = integrate_const(
 				stepper_type( controlled_stepper ) , lorenz() , x1 , 0.0 , 50.0 , 0.001 , tmp_func( fout ) );
 		clog << "Integrate denseoutput controlled dopri5 " << num_of_steps << endl;
 	}

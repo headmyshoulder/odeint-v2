@@ -6,14 +6,14 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
 <link rel="start" href="../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
 <link rel="up" href="../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
-<link rel="prev" href="short_example.html" title="Short Example">
+<link rel="prev" href="getting_started.html" title="Getting started">
 <link rel="next" href="extend_odeint.html" title="Extend odeint">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="short_example.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="extend_odeint.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="getting_started.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="extend_odeint.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
@@ -28,8 +28,8 @@
       systems and Lyapunov exponents</a></span></dt>
 <dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.stiff_systems">Stiff
       systems</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.different_steppers">Different
-      steppers</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.odeint_in_detail">Odeint
+      in detail</a></span></dt>
 <dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics">Special
       topics</a></span></dt>
 <dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.references">References</a></span></dt>
@@ -39,6 +39,16 @@
 <a name="boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator" title="Harmonic oscillator">Harmonic
       oscillator</a>
 </h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.define_the_ode">Define
+        the ODE</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.stepper_types">Stepper
+        Types</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.integration_with_constant_step_size">Integration
+        with Constant Step Size</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.integration_with_adaptive_step_size">Integration
+        with Adaptive Step Size</a></span></dt>
+</dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.define_the_ode"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.define_the_ode" title="Define the ODE">Define
@@ -65,9 +75,7 @@
           to just define a function, e.g:
         </p>
 <p>
-          </p>
-<p>
-            
+          
 </p>
 <pre class="programlisting"><span class="comment">/* The type of container used to hold the state vector */</span>
 <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
@@ -82,8 +90,6 @@
 <span class="special">}</span>
 </pre>
 <p>
-          </p>
-<p>
         </p>
 <p>
           The parameters of the function must follow the example above where <span class="bold"><strong>x</strong></span> is the current state, <span class="bold"><strong>dxdt</strong></span>
@@ -97,9 +103,7 @@
           parameter structure as above:
         </p>
 <p>
-          </p>
-<p>
-            
+          
 </p>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">harm_osc</span> <span class="special">{</span>
 
@@ -115,8 +119,6 @@
     <span class="special">}</span>
 <span class="special">};</span>
 </pre>
-<p>
-          </p>
 <p>
         </p>
 <p>
@@ -141,9 +143,11 @@
           choose:
         </p>
 <div class="table">
-<a name="id368985"></a><p class="title"><b>Table&#160;1.2.&#160;Stepper Algorithms</b></p>
+<a name="id560646"></a><p class="title"><b>Table&#160;1.2.&#160;Stepper Algorithms</b></p>
 <div class="table-contents"><table class="table" summary="Stepper Algorithms">
 <colgroup>
+<col>
+<col>
 <col>
 <col>
 <col>
@@ -170,6 +174,16 @@
                     Error Estimation
                   </p>
                 </th>
+<th>
+                  <p>
+                    Dense Output
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Remarks
+                  </p>
+                </th>
 </tr></thead>
 <tbody>
 <tr>
@@ -191,6 +205,16 @@
 <td>
                   <p>
                     No
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Yes
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Very simple, only for demonstrating purposes
                   </p>
                 </td>
 </tr>
@@ -215,6 +239,16 @@
                     No
                   </p>
                 </td>
+<td>
+                  <p>
+                    No
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Good default method
+                  </p>
+                </td>
 </tr>
 <tr>
 <td>
@@ -237,6 +271,16 @@
                     Yes (Order 4)
                   </p>
                 </td>
+<td>
+                  <p>
+                    No
+                  </p>
+                </td>
+<td>
+                  <p>
+                    ...
+                  </p>
+                </td>
 </tr>
 <tr>
 <td>
@@ -257,6 +301,80 @@
 <td>
                   <p>
                     Yes (Order 4)
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Yes
+                  </p>
+                </td>
+<td>
+                  <p>
+                    ...
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    Implicit Euler
+                  </p>
+                </td>
+<td>
+                  <p>
+                    implicit_euler
+                  </p>
+                </td>
+<td>
+                  <p>
+                    1
+                  </p>
+                </td>
+<td>
+                  <p>
+                    No
+                  </p>
+                </td>
+<td>
+                  <p>
+                    No
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Needs the Jacobian
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    Rosenbrock 4
+                  </p>
+                </td>
+<td>
+                  <p>
+                    rosenbrock4
+                  </p>
+                </td>
+<td>
+                  <p>
+                    4
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Yes
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Yes
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Good for stiff systems
                   </p>
                 </td>
 </tr>
@@ -288,15 +406,11 @@
           <span class="special">)</span></code> function from odeint:
         </p>
 <p>
-          </p>
-<p>
-            
+          
 </p>
 <pre class="programlisting"><span class="identifier">explicit_rk4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">stepper</span><span class="special">;</span>
 <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">stepper</span> <span class="special">,</span> <span class="identifier">harmonic_oscillator</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">);</span>
 </pre>
-<p>
-          </p>
 <p>
         </p>
 <p>
@@ -308,15 +422,12 @@
           method which can used directly. So, you write down the above example as
         </p>
 <p>
-          </p>
-<p>
-            
+          
 </p>
-<pre class="programlisting"><span class="keyword">for</span><span class="special">(</span> <span class="keyword">double</span> <span class="identifier">t</span><span class="special">=</span><span class="number">0.0</span> <span class="special">;</span> <span class="identifier">t</span><span class="special">&lt;</span><span class="number">10.0</span> <span class="special">;</span> <span class="identifier">t</span><span class="special">+=</span> <span class="identifier">dt</span> <span class="special">)</span>
+<pre class="programlisting"><span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">dt</span> <span class="special">=</span> <span class="number">0.01</span><span class="special">;</span>
+<span class="keyword">for</span><span class="special">(</span> <span class="keyword">double</span> <span class="identifier">t</span><span class="special">=</span><span class="number">0.0</span> <span class="special">;</span> <span class="identifier">t</span><span class="special">&lt;</span><span class="number">10.0</span> <span class="special">;</span> <span class="identifier">t</span><span class="special">+=</span> <span class="identifier">dt</span> <span class="special">)</span>
 	<span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">harmonic_oscillator</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
 </pre>
-<p>
-          </p>
 <p>
         </p>
 </div>
@@ -335,15 +446,11 @@
           4th order error estimation and coefficients introduced by Cash-Karp.
         </p>
 <p>
-          </p>
-<p>
-            
+          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">explicit_error_rk54_ck</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">error_stepper_type</span><span class="special">;</span>
 <span class="identifier">error_stepper_type</span> <span class="identifier">rk54</span><span class="special">;</span>
 </pre>
-<p>
-          </p>
 <p>
         </p>
 <p>
@@ -368,16 +475,12 @@
           stepper create by <code class="computeroutput"><span class="identifier">make_controlled_stepper_standard</span></code>.
         </p>
 <p>
-          </p>
-<p>
-            
+          
 </p>
-<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">controlled_error_stepper</span><span class="special">&lt;</span> <span class="identifier">error_stepper_type</span> <span class="special">&gt;</span> <span class="identifier">controlled_stepper_type</span>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">controlled_error_stepper</span><span class="special">&lt;</span> <span class="identifier">error_stepper_type</span> <span class="special">&gt;</span> <span class="identifier">controlled_stepper_type</span><span class="special">;</span>
 <span class="identifier">controlled_stepper_type</span> <span class="identifier">controlled_stepper</span><span class="special">;</span>
-<span class="identifier">integrate_adaptive</span><span class="special">(</span> <span class="identifier">controlled_stepper</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">);</span>
+<span class="identifier">integrate_adaptive</span><span class="special">(</span> <span class="identifier">controlled_stepper</span> <span class="special">,</span> <span class="identifier">harmonic_oscillator</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">);</span>
 </pre>
-<p>
-          </p>
 <p>
         </p>
 <p>
@@ -388,7 +491,7 @@
         </p>
 </div>
 <p>
-        [Some details]
+        Some details
       </p>
 <p>
         Observers
@@ -402,6 +505,12 @@
 <a name="boost_sandbox_numeric_odeint.tutorial.solar_system"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.solar_system" title="Solar system">Solar
       system</a>
 </h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.solar_system.gravitation_and_energy_conservation">Gravitation
+        and energy conservation</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.solar_system.define_the_system_function">Define
+        the system function</a></span></dt>
+</dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.solar_system.gravitation_and_energy_conservation"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.solar_system.gravitation_and_energy_conservation" title="Gravitation and energy conservation">Gravitation
@@ -525,9 +634,12 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_sandbox_numeric_odeint.tutorial.different_steppers"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.different_steppers" title="Different steppers">Different
-      steppers</a>
+<a name="boost_sandbox_numeric_odeint.tutorial.odeint_in_detail"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.odeint_in_detail" title="Odeint in detail">Odeint
+      in detail</a>
 </h3></div></div></div>
+<p>
+        Different steppers
+      </p>
 <p>
         Explicit steppers
       </p>
@@ -549,6 +661,30 @@
 <a name="boost_sandbox_numeric_odeint.tutorial.special_topics"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics" title="Special topics">Special
       topics</a>
 </h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.complex_state_types">Complex
+        state types</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.lattice_systems">Lattice
+        systems</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.partial_differential_equations">Partial
+        differential equations</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.using_boost__units">Using
+        boost::units</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.using_cuda_and_thrust">Using
+        Cuda and Thrust</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.using_matrices_as_state_types">Using
+        matrices as state types</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.ordinary_differential_equations_on_networks">Ordinary
+        differential equations on networks</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.pass_by_value_or_by_reference">Pass
+        by value or by reference</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.using_boost__range">Using
+        boost::range</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.using_arbitrary_precision_floating_point_types">Using
+        arbitrary precision floating point types</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.self_expanding_lattices">Self
+        expanding lattices</a></span></dt>
+</dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.special_topics.complex_state_types"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.complex_state_types" title="Complex state types">Complex
@@ -646,6 +782,10 @@
           GMP
         </p>
 </div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sandbox_numeric_odeint.tutorial.special_topics.self_expanding_lattices"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.self_expanding_lattices" title="Self expanding lattices">Self
+        expanding lattices</a>
+</h4></div></div></div></div>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -696,7 +836,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2009 Karsten Ahnert and Mario Mulansky<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Karsten Ahnert and Mario Mulansky<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -704,7 +844,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="short_example.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="extend_odeint.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="getting_started.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="extend_odeint.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
