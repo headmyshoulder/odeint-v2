@@ -11,7 +11,8 @@ project
     : build-dir .
     ;
 
-# exe harmonic_oscillator : harmonic_oscillator.cpp ;
+
+exe harmonic_oscillator : harmonic_oscillator.cpp ;
 # exe solar_system : solar_system.cpp point_type.hpp ;
 
 exe stiff_system : stiff_system.cpp ;
