@@ -97,7 +97,6 @@ Time integrate_n_steps(
 
 
 
-
 template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate_adaptive(
 		Stepper stepper , System system , State &start_state ,

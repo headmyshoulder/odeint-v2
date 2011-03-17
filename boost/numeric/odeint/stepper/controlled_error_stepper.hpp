@@ -46,7 +46,7 @@ template
 	class Algebra = range_algebra ,
 	class Operations = default_operations
 >
-class error_checker_standard
+class default_error_checker
 {
 public:
 
@@ -55,7 +55,7 @@ public:
 	typedef Operations operations_type;
 
 
-	error_checker_standard(
+	default_error_checker(
 			value_type eps_abs = static_cast< value_type >( 1.0e-6 ) ,
 			value_type eps_rel = static_cast< value_type >( 1.0e-6 ) ,
 			value_type a_x = static_cast< value_type >( 1.0 ) ,
@@ -95,7 +95,7 @@ private:
  */
 template<
     class ErrorStepper ,
-    class ErrorChecker = error_checker_standard< typename ErrorStepper::value_type ,
+    class ErrorChecker = default_error_checker< typename ErrorStepper::value_type ,
                                                  typename ErrorStepper::algebra_type ,
                                                  typename ErrorStepper::operations_type > ,
     class AdjustSizePolicy = typename ErrorStepper::adjust_size_policy ,

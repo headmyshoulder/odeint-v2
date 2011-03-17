@@ -33,4 +33,6 @@
  */
 // #include <boost/numeric/odeint/algebra/fusion_algebra.hpp>
 
+#include <boost/numeric/odeint/integrate/integrate.hpp>
+
 #endif // BOOST_NUMERIC_ODEINT_HPP

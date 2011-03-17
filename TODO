@@ -1,4 +1,4 @@
-* Unit test
+* UNIT TEST
   NEARLY DONE * test operations
   * test vector_space_algebra, maybe with some proto lib
   NEARLY DONE * test copying
@@ -9,30 +9,28 @@
   * test explicit stepper with ranges
   * split check_concepts into check_stepper_concept, check_error_stepper_concept, check_controlled_stepper_concept
   * include test/thrust in jam system, use system from
+  * ranges and the integrate functions
+  * symplectic intergrators and ranges
+* GENERAL:
+  * check if everywhere static_cast< value_type > is used
+  * check header guards
+  * check copyright note
+  * documente every file in the preamble
+  * check once more, if all contructor, destructors and assign-operators are present
 * integrate functions
   * check forwarding problem
   * check where exactly the observer will be called (before, after each step?)
+  * ranges
+  OK * check function signatures
+  OK * what to throw?
+  OK * check lambdas, lambda is broken
 * Factory functions for steppers, controlled_steppers, error_checker und dense_output_stepper
-* rename error_checker_standard to default_error_checker
 * implicit euler, include dfdt
 * same interface for implicit_euler and rosenbrock4
 DIFFICULT * finishing change of controlled_stepper to units
   * check if rosenbrock controller and controlled_stepper can both be used with the explicit steppers
   OK * move error_checker into controlled_stepper
   * rename controlled_stepper to a more specific name
-* ranges:
-  * integrate functions
-* general:
-  * check if everywhere static_cast< value_type > is used
-  * check header guards
-  * check copyright note
-  * documente every file in the preamble
-  * check once more, if all contructor, destructors and assign-operators are present
-* symplecit_stepper
-  OK * find an appropriate name, (symplectic stroemer nystroem)
-  OK * check is the coefficients are named good
-  * check ranges and call
-  OK * include do_step( system , q , p , t , dt )
 * dense output for rosenbrock
 * Integrate functions
 * skript for setting the include defines according to the position in file system an writing a general copyright comment at the beginning
@@ -43,6 +41,12 @@ DIFFICULT * finishing change of controlled_stepper to units
 
 DONE:
 
+OK * symplecit_stepper
+  OK * find an appropriate name, (symplectic stroemer nystroem)
+  OK * check is the coefficients are named good
+  OK * include do_step( system , q , p , t , dt )
+OK * rename error_checker_standard to default_error_checker
+OK * check the order of arguments in the observer in integrate functions and initialize in dense_output_stepper
 OK * decrease complexity:
   LATER * remove construct, destruct, copy ?
   OK * remove the overloads solving the forwarding problem. boost::range can not be used then anymore

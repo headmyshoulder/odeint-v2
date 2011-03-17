@@ -5,7 +5,10 @@
  *      Author: karsten
  */
 
+#include <fstream>
+#include <iostream>
 #include <tr1/array>
+#include <vector>
 
 #include <boost/numeric/odeint/stepper/implicit_euler.hpp>
 #include <boost/numeric/odeint/stepper/rosenbrock4.hpp>
@@ -19,17 +22,6 @@
 #include <boost/numeric/odeint/stepper/dense_output_controlled_explicit_fsal.hpp>
 
 #include <boost/numeric/odeint/integrate/integrate.hpp>
-
-#include <boost/lambda/lambda.hpp>
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/if.hpp>
-#include <boost/lambda/loops.hpp>
-#include <boost/lambda/switch.hpp>
-#include <boost/lambda/construct.hpp>
-#include <boost/lambda/casts.hpp>
-#include <boost/lambda/exceptions.hpp>
-#include <boost/lambda/numeric.hpp>
-#include <boost/lambda/algorithm.hpp>
 
 
 const double sigma = 10.0;
@@ -90,24 +82,26 @@ std::ostream& operator<<( std::ostream &out , const state_type &x )
 
 
 
-using namespace std;
 using namespace boost::numeric::odeint;
-using namespace boost::lambda;
-
 
 struct tmp_func
 {
+	std::ostream &m_out;
+	tmp_func( std::ostream &out ) : m_out( out ) { }
+
 	template< class T1 , class T2 >
 	void operator()( const T1 &t1 , const T2 &t2 ) const
 	{
-		cout << t1 << " " << t2 << "\n";
+//		m_out << t2 << " " << t1 << "\n";
 	}
 };
 
 int main( int argc , char **argv )
 {
+	using namespace std;
+
 	state_type x1 = { { 10.0 , 10.0 , 10.0 } };
-	vector_type x2( 3 );
+	vector_type x2( 3 , 10.0 );
 
 //	integrate( implicit_euler< double >() , make_pair( lorenz() , lorenz_jacobi() ) , x2 , 0.0 , 10.0 , 0.1 , do_nothing_observer() );
 //	integrate_n_steps( implicit_euler< double >() , make_pair( lorenz() , lorenz_jacobi() ) , x2 , 0.0 , 1000 , 0.1 );
@@ -121,37 +115,55 @@ int main( int argc , char **argv )
 //	integrate_n_steps( rosenbrock4_controller< rosenbrock4< double > >() , make_pair( lorenz() , lorenz_jacobi() ) , x2 , 0.0 , 1000 , 0.1 );
 //	integrate_adaptive( rosenbrock4_controller< rosenbrock4< double > >() , make_pair( lorenz() , lorenz_jacobi() ) , x2 , 0.0 , 10.0 , 0.1 );
 
-//	integrate( explicit_euler< state_type >() , lorenz() , x1 , 0.0 , 10.0 , 0.01 , tmp_func() );
-//	integrate( explicit_euler< state_type >() , lorenz() , x1 , 0.0 , 1.0 , 0.01 , cout << _1 << "\n" );
+
+	integrate( explicit_euler< state_type >() , lorenz() , x1 , 0.0 , 0.1001 , 0.01 , tmp_func( cout ) );
 //	integrate_n_steps( explicit_euler< state_type >() , lorenz() , x1 , 0.0 , 0.1 , 100 , cout << _1 << "\n" );
 //	integrate_adaptive( explicit_euler< state_type >() , lorenz() , x1 , 0.0 , 10.0 , 0.1 , cout << _1 << "\n" );
 
 
 
 
-	// works
-//	size_t num_of_steps = integrate(
-//			controlled_error_stepper< explicit_error_rk54_ck< state_type > >() ,
-//			lorenz() , x1 , 0.0 , 50.0 , 0.1 , tmp_func() );
-//	clog << num_of_steps << endl;
 
-	// works
-//	num_of_steps = integrate_adaptive(
-//			controlled_error_stepper< explicit_error_rk54_ck< state_type > >() ,
-//			lorenz() , x1 , 0.0 , 50.0 , 0.1 , tmp_func() );
-//	clog << num_of_steps << endl;
+	{
+		// works
+		ofstream fout( "integrate_controlled_rk54.dat" );
+		size_t num_of_steps = integrate(
+				controlled_error_stepper< explicit_error_rk54_ck< state_type > >() ,
+				lorenz() , x1 , 0.0 , 50.0 , 0.1 , tmp_func( fout ) );
+		clog << "Integrate controlled error stepper rk54 " << num_of_steps << endl;
+	}
 
 
-	// seems to work, check
-	typedef explicit_error_dopri5< state_type > dopri5_type;
-	typedef controlled_error_stepper< dopri5_type > controlled_error_stepper_type;
-	typedef dense_output_controlled_explicit_fsal< controlled_error_stepper_type > stepper_type;
 
-	controlled_error_stepper_type controlled_stepper(
-			dopri5_type() , error_checker_standard< double >( 1.0e-1 , 0.1 ) );
-	size_t num_of_steps = integrate(
-			stepper_type( controlled_stepper ) , lorenz() , x1 , 0.0 , 50.0 , 0.001 , tmp_func() );
-	clog << num_of_steps << endl;
+	{
+		// seem to work, check
+		typedef explicit_error_dopri5< state_type > dopri5_type;
+		typedef controlled_error_stepper< dopri5_type > controlled_error_stepper_type;
+		typedef dense_output_controlled_explicit_fsal< controlled_error_stepper_type > stepper_type;
+
+		controlled_error_stepper_type controlled_stepper(
+				dopri5_type() , default_error_checker< double >( 1.0e-1 , 0.1 ) );
+
+		ofstream fout( "integrate_controlled_dopri5.dat" );
+		size_t num_of_steps = integrate(
+				stepper_type( controlled_stepper ) , lorenz() , x1 , 0.0 , 50.0 , 0.001 , tmp_func( fout ) );
+		clog << "Integrate denseoutput controlled dopri5 " << num_of_steps << endl;
+	}
+
+	{
+		// seem to work, check
+		typedef explicit_error_dopri5< state_type > dopri5_type;
+		typedef controlled_error_stepper< dopri5_type > controlled_error_stepper_type;
+		typedef dense_output_controlled_explicit_fsal< controlled_error_stepper_type > stepper_type;
+
+		controlled_error_stepper_type controlled_stepper(
+				dopri5_type() , default_error_checker< double >( 1.0e-1 , 0.1 ) );
+
+		ofstream fout( "integrate_adpative_controlled_dopri5.dat" );
+		size_t num_of_steps = integrate_adaptive(
+				stepper_type( controlled_stepper ) , lorenz() , x1 , 0.0 , 50.0 , 0.001 , tmp_func( fout ) );
+		clog << "Integrate adaptive denseoutput controlled dopri5 " << num_of_steps << endl;
+	}
 
 
 

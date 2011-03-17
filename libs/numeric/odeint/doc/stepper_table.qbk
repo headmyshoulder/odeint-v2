@@ -1,0 +1,7 @@
+[table Stepper Algorithms
+  [[Method] [Class] [Order] [Error Estimation]]
+  [[Explicit Euler]  [explicit_euler] [1] [No]]
+  [[Runge-Kutta 4] [explicit_rkrk4] [4] [No]]
+  [[Runge-Kutta Cash-Karp] [explicit_error_rk54_ck] [5] [Yes (Order 4)]]
+  [[Dormand-Prince 5] [explicit_error_dopri5] [5] [Yes (Order 4)]]
+]

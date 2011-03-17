@@ -337,7 +337,7 @@ struct perform_controlled_stepper_test< ControlledStepper , vector_type >
 	{
 		vector_type x( 1 , 2.0 );
 		typename ControlledStepper::stepper_type error_stepper;
-		error_checker_standard< typename ControlledStepper::value_type > error_checker;
+		default_error_checker< typename ControlledStepper::value_type > error_checker;
 		ControlledStepper controlled_stepper( error_stepper , error_checker );
 		check_controlled_stepper_concept( controlled_stepper , constant_system_vector , x );
 		check_controlled_stepper_concept( controlled_stepper , boost::cref( constant_system_vector_class() ) , x );
@@ -353,7 +353,7 @@ struct perform_controlled_stepper_test< ControlledStepper , vector_space_type >
 		vector_space_type x;
 		x.m_x = 2.0;
 		typename ControlledStepper::stepper_type error_stepper;
-		error_checker_standard< typename ControlledStepper::value_type , vector_space_algebra > error_checker;
+		default_error_checker< typename ControlledStepper::value_type , vector_space_algebra > error_checker;
 		ControlledStepper controlled_stepper( error_stepper , error_checker );
 		check_controlled_stepper_concept( controlled_stepper , constant_system_vector_space , x );
 		check_controlled_stepper_concept( controlled_stepper , boost::cref( constant_system_vector_space_class() ) , x );
@@ -369,7 +369,7 @@ struct perform_controlled_stepper_test< ControlledStepper , array_type >
 		array_type x;
 		x[0] = 2.0;
 		typename ControlledStepper::stepper_type error_stepper;
-		error_checker_standard< typename ControlledStepper::value_type > error_checker;
+		default_error_checker< typename ControlledStepper::value_type > error_checker;
 		ControlledStepper controlled_stepper( error_stepper , error_checker );
 		check_controlled_stepper_concept( controlled_stepper , constant_system_array , x );
 		check_controlled_stepper_concept( controlled_stepper , boost::cref( constant_system_array_class() ) , x );
