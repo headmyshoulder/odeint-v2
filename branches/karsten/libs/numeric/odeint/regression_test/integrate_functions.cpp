@@ -95,7 +95,7 @@ struct tmp_func
 	template< class T1 , class T2 >
 	void operator()( const T1 &t1 , const T2 &t2 ) const
 	{
-//		m_out << t2 << " " << t1 << "\n";
+		m_out << t2 << " " << t1 << "\n";
 	}
 };
 

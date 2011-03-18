@@ -50,6 +50,7 @@ size_t integrate_adaptive(
 	size_t count = 0;
 	while( start_time < end_time )
 	{
+		observer( start_state , start_time );
 		if( ( start_time + dt ) > end_time )
 		{
 			dt = end_time - start_time;
@@ -65,9 +66,9 @@ size_t integrate_adaptive(
 		while( ( res == step_size_decreased ) && ( trials < max_attempts ) );
 		if( trials == max_attempts ) throw std::overflow_error( error_string );
 
-		observer( start_state , start_time );
 		++count;
 	}
+	observer( start_state , start_time );
 	return count;
 }
 
@@ -87,10 +88,11 @@ size_t integrate_adaptive(
 	stepper.initialize( start_state , start_time , dt );
 	while( stepper.current_time() < end_time )
 	{
-		stepper.do_step( system );
 		observer( stepper.current_state() , stepper.current_time() );
+		stepper.do_step( system );
 		++count;
 	}
+	observer( stepper.current_state() , stepper.current_time() );
 	return count;
 }
 

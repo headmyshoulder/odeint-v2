@@ -2,83 +2,68 @@
 
 [section Gravitation and energy conservation]
 
-The next example in this tutorial is a simulation of the solar system. In the
-solar system each planet, and of course also the sun will be represented by
-mass points. The interaction force between each object is the gravitational
-force which can be written as
+The next example in this tutorial is a simulation of the outer solar system, consisting of the sun, Jupiter, Saturn, Uranus, Neptune and Pluto.
 
-F_ij = -gamma m_i m_j (q_i-q_j)/|q_i-q_j|^3
+[$solar_system.jpg]
 
-where gamma is the gravitational constant, m_i and m_j are the masses and q_i
-and q_j are the locations of the two objects. The equations of motion are then
+Each planet and of course the sun will be represented by mass points. The interaction force between each object is the gravitational force which can be written as
 
-dq_i/dt = p_i
-dp_i/dt = 1/m_i sum_ji F_ij
+['F[subl ij] = -__gamma m[subl i] m[subl j] ( q[subl i] - q[subl j] ) / | q[subl i] - q[subl j] | [super 3]]
 
-where pi is the momenta of object i. The equations of motion can also be
-derived from the Hamiltonian
+where [' __gamma] is the gravitational constant, ['m[subl i]] and ['m[subl j]] are the masses and ['q[subl i]] and ['q[subl j]] are the locations of the two objects. The equations of motion are then
 
-H = sum_i p_i^2/(2m_i) + sum_j V( qi , qj ) 
+['dq[subl i] / dt = p[subl i]]
 
-with the interaction potential V(q_i,q_j). The Hamiltonian equations give the
+['dp[subl i] / dt = 1 / m[subl i] __Sigma[subl ji] F[subl ij]]
+
+where ['p[subl i]] is the momenta of object ['i]. The equations of motion can also be derived from the Hamiltonian
+
+['H = __Sigma[subl i] p[subl i][super 2] / ( 2 m[subl i] ) + __Sigma[subl j] V( q[subl i] , q[subl j] )]
+
+with the interaction potential ['V(q[subl i],q[subl j])]. The Hamiltonian equations give the
 equations of motion
 
-dq_i/dt = dH/dp_i
+['dq[subl i] / dt = dH / dp[subl i]]
 
-dp_i = -dH/dq_i.
+['dp[subl i] = -dH / dq[subl i]]
 
-In time independent Hamiltonian system the energy is conserved and special
-integration methods have to be applied in order to ensure energy
-conservation. The odeint library provides classes for Hamiltonian
-systems, which are separable and can be written in the form H = sum p_i^2/2m_i +
-Hq(q), where Hq(q) only depends on the coordinates.
-
-hamiltonian_stepper_euler
-hamiltonian_stepper_rk
-
-Alltough this functional form might look a bit arbitrary it covers nearly all
-classical mechanical systems with inertia and without dissipation, or where
-the equations of motion can be written in the form dqi=mi pi dpi=f(qi).
+In time independent Hamiltonian system the energy and the phase space volume are conserved and special integration methods have to be applied in order to ensure these conservation laws. The odeint library provides classes for separable Hamiltonian systems, which can be written in the form ['H = __Sigma p[subl i][super 2] / (2m[subl i]) + H[subl q](q)], where ['H[subl q](q)] only depends on the coordinates. Alltough this functional form might look a bit arbitrary it covers nearly all classical mechanical systems with inertia and without dissipation, or where the equations of motion can be written in the form ['dq[subl i] / dt = p[subl i]] / m[subl i] , ['dp[subl i] / dt = f( q[subl i] )].
 
 [endsect]
 
 
 [section Define the system function]
 
-To implement this system we define a point type which will represent the space
-as well as the velocity. Therefore, we use the operators from
-<boost/operator.hpp>:
+To implement this system we define a point type which will represent the space as well as the velocity. Therefore, we use the operators from __boost_operators:
 
 [import ../examples/point_type.hpp]
 [point_type]
 
 
-The next step is to define a container type storing the values of q and p and
-to define systems (derivative) functions. As container type we use
-std::tr1::array and the state type is then simply 
+The next step is to define a container type storing the values of ['q] and ['p] and to define system functions. As container type we use `std::tr1::array`
 
 [import ../examples/solar_system.cpp]
-[state_type_definition]
+[container_type_definition]
 
-and represents all space coordinates q or all momenta coordinates p. As system
-function we have to provide f(p) = dq and f(q) = -dp, which acts only on p or q:
+The `container_type` is different from the state type of the ODE. The state type of the ode is simply a `pair< container_type , container_type >` since it needs the informations about the coordinates and the momenta.
 
-
-[momentum_function]
+As system function we have to provide ['f(p)] and ['f(q)]:
 
 [coordinate_function]
 
-In general a three body-system is chaotic, hence we can not expect that
-arbitray initial conditions of the system will lead to a dynamic which is
-comparable with the solar system. That is we have to define proper initial
-conditions, which are taken from the book of Hairer, Wannier, Lubich.
+[momentum_function]
 
-Now, we use the rk stepper to integrate the solar system. To visualize the
-motion we save the trajectory of each planet in a circular buffer. The output
-can be piped directly into gnuplot and a very nice visualization of the motion
-appears.
+In general a three body-system is chaotic, hence we can not expect that arbitray initial conditions of the system will lead to a dynamic which is comparable with the solar system. That is we have to define proper initial conditions, which are taken from the book of Hairer, Wannier, Lubich.
+
+As mentioned above, we need to use some special integrators in order to conserve phase space volume and energy. There is a well known family of such integrators, the so-called Runge-Kutta-Nystroem solvers, which we apply here:
 
 [integration_solar_system]
+
+These integration routine was used to produce the above sketch of the solar system. Note, that there are two particularities in this example. First, the state of the symplectic stepper is not `container_type` but a pair of `container_type`. Hence, we must pass such a pair to the integrate function. Since, we want to pass them as references we can simply pack them into __boost_ref. The second point is the observer, which is called with a state type, hence a pair of `container_type`. The reference wrapper is also passed, but this is not a problem at all:
+
+[streaming_observer]
+
+The full example can be found here: [@../../examples/solar_system.cpp]
 
 [endsect]
 

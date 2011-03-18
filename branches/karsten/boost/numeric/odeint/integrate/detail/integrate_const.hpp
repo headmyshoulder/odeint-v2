@@ -37,6 +37,7 @@ size_t integrate_const(
 		start_time += dt;
 		++count;
 	}
+	observer( start_state , start_time );
 	return count;
 }
 
@@ -57,14 +58,14 @@ size_t integrate_const(
 	Time time_step = dt;
 	while( start_time < end_time )
 	{
+		observer( start_state , start_time );
 		Time next_time = start_time + time_step;
 		if( next_time > end_time ) next_time = end_time;
-		detail::integrate_adaptive(
-				stepper , system , start_state , start_time , next_time , dt ,
-				do_nothing_observer() , controlled_stepper_tag() );
-		++count;
-		observer( start_state , start_time );
+		count += detail::integrate_adaptive(
+					stepper , system , start_state , start_time , next_time , dt ,
+					do_nothing_observer() , controlled_stepper_tag() );
 	}
+	observer( start_state , start_time );
 	return count;
 }
 
@@ -74,8 +75,6 @@ size_t integrate_const(
  * integrates with constant time step using a controlled stepper
  *
  * step size control is used if the stepper is a controlled stepper, otherwise not
- *
- * TODO : check the loops for the observers
  */
 template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate_const(
@@ -93,13 +92,13 @@ size_t integrate_const(
 			stepper.calc_state( start_time , start_state );
 			observer( start_state , start_time );
 			start_time += dt;
-			++count;
 		}
 
 		// we have not reached the end, do another real step
 		if( start_time < end_time )
 		{
 			stepper.do_step( system );
+			++count;
 		}
 	}
 	return count;

@@ -50,6 +50,37 @@ size_t integrate_const(
 }
 
 
+template< class Stepper , class System , class State , class Time , class Observer >
+size_t integrate_const(
+		Stepper stepper , System system , const State &start_state ,
+		Time start_time , Time end_time , Time dt ,
+		Observer observer
+		)
+{
+	// we want to get as fast as possible to the end
+	if( boost::is_same< do_nothing_observer , Observer >::value )
+	{
+		return detail::integrate_adaptive(
+				stepper , system , start_state ,
+				start_time , end_time  , dt ,
+				observer , typename Stepper::stepper_category() );
+	}
+	else
+	{
+		return detail::integrate_const(
+				stepper , system , start_state ,
+				start_time , end_time  , dt ,
+				observer , typename Stepper::stepper_category() );
+	}
+}
+
+
+
+
+
+/*
+ * Without observers
+ */
 template< class Stepper , class System , class State , class Time >
 size_t integrate_const(
 		Stepper stepper , System system , State &start_state ,
@@ -58,6 +89,16 @@ size_t integrate_const(
 {
 	return integrate_const( stepper , system , start_state , start_time , end_time , dt , do_nothing_observer() );
 }
+
+template< class Stepper , class System , class State , class Time >
+size_t integrate_const(
+		Stepper stepper , System system , const State &start_state ,
+		Time start_time , Time end_time , Time dt
+		)
+{
+	return integrate_const( stepper , system , start_state , start_time , end_time , dt , do_nothing_observer() );
+}
+
 
 
 

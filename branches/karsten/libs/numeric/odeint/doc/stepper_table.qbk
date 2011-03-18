@@ -6,4 +6,5 @@
   [[Dormand-Prince 5] [explicit_error_dopri5] [5] [Yes (Order 4)] [Yes] [...]]
   [[Implicit Euler] [implicit_euler] [1] [No] [No] [Needs the Jacobian]]
   [[Rosenbrock 4] [rosenbrock4] [4] [Yes] [Yes] [Good for stiff systems]]
+  [[Symplectic Euler] [symplectic_euler] [1] [No] [No] [Symplectic solver for separable Hamiltonian system]]
 ]
