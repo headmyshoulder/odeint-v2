@@ -13,7 +13,7 @@
 <table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="getting_started.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="extend_odeint.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p" href="getting_started.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="extend_odeint.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
@@ -75,7 +75,9 @@
           to just define a function, e.g:
         </p>
 <p>
-          
+          </p>
+<p>
+            
 </p>
 <pre class="programlisting"><span class="comment">/* The type of container used to hold the state vector */</span>
 <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
@@ -90,6 +92,8 @@
 <span class="special">}</span>
 </pre>
 <p>
+          </p>
+<p>
         </p>
 <p>
           The parameters of the function must follow the example above where <span class="bold"><strong>x</strong></span> is the current state, <span class="bold"><strong>dxdt</strong></span>
@@ -103,7 +107,9 @@
           parameter structure as above:
         </p>
 <p>
-          
+          </p>
+<p>
+            
 </p>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">harm_osc</span> <span class="special">{</span>
 
@@ -119,6 +125,8 @@
     <span class="special">}</span>
 <span class="special">};</span>
 </pre>
+<p>
+          </p>
 <p>
         </p>
 <p>
@@ -143,7 +151,7 @@
           choose:
         </p>
 <div class="table">
-<a name="id560646"></a><p class="title"><b>Table&#160;1.2.&#160;Stepper Algorithms</b></p>
+<a name="id369858"></a><p class="title"><b>Table&#160;1.2.&#160;Stepper Algorithms</b></p>
 <div class="table-contents"><table class="table" summary="Stepper Algorithms">
 <colgroup>
 <col>
@@ -406,11 +414,15 @@
           <span class="special">)</span></code> function from odeint:
         </p>
 <p>
-          
+          </p>
+<p>
+            
 </p>
 <pre class="programlisting"><span class="identifier">explicit_rk4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">stepper</span><span class="special">;</span>
 <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">stepper</span> <span class="special">,</span> <span class="identifier">harmonic_oscillator</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">);</span>
 </pre>
+<p>
+          </p>
 <p>
         </p>
 <p>
@@ -422,12 +434,16 @@
           method which can used directly. So, you write down the above example as
         </p>
 <p>
-          
+          </p>
+<p>
+            
 </p>
 <pre class="programlisting"><span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">dt</span> <span class="special">=</span> <span class="number">0.01</span><span class="special">;</span>
 <span class="keyword">for</span><span class="special">(</span> <span class="keyword">double</span> <span class="identifier">t</span><span class="special">=</span><span class="number">0.0</span> <span class="special">;</span> <span class="identifier">t</span><span class="special">&lt;</span><span class="number">10.0</span> <span class="special">;</span> <span class="identifier">t</span><span class="special">+=</span> <span class="identifier">dt</span> <span class="special">)</span>
 	<span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">harmonic_oscillator</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
 </pre>
+<p>
+          </p>
 <p>
         </p>
 </div>
@@ -446,11 +462,15 @@
           4th order error estimation and coefficients introduced by Cash-Karp.
         </p>
 <p>
-          
+          </p>
+<p>
+            
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">explicit_error_rk54_ck</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">error_stepper_type</span><span class="special">;</span>
 <span class="identifier">error_stepper_type</span> <span class="identifier">rk54</span><span class="special">;</span>
 </pre>
+<p>
+          </p>
 <p>
         </p>
 <p>
@@ -475,12 +495,16 @@
           stepper create by <code class="computeroutput"><span class="identifier">make_controlled_stepper_standard</span></code>.
         </p>
 <p>
-          
+          </p>
+<p>
+            
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">controlled_error_stepper</span><span class="special">&lt;</span> <span class="identifier">error_stepper_type</span> <span class="special">&gt;</span> <span class="identifier">controlled_stepper_type</span><span class="special">;</span>
 <span class="identifier">controlled_stepper_type</span> <span class="identifier">controlled_stepper</span><span class="special">;</span>
 <span class="identifier">integrate_adaptive</span><span class="special">(</span> <span class="identifier">controlled_stepper</span> <span class="special">,</span> <span class="identifier">harmonic_oscillator</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">);</span>
 </pre>
+<p>
+          </p>
 <p>
         </p>
 <p>
@@ -844,7 +868,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="getting_started.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="extend_odeint.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p" href="getting_started.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="extend_odeint.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
