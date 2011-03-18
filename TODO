@@ -20,11 +20,10 @@
   * documente every file in the preamble
   * check once more, if all contructor, destructors and assign-operators are present
 * INTEGRATE FUNCTIONS
-  * check forwarding problem
-  * check where exactly the observer will be called (before, after each step?)
-  * ranges
-  * functions without obversers
-  * integrate without stepper , intelligent choice of the stepper
+  * check forwarding problem, ranges
+  OK * check where exactly the observer will be called (before, after each step?)
+  OK * functions without obversers
+  OK * integrate without stepper , intelligent choice of the stepper
   OK * check function signatures
   OK * what to throw?
   OK * check lambdas, lambda is broken

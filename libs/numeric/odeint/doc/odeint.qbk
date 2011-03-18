@@ -15,6 +15,33 @@
      ]
 ]
 
+[def __boost_lambda
+    [@http://www.boost.org/doc/libs/release/doc/html/lambda.html Boost.Lambda]]
+[def __boost_phoenix
+    [@http://www.boost.org/doc/libs/1_46_1/libs/spirit/phoenix/doc/html/index.html Boost.Phoenix]]
+[def __boost_operators
+    [@http://www.boost.org/doc/libs/release/doc/html/operators.html Boost.Operators]]
+[def __boost_ref
+    [@http://www.boost.org/doc/libs/release/doc/html/ref.html `boost::ref`]]
+
+
+
+
+[def __alpha '''&#945;''']
+[def __lambda '''&#955;'''][/lower case]
+[def __Lambda '''&#923;'''][/upper case]
+[def __gamma '''&#947;''']
+[def __Gamma '''&#915;''']
+[def __sigma '''&#963;''']
+[def __Sigma '''&#931;''']
+[def __space '''&#8203;''']
+
+[template super[x]'''<superscript>'''[x]'''</superscript>''']
+[template sub[x]'''<subscript>'''[x]'''</subscript>''']
+[template subl[x]'''<subscript>'''__space[x]'''</subscript>''']
+
+
+
 [include getting_started.qbk]
 
 [include tutorial.qbk]

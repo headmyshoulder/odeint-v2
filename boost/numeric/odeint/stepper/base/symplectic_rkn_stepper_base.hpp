@@ -131,6 +131,8 @@ public:
 	/*
 	 * Version 2 : do_step( system , q , p , t , dt );
 	 *
+	 * For Convenience
+	 *
 	 * The two overloads are needed in order to solve the forwarding problem.
 	 */
 	template< class System , class CoorInOut , class MomentumInOut >
@@ -139,7 +141,6 @@ public:
 		do_step( system , std::make_pair( boost::ref( q ) , boost::ref( p ) ) , t , dt );
 	}
 
-	// for convenience
 	template< class System , class CoorInOut , class MomentumInOut >
 	void do_step( System system , const CoorInOut &q , const MomentumInOut &p , const time_type &t , const time_type &dt )
 	{
@@ -151,7 +152,7 @@ public:
 
 
 	/*
-	 * Version 2 : do_step( system , in , t , out , dt )
+	 * Version 3 : do_step( system , in , t , out , dt )
 	 *
 	 * The forwarding problem is not solved in this version
 	 */

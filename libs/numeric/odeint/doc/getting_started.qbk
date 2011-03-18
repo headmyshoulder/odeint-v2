@@ -2,9 +2,9 @@
 
 [section Overview]
 
-Odeint is a library for solving  initial value problems (IVP) of ordinary differential equations. Mathematically, these problems are formulated as follows: x'(t) = f(x,t), x(0) = x0. x and f can be vectors and the solution is some function x(t) fullfilling both equations above. In the following we will refer to x'(t) also `dxdt` which is also our notation for the derivative in the source code.
+Odeint is a library for solving  initial value problems (IVP) of ordinary differential equations. Mathematically, these problems are formulated as follows: ['x'(t) = f(x,t)], ['x(0) = x0]. ['x] and ['f] can be vectors and the solution is some function ['x(t)] fullfilling both equations above. In the following we will refer to ['x'(t)] also `dxdt` which is also our notation for the derivative in the source code.
 
-Numerical approximations for the solution x(t) are calculated iteratively. The easiest algorithm is the Euler-Scheme, where starting at x(0) one finds x(dt) = x(0) + dt*f(x(0),0). Now one can use x(dt) and obtain x(2dt) in a similar way and so on. The Euler method is of order 1, that means the error at each step is ~ dt^2. This is, of course, not very satisfying, which is why the Euler method is  merely used for real life problems and serves just as illustrative example. In odeint, the following algorithms are implemented:
+Numerical approximations for the solution ['x(t)] are calculated iteratively. The easiest algorithm is the Euler-Scheme, where starting at ['x(0)] one finds ['x(dt) = x(0) + dt f(x(0),0)]. Now one can use ['x(dt)] and obtain ['x(2dt)] in a similar way and so on. The Euler method is of order 1, that means the error at each step is ['~ dt[super 2]]. This is, of course, not very satisfying, which is why the Euler method is  merely used for real life problems and serves just as illustrative example. In odeint, the following algorithms are implemented:
 
 [include stepper_table.qbk]
 
@@ -31,7 +31,7 @@ which includes all headers in the library. All functions and classes from odeint
 
 [section Short Example]
 
-Image, you want to numerically integrate a harmonic oscillator with friction. The equations of motion are given by x'' = -x + gamma x'. This can be transformed to a system of two coupled first-order differential equations with new variables x and p=x'. To apply numerical integration one first has to design the right hand side of the equation w' = f(w) where in this case w = (x,p):
+Image, you want to numerically integrate a harmonic oscillator with friction. The equations of motion are given by ['x'' = -x + gamma x']. This can be transformed to a system of two coupled first-order differential equations with new variables ['x] and ['p=x']. To apply numerical integration one first has to design the right hand side of the equation ['w' = f(w)] where in this case ['w = (x,p)]:
 
 [import ../examples/harmonic_oscillator.cpp]
 [rhs_function]
@@ -46,11 +46,7 @@ For the integration itself we'll use the [funcref boost::numeric::odeint::integr
 
 [integration]
 
-The integrate function expects as parameters the rhs of the ode as defined above, the initial state x, the start-and end-time of the integration as well as the initial time step. Note, that [funcref boost::numeric::odeint::integrate integrate] uses an adaptive stepsize during the integration steps so the time points will not be equally spaced. The integration returns the number of steps that were applied.
-
-[integrate_observer]
-
-[integrate_observ]
+The integrate function expects as parameters the rhs of the ode as defined above, the initial state `x`, the start-and end-time of the integration as well as the initial time step. Note, that [funcref boost::numeric::odeint::integrate integrate] uses an adaptive stepsize during the integration steps so the time points will not be equally spaced. The integration returns the number of steps that were applied.
 
 It is, of course, also possible to implement the ode system as a class. The rhs must then be implemented as a functor having defined the ()-operator:
 
@@ -59,6 +55,19 @@ It is, of course, also possible to implement the ode system as a class. The rhs 
 which can be used via
 
 [integration_class]
+
+You surely have already noticed that during the integration a lot of steps have been done. You might wonder if you could access them do observe the solution during the iteration. Yes, you can do that. All you have to do is to provide a reasonable observer. An example is
+
+[integrate_observer]
+
+which stores the intermediate steps in a container. Now, you only have to pass this container to the integration function:
+
+[integrate_observ]
+
+That is all. Of course, you can use functional libraries like __boost_lambda or __boost_phoenix to ease the creation of observer functions.
+
+The full cpp file for this example can be found here: [@../../examples/harmonic_oscillator.cpp]
+
 
 [endsect]
 
