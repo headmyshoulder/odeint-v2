@@ -48,6 +48,10 @@ For the integration itself we'll use the [funcref boost::numeric::odeint::integr
 
 The integrate function expects as parameters the rhs of the ode as defined above, the initial state x, the start-and end-time of the integration as well as the initial time step. Note, that [funcref boost::numeric::odeint::integrate integrate] uses an adaptive stepsize during the integration steps so the time points will not be equally spaced. The integration returns the number of steps that were applied.
 
+[integrate_observer]
+
+[integrate_observ]
+
 It is, of course, also possible to implement the ode system as a class. The rhs must then be implemented as a functor having defined the ()-operator:
 
 [rhs_class]

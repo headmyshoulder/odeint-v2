@@ -32,6 +32,25 @@ public:
 };
 //]
 
+
+//[ integrate_observer
+struct push_back_state_and_time
+{
+	vector< state_type >& m_states;
+	vector< double >& m_time;
+
+	push_back_state_and_time( vector< state_type > &states , vector< double > &times )
+	: m_states( states ) , m_times( times ) { }
+
+	void operator()( const state_type &x , double t )
+	{
+		m_states.push_back( x );
+		m_times.push_back( t );
+	}
+};
+//]
+
+
 int main(int argc, char **argv)
 {
     using namespace std;
@@ -45,17 +64,23 @@ int main(int argc, char **argv)
 
 
     //[ integration
-    vector<double> times;
-    vector<state_type> x_t_vec;
-
     size_t steps = integrate( harmonic_oscillator ,
                               x , 0.0 , 10.0 , 0.1
                               );
     //]
 
+    //[ integrate_observ
+    vector<state_type> x_vec;
+    vector<double> times;
 
-    //[ output
-    for( size_t i=0; i<=steps; i++ ) { //initial state is 0th entry
+    size_t steps = integrate( harmonic_oscillator ,
+                              x , 0.0 , 10.0 , 0.1 ,
+                              push_back_state_and_time( x_vec , times )
+                              );
+
+    // output
+    for( size_t i=0; i<=steps; i++ )
+    {
         cout << times[i] << '\t' << x_t_vec[i][0] << '\t' << x_t_vec[i][1] << '\n';
     }
     //]
