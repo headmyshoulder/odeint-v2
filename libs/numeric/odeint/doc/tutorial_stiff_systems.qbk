@@ -1,0 +1,37 @@
+[section Stiff systems]
+
+[import ../examples/stiff_system.cpp]
+
+An important class of ordinary differential equations are so called stiff system which are characterized by two or more time scales of different order. 
+
+what are stiff systems?
+
+examples
+
+applications
+
+To solve stiff systems numerically the Jacobian
+
+['J = d f[subl i] / d x[subl j]]
+
+is needed. Here is the definition of the above example
+
+[stiff_system_definition]
+
+The state type has to be a `ublas::vector` and the matrix type must by a `ublas::matrix` since the stiff integrator only accepts these types. With a little trick you can simply make this functions valid for other state and matrix types, just templatize the `operator()`:
+
+[stiff_system_alternative_definition]
+
+Now you can use `stiff_system` in combination with `std::vector` or `std::tr1::array`. In the example the explicit time derivative of ['f(x,t)] is introduced separately in the Jacobian. If ['df / dt = 0] simply fill `dfdt` with zeros.
+
+A well know solver for stiff systems is the so called Rosenbrock method. It has a step size control and dense output facilities and can be used like all the other stepper:
+
+[integrate_stiff_system]
+
+During the integration approximately XX steps have been done. Comparing to a classical Runge-Kutta solver this is a very good result. For example the Dormand-Prince 5 method with step size control and dense output yields ca. XX steps.
+
+
+The full example can be found here: [@../../examples/stiff_system.cpp]
+
+
+[endsect]

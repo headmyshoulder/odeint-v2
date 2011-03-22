@@ -10,11 +10,7 @@ blah blah
 
 [endsect]
 
-[section Stiff systems]
-
-blah blah
-
-[endsect]
+[include tutorial_stiff_systems.qbk]
 
 [section Odeint in detail]
 
