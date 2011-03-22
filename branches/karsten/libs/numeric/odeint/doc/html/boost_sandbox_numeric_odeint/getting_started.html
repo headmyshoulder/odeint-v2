@@ -13,7 +13,7 @@
 <table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="tutorial.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p" href="../index.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="tutorial.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
@@ -52,7 +52,7 @@
         algorithms are implemented:
       </p>
 <div class="table">
-<a name="id518246"></a><p class="title"><b>Table&#160;1.1.&#160;Stepper Algorithms</b></p>
+<a name="id326539"></a><p class="title"><b>Table&#160;1.1.&#160;Stepper Algorithms</b></p>
 <div class="table-contents"><table class="table" summary="Stepper Algorithms">
 <colgroup>
 <col>
@@ -369,7 +369,9 @@
         = (x,p)</em></span>:
       </p>
 <p>
-        
+        </p>
+<p>
+          
 </p>
 <pre class="programlisting"><span class="comment">/* The type of container used to hold the state vector */</span>
 <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
@@ -383,6 +385,8 @@
     <span class="identifier">dxdt</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="special">-</span><span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">-</span> <span class="identifier">gam</span><span class="special">*</span><span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">];</span>
 <span class="special">}</span>
 </pre>
+<p>
+        </p>
 <p>
       </p>
 <p>
@@ -399,12 +403,16 @@
         start:
       </p>
 <p>
-        
+        </p>
+<p>
+          
 </p>
 <pre class="programlisting"><span class="identifier">state_type</span> <span class="identifier">x</span><span class="special">(</span><span class="number">2</span><span class="special">);</span>
 <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span> <span class="comment">// start at x=1.0, p=0.0
 </span><span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
 </pre>
+<p>
+        </p>
 <p>
       </p>
 <p>
@@ -414,11 +422,15 @@
         stepper (5th order) and uses adaptive stepsize.
       </p>
 <p>
-        
+        </p>
+<p>
+          
 </p>
 <pre class="programlisting"><span class="identifier">size_t</span> <span class="identifier">steps</span> <span class="special">=</span> <span class="identifier">integrate</span><span class="special">(</span> <span class="identifier">harmonic_oscillator</span> <span class="special">,</span>
                           <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.1</span> <span class="special">);</span>
 </pre>
+<p>
+        </p>
 <p>
       </p>
 <p>
@@ -435,7 +447,9 @@
         rhs must then be implemented as a functor having defined the ()-operator:
       </p>
 <p>
-        
+        </p>
+<p>
+          
 </p>
 <pre class="programlisting"><span class="comment">/* The rhs of x' = f(x) defined as a class */</span>
 <span class="keyword">class</span> <span class="identifier">harm_osc</span> <span class="special">{</span>
@@ -453,17 +467,23 @@
 <span class="special">};</span>
 </pre>
 <p>
+        </p>
+<p>
       </p>
 <p>
         which can be used via
       </p>
 <p>
-        
+        </p>
+<p>
+          
 </p>
 <pre class="programlisting"><span class="identifier">harm_osc</span> <span class="identifier">ho</span><span class="special">(</span><span class="number">0.15</span><span class="special">);</span>
 <span class="identifier">steps</span> <span class="special">=</span> <span class="identifier">integrate</span><span class="special">(</span> <span class="identifier">ho</span> <span class="special">,</span>
                    <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.1</span> <span class="special">);</span>
 </pre>
+<p>
+        </p>
 <p>
       </p>
 <p>
@@ -473,7 +493,9 @@
         to provide a reasonable observer. An example is
       </p>
 <p>
-        
+        </p>
+<p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">push_back_state_and_time</span>
 <span class="special">{</span>
@@ -491,13 +513,17 @@
 <span class="special">};</span>
 </pre>
 <p>
+        </p>
+<p>
       </p>
 <p>
         which stores the intermediate steps in a container. Now, you only have to
         pass this container to the integration function:
       </p>
 <p>
-        
+        </p>
+<p>
+          
 </p>
 <pre class="programlisting"><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">state_type</span><span class="special">&gt;</span> <span class="identifier">x_vec</span><span class="special">;</span>
 <span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">times</span><span class="special">;</span>
@@ -512,6 +538,8 @@
     <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">times</span><span class="special">[</span><span class="identifier">i</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="char">'\t'</span> <span class="special">&lt;&lt;</span> <span class="identifier">x_vec</span><span class="special">[</span><span class="identifier">i</span><span class="special">][</span><span class="number">0</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="char">'\t'</span> <span class="special">&lt;&lt;</span> <span class="identifier">x_vec</span><span class="special">[</span><span class="identifier">i</span><span class="special">][</span><span class="number">1</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
+<p>
+        </p>
 <p>
       </p>
 <p>
@@ -534,7 +562,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="tutorial.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p" href="../index.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="tutorial.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

@@ -13,7 +13,7 @@
 <table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="extend_odeint.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p" href="extend_odeint.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
@@ -59,8 +59,12 @@
 </colgroup>
 <thead><tr>
 <th>
+                <p>
+                </p>
               </th>
 <th>
+                <p>
+                </p>
               </th>
 <th>
                 <p>
@@ -145,25 +149,23 @@
       </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            <code class="computeroutput"><span class="identifier">Stepper</span><span class="special">()</span></code>
-            Constructor.
-          </li>
+<code class="computeroutput"><span class="identifier">Stepper</span><span class="special">()</span></code>
+          Constructor.
+        </li>
 <li>
-            <code class="computeroutput"><span class="identifier">Stepper</span><span class="special">(</span>
-            <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">)</span></code>
-            Constructor that allocates internal memory to store intermediate results
-            of the same size as <code class="computeroutput"><span class="identifier">x</span></code>.
-          </li>
-<li>
-            <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">DynamicalSystem</span>
-            <span class="special">&amp;</span><span class="identifier">system</span>
-            <span class="special">,</span> <span class="identifier">container_type</span>
-            <span class="special">&amp;</span><span class="identifier">x</span>
-            <span class="special">,</span> <span class="identifier">time_type</span>
-            <span class="identifier">t</span> <span class="special">,</span>
-            <span class="identifier">time_type</span> <span class="identifier">dt</span>
-            <span class="special">)</span></code>
-          </li>
+<code class="computeroutput"><span class="identifier">Stepper</span><span class="special">(</span>
+          <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">)</span></code> Constructor
+          that allocates internal memory to store intermediate results of the same
+          size as <code class="computeroutput"><span class="identifier">x</span></code>.
+        </li>
+<li><code class="computeroutput"><span class="keyword">void</span> <span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">DynamicalSystem</span>
+          <span class="special">&amp;</span><span class="identifier">system</span>
+          <span class="special">,</span> <span class="identifier">container_type</span>
+          <span class="special">&amp;</span><span class="identifier">x</span>
+          <span class="special">,</span> <span class="identifier">time_type</span>
+          <span class="identifier">t</span> <span class="special">,</span>
+          <span class="identifier">time_type</span> <span class="identifier">dt</span>
+          <span class="special">)</span></code></li>
 </ul></div>
 <p>
         Executes one timestep with the given parameters:
@@ -266,16 +268,14 @@
         The result of this method is the (approximate) state of the system <span class="bold"><strong>x(t+dt)</strong></span> and is stored in the variable <code class="computeroutput"><span class="identifier">x</span></code> (in-place). Note, that the time <code class="computeroutput"><span class="identifier">t</span></code> is not automatically increased by this
         method.
       </p>
-<div class="itemizedlist"><ul type="disc"><li>
-            <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">DynamicalSystem</span>
-            <span class="special">&amp;</span><span class="identifier">system</span>
-            <span class="special">,</span> <span class="identifier">container_type</span>
-            <span class="special">&amp;</span><span class="identifier">x</span>
-            <span class="special">,</span> <span class="keyword">const</span>
-            <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="identifier">time_type</span> <span class="identifier">t</span>
-            <span class="special">,</span> <span class="identifier">time_type</span>
-            <span class="identifier">dt</span> <span class="special">)</span></code>
-          </li></ul></div>
+<div class="itemizedlist"><ul type="disc"><li><code class="computeroutput"><span class="keyword">void</span> <span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">DynamicalSystem</span>
+          <span class="special">&amp;</span><span class="identifier">system</span>
+          <span class="special">,</span> <span class="identifier">container_type</span>
+          <span class="special">&amp;</span><span class="identifier">x</span>
+          <span class="special">,</span> <span class="keyword">const</span>
+          <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="identifier">time_type</span> <span class="identifier">t</span>
+          <span class="special">,</span> <span class="identifier">time_type</span>
+          <span class="identifier">dt</span> <span class="special">)</span></code></li></ul></div>
 <p>
         The same as above but with the additional parameter <code class="computeroutput"><span class="identifier">dxdt</span></code>
         that represents the derivative <span class="bold"><strong>x'(t) = f(x,t)</strong></span>
@@ -283,33 +283,26 @@
       </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">adjust_size</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">)</span></code>
-            Adjusts the internal memory to store intermediate results of the same
-            size as <code class="computeroutput"><span class="identifier">x</span></code>. This function
-            <span class="emphasis"><em>must</em></span> be called whenever the system size changes
-            during the integration.
-          </li>
+<code class="computeroutput"><span class="keyword">void</span> <span class="identifier">adjust_size</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">)</span></code> Adjusts
+          the internal memory to store intermediate results of the same size as
+          <code class="computeroutput"><span class="identifier">x</span></code>. This function <span class="emphasis"><em>must</em></span>
+          be called whenever the system size changes during the integration.
+        </li>
 <li>
-            <code class="computeroutput"><span class="identifier">order_type</span> <span class="identifier">order_step</span><span class="special">()</span></code> Returns the order of the algorithm.
-            If <span class="bold"><strong>n</strong></span> is the order of a method, then
-            the result of one iteration with the timestep <span class="bold"><strong>dt</strong></span>
-            is accurate up to <span class="bold"><strong>dt^n</strong></span>. That means the
-            error made by the time discretization is of order <span class="bold"><strong>dt^(n+1)</strong></span>.
-          </li>
+<code class="computeroutput"><span class="identifier">order_type</span> <span class="identifier">order_step</span><span class="special">()</span></code> Returns the order of the algorithm. If
+          <span class="bold"><strong>n</strong></span> is the order of a method, then the result
+          of one iteration with the timestep <span class="bold"><strong>dt</strong></span>
+          is accurate up to <span class="bold"><strong>dt^n</strong></span>. That means the
+          error made by the time discretization is of order <span class="bold"><strong>dt^(n+1)</strong></span>.
+        </li>
 </ul></div>
 <p>
         <span class="bold"><strong>Stepper that model this concept</strong></span>
       </p>
 <div class="itemizedlist"><ul type="disc">
-<li>
-            <code class="computeroutput"><span class="identifier">stepper_euler</span></code>
-          </li>
-<li>
-            <code class="computeroutput"><span class="identifier">stepper_rk4</span></code>
-          </li>
-<li>
-            <code class="computeroutput"><span class="identifier">stepper_rk78_fehlberg</span></code>
-          </li>
+<li><code class="computeroutput"><span class="identifier">stepper_euler</span></code></li>
+<li><code class="computeroutput"><span class="identifier">stepper_rk4</span></code></li>
+<li><code class="computeroutput"><span class="identifier">stepper_rk78_fehlberg</span></code></li>
 </ul></div>
 </div>
 <div class="section" lang="en">
@@ -339,26 +332,24 @@
       </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            <code class="computeroutput"><span class="identifier">Error_Stepper</span><span class="special">()</span></code>
-            Constructor.
-          </li>
+<code class="computeroutput"><span class="identifier">Error_Stepper</span><span class="special">()</span></code>
+          Constructor.
+        </li>
 <li>
-            <code class="computeroutput"><span class="identifier">Error_Stepper</span><span class="special">(</span>
-            <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">)</span></code>
-            Constructor that allocates internal memory to store intermediate results
-            of the same size as <code class="computeroutput"><span class="identifier">x</span></code>.
-          </li>
-<li>
-            <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">DynamicalSystem</span>
-            <span class="special">&amp;</span><span class="identifier">system</span>
-            <span class="special">,</span> <span class="identifier">container_type</span>
-            <span class="special">&amp;</span><span class="identifier">x</span>
-            <span class="special">,</span> <span class="identifier">time_type</span>
-            <span class="identifier">t</span> <span class="special">,</span>
-            <span class="identifier">time_type</span> <span class="identifier">dt</span>
-            <span class="special">,</span> <span class="identifier">container_type</span>
-            <span class="special">&amp;</span><span class="identifier">xerr</span><span class="special">)</span></code>
-          </li>
+<code class="computeroutput"><span class="identifier">Error_Stepper</span><span class="special">(</span>
+          <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">)</span></code> Constructor
+          that allocates internal memory to store intermediate results of the same
+          size as <code class="computeroutput"><span class="identifier">x</span></code>.
+        </li>
+<li><code class="computeroutput"><span class="keyword">void</span> <span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">DynamicalSystem</span>
+          <span class="special">&amp;</span><span class="identifier">system</span>
+          <span class="special">,</span> <span class="identifier">container_type</span>
+          <span class="special">&amp;</span><span class="identifier">x</span>
+          <span class="special">,</span> <span class="identifier">time_type</span>
+          <span class="identifier">t</span> <span class="special">,</span>
+          <span class="identifier">time_type</span> <span class="identifier">dt</span>
+          <span class="special">,</span> <span class="identifier">container_type</span>
+          <span class="special">&amp;</span><span class="identifier">xerr</span><span class="special">)</span></code></li>
 </ul></div>
 <p>
         Executes one timestep with the given parameters:
@@ -480,17 +471,15 @@
         Note, that the time <code class="computeroutput"><span class="identifier">t</span></code> is
         not automatically increased by this method.
       </p>
-<div class="itemizedlist"><ul type="disc"><li>
-            <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">DynamicalSystem</span>
-            <span class="special">&amp;</span><span class="identifier">system</span>
-            <span class="special">,</span> <span class="identifier">container_type</span>
-            <span class="special">&amp;</span><span class="identifier">x</span>
-            <span class="special">,</span> <span class="keyword">const</span>
-            <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="identifier">time_type</span> <span class="identifier">t</span>
-            <span class="special">,</span> <span class="identifier">time_type</span>
-            <span class="identifier">dt</span> <span class="special">,</span>
-            <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">xerr</span><span class="special">)</span></code>
-          </li></ul></div>
+<div class="itemizedlist"><ul type="disc"><li><code class="computeroutput"><span class="keyword">void</span> <span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">DynamicalSystem</span>
+          <span class="special">&amp;</span><span class="identifier">system</span>
+          <span class="special">,</span> <span class="identifier">container_type</span>
+          <span class="special">&amp;</span><span class="identifier">x</span>
+          <span class="special">,</span> <span class="keyword">const</span>
+          <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="identifier">time_type</span> <span class="identifier">t</span>
+          <span class="special">,</span> <span class="identifier">time_type</span>
+          <span class="identifier">dt</span> <span class="special">,</span>
+          <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">xerr</span><span class="special">)</span></code></li></ul></div>
 <p>
         The same as above but with the additional parameter <code class="computeroutput"><span class="identifier">dxdt</span></code>
         that represents the derivative <span class="bold"><strong>x'(t) = f(x,t)</strong></span>
@@ -498,33 +487,26 @@
       </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">adjust_size</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">)</span></code>
-            Adjusts the internal memory to store intermediate results of the same
-            size as <code class="computeroutput"><span class="identifier">x</span></code>. This function
-            <span class="emphasis"><em>must</em></span> be called whenever the system size changes
-            during the integration.
-          </li>
+<code class="computeroutput"><span class="keyword">void</span> <span class="identifier">adjust_size</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">)</span></code> Adjusts
+          the internal memory to store intermediate results of the same size as
+          <code class="computeroutput"><span class="identifier">x</span></code>. This function <span class="emphasis"><em>must</em></span>
+          be called whenever the system size changes during the integration.
+        </li>
 <li>
-            <code class="computeroutput"><span class="identifier">order_type</span> <span class="identifier">order_error_step</span><span class="special">()</span></code> Returns the order of the result <span class="bold"><strong>x(t+dt)</strong></span> of the algorithm.
-          </li>
+<code class="computeroutput"><span class="identifier">order_type</span> <span class="identifier">order_error_step</span><span class="special">()</span></code> Returns the order of the result <span class="bold"><strong>x(t+dt)</strong></span> of the algorithm.
+        </li>
 <li>
-            <code class="computeroutput"><span class="identifier">order_type</span> <span class="identifier">order_error</span><span class="special">()</span></code> Returns the order of the error estimation
-            of the algorithm.
-          </li>
+<code class="computeroutput"><span class="identifier">order_type</span> <span class="identifier">order_error</span><span class="special">()</span></code> Returns the order of the error estimation
+          of the algorithm.
+        </li>
 </ul></div>
 <p>
         <span class="bold"><strong>Stepper that model this concept</strong></span>
       </p>
 <div class="itemizedlist"><ul type="disc">
-<li>
-            <code class="computeroutput"><span class="identifier">stepper_rk5_ck</span></code>
-          </li>
-<li>
-            <code class="computeroutput"><span class="identifier">stepper_rk78_fehlberg</span></code>
-          </li>
-<li>
-            <code class="computeroutput"><span class="identifier">stepper_half_step</span></code>
-          </li>
+<li><code class="computeroutput"><span class="identifier">stepper_rk5_ck</span></code></li>
+<li><code class="computeroutput"><span class="identifier">stepper_rk78_fehlberg</span></code></li>
+<li><code class="computeroutput"><span class="identifier">stepper_half_step</span></code></li>
 </ul></div>
 </div>
 <div class="section" lang="en">
@@ -547,13 +529,11 @@
 <p>
         <span class="bold"><strong>Methods</strong></span>
       </p>
-<div class="itemizedlist"><ul type="disc"><li>
-            <code class="computeroutput"><span class="identifier">Controlled_Stepper</span><span class="special">(</span>
-            <span class="identifier">time_type</span> <span class="identifier">abs_err</span><span class="special">,</span> <span class="identifier">time_type</span>
-            <span class="identifier">rel_err</span><span class="special">,</span>
-            <span class="identifier">time_type</span> <span class="identifier">factor_x</span><span class="special">,</span> <span class="identifier">time_type</span>
-            <span class="identifier">factor_dxdt</span> <span class="special">)</span></code>
-          </li></ul></div>
+<div class="itemizedlist"><ul type="disc"><li><code class="computeroutput"><span class="identifier">Controlled_Stepper</span><span class="special">(</span>
+          <span class="identifier">time_type</span> <span class="identifier">abs_err</span><span class="special">,</span> <span class="identifier">time_type</span>
+          <span class="identifier">rel_err</span><span class="special">,</span>
+          <span class="identifier">time_type</span> <span class="identifier">factor_x</span><span class="special">,</span> <span class="identifier">time_type</span>
+          <span class="identifier">factor_dxdt</span> <span class="special">)</span></code></li></ul></div>
 <p>
         Constructor that initializes the controlled stepper with several parameters
         of the error control. The controlled stepper assures that the error done
@@ -574,18 +554,20 @@
       </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            <code class="computeroutput"><span class="identifier">Controlled_Stepper</span><span class="special">(</span>
-            <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="identifier">abs_err</span><span class="special">,</span> <span class="identifier">time_type</span>
-            <span class="identifier">rel_err</span><span class="special">,</span>
-            <span class="identifier">time_type</span> <span class="identifier">factor_x</span><span class="special">,</span> <span class="identifier">time_type</span>
-            <span class="identifier">factor_dxdt</span> <span class="special">)</span></code>
-            Same as above, but with additional allocation of the internal memory
-            to store intermediate results of the same size as <code class="computeroutput"><span class="identifier">x</span></code>.
-          </li>
-<li>
-            <code class="computeroutput"><span class="identifier">controlled_step_result</span> <span class="identifier">try_step</span><span class="special">(</span>
-            <span class="identifier">DynamicalSystem</span> <span class="special">&amp;</span><span class="identifier">system</span><span class="special">,</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="identifier">dt</span> <span class="special">)</span></code>
-          </li>
+<code class="computeroutput"><span class="identifier">Controlled_Stepper</span><span class="special">(</span>
+          <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">time_type</span>
+          <span class="identifier">abs_err</span><span class="special">,</span>
+          <span class="identifier">time_type</span> <span class="identifier">rel_err</span><span class="special">,</span> <span class="identifier">time_type</span>
+          <span class="identifier">factor_x</span><span class="special">,</span>
+          <span class="identifier">time_type</span> <span class="identifier">factor_dxdt</span>
+          <span class="special">)</span></code> Same as above, but with additional
+          allocation of the internal memory to store intermediate results of the
+          same size as <code class="computeroutput"><span class="identifier">x</span></code>.
+        </li>
+<li><code class="computeroutput"><span class="identifier">controlled_step_result</span> <span class="identifier">try_step</span><span class="special">(</span> <span class="identifier">DynamicalSystem</span> <span class="special">&amp;</span><span class="identifier">system</span><span class="special">,</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">time_type</span>
+          <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">time_type</span>
+          <span class="special">&amp;</span><span class="identifier">dt</span>
+          <span class="special">)</span></code></li>
 </ul></div>
 <p>
         Tries one timestep with the given parameters
@@ -700,37 +682,30 @@
       </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            <code class="computeroutput"><span class="identifier">controlled_step_result</span> <span class="identifier">try_step</span><span class="special">(</span>
-            <span class="identifier">DynamicalSystem</span> <span class="special">&amp;</span><span class="identifier">system</span><span class="special">,</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">container_type</span>
-            <span class="special">&amp;</span><span class="identifier">dxdt</span><span class="special">,</span> <span class="identifier">time_type</span>
-            <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">time_type</span>
-            <span class="special">&amp;</span><span class="identifier">dt</span>
-            <span class="special">)</span></code> Same as above but with the additional
-            parameter <code class="computeroutput"><span class="identifier">dxdt</span></code> that that
-            represents the derivative <span class="bold"><strong>x'(t) = f(x,t)</strong></span>
-            at the time <span class="bold"><strong>t</strong></span>.
-          </li>
+<code class="computeroutput"><span class="identifier">controlled_step_result</span> <span class="identifier">try_step</span><span class="special">(</span> <span class="identifier">DynamicalSystem</span> <span class="special">&amp;</span><span class="identifier">system</span><span class="special">,</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span><span class="special">,</span> <span class="keyword">const</span>
+          <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">time_type</span>
+          <span class="special">&amp;</span><span class="identifier">dt</span>
+          <span class="special">)</span></code> Same as above but with the additional
+          parameter <code class="computeroutput"><span class="identifier">dxdt</span></code> that that
+          represents the derivative <span class="bold"><strong>x'(t) = f(x,t)</strong></span>
+          at the time <span class="bold"><strong>t</strong></span>.
+        </li>
 <li>
-            <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">adjust_size</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">)</span></code>
-            Adjusts the internal memory to store intermediate results of the same
-            size as <code class="computeroutput"><span class="identifier">x</span></code>. This function
-            <span class="emphasis"><em>must</em></span> be called whenever the system size changes
-            during the integration.
-          </li>
+<code class="computeroutput"><span class="keyword">void</span> <span class="identifier">adjust_size</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">)</span></code> Adjusts
+          the internal memory to store intermediate results of the same size as
+          <code class="computeroutput"><span class="identifier">x</span></code>. This function <span class="emphasis"><em>must</em></span>
+          be called whenever the system size changes during the integration.
+        </li>
 <li>
-            <code class="computeroutput"><span class="identifier">order_type</span> <span class="identifier">order_error_step</span><span class="special">()</span></code> Returns the order of the result <span class="bold"><strong>x(t+dt)</strong></span> of the algorithm.
-          </li>
+<code class="computeroutput"><span class="identifier">order_type</span> <span class="identifier">order_error_step</span><span class="special">()</span></code> Returns the order of the result <span class="bold"><strong>x(t+dt)</strong></span> of the algorithm.
+        </li>
 </ul></div>
 <p>
         <span class="bold"><strong>Stepper that model this concept</strong></span>
       </p>
 <div class="itemizedlist"><ul type="disc">
-<li>
-            <code class="computeroutput"><span class="identifier">controlled_stepper_standard</span></code>
-          </li>
-<li>
-            <code class="computeroutput"><span class="identifier">controlled_stepper_bs</span></code>
-          </li>
+<li><code class="computeroutput"><span class="identifier">controlled_stepper_standard</span></code></li>
+<li><code class="computeroutput"><span class="identifier">controlled_stepper_bs</span></code></li>
 </ul></div>
 </div>
 <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
@@ -758,7 +733,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="extend_odeint.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p" href="extend_odeint.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

@@ -13,7 +13,7 @@
 <table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="getting_started.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="extend_odeint.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p" href="getting_started.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="extend_odeint.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
@@ -71,7 +71,9 @@
           to just define a function, e.g:
         </p>
 <p>
-          
+          </p>
+<p>
+            
 </p>
 <pre class="programlisting"><span class="comment">/* The type of container used to hold the state vector */</span>
 <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
@@ -86,6 +88,8 @@
 <span class="special">}</span>
 </pre>
 <p>
+          </p>
+<p>
         </p>
 <p>
           The parameters of the function must follow the example above where <code class="computeroutput"><span class="identifier">x</span></code> is the current state, <code class="computeroutput"><span class="identifier">dxdt</span></code> is the derivative <span class="emphasis"><em>x'</em></span>
@@ -98,7 +102,9 @@
           parameter structure as above:
         </p>
 <p>
-          
+          </p>
+<p>
+            
 </p>
 <pre class="programlisting"><span class="comment">/* The rhs of x' = f(x) defined as a class */</span>
 <span class="keyword">class</span> <span class="identifier">harm_osc</span> <span class="special">{</span>
@@ -115,6 +121,8 @@
     <span class="special">}</span>
 <span class="special">};</span>
 </pre>
+<p>
+          </p>
 <p>
         </p>
 <p>
@@ -139,7 +147,7 @@
           choose:
         </p>
 <div class="table">
-<a name="id561513"></a><p class="title"><b>Table&#160;1.2.&#160;Stepper Algorithms</b></p>
+<a name="id370055"></a><p class="title"><b>Table&#160;1.2.&#160;Stepper Algorithms</b></p>
 <div class="table-contents"><table class="table" summary="Stepper Algorithms">
 <colgroup>
 <col>
@@ -434,11 +442,15 @@
           <span class="special">)</span></code> function from odeint:
         </p>
 <p>
-          
+          </p>
+<p>
+            
 </p>
 <pre class="programlisting"><span class="identifier">explicit_rk4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">stepper</span><span class="special">;</span>
 <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">stepper</span> <span class="special">,</span> <span class="identifier">harmonic_oscillator</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">);</span>
 </pre>
+<p>
+          </p>
 <p>
         </p>
 <p>
@@ -451,12 +463,16 @@
           method which can used directly. So, you write down the above example as
         </p>
 <p>
-          
+          </p>
+<p>
+            
 </p>
 <pre class="programlisting"><span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">dt</span> <span class="special">=</span> <span class="number">0.01</span><span class="special">;</span>
 <span class="keyword">for</span><span class="special">(</span> <span class="keyword">double</span> <span class="identifier">t</span><span class="special">=</span><span class="number">0.0</span> <span class="special">;</span> <span class="identifier">t</span><span class="special">&lt;</span><span class="number">10.0</span> <span class="special">;</span> <span class="identifier">t</span><span class="special">+=</span> <span class="identifier">dt</span> <span class="special">)</span>
 	<span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">harmonic_oscillator</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
 </pre>
+<p>
+          </p>
 <p>
         </p>
 </div>
@@ -475,11 +491,15 @@
           with 4th order error estimation and coefficients introduced by Cash-Karp.
         </p>
 <p>
-          
+          </p>
+<p>
+            
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">explicit_error_rk54_ck</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">error_stepper_type</span><span class="special">;</span>
 <span class="identifier">error_stepper_type</span> <span class="identifier">rk54</span><span class="special">;</span>
 </pre>
+<p>
+          </p>
 <p>
         </p>
 <p>
@@ -504,12 +524,16 @@
           stepper create by <code class="computeroutput"><span class="identifier">make_controlled_stepper_standard</span></code>.
         </p>
 <p>
-          
+          </p>
+<p>
+            
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">controlled_error_stepper</span><span class="special">&lt;</span> <span class="identifier">error_stepper_type</span> <span class="special">&gt;</span> <span class="identifier">controlled_stepper_type</span><span class="special">;</span>
 <span class="identifier">controlled_stepper_type</span> <span class="identifier">controlled_stepper</span><span class="special">;</span>
 <span class="identifier">integrate_adaptive</span><span class="special">(</span> <span class="identifier">controlled_stepper</span> <span class="special">,</span> <span class="identifier">harmonic_oscillator</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">);</span>
 </pre>
+<p>
+          </p>
 <p>
         </p>
 <p>
@@ -616,7 +640,9 @@
           space as well as the velocity. Therefore, we use the operators from <a href="http://www.boost.org/doc/libs/release/doc/html/operators.html" target="_top">Boost.Operators</a>:
         </p>
 <p>
-          
+          </p>
+<p>
+            
 </p>
 <pre class="programlisting"><span class="comment">/*the point type */</span>
 <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">T</span> <span class="special">,</span> <span class="identifier">size_t</span> <span class="identifier">Dim</span> <span class="special">&gt;</span>
@@ -647,6 +673,8 @@
 </span><span class="comment">// more operators
 </span></pre>
 <p>
+          </p>
+<p>
         </p>
 <p>
           The next step is to define a container type storing the values of <span class="emphasis"><em>q</em></span>
@@ -654,7 +682,9 @@
           type we use <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">tr1</span><span class="special">::</span><span class="identifier">array</span></code>
         </p>
 <p>
-          
+          </p>
+<p>
+            
 </p>
 <pre class="programlisting"><span class="comment">// we simulate 5 planets and the sun
 </span><span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">n</span> <span class="special">=</span> <span class="number">6</span><span class="special">;</span>
@@ -663,6 +693,8 @@
 <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">tr1</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="identifier">point_type</span> <span class="special">,</span> <span class="identifier">n</span> <span class="special">&gt;</span> <span class="identifier">container_type</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">tr1</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">n</span> <span class="special">&gt;</span> <span class="identifier">mass_type</span><span class="special">;</span>
 </pre>
+<p>
+          </p>
 <p>
         </p>
 <p>
@@ -677,7 +709,9 @@
           As system function we have to provide <span class="emphasis"><em>f(p)</em></span> and <span class="emphasis"><em>f(q)</em></span>:
         </p>
 <p>
-          
+          </p>
+<p>
+            
 </p>
 <pre class="programlisting"><span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">gravitational_constant</span> <span class="special">=</span> <span class="number">2.95912208286e-4</span><span class="special">;</span>
 
@@ -695,9 +729,13 @@
 <span class="special">};</span>
 </pre>
 <p>
+          </p>
+<p>
         </p>
 <p>
-          
+          </p>
+<p>
+            
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">solar_system_momentum</span>
 <span class="special">{</span>
@@ -725,6 +763,8 @@
 <span class="special">};</span>
 </pre>
 <p>
+          </p>
+<p>
         </p>
 <p>
           In general a three body-system is chaotic, hence we can not expect that
@@ -739,7 +779,9 @@
           apply here:
         </p>
 <p>
-          
+          </p>
+<p>
+            
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">symplectic_rkn_sb3a_mclachlan</span><span class="special">&lt;</span> <span class="identifier">container_type</span> <span class="special">&gt;</span> <span class="identifier">stepper_type</span><span class="special">;</span>
 <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">dt</span> <span class="special">=</span> <span class="number">100.0</span><span class="special">;</span>
@@ -750,6 +792,8 @@
 		<span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">q</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">p</span> <span class="special">)</span> <span class="special">)</span> <span class="special">,</span>
 		<span class="number">0.0</span> <span class="special">,</span> <span class="number">200000.0</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">,</span> <span class="identifier">streaming_observer</span><span class="special">(</span> <span class="identifier">cout</span> <span class="special">)</span> <span class="special">);</span>
 </pre>
+<p>
+          </p>
 <p>
         </p>
 <p>
@@ -763,7 +807,9 @@
           is also passed, but this is not a problem at all:
         </p>
 <p>
-          
+          </p>
+<p>
+            
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">streaming_observer</span>
 <span class="special">{</span>
@@ -781,6 +827,8 @@
 	<span class="special">}</span>
 <span class="special">};</span>
 </pre>
+<p>
+          </p>
 <p>
         </p>
 <p>
@@ -803,7 +851,133 @@
       systems</a>
 </h3></div></div></div>
 <p>
-        blah blah
+        An important class of ordinary differential equations are so called stiff
+        system which are characterized by two or more time scales of different order.
+      </p>
+<p>
+        what are stiff systems?
+      </p>
+<p>
+        examples
+      </p>
+<p>
+        applications
+      </p>
+<p>
+        To solve stiff systems numerically the Jacobian
+      </p>
+<p>
+        <span class="emphasis"><em>J = d f<sub>&#8203;i</sub> / d x<sub>&#8203;j</sub></em></span>
+      </p>
+<p>
+        is needed. Here is the definition of the above example
+      </p>
+<p>
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">vector_type</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">matrix</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">matrix_type</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">stiff_system</span>
+<span class="special">{</span>
+	<span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">vector_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">vector_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span>
+	<span class="special">{</span>
+		<span class="identifier">dxdt</span><span class="special">[</span> <span class="number">0</span> <span class="special">]</span> <span class="special">=</span> <span class="special">-</span><span class="number">101.0</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">[</span> <span class="number">0</span> <span class="special">]</span> <span class="special">-</span> <span class="number">100.0</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">[</span> <span class="number">1</span> <span class="special">];</span>
+		<span class="identifier">dxdt</span><span class="special">[</span> <span class="number">1</span> <span class="special">]</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">[</span> <span class="number">0</span> <span class="special">];</span>
+	<span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">stiff_system_jacobi</span>
+<span class="special">{</span>
+	<span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">vector_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">matrix_type</span> <span class="special">&amp;</span><span class="identifier">J</span> <span class="special">,</span> <span class="keyword">const</span> <span class="keyword">double</span> <span class="special">&amp;</span><span class="identifier">t</span> <span class="special">,</span> <span class="identifier">vector_type</span> <span class="special">&amp;</span><span class="identifier">dfdt</span> <span class="special">)</span>
+	<span class="special">{</span>
+		<span class="identifier">J</span><span class="special">(</span> <span class="number">0</span> <span class="special">,</span> <span class="number">0</span> <span class="special">)</span> <span class="special">=</span> <span class="special">-</span><span class="number">101.0</span><span class="special">;</span>
+		<span class="identifier">J</span><span class="special">(</span> <span class="number">0</span> <span class="special">,</span> <span class="number">1</span> <span class="special">)</span> <span class="special">=</span> <span class="special">-</span><span class="number">100.0</span><span class="special">;</span>
+		<span class="identifier">J</span><span class="special">(</span> <span class="number">1</span> <span class="special">,</span> <span class="number">0</span> <span class="special">)</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span>
+		<span class="identifier">J</span><span class="special">(</span> <span class="number">1</span> <span class="special">,</span> <span class="number">1</span> <span class="special">)</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
+		<span class="identifier">dfdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
+		<span class="identifier">dfdt</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
+	<span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+        </p>
+<p>
+      </p>
+<p>
+        The state type has to be a <code class="computeroutput"><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">vector</span></code>
+        and the matrix type must by a <code class="computeroutput"><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">matrix</span></code>
+        since the stiff integrator only accepts these types. With a little trick
+        you can simply make this functions valid for other state and matrix types,
+        just templatize the <code class="computeroutput"><span class="keyword">operator</span><span class="special">()</span></code>:
+      </p>
+<p>
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">stiff_system</span>
+<span class="special">{</span>
+	<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">State</span> <span class="special">&gt;</span>
+	<span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span>
+	<span class="special">{</span>
+		<span class="special">...</span>
+	<span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">stiff_system_jacobi</span>
+<span class="special">{</span>
+	<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">State</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Matrix</span> <span class="special">&gt;</span>
+	<span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">Matrix</span> <span class="special">&amp;</span><span class="identifier">J</span> <span class="special">,</span> <span class="keyword">const</span> <span class="keyword">double</span> <span class="special">&amp;</span><span class="identifier">t</span> <span class="special">,</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">dfdt</span> <span class="special">)</span>
+	<span class="special">{</span>
+		<span class="special">...</span>
+	<span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+        </p>
+<p>
+      </p>
+<p>
+        Now you can use <code class="computeroutput"><span class="identifier">stiff_system</span></code>
+        in combination with <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span></code> or <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">tr1</span><span class="special">::</span><span class="identifier">array</span></code>. In the example the explicit time
+        derivative of <span class="emphasis"><em>f(x,t)</em></span> is introduced separately in the
+        Jacobian. If <span class="emphasis"><em>df / dt = 0</em></span> simply fill <code class="computeroutput"><span class="identifier">dfdt</span></code>
+        with zeros.
+      </p>
+<p>
+        A well know solver for stiff systems is the so called Rosenbrock method.
+        It has a step size control and dense output facilities and can be used like
+        all the other stepper:
+      </p>
+<p>
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">rosenbrock4</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">stepper_type</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">rosenbrock4_controller</span><span class="special">&lt;</span> <span class="identifier">stepper_type</span> <span class="special">&gt;</span> <span class="identifier">controlled_stepper_type</span><span class="special">;</span>
+
+<span class="identifier">vector_type</span> <span class="identifier">x</span><span class="special">(</span> <span class="number">3</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">xerr</span><span class="special">(</span> <span class="number">3</span> <span class="special">);</span>
+
+<span class="identifier">size_t</span> <span class="identifier">num_of_steps</span> <span class="special">=</span> <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">controlled_stepper_type</span><span class="special">()</span> <span class="special">,</span>
+		<span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">stiff_system</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">stiff_system_jacobi</span><span class="special">()</span> <span class="special">)</span> <span class="special">,</span>
+		<span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">50.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">);</span>
+</pre>
+<p>
+        </p>
+<p>
+      </p>
+<p>
+        During the integration approximately XX steps have been done. Comparing to
+        a classical Runge-Kutta solver this is a very good result. For example the
+        Dormand-Prince 5 method with step size control and dense output yields ca.
+        XX steps.
+      </p>
+<p>
+        The full example can be found here: <a href="../../../examples/stiff_system.cpp" target="_top">../../examples/stiff_system.cpp</a>
       </p>
 </div>
 <div class="section" lang="en">
@@ -1018,7 +1192,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="getting_started.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="extend_odeint.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p" href="getting_started.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="extend_odeint.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

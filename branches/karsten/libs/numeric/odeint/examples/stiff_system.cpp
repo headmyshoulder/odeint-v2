@@ -1,70 +1,127 @@
-/* Boost implicit_euler.cpp example file
-
- Copyright 2010 Karsten Ahnert
- Copyright 2010 Mario Mulansky
-
- This file shows the use of the implicit euler stepper
-
- Distributed under the Boost Software License, Version 1.0.
- (See accompanying file LICENSE_1_0.txt or
- copy at http://www.boost.org/LICENSE_1_0.txt)
-*/
+/*
+ * rosenbrock4.cpp
+ *
+ *  Created on: Jan 9, 2011
+ *      Author: karsten
+ */
 
 #include <iostream>
+#include <fstream>
 #include <utility>
+#include <tr1/array>
 
 #include <boost/numeric/odeint.hpp>
-#include <boost/numeric/odeint/stepper/implicit_euler.hpp>
-#include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
-
-#include <boost/numeric/ublas/vector.hpp>
-#include <boost/numeric/ublas/matrix.hpp>
-
-#define tab '\t'
-
-typedef double value_type;
-typedef boost::numeric::ublas::vector< value_type > state_type;
-typedef boost::numeric::ublas::matrix< value_type > matrix_type;
-
-void stiff_system( state_type &x , state_type &dxdt , value_type t )
-{
-	dxdt( 0 ) = -101.0 * x( 0 ) - 100.0 * x( 1 );
-	dxdt( 1 ) = x( 0 );
-}
-
-void jacobi( state_type &x , matrix_type &jacobi , value_type t )
-{
-	jacobi( 0 , 0 ) = -101.0;
-	jacobi( 0 , 1 ) = -100.0;
-	jacobi( 1 , 0 ) = 1.0;
-	jacobi( 1 , 1 ) = 0.0;
-}
 
 using namespace std;
 using namespace boost::numeric::odeint;
 
-int main( void )
+//[ stiff_system_definition
+typedef boost::numeric::ublas::vector< double > vector_type;
+typedef boost::numeric::ublas::matrix< double > matrix_type;
+
+struct stiff_system
 {
-	explicit_euler< state_type , value_type /*, vector_space_algebra */> expl_euler;
-	implicit_euler< value_type > impl_euler;
-
-	state_type x1( 2 );
-	x1( 0 ) = 1.0; x1( 1 ) = 0.0;
-	state_type x2( x1 );
-
-	const value_type dt = 0.01; // for dt >= 0.01 the euler method gets unstable
-	const size_t steps = 1000;
-
-	value_type t = 0.0;
-	for( size_t step = 0 ; step < steps ; ++step , t+=dt )
+	void operator()( const vector_type &x , vector_type &dxdt , double t )
 	{
-		clog << step << " of " << steps << endl;
-		cout << t << tab << x1( 0 ) << tab << x1( 1 ) << tab << x2( 0 ) << tab << x2( 1 ) << tab;
-		cout << 1.0 / 99.0 * exp( -100.0 * t ) * ( 100.0  - exp( 99.0 * t ) ) << tab;
-		cout << 1.0 / 99.0 * exp( -100.0 * t ) * ( -1.0 + exp( 99.0 * t ) ) << endl;
-
-		expl_euler.do_step( stiff_system , x1 , t , dt );
-		impl_euler.do_step( make_pair( stiff_system , jacobi ) , x2 , t , dt );
+		dxdt[ 0 ] = -101.0 * x[ 0 ] - 100.0 * x[ 1 ];
+		dxdt[ 1 ] = x[ 0 ];
 	}
+};
 
+struct stiff_system_jacobi
+{
+	void operator()( const vector_type &x , matrix_type &J , const double &t , vector_type &dfdt )
+	{
+		J( 0 , 0 ) = -101.0;
+		J( 0 , 1 ) = -100.0;
+		J( 1 , 0 ) = 1.0;
+		J( 1 , 1 ) = 0.0;
+		dfdt[0] = 0.0;
+		dfdt[1] = 0.0;
+	}
+};
+//]
+
+
+/*
+//[ stiff_system_alternative_definition
+struct stiff_system
+{
+	template< class State >
+	void operator()( const State &x , State &dxdt , double t )
+	{
+		...
+	}
+};
+
+struct stiff_system_jacobi
+{
+	template< class State , class Matrix >
+	void operator()( const State &x , Matrix &J , const double &t , State &dfdt )
+	{
+		...
+	}
+};
+//]
+*/
+
+
+
+
+
+void rk54_ck_controlled_with_stiff_system( void )
+{
+	typedef explicit_error_rk54_ck< vector_type > stepper_type;
+	typedef controlled_error_stepper< stepper_type > controlled_stepper_type;
+	controlled_stepper_type stepper;
+
+	vector_type x( 3 , 1.0 );
+	double t = 0.0 , dt = 0.00001;
+	ofstream fout( "rk54_ck_controller_stiff.dat" );
+	size_t count = 0;
+	while( t < 50.0 )
+	{
+		fout << t << "\t" << dt << "\t" << stepper.last_error() << "\t";
+		fout << x[0] << "\t" << x[1] << "\t" << x[2] << "\t";
+		fout <<std::endl;
+
+		size_t trials = 0;
+		while( trials < 100 )
+		{
+			if( stepper.try_step( stiff_system() , x , t , dt ) !=  step_size_decreased )
+				break;
+			++trials;
+		}
+		if( trials == 100 )
+		{
+			cerr << "Error : stepper did not converge! " << endl;
+			break;
+		}
+		++count;
+	}
+	clog << "RK 54 : " << count << endl;
+}
+
+
+
+
+
+
+int main( int argc , char **argv )
+{
+//[ integrate_stiff_system
+	typedef rosenbrock4< double > stepper_type;
+	typedef rosenbrock4_controller< stepper_type > controlled_stepper_type;
+
+	vector_type x( 3 , 1.0 ) , xerr( 3 );
+
+	size_t num_of_steps = integrate_const( controlled_stepper_type() ,
+			make_pair( stiff_system() , stiff_system_jacobi() ) ,
+			x , 0.0 , 50.0 , 0.01 );
+//]
+	clog << num_of_steps << endl;
+
+	rk54_ck_controlled_with_stiff_system();
+
+	return 0;
 }
