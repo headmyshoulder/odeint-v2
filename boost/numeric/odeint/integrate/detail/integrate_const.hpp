@@ -8,7 +8,6 @@
 #ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_DETAIL_INTEGRATE_CONST_HPP_
 #define BOOST_NUMERIC_ODEINT_INTEGRATE_DETAIL_INTEGRATE_CONST_HPP_
 
-
 #include <boost/numeric/odeint/integrate/detail/integrate_adaptive.hpp>
 
 namespace boost {

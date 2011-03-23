@@ -12,9 +12,14 @@
 
 #include <boost/numeric/odeint.hpp>
 
+#include <boost/spirit/include/phoenix.hpp>
+
 using namespace std;
 using namespace boost::numeric::odeint;
+namespace phoenix = boost::phoenix;
 
+
+/*
 //[ stiff_system_definition
 typedef boost::numeric::ublas::vector< double > vector_type;
 typedef boost::numeric::ublas::matrix< double > matrix_type;
@@ -41,16 +46,18 @@ struct stiff_system_jacobi
 	}
 };
 //]
+*/
 
 
-/*
 //[ stiff_system_alternative_definition
+typedef boost::numeric::ublas::vector< double > vector_type;
+typedef boost::numeric::ublas::matrix< double > matrix_type;
+
 struct stiff_system
 {
 	template< class State >
 	void operator()( const State &x , State &dxdt , double t )
 	{
-		...
 	}
 };
 
@@ -59,50 +66,9 @@ struct stiff_system_jacobi
 	template< class State , class Matrix >
 	void operator()( const State &x , Matrix &J , const double &t , State &dfdt )
 	{
-		...
 	}
 };
 //]
-*/
-
-
-
-
-
-void rk54_ck_controlled_with_stiff_system( void )
-{
-	typedef explicit_error_rk54_ck< vector_type > stepper_type;
-	typedef controlled_error_stepper< stepper_type > controlled_stepper_type;
-	controlled_stepper_type stepper;
-
-	vector_type x( 3 , 1.0 );
-	double t = 0.0 , dt = 0.00001;
-	ofstream fout( "rk54_ck_controller_stiff.dat" );
-	size_t count = 0;
-	while( t < 50.0 )
-	{
-		fout << t << "\t" << dt << "\t" << stepper.last_error() << "\t";
-		fout << x[0] << "\t" << x[1] << "\t" << x[2] << "\t";
-		fout <<std::endl;
-
-		size_t trials = 0;
-		while( trials < 100 )
-		{
-			if( stepper.try_step( stiff_system() , x , t , dt ) !=  step_size_decreased )
-				break;
-			++trials;
-		}
-		if( trials == 100 )
-		{
-			cerr << "Error : stepper did not converge! " << endl;
-			break;
-		}
-		++count;
-	}
-	clog << "RK 54 : " << count << endl;
-}
-
-
 
 
 
@@ -113,15 +79,29 @@ int main( int argc , char **argv )
 	typedef rosenbrock4< double > stepper_type;
 	typedef rosenbrock4_controller< stepper_type > controlled_stepper_type;
 
-	vector_type x( 3 , 1.0 ) , xerr( 3 );
+	vector_type x( 3 , 1.0 );
 
 	size_t num_of_steps = integrate_const( controlled_stepper_type() ,
 			make_pair( stiff_system() , stiff_system_jacobi() ) ,
-			x , 0.0 , 50.0 , 0.01 );
+			x , 0.0 , 50.0 , 0.01 ,
+			cout << phoenix::arg_names::arg2 << " " << phoenix::arg_names::arg1[0] << "\n" );
 //]
 	clog << num_of_steps << endl;
 
-	rk54_ck_controlled_with_stiff_system();
+
+
+//[ integrate_stiff_system_alternative
+	typedef explicit_error_dopri5< vector_type > dopri5_type;
+	typedef controlled_error_stepper< dopri5_type > controlled_dopri5_type;
+	typedef dense_output_controlled_explicit_fsal< controlled_dopri5_type > dense_output_dopri5_type;
+
+	vector_type x2( 3 , 1.0 );
+
+	size_t num_of_steps2 = integrate_const( dense_output_dopri5_type() ,
+			stiff_system() , x2 , 0.0 , 50.0 , 0.01 ,
+			cout << phoenix::arg_names::arg2 << " " << phoenix::arg_names::arg1[0] << "\n" );
+	clog << num_of_steps2 << endl;
+//]
 
 	return 0;
 }

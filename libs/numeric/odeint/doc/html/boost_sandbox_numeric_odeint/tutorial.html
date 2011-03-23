@@ -960,11 +960,12 @@
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">rosenbrock4</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">stepper_type</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">rosenbrock4_controller</span><span class="special">&lt;</span> <span class="identifier">stepper_type</span> <span class="special">&gt;</span> <span class="identifier">controlled_stepper_type</span><span class="special">;</span>
 
-<span class="identifier">vector_type</span> <span class="identifier">x</span><span class="special">(</span> <span class="number">3</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">xerr</span><span class="special">(</span> <span class="number">3</span> <span class="special">);</span>
+<span class="identifier">vector_type</span> <span class="identifier">x</span><span class="special">(</span> <span class="number">3</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">);</span>
 
 <span class="identifier">size_t</span> <span class="identifier">num_of_steps</span> <span class="special">=</span> <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">controlled_stepper_type</span><span class="special">()</span> <span class="special">,</span>
 		<span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">stiff_system</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">stiff_system_jacobi</span><span class="special">()</span> <span class="special">)</span> <span class="special">,</span>
-		<span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">50.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">);</span>
+		<span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">50.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">,</span>
+		<span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">phoenix</span><span class="special">::</span><span class="identifier">arg_names</span><span class="special">::</span><span class="identifier">arg2</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span> <span class="special">&lt;&lt;</span> <span class="identifier">phoenix</span><span class="special">::</span><span class="identifier">arg_names</span><span class="special">::</span><span class="identifier">arg1</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span> <span class="special">);</span>
 </pre>
 <p>
         </p>
@@ -975,6 +976,30 @@
         a classical Runge-Kutta solver this is a very good result. For example the
         Dormand-Prince 5 method with step size control and dense output yields ca.
         XX steps.
+      </p>
+<p>
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">explicit_error_dopri5</span><span class="special">&lt;</span> <span class="identifier">vector_type</span> <span class="special">&gt;</span> <span class="identifier">dopri5_type</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">controlled_error_stepper</span><span class="special">&lt;</span> <span class="identifier">dopri5_type</span> <span class="special">&gt;</span> <span class="identifier">controlled_dopri5_type</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">dense_output_controlled_explicit_fsal</span><span class="special">&lt;</span> <span class="identifier">controlled_dopri5_type</span> <span class="special">&gt;</span> <span class="identifier">dense_output_dopri5_type</span><span class="special">;</span>
+
+<span class="identifier">vector_type</span> <span class="identifier">x2</span><span class="special">(</span> <span class="number">3</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">);</span>
+
+<span class="identifier">size_t</span> <span class="identifier">num_of_steps2</span> <span class="special">=</span> <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">dense_output_dopri5_type</span><span class="special">()</span> <span class="special">,</span>
+		<span class="identifier">stiff_system</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">x2</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">50.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">,</span>
+		<span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">phoenix</span><span class="special">::</span><span class="identifier">arg_names</span><span class="special">::</span><span class="identifier">arg2</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span> <span class="special">&lt;&lt;</span> <span class="identifier">phoenix</span><span class="special">::</span><span class="identifier">arg_names</span><span class="special">::</span><span class="identifier">arg1</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span> <span class="special">);</span>
+<span class="identifier">clog</span> <span class="special">&lt;&lt;</span> <span class="identifier">num_of_steps2</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+</pre>
+<p>
+        </p>
+<p>
+      </p>
+<p>
+        Note, that we have used <a href="http://www.boost.org/doc/libs/1_46_1/libs/spirit/phoenix/doc/html/index.html" target="_top">Boost.Phoenix</a>
+        a great functional programming library to create and compose the observer.
       </p>
 <p>
         The full example can be found here: <a href="../../../examples/stiff_system.cpp" target="_top">../../examples/stiff_system.cpp</a>
