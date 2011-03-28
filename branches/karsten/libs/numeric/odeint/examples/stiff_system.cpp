@@ -19,7 +19,7 @@ using namespace boost::numeric::odeint;
 namespace phoenix = boost::phoenix;
 
 
-/*
+
 //[ stiff_system_definition
 typedef boost::numeric::ublas::vector< double > vector_type;
 typedef boost::numeric::ublas::matrix< double > matrix_type;
@@ -46,9 +46,10 @@ struct stiff_system_jacobi
 	}
 };
 //]
-*/
 
 
+
+/*
 //[ stiff_system_alternative_definition
 typedef boost::numeric::ublas::vector< double > vector_type;
 typedef boost::numeric::ublas::matrix< double > matrix_type;
@@ -69,7 +70,7 @@ struct stiff_system_jacobi
 	}
 };
 //]
-
+*/
 
 
 

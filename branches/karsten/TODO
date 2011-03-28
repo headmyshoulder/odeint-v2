@@ -35,7 +35,6 @@ DIFFICULT * finishing change of controlled_stepper to units
   OK * move error_checker into controlled_stepper
   * rename controlled_stepper to a more specific name
 * dense output for rosenbrock
-* Integrate functions
 * skript for setting the include defines according to the position in file system an writing a general copyright comment at the beginning
 * Documentation
 * Tutorials 
