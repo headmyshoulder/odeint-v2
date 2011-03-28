@@ -106,8 +106,8 @@ public :
 
 		typename boost::unwrap_reference< System >::type &sys = system;
 
-        time_type dh = static_cast< value_type >( 0.5 ) * dt;
-        time_type th = t + dh;
+        const time_type dh = static_cast< value_type >( 0.5 ) * dt;
+        const time_type th = t + dh;
 
         // dt * dxdt = k1
         // m_x_tmp = x + dh*dxdt
