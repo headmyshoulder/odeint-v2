@@ -58,8 +58,10 @@ struct default_rosenbrock_coefficients : boost::noncopyable
 	  a41 ( 0.3314825187068521e+01 ) , a42 ( 0.2896124015972201e+01 ) , a43 ( 0.9986419139977817e+00 ) ,
 	  c51 ( 0.7496443313967647e+01 ) , c52 ( -0.1024680431464352e+02 ) , c53 ( -0.3399990352819905e+02 ) , c54 (  0.1170890893206160e+02 ) ,
 	  a51 ( 0.1221224509226641e+01 ) , a52 ( 0.6019134481288629e+01 ) , a53 ( 0.1253708332932087e+02 ) , a54 ( -0.6878860361058950e+00 ) ,
-	  c61 ( 0.8083246795921522e+01 ) , c62 ( -0.7981132988064893e+01 ) , c63 ( -0.3152159432874371e+02 ) , c64 ( 0.1631930543123136e+02 ) , c65 ( -0.6058818238834054e+01 )
-	  {}
+	  c61 ( 0.8083246795921522e+01 ) , c62 ( -0.7981132988064893e+01 ) , c63 ( -0.3152159432874371e+02 ) , c64 ( 0.1631930543123136e+02 ) , c65 ( -0.6058818238834054e+01 ) ,
+	  d21 ( 0.1012623508344586e+02 ) , d22 ( 0.7487995877610167e+01 ) , d23 ( -0.3480091861555747e+02 ) , d24 ( -0.7992771707568823e+01 ) , d25 ( 0.1025137723295662e+01 ) ,
+      d31 ( -0.6762803392801253e+00 ) , d32 ( 0.6087714651680015e+01 ) , d33 ( 0.1643084320892478e+02 ) , d34 ( 0.2476722511418386e+02 ) , d35 ( -0.6594389125716872e+01 )
+	{}
 
 	const value_type gamma;
 	const value_type d1 , d2 , d3 , d4;
@@ -73,6 +75,8 @@ struct default_rosenbrock_coefficients : boost::noncopyable
 	const value_type c51 , c52 , c53 , c54;
 	const value_type a51 , a52 , a53 , a54;
 	const value_type c61 , c62 , c63 , c64 , c65;
+	const value_type d21 , d22 , d23 , d24 , d25;
+	const value_type d31 , d32 , d33 , d34 , d35;
 };
 
 
@@ -95,8 +99,10 @@ private:
 		m_state_adjuster.register_state( 4 , m_g3 );
 		m_state_adjuster.register_state( 5 , m_g4 );
 		m_state_adjuster.register_state( 6 , m_g5 );
-		m_state_adjuster.register_state( 7 , m_xtmp );
-		m_state_adjuster.register_state( 8 , m_dxdtnew );
+		m_state_adjuster.register_state( 7 , m_cont3 );
+		m_state_adjuster.register_state( 8 , m_cont4 );
+		m_state_adjuster.register_state( 9 , m_xtmp );
+		m_state_adjuster.register_state( 10 , m_dxdtnew );
 	}
 
 	void copy( const rosenbrock4 &rb )
@@ -110,6 +116,8 @@ private:
 		m_g3 = rb.m_g3;
 		m_g4 = rb.m_g4;
 		m_g5 = rb.m_g5;
+		m_cont3 = rb.m_cont3;
+		m_cont4 = rb.m_cont4;
 		m_xtmp = rb.m_xtmp;
 		m_dxdtnew = rb.m_dxdtnew;
 	}
@@ -131,6 +139,7 @@ public:
 	  m_jac() , m_pm( 1 ) ,
 	  m_dfdt() , m_dxdt() ,
 	  m_g1() , m_g2() , m_g3() , m_g4() , m_g5() ,
+	  m_cont3() , m_cont4() ,
 	  m_xtmp() , m_dxdtnew() ,
 	  m_coef()
     {
@@ -142,6 +151,7 @@ public:
 	  m_jac() , m_pm( 1 ) ,
 	  m_dfdt() , m_dxdt() ,
 	  m_g1() , m_g2() , m_g3() , m_g4() , m_g5() ,
+	  m_cont3() , m_cont4() ,
 	  m_xtmp() , m_dxdtnew() ,
 	  m_coef()
 	{
@@ -235,6 +245,30 @@ public:
 		do_step( system , x , t , x , dt , xerr );
 	}
 
+	void prepare_dense_output()
+	{
+		const size_t n = m_g1.size();
+		for( size_t i=0 ; i<n ; ++i )
+		{
+			m_cont3[i] = m_coef.d21 * m_g1[i] + m_coef.d22 * m_g2[i] + m_coef.d23 * m_g3[i] + m_coef.d24 * m_g4[i] + m_coef.d25 * m_g5[i];
+			m_cont4[i] = m_coef.d31 * m_g1[i] + m_coef.d32 * m_g2[i] + m_coef.d33 * m_g3[i] + m_coef.d34 * m_g4[i] + m_coef.d35 * m_g5[i];
+		}
+	}
+
+
+	void calc_state( const time_type &t , state_type &x ,
+			const state_type &x_old , const time_type &t_old ,
+			const state_type &x_new , const time_type &t_new )
+	{
+		const size_t n = m_g1.size();
+		time_type dt = t_new - t_old;
+		time_type s = ( t - t_old ) / dt;
+		time_type s1 = 1.0 - s;
+		for( size_t i=0 ; i<n ; ++i )
+			x[i] = x_old[i] * s1 + s * ( x_new[i] + s1 * ( m_cont3[i] + s * m_cont4[i] ) );
+	}
+
+
 
 
 	template< class StateType >
@@ -248,7 +282,7 @@ public:
 
 private:
 
-	size_adjuster< state_type , 9 > m_state_adjuster;
+	size_adjuster< state_type , 11 > m_state_adjuster;
     size_adjuster< matrix_type , 1 , matrix_vector_adjust_size > m_matrix_adjuster;
     size_adjuster< pmatrix_type , 1 > m_pmatrix_adjuster;
 
@@ -256,6 +290,7 @@ private:
 	pmatrix_type m_pm;
 	state_type m_dfdt , m_dxdt;
 	state_type m_g1 , m_g2 , m_g3 , m_g4 , m_g5;
+	state_type m_cont3 , m_cont4;
 	state_type m_xtmp , m_dxdtnew;
 
 	rosenbrock_coefficients m_coef;
