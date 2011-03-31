@@ -20,7 +20,9 @@ namespace numeric {
 namespace odeint {
 
 
-
+/*
+ * the two overloads are needed in order to solve the forwarding problem
+ */
 template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate_adaptive(
 		Stepper stepper , System system , State &start_state ,
@@ -33,6 +35,24 @@ size_t integrate_adaptive(
 			observer , typename Stepper::stepper_category() );
 }
 
+template< class Stepper , class System , class State , class Time , class Observer >
+size_t integrate_adaptive(
+		Stepper stepper , System system , const State &start_state ,
+		Time start_time , Time end_time , Time dt ,
+		Observer observer )
+{
+	return detail::integrate_adaptive(
+			stepper , system , start_state ,
+			start_time , end_time , dt ,
+			observer , typename Stepper::stepper_category() );
+}
+
+
+
+
+/*
+ * the two overloads are needed in order to solve the forwarding problem
+ */
 template< class Stepper , class System , class State , class Time >
 size_t integrate_adaptive(
 		Stepper stepper , System system , State &start_state ,
@@ -40,6 +60,15 @@ size_t integrate_adaptive(
 {
 	return integrate_adaptive( stepper , system , start_state , start_time , end_time , dt , do_nothing_observer() );
 }
+
+template< class Stepper , class System , class State , class Time >
+size_t integrate_adaptive(
+		Stepper stepper , System system , const State &start_state ,
+		Time start_time , Time end_time , Time dt )
+{
+	return integrate_adaptive( stepper , system , start_state , start_time , end_time , dt , do_nothing_observer() );
+}
+
 
 
 

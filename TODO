@@ -19,22 +19,13 @@
   * check copyright note
   * documente every file in the preamble
   * check once more, if all contructor, destructors and assign-operators are present
-* INTEGRATE FUNCTIONS
-  * check forwarding problem, ranges
-  OK * check where exactly the observer will be called (before, after each step?)
-  OK * functions without obversers
-  OK * integrate without stepper , intelligent choice of the stepper
-  OK * check function signatures
-  OK * what to throw?
-  OK * check lambdas, lambda is broken
 * Factory functions for steppers, controlled_steppers, error_checker und dense_output_stepper
-* implicit euler, include dfdt
 * same interface for implicit_euler and rosenbrock4
-DIFFICULT * finishing change of controlled_stepper to units
+  * implicit euler, include dfdt
+* Controlled stepper and dense output stepper
   * check if rosenbrock controller and controlled_stepper can both be used with the explicit steppers
-  OK * move error_checker into controlled_stepper
+  * check if rosenbrock4_dense_output and dense_output_explicit can be used unified to one dense output stepper
   * rename controlled_stepper to a more specific name
-* dense output for rosenbrock
 * skript for setting the include defines according to the position in file system an writing a general copyright comment at the beginning
 * Documentation
 * Tutorials 
@@ -43,6 +34,17 @@ DIFFICULT * finishing change of controlled_stepper to units
 
 DONE:
 
+OK * INTEGRATE FUNCTIONS
+  OK * check forwarding problem, ranges
+  OK * check where exactly the observer will be called (before, after each step?)
+  OK * functions without obversers
+  OK * integrate without stepper , intelligent choice of the stepper
+  OK * check function signatures
+  OK * what to throw?
+  OK * check lambdas, lambda is broken
+OK * move error_checker into controlled_stepper
+OK * finishing change of controlled_stepper to units
+OK * dense output for rosenbrock
 OK * symplecit_stepper
   OK * find an appropriate name, (symplectic stroemer nystroem)
   OK * check is the coefficients are named good
