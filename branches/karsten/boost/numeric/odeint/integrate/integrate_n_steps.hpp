@@ -22,6 +22,8 @@ namespace odeint {
 
 /*
  * Integrates n steps
+ *
+ * the two overloads are needed in order to solve the forwarding problem
  */
 template< class Stepper , class System , class State , class Time , class Observer >
 Time integrate_n_steps(
@@ -49,6 +51,42 @@ Time integrate_n_steps(
 	return end_time;
 }
 
+template< class Stepper , class System , class State , class Time , class Observer >
+Time integrate_n_steps(
+		Stepper stepper , System system , const State &start_state ,
+		Time start_time , Time dt , size_t num_of_steps ,
+		Observer observer )
+{
+	Time end_time = dt * num_of_steps;
+
+	// we want to get as fast as possible to the end
+	if( boost::is_same< do_nothing_observer , Observer >::type::value )
+	{
+		detail::integrate_adaptive(
+				stepper , system , start_state ,
+				start_time , end_time  , dt ,
+				observer , typename Stepper::stepper_category() );
+	}
+	else
+	{
+		detail::integrate_const(
+				stepper , system , start_state ,
+				start_time , end_time  , dt ,
+				observer , typename Stepper::stepper_category() );
+	}
+	return end_time;
+}
+
+
+
+
+
+
+
+
+/*
+ * the two overloads are needed in order to solve the forwarding problem
+ */
 template< class Stepper , class System , class State , class Time >
 Time integrate_n_steps(
 		Stepper stepper , System system , State &start_state ,
@@ -56,6 +94,15 @@ Time integrate_n_steps(
 {
 	return integrate_n_steps( stepper , system , start_state , start_time , dt , num_of_steps , do_nothing_observer() );
 }
+
+template< class Stepper , class System , class State , class Time >
+Time integrate_n_steps(
+		Stepper stepper , System system , const State &start_state ,
+		Time start_time , Time dt , size_t num_of_steps )
+{
+	return integrate_n_steps( stepper , system , start_state , start_time , dt , num_of_steps , do_nothing_observer() );
+}
+
 
 
 

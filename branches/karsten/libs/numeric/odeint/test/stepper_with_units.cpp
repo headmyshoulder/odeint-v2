@@ -55,6 +55,9 @@ typedef fusion::vector< velocity_type , acceleration_type > deriv_type;
 
 void oscillator( const state_type &x , deriv_type &dxdt , time_type t )
 {
+	const units::quantity< si::frequency , value_type > omega = 1.0 * si::hertz;
+	fusion::at_c< 0 >( dxdt ) = fusion::at_c< 1 >( x );
+	fusion::at_c< 1 >( dxdt ) = - omega * omega * fusion::at_c< 0 >( x );
 }
 
 template< class Stepper >

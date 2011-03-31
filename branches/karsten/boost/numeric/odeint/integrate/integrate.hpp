@@ -34,6 +34,8 @@ namespace odeint {
  * ToDo :
  *
  * determine type of dxdt for units
+ *
+ * the two overloads are needed in order to solve the forwarding problem
  */
 template< class System , class State , class Time , class Observer >
 size_t integrate( System system , State &start_state , Time start_time , Time end_time , Time dt , Observer observer )
@@ -41,11 +43,33 @@ size_t integrate( System system , State &start_state , Time start_time , Time en
 	return integrate_adaptive( controlled_error_stepper< explicit_error_rk54_ck< State > >() , system , start_state , start_time , end_time , dt , observer );
 }
 
+template< class System , class State , class Time , class Observer >
+size_t integrate( System system , const State &start_state , Time start_time , Time end_time , Time dt , Observer observer )
+{
+	return integrate_adaptive( controlled_error_stepper< explicit_error_rk54_ck< State > >() , system , start_state , start_time , end_time , dt , observer );
+}
+
+
+
+
+
+
+
+/*
+ * the two overloads are needed in order to solve the forwarding problem
+ */
 template< class System , class State , class Time >
 size_t integrate( System system , State &start_state , Time start_time , Time end_time , Time dt )
 {
 	return integrate( system , start_state , start_time , end_time , dt , do_nothing_observer() );
 }
+
+template< class System , class State , class Time >
+size_t integrate( System system , const State &start_state , Time start_time , Time end_time , Time dt )
+{
+	return integrate( system , start_state , start_time , end_time , dt , do_nothing_observer() );
+}
+
 
 
 
