@@ -74,7 +74,7 @@ public:
 
 
 	/*
-	 * ToDo : xerr in size_adjuster
+	 * ToDo : xerr in size_adjuster und adjust size
 	 */
 	template< class System >
 	boost::numeric::odeint::controlled_step_result

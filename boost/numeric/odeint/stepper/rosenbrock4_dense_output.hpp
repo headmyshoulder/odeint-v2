@@ -10,6 +10,8 @@
 
 #include <utility>
 
+#include <boost/numeric/odeint/stepper/rosenbrock4_controller.hpp>
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -19,17 +21,15 @@ class rosenbrock4_dense_output
 {
 	void initialize_variables( void )
 	{
-		boost::numeric::odeint::construct( m_x1 );
-		boost::numeric::odeint::construct( m_x2 );
-		m_size_adjuster.register_state( 0 , m_x1 );
-		m_size_adjuster.register_state( 1 , m_x2 );
+		m_state_adjuster.register_state( 0 , m_x1 );
+		m_state_adjuster.register_state( 1 , m_x2 );
 	}
 
 	void copy_variables( const rosenbrock4_dense_output &rb )
 	{
 		m_stepper = rb.m_stepper;
-		boost::numeric::copy( rb.m_x1 , m_x1 );
-		boost::numeric::copy( rb.m_x2 , m_x2 );
+		m_x1 = rb.m_x1;
+		m_x2 = rb.m_x2;
 		if( rb.m_current_state == ( & ( rb.m_x1 ) ) )
 		{
 			m_current_state = &m_x1;
@@ -48,10 +48,12 @@ class rosenbrock4_dense_output
 public:
 
 	typedef ControlledStepper controlled_stepper_type;
+	typedef typename controlled_stepper_type::stepper_type stepper_type;
 	typedef typename stepper_type::value_type value_type;
 	typedef typename stepper_type::state_type state_type;
 	typedef typename stepper_type::time_type time_type;
 	typedef typename stepper_type::deriv_type deriv_type;
+	typedef typename stepper_type::adjust_size_policy adjust_size_policy;
 	typedef dense_output_stepper_tag stepper_category;
 
 	rosenbrock4_dense_output( const controlled_stepper_type &stepper = controlled_stepper_type() )
@@ -63,7 +65,7 @@ public:
 	}
 
 	rosenbrock4_dense_output( const rosenbrock4_dense_output &rb )
-	: m_stepper( stepper ) , m_state_adjuster() ,
+	: m_stepper() , m_state_adjuster() ,
 	  m_x1() , m_x2() , m_current_state( &m_x1 ) , m_old_state( &m_x2 ) ,
 	  m_t() , m_t_old() , m_dt()
 	{
@@ -79,8 +81,6 @@ public:
 
 	~rosenbrock4_dense_output( void )
 	{
-		boost::numeric::odeint::destruct( m_x1 );
-		boost::numeric::odeint::destruct( m_x2 );
 	}
 
 
@@ -89,7 +89,7 @@ public:
 	void initialize( const StateType &x0 , const time_type &t0 , const time_type &dt0 )
 	{
 		m_state_adjuster.adjust_size_by_policy( x0 , adjust_size_policy() );
-		boost::numeric::odeint::copy( x0 , *m_current_state );
+		*m_current_state = x0;
 		m_t = t0;
 		m_dt = dt0;
 	}
@@ -129,6 +129,35 @@ public:
 	{
 		m_stepper.stepper().calc_state( t , x , *m_old_state , m_t_old , *m_current_state , m_t );
 	}
+
+
+
+	const state_type& current_state( void ) const
+	{
+		return *m_current_state;
+	}
+
+	const time_type& current_time( void ) const
+	{
+		return m_t;
+	}
+
+	const time_type& previous_state( void ) const
+	{
+		return *m_old_state;
+	}
+
+	const time_type& previous_time( void ) const
+	{
+		return m_t_old;
+	}
+
+	const time_type& current_time_step( void ) const
+	{
+		return m_dt;
+	}
+
+
 
 
 private:
