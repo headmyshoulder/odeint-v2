@@ -79,10 +79,11 @@ int main( int argc , char **argv )
 //[ integrate_stiff_system
 	typedef rosenbrock4< double > stepper_type;
 	typedef rosenbrock4_controller< stepper_type > controlled_stepper_type;
+	typedef rosenbrock4_dense_output< controlled_stepper_type > dense_output_type;
 
 	vector_type x( 3 , 1.0 );
 
-	size_t num_of_steps = integrate_const( controlled_stepper_type() ,
+	size_t num_of_steps = integrate_const( dense_output_type() ,
 			make_pair( stiff_system() , stiff_system_jacobi() ) ,
 			x , 0.0 , 50.0 , 0.01 ,
 			cout << phoenix::arg_names::arg2 << " " << phoenix::arg_names::arg1[0] << "\n" );
@@ -101,8 +102,9 @@ int main( int argc , char **argv )
 	size_t num_of_steps2 = integrate_const( dense_output_dopri5_type() ,
 			stiff_system() , x2 , 0.0 , 50.0 , 0.01 ,
 			cout << phoenix::arg_names::arg2 << " " << phoenix::arg_names::arg1[0] << "\n" );
-	clog << num_of_steps2 << endl;
 //]
+	clog << num_of_steps2 << endl;
+
 
 	return 0;
 }

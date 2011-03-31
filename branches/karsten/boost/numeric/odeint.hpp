@@ -33,6 +33,7 @@
 #include <boost/numeric/odeint/stepper/implicit_euler.hpp>
 #include <boost/numeric/odeint/stepper/rosenbrock4.hpp>
 #include <boost/numeric/odeint/stepper/rosenbrock4_controller.hpp>
+#include <boost/numeric/odeint/stepper/rosenbrock4_dense_output.hpp>
 
 /*
  * Including this algebra slows down the compilation time
