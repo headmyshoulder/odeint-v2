@@ -12,6 +12,7 @@
 
 #include <boost/numeric/odeint/stepper/rosenbrock4.hpp>
 #include <boost/numeric/odeint/stepper/rosenbrock4_controller.hpp>
+#include <boost/numeric/odeint/stepper/rosenbrock4_dense_output.hpp>
 #include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 
@@ -147,7 +148,7 @@ void rk54_ck_stepper_with_lorenz( void )
 
 void test_controlled_rosenbrock_with_stiff_system( void )
 {
-	const static size_t dim = 3;
+	const static size_t dim = 2;
 	typedef rosenbrock4< double > stepper_type;
 	typedef stepper_type::state_type state_type;
 	typedef stepper_type::matrix_type matrix_type;
@@ -158,14 +159,14 @@ void test_controlled_rosenbrock_with_stiff_system( void )
 
 	controlled_stepper_type controlled_stepper;
 
-	x[0] = 1.0 ; x[1] = 1.0 ; x[2] = 0.0;
+	x[0] = 1.0 ; x[1] = 1.0 ;
 
 	ofstream fout( "rosenbrock_controller_stiff.dat" );
 	size_t count = 0;
 	while( t < 50.0 )
 	{
 		fout << t << "\t" << dt << "\t" << controlled_stepper.last_error() << "\t";
-		fout << x[0] << "\t" << x[1] << "\t" << x[2] << "\t";
+		fout << x[0] << "\t" << x[1] << "\t";
 		fout <<std::endl;
 
 		size_t trials = 0;
@@ -185,21 +186,62 @@ void test_controlled_rosenbrock_with_stiff_system( void )
 	clog << "Rosenbrock: " << count << endl;
 }
 
+void test_dense_output_rosenbrock_with_stiff_system( void )
+{
+	const static size_t dim = 2;
+	typedef rosenbrock4< double > stepper_type;
+	typedef stepper_type::state_type state_type;
+	typedef stepper_type::matrix_type matrix_type;
+	typedef rosenbrock4_controller< stepper_type > controlled_stepper_type;
+	typedef rosenbrock4_dense_output< controlled_stepper_type > dense_output_stepper_type;
+
+	state_type x( dim );
+	double t = 0.0 , dt = 1.0;
+
+	dense_output_stepper_type dense_output_stepper;
+	x[0] = 1.0 ; x[1] = 1.0 ;
+	dense_output_stepper.initialize( x , t , 0.00001 );
+
+	ofstream stepper_out( "rosenbrock_dense_output_stiff_stepper.dat" );
+	ofstream res_out( "rosenbrock_dense_output_stiff.dat" );
+	size_t count = 0;
+
+	while( t < 50.0 )
+	{
+    	if( t < dense_output_stepper.current_time() )
+    	{
+    		dense_output_stepper.calc_state( t , x );
+    		res_out << t << "\t" << x[0] << "\t" << x[1] << endl;
+    	}
+    	else
+    	{
+    		dense_output_stepper.do_step( make_pair( stiff_system() , stiff_system_jacobi() ) );
+    		const state_type &xx = dense_output_stepper.current_state();
+    		stepper_out << dense_output_stepper.current_time() << "\t" << xx[0] << "\t" << xx[1] << std::endl;
+    		++count;
+    		continue;
+    	}
+    	t += dt;
+	}
+	clog << "Rosenbrock dense out : " << count << endl;
+
+}
+
 void rk54_ck_controlled_with_stiff_system( void )
 {
-	typedef std::tr1::array< double , 3 > state_type2;
+	typedef std::tr1::array< double , 2 > state_type2;
 	typedef explicit_error_rk54_ck< state_type2 > stepper_type2;
 	typedef controlled_error_stepper< stepper_type2 > controlled_stepper_type2;
 	controlled_stepper_type2 stepper;
 
-	state_type2 x = {{ 1.0 , 1.0 , 0.0 }};
+	state_type2 x = {{ 1.0 , 1.0 }};
 	double t = 0.0 , dt = 0.00001;
 	ofstream fout( "rk54_ck_controller_stiff.dat" );
 	size_t count = 0;
 	while( t < 50.0 )
 	{
 		fout << t << "\t" << dt << "\t" << stepper.last_error() << "\t";
-		fout << x[0] << "\t" << x[1] << "\t" << x[2] << "\t";
+		fout << x[0] << "\t" << x[1] << "\t";
 		fout <<std::endl;
 
 		size_t trials = 0;
@@ -230,6 +272,7 @@ int main( int argc , char **argv )
 	rk54_ck_stepper_with_lorenz();
 	test_controlled_rosenbrock_with_stiff_system();
 	rk54_ck_controlled_with_stiff_system();
+	test_dense_output_rosenbrock_with_stiff_system();
 
 	return 0;
 }
