@@ -28,7 +28,20 @@
   * rename controlled_stepper to a more specific name
 * skript for setting the include defines according to the position in file system an writing a general copyright comment at the beginning
 * Documentation
-* Tutorials 
+* Tutorials
+
+
+
+* UNIT TEST Requirements (NEW):
+  * test stepper concepts
+    * top level concepts (stepper, error_stepper, controlled_stepper, dense_output_stepper)
+    * adjust_size, algebras, various versions of do_step, try_step, ... 
+  * test resizing and resize functionality
+  * test copying (copy ctor, assign operator)
+  * stepper results ?
+  * stepper with ranges
+  * stepper with units
+ 
 
 
 
