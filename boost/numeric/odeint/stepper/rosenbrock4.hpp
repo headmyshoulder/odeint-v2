@@ -162,6 +162,7 @@ public:
 	rosenbrock4& operator=( const rosenbrock4 &rb )
 	{
 		copy( rb );
+		return *this;
 	}
 
 	template< class System >

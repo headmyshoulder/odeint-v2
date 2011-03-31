@@ -21,6 +21,25 @@ namespace odeint {
 template< class Stepper >
 class rosenbrock4_controller
 {
+private:
+
+	void initialize_variables( void )
+	{
+		m_state_adjuster.register_state( 0 , m_xerr );
+	}
+
+	void copy_variables( const rosenbrock4_controller &rb )
+	{
+		m_stepper = rb.m_stepper;
+		m_xerr = rb.m_xerr;
+		m_atol = rb.m_atol;
+		m_rtol = rb.m_rtol;
+		m_first_step = rb.m_first_step;
+		m_err_old = rb.m_err_old;
+		m_dt_old = rb.m_dt_old;
+		m_last_rejected = rb.m_last_rejected;
+	}
+
 public:
 
 	typedef Stepper stepper_type;
@@ -28,14 +47,33 @@ public:
 	typedef typename stepper_type::state_type state_type;
 	typedef typename stepper_type::time_type time_type;
 	typedef typename stepper_type::deriv_type deriv_type;
+	typedef typename stepper_type::adjust_size_policy adjust_size_policy;
 	typedef controlled_stepper_tag stepper_category;
 
 
 	rosenbrock4_controller( value_type atol = 1.0e-6 , value_type rtol = 1.0e-6 , const stepper_type &stepper = stepper_type() )
-    : m_stepper() , m_atol( atol ) , m_rtol( rtol ) ,
+    : m_stepper() , m_state_adjuster() , m_xerr() ,
+      m_atol( atol ) , m_rtol( rtol ) ,
       m_first_step( true ) , m_err_old( 0.0 ) , m_dt_old( 0.0 ) ,
       m_last_rejected( false )
 	{
+		initialize_variables();
+	}
+
+	rosenbrock4_controller( const rosenbrock4_controller &rb )
+	: m_stepper() , m_state_adjuster() , m_xerr() ,
+      m_atol( 1.0e-6l ) , m_rtol( 1.0e-6 ) ,
+      m_first_step( true ) , m_err_old( 0.0 ) , m_dt_old( 0.0 ) ,
+      m_last_rejected( false )
+	{
+		initialize_variables();
+		copy_variables( rb );
+	}
+
+	rosenbrock4_controller& operator=( const rosenbrock4_controller &rb )
+	{
+		copy_variables( rb );
+		return *this;
 	}
 
 	value_type error( const state_type &x , const state_type &xold , const state_type &xerr )
@@ -82,10 +120,10 @@ public:
 	{
 		static const value_type safe = 0.9 , fac1 = 5.0 , fac2 = 1.0 / 6.0;
 
-		const size_t n = x.size();
-		state_type xerr( n );
-		m_stepper.do_step( sys , x , t , xout , dt , xerr );
-		value_type err = error( xout , x , xerr );
+		m_state_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
+
+		m_stepper.do_step( sys , x , t , xout , dt , m_xerr );
+		value_type err = error( xout , x , m_xerr );
 
 		value_type fac = std::max( fac2 ,std::min( fac1 , std::pow( err , 0.25 ) / safe ) );
 		value_type dt_new = dt / fac;
@@ -121,6 +159,15 @@ public:
 	}
 
 
+	template< class StateType >
+	void adjust_size( const StateType &x )
+	{
+		m_stepper.adjust_size( x );
+		m_state_adjuster.adjust_size( x );
+	}
+
+
+
 
 
 	stepper_type& stepper( void )
@@ -139,6 +186,8 @@ public:
 private:
 
 	stepper_type m_stepper;
+	size_adjuster< state_type , 1 > m_state_adjuster;
+	state_type m_xerr;
 	value_type m_atol , m_rtol;
 	bool m_first_step;
 	value_type m_err_old , m_dt_old;

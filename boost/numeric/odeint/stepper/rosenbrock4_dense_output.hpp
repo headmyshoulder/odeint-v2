@@ -79,10 +79,6 @@ public:
 		return *this;
 	}
 
-	~rosenbrock4_dense_output( void )
-	{
-	}
-
 
 
 	template< class StateType >
@@ -129,6 +125,15 @@ public:
 	{
 		m_stepper.stepper().calc_state( t , x , *m_old_state , m_t_old , *m_current_state , m_t );
 	}
+
+
+	template< class StateType >
+	void adjust_size( const StateType &x )
+	{
+		m_stepper.adjust_size( x );
+		m_state_adjuster.adjust_size( x );
+	}
+
 
 
 
