@@ -105,7 +105,7 @@ public:
     explicit_stepper_and_error_stepper_fsal_base& operator=( const explicit_stepper_and_error_stepper_fsal_base &b )
     {
     	boost::numeric::odeint::copy( b.m_dxdt , m_dxdt );
-    	m_first_call( true );
+    	m_first_call = true;
 		return *this;
     }
 

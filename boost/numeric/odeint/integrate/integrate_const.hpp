@@ -35,6 +35,10 @@ size_t integrate_const(
 	// we want to get as fast as possible to the end
 	if( boost::is_same< do_nothing_observer , Observer >::value )
 	{
+	    /**
+	     * ToDo: discuss if it actually makes sense to call integrate_adaptive
+	     * from an integrate_const routine! (mario)
+	     */
 		return detail::integrate_adaptive(
 				stepper , system , start_state ,
 				start_time , end_time  , dt ,
