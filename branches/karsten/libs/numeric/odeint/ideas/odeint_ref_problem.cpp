@@ -19,8 +19,8 @@
 #include <boost/timer.hpp>
 
 #include <boost/numeric/odeint.hpp>
-#include <boost/numeric/odeint/detail/iterator_algebra.hpp>
-#include <boost/numeric/odeint/container_traits.hpp>
+//#include <boost/numeric/odeint/algebra/iterator_algebra.hpp>
+//#include <boost/numeric/odeint/container_traits.hpp>
 
 
 #define tab "\t"

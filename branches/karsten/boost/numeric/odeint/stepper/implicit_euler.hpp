@@ -94,6 +94,7 @@ public:
     implicit_euler& operator=( const implicit_euler &euler )
     {
     	copy( euler );
+    	return *this;
     }
 
     template< class System >
