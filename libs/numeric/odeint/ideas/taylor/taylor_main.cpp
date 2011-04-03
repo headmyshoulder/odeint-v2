@@ -49,13 +49,15 @@ using boost::numeric::odeint::taylor_adf::arg3;
 
 int main( int argc , char **argv )
 {
+	cout.precision( 14 );
+
 	taylor_type t;
 
-	state_type x = {{ 10.0 , 10.0 , 10.0 }} , dxdt = {{ 0.0 , 0.0 , 0.0 }} , xerr = {{ 0.0 , 0.0 , 0.0 }};
+	state_type in = {{ 10.0 , 10.0 , 10.0 }} , dxdt = {{ 0.0 , 0.0 , 0.0 }} , xerr = {{ 0.0 , 0.0 , 0.0 }} , out = {{ 0.0 ,0.0 , 0.0 }};
 
-	lorenz( x , dxdt , 0.0 );
+	lorenz( in , dxdt , 0.0 );
 
-	cout << x << endl;
+	cout << in << endl;
 	cout << dxdt << endl << endl;
 
 	t.do_step(
@@ -65,9 +67,14 @@ int main( int argc , char **argv )
 					R * arg1 - arg2 - arg1 * arg3 ,
 					arg1 * arg2 - b * arg3
 			) ,
-			x , 0.0 , 0.1 );
+			in , 0.0 , out , 0.1 , xerr );
 
-	cout.precision( 14 );
+
+
+	cout << in << endl;
+	cout << dxdt << endl;
+	cout << xerr << endl;
+	cout << out << endl << endl;
 	const derivs_type &derivs = t.get_last_derivs();
 	for( size_t i=0 ; i<derivs.size() ; ++i )
 		cout << derivs[i] << endl;

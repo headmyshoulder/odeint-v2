@@ -151,31 +151,89 @@ class taylor
 public:
 
 	static const size_t dim = N;
-	static const size_t order = Order;
+	static const size_t order_value = Order;
 	typedef double value_type;
 	typedef value_type time_type;
+	typedef unsigned short order_type;
 
 	typedef std::tr1::array< value_type , dim > state_type;
-	typedef std::tr1::array< state_type , order > derivs_type;
+	typedef state_type deriv_type;
+	typedef std::tr1::array< state_type , order_value > derivs_type;
+
+    order_type order( void ) const
+    {
+    	return order_value;
+    }
+
+    order_type stepper_order( void ) const
+    {
+    	return order_value;
+    }
+
+    order_type error_order( void ) const
+    {
+    	return order_value - 1;
+    }
+
 
 
 
 	template< class System >
-	void do_step( System sys , state_type &x , value_type t , value_type dt )
+	void do_step( System sys , state_type &x , time_type t , time_type dt )
 	{
+		BOOST_STATIC_ASSERT(( boost::fusion::traits::is_sequence< System >::value ));
+		BOOST_STATIC_ASSERT(( size_t( boost::fusion::result_of::size< System >::value ) == dim ));
 
+		do_step( sys , x , t , x , dt );
+	}
+
+	template< class System >
+	void do_step( System sys , const state_type &in , time_type t , state_type &out , time_type dt )
+	{
 		BOOST_STATIC_ASSERT(( boost::fusion::traits::is_sequence< System >::value ));
 		BOOST_STATIC_ASSERT(( size_t( boost::fusion::result_of::size< System >::value ) == dim ));
 
 		for( size_t i=0 ; i<Order ; ++i )
 		{
-			boost::mpl::for_each< boost::mpl::range_c< size_t , 0 , dim > >( make_eval_derivs( sys , x , m_derivs , i , dt ) );
+			boost::mpl::for_each< boost::mpl::range_c< size_t , 0 , dim > >( make_eval_derivs( sys , in , m_derivs , i , dt ) );
 		}
 
 		for( size_t i=0 ; i<N ; ++i )
 		{
-			for( size_t k=0 ; k<order ; ++k )
-				x[i] += m_derivs[k][i];
+			out[i] = in[i];
+			for( size_t k=0 ; k<order_value ; ++k )
+				out[i] += m_derivs[k][i];
+		}
+	}
+
+	template< class System >
+	void do_step( System sys , state_type &x , time_type t , time_type dt , state_type &xerr )
+	{
+		BOOST_STATIC_ASSERT(( boost::fusion::traits::is_sequence< System >::value ));
+		BOOST_STATIC_ASSERT(( size_t( boost::fusion::result_of::size< System >::value ) == dim ));
+		BOOST_STATIC_ASSERT(( order_value > 1 ));
+
+		do_step( sys , x , t , x , dt , xerr );
+	}
+
+	template< class System >
+	void do_step( System sys , const state_type &in , time_type t , state_type &out , time_type dt , state_type &xerr )
+	{
+		BOOST_STATIC_ASSERT(( boost::fusion::traits::is_sequence< System >::value ));
+		BOOST_STATIC_ASSERT(( size_t( boost::fusion::result_of::size< System >::value ) == dim ));
+		BOOST_STATIC_ASSERT(( order_value > 1 ));
+
+		for( size_t i=0 ; i<Order ; ++i )
+		{
+			boost::mpl::for_each< boost::mpl::range_c< size_t , 0 , dim > >( make_eval_derivs( sys , in , m_derivs , i , dt ) );
+		}
+
+		for( size_t i=0 ; i<N ; ++i )
+		{
+			out[i] = in[i];
+			for( size_t k=0 ; k<order_value ; ++k )
+				out[i] += m_derivs[k][i];
+			xerr[i] = m_derivs[order_value-1][i];
 		}
 	}
 
