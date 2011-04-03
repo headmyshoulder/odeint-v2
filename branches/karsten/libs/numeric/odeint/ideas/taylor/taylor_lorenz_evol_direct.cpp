@@ -10,6 +10,7 @@
 #include "taylor.hpp"
 
 #include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
+
 #include <boost/fusion/include/make_vector.hpp>
 
 template< typename T , size_t N >
