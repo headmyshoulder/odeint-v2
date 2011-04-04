@@ -133,7 +133,7 @@ int main( int argc , char **argv )
 	eps_rel_values += 1.0e-1 , 1.0e-2 , 1.0e-3 , 1.0e-4 , 1.0e-5 , 1.0e-6 , 1.0e-7 , 1.0e-8 , 1.0e-9 , 1.0e-10 , 1.0e-11 , 1.0e-12 , 1.0e-13 , 1.0e-14;
 
 
-	typedef mpl::range_c< size_t , 2 , 30 > order_values;
+	typedef mpl::range_c< size_t , 5 , 30 > order_values;
 	mpl::for_each< order_values >( run( eps_abs_values , eps_rel_values , t_end ) );
 
 
@@ -144,7 +144,7 @@ int main( int argc , char **argv )
 		for( size_t j=0 ; j<eps_rel_values.size() ; ++j )
 		{
 			double eps_abs = eps_abs_values[i];
-			double eps_rel = eps_rel_values[i];
+			double eps_rel = eps_rel_values[j];
 
 			rk54_type rk54_plain;
 			controlled_error_stepper< rk54_type > rk54( rk54_plain , default_error_checker< double >( eps_abs , eps_rel ) );

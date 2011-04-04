@@ -1,0 +1,7 @@
+[table Examples Overview
+  [[File] [Brief Description]]
+  [[[@../../examples/harmonic_oscillator.cpp]] [The harmonic oscillator examples gives a brief introduction to odeint and shows the usage of the classical Runge-Kutta-solvers.]]
+  [[[@../../examples/solar_system.cpp]] [The solar system example shows the usage of the symplectic solvers.]]
+  [[[@../../examples/stiff_system.cpp]] [The stiff system example shows the usage of the stiff solvers using the Jacobian of the system function.]]
+  [[[@../../examples/thrust/phase_osc_chain.cu]] [tba.]]
+]
