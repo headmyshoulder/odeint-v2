@@ -106,7 +106,13 @@ GMP
 [endsect]
 
 
+[section All examples]
 
+The following table gives an overview over all examples.
+
+[include examples_table.qbk]
+
+[endsect]
 
 
 
