@@ -2,14 +2,14 @@
  * chaotic_system.cpp
  *
  * This example demonstrates how one can use odeint to determine the Lyapunov
- * exponents of a chaotic system namely the well known Lorenz system.
+ * exponents of a chaotic system namely the well known Lorenz system. Furthermore,
+ * it shows how odeint interacts with boost.range.
  *
  *  Created on: Apr 5, 2011
  *      Author: karsten
  */
 
 #include <iostream>
-
 #include <tr1/array>
 
 #include <boost/numeric/odeint.hpp>
@@ -56,14 +56,6 @@ void lorenz_with_lyap( const state_type &x , state_type &dxdt , double t )
     }
 }
 
-struct streaming
-{
-	template< class State , class Time >
-	void operator()( const State& x , const Time &t ) const
-	{
-		cout << t << "\t" << x[0] << "\t" << x[1] << "\t" << x[2] << "\n";
-	}
-};
 
 int main( int argc , char **argv )
 {
@@ -74,7 +66,7 @@ int main( int argc , char **argv )
     fill( x.begin() , x.end() , 0.0 );
     x[0] = 10.0 ; x[1] = 10.0 ; x[2] = 5.0;
 
-    const double dt = 0.1;
+    const double dt = 0.01;
 
     // 10000 transients steps
     integrate_n_steps( rk4 , lorenz() , std::make_pair( x.begin() , x.begin() + n ) , 0.0 , dt , 10000 );
@@ -85,30 +77,18 @@ int main( int argc , char **argv )
 
     double t = 0.0;
     size_t count = 0;
-    for( size_t i=0 ; i<x.size() ; ++i ) cout << "\t" << x[i];
-    cout << endl;
     while( true )
     {
     	t = integrate_n_steps( rk4 , lorenz_with_lyap , x , t , dt , 100 );
-        gram_schmitt( x , lyap , n , num_of_lyap );
-        ++count;
-        if( count == 1 )
-        {
-        	for( size_t i=0 ; i<x.size() ; ++i ) cout << "\t" << x[i];
-        	cout << endl;
-        }
+    	gram_schmitt( x , lyap , n , num_of_lyap );
+    	++count;
 
-
-        if( !(count % 1) )
+        if( !(count % 100000) )
         {
             cout << t;
-            for( size_t i=0 ; i<num_of_lyap ; ++i )
-                cout << "\t" << lyap[i] / t ;
-            for( size_t i=0 ; i<x.size() ; ++i ) cout << "\t" << x[i];
+            for( size_t i=0 ; i<num_of_lyap ; ++i ) cout << "\t" << lyap[i] / t ;
             cout << endl;
         }
-
-        if( count == 2 ) break;
     }
 
     return 0;
