@@ -31,7 +31,7 @@ Time integrate_n_steps(
 		Time start_time , Time dt , size_t num_of_steps ,
 		Observer observer )
 {
-	Time end_time = dt * num_of_steps;
+	Time end_time = start_time + dt * num_of_steps;
 
 	// we want to get as fast as possible to the end
 	if( boost::is_same< do_nothing_observer , Observer >::type::value )
@@ -57,7 +57,7 @@ Time integrate_n_steps(
 		Time start_time , Time dt , size_t num_of_steps ,
 		Observer observer )
 {
-	Time end_time = dt * num_of_steps;
+	Time end_time = start_time + dt * num_of_steps;
 
 	// we want to get as fast as possible to the end
 	if( boost::is_same< do_nothing_observer , Observer >::type::value )
