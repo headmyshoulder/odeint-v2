@@ -4,11 +4,7 @@
 
 [include tutorial_solar_system.qbk]
 
-[section Chaotic systems and Lyapunov exponents]
-
-blah blah
-
-[endsect]
+[include tutorial_chaotic_system.qbk]
 
 [include tutorial_stiff_systems.qbk]
 
