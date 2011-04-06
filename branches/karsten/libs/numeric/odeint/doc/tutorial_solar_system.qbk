@@ -14,7 +14,7 @@ where [' __gamma] is the gravitational constant, ['m[subl i]] and ['m[subl j]] a
 
 ['dq[subl i] / dt = p[subl i]]
 
-['dp[subl i] / dt = 1 / m[subl i] __Sigma[subl ji] F[subl ij]]
+['dpboost_1_46_1.tar[subl i] / dt = 1 / m[subl i] __Sigma[subl ji] F[subl ij]]
 
 where ['p[subl i]] is the momenta of object ['i]. The equations of motion can also be derived from the Hamiltonian
 

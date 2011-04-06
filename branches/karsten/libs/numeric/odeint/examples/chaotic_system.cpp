@@ -19,14 +19,10 @@
 using namespace std;
 using namespace boost::numeric::odeint;
 
-const size_t n = 3;
-const size_t num_of_lyap = 3;
-const size_t N = n + n*num_of_lyap;
 
-typedef std::tr1::array< double , N > state_type;
-typedef std::tr1::array< double , num_of_lyap > lyap_type;
-const double dt = 0.01;
-
+const double sigma = 10.0;
+const double R = 28.0;
+const double b = 8.0 / 3.0;
 
 struct lorenz
 {
@@ -36,11 +32,20 @@ struct lorenz
 		typename boost::range_iterator< const State >::type x = boost::begin( x_ );
 		typename boost::range_iterator< Deriv >::type dxdt = boost::begin( dxdt_ );
 
-		dxdt[0]=10.0*(x[1]-x[0]);
-		dxdt[1]=28.0*x[0]-x[1]-x[0]*x[2];
-		dxdt[2]=-2.666666666666*x[2]+x[0]*x[1];
+		dxdt[0] = sigma * ( x[1] - x[0] );
+		dxdt[1] = R * x[0] - x[1] - x[0] * x[2];
+		dxdt[2] = -b * x[2] + x[0] * x[1];
 	}
 };
+
+
+//[ system_function_with_perturbations
+const size_t n = 3;
+const size_t num_of_lyap = 3;
+const size_t N = n + n*num_of_lyap;
+
+typedef std::tr1::array< double , N > state_type;
+typedef std::tr1::array< double , num_of_lyap > lyap_type;
 
 void lorenz_with_lyap( const state_type &x , state_type &dxdt , double t )
 {
@@ -50,11 +55,15 @@ void lorenz_with_lyap( const state_type &x , state_type &dxdt , double t )
     {
 		const double *pert = x.begin() + 3 + l * 3;
 		double *dpert = dxdt.begin() + 3 + l * 3;
-        dpert[0] = -10.0 * pert[0] + 10.0 * pert[1];
-        dpert[1] = ( 28.0 - x[2] ) * pert[0] - pert[1] - x[0] * pert[2];
-        dpert[2] = x[1] * pert[0] + x[0] * pert[1] - 2.666666666666 * pert[2];
+        dpert[0] = - sigma * pert[0] + 10.0 * pert[1];
+        dpert[1] = ( R - x[2] ) * pert[0] - pert[1] - x[0] * pert[2];
+        dpert[2] = x[1] * pert[0] + x[0] * pert[1] - b * pert[2];
     }
 }
+//]
+
+
+
 
 
 int main( int argc , char **argv )
