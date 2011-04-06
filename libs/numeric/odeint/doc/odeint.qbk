@@ -23,7 +23,8 @@
     [@http://www.boost.org/doc/libs/release/doc/html/operators.html Boost.Operators]]
 [def __boost_ref
     [@http://www.boost.org/doc/libs/release/doc/html/ref.html `boost::ref`]]
-
+[def __boost_range
+    [@http://www.boost.org/doc/libs/release/libs/range/index.html `Boost.Range`]]
 
 
 

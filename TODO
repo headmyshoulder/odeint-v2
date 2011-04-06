@@ -13,6 +13,7 @@
   * symplectic intergrators and ranges
 * DOCUMENTATION
   * include links to the source of the examples
+  * use classical citations, via []
 * GENERAL:
   * check if everywhere static_cast< value_type > is used
   * check header guards
