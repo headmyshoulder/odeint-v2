@@ -1,0 +1,20 @@
+Version 2:
+
+* Requirements:
+  * Optimize a * x 
+  * Optimize a + x
+  * Optimize x * y
+  * Optimize g(x)
+
+* Ansatz :
+  * mult< terminal< double >( a ) , expr > to mult_scalar< expr )( a )
+  * plus< terminal< double >( a ) , expr > to shift_scalar< expr )( a )
+  * mult< expr1 , expr2 > to mult_leibnitz< expr1 , expr2 >
+  * unary_op< expr > to unary_op_faa_di_bruno_bruno< expr >
+  
+* Possible solutions :
+  * Proto transform to create
+    deriv[which] = deriv_transform()( expr , x , derivs , which );
+  * custom eval context to create
+    deriv[which] = proto::eval( expr , my_context( x , derivs , which ) );
+  * start with 1D Odes 
