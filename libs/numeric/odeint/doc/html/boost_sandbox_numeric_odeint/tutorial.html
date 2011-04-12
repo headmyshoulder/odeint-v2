@@ -865,7 +865,7 @@
         faced with periodic motion. In the case of a largest Lyapunov exponent smaller
         then zero the converges the a fixed point. More informations about Lyapunov
         exponents and nonlinear dynamical systems can be found in many textbooks,
-        see for example [].
+        see for example .
       </p>
 <p>
         To calculate the Lyapunov exponents numerically one usually solves the equations
@@ -984,52 +984,110 @@
 <p>
         The problem is now, that <code class="computeroutput"><span class="identifier">x</span></code>
         is the full state containing also the perturbations and <code class="computeroutput"><span class="identifier">integrate_n_steps</span></code>
-        does not know that it should only use 3 element. In classical solvers from
-        the Numerical recipies this problem was solved by pointers and an appropriate
-        length. But odeint supports a similar and much more sophisticated concept:
-        <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top"><code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">Range</span></code></a>.
+        does not know that it should only use 3 element. In detail, odeint and its
+        steppers determine the length of the system under consideration be determing
+        the length of the state. In the classical solvers from the problem was solved
+        by pointer to the state and an appropriate length, something similar to
       </p>
 <p>
-        hier gehts weiter!!!
+        
+</p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">lorenz</span><span class="special">(</span> <span class="keyword">double</span><span class="special">*</span> <span class="identifier">x</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">*</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span><span class="special">,</span> <span class="keyword">void</span><span class="special">*</span> <span class="identifier">params</span> <span class="special">)</span>
+<span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">system_length</span> <span class="special">=</span> <span class="number">3</span><span class="special">;</span>
+<span class="identifier">rk4</span><span class="special">(</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">system_length</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">,</span> <span class="identifier">lorenz</span> <span class="special">);</span>
+</pre>
+<p>
+      </p>
+<p>
+        But odeint supports a similar and much more sophisticated concept: <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top"><code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">Range</span></code></a>. To make the steppers and
+        the system ready to work with <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top"><code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">Range</span></code></a> the system has to by changed:
       </p>
 <p>
         </p>
 <p>
           
 </p>
-<pre class="programlisting"><span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">n</span> <span class="special">=</span> <span class="number">3</span><span class="special">;</span>
-<span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">num_of_lyap</span> <span class="special">=</span> <span class="number">3</span><span class="special">;</span>
-<span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">N</span> <span class="special">=</span> <span class="identifier">n</span> <span class="special">+</span> <span class="identifier">n</span><span class="special">*</span><span class="identifier">num_of_lyap</span><span class="special">;</span>
-
-<span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">tr1</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">N</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
-<span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">tr1</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">num_of_lyap</span> <span class="special">&gt;</span> <span class="identifier">lyap_type</span><span class="special">;</span>
-
-<span class="keyword">void</span> <span class="identifier">lorenz_with_lyap</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">lorenz</span>
 <span class="special">{</span>
-	<span class="identifier">lorenz</span><span class="special">()(</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">dxdt</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">);</span>
+	<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">State</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Deriv</span> <span class="special">&gt;</span>
+	<span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">x_</span> <span class="special">,</span> <span class="identifier">Deriv</span> <span class="special">&amp;</span><span class="identifier">dxdt_</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span> <span class="keyword">const</span>
+	<span class="special">{</span>
+		<span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">range_iterator</span><span class="special">&lt;</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">x</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">begin</span><span class="special">(</span> <span class="identifier">x_</span> <span class="special">);</span>
+		<span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">range_iterator</span><span class="special">&lt;</span> <span class="identifier">Deriv</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">dxdt</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">begin</span><span class="special">(</span> <span class="identifier">dxdt_</span> <span class="special">);</span>
 
-	<span class="keyword">for</span><span class="special">(</span> <span class="identifier">size_t</span> <span class="identifier">l</span><span class="special">=</span><span class="number">0</span> <span class="special">;</span> <span class="identifier">l</span><span class="special">&lt;</span><span class="identifier">num_of_lyap</span> <span class="special">;</span> <span class="special">++</span><span class="identifier">l</span> <span class="special">)</span>
-    <span class="special">{</span>
-		<span class="keyword">const</span> <span class="keyword">double</span> <span class="special">*</span><span class="identifier">pert</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">+</span> <span class="number">3</span> <span class="special">+</span> <span class="identifier">l</span> <span class="special">*</span> <span class="number">3</span><span class="special">;</span>
-		<span class="keyword">double</span> <span class="special">*</span><span class="identifier">dpert</span> <span class="special">=</span> <span class="identifier">dxdt</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">+</span> <span class="number">3</span> <span class="special">+</span> <span class="identifier">l</span> <span class="special">*</span> <span class="number">3</span><span class="special">;</span>
-        <span class="identifier">dpert</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="special">-</span> <span class="identifier">sigma</span> <span class="special">*</span> <span class="identifier">pert</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">+</span> <span class="number">10.0</span> <span class="special">*</span> <span class="identifier">pert</span><span class="special">[</span><span class="number">1</span><span class="special">];</span>
-        <span class="identifier">dpert</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="special">(</span> <span class="identifier">R</span> <span class="special">-</span> <span class="identifier">x</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">)</span> <span class="special">*</span> <span class="identifier">pert</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">-</span> <span class="identifier">pert</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">-</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">*</span> <span class="identifier">pert</span><span class="special">[</span><span class="number">2</span><span class="special">];</span>
-        <span class="identifier">dpert</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">*</span> <span class="identifier">pert</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">+</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">*</span> <span class="identifier">pert</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">-</span> <span class="identifier">b</span> <span class="special">*</span> <span class="identifier">pert</span><span class="special">[</span><span class="number">2</span><span class="special">];</span>
-    <span class="special">}</span>
-<span class="special">}</span>
+		<span class="identifier">dxdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">sigma</span> <span class="special">*</span> <span class="special">(</span> <span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">-</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">);</span>
+		<span class="identifier">dxdt</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">R</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">-</span> <span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">-</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">[</span><span class="number">2</span><span class="special">];</span>
+		<span class="identifier">dxdt</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="special">-</span><span class="identifier">b</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">+</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">];</span>
+	<span class="special">}</span>
+<span class="special">};</span>
 </pre>
 <p>
         </p>
 <p>
       </p>
 <p>
-        show NR solution with pointers
+        This is in principle all. Now, we only have to call <code class="computeroutput"><span class="identifier">integrate_n_steps</span></code>
+        with an suited range:
       </p>
 <p>
-        ranges
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="comment">// perform 10000 transient steps
+</span><span class="identifier">integrate_n_steps</span><span class="special">(</span> <span class="identifier">rk4</span> <span class="special">,</span> <span class="identifier">lorenz</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">n</span> <span class="special">)</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">,</span> <span class="number">10000</span> <span class="special">);</span>
+</pre>
+<p>
+        </p>
+<p>
       </p>
 <p>
-        templatized operator()
+        Having integrated a sufficient number of transients steps we are now able
+        to calculate the Lyapunov exponents:
+      </p>
+<div class="orderedlist"><ol type="1">
+<li>
+          First, we initialize the perturbations. They are stored linearly behind
+          the state of the Lorenz system. The perturbation are initialized such that
+          they fullfill <span class="emphasis"><em>&lt; p <sub>&#8203;i</sub> , p<sub>&#8203;j</sub> &gt; = delta <sub>&#8203;ij</sub> </em></span> where &lt;,&gt;
+          is the classical scalar product and delta <sub>&#8203;ij</sub> is the Kronecker symbol.
+        </li>
+<li>
+          as
+        </li>
+</ol></div>
+<p>
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="identifier">fill</span><span class="special">(</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()+</span><span class="identifier">n</span> <span class="special">,</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">end</span><span class="special">()</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">);</span>
+<span class="keyword">for</span><span class="special">(</span> <span class="identifier">size_t</span> <span class="identifier">i</span><span class="special">=</span><span class="number">0</span> <span class="special">;</span> <span class="identifier">i</span><span class="special">&lt;</span><span class="identifier">num_of_lyap</span> <span class="special">;</span> <span class="special">++</span><span class="identifier">i</span> <span class="special">)</span> <span class="identifier">x</span><span class="special">[</span><span class="identifier">n</span><span class="special">+</span><span class="identifier">n</span><span class="special">*</span><span class="identifier">i</span><span class="special">+</span><span class="identifier">i</span><span class="special">]</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span>
+<span class="identifier">fill</span><span class="special">(</span> <span class="identifier">lyap</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">lyap</span><span class="special">.</span><span class="identifier">end</span><span class="special">()</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">);</span>
+
+<span class="keyword">double</span> <span class="identifier">t</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
+<span class="identifier">size_t</span> <span class="identifier">count</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="keyword">while</span><span class="special">(</span> <span class="keyword">true</span> <span class="special">)</span>
+<span class="special">{</span>
+	<span class="identifier">t</span> <span class="special">=</span> <span class="identifier">integrate_n_steps</span><span class="special">(</span> <span class="identifier">rk4</span> <span class="special">,</span> <span class="identifier">lorenz_with_lyap</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">,</span> <span class="number">100</span> <span class="special">);</span>
+	<span class="identifier">gram_schmitt</span><span class="special">(</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">lyap</span> <span class="special">,</span> <span class="identifier">n</span> <span class="special">,</span> <span class="identifier">num_of_lyap</span> <span class="special">);</span>
+	<span class="special">++</span><span class="identifier">count</span><span class="special">;</span>
+
+    <span class="keyword">if</span><span class="special">(</span> <span class="special">!(</span><span class="identifier">count</span> <span class="special">%</span> <span class="number">100000</span><span class="special">)</span> <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span><span class="special">;</span>
+        <span class="keyword">for</span><span class="special">(</span> <span class="identifier">size_t</span> <span class="identifier">i</span><span class="special">=</span><span class="number">0</span> <span class="special">;</span> <span class="identifier">i</span><span class="special">&lt;</span><span class="identifier">num_of_lyap</span> <span class="special">;</span> <span class="special">++</span><span class="identifier">i</span> <span class="special">)</span> <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\t"</span> <span class="special">&lt;&lt;</span> <span class="identifier">lyap</span><span class="special">[</span><span class="identifier">i</span><span class="special">]</span> <span class="special">/</span> <span class="identifier">t</span> <span class="special">;</span>
+        <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<p>
+        </p>
+<p>
       </p>
 <p>
         gram schmitt
@@ -1362,7 +1420,7 @@
         The following table gives an overview over all examples.
       </p>
 <div class="table">
-<a name="id379970"></a><p class="title"><b>Table&#160;1.3.&#160;Examples Overview</b></p>
+<a name="id380798"></a><p class="title"><b>Table&#160;1.3.&#160;Examples Overview</b></p>
 <div class="table-contents"><table class="table" summary="Examples Overview">
 <colgroup>
 <col>

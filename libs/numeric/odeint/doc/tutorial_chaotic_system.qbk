@@ -1,10 +1,12 @@
 [section Chaotic systems and Lyapunov exponents]
 
+[import ../examples/chaotic_system.cpp]
+
 Odeint can easily be used to investigate the properties of chaotic deterministic systems. In mathematical terms chaotic refers to an exponential growth of perturbations. In order to observe this exponential growth one usually solves the equations for the tangential dynamics which is again an ordinary differential equation. These equations are linear but time dependent and can be obtained via
 
 ['d delta x / dt = J(x) delta x]
 
-where ['J] is the Jacobian of the system under consideration. ['delta x] cam also be interpreted as a perturbation of the original system. In principle ['n] of these perturbations exit, they form a hypercube and evolve in the time. The Lyapunov exponents are then defined as logarithmic growth rates of the perturbations. If one Lyapunov exponent is larger then zero nearby trajectories divergy exponentially hence they are chaotic. If the largest Lyapunov exponent is zero one is usually faced with periodic motion. In the case of a largest Lyapunov exponent smaller then zero the converges the a fixed point. More informations about Lyapunov exponents and nonlinear dynamical systems can be found in many textbooks, see for example [].
+where ['J] is the Jacobian of the system under consideration. ['delta x] cam also be interpreted as a perturbation of the original system. In principle ['n] of these perturbations exit, they form a hypercube and evolve in the time. The Lyapunov exponents are then defined as logarithmic growth rates of the perturbations. If one Lyapunov exponent is larger then zero nearby trajectories divergy exponentially hence they are chaotic. If the largest Lyapunov exponent is zero one is usually faced with periodic motion. In the case of a largest Lyapunov exponent smaller then zero the converges the a fixed point. More informations about Lyapunov exponents and nonlinear dynamical systems can be found in many textbooks, see for example .
 
 To calculate the Lyapunov exponents numerically one usually solves the equations of motion for ['n] perturbations und orthonormalized them every ['k] steps. The Lyapunov exponent is the average the logarithm of the stretching factor of each perturbation.
 
@@ -87,22 +89,38 @@ state_type x;
 explicit_rk4< state_type > rk4;
 integrate_n_steps( rk4 , lorenz , x , 0.0 , 0.01 , 1000 );
 ``
-The problem is now, that `x` is the full state containing also the perturbations and `integrate_n_steps` does not know that it should only use 3 element. In classical solvers from the Numerical recipies this problem was solved by pointers and an appropriate length. But odeint supports a similar and much more sophisticated concept: __boost_range.
+The problem is now, that `x` is the full state containing also the perturbations and `integrate_n_steps` does not know that it should only use 3 element. In detail, odeint and its steppers determine the length of the system under consideration be determing the length of the state. In the classical solvers from the problem was solved by pointer to the state and an appropriate length, something similar to 
 
-hier gehts weiter!!!
+``
+void lorenz( double* x , double *dxdt , double t, void* params )
+{
+    ...
+}
+
+int system_length = 3;
+rk4( x , system_length , t , dt , lorenz );
+``
+
+But odeint supports a similar and much more sophisticated concept:  __boost_range. To make the steppers and the system ready to work with __boost_range the system has to by changed:
+
+[system_function_without_perturbations]
+
+This is in principle all. Now, we only have to call `integrate_n_steps` with an suited range:
+
+[integrate_transients_with_range]
+
+Having integrated a sufficient number of transients steps we are now able to calculate the Lyapunov exponents:
+
+# First, we initialize the perturbations. They are stored linearly behind the state of the Lorenz system. The perturbation are initialized such that they fullfill 
+[' < p [subl i] , p[subl j] > = delta [subl ij] ]
+where <,> is the classical scalar product and delta [subl ij] is the Kronecker symbol.
+# as
 
 
-[import ../examples/chaotic_system.cpp]
-[system_function_with_perturbations]
+[lyapunov_full_code]
 
 
 
-
-show NR solution with pointers
-
-ranges
-
-templatized operator()
 
 gram schmitt
 
