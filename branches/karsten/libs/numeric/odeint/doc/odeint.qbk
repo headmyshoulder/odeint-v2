@@ -29,6 +29,8 @@
 
 
 [def __alpha '''&#945;''']
+[def __delta '''&#948;''']
+[def __Delta '''&#916;''']
 [def __lambda '''&#955;'''][/lower case]
 [def __Lambda '''&#923;'''][/upper case]
 [def __gamma '''&#947;''']
@@ -36,6 +38,7 @@
 [def __sigma '''&#963;''']
 [def __Sigma '''&#931;''']
 [def __space '''&#8203;''']
+
 
 [template super[x]'''<superscript>'''[x]'''</superscript>''']
 [template sub[x]'''<subscript>'''[x]'''</subscript>''']
