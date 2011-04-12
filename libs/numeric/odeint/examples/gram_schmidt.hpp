@@ -35,7 +35,7 @@ void substract_vector( Iterator first1 , Iterator last1 ,
 }
 
 template< class StateType , class LyapType >
-void gram_schmitt( StateType &x , LyapType &lyap , size_t n , size_t num_of_lyap )
+void gram_schmidt( StateType &x , LyapType &lyap , size_t n , size_t num_of_lyap )
 {
 	if( !num_of_lyap ) return;
 	if( ptrdiff_t( ( num_of_lyap + 1 ) * n ) != std::distance( x.begin() , x.end() ) )

@@ -14,7 +14,7 @@
 
 #include <boost/numeric/odeint.hpp>
 
-#include "gram_schmitt.hpp"
+#include "gram_schmidt.hpp"
 
 using namespace std;
 using namespace boost::numeric::odeint;
@@ -95,7 +95,7 @@ int main( int argc , char **argv )
     while( true )
     {
     	t = integrate_n_steps( rk4 , lorenz_with_lyap , x , t , dt , 100 );
-    	gram_schmitt( x , lyap , n , num_of_lyap );
+    	gram_schmidt( x , lyap , n , num_of_lyap );
     	++count;
 
         if( !(count % 100000) )

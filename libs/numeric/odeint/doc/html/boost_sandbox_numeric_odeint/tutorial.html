@@ -3,8 +3,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Tutorial</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
 <link rel="up" href="../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
 <link rel="prev" href="getting_started.html" title="Getting started">
 <link rel="next" href="extend_odeint.html" title="Extend odeint">
@@ -13,9 +13,9 @@
 <table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="getting_started.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="extend_odeint.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="getting_started.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="extend_odeint.html"><img src="../images/next.png" alt="Next"></a>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="boost_sandbox_numeric_odeint.tutorial"></a><a class="link" href="tutorial.html" title="Tutorial">Tutorial</a>
 </h2></div></div></div>
@@ -36,7 +36,7 @@
       examples</a></span></dt>
 <dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.references">References</a></span></dt>
 </dl></div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator" title="Harmonic oscillator">Harmonic
       oscillator</a>
@@ -51,7 +51,7 @@
 <dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.integration_with_adaptive_step_size">Integration
         with Adaptive Step Size</a></span></dt>
 </dl></div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.define_the_ode"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.define_the_ode" title="Define the ODE">Define
         the ODE</a>
@@ -73,9 +73,7 @@
           to just define a function, e.g:
         </p>
 <p>
-          </p>
-<p>
-            
+          
 </p>
 <pre class="programlisting"><span class="comment">/* The type of container used to hold the state vector */</span>
 <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
@@ -90,8 +88,6 @@
 <span class="special">}</span>
 </pre>
 <p>
-          </p>
-<p>
         </p>
 <p>
           The parameters of the function must follow the example above where <code class="computeroutput"><span class="identifier">x</span></code> is the current state, <code class="computeroutput"><span class="identifier">dxdt</span></code> is the derivative <span class="emphasis"><em>x'</em></span>
@@ -104,9 +100,7 @@
           parameter structure as above:
         </p>
 <p>
-          </p>
-<p>
-            
+          
 </p>
 <pre class="programlisting"><span class="comment">/* The rhs of x' = f(x) defined as a class */</span>
 <span class="keyword">class</span> <span class="identifier">harm_osc</span> <span class="special">{</span>
@@ -124,15 +118,13 @@
 <span class="special">};</span>
 </pre>
 <p>
-          </p>
-<p>
         </p>
 <p>
           odeint can deal with instances of such classes instead of pure functions
           which allows for cleaner code.
         </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.stepper_types"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.stepper_types" title="Stepper Types">Stepper
         Types</a>
@@ -149,7 +141,7 @@
           choose:
         </p>
 <div class="table">
-<a name="id370055"></a><p class="title"><b>Table&#160;1.2.&#160;Stepper Algorithms</b></p>
+<a name="id575770"></a><p class="title"><b>Table&#160;1.2.&#160;Stepper Algorithms</b></p>
 <div class="table-contents"><table class="table" summary="Stepper Algorithms">
 <colgroup>
 <col>
@@ -426,7 +418,7 @@
           which kind of steppers should be applied.
         </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.integration_with_constant_step_size"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.integration_with_constant_step_size" title="Integration with Constant Step Size">Integration
         with Constant Step Size</a>
@@ -444,15 +436,11 @@
           <span class="special">)</span></code> function from odeint:
         </p>
 <p>
-          </p>
-<p>
-            
+          
 </p>
 <pre class="programlisting"><span class="identifier">explicit_rk4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">stepper</span><span class="special">;</span>
 <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">stepper</span> <span class="special">,</span> <span class="identifier">harmonic_oscillator</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">);</span>
 </pre>
-<p>
-          </p>
 <p>
         </p>
 <p>
@@ -465,20 +453,16 @@
           method which can used directly. So, you write down the above example as
         </p>
 <p>
-          </p>
-<p>
-            
+          
 </p>
 <pre class="programlisting"><span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">dt</span> <span class="special">=</span> <span class="number">0.01</span><span class="special">;</span>
 <span class="keyword">for</span><span class="special">(</span> <span class="keyword">double</span> <span class="identifier">t</span><span class="special">=</span><span class="number">0.0</span> <span class="special">;</span> <span class="identifier">t</span><span class="special">&lt;</span><span class="number">10.0</span> <span class="special">;</span> <span class="identifier">t</span><span class="special">+=</span> <span class="identifier">dt</span> <span class="special">)</span>
 	<span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">harmonic_oscillator</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
 </pre>
 <p>
-          </p>
-<p>
         </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.integration_with_adaptive_step_size"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.integration_with_adaptive_step_size" title="Integration with Adaptive Step Size">Integration
         with Adaptive Step Size</a>
@@ -493,15 +477,11 @@
           with 4th order error estimation and coefficients introduced by Cash-Karp.
         </p>
 <p>
-          </p>
-<p>
-            
+          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">explicit_error_rk54_ck</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">error_stepper_type</span><span class="special">;</span>
 <span class="identifier">error_stepper_type</span> <span class="identifier">rk54</span><span class="special">;</span>
 </pre>
-<p>
-          </p>
 <p>
         </p>
 <p>
@@ -526,16 +506,12 @@
           stepper create by <code class="computeroutput"><span class="identifier">make_controlled_stepper_standard</span></code>.
         </p>
 <p>
-          </p>
-<p>
-            
+          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">controlled_error_stepper</span><span class="special">&lt;</span> <span class="identifier">error_stepper_type</span> <span class="special">&gt;</span> <span class="identifier">controlled_stepper_type</span><span class="special">;</span>
 <span class="identifier">controlled_stepper_type</span> <span class="identifier">controlled_stepper</span><span class="special">;</span>
 <span class="identifier">integrate_adaptive</span><span class="special">(</span> <span class="identifier">controlled_stepper</span> <span class="special">,</span> <span class="identifier">harmonic_oscillator</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">);</span>
 </pre>
-<p>
-          </p>
 <p>
         </p>
 <p>
@@ -559,7 +535,7 @@
         The full cpp file for this example can be found here: <a href="../../../examples/harmonic_oscillator.cpp" target="_top">../../examples/harmonic_oscillator.cpp</a>
       </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.solar_system"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.solar_system" title="Solar system">Solar
       system</a>
@@ -570,7 +546,7 @@
 <dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.solar_system.define_the_system_function">Define
         the system function</a></span></dt>
 </dl></div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.solar_system.gravitation_and_energy_conservation"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.solar_system.gravitation_and_energy_conservation" title="Gravitation and energy conservation">Gravitation
         and energy conservation</a>
@@ -632,7 +608,7 @@
           f( q<sub>&#8203;i</sub> )</em></span>.
         </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.solar_system.define_the_system_function"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.solar_system.define_the_system_function" title="Define the system function">Define
         the system function</a>
@@ -642,9 +618,7 @@
           space as well as the velocity. Therefore, we use the operators from <a href="http://www.boost.org/doc/libs/release/doc/html/operators.html" target="_top">Boost.Operators</a>:
         </p>
 <p>
-          </p>
-<p>
-            
+          
 </p>
 <pre class="programlisting"><span class="comment">/*the point type */</span>
 <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">T</span> <span class="special">,</span> <span class="identifier">size_t</span> <span class="identifier">Dim</span> <span class="special">&gt;</span>
@@ -675,8 +649,6 @@
 </span><span class="comment">// more operators
 </span></pre>
 <p>
-          </p>
-<p>
         </p>
 <p>
           The next step is to define a container type storing the values of <span class="emphasis"><em>q</em></span>
@@ -684,9 +656,7 @@
           type we use <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">tr1</span><span class="special">::</span><span class="identifier">array</span></code>
         </p>
 <p>
-          </p>
-<p>
-            
+          
 </p>
 <pre class="programlisting"><span class="comment">// we simulate 5 planets and the sun
 </span><span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">n</span> <span class="special">=</span> <span class="number">6</span><span class="special">;</span>
@@ -695,8 +665,6 @@
 <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">tr1</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="identifier">point_type</span> <span class="special">,</span> <span class="identifier">n</span> <span class="special">&gt;</span> <span class="identifier">container_type</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">tr1</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">n</span> <span class="special">&gt;</span> <span class="identifier">mass_type</span><span class="special">;</span>
 </pre>
-<p>
-          </p>
 <p>
         </p>
 <p>
@@ -711,9 +679,7 @@
           As system function we have to provide <span class="emphasis"><em>f(p)</em></span> and <span class="emphasis"><em>f(q)</em></span>:
         </p>
 <p>
-          </p>
-<p>
-            
+          
 </p>
 <pre class="programlisting"><span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">gravitational_constant</span> <span class="special">=</span> <span class="number">2.95912208286e-4</span><span class="special">;</span>
 
@@ -731,13 +697,9 @@
 <span class="special">};</span>
 </pre>
 <p>
-          </p>
-<p>
         </p>
 <p>
-          </p>
-<p>
-            
+          
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">solar_system_momentum</span>
 <span class="special">{</span>
@@ -765,8 +727,6 @@
 <span class="special">};</span>
 </pre>
 <p>
-          </p>
-<p>
         </p>
 <p>
           In general a three body-system is chaotic, hence we can not expect that
@@ -781,9 +741,7 @@
           apply here:
         </p>
 <p>
-          </p>
-<p>
-            
+          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">symplectic_rkn_sb3a_mclachlan</span><span class="special">&lt;</span> <span class="identifier">container_type</span> <span class="special">&gt;</span> <span class="identifier">stepper_type</span><span class="special">;</span>
 <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">dt</span> <span class="special">=</span> <span class="number">100.0</span><span class="special">;</span>
@@ -794,8 +752,6 @@
 		<span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">q</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">p</span> <span class="special">)</span> <span class="special">)</span> <span class="special">,</span>
 		<span class="number">0.0</span> <span class="special">,</span> <span class="number">200000.0</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">,</span> <span class="identifier">streaming_observer</span><span class="special">(</span> <span class="identifier">cout</span> <span class="special">)</span> <span class="special">);</span>
 </pre>
-<p>
-          </p>
 <p>
         </p>
 <p>
@@ -809,9 +765,7 @@
           is also passed, but this is not a problem at all:
         </p>
 <p>
-          </p>
-<p>
-            
+          
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">streaming_observer</span>
 <span class="special">{</span>
@@ -830,15 +784,13 @@
 <span class="special">};</span>
 </pre>
 <p>
-          </p>
-<p>
         </p>
 <p>
           The full example can be found here: <a href="../../../examples/solar_system.cpp" target="_top">../../examples/solar_system.cpp</a>
         </p>
 </div>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.chaotic_systems_and_lyapunov_exponents"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.chaotic_systems_and_lyapunov_exponents" title="Chaotic systems and Lyapunov exponents">Chaotic
       systems and Lyapunov exponents</a>
@@ -852,16 +804,16 @@
         via
       </p>
 <p>
-        <span class="emphasis"><em>d delta x / dt = J(x) delta x</em></span>
+        <span class="emphasis"><em>d &#948; x / dt = J(x) &#948; x</em></span>
       </p>
 <p>
         where <span class="emphasis"><em>J</em></span> is the Jacobian of the system under consideration.
-        <span class="emphasis"><em>delta x</em></span> cam also be interpreted as a perturbation of
-        the original system. In principle <span class="emphasis"><em>n</em></span> of these perturbations
-        exit, they form a hypercube and evolve in the time. The Lyapunov exponents
-        are then defined as logarithmic growth rates of the perturbations. If one
-        Lyapunov exponent is larger then zero nearby trajectories divergy exponentially
-        hence they are chaotic. If the largest Lyapunov exponent is zero one is usually
+        <span class="emphasis"><em>&#948; x</em></span> cam also be interpreted as a perturbation of the original
+        system. In principle <span class="emphasis"><em>n</em></span> of these perturbations exit,
+        they form a hypercube and evolve in the time. The Lyapunov exponents are
+        then defined as logarithmic growth rates of the perturbations. If one Lyapunov
+        exponent is larger then zero nearby trajectories divergy exponentially hence
+        they are chaotic. If the largest Lyapunov exponent is zero one is usually
         faced with periodic motion. In the case of a largest Lyapunov exponent smaller
         then zero the converges the a fixed point. More informations about Lyapunov
         exponents and nonlinear dynamical systems can be found in many textbooks,
@@ -890,7 +842,9 @@
 <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">R</span> <span class="special">=</span> <span class="number">28.0</span><span class="special">;</span>
 <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">b</span> <span class="special">=</span> <span class="number">8.0</span> <span class="special">/</span> <span class="number">3.0</span><span class="special">;</span>
 
-<span class="keyword">void</span> <span class="identifier">lorenz</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span>
+<span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">tr1</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="number">3</span> <span class="special">&gt;</span> <span class="identifier">lorenz_state_type</span><span class="special">;</span>
+
+<span class="keyword">void</span> <span class="identifier">lorenz</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">lorenz_state_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">lorenz_state_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span>
 <span class="special">{</span>
     <span class="identifier">dxdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">sigma</span> <span class="special">*</span> <span class="special">(</span> <span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">-</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">);</span>
     <span class="identifier">dxdt</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">R</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">-</span> <span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">-</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">[</span><span class="number">2</span><span class="special">];</span>
@@ -898,11 +852,11 @@
 <span class="special">}</span>
 </pre>
 <p>
-        Now, we need also need to integrate the set of the perturbations. This is
-        done in parallel to the original system, hence within one system function.
-        Of course, we want to use the above defintion of the Lorenz system, hence
-        the definition of the system function including the Lorenz system itself
-        and the perturbation could look like:
+        We need also need to integrate the set of the perturbations. This is done
+        in parallel to the original system, hence within one system function. Of
+        course, we want to use the above defintion of the Lorenz system, hence the
+        definition of the system function including the Lorenz system itself and
+        the perturbation could look like:
       </p>
 <p>
         
@@ -931,9 +885,10 @@
 <p>
       </p>
 <p>
-        But this approach will not work, since lorenz() and lorenz_with_lyap() have different state type. A simple
-        trick to over come this problem is put the Lorenz system inside a functor
-        with templatized arguments:
+        The perturbations are stored linearly in the <code class="computeroutput"><span class="identifier">state_type</span></code>
+        behind the state of the Lorenz system. The problem that lorenz() and lorenz_with_lyap() have different
+        state types. A simple trick to over come this problem is put the Lorenz system
+        inside a functor with templatized arguments:
       </p>
 <p>
         
@@ -1007,9 +962,7 @@
         the system ready to work with <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top"><code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">Range</span></code></a> the system has to by changed:
       </p>
 <p>
-        </p>
-<p>
-          
+        
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">lorenz</span>
 <span class="special">{</span>
@@ -1026,44 +979,44 @@
 <span class="special">};</span>
 </pre>
 <p>
-        </p>
-<p>
       </p>
 <p>
         This is in principle all. Now, we only have to call <code class="computeroutput"><span class="identifier">integrate_n_steps</span></code>
         with an suited range:
       </p>
 <p>
-        </p>
-<p>
-          
+        
 </p>
 <pre class="programlisting"><span class="comment">// perform 10000 transient steps
 </span><span class="identifier">integrate_n_steps</span><span class="special">(</span> <span class="identifier">rk4</span> <span class="special">,</span> <span class="identifier">lorenz</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">n</span> <span class="special">)</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">,</span> <span class="number">10000</span> <span class="special">);</span>
 </pre>
-<p>
-        </p>
 <p>
       </p>
 <p>
         Having integrated a sufficient number of transients steps we are now able
         to calculate the Lyapunov exponents:
       </p>
-<div class="orderedlist"><ol type="1">
-<li>
-          First, we initialize the perturbations. They are stored linearly behind
-          the state of the Lorenz system. The perturbation are initialized such that
-          they fullfill <span class="emphasis"><em>&lt; p <sub>&#8203;i</sub> , p<sub>&#8203;j</sub> &gt; = delta <sub>&#8203;ij</sub> </em></span> where &lt;,&gt;
-          is the classical scalar product and delta <sub>&#8203;ij</sub> is the Kronecker symbol.
-        </li>
-<li>
-          as
-        </li>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+            We initialize the perturbations. They are stored linearly behind the
+            state of the Lorenz system. The perturbation are initialized such that
+            they fullfill <span class="emphasis"><em>&lt; p <sub>&#8203;i</sub> , p<sub>&#8203;j</sub> &gt; = &#948; <sub>&#8203;ij</sub> </em></span> where <span class="emphasis"><em>&lt;,&gt;</em></span>
+            is the classical scalar product and <span class="emphasis"><em>&#948; <sub>&#8203;ij</sub></em></span> is the Kronecker
+            symbol.
+          </li>
+<li class="listitem">
+            Integrate 100 steps of the full system with perturbations
+          </li>
+<li class="listitem">
+            Orthonormalize the perturbation using Gram-Schmidt orthonormalization
+            algorithm.
+          </li>
+<li class="listitem">
+            Repeat step 2 and 3. Every 10000 steps write the current Lyapunov exponent.
+          </li>
 </ol></div>
 <p>
-        </p>
-<p>
-          
+        
 </p>
 <pre class="programlisting"><span class="identifier">fill</span><span class="special">(</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()+</span><span class="identifier">n</span> <span class="special">,</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">end</span><span class="special">()</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">);</span>
 <span class="keyword">for</span><span class="special">(</span> <span class="identifier">size_t</span> <span class="identifier">i</span><span class="special">=</span><span class="number">0</span> <span class="special">;</span> <span class="identifier">i</span><span class="special">&lt;</span><span class="identifier">num_of_lyap</span> <span class="special">;</span> <span class="special">++</span><span class="identifier">i</span> <span class="special">)</span> <span class="identifier">x</span><span class="special">[</span><span class="identifier">n</span><span class="special">+</span><span class="identifier">n</span><span class="special">*</span><span class="identifier">i</span><span class="special">+</span><span class="identifier">i</span><span class="special">]</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span>
@@ -1086,14 +1039,12 @@
 <span class="special">}</span>
 </pre>
 <p>
-        </p>
-<p>
       </p>
 <p>
-        gram schmitt
+        The full code can be found here: <a href="../../../examples/chaotic_system.cpp" target="_top">../../examples/chaotic_system.cpp</a>
       </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.stiff_systems"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.stiff_systems" title="Stiff systems">Stiff
       systems</a>
@@ -1121,9 +1072,7 @@
         is needed. Here is the definition of the above example
       </p>
 <p>
-        </p>
-<p>
-          
+        
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">vector_type</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">matrix</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">matrix_type</span><span class="special">;</span>
@@ -1151,8 +1100,6 @@
 <span class="special">};</span>
 </pre>
 <p>
-        </p>
-<p>
       </p>
 <p>
         The state type has to be a <code class="computeroutput"><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">vector</span></code>
@@ -1162,9 +1109,7 @@
         just templatize the <code class="computeroutput"><span class="keyword">operator</span><span class="special">()</span></code>:
       </p>
 <p>
-        </p>
-<p>
-          
+        
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">vector_type</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">matrix</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">matrix_type</span><span class="special">;</span>
@@ -1186,8 +1131,6 @@
 <span class="special">};</span>
 </pre>
 <p>
-        </p>
-<p>
       </p>
 <p>
         Now you can use <code class="computeroutput"><span class="identifier">stiff_system</span></code>
@@ -1202,9 +1145,7 @@
         all the other stepper:
       </p>
 <p>
-        </p>
-<p>
-          
+        
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">rosenbrock4</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">stepper_type</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">rosenbrock4_controller</span><span class="special">&lt;</span> <span class="identifier">stepper_type</span> <span class="special">&gt;</span> <span class="identifier">controlled_stepper_type</span><span class="special">;</span>
@@ -1218,8 +1159,6 @@
 		<span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">phoenix</span><span class="special">::</span><span class="identifier">arg_names</span><span class="special">::</span><span class="identifier">arg2</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span> <span class="special">&lt;&lt;</span> <span class="identifier">phoenix</span><span class="special">::</span><span class="identifier">arg_names</span><span class="special">::</span><span class="identifier">arg1</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span> <span class="special">);</span>
 </pre>
 <p>
-        </p>
-<p>
       </p>
 <p>
         During the integration 71 steps have been done. Comparing to a classical
@@ -1227,9 +1166,7 @@
         5 method with step size control and dense output yields 1531 steps.
       </p>
 <p>
-        </p>
-<p>
-          
+        
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">explicit_error_dopri5</span><span class="special">&lt;</span> <span class="identifier">vector_type</span> <span class="special">&gt;</span> <span class="identifier">dopri5_type</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">controlled_error_stepper</span><span class="special">&lt;</span> <span class="identifier">dopri5_type</span> <span class="special">&gt;</span> <span class="identifier">controlled_dopri5_type</span><span class="special">;</span>
@@ -1242,8 +1179,6 @@
 		<span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">phoenix</span><span class="special">::</span><span class="identifier">arg_names</span><span class="special">::</span><span class="identifier">arg2</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span> <span class="special">&lt;&lt;</span> <span class="identifier">phoenix</span><span class="special">::</span><span class="identifier">arg_names</span><span class="special">::</span><span class="identifier">arg1</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span> <span class="special">);</span>
 </pre>
 <p>
-        </p>
-<p>
       </p>
 <p>
         Note, that we have used <a href="http://www.boost.org/doc/libs/1_46_1/libs/spirit/phoenix/doc/html/index.html" target="_top">Boost.Phoenix</a>
@@ -1253,7 +1188,7 @@
         The full example can be found here: <a href="../../../examples/stiff_system.cpp" target="_top">../../examples/stiff_system.cpp</a>
       </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.odeint_in_detail"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.odeint_in_detail" title="Odeint in detail">Odeint
       in detail</a>
@@ -1280,7 +1215,7 @@
         Overview and table
       </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.special_topics"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics" title="Special topics">Special
       topics</a>
@@ -1309,7 +1244,7 @@
 <dt><span class="section"><a href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.self_expanding_lattices">Self
         expanding lattices</a></span></dt>
 </dl></div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.special_topics.complex_state_types"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.complex_state_types" title="Complex state types">Complex
         state types</a>
@@ -1324,7 +1259,7 @@
           DNLS
         </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.special_topics.lattice_systems"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.lattice_systems" title="Lattice systems">Lattice
         systems</a>
@@ -1333,7 +1268,7 @@
           Fermi-Pasta-Ulam system
         </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.special_topics.partial_differential_equations"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.partial_differential_equations" title="Partial differential equations">Partial
         differential equations</a>
@@ -1348,7 +1283,7 @@
           Ginzburg-Landau
         </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.special_topics.using_boost__units"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.using_boost__units" title="Using boost::units">Using
         boost::units</a>
@@ -1357,7 +1292,7 @@
           blah blah
         </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.special_topics.using_cuda_and_thrust"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.using_cuda_and_thrust" title="Using Cuda and Thrust">Using
         Cuda and Thrust</a>
@@ -1366,7 +1301,7 @@
           blah blah
         </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.special_topics.using_matrices_as_state_types"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.using_matrices_as_state_types" title="Using matrices as state types">Using
         matrices as state types</a>
@@ -1375,11 +1310,11 @@
           Expanding resizing
         </p>
 </div>
-<div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title">
+<div class="section"><div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.special_topics.ordinary_differential_equations_on_networks"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.ordinary_differential_equations_on_networks" title="Ordinary differential equations on networks">Ordinary
         differential equations on networks</a>
 </h4></div></div></div></div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.special_topics.pass_by_value_or_by_reference"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.pass_by_value_or_by_reference" title="Pass by value or by reference">Pass
         by value or by reference</a>
@@ -1388,7 +1323,7 @@
           blah blah
         </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.special_topics.using_boost__range"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.using_boost__range" title="Using boost::range">Using
         boost::range</a>
@@ -1397,7 +1332,7 @@
           blah blah
         </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.special_topics.using_arbitrary_precision_floating_point_types"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.using_arbitrary_precision_floating_point_types" title="Using arbitrary precision floating point types">Using
         arbitrary precision floating point types</a>
@@ -1406,12 +1341,12 @@
           GMP
         </p>
 </div>
-<div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title">
+<div class="section"><div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.special_topics.self_expanding_lattices"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.special_topics.self_expanding_lattices" title="Self expanding lattices">Self
         expanding lattices</a>
 </h4></div></div></div></div>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.all_examples"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.all_examples" title="All examples">All
       examples</a>
@@ -1420,7 +1355,7 @@
         The following table gives an overview over all examples.
       </p>
 <div class="table">
-<a name="id380798"></a><p class="title"><b>Table&#160;1.3.&#160;Examples Overview</b></p>
+<a name="id586564"></a><p class="title"><b>Table&#160;1.3.&#160;Examples Overview</b></p>
 <div class="table-contents"><table class="table" summary="Examples Overview">
 <colgroup>
 <col>
@@ -1494,7 +1429,7 @@
 </div>
 <br class="table-break">
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.references"></a><a class="link" href="tutorial.html#boost_sandbox_numeric_odeint.tutorial.references" title="References">References</a>
 </h3></div></div></div>
@@ -1551,7 +1486,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="getting_started.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="extend_odeint.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="getting_started.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="extend_odeint.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
