@@ -24,6 +24,7 @@ const double sigma = 10.0;
 const double R = 28.0;
 const double b = 8.0 / 3.0;
 
+//[ system_function_without_perturbations
 struct lorenz
 {
 	template< class State , class Deriv >
@@ -37,6 +38,8 @@ struct lorenz
 		dxdt[2] = -b * x[2] + x[0] * x[1];
 	}
 };
+//]
+
 
 
 //[ system_function_with_perturbations
@@ -77,9 +80,12 @@ int main( int argc , char **argv )
 
     const double dt = 0.01;
 
-    // 10000 transients steps
+    //[ integrate_transients_with_range
+    // perform 10000 transient steps
     integrate_n_steps( rk4 , lorenz() , std::make_pair( x.begin() , x.begin() + n ) , 0.0 , dt , 10000 );
+    //]
 
+    //[ lyapunov_full_code
     fill( x.begin()+n , x.end() , 0.0 );
     for( size_t i=0 ; i<num_of_lyap ; ++i ) x[n+n*i+i] = 1.0;
     fill( lyap.begin() , lyap.end() , 0.0 );
@@ -99,6 +105,7 @@ int main( int argc , char **argv )
             cout << endl;
         }
     }
+    //]
 
     return 0;
 }
