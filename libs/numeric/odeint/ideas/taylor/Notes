@@ -1,4 +1,15 @@
+Version 1:
+
+* Done
+* Improve Binomial coefficient calculation
+
+
 Version 2:
+
+* Requiremnts:
+  * Solve Lorenz with help of transforms and compare performance with Version 1
+
+Version 3:
 
 * Requirements:
   * Optimize a * x 
