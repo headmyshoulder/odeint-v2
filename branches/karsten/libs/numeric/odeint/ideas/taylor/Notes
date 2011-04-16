@@ -1,11 +1,12 @@
 Version 1:
 
 * Done
-* Improve Binomial coefficient calculation
+* Use contexts
 
 
 Version 2:
 
+* Done
 * Requiremnts:
   * Solve Lorenz with help of transforms and compare performance with Version 1
 
@@ -14,6 +15,10 @@ Version 3:
 * Requirements:
   * Optimize a * x 
   * Optimize a + x
+
+
+Version 4:
+  
   * Optimize x * y
   * Optimize g(x)
 
