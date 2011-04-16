@@ -9,6 +9,8 @@
 
 #include "taylor.hpp"
 
+#include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
+
 #include <boost/fusion/include/make_vector.hpp>
 
 template< typename T , size_t N >
@@ -19,9 +21,9 @@ std::ostream& operator<<( std::ostream& out , const std::tr1::array< T , N > &x 
 	return out;
 }
 
-typedef boost::numeric::odeint::taylor< 3 , 10 > taylor_type;
+typedef boost::numeric::odeint::taylor< 3 , 11 > taylor_type;
 typedef taylor_type::state_type state_type;
-typedef taylor_type::derivs_type derivs_type;
+typedef boost::numeric::odeint::explicit_rk4< state_type > rk4_type;
 
 const double sigma = 10.0;
 const double R = 28.0;
@@ -49,35 +51,30 @@ using boost::numeric::odeint::taylor_adf::arg3;
 
 int main( int argc , char **argv )
 {
-	cout.precision( 14 );
-
-	taylor_type t;
-
-	state_type in = {{ 10.0 , 10.0 , 10.0 }} , dxdt = {{ 0.0 , 0.0 , 0.0 }} , xerr = {{ 0.0 , 0.0 , 0.0 }} , out = {{ 0.0 ,0.0 , 0.0 }};
-
-	lorenz( in , dxdt , 0.0 );
-
-	cout << in << endl;
-	cout << dxdt << endl << endl;
-
-	t.do_step(
-			fusion::make_vector
-			(
-					sigma * ( arg2 - arg1 ) ,
-					R * arg1 - arg2 - arg1 * arg3 ,
-					arg1 * arg2 - b * arg3
-			) ,
-			in , 0.0 , out , 0.1 , xerr );
+	taylor_type tay;
+	rk4_type rk4;
 
 
+	state_type x1 = {{ 10.0 , 10.0 , 10.0 }} , x2 = x1 , xerr = x1;
 
-	cout << endl;
-	cout << in << endl;
-	cout << xerr << endl;
-	cout << out << endl << endl;
-	const derivs_type &derivs = t.get_last_derivs();
-	for( size_t i=0 ; i<derivs.size() ; ++i )
-		cout << derivs[i] << endl;
+	const double dt = 0.01;
+	double t = 0.0;
+	for( size_t i=0 ; i<10000 ; ++i , t += dt )
+	{
+		tay.do_step(
+				fusion::make_vector
+				(
+						sigma * ( arg2 - arg1 ) ,
+						R * arg1 - arg2 - arg1 * arg3 ,
+						arg1 * arg2 - b * arg3
+				) ,
+				x1 , t , dt , xerr );
+
+		rk4.do_step( lorenz , x2 , t , dt );
+
+		cout << t << "\t" << x1 << "\t" << x2 << "\n";
+	}
+
 
 	return 0;
 }
