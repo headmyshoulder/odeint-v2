@@ -10,18 +10,17 @@
 
 #include <boost/array.hpp>
 
-#include <boost/numeric/odeint/algebra/range_algebra.hpp>
-#include <boost/numeric/odeint/algebra/default_operations.hpp>
 
 template< size_t n >
 struct fusion_algebra
 {
 
-    template< class state_type >
-    inline static void foreach( state_type &x_tmp , const state_type &x , const boost::array< double , n > &a ,
-            const state_type *k_vector , const double dt )
+    template< typename T , size_t dim >
+    inline static void foreach( boost::array< T , dim > &x_tmp , const boost::array< T , dim > &x ,
+            const boost::array< double , n > &a ,
+            const boost::array< T , dim > *k_vector , const double dt )
     {
-        for( size_t i=0 ; i<x.size() ; ++i )
+        for( size_t i=0 ; i<dim ; ++i )
         {
             x_tmp[i] = x[i];
             for( size_t j = 0 ; j<n ; ++j )
@@ -31,7 +30,13 @@ struct fusion_algebra
 
 };
 
-/*
+
+
+
+/** hand-wise implementation for performance improvement for n = 1..4 **/
+
+/* !!!!!!!   Actually, this is factor 3 slower with intel compiler, so we don'y use it !!!!!
+ *
 
 template<>
 struct fusion_algebra< 1 >
@@ -82,7 +87,6 @@ struct fusion_algebra< 3 >
     }
 
 };
-
 
 template<>
 struct fusion_algebra< 4 >

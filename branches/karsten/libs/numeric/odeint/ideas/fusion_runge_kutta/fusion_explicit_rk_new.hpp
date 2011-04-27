@@ -52,6 +52,32 @@ struct stage_fusion_wrapper
     typedef typename fusion::vector< size_t , T , boost::array< T , Constant::value > , StageCategory > type;
 };
 
+template< class T , size_t n , class StageCategory >
+struct stage
+{
+    static const size_t stage_number = n - 1;
+    T m_c;
+    boost::array< T , n > m_a;
+    typedef StageCategory category;
+};
+
+template< class T , size_t n>
+struct stage< T , n , last_stage >
+{
+    static const size_t stage_number = n - 1;
+    T m_c;
+    boost::array< T , n > m_b;
+    typedef last_stage category;
+};
+
+
+
+template< class T , class Constant , class StageCategory >
+struct stage_wrapper
+{
+    typedef stage< T , Constant::value , StageCategory > type;
+};
+
 
 template< class StateType , size_t stage_count >
 class explicit_rk
@@ -89,10 +115,10 @@ public:
                 mpl::inserter
                 <
                     mpl::vector0<> ,
-                    mpl::push_back< mpl::_1 , stage_fusion_wrapper< double , mpl::_2 , intermediate_stage > >
+                    mpl::push_back< mpl::_1 , stage_wrapper< double , mpl::_2 , intermediate_stage > >
                 >
             >::type ,
-            typename stage_fusion_wrapper< double , mpl::size_t< stage_count > , last_stage >::type
+            stage< double , stage_count , last_stage >
         >::type
     >::type stage_vector_base;
 
@@ -111,9 +137,9 @@ public:
             template< class Index >
             void operator()( Index ) const
             {
-                fusion::at_c< 0 >( fusion::at< Index >( m_base ) ) = Index::value;
-                fusion::at_c< 1 >( fusion::at< Index >( m_base ) ) = m_c[ Index::value ];
-                fusion::at_c< 2 >( fusion::at< Index >( m_base ) ) = fusion::at< Index >( m_a );
+                //fusion::at< Index >( m_base )::  = Index::value;
+                fusion::at< Index >( m_base ).m_c  = m_c[ Index::value ];
+                fusion::at< Index >( m_base ).m_a = fusion::at< Index >( m_a );
             }
         };
 
@@ -121,9 +147,9 @@ public:
         {
             typedef mpl::range_c< size_t , 0 , stage_count - 1 > indices;
             mpl::for_each< indices >( do_insertion( *this , a , c ) );
-            fusion::at_c< 0 >( fusion::at_c< stage_count - 1 >( *this ) ) = stage_count - 1 ;
-            fusion::at_c< 1 >( fusion::at_c< stage_count - 1 >( *this ) ) = c[ stage_count - 1 ];
-            fusion::at_c< 2 >( fusion::at_c< stage_count - 1 >( *this ) ) = b;
+            //fusion::at_c< 0 >( fusion::at_c< stage_count - 1 >( *this ) ) = stage_count - 1 ;
+            fusion::at_c< stage_count - 1 >( *this ).m_c = c[ stage_count - 1 ];
+            fusion::at_c< stage_count - 1 >( *this ).m_b = b;
         }
     };
 
@@ -145,32 +171,32 @@ public:
 
 
         template< typename T , size_t stage_number >
-        void operator()( fusion::vector< size_t , T , boost::array< T , stage_number > , intermediate_stage > const &stage ) const
+        void operator()( stage< T , stage_number , intermediate_stage > const &stage ) const
         //typename stage_fusion_wrapper< T , mpl::size_t< stage_number > , intermediate_stage >::type const &stage ) const
         {
-            double c = fusion::at_c< 1 >( stage );
+            double c = stage.m_c;
 
             if( stage_number == 1 )
                 system( x , k_vector[stage_number-1] , t + c * dt );
             else
                 system( x_tmp , k_vector[stage_number-1] , t + c * dt );
 
-            fusion_algebra<stage_number>::foreach( x_tmp , x , fusion::at_c< 2 >( stage ) , k_vector , dt);
+            fusion_algebra<stage_number>::foreach( x_tmp , x , stage.m_a , k_vector , dt);
         }
 
 
         template< typename T , size_t stage_number >
-        void operator()( fusion::vector< size_t , T , boost::array< T , stage_number > , last_stage > const &stage ) const
+        void operator()( stage< T , stage_number , last_stage > const &stage ) const
         //void operator()( typename stage_fusion_wrapper< T , mpl::size_t< stage_number > , last_stage >::type const &stage ) const
         {
-            double c = fusion::at_c< 1 >( stage );
+            double c = stage.m_c;
 
             if( stage_number == 1 )
                 system( x , k_vector[stage_number-1] , t + c * dt );
             else
                 system( x_tmp , k_vector[stage_number-1] , t + c * dt );
 
-            fusion_algebra<stage_number>::foreach( x , x , fusion::at_c< 2 >( stage ) , k_vector , dt);
+            fusion_algebra<stage_number>::foreach( x , x , stage.m_b , k_vector , dt);
         }
 
 
