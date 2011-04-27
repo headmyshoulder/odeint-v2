@@ -8,13 +8,14 @@
 #include <iostream>
 #include <fstream>
 
-#include <tr1/array>
+#include <boost/array.hpp>
 
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
 #include <boost/timer.hpp>
 
-#include "fusion_explicit_rk.hpp"
+//#include "fusion_explicit_rk.hpp"
+#include "fusion_explicit_rk_new.hpp"
 
 #define tab "\t"
 
@@ -35,7 +36,7 @@ ostream& operator<<( ostream& out , accumulator_type &acc )
 typedef boost::timer timer_type;
 
 
-typedef std::tr1::array< double , 3 > state_type;
+typedef boost::array< double , 3 > state_type;
 typedef explicit_rk< state_type , 4 > rk4_fusion_type;
 
 
