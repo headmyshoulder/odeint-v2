@@ -15,7 +15,7 @@
 #include <iostream>
 #include <fstream>
 
-#include <tr1/array>
+#include <boost/array.hpp>
 
 #include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
 #include <boost/accumulators/accumulators.hpp>
@@ -44,7 +44,7 @@ ostream& operator<<( ostream& out , accumulator_type &acc )
 typedef boost::timer timer_type;
 
 
-typedef std::tr1::array< double , 3 > state_type;
+typedef boost::array< double , 3 > state_type;
 typedef boost::numeric::odeint::explicit_rk4< state_type > rk4_odeint_type;
 typedef mpl_rk4_stepper< state_type > rk4_mpl_type;
 typedef runge_kutta_stepper< state_type , 4 > rk4_fusion_type;
@@ -83,7 +83,7 @@ int main( int argc , char **argv )
     rk4_fusion_type rk4_fusion( a , b , c );
 
     const size_t num_of_steps = 20000000;
-    const size_t dt = 0.01;
+    const double dt = 0.01;
 
     accumulator_type acc1 , acc2 , acc3;
     timer_type timer;

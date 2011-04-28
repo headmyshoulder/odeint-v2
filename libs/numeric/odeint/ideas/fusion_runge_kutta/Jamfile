@@ -6,7 +6,7 @@ import os ;
 import modules ;
 import path ; 
 
-path-constant HOME : [ os.environ HOME ] ;
+#path-constant HOME : [ os.environ HOME ] ;
 #path-constant CHRONO_ROOT : [ os.environ CHRONO_ROOT ] ;
 
 project
