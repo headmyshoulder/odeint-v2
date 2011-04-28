@@ -15,7 +15,7 @@
 #include <iostream>
 #include <fstream>
 
-#include <tr1/array>
+#include <boost/array.hpp>
 
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
@@ -42,7 +42,7 @@ ostream& operator<<( ostream& out , accumulator_type &acc )
 typedef boost::timer timer_type;
 
 
-typedef std::tr1::array< double , 3 > state_type;
+typedef boost::array< double , 3 > state_type;
 typedef runge_kutta_stepper< state_type , 4 > rk4_fusion_type;
 
 
@@ -76,16 +76,18 @@ int main( int argc , char **argv )
     rk4_fusion_type rk4_fusion( a , b , c );
 
     const size_t num_of_steps = 20000000;
-    const size_t dt = 0.01;
+    const double dt = 0.01;
 
     accumulator_type acc;
     timer_type timer;
 
-    srand48( 12312354 );
+    srand( 12312354 );
 
     while( true )
     {
-        state_type x = {{ 10.0 * drand48() , 10.0 * drand48() , 10.0 * drand48() }};
+        state_type x = {{ 10.0 * rand()/RAND_MAX , 
+						  10.0 * rand()/RAND_MAX , 
+						  10.0 * rand()/RAND_MAX }};
         double t = 0.0;
 
         timer.restart();

@@ -14,8 +14,8 @@
 #include <boost/accumulators/statistics.hpp>
 #include <boost/timer.hpp>
 
-//#include "fusion_explicit_rk.hpp"
-#include "fusion_explicit_rk_new.hpp"
+#include "fusion_explicit_rk.hpp"
+//#include "fusion_explicit_rk_new.hpp"
 
 #define tab "\t"
 
@@ -70,16 +70,17 @@ int main( int argc , char **argv )
     rk4_fusion_type rk4_fusion( a , b , c );
 
     const size_t num_of_steps = 20000000;
-    const size_t dt = 0.01;
+    const double dt = 0.01;
 
     accumulator_type acc;
     timer_type timer;
 
-    srand48( 12312354 );
+    srand( 12312354 );
 
     while( true )
     {
-        state_type x = {{ 10.0 * drand48() , 10.0 * drand48() , 10.0 * drand48() }};
+        state_type x = {{ 10.0 * rand()/RAND_MAX , 10.0 * rand()/RAND_MAX , 10.0 * rand()/RAND_MAX }};
+        //state_type x = {{ 10.0 , 1.0 , 5.0 }};
         double t = 0.0;
 
         timer.restart();

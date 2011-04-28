@@ -15,7 +15,7 @@
 #include <iostream>
 #include <fstream>
 
-#include <tr1/array>
+#include <boost/array.hpp>
 
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
@@ -42,7 +42,7 @@ ostream& operator<<( ostream& out , accumulator_type &acc )
 typedef boost::timer timer_type;
 
 
-typedef std::tr1::array< double , 3 > state_type;
+typedef boost::array< double , 3 > state_type;
 typedef mpl_rk4_stepper< state_type > rk4_mpl_type;
 
 
@@ -64,7 +64,7 @@ int main( int argc , char **argv )
     rk4_mpl_type rk4_mpl;
 
     const size_t num_of_steps = 20000000;
-    const size_t dt = 0.01;
+    const double dt = 0.01;
 
     accumulator_type acc;
     timer_type timer;

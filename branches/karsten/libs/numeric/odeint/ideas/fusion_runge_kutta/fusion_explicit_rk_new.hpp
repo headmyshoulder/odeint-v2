@@ -52,21 +52,19 @@ struct stage_fusion_wrapper
     typedef typename fusion::vector< size_t , T , boost::array< T , Constant::value > , StageCategory > type;
 };
 
-template< class T , size_t n , class StageCategory >
+template< class T , size_t i , class StageCategory >
 struct stage
 {
-    static const size_t stage_number = n - 1;
     T m_c;
-    boost::array< T , n > m_a;
+    boost::array< T , i > m_a;
     typedef StageCategory category;
 };
 
-template< class T , size_t n>
-struct stage< T , n , last_stage >
+template< class T , size_t i>
+struct stage< T , i , last_stage >
 {
-    static const size_t stage_number = n - 1;
     T m_c;
-    boost::array< T , n > m_b;
+    boost::array< T , i > m_b;
     typedef last_stage category;
 };
 
