@@ -55,16 +55,16 @@ struct stage_fusion_wrapper
 template< class T , size_t i , class StageCategory >
 struct stage
 {
-    T m_c;
-    boost::array< T , i > m_a;
+    T c;
+    boost::array< T , i > a;
     typedef StageCategory category;
 };
 
 template< class T , size_t i>
 struct stage< T , i , last_stage >
 {
-    T m_c;
-    boost::array< T , i > m_b;
+    T c;
+    boost::array< T , i > b;
     typedef last_stage category;
 };
 
@@ -136,8 +136,8 @@ public:
             void operator()( Index ) const
             {
                 //fusion::at< Index >( m_base )::  = Index::value;
-                fusion::at< Index >( m_base ).m_c  = m_c[ Index::value ];
-                fusion::at< Index >( m_base ).m_a = fusion::at< Index >( m_a );
+                fusion::at< Index >( m_base ).c  = m_c[ Index::value ];
+                fusion::at< Index >( m_base ).a = fusion::at< Index >( m_a );
             }
         };
 
@@ -146,8 +146,8 @@ public:
             typedef mpl::range_c< size_t , 0 , stage_count - 1 > indices;
             mpl::for_each< indices >( do_insertion( *this , a , c ) );
             //fusion::at_c< 0 >( fusion::at_c< stage_count - 1 >( *this ) ) = stage_count - 1 ;
-            fusion::at_c< stage_count - 1 >( *this ).m_c = c[ stage_count - 1 ];
-            fusion::at_c< stage_count - 1 >( *this ).m_b = b;
+            fusion::at_c< stage_count - 1 >( *this ).c = c[ stage_count - 1 ];
+            fusion::at_c< stage_count - 1 >( *this ).b = b;
         }
     };
 
@@ -158,13 +158,13 @@ public:
     {
         System &system;
         state_type &x , &x_tmp;
-        state_type *k_vector;
+        state_type *F;
         const double t;
         const double dt;
 
-        calculate_stage( System &_system , state_type &_x , state_type &_x_tmp , state_type *_k_vector ,
+        calculate_stage( System &_system , state_type &_x , state_type &_x_tmp , state_type *_F ,
                             const double _t , const double _dt )
-        : system( _system ) , x( _x ) , x_tmp( _x_tmp ) , k_vector( _k_vector ) , t( _t ) , dt( _dt )
+        : system( _system ) , x( _x ) , x_tmp( _x_tmp ) , F( _F ) , t( _t ) , dt( _dt )
         {}
 
 
@@ -172,14 +172,12 @@ public:
         void operator()( stage< T , stage_number , intermediate_stage > const &stage ) const
         //typename stage_fusion_wrapper< T , mpl::size_t< stage_number > , intermediate_stage >::type const &stage ) const
         {
-            double c = stage.m_c;
-
             if( stage_number == 1 )
-                system( x , k_vector[stage_number-1] , t + c * dt );
+                system( x , F[stage_number-1] , t + stage.c * dt );
             else
-                system( x_tmp , k_vector[stage_number-1] , t + c * dt );
+                system( x_tmp , F[stage_number-1] , t + stage.c * dt );
 
-            fusion_algebra<stage_number>::foreach( x_tmp , x , stage.m_a , k_vector , dt);
+            fusion_algebra<stage_number>::foreach( x_tmp , x , stage.a , F , dt);
         }
 
 
@@ -187,21 +185,16 @@ public:
         void operator()( stage< T , stage_number , last_stage > const &stage ) const
         //void operator()( typename stage_fusion_wrapper< T , mpl::size_t< stage_number > , last_stage >::type const &stage ) const
         {
-            double c = stage.m_c;
-
             if( stage_number == 1 )
-                system( x , k_vector[stage_number-1] , t + c * dt );
+                system( x , F[stage_number-1] , t + stage.c * dt );
             else
-                system( x_tmp , k_vector[stage_number-1] , t + c * dt );
+                system( x_tmp , F[stage_number-1] , t + stage.c * dt );
 
-            fusion_algebra<stage_number>::foreach( x , x , stage.m_b , k_vector , dt);
+            fusion_algebra<stage_number>::foreach( x , x , stage.b , F , dt);
         }
 
 
     };
-
-
-
 
 public:
 
@@ -217,9 +210,8 @@ public:
     template< class System >
     void do_step( System &system , state_type &x , double t , const double dt )
     {
-        fusion::for_each( m_stages , calculate_stage< System >( system , x , m_x_tmp , m_k_vector , t , dt ) );
+        fusion::for_each( m_stages , calculate_stage< System >( system , x , m_x_tmp , m_F , t , dt ) );
     }
-
 
 private:
 
@@ -228,8 +220,7 @@ private:
     const coef_c_type m_c;
     const stage_vector m_stages;
     state_type m_x_tmp;
-    state_type m_k_vector[stage_count];
+    state_type m_F[stage_count];
 };
-
 
 #endif /* FUSION_EXPLICIT_RK_HPP_ */

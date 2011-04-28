@@ -1,15 +1,8 @@
 /*
- * performance.cpp
+ * odeint_rk4.cpp
  *
- *  Created on: Dec 1, 2010
+ *  Created on: Apr 28, 2011
  *      Author: mario
- */
-
-/*
- * butcher_test.cpp
- *
- *  Created on: Nov 5, 2010
- *      Author: karsten
  */
 
 #include <iostream>
@@ -17,11 +10,11 @@
 
 #include <boost/array.hpp>
 
+#include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
+#include <boost/numeric/odeint/algebra/array_algebra.hpp>
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
 #include <boost/timer.hpp>
-
-#include "runge_kutta_stepper.hpp"
 
 #define tab "\t"
 
@@ -43,7 +36,9 @@ typedef boost::timer timer_type;
 
 
 typedef boost::array< double , 3 > state_type;
-typedef runge_kutta_stepper< state_type , 4 > rk4_fusion_type;
+//typedef boost::numeric::odeint::explicit_rk4< state_type > rk4_odeint_type;
+typedef boost::numeric::odeint::explicit_rk4< state_type , double , state_type , double ,
+                                              boost::numeric::odeint::array_algebra > rk4_odeint_type;
 
 
 void lorenz( const state_type &x , state_type &dxdt , double t )
@@ -58,24 +53,13 @@ void lorenz( const state_type &x , state_type &dxdt , double t )
 
 
 
+
 int main( int argc , char **argv )
 {
-    typedef rk4_fusion_type::coef_a_type coef_a_type;
-    typedef rk4_fusion_type::coef_b_type coef_b_type;
-    typedef rk4_fusion_type::coef_c_type coef_c_type;
-
-    const boost::array< double , 1 > a1 = {{ 0.5 }};
-    const boost::array< double , 2 > a2 = {{ 0.0 , 0.5 }};
-    const boost::array< double , 3 > a3 = {{ 0.0 , 0.0 , 1.0 }};
-
-    const coef_a_type a = fusion::make_vector( a1 , a2 , a3 );
-    const coef_b_type b = {{ 1.0/6 , 1.0/3 , 1.0/3 , 1.0/6 }};
-    const coef_c_type c = {{ 0.0 , 0.5 , 0.5 , 1.0 }};
-
-    rk4_fusion_type rk4_fusion( a , b , c );
+    rk4_odeint_type rk4_odeint;
 
     const size_t num_of_steps = 20000000;
-    const double dt = 0.01;
+    const double dt = 1E-10;
 
     accumulator_type acc;
     timer_type timer;
@@ -85,13 +69,13 @@ int main( int argc , char **argv )
     while( true )
     {
         state_type x = {{ 10.0 * rand()/RAND_MAX , 
-						  10.0 * rand()/RAND_MAX , 
-						  10.0 * rand()/RAND_MAX }};
+                          10.0 * rand()/RAND_MAX , 
+                          10.0 * rand()/RAND_MAX }};
         double t = 0.0;
 
         timer.restart();
         for( size_t i=0 ; i<num_of_steps ; ++i, t+=dt )
-            rk4_fusion.do_step( lorenz , x , t , dt );
+            rk4_odeint.do_step( lorenz , x , t , dt );
         acc( timer.elapsed() );
 
         clog.precision( 3 );
@@ -99,12 +83,5 @@ int main( int argc , char **argv )
         clog << acc << " " << x[0] << endl;
     }
 
-
-
     return 0;
 }
-
-/*
- * Compile with :
- * g++ -O3 -I$BOOST_ROOT -I$HOME/boost/chrono -I$ODEINT_ROOT butcher_performance.cpp
- */

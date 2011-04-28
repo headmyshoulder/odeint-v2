@@ -1,19 +1,18 @@
 /*
- * performance.cpp
+ * gsl_rk4.cpp
  *
- *  Created on: Dec 1, 2010
+ *  Created on: Apr 28, 2011
  *      Author: mario
  */
 
 #include <iostream>
-#include <fstream>
 
-#include <boost/array.hpp>
-
-#include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
 #include <boost/timer.hpp>
+
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_odeiv.h>
 
 #define tab "\t"
 
@@ -34,45 +33,45 @@ ostream& operator<<( ostream& out , accumulator_type &acc )
 typedef boost::timer timer_type;
 
 
-typedef boost::array< double , 3 > state_type;
-typedef boost::numeric::odeint::explicit_rk4< state_type > rk4_odeint_type;
-
-
-void lorenz( const state_type &x , state_type &dxdt , double t )
+int lorenz_gsl( double t , const double y[] , double f[] , void *params)
 {
     const double sigma = 10.0;
     const double R = 28.0;
     const double b = 8.0 / 3.0;
-    dxdt[0] = sigma * ( x[1] - x[0] );
-    dxdt[1] = R * x[0] - x[1] - x[0] * x[2];
-    dxdt[2] = x[0]*x[1] - b * x[2];
+
+    f[0] = sigma * ( y[1] - y[0] );
+    f[1] = R * y[0] - y[1] - y[0] * y[2];
+    f[2] = y[0]*y[1] - b * y[2];
+    return GSL_SUCCESS;
 }
 
 
-
-
-int main( int argc , char **argv )
+int main()
 {
-    rk4_odeint_type rk4_odeint;
-
-    const size_t num_of_steps = 20000000;
-    const double dt = 0.01;
+    const size_t num_of_steps = 20000000 / 3 ; // gsl rk4 routine makes error control by
+                                               // additional doing two steps with half step size
+    const double dt = 1E-10 * 3 ;             // so it actually does 3 * num_of_steps steps
 
     accumulator_type acc;
     timer_type timer;
 
     srand( 12312354 );
 
+    gsl_odeiv_step *s = gsl_odeiv_step_alloc( gsl_odeiv_step_rk4 , 3);
+    gsl_odeiv_system sys = { lorenz_gsl , 0 , 3 , 0 };
+
     while( true )
     {
-        state_type x = {{ 10.0 * rand()/RAND_MAX , 
-						  10.0 * rand()/RAND_MAX , 
-						  10.0 * rand()/RAND_MAX }};
+        double x[3] = { 10.0 * rand()/RAND_MAX ,
+                         10.0 * rand()/RAND_MAX ,
+                         10.0 * rand()/RAND_MAX };
+        double x_err[3];
+
         double t = 0.0;
 
         timer.restart();
         for( size_t i=0 ; i<num_of_steps ; ++i, t+=dt )
-            rk4_odeint.do_step( lorenz , x , t , dt );
+            gsl_odeiv_step_apply ( s , t , dt , x , x_err , 0 , 0 , &sys );
         acc( timer.elapsed() );
 
         clog.precision( 3 );
@@ -80,12 +79,6 @@ int main( int argc , char **argv )
         clog << acc << " " << x[0] << endl;
     }
 
-
-
     return 0;
-}
 
-/*
- * Compile with :
- * g++ -O3 -I$BOOST_ROOT -I$HOME/boost/chrono -I$ODEINT_ROOT butcher_performance.cpp
- */
+}

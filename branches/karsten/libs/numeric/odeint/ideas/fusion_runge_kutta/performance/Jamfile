@@ -6,15 +6,30 @@ import os ;
 import modules ;
 import path ; 
 
-#path-constant HOME : [ os.environ HOME ] ;
 path-constant CHRONO_ROOT : [ os.environ CHRONO_ROOT ] ;
 
 project
     : requirements
       <define>BOOST_ALL_NO_LIB=1
-      <include>../../../../..
+      <include>../../../../../..
+      <include>$(CHRONO_ROOT)
     ;
 
-exe test_explicit_rk
-    : test_explicit_rk.cpp
+exe generic_rk4 
+    : generic_rk4.cpp
+    ;
+   
+exe odeint_rk4
+    :   odeint_rk4.cpp
+    ;
+    
+exe nr_rk4
+    : nr_rk4.cpp
+    ;
+    
+lib libgsl : : <name>gsl ;
+lib libgslcblas : : <name>gslcblas ;   
+    
+exe gsl_rk4
+    : gsl_rk4.cpp libgsl libgslcblas
     ;
