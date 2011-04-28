@@ -29,6 +29,7 @@ struct fusion_algebra
 
 };
 
+
 template<>
 struct fusion_algebra< 1 >
 {

@@ -135,11 +135,11 @@ public:
         {}
 
 
-        template< typename T , size_t stage_number >
+        template< typename T , const size_t stage_number >
         inline void operator()( fusion::vector< size_t , T , boost::array< T , stage_number > , intermediate_stage > const &stage ) const
         //typename stage_fusion_wrapper< T , mpl::size_t< stage_number > , intermediate_stage >::type const &stage ) const
         {
-            double c = fusion::at_c< 1 >( stage );
+            const double c = fusion::at_c< 1 >( stage );
 
             if( stage_number == 1 )
                 system( x , k_vector[stage_number-1] , t + c * dt );
@@ -150,11 +150,11 @@ public:
         }
 
 
-        template< typename T , size_t stage_number >
+        template< typename T , const size_t stage_number >
         inline void operator()( fusion::vector< size_t , T , boost::array< T , stage_number > , last_stage > const &stage ) const
         //void operator()( typename stage_fusion_wrapper< T , mpl::size_t< stage_number > , last_stage >::type const &stage ) const
         {
-            double c = fusion::at_c< 1 >( stage );
+            const double c = fusion::at_c< 1 >( stage );
 
             if( stage_number == 1 )
                 system( x , k_vector[stage_number-1] , t + c * dt );

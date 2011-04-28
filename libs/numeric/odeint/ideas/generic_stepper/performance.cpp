@@ -23,7 +23,7 @@
 #include <boost/timer.hpp>
 
 #include "predefined_steppers.hpp"
-#include "runge_kutta_stepper.hpp"
+#include "runge_kutta_stepper_fast.hpp"
 
 #define tab "\t"
 

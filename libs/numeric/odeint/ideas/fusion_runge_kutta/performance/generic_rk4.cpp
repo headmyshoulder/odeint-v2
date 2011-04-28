@@ -1,15 +1,8 @@
 /*
- * performance.cpp
+ * generic_rk4.cpp
  *
- *  Created on: Dec 1, 2010
+ *  Created on: Apr 28, 2011
  *      Author: mario
- */
-
-/*
- * butcher_test.cpp
- *
- *  Created on: Nov 5, 2010
- *      Author: karsten
  */
 
 #include <iostream>
@@ -21,7 +14,8 @@
 #include <boost/accumulators/statistics.hpp>
 #include <boost/timer.hpp>
 
-#include "runge_kutta_stepper.hpp"
+//#include "fusion_explicit_rk.hpp"
+#include "../fusion_explicit_rk_new.hpp"
 
 #define tab "\t"
 
@@ -43,7 +37,7 @@ typedef boost::timer timer_type;
 
 
 typedef boost::array< double , 3 > state_type;
-typedef runge_kutta_stepper< state_type , 4 > rk4_fusion_type;
+typedef explicit_rk< state_type , 4 > rk4_fusion_type;
 
 
 void lorenz( const state_type &x , state_type &dxdt , double t )
@@ -55,6 +49,7 @@ void lorenz( const state_type &x , state_type &dxdt , double t )
     dxdt[1] = R * x[0] - x[1] - x[0] * x[2];
     dxdt[2] = x[0]*x[1] - b * x[2];
 }
+
 
 
 
@@ -75,7 +70,7 @@ int main( int argc , char **argv )
     rk4_fusion_type rk4_fusion( a , b , c );
 
     const size_t num_of_steps = 20000000;
-    const double dt = 0.01;
+    const double dt = 1E-10;
 
     accumulator_type acc;
     timer_type timer;
@@ -84,9 +79,8 @@ int main( int argc , char **argv )
 
     while( true )
     {
-        state_type x = {{ 10.0 * rand()/RAND_MAX , 
-						  10.0 * rand()/RAND_MAX , 
-						  10.0 * rand()/RAND_MAX }};
+        state_type x = {{ 10.0 * rand()/RAND_MAX , 10.0 * rand()/RAND_MAX , 10.0 * rand()/RAND_MAX }};
+        //state_type x = {{ 10.0 , 1.0 , 5.0 }};
         double t = 0.0;
 
         timer.restart();
@@ -99,12 +93,5 @@ int main( int argc , char **argv )
         clog << acc << " " << x[0] << endl;
     }
 
-
-
     return 0;
 }
-
-/*
- * Compile with :
- * g++ -O3 -I$BOOST_ROOT -I$HOME/boost/chrono -I$ODEINT_ROOT butcher_performance.cpp
- */

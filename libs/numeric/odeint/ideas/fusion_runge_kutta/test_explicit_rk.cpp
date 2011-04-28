@@ -14,8 +14,8 @@
 #include <boost/accumulators/statistics.hpp>
 #include <boost/timer.hpp>
 
-#include "fusion_explicit_rk.hpp"
-//#include "fusion_explicit_rk_new.hpp"
+//#include "fusion_explicit_rk.hpp"
+#include "fusion_explicit_rk_new.hpp"
 
 #define tab "\t"
 
