@@ -6,3 +6,4 @@ gcc 4.5.0   |   0.79    |   0.80    |   0.82    |   1.11    |   Corei7 870 @ 2.9
 gcc 4.3.2   |   1.00    |   1.07    |   0.97    |   2.03    |   Core2Quad Q9550 @ 2.83 GHz
 icc 12.0.2  |   0.95    |   0.87    |   1.09    |   1.12    |   Corei7 870 @ 2.93 GHz
 icc 11.1    |   1.11    |   0.98    |   1.19    |   1.28    |   Xeon X5650   @ 2.67 GHz
+gcc 4.4.1   |   1.19    |   1.22    |   1.24    |   1.97    |   Core2Quad Q6600  @ 2.40GHz (vielleicht macht gsl einen schritt mit fehlerberechnung)

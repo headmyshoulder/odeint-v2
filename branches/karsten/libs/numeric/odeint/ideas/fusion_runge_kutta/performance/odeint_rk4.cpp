@@ -36,9 +36,9 @@ typedef boost::timer timer_type;
 
 
 typedef boost::array< double , 3 > state_type;
-//typedef boost::numeric::odeint::explicit_rk4< state_type > rk4_odeint_type;
-typedef boost::numeric::odeint::explicit_rk4< state_type , double , state_type , double ,
-                                              boost::numeric::odeint::array_algebra > rk4_odeint_type;
+typedef boost::numeric::odeint::explicit_rk4< state_type > rk4_odeint_type;
+//typedef boost::numeric::odeint::explicit_rk4< state_type , double , state_type , double ,
+//                                              boost::numeric::odeint::array_algebra > rk4_odeint_type;
 
 
 void lorenz( const state_type &x , state_type &dxdt , double t )
