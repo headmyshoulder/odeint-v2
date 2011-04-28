@@ -6,8 +6,6 @@ import os ;
 import modules ;
 import path ; 
 
-path-constant CHRONO_ROOT : [ os.environ CHRONO_ROOT ] ;
-
 project
     : requirements
       <define>BOOST_ALL_NO_LIB=1
