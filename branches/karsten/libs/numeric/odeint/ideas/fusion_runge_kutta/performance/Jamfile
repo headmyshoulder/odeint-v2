@@ -10,7 +10,6 @@ project
     : requirements
       <define>BOOST_ALL_NO_LIB=1
       <include>../../../../../..
-      <include>$(CHRONO_ROOT)
     ;
 
 exe generic_rk4 
@@ -24,6 +23,10 @@ exe odeint_rk4
 exe nr_rk4
     : nr_rk4.cpp
     ;
+   
+exe rt_generic_rk4
+	: rt_generic_rk4.cpp
+	;
     
 lib libgsl : : <name>gsl ;
 lib libgslcblas : : <name>gslcblas ;   
