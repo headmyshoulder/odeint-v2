@@ -16,17 +16,8 @@
 #include <boost/mpl/size_t.hpp>
 
 #include <boost/fusion/container.hpp>
-#include <boost/fusion/algorithm.hpp>
-#include <boost/fusion/sequence.hpp>
-#include <boost/fusion/adapted.hpp>
-
-
-#include <algorithm>
-#include <iostream>
-#include <string>
 
 #include <boost/array.hpp>
-#include <typeinfo>
 
 #include "fusion_algebra.hpp"
 
@@ -201,8 +192,7 @@ public:
     explicit_rk( const coef_a_type &a ,
                   const coef_b_type &b ,
                   const coef_c_type &c )
-    : m_a( a ) , m_b( b ) , m_c( c ) ,
-      m_stages( a , b , c )
+    : m_stages( a , b , c )
 
     { }
 
@@ -215,12 +205,12 @@ public:
 
 private:
 
-    const coef_a_type m_a;
-    const coef_b_type m_b;
-    const coef_c_type m_c;
     const stage_vector m_stages;
     state_type m_x_tmp;
+
+protected:
     state_type m_F[stage_count];
+
 };
 
 #endif /* FUSION_EXPLICIT_RK_HPP_ */
