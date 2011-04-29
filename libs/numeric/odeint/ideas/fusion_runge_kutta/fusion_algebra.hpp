@@ -36,7 +36,7 @@ struct fusion_algebra
 
 /* !!!!!!!   Actually, this is factor 3 slower with intel compiler, so we don'y use it !!!!!
  * Update: Current implementation increases performance on msvc 9.0 by about 30%, so it is in use again....
- */
+ *
 
 template<>
 struct fusion_algebra< 1 >
@@ -107,6 +107,6 @@ struct fusion_algebra< 4 >
     }
 
 };
-
+*/
 
 #endif /* FUSION_ALGEBRA_HPP_ */
