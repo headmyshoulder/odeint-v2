@@ -11,6 +11,10 @@ project
       <define>BOOST_ALL_NO_LIB=1
       <include>../../../../../..
     ;
+    
+    
+lib libgsl : : <name>gsl ;
+lib libgslcblas : : <name>gslcblas ;
 
 exe generic_rk4 
     : generic_rk4.cpp
@@ -27,10 +31,21 @@ exe nr_rk4
 exe rt_generic_rk4
 	: rt_generic_rk4.cpp
 	;
-    
-lib libgsl : : <name>gsl ;
-lib libgslcblas : : <name>gslcblas ;   
+ 
     
 exe gsl_rk4
     : gsl_rk4.cpp libgsl libgslcblas
+    ;
+    
+
+exe generic_rk54ck
+    : generic_rk54ck.cpp
+    ;
+    
+exe odeint_rk54ck
+    :   odeint_rk54ck.cpp
+    ;
+    
+exe gsl_rk54ck
+    : gsl_rk54ck.cpp libgsl libgslcblas
     ;

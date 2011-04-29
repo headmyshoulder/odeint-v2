@@ -27,6 +27,19 @@ struct fusion_algebra
         }
     }
 
+    template< typename T , size_t dim >
+    inline static void foreach( boost::array< T , dim > &x_tmp ,
+                const boost::array< double , n > &a ,
+                const boost::array< T , dim > *k_vector , const double dt )
+    {
+        for( size_t i=0 ; i<dim ; ++i )
+        {
+            x_tmp[i] = a[0]*dt*k_vector[0][i];
+            for( size_t j = 1 ; j<n ; ++j )
+                x_tmp[i] += a[j]*dt*k_vector[j][i];
+         }
+    }
+
 };
 
 
@@ -36,7 +49,7 @@ struct fusion_algebra
 
 /* !!!!!!!   Actually, this is factor 3 slower with intel compiler, so we don'y use it !!!!!
  * Update: Current implementation increases performance on msvc 9.0 by about 30%, so it is in use again....
- *
+ */
 
 template<>
 struct fusion_algebra< 1 >
@@ -107,6 +120,6 @@ struct fusion_algebra< 4 >
     }
 
 };
-*/
+
 
 #endif /* FUSION_ALGEBRA_HPP_ */

@@ -34,13 +34,7 @@ struct last_stage {};
 template< class T , class Constant >
 struct array_wrapper
 {
-    typedef typename boost::array< T , Constant::value > type;
-};
-
-template< class T , class Constant , class StageCategory >
-struct stage_fusion_wrapper
-{
-    typedef typename fusion::vector< size_t , T , boost::array< T , Constant::value > , StageCategory > type;
+    typedef const typename boost::array< T , Constant::value > type;
 };
 
 template< class T , size_t i , class StageCategory >
