@@ -14,8 +14,6 @@
 template< size_t n >
 struct fusion_algebra
 {
-
-
     template< typename T , size_t dim >
     inline static void foreach( boost::array< T , dim > &x_tmp , const boost::array< T , dim > &x ,
             const boost::array< double , n > &a ,
