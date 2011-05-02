@@ -33,7 +33,7 @@ ostream& operator<<( ostream& out , accumulator_type &acc )
 typedef boost::timer timer_type;
 
 
-int lorenz_gsl( double t , const double y[] , double f[] , void *params)
+int lorenz_gsl( const double t , const double y[] , double f[] , void *params)
 {
     const double sigma = 10.0;
     const double R = 28.0;
@@ -45,6 +45,8 @@ int lorenz_gsl( double t , const double y[] , double f[] , void *params)
     return GSL_SUCCESS;
 }
 
+
+const size_t loops = 20;
 
 int main()
 {
@@ -60,7 +62,7 @@ int main()
     gsl_odeiv_step *s = gsl_odeiv_step_alloc( gsl_odeiv_step_rk4 , 3);
     gsl_odeiv_system sys = { lorenz_gsl , 0 , 3 , 0 };
 
-    while( true )
+    for( size_t n=0 ; n<loops ; ++n )
     {
         double x[3] = { 10.0 * rand()/RAND_MAX ,
                          10.0 * rand()/RAND_MAX ,
@@ -78,7 +80,7 @@ int main()
         clog.width( 5 );
         clog << acc << " " << x[0] << endl;
     }
-
+    cout << acc << endl;
     return 0;
 
 }
