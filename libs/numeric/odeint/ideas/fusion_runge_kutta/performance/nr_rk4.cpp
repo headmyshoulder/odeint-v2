@@ -36,7 +36,7 @@ typedef boost::timer timer_type;
 
 typedef boost::array< double , 3 > state_type;
 
-void lorenz( const state_type &x , state_type &dxdt , double t )
+inline void lorenz( const state_type &x , state_type &dxdt , const double t )
 {
     const double sigma = 10.0;
     const double R = 28.0;
@@ -76,6 +76,8 @@ void rk4_step( System &sys , boost::array< T , dim > &x , const double t , const
 }
 
 
+const size_t loops = 20;
+
 int main( int argc , char **argv )
 {
     const size_t num_of_steps = 20000000;
@@ -86,7 +88,7 @@ int main( int argc , char **argv )
 
     srand( 12312354 );
 
-    while( true )
+    for( size_t n=0 ; n<loops ; ++n )
     {
         state_type x = {{ 10.0 * rand()/RAND_MAX ,
                           10.0 * rand()/RAND_MAX ,
@@ -102,6 +104,6 @@ int main( int argc , char **argv )
         clog.width( 5 );
         clog << acc << " " << x[0] << endl;
     }
-
+    cout << acc << endl;
     return 0;
 }

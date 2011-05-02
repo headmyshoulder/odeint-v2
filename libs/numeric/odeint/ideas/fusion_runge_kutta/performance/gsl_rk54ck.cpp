@@ -46,6 +46,8 @@ int lorenz_gsl( double t , const double y[] , double f[] , void *params)
 }
 
 
+const size_t loops = 20;
+
 int main()
 {
     const size_t num_of_steps = 20000000; // gsl rk4 routine makes error control by
@@ -60,7 +62,7 @@ int main()
     gsl_odeiv_step *s = gsl_odeiv_step_alloc( gsl_odeiv_step_rkck , 3);
     gsl_odeiv_system sys = { lorenz_gsl , 0 , 3 , 0 };
 
-    while( true )
+    for( size_t n=0 ; n<loops ; ++n )
     {
         double x[3] = { 10.0 * rand()/RAND_MAX ,
                          10.0 * rand()/RAND_MAX ,
@@ -78,7 +80,7 @@ int main()
         clog.width( 20 );
         clog << acc << " " << x[0] << tab << " " << x_err[0] << endl;
     }
-
+    cout << acc << endl;
     return 0;
 
 }

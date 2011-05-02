@@ -38,9 +38,10 @@ typedef boost::timer timer_type;
 
 typedef boost::array< double , 3 > state_type;
 typedef explicit_error_rk< state_type , 6 > rk54ck_fusion_type;
+//typedef explicit_rk< state_type , 6 > rk54ck_fusion_type;
 
 
-void lorenz( const state_type &x , state_type &dxdt , double t )
+inline void lorenz( const state_type &x , state_type &dxdt , const double t )
 {
     const double sigma = 10.0;
     const double R = 28.0;
@@ -51,7 +52,7 @@ void lorenz( const state_type &x , state_type &dxdt , double t )
 }
 
 
-
+const size_t loops = 20;
 
 int main( int argc , char **argv )
 {
@@ -73,6 +74,7 @@ int main( int argc , char **argv )
     const coef_c_type c = {{ 0.0 , 0.2 , 0.3 , 0.6 , 1.0 , 7.0/8 }};
 
     rk54ck_fusion_type rk54ck( a , b , b2 , c );
+    //rk54ck_fusion_type rk54ck( a , b  , c );
 
     const size_t num_of_steps = 20000000;
     const double dt = 1E-4;
@@ -82,7 +84,7 @@ int main( int argc , char **argv )
 
     srand( 12312354 );
 
-    while( true )
+    for( size_t n=0 ; n<loops ; ++n )
     {
         state_type x = {{ 10.0 * rand()/RAND_MAX , 10.0 * rand()/RAND_MAX , 10.0 * rand()/RAND_MAX }};
         state_type x_err;
@@ -97,6 +99,6 @@ int main( int argc , char **argv )
         clog.width( 20 );
         clog << acc << " " << x[0] << tab << " " << x_err[0] << endl;
     }
-
+    cout << acc << endl;
     return 0;
 }
