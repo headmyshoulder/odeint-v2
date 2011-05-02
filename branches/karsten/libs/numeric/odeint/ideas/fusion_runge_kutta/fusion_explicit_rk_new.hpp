@@ -20,6 +20,7 @@
 #include <boost/array.hpp>
 
 #include "fusion_algebra.hpp"
+#include "fusion_foreach_performance.hpp"
 
 namespace mpl = boost::mpl;
 namespace fusion = boost::fusion;
