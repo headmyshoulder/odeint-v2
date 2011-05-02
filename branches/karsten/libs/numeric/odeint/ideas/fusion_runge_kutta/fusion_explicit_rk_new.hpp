@@ -20,7 +20,7 @@
 #include <boost/array.hpp>
 
 #include "fusion_algebra.hpp"
-#include "fusion_foreach_performance.hpp"
+//#include "fusion_foreach_performance.hpp"
 
 namespace mpl = boost::mpl;
 namespace fusion = boost::fusion;
@@ -142,13 +142,13 @@ public:
     template< class System >
     struct calculate_stage
     {
-        const System &system;
+        System &system;
         state_type &x , &x_tmp;
         state_type *F;
         const double t;
         const double dt;
 
-        calculate_stage( const System &_system , state_type &_x , state_type &_x_tmp , state_type *_F ,
+        calculate_stage( System &_system , state_type &_x , state_type &_x_tmp , state_type *_F ,
                             const double _t , const double _dt )
         : system( _system ) , x( _x ) , x_tmp( _x_tmp ) , F( _F ) , t( _t ) , dt( _dt )
         {}
@@ -193,7 +193,7 @@ public:
 
 
     template< class System >
-    void do_step( const System &system , state_type &x , double t , const double dt )
+    void do_step( System &system , state_type &x , double t , const double dt )
     {
         fusion::for_each( m_stages , calculate_stage< System >( system , x , m_x_tmp , m_F , t , dt ) );
     }

@@ -43,7 +43,7 @@ public:
     { }
 
     template< class System >
-    void do_step( const System &system , state_type &x , double t , const double dt , state_type &x_err )
+    void do_step( System &system , state_type &x , double t , const double dt , state_type &x_err )
     {
         base::do_step( system , x , t , dt );
         // compute error estimate
