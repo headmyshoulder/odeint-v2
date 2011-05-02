@@ -6,6 +6,8 @@
 #include <boost/fusion/iterator/distance.hpp>
 #include <boost/mpl/bool.hpp>
 
+#include <iostream>
+
 namespace boost { namespace fusion {
 namespace detail
 {
