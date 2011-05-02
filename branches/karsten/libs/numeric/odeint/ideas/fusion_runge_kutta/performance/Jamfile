@@ -24,6 +24,10 @@ exe odeint_rk4
     :   odeint_rk4.cpp
     ;
     
+exe odeint_rk4_def_alg
+    :   odeint_rk4_def_alg.cpp
+    ;
+    
 exe nr_rk4
     : nr_rk4.cpp
     ;
@@ -44,6 +48,10 @@ exe generic_rk54ck
     
 exe odeint_rk54ck
     :   odeint_rk54ck.cpp
+    ;
+    
+exe odeint_rk54ck_def_alg
+    :   odeint_rk54ck_def_alg.cpp
     ;
     
 exe gsl_rk54ck
