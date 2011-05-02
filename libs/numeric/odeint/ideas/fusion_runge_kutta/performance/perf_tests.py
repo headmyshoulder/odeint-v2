@@ -1,12 +1,15 @@
 from os import popen
 from os.path import isfile
 
-bin_path = "bin/gcc-4.4/release/"
-#bin_path = "bin/intel-linux/release/"
+#bin_path = "bin/gcc-4.4/release/"
+bin_path = "bin/intel-linux/release/"
 
 bins = [ "odeint_rk4" , "generic_rk4" , "nr_rk4" , "gsl_rk4" , "rt_generic_rk4" , 
 		 "odeint_rk54ck" , "generic_rk54ck" , "gsl_rk54ck" ]
 results = []
+
+print "Performance tests for " , bin_path
+print
 
 for bin in bins:
 	if isfile( bin_path + bin ):
@@ -18,6 +21,7 @@ for bin in bins:
 		results.append( " -- " )
 
 print "Results from" , bin_path
+print
 
 for i in range(len(bins)):
 	print bins[i] , results[i]
