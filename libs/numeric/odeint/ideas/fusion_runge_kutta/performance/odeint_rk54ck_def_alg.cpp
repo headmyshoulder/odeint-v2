@@ -1,7 +1,7 @@
 /*
- * odeint_rk4.cpp
+ * odeint_rk54ck.cpp
  *
- *  Created on: Apr 28, 2011
+ *  Created on: Apr 29, 2011
  *      Author: mario
  */
 
@@ -10,7 +10,7 @@
 
 #include <boost/array.hpp>
 
-#include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
+#include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
 #include <boost/numeric/odeint/algebra/array_algebra.hpp>
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
@@ -36,8 +36,7 @@ typedef boost::timer timer_type;
 
 
 typedef boost::array< double , 3 > state_type;
-typedef boost::numeric::odeint::explicit_rk4< state_type , double , state_type , double ,
-                                              boost::numeric::odeint::array_algebra > rk4_odeint_type;
+typedef boost::numeric::odeint::explicit_error_rk54_ck< state_type > rk54_ck_odeint_type;
 
 
 inline void lorenz( const state_type &x , state_type &dxdt , const double t )
@@ -55,10 +54,10 @@ const size_t loops = 20;
 
 int main( int argc , char **argv )
 {
-    rk4_odeint_type rk4_odeint;
+    rk54_ck_odeint_type rk54_ck_odeint;
 
     const size_t num_of_steps = 20000000;
-    const double dt = 1E-10;
+    const double dt = 1E-4;
 
     accumulator_type acc;
     timer_type timer;
@@ -67,19 +66,20 @@ int main( int argc , char **argv )
 
     for( size_t n=0 ; n<loops ; ++n )
     {
-        state_type x = {{ 10.0 * rand()/RAND_MAX , 
-                          10.0 * rand()/RAND_MAX , 
+        state_type x = {{ 10.0 * rand()/RAND_MAX ,
+                          10.0 * rand()/RAND_MAX ,
                           10.0 * rand()/RAND_MAX }};
+        state_type x_err;
         double t = 0.0;
 
         timer.restart();
         for( size_t i=0 ; i<num_of_steps ; ++i, t+=dt )
-            rk4_odeint.do_step( lorenz , x , t , dt );
+            rk54_ck_odeint.do_step( lorenz , x , t , dt , x_err );
         acc( timer.elapsed() );
 
-        clog.precision( 3 );
-        clog.width( 5 );
-        clog << acc << " " << x[0] << endl;
+        clog.precision( 15 );
+        clog.width( 20 );
+        clog << acc << " " << x[0] << tab << " " << x_err[0] << endl;
     }
     cout << acc << endl;
     return 0;
