@@ -78,6 +78,19 @@ struct array_algebra
         for( size_t i=0 ; i<dim ; ++i )
             op( s1[i] , s2[i] , s3[i] , s4[i] , s5[i] , s6[i] );
     }
+
+    template< typename T , size_t dim , class Op >
+    static void for_each7( boost::array< T , dim > &s1 ,
+                              const boost::array< T , dim > &s2 ,
+                              const boost::array< T , dim > &s3 ,
+                              const boost::array< T , dim > &s4 ,
+                              const boost::array< T , dim > &s5 ,
+                              const boost::array< T , dim > &s6 ,
+                              const boost::array< T , dim > &s7 , Op op )
+    {
+        for( size_t i=0 ; i<dim ; ++i )
+            op( s1[i] , s2[i] , s3[i] , s4[i] , s5[i] , s6[i] , s7[i] );
+    }
 };
 
 }
