@@ -10,6 +10,7 @@ project
     : requirements
       <define>BOOST_ALL_NO_LIB=1
       <include>../../../../../..
+    : default-build release
     ;
     
     
@@ -18,6 +19,7 @@ lib libgslcblas : : <name>gslcblas ;
 
 exe generic_rk4 
     : generic_rk4.cpp
+    : <toolset>intel:<cxxflags>-inline-forceinline
     ;
    
 exe odeint_rk4
@@ -44,6 +46,7 @@ exe gsl_rk4
 
 exe generic_rk54ck
     : generic_rk54ck.cpp
+    : <toolset>intel:<cxxflags>-inline-forceinline
     ;
     
 exe odeint_rk54ck

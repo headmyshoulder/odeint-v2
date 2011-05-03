@@ -121,7 +121,7 @@ public:
             template< class Index >
             void operator()( Index ) const
             {
-                //fusion::at< Index >( m_base )::  = Index::value;
+                //fusion::at< Index >( m_base ) = stage< double , Index::value+1 , intermediate_stage >( m_c[ Index::value ] , fusion::at< Index >( m_a ) );
                 fusion::at< Index >( m_base ).c  = m_c[ Index::value ];
                 fusion::at< Index >( m_base ).a = fusion::at< Index >( m_a );
             }
@@ -155,7 +155,7 @@ public:
 
 
         template< typename T , size_t stage_number >
-        void operator()( stage< T , stage_number , intermediate_stage > const &stage ) const
+        void inline operator()( stage< T , stage_number , intermediate_stage > const &stage ) const
         //typename stage_fusion_wrapper< T , mpl::size_t< stage_number > , intermediate_stage >::type const &stage ) const
         {
             if( stage_number == 1 )
@@ -168,7 +168,7 @@ public:
 
 
         template< typename T , size_t stage_number >
-        void operator()( stage< T , stage_number , last_stage > const &stage ) const
+        void inline operator()( stage< T , stage_number , last_stage > const &stage ) const
         //void operator()( typename stage_fusion_wrapper< T , mpl::size_t< stage_number > , last_stage >::type const &stage ) const
         {
             if( stage_number == 1 )
@@ -193,7 +193,7 @@ public:
 
 
     template< class System >
-    void do_step( System &system , state_type &x , double t , const double dt )
+    void inline do_step( System &system , state_type &x , const double t , const double dt )
     {
         fusion::for_each( m_stages , calculate_stage< System >( system , x , m_x_tmp , m_F , t , dt ) );
     }
