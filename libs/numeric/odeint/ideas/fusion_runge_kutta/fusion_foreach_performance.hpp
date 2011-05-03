@@ -15,7 +15,7 @@ namespace detail
     struct for_each_unrolled<6>
     {
         template<typename I0, typename F>
-        static void call(I0 const& i0, F const& f)
+        static void inline call(I0 const& i0, F const& f)
         {
             f(*i0);
             typedef typename result_of::next<I0>::type I1;
