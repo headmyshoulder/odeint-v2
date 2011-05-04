@@ -10,6 +10,8 @@
 
 #include <boost/array.hpp>
 
+#include <iostream>
+
 
 template< size_t n >
 struct fusion_algebra
@@ -17,11 +19,11 @@ struct fusion_algebra
     template< typename T , size_t dim >
     inline static void foreach( boost::array< T , dim > &x_tmp , const boost::array< T , dim > &x ,
             const boost::array< double , n > &a ,
-            const boost::array< T , dim > *k_vector , const double dt )
+            const boost::array< T , dim > k_vector[n] , const double dt )
     {
         for( size_t i=0 ; i<dim ; ++i )
         {
-            x_tmp[i] = x[i];
+            x_tmp[i] = x[i];// + a[0]*dt*k_vector[0][i];
             for( size_t j = 0 ; j<n ; ++j )
                 x_tmp[i] += a[j]*dt*k_vector[j][i];
         }
@@ -30,7 +32,7 @@ struct fusion_algebra
     template< typename T , size_t dim >
     inline static void foreach( boost::array< T , dim > &x_tmp ,
                 const boost::array< double , n > &a ,
-                const boost::array< T , dim > *k_vector , const double dt )
+                const boost::array< T , dim > k_vector[n] , const double dt )
     {
         for( size_t i=0 ; i<dim ; ++i )
         {
@@ -61,7 +63,8 @@ struct fusion_algebra< 1 >
     {
         for( size_t i=0 ; i<dim ; ++i )
         {
-            x_tmp[i] = x[i] + a[0]*dt*k_vector[0][i];
+            x_tmp[i] = x[i];
+            x_tmp[i] += a[0]*dt*k_vector[0][i];
         }
     }
 
@@ -79,7 +82,9 @@ struct fusion_algebra< 2 >
     {
         for( size_t i=0 ; i<dim ; ++i )
         {
-            x_tmp[i] = x[i] + a[0]*dt*k_vector[0][i] + a[1]*dt*k_vector[1][i];
+            x_tmp[i] = x[i];
+            x_tmp[i] += a[0]*dt*k_vector[0][i];
+            x_tmp[i] += a[1]*dt*k_vector[1][i];
         }
     }
 
@@ -97,7 +102,10 @@ struct fusion_algebra< 3 >
     {
         for( size_t i=0 ; i<dim ; ++i )
         {
-            x_tmp[i] = x[i] + a[0]*dt*k_vector[0][i] + a[1]*dt*k_vector[1][i] + a[2]*dt*k_vector[2][i];
+            x_tmp[i] = x[i];
+            x_tmp[i] += a[0]*dt*k_vector[0][i];
+            x_tmp[i] += a[1]*dt*k_vector[1][i];
+            x_tmp[i] += a[2]*dt*k_vector[2][i];
         }
     }
 
@@ -114,8 +122,11 @@ struct fusion_algebra< 4 >
     {
         for( size_t i=0 ; i<dim ; ++i )
         {
-            x_tmp[i] = x[i] + a[0]*dt*k_vector[0][i] + a[1]*dt*k_vector[1][i] +
-                           a[2]*dt*k_vector[2][i] + a[3]*dt*k_vector[3][i];;
+            x_tmp[i] = x[i];
+            x_tmp[i] += a[0]*dt*k_vector[0][i];
+            x_tmp[i] += a[1]*dt*k_vector[1][i];
+            x_tmp[i] += a[2]*dt*k_vector[2][i];
+            x_tmp[i] += a[3]*dt*k_vector[3][i];
         }
     }
 
@@ -132,9 +143,12 @@ struct fusion_algebra< 5 >
     {
         for( size_t i=0 ; i<dim ; ++i )
         {
-            x_tmp[i] = x[i] + a[0]*dt*k_vector[0][i] + a[1]*dt*k_vector[1][i] +
-                           a[2]*dt*k_vector[2][i] + a[3]*dt*k_vector[3][i] +
-                           a[4]*dt*k_vector[4][i];
+            x_tmp[i] = x[i];
+            x_tmp[i] += a[0]*dt*k_vector[0][i];
+            x_tmp[i] += a[1]*dt*k_vector[1][i];
+            x_tmp[i] += a[2]*dt*k_vector[2][i];
+            x_tmp[i] += a[3]*dt*k_vector[3][i];
+            x_tmp[i] += a[4]*dt*k_vector[4][i];
         }
     }
 
@@ -151,13 +165,31 @@ struct fusion_algebra< 6 >
     {
         for( size_t i=0 ; i<dim ; ++i )
         {
-            x_tmp[i] = x[i] + a[0]*dt*k_vector[0][i] + a[1]*dt*k_vector[1][i] +
-                           a[2]*dt*k_vector[2][i] + a[3]*dt*k_vector[3][i] +
-                           a[4]*dt*k_vector[4][i] + a[5]*dt*k_vector[5][i];
+            x_tmp[i] = x[i];
+            x_tmp[i] += a[0]*dt*k_vector[0][i];
+            x_tmp[i] += a[1]*dt*k_vector[1][i];
+            x_tmp[i] += a[2]*dt*k_vector[2][i];
+            x_tmp[i] += a[3]*dt*k_vector[3][i];
+            x_tmp[i] += a[4]*dt*k_vector[4][i];
+            x_tmp[i] += a[5]*dt*k_vector[5][i];
+        }
+    }
+
+    template< typename T , size_t dim >
+    inline static void foreach(boost::array<T , dim> &x_tmp ,
+            const boost::array<double , 6> &a ,
+            const boost::array<T , dim> *k_vector , const double dt)
+    {
+        for (size_t i = 0 ; i < dim ; ++i)
+        {
+            x_tmp[i] = a[0] * dt * k_vector[0][i] + a[1] * dt * k_vector[1][i]
+                    + a[2] * dt * k_vector[2][i] + a[3] * dt * k_vector[3][i]
+                    + a[4] * dt * k_vector[4][i] + a[5] * dt * k_vector[5][i];
         }
     }
 
 };
 */
+
 
 #endif /* FUSION_ALGEBRA_HPP_ */
