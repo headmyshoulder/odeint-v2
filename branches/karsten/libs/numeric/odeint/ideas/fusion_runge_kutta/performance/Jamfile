@@ -50,11 +50,15 @@ exe generic_rk54ck
     ;
     
 exe odeint_rk54ck
-    :   odeint_rk54ck.cpp
+    : odeint_rk54ck.cpp
     ;
     
 exe odeint_rk54ck_def_alg
-    :   odeint_rk54ck_def_alg.cpp
+    : odeint_rk54ck_def_alg.cpp
+    ;
+    
+exe nr_rk54ck
+    : nr_rk54ck.cpp
     ;
     
 exe gsl_rk54ck

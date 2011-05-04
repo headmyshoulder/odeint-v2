@@ -50,9 +50,8 @@ const size_t loops = 20;
 
 int main()
 {
-    const size_t num_of_steps = 20000000; // gsl rk4 routine makes error control by
-                                               // additional doing two steps with half step size
-    const double dt = 1E-4;             // so it actually does 3 * num_of_steps steps
+    const size_t num_of_steps = 20000000;
+    double dt = 1E-10;
 
     accumulator_type acc;
     timer_type timer;
@@ -73,7 +72,11 @@ int main()
 
         timer.restart();
         for( size_t i=0 ; i<num_of_steps ; ++i, t+=dt )
+        {
             gsl_odeiv_step_apply ( s , t , dt , x , x_err , 0 , 0 , &sys );
+            if( i % 1000 == 0 ) // simulated stepsize control
+                dt += (dt*1E-3*rand())/RAND_MAX - dt*5E-4;
+        }
         acc( timer.elapsed() );
 
         clog.precision( 15 );

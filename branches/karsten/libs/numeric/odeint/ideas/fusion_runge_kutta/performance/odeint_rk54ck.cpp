@@ -59,7 +59,7 @@ int main( int argc , char **argv )
     rk54_ck_odeint_type rk54_ck_odeint;
 
     const size_t num_of_steps = 20000000;
-    const double dt = 1E-4;
+    double dt = 1E-10;
 
     accumulator_type acc;
     timer_type timer;
@@ -76,7 +76,11 @@ int main( int argc , char **argv )
 
         timer.restart();
         for( size_t i=0 ; i<num_of_steps ; ++i, t+=dt )
+        {
             rk54_ck_odeint.do_step( lorenz , x , t , dt , x_err );
+            if( i % 1000 == 0 ) // simulated stepsize control
+                dt += (dt*1E-3*rand())/RAND_MAX - dt*5E-4;
+        }
         acc( timer.elapsed() );
 
         clog.precision( 15 );

@@ -5,7 +5,6 @@
  *      Author: mario
  */
 
-
 #include <iostream>
 #include <fstream>
 
@@ -61,14 +60,14 @@ int main( int argc , char **argv )
     typedef rk54ck_fusion_type::coef_c_type coef_c_type;
 
     const boost::array< double , 1 > a1 = {{ 0.2 }};
-    const boost::array< double , 2 > a2 = {{ 3.0/40 , 9.0/40 }};
-    const boost::array< double , 3 > a3 = {{ 3.0/10 , -9.0/10 , 6.0/5 }};
-    const boost::array< double , 4 > a4 = {{ -11.0/54 , 5.0/2 , -70.0/27 , 35.0/27 }};
-    const boost::array< double , 5 > a5 = {{ 1631.0/55296 , 175.0/512 , 575.0/13824 , 44275.0/110592 , 253.0/4096 }};
+    const boost::array< double , 2 > a2 = {{ 3.0/40.0 , 9.0/40 }};
+    const boost::array< double , 3 > a3 = {{ 0.3 , -0.9 , 1.2 }};
+    const boost::array< double , 4 > a4 = {{ -11.0/54.0 , 2.5 , -70.0/27.0 , 35.0/27.0 }};
+    const boost::array< double , 5 > a5 = {{ 1631.0/55296.0 , 175.0/512.0 , 575.0/13824.0 , 44275.0/110592.0 , 253.0/4096.0 }};
 
     const coef_a_type a = fusion::make_vector( a1 , a2 , a3 , a4 , a5 );
-    const coef_b_type b = {{ 37.0/378 , 0.0 , 250.0/621 , 125.0/594 , 0.0 , 512.0/1771 }};
-    const coef_b_type b2 = {{ b[0]-2825.0/27648 , b[1]-0.0 , b[2]-18575.0/48384 , b[3]-13525.0/55296 , b[4]-277.0/14336 , b[5]-1.0/4 }};
+    const coef_b_type b = {{ 37.0/378.0 , 0.0 , 250.0/621.0 , 125.0/594.0 , 0.0 , 512.0/1771.0 }};
+    const coef_b_type b2 = {{ b[0]-2825.0/27648.0 , b[1]-0.0 , b[2]-18575.0/48384.0 , b[3]-13525.0/55296.0 , b[4]-277.0/14336.0 , b[5]-0.25 }};
     //const coef_b_type b = {{ 2825.0/27648 , 0.0 , 18575.0/48384 , 13525.0/55296 , 277.0/14336 , 1.0/4 }};
     //const coef_b_type b2 = {{ b[0]-37.0/378 , b[1]-0.0 , b[2]-250.0/621 , b[3]-125.0/594 , b[4]-0.0 , b[5]-512.0/1771 }};
     const coef_c_type c = {{ 0.0 , 0.2 , 0.3 , 0.6 , 1.0 , 7.0/8 }};
@@ -77,7 +76,7 @@ int main( int argc , char **argv )
     //rk54ck_fusion_type rk54ck( a , b  , c );
 
     const size_t num_of_steps = 20000000;
-    const double dt = 1E-4;
+    double dt = 1E-10;
 
     accumulator_type acc;
     timer_type timer;
@@ -92,7 +91,11 @@ int main( int argc , char **argv )
 
         timer.restart();
         for( size_t i=0 ; i<num_of_steps ; ++i, t+=dt )
+        {
             rk54ck.do_step( lorenz , x , t , dt , x_err );
+            if( i % 1000 == 0 )  // simulated stepsize control
+                dt += (dt*1E-3*rand())/RAND_MAX - dt*5E-4;
+        }
         acc( timer.elapsed() );
 
         clog.precision( 15 );
