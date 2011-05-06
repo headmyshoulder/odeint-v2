@@ -1,5 +1,8 @@
 from pylab import *
 
+rcParams.update( { 'xtick.labelsize': 20 , 'ytick.labelsize': 20 })
+
+
 results_rk4 = array( 
 [[ 0.82 , 0.59 , 0.60 , 0.60 , 0.54 , 0.54 , 0.81 , 0.98 , 1.14 ] , #odeint
  [ 0.64 , 0.56 , 0.54 , 0.60 , 0.77 , 0.65 , 0.85 , 0.98 , 1.09 ] , #generic
@@ -29,18 +32,20 @@ for i in arange(1,4):
 	means_rk54ck[i] = 100*mean( tmp )
 	error_rk54ck[i] = 100*sqrt(var( tmp ))
 
+bar_width = 0.6
+  
 figure(1)
-title("Performance for RK4 and Lorenz System")
-bar( arange(5) , means_rk4 , 0.2 , color='blue' , linewidth=4 , edgecolor='blue' , yerr = error_rk4 , error_kw=dict(elinewidth=2, ecolor='red') )
-xlim( -0.5 , 4.5 )
-xticks( arange(5)+0.1 , ('odeint' , 'generic' , 'nr' , 'gsl' , 'rt gen' ) )
-ylabel('Performance in % relative to odeint implementation')
+title("Runge-Kutta 4" , fontsize=20)
+bar( arange(5) , means_rk4 , bar_width , color='blue' , linewidth=4 , edgecolor='blue' , yerr = error_rk4 , ecolor='red') #, elinewidth=2, ecolor='red' )
+xlim( -0.5 , 4.5+bar_width )
+xticks( arange(5)+bar_width/2 , ('odeint' , 'generic' , 'nr' , 'gsl' , 'rt gen' ) )
+ylabel('Performance in %' , fontsize=20)
 
 figure(2)
-title("Performance for RK54CK and Lorenz System")
-bar( arange(4) , means_rk54ck , 0.2 , color='blue' , linewidth=4 , edgecolor='blue' , yerr = error_rk54ck , error_kw=dict(elinewidth=2, ecolor='red') )
-xlim( -0.5 , 3.5 )
-xticks( arange(4)+0.1 , ('odeint' , 'generic' , 'nr' , 'gsl' ) )
-ylabel('Performance in % relative to odeint implementation')
+title("Runge-Kutta 5(4) Cash-Karp" , fontsize=20)
+bar( arange(4) , means_rk54ck , bar_width , color='blue' , linewidth=4 , edgecolor='blue' , yerr = error_rk54ck , ecolor='red') #, elinewidth=2, ecolor='red' )
+xlim( -0.5 , 3.5+bar_width )
+xticks( arange(4)+bar_width/2 , ('odeint' , 'generic' , 'nr' , 'gsl' ) )
+ylabel('Performance in %' , fontsize=20)
 
 show()
