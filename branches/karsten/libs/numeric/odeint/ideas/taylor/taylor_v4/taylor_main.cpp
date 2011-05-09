@@ -50,8 +50,8 @@ int main( int argc , char **argv )
 	state_type x = {{ 10.0 , 10.0 , 10.0 }} ;
 
 	double t = 0.0;
-	double dt = 0.01;
-	while( t < 10.0 )
+	double dt = 0.001;
+	for( size_t i=0 ; i<10000 ; ++i )
 	{
 		stepper.try_step(
 				fusion::make_vector
@@ -61,9 +61,23 @@ int main( int argc , char **argv )
 						arg1 * arg2 - b * arg3
 				) ,
 				x , t , dt );
-
-		cout << t << "\t" << x << endl;
+		cout << i << "\t" << t << "\t" << x << "\n";
 	}
+
+
+//	while( t < 10.0 )
+//	{
+//		stepper.try_step(
+//				fusion::make_vector
+//				(
+//						sigma * ( arg2 - arg1 ) ,
+//						R * arg1 - arg2 - arg1 * arg3 ,
+//						arg1 * arg2 - b * arg3
+//				) ,
+//				x , t , dt );
+//
+//		cout << t << "\t" << x << endl;
+//	}
 
 	return 0;
 }
