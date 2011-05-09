@@ -159,9 +159,13 @@ namespace taylor_adf
 					data_type data1( k ,  data.x , data.derivs , data.dt_fac );
 					data_type data2( data.which - k ,  data.x , data.derivs , data.dt_fac );
 
-					tmp += boost::math::binomial_coefficient< double >( data.which , k )
-						* Grammar()( proto::left( expr ) , state , data1 )
-						* Grammar()( proto::right( expr ) , state , data2 );
+//					tmp += boost::math::binomial_coefficient< double >( data.which , k )
+//						* Grammar()( proto::left( expr ) , state , data1 )
+//						* Grammar()( proto::right( expr ) , state , data2 );
+
+					tmp += Grammar()( proto::left( expr ) , state , data1 )
+						 * Grammar()( proto::right( expr ) , state , data2 );
+
 				}
 
 				return tmp;
@@ -388,6 +392,8 @@ public:
 	typedef state_type deriv_type;
 	typedef std::tr1::array< state_type , order_value > derivs_type;
 
+	taylor( void ) : m_derivs() , m_dt_fac( 1.0 ) { }
+
     order_type order( void ) const
     {
     	return order_value;
@@ -424,38 +430,41 @@ public:
 		BOOST_STATIC_ASSERT(( boost::fusion::traits::is_sequence< System >::value ));
 		BOOST_STATIC_ASSERT(( size_t( boost::fusion::result_of::size< System >::value ) == dim ));
 
-		double dt_fac = dt;
-		eval_derivs( sys , in , m_derivs , dt_fac );
+		eval_derivs( sys , in , m_derivs , m_dt_fac );
 
-//		double max_error = 0.0;
-//		for( size_t i=0 ; i<N ; ++i )
-//		{
-//			double error = std::abs( m_derivs[order_value-1][i] ) / ( std::abs( in[i] ) + 1.0e-35 );
-//			max_error = std::max( error , max_error );
-//		}
+		double max_error = 0.0;
+		for( size_t i=0 ; i<dim ; ++i )
+		{
+			double error = std::abs( m_derivs[order_value-1][i] ) / ( std::abs( in[i] ) + 1.0e-35 );
+			max_error = std::max( error , max_error );
+		}
 
-//		dt = pow( dt0 / max_error , 1.0 / double( order_value ) );
+		dt = pow( dt0 / max_error , 1.0 / double( order_value ) );
+//		clog << dt << tab << max_error << tab << in[0] << tab << in[1] << tab << in[2] << tab;
+//		clog << m_derivs[0][0] << tab << m_derivs[0][1] << tab << m_derivs[0][2] << tab << m_dt_fac << endl;
 
-//		clog << dt << tab << dt0 << tab << max_error << tab << dt_fac << endl;
-
-		for( size_t i=0 ; i<N ; ++i )
+		for( size_t i=0 ; i<dim ; ++i )
 		{
 			value_type tmp = 0.0;
 			for( size_t k=0 ; k<order_value ; ++k )
-				tmp += 1.0 * ( tmp + m_derivs[order_value-1-k][i] );
+				tmp = dt * ( tmp + m_derivs[order_value-1-k][i] );
 			out[i] = in[i] + tmp;
 		}
+
+//		clog << dt << tab << dt0 << tab << max_error << tab << m_dt_fac;
+//		for( size_t j=0 ; j<dim ; ++j ) clog << tab << out[j];
+//		clog << endl;
 
 //		clog << endl;
 //		for( size_t i=0 ; i<4 ; ++i )
 //		{
-//			for( size_t j=0 ; j<N ; ++j )
+//			for( size_t j=0 ; j<dim ; ++j )
 //				clog << m_derivs[i][j] << "\t";
 //			clog << endl;
 //		}
 //		clog << endl;
 
-//		dt *= dt_fac;
+		dt *= m_dt_fac;
 		t += dt;
 	}
 
@@ -472,9 +481,14 @@ public:
 		const double min_fac = 1.5;
 		const double max_fac = 0.6;
 
-		for( size_t i=0 ; i<Order ; ++i )
+		for( size_t i=0 ; i<order_value ; ++i )
 		{
 			boost::mpl::for_each< boost::mpl::range_c< size_t , 0 , dim > >( make_eval_derivs( sys , in , der , dt_fac , i ) );
+
+//			clog << i << tab << "Deriv : ";
+//			for( size_t j=0 ; j<dim ; ++j )
+//				clog << tab << der[i][j];
+//			clog << endl;
 
 			/*
 			 * OK # Fehler bestimmen
@@ -483,25 +497,30 @@ public:
 			 *     OK # dt_fac aendern
 			 *     OK # schon berechnete Ableitungen skalieren
 			 */
-//			while( true )
-//			{
-//				double err = 0.0;
-//				for( size_t j=0 ; j<N ; ++j ) err += std::abs( der[i][j] );
-//
-//				if( err < min_error )
-//				{
-//					scale_derivs( der , i , min_fac );
-//					dt_fac *= min_fac;
-//					continue;
-//				}
-//				if( err > max_error )
-//				{
-//					scale_derivs( der , i , max_fac );
-//					dt_fac *= max_fac;
-//					continue;
-//				}
-//				break;
-//			}
+			while( true )
+			{
+				double err = 0.0;
+				for( size_t j=0 ; j<dim ; ++j ) err += std::abs( der[i][j] );
+//				clog << i;
+//				for( size_t j=0 ; j<dim ; ++j ) clog << tab << der[i][j];
+//				clog << tab << err << endl;
+
+				if( err < min_error )
+				{
+//					clog << i << tab << "min_error : " << err << tab << dt_fac << endl;
+					scale_derivs( der , i , min_fac );
+					dt_fac *= min_fac;
+					continue;
+				}
+				if( err > max_error )
+				{
+//					clog << i << tab << "max_error : " << err << tab << dt_fac << endl;
+					scale_derivs( der , i , max_fac );
+					dt_fac *= max_fac;
+					continue;
+				}
+				break;
+			}
 
 		}
 
@@ -513,7 +532,7 @@ public:
 		for( size_t i=0 ; i<=order ; ++i )
 		{
 			scale *= fac;
-			for( size_t j=0 ; j<N ; ++j )
+			for( size_t j=0 ; j<dim ; ++j )
 				der[i][j] *= scale;
 		}
 	}
@@ -523,6 +542,7 @@ public:
 private:
 
 	derivs_type m_derivs;
+	double m_dt_fac;
 
 };
 
