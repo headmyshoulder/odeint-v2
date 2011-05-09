@@ -6,6 +6,7 @@
  */
 
 #include <iostream>
+#include <fstream>
 
 #include "taylor.hpp"
 
@@ -19,7 +20,7 @@ std::ostream& operator<<( std::ostream& out , const std::tr1::array< T , N > &x 
 	return out;
 }
 
-typedef boost::numeric::odeint::taylor< 3 , 10 > taylor_type;
+typedef boost::numeric::odeint::taylor< 3 , 25 > taylor_type;
 typedef taylor_type::state_type state_type;
 typedef taylor_type::derivs_type derivs_type;
 
@@ -50,22 +51,8 @@ int main( int argc , char **argv )
 	state_type x = {{ 10.0 , 10.0 , 10.0 }} ;
 
 	double t = 0.0;
-	double dt = 0.001;
-	for( size_t i=0 ; i<10000 ; ++i )
-	{
-		stepper.try_step(
-				fusion::make_vector
-				(
-						sigma * ( arg2 - arg1 ) ,
-						R * arg1 - arg2 - arg1 * arg3 ,
-						arg1 * arg2 - b * arg3
-				) ,
-				x , t , dt );
-		cout << i << "\t" << t << "\t" << x << "\n";
-	}
-
-
-//	while( t < 10.0 )
+	double dt = 1.0;
+//	for( size_t i=0 ; i<10000 ; ++i )
 //	{
 //		stepper.try_step(
 //				fusion::make_vector
@@ -75,9 +62,26 @@ int main( int argc , char **argv )
 //						arg1 * arg2 - b * arg3
 //				) ,
 //				x , t , dt );
-//
-//		cout << t << "\t" << x << endl;
+//		cout << i << "\t" << t << "\t" << x << "\n";
 //	}
+
+	ofstream fout( "lorenz.dat" );
+	size_t count = 0;
+	while( t < 5000.0 )
+	{
+		stepper.try_step(
+				fusion::make_vector
+				(
+						sigma * ( arg2 - arg1 ) ,
+						R * arg1 - arg2 - arg1 * arg3 ,
+						arg1 * arg2 - b * arg3
+				) ,
+				x , t , dt );
+
+		fout << t << "\t" << x << endl;
+		++count;
+	}
+	clog << count << endl;
 
 	return 0;
 }

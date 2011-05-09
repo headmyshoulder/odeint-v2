@@ -3,6 +3,8 @@
       stop
       end
 
+
+
       Subroutine  INTEGRATION
       IMPLICIT REAL*8 (A-H,O-Z)
       real*8 AX(77777),AY(77777),AZ(77777),AT(77777)
@@ -16,6 +18,8 @@ c  These data are written into the file 'lorsec.dat'
 
       COMMON /ST/ DX,DY,DZ,Q,NO
       INTEGER counter
+      open(9,file='lorenz.dat',status='unknown',access='sequential',
+     : form='formatted')
 C  Introduce the parameters:
       P=10.d0
       B=8.d0/3.d0
@@ -27,11 +31,9 @@ C  Insert the initial point:
       t=0.d0
       tend=5000.d0
       counter=0
-  10  xp=x
-      yp=y
-      zp=z
-      call step (P,R,B,X,Y,Z,DT)
+10    call step (P,R,B,X,Y,Z,DT)
       T=T+DT
+      write(9,'(4f20.11)') t,x,y,z
       counter = counter + 1
       if(t.lt.tend) goto 10
       write(*,"(i8)")counter
