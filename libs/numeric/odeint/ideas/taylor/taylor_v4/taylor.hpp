@@ -8,10 +8,13 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_TAYLOR_HPP_
 #define BOOST_NUMERIC_ODEINT_STEPPER_TAYLOR_HPP_
 
+#include <ostream>
+#include <cmath>
 #include <tr1/array>
 
 #include <iostream>
 using namespace std;
+#define tab "\t"
 
 // general boost includes
 #include <boost/static_assert.hpp>
@@ -34,7 +37,11 @@ using namespace std;
 /*
  * OK # dt entfernen aus context
  * OK # do_step zu try_step
- * # Skalierung
+ * OK # Skalierung
+ *   OK -- dt_fac # Namen für Skalierungsfaktor finden
+ *   OK # Faktor einschleusen in context
+ *   OK # Nach jedem Durchgang einer Ordnung Skalierungsfaktor neu berechnen und schon
+ *     berechnete Ableitungen skalieren
  * # Fehler als Member parameter
  * # Fehler anhand der hoechsten Ableitung berechnen
  * # Schrittweite bestimmen
@@ -80,9 +87,10 @@ namespace taylor_adf
 		size_t which;
 		const state_type &x;
 		deriv_type &derivs;
+		double &dt_fac;
 
-		taylor_context( size_t _which , const state_type &_x , deriv_type &_derivs )
-		: which( _which ) , x( _x ) , derivs( _derivs ) { }
+		taylor_context( size_t _which , const state_type &_x , deriv_type &_derivs , double &_dt_fac )
+		: which( _which ) , x( _x ) , derivs( _derivs ) , dt_fac( _dt_fac ) { }
 	};
 
 
@@ -148,8 +156,8 @@ namespace taylor_adf
 				double tmp = 0.0;
 				for( size_t k=0 ; k<=data.which ; ++k )
 				{
-					data_type data1( k ,  data.x , data.derivs );
-					data_type data2( data.which - k ,  data.x , data.derivs );
+					data_type data1( k ,  data.x , data.derivs , data.dt_fac );
+					data_type data2( data.which - k ,  data.x , data.derivs , data.dt_fac );
 
 					tmp += boost::math::binomial_coefficient< double >( data.which , k )
 						* Grammar()( proto::left( expr ) , state , data1 )
@@ -344,8 +352,8 @@ namespace taylor_adf
 		System m_sys;
 		taylor_context_type m_data;
 
-		eval_derivs( System sys , const State &x , deriv_type &derivs , size_t which )
-		: m_sys( sys ) , m_data( which , x , derivs ) { }
+		eval_derivs( System sys , const State &x , deriv_type &derivs , double &dt_fac , size_t which )
+		: m_sys( sys ) , m_data( which , x , derivs , dt_fac ) { }
 
 		template< class Index >
 		void operator()( Index )
@@ -354,14 +362,14 @@ namespace taylor_adf
 			const expr_type &expr = boost::fusion::at< Index >( m_sys );
 
 			double deriv = taylor_transform()( expr , 0.0 , m_data );
-			m_data.derivs[ m_data.which ][ Index::value ] = 1.0 / double( m_data.which + 1 ) * deriv;
+			m_data.derivs[ m_data.which ][ Index::value ] = m_data.dt_fac / double( m_data.which + 1 ) * deriv;
 		}
 	};
 
 	template< class System , class State , size_t Order >
-	eval_derivs< System , State , Order > make_eval_derivs( System sys , const State &x , std::tr1::array< State , Order > &derivs , size_t i )
+	eval_derivs< System , State , Order > make_eval_derivs( System sys , const State &x , std::tr1::array< State , Order > &derivs , double &dt_fac , size_t i )
 	{
-		return eval_derivs< System , State , Order >( sys , x , derivs , i );
+		return eval_derivs< System , State , Order >( sys , x , derivs , dt_fac , i );
 	}
 }
 
@@ -410,22 +418,44 @@ public:
 	template< class System >
 	void try_step( System sys , const state_type &in , time_type &t , state_type &out , time_type &dt )
 	{
+		// this is the max rel error and should be parametrized
+		const double dt0 = 1.0e-17;
+
 		BOOST_STATIC_ASSERT(( boost::fusion::traits::is_sequence< System >::value ));
 		BOOST_STATIC_ASSERT(( size_t( boost::fusion::result_of::size< System >::value ) == dim ));
 
-		for( size_t i=0 ; i<Order ; ++i )
-		{
-			boost::mpl::for_each< boost::mpl::range_c< size_t , 0 , dim > >( make_eval_derivs( sys , in , m_derivs , i ) );
-		}
+		double dt_fac = dt;
+		eval_derivs( sys , in , m_derivs , dt_fac );
+
+//		double max_error = 0.0;
+//		for( size_t i=0 ; i<N ; ++i )
+//		{
+//			double error = std::abs( m_derivs[order_value-1][i] ) / ( std::abs( in[i] ) + 1.0e-35 );
+//			max_error = std::max( error , max_error );
+//		}
+
+//		dt = pow( dt0 / max_error , 1.0 / double( order_value ) );
+
+//		clog << dt << tab << dt0 << tab << max_error << tab << dt_fac << endl;
 
 		for( size_t i=0 ; i<N ; ++i )
 		{
 			value_type tmp = 0.0;
 			for( size_t k=0 ; k<order_value ; ++k )
-				tmp += dt * ( tmp + m_derivs[k][order_value-1-i] );
+				tmp += 1.0 * ( tmp + m_derivs[order_value-1-k][i] );
 			out[i] = in[i] + tmp;
 		}
 
+//		clog << endl;
+//		for( size_t i=0 ; i<4 ; ++i )
+//		{
+//			for( size_t j=0 ; j<N ; ++j )
+//				clog << m_derivs[i][j] << "\t";
+//			clog << endl;
+//		}
+//		clog << endl;
+
+//		dt *= dt_fac;
 		t += dt;
 	}
 
@@ -435,13 +465,57 @@ public:
 	}
 
 	template< class System >
-	void eval_derivs( System sys , const state_type &in , derivs_type &der ) const
+	void eval_derivs( System sys , const state_type &in , derivs_type &der , double &dt_fac ) const
 	{
+		const double min_error = 1.0e-19;
+		const double max_error = 1.0e19;
+		const double min_fac = 1.5;
+		const double max_fac = 0.6;
+
 		for( size_t i=0 ; i<Order ; ++i )
 		{
-			boost::mpl::for_each< boost::mpl::range_c< size_t , 0 , dim > >( make_eval_derivs( sys , in , der , i ) );
+			boost::mpl::for_each< boost::mpl::range_c< size_t , 0 , dim > >( make_eval_derivs( sys , in , der , dt_fac , i ) );
+
+			/*
+			 * OK # Fehler bestimmen
+			 * OK # Fehler grenzen pruefen
+			 * OK  # Falls ja
+			 *     OK # dt_fac aendern
+			 *     OK # schon berechnete Ableitungen skalieren
+			 */
+//			while( true )
+//			{
+//				double err = 0.0;
+//				for( size_t j=0 ; j<N ; ++j ) err += std::abs( der[i][j] );
+//
+//				if( err < min_error )
+//				{
+//					scale_derivs( der , i , min_fac );
+//					dt_fac *= min_fac;
+//					continue;
+//				}
+//				if( err > max_error )
+//				{
+//					scale_derivs( der , i , max_fac );
+//					dt_fac *= max_fac;
+//					continue;
+//				}
+//				break;
+//			}
+
 		}
 
+	}
+
+	void scale_derivs( derivs_type &der , size_t order , double fac ) const
+	{
+		double scale = 1.0;
+		for( size_t i=0 ; i<=order ; ++i )
+		{
+			scale *= fac;
+			for( size_t j=0 ; j<N ; ++j )
+				der[i][j] *= scale;
+		}
 	}
 
 
