@@ -81,6 +81,7 @@ int main()
         clog << acc << " " << x[0] << endl;
     }
     cout << acc << endl;
+    gsl_odeiv_step_free( s );
     return 0;
 
 }

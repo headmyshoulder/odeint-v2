@@ -22,27 +22,49 @@ exe generic_rk4
     : <toolset>intel:<cxxflags>-inline-forceinline
     ;
    
+exe generic_rk4_lorenz 
+    : generic_rk4_lorenz.cpp
+    : <toolset>intel:<cxxflags>-inline-forceinline
+    ;
+   
 exe odeint_rk4
-    :   odeint_rk4.cpp
+    : odeint_rk4.cpp
+#    : <cxxflags>-Winline
     ;
     
-exe odeint_rk4_def_alg
-    :   odeint_rk4_def_alg.cpp
+exe odeint_rk4_lorenz
+    : odeint_rk4_lorenz.cpp
+    ;
+    
+exe odeint_rk4_lorenz_def_alg
+    :   odeint_rk4_lorenz_def_alg.cpp
     ;
     
 exe nr_rk4
     : nr_rk4.cpp
     ;
+    
+exe nr_rk4_lorenz
+    : nr_rk4_lorenz.cpp
+    ;
+    
    
 exe rt_generic_rk4
 	: rt_generic_rk4.cpp
 	;
+	
+exe rt_generic_rk4_lorenz
+    : rt_generic_rk4_lorenz.cpp
+    ;
  
     
 exe gsl_rk4
     : gsl_rk4.cpp libgsl libgslcblas
     ;
     
+exe gsl_rk4_lorenz
+    : gsl_rk4_lorenz.cpp libgsl libgslcblas
+    ;
 
 exe generic_rk54ck
     : generic_rk54ck.cpp

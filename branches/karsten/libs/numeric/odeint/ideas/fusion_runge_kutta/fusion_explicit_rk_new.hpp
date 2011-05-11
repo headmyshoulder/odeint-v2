@@ -16,6 +16,7 @@
 #include <boost/mpl/size_t.hpp>
 
 #include <boost/fusion/container.hpp>
+#include <boost/fusion/algorithm/iteration.hpp>
 
 #include <boost/array.hpp>
 
@@ -193,7 +194,7 @@ public:
 
 
     template< class System >
-    void inline do_step( System &system , state_type &x , const double t , const double dt )
+    void inline do_step( System system , state_type &x , const double t , const double dt )
     {
         fusion::for_each( m_stages , calculate_stage< System >( system , x , m_x_tmp , m_F , t , dt ) );
     }
