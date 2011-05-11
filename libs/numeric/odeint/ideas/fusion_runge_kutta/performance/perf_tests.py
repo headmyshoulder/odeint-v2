@@ -1,10 +1,11 @@
 from os import popen
 from os.path import isfile
 
-#bin_path = "bin/gcc-4.4/release/"
+bin_path = "bin/gcc-4.4/release/"
 #bin_path = "bin/intel-linux/release/"
-bin_path = "bin\\msvc-9.0express\\release\\threading-multi\\"
-extension = ".exe"
+#bin_path = "bin\\msvc-9.0express\\release\\threading-multi\\"
+#extension = ".exe"
+extension = ""
 
 bins = [ "odeint_rk4" , "odeint_rk4_def_alg" , "generic_rk4" , "nr_rk4" , "gsl_rk4" , "rt_generic_rk4" , 
  "odeint_rk54ck" , "odeint_rk54ck_def_alg" , "generic_rk54ck" , "nr_rk54ck" , "gsl_rk54ck" ]
