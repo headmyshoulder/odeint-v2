@@ -392,7 +392,8 @@ public:
 	typedef state_type deriv_type;
 	typedef std::tr1::array< state_type , order_value > derivs_type;
 
-	taylor( void ) : m_derivs() , m_dt_fac( 1.0 ) { }
+	taylor( value_type rel_error = 1.0e-14 )
+	: m_derivs() , m_dt_fac( 1.0 ) , m_rel_error( rel_error ) { }
 
     order_type order( void ) const
     {
@@ -424,9 +425,6 @@ public:
 	template< class System >
 	void try_step( System sys , const state_type &in , time_type &t , state_type &out , time_type &dt )
 	{
-		// this is the max rel error and should be parametrized
-		const double dt0 = 1.0e-17;
-
 		BOOST_STATIC_ASSERT(( boost::fusion::traits::is_sequence< System >::value ));
 		BOOST_STATIC_ASSERT(( size_t( boost::fusion::result_of::size< System >::value ) == dim ));
 
@@ -439,7 +437,7 @@ public:
 			max_error = std::max( error , max_error );
 		}
 
-		dt = pow( dt0 / max_error , 1.0 / double( order_value ) );
+		dt = pow( m_rel_error / max_error , 1.0 / double( order_value ) );
 //		clog << dt << tab << max_error << tab << in[0] << tab << in[1] << tab << in[2] << tab;
 //		clog << m_derivs[0][0] << tab << m_derivs[0][1] << tab << m_derivs[0][2] << tab << m_dt_fac << endl;
 
@@ -542,7 +540,8 @@ public:
 private:
 
 	derivs_type m_derivs;
-	double m_dt_fac;
+	time_type m_dt_fac;
+	value_type m_rel_error;
 
 };
 
