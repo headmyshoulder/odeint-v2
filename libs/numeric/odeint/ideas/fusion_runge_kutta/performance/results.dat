@@ -1,19 +1,20 @@
 Results for Runge-Kutta 4 with different implementations and compilers
 
-            |   odeint  |	def alg	|   generic |   nr      |   gsl     |   rt gen  |
+            |   odeint  |  def alg  |   generic |   nr      |   gsl     |   rt gen  |
 -------------------------------------------------------------------------------------
 gcc 4.3.2   |   0.82    |   0.84    |   0.64    |   0.96    |   1.52    |   1.85    |   Core2Quad Q9550 @ 2.83 GHz
 gcc 4.4.1   |   0.59    |   0.59    |   0.56    |   0.64    |   1.61    |   1.85    |   PhenomII X4 945 @ 3 GHz
 gcc 4.4.1   |   0.60    |   0.60    |   0.54    |   0.62    |   1.35    |   1.47    |   Core i7 930 @ 2.80 GHz
 gcc 4.4.1   |   0.60    |   0.59    |   0.60    |   0.60    |   1.77    |   2.08    |   Opteron 2224 @ 3 GHz
 gcc 4.4.1   |   0.731   |   0.7315  |   0.729   |   0.7785  |   1.7755  |   2.8295  |   Core 2 Duo  P8400  @ 2.26GHz       
+gcc 4.4.1   |   0.7125  |   0.7095  |   0.7085  |   0.7555  |   2.0065  |   2.915   |   Core 2 Quad Q6600  @ 2.40GHz
 gcc 4.5.0   |   0.54    |   0.77    |   0.77    |   0.80    |   1.07    |   1.08    |   Core i7 870 @ 2.93 GHz
 gcc 4.6.0   |   0.54    |   0.54    |   0.65    |   0.47    |   1.06    |   1.08    |   Core i7 870 @ 2.93 GHz
 icc 12.0.2  |   0.90    |   0.81    |	0.85    |   1.05    |   1.07    |   1.57    |   Core i7 870 @ 2.93 GHz
 icc 11.1    |   1.11    |   0.98    |   0.98    |   0.63    |   1.28    |   1.70    |   Xeon X5650   @ 2.67 GHz
-gcc 4.4.1   |   1.19    |   		|	1.22    |   1.24    |   1.97    |           |   Core2Quad Q6600  @ 2.40GHz (to be repeated)
-msvc 9.0    |   6.91    |   		|	7.28    |   5.59    |   ----    |   13.2    |   Via Nano @ 1.60 GHz
-icc 11.1	|	1.24	|	1.14	|	1.09	|	0.76	|	1.62	|	2.10	|	PhenomII X4 945 @ 3 GHz
+msvc 9.0    |   6.91    |           |	7.28    |   5.59    |   ----    |   13.2    |   Via Nano @ 1.60 GHz
+msvc 9.0    |   1.957   |   2.2625  |   2.2953  |   1.2531  |   ----    |   4.35155 |   Core 2 Quad Q6600  @ 2.40GHz (32bit)
+icc 11.1    |	1.24	|   1.14    |	1.09	|   0.76    |	1.62	|   2.10    |	PhenomII X4 945 @ 3 GHz
 
 
 Results for Runge-Kutta 54 Cash Karp (including simulated stepsize control) 
@@ -25,15 +26,15 @@ gcc 4.4.1   |   1.06    |   1.05    |   1.15    |           |   2.63    |   Phen
 gcc 4.4.1   |   1.14    |   1.14    |   1.13    |    1.32   |   2.34    |   Core i7 930 @ 2.80 GHz
 gcc 4.4.1   |   1.38    |   1.38    |   1.43    |    1.34   |   2.79    |   Opteron 2224 @ 3 GHz
 gcc 4.4.1   |   1.412   |   1.4135  |   1.4265  |    1.571  |   2.955   |   Core 2 Duo  P8400  @ 2.26GHz
-gcc 4.5.0   |   1.00    |	1.13	|   1.28    |    1.48   |   1.80    |   Core i7 870 @ 2.93 GHz
+gcc 4.4.1   |   1.37    |   1.387   |   1.424   |    2.287  |   4.3235  |   Core 2 Quad Q6600  @ 2.40GHz
+gcc 4.5.0   |   1.00    |   1.13    |   1.28    |    1.48   |   1.80    |   Core i7 870 @ 2.93 GHz
 gcc 4.6.0   |   0.95    |   0.95    |   1.02    |    1.10   |   1.94    |   Core i7 870 @ 2.93 GHz
 icc 12.0.2  |   1.53    |   1.82    |   1.63    |    1.82   |   1.99    |   Core i7 870 @ 2.93 GHz
 icc 11.1    |   1.91    |   1.93    |   1.84    |    1.15   |   2.16    |   Xeon X5650   @ 2.67 GHz
-gcc 4.4.1   |           |           |			|           |           |   Core2Quad Q6600  @ 2.40GHz
-msvc 9.0    |   12.8    |   		|	15.4    |           |   ----    |   Via Nano @ 1.60 GHz
-icc 11.1	|	1.80	|	2.44	|	2.39	|			|	2.69	|	PhenomII X4 945 @ 3 GHz
-
-
+gcc 4.4.1   |           |           |		|           |           |   Core2Quad Q6600  @ 2.40GHz
+msvc 9.0    |   12.8    |           |	15.4    |           |   ----    |   Via Nano @ 1.60 GHz
+msvc 9.0    |   4.21015 |   4.5484  |   4.79375 |    2.8133 |   ----    |   Core 2 Quad Q6600  @ 2.40GHz (32bit)
+icc 11.1    |	1.80	|   2.44    |	2.39	|           |	2.69	|   PhenomII X4 945 @ 3 GHz
 
 NOTE: additional Intel Compiler option: -inline-forceinline
 
