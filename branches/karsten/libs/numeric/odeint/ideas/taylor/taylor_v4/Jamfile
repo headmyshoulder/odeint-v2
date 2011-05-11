@@ -11,3 +11,4 @@ project
     ;
 
 exe taylor_main : taylor_main.cpp ;
+exe taylor_lorenz_evol_adaptive_statistics : taylor_lorenz_evol_adaptive_statistics.cpp ;
