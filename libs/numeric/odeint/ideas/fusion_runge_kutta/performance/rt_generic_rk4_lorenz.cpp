@@ -33,7 +33,7 @@ class rt_generic_wrapper
 {
 public:
 
-    rt_generic_wrapper()
+    rt_generic_wrapper() : m_stepper( stage_count )
     {
         rk_stepper_type::coeff_a_type a( stage_count-1 );
         a[0].resize(1); a[0][0] = 0.5;
@@ -46,7 +46,7 @@ public:
         rk_stepper_type::coeff_c_type c( stage_count );
         c[0] = 0.0; c[1] = 0.5; c[2] = 0.5; c[3] = 1.0;
 
-        m_stepper = rk_stepper_type( stage_count , a , b , c );
+        m_stepper.set_params( a , b , c );
     }
 
     void reset_init_cond()
