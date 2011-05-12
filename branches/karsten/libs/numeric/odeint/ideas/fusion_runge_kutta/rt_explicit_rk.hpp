@@ -22,9 +22,9 @@ public:
     typedef vector< double > coeff_b_type;
     typedef vector< double > coeff_c_type;
 
-    rt_explicit_rk()
+    rt_explicit_rk( size_t stage_count ) : m_s( stage_count )
     {
-        m_F = 0;
+        m_F = new state_type[ m_s ];
     }
 
     rt_explicit_rk( size_t stage_count , coeff_a_type &a , coeff_b_type &b , coeff_c_type &c )
@@ -33,7 +33,17 @@ public:
         m_F = new state_type[ m_s ];
     }
 
-    ~rt_explicit_rk() { if( m_F ) delete[] m_F; }
+    ~rt_explicit_rk()
+    {
+        delete[] m_F;
+    }
+
+    void set_params( coeff_a_type &a , coeff_b_type &b , coeff_c_type &c )
+    {
+        m_a = a;
+        m_b = b;
+        m_c = c;
+    }
 
     template< class System >
     void do_step( System &sys , state_type &x , const double t , const double dt )
