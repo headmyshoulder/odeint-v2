@@ -1,7 +1,7 @@
 /*
- * gsl_rk4_lorenz.cpp
+ * gsl_rk54ck_lorenz.cpp
  *
- *  Created on: May 11, 2011
+ *  Created on: May 12, 2011
  *      Author: mario
  */
 
@@ -19,7 +19,7 @@ public:
 
     gsl_wrapper()
     {
-        m_s = gsl_odeiv_step_alloc( gsl_odeiv_step_rk4 , dim);
+        m_s = gsl_odeiv_step_alloc( gsl_odeiv_step_rkck , dim);
         m_sys.function = lorenz_gsl;
         m_sys.jacobian = 0;
         m_sys.dimension = dim;
@@ -62,5 +62,5 @@ int main()
 {
     gsl_wrapper stepper;
 
-    run( stepper , 20000000 / 3 , 1E-10 * 3);
+    run( stepper );
 }

@@ -1,41 +1,19 @@
 /*
- * nr_rk4.cpp
+ * nr_rk54ck_lorenz.cpp
  *
- *  Created on: Apr 28, 2011
+ *  Created on: May 12, 2011
  *      Author: mario
  */
 
-#include <iostream>
-#include <fstream>
-
 #include <boost/array.hpp>
 
-#include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
-#include <boost/accumulators/accumulators.hpp>
-#include <boost/accumulators/statistics.hpp>
-#include <boost/timer.hpp>
+#include "rk_performance_test_case.hpp"
 
 #include "lorenz.hpp"
 
-#define tab "\t"
+const size_t dim = 3;
 
-using namespace std;
-using namespace boost::accumulators;
-
-typedef accumulator_set<
-    double , stats< tag::mean , tag::variance >
-    > accumulator_type;
-
-ostream& operator<<( ostream& out , accumulator_type &acc )
-{
-    out << boost::accumulators::mean( acc ) << tab;
-//    out << boost::accumulators::variance( acc ) << tab;
-    return out;
-}
-
-typedef boost::timer timer_type;
-
-typedef boost::array< double , 3 > state_type;
+typedef boost::array< double , dim > state_type;
 
 
 template< class System , typename T , size_t dim >
@@ -83,39 +61,36 @@ void rk54ck_step( System sys , boost::array< T , dim > &x , const double t , con
 }
 
 
-const size_t loops = 20;
-
-int main( int argc , char **argv )
+class nr_wrapper
 {
-    const size_t num_of_steps = 20000000;
-    double dt = 1E-10;
-
-    accumulator_type acc;
-    timer_type timer;
-
-    srand( 12312354 );
-
-    for( size_t n=0 ; n<loops ; ++n )
+public:
+    void reset_init_cond()
     {
-        state_type x = {{ 10.0 * rand()/RAND_MAX ,
-                          10.0 * rand()/RAND_MAX ,
-                          10.0 * rand()/RAND_MAX }};
-        state_type x_err;
-        double t = 0.0;
-
-        timer.restart();
-        for( size_t i=0 ; i<num_of_steps ; ++i, t+=dt )
-        {
-            rk54ck_step( lorenz() , x , t , dt , x_err );
-            if( i % 1000 == 0 ) // simulated stepsize control
-                dt += (dt*1E-3*rand())/RAND_MAX - dt*5E-4;
-        }
-        acc( timer.elapsed() );
-
-        clog.precision( 15 );
-        clog.width( 20 );
-        clog << acc << " " << x[0] << tab << " " << x_err[0] << endl;
+        m_x[0] = 10.0 * rand() / RAND_MAX;
+        m_x[1] = 10.0 * rand() / RAND_MAX;
+        m_x[2] = 10.0 * rand() / RAND_MAX;
+        m_t = 0.0;
     }
-    cout << acc << endl;
-    return 0;
+
+    inline void do_step( const double dt )
+    {
+        rk54ck_step( lorenz() , m_x , m_t , dt , m_x_err );
+    }
+
+    double state( const size_t i ) const
+    { return m_x[i]; }
+
+private:
+    state_type m_x;
+    state_type m_x_err;
+    double m_t;
+};
+
+
+
+int main()
+{
+    nr_wrapper stepper;
+
+    run( stepper );
 }

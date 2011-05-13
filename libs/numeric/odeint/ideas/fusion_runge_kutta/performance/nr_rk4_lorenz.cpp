@@ -9,22 +9,12 @@
 
 #include "rk_performance_test_case.hpp"
 
+#include "lorenz.hpp"
+
 const size_t dim = 3;
 
 typedef boost::array< double , dim > state_type;
 
-struct lorenz
-{
-    inline void operator()( const state_type &x , state_type &dxdt , const double t ) const
-    {
-        const double sigma = 10.0;
-        const double R = 28.0;
-        const double b = 8.0 / 3.0;
-        dxdt[0] = sigma * ( x[1] - x[0] );
-        dxdt[1] = R * x[0] - x[1] - x[0] * x[2];
-        dxdt[2] = x[0]*x[1] - b * x[2];
-    }
-};
 
 template< class System , typename T , size_t dim >
 void rk4_step( const System sys , boost::array< T , dim > &x , const double t , const double dt )

@@ -16,6 +16,8 @@
 #include <boost/accumulators/statistics.hpp>
 #include <boost/timer.hpp>
 
+#include "lorenz.hpp"
+
 #define tab "\t"
 
 using namespace std;
@@ -37,17 +39,6 @@ typedef boost::timer timer_type;
 
 typedef boost::array< double , 3 > state_type;
 typedef boost::numeric::odeint::explicit_error_rk54_ck< state_type > rk54_ck_odeint_type;
-
-
-inline void lorenz( const state_type &x , state_type &dxdt , const double t )
-{
-    const double sigma = 10.0;
-    const double R = 28.0;
-    const double b = 8.0 / 3.0;
-    dxdt[0] = sigma * ( x[1] - x[0] );
-    dxdt[1] = R * x[0] - x[1] - x[0] * x[2];
-    dxdt[2] = x[0]*x[1] - b * x[2];
-}
 
 
 const size_t loops = 20;
@@ -75,7 +66,7 @@ int main( int argc , char **argv )
         timer.restart();
         for( size_t i=0 ; i<num_of_steps ; ++i, t+=dt )
         {
-            rk54_ck_odeint.do_step( lorenz , x , t , dt , x_err );
+            rk54_ck_odeint.do_step( lorenz() , x , t , dt , x_err );
             if( i % 1000 == 0 )  // simulated stepsize control
                 dt += (dt*1E-3*rand())/RAND_MAX - dt*5E-4;
         }
