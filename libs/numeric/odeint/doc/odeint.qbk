@@ -44,6 +44,7 @@
 [template sub[x]'''<subscript>'''[x]'''</subscript>''']
 [template subl[x]'''<subscript>'''__space[x]'''</subscript>''']
 
+[caution Boost.Odeint is not an official boost library!]
 
 
 [include getting_started.qbk]
