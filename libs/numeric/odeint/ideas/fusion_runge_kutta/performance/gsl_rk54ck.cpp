@@ -14,7 +14,7 @@
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_odeiv.h>
 
-#include "lorenz.hpp"
+#include "lorenz_gsl.hpp"
 
 #define tab "\t"
 

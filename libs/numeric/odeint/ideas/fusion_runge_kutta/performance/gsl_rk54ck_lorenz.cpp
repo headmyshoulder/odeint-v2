@@ -9,7 +9,7 @@
 
 #include "rk_performance_test_case.hpp"
 
-#include "lorenz.hpp"
+#include "lorenz_gsl.hpp"
 
 const size_t dim = 3;
 

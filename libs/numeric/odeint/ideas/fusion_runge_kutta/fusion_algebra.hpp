@@ -50,8 +50,10 @@ struct fusion_algebra
 /** hand-wise implementation for performance improvement for n = 1..4 **/
 
 /* !!!!!!!   Actually, this is factor 3 slower with intel compiler, so we don'y use it !!!!!
- * Update: Current implementation increases performance on msvc 9.0 by about 30%, so it is in use again....
- *
+ * Update: It increases performance on msvc 9.0 by about 30%, so it is activated for MSVC
+ */
+
+#ifdef BOOST_MSVC
 
 template<>
 struct fusion_algebra< 1 >
@@ -63,8 +65,8 @@ struct fusion_algebra< 1 >
     {
         for( size_t i=0 ; i<dim ; ++i )
         {
-            x_tmp[i] = x[i];
-            x_tmp[i] += a[0]*dt*k_vector[0][i];
+            x_tmp[i] = x[i]
+						+ a[0]*dt*k_vector[0][i];
         }
     }
 
@@ -82,9 +84,9 @@ struct fusion_algebra< 2 >
     {
         for( size_t i=0 ; i<dim ; ++i )
         {
-            x_tmp[i] = x[i];
-            x_tmp[i] += a[0]*dt*k_vector[0][i];
-            x_tmp[i] += a[1]*dt*k_vector[1][i];
+            x_tmp[i] = x[i]
+             + a[0]*dt*k_vector[0][i]
+             + a[1]*dt*k_vector[1][i];
         }
     }
 
@@ -102,10 +104,10 @@ struct fusion_algebra< 3 >
     {
         for( size_t i=0 ; i<dim ; ++i )
         {
-            x_tmp[i] = x[i];
-            x_tmp[i] += a[0]*dt*k_vector[0][i];
-            x_tmp[i] += a[1]*dt*k_vector[1][i];
-            x_tmp[i] += a[2]*dt*k_vector[2][i];
+            x_tmp[i] = x[i]
+             + a[0]*dt*k_vector[0][i]
+             + a[1]*dt*k_vector[1][i]
+             + a[2]*dt*k_vector[2][i];
         }
     }
 
@@ -122,11 +124,11 @@ struct fusion_algebra< 4 >
     {
         for( size_t i=0 ; i<dim ; ++i )
         {
-            x_tmp[i] = x[i];
-            x_tmp[i] += a[0]*dt*k_vector[0][i];
-            x_tmp[i] += a[1]*dt*k_vector[1][i];
-            x_tmp[i] += a[2]*dt*k_vector[2][i];
-            x_tmp[i] += a[3]*dt*k_vector[3][i];
+            x_tmp[i] = x[i]
+             + a[0]*dt*k_vector[0][i]
+             + a[1]*dt*k_vector[1][i]
+             + a[2]*dt*k_vector[2][i]
+             + a[3]*dt*k_vector[3][i];
         }
     }
 
@@ -143,12 +145,12 @@ struct fusion_algebra< 5 >
     {
         for( size_t i=0 ; i<dim ; ++i )
         {
-            x_tmp[i] = x[i];
-            x_tmp[i] += a[0]*dt*k_vector[0][i];
-            x_tmp[i] += a[1]*dt*k_vector[1][i];
-            x_tmp[i] += a[2]*dt*k_vector[2][i];
-            x_tmp[i] += a[3]*dt*k_vector[3][i];
-            x_tmp[i] += a[4]*dt*k_vector[4][i];
+            x_tmp[i] = x[i]
+             + a[0]*dt*k_vector[0][i]
+             + a[1]*dt*k_vector[1][i]
+             + a[2]*dt*k_vector[2][i]
+             + a[3]*dt*k_vector[3][i]
+             + a[4]*dt*k_vector[4][i];
         }
     }
 
@@ -165,13 +167,13 @@ struct fusion_algebra< 6 >
     {
         for( size_t i=0 ; i<dim ; ++i )
         {
-            x_tmp[i] = x[i];
-            x_tmp[i] += a[0]*dt*k_vector[0][i];
-            x_tmp[i] += a[1]*dt*k_vector[1][i];
-            x_tmp[i] += a[2]*dt*k_vector[2][i];
-            x_tmp[i] += a[3]*dt*k_vector[3][i];
-            x_tmp[i] += a[4]*dt*k_vector[4][i];
-            x_tmp[i] += a[5]*dt*k_vector[5][i];
+            x_tmp[i] = x[i]
+             + a[0]*dt*k_vector[0][i]
+             + a[1]*dt*k_vector[1][i]
+             + a[2]*dt*k_vector[2][i]
+             + a[3]*dt*k_vector[3][i]
+             + a[4]*dt*k_vector[4][i]
+             + a[5]*dt*k_vector[5][i];
         }
     }
 
@@ -189,7 +191,7 @@ struct fusion_algebra< 6 >
     }
 
 };
-*/
 
+#endif /* BOOST_MSVC */
 
 #endif /* FUSION_ALGEBRA_HPP_ */

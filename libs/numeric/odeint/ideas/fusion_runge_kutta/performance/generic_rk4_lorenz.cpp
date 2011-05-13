@@ -39,7 +39,7 @@ public:
 
     inline void do_step( const double dt )
     {
-        m_stepper.do_step( lorenz() , m_x , m_t , dt );
+        m_stepper.do_step( lorenz(), m_x , m_t , dt );
     }
 
     double state( const size_t i ) const
