@@ -392,8 +392,8 @@ public:
 	typedef state_type deriv_type;
 	typedef std::tr1::array< state_type , order_value > derivs_type;
 
-	taylor( value_type rel_error = 1.0e-14 )
-	: m_derivs() , m_dt_fac( 1.0 ) , m_rel_error( rel_error ) { }
+	taylor( value_type rel_error = 1.0e-14 , value_type abs_error = 1.0e-14 )
+	: m_derivs() , m_dt_fac( 1.0 ) , m_rel_error( rel_error ) , m_abs_error( abs_error ) { }
 
     order_type order( void ) const
     {
@@ -433,11 +433,12 @@ public:
 		double max_error = 0.0;
 		for( size_t i=0 ; i<dim ; ++i )
 		{
-			double error = std::abs( m_derivs[order_value-1][i] ) / ( std::abs( in[i] ) + 1.0e-35 );
+			double error = std::abs( m_derivs[order_value-1][i] ) /
+					( m_rel_error * std::abs( in[i] ) + m_abs_error );
 			max_error = std::max( error , max_error );
 		}
 
-		dt = pow( m_rel_error / max_error , 1.0 / double( order_value ) );
+		dt = pow( 1.0 / max_error , 1.0 / double( order_value ) );
 //		clog << dt << tab << max_error << tab << in[0] << tab << in[1] << tab << in[2] << tab;
 //		clog << m_derivs[0][0] << tab << m_derivs[0][1] << tab << m_derivs[0][2] << tab << m_dt_fac << endl;
 
@@ -542,6 +543,7 @@ private:
 	derivs_type m_derivs;
 	time_type m_dt_fac;
 	value_type m_rel_error;
+	value_type m_abs_error;
 
 };
 
