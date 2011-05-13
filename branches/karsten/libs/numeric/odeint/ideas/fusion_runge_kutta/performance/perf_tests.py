@@ -2,16 +2,16 @@ from os import popen
 from os import system
 from os.path import isfile
 
-toolset = "intel"
+toolset = "gcc-4.5"
 
-#bin_path = "bin/gcc-4.3/release/"
-bin_path = "bin/intel-linux/release/"
+bin_path = "bin/gcc-4.5/release/"
+#bin_path = "bin/intel-linux/release/"
 #bin_path = "bin\\msvc-9.0express\\release\\threading-multi\\"
 #extension = ".exe"
 extension = ""
 
-bins = [ "odeint_rk4_lorenz" , "odeint_rk4_lorenz_def_alg" , "generic_rk4_lorenz" , "nr_rk4_lorenz" , "gsl_rk4_lorenz" , "rt_generic_rk4_lorenz" ] 
-# "odeint_rk54ck" , "odeint_rk54ck_def_alg" , "generic_rk54ck" , "nr_rk54ck" , "gsl_rk54ck" ]
+bins = [ "odeint_rk4_lorenz" , "odeint_rk4_lorenz_def_alg" , "generic_rk4_lorenz" , "nr_rk4_lorenz" , "gsl_rk4_lorenz" , "rt_generic_rk4_lorenz" ,
+ "odeint_rk54ck_lorenz" , "odeint_rk54ck_lorenz_def_alg" , "generic_rk54ck_lorenz" , "nr_rk54ck_lorenz" , "gsl_rk54ck_lorenz" ]
 
 results = []
 

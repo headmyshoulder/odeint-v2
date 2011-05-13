@@ -46,7 +46,7 @@ public:
     }
 
     template< class System >
-    void do_step( System &sys , state_type &x , const double t , const double dt )
+    void do_step( System sys , state_type &x , const double t , const double dt )
     {
         // first stage separately
         sys( x , m_F[0] , t + m_c[0]*t );
