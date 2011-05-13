@@ -10,6 +10,11 @@
 
 #include "taylor.hpp"
 
+#include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
+#include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
+#include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
+
+
 #include <boost/fusion/include/make_vector.hpp>
 #include <boost/spirit/include/phoenix.hpp>
 #include <boost/assign.hpp>
@@ -30,9 +35,19 @@ std::ostream& operator<<( std::ostream& out , const std::tr1::array< T , N > &x 
 
 typedef std::tr1::array< double , 3 > state_type;
 
+typedef boost::numeric::odeint::explicit_error_rk54_ck< state_type > rk54_type;
+
 const double sigma = 10.0;
 const double R = 28.0;
 const double b = 8.0 / 3.0;
+
+void lorenz( const state_type &x , state_type &dxdt , double t )
+{
+    dxdt[0] = sigma * ( x[1] - x[0] );
+    dxdt[1] = R * x[0] - x[1] - x[0] * x[2];
+    dxdt[2] = x[0]*x[1] - b * x[2];
+}
+
 
 namespace fusion = boost::fusion;
 namespace phoenix = boost::phoenix;
@@ -123,6 +138,33 @@ int main( int argc , char **argv )
 
 	typedef mpl::range_c< size_t , 5 , 30 > order_values;
 	mpl::for_each< order_values >( run( eps_abs_values , eps_rel_values , t_end ) );
+
+
+	boost::timer timer;
+	ofstream fout( "dat/lorenz_rk54.dat" );
+	for( size_t i=0 ; i<eps_abs_values.size() ; ++i )
+	{
+		for( size_t j=0 ; j<eps_rel_values.size() ; ++j )
+		{
+			double eps_abs = eps_abs_values[i];
+			double eps_rel = eps_rel_values[j];
+
+			rk54_type rk54_plain;
+			controlled_error_stepper< rk54_type > rk54( rk54_plain , default_error_checker< double >( eps_abs , eps_rel ) );
+
+			state_type x = {{ 10.0 , 10.0 , 10.0 }};
+
+			timer.restart();
+			size_t steps_rk54 = integrate_adaptive( rk54 , lorenz , x , 0.0 , t_end , 0.1 );
+			double time_rk54 = timer.elapsed();
+
+			fout << i << tab << j << tab << eps_abs << tab << eps_rel << tab;
+			fout << steps_rk54 << tab << time_rk54 << tab;
+			fout << endl;
+		}
+		fout << endl;
+	}
+
 
 
 
