@@ -18,8 +18,8 @@ boostbook odeint
 	:
           <xsl:param>navig.graphics=1
           <xsl:param>boost.root=../../../..
-          <xsl:param>chunk.section.depth=1
-          <xsl:param>chunk.first.sections=1
+          <xsl:param>chunk.section.depth=2
+          <xsl:param>chunk.first.sections=0
           <xsl:param>toc.section.depth=2
           <xsl:param>toc.max.depth=2
           <xsl:param>generate.section.toc.level=3
