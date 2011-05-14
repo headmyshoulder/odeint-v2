@@ -1,0 +1,82 @@
+[section Concept stepper]
+
+Concept Stepper
+
+[section Description]
+
+The basic stepper concept.
+
+tba.
+
+[endsect]
+
+[section Refinement of]
+
+* DefaultConstructable
+* CopyConstructable
+
+[endsect]
+
+[section Associated types]
+
+*  '''<para>'''[*state_type]'''</para>'''
+'''<para>'''`Stepper::state_type`'''</para>'''
+'''<para>'''The type characterizing the state of the ODE, hence ['x].'''</para>'''
+
+*  '''<para>'''[*deriv_type]'''</para>'''
+'''<para>'''`Stepper::deriv_type`'''</para>'''
+'''<para>'''The type characterizing the derivative of the ODE, hence ['d x/dt].'''</para>'''
+
+*  '''<para>'''[*time_type]'''</para>'''
+'''<para>'''`Stepper::time_type`'''</para>'''
+'''<para>'''The type characterizing the dependent variable of the ODE, hence the time ['t].'''</para>'''
+
+*  '''<para>'''[*value_type]'''</para>'''
+'''<para>'''`Stepper::value_type`'''</para>'''
+'''<para>'''The numerical data type which is used within the stepper, something like `float`, `double`, `complex&lt; double &gt;`.'''</para>'''
+
+*  '''<para>'''[*order_type]'''</para>'''
+'''<para>'''`Stepper::order_type`'''</para>'''
+'''<para>'''The type characterizing the order of the ODE, typically something like `unsigned short`.'''</para>'''
+
+[endsect]
+
+[section Notation]
+
+[variablelist 
+  [[Stepper] [A type that is a model of Stepper]]
+  [[State] [A type that is the `state_type` of Stepper]]
+  [[Time] [A type that is the `time_type` of Stepper]]
+  [[Order] [A type that is the `order_type` of Stepper]]
+  [[stepper] [An object of type Stepper]]
+  [[x,in,out] [Objects of type State]]
+  [[t,dt] [Objects of type Time]]
+  [[sys] [An object defining the ODE. Depends on the context of the stepper]]
+]
+
+[endsect]
+
+[section Valid expressions]
+
+[table
+  [[Name] [Expression] [Type] [Semantics]]
+  [[Get the order] [`stepper.order()`] [`Order`] [Returns the order of the stepper which is used for error calculation.] ]
+  [[Do step in-place] [`stepper.do_step( sys , x , t , dt )`] [`void`] [Performs one step of step size `dt`.  The newly obtained state is written in place in `x`.] ]
+  [[Do step out-of-place] [`stepper.do_step( sys , in , t , out , dt )`] [`void`] [Performs one step. The newly obtained state is written to `out`] ]
+]
+
+[endsect]
+
+[section Models]
+
+* explicit_rk4
+* explicit_euler
+* explicit_error_rk54_ck
+* explicit_error_dopri5
+
+[endsect]
+
+
+
+
+[endsect]
