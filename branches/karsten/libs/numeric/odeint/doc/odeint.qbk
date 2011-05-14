@@ -52,5 +52,9 @@
 
 [include concepts.qbk]
 
-[include reference.qbk]
+[xinclude reference.xml]
+
+[include concepts_old.qbk]
+
+[include reference_old.qbk]
 

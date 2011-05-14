@@ -7,314 +7,28 @@
 <link rel="home" href="../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
 <link rel="up" href="../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
 <link rel="prev" href="extend_odeint/adapt_your_own_operations.html" title="Adapt your own operations">
-<link rel="next" href="concepts/error_stepper.html" title="Error stepper">
+<link rel="next" href="concepts/concept_stepper.html" title="Concept stepper">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="extend_odeint/adapt_your_own_operations.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="concepts/error_stepper.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p" href="extend_odeint/adapt_your_own_operations.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="concepts/concept_stepper.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="boost_sandbox_numeric_odeint.concepts"></a><a class="link" href="concepts.html" title="Concepts">Concepts</a>
 </h2></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="concepts.html#boost_sandbox_numeric_odeint.concepts.basic_stepper">Basic
+<dt><span class="section"><a href="concepts/concept_stepper.html">Concept
       stepper</a></span></dt>
 <dt><span class="section"><a href="concepts/error_stepper.html">Error
       stepper</a></span></dt>
 <dt><span class="section"><a href="concepts/controlled_stepper.html">Controlled
       stepper</a></span></dt>
-<dt><span class="section"><a href="concepts/dense_ouput_stepper.html">Dense
-      ouput stepper</a></span></dt>
-<dt><span class="section"><a href="concepts/size_adjusting_stepper.html">Size
-      adjusting stepper</a></span></dt>
-<dt><span class="section"><a href="concepts/compositestepper.html">CompositeStepper</a></span></dt>
+<dt><span class="section"><a href="concepts/dense_output_stepper.html">Dense
+      output stepper</a></span></dt>
 </dl></div>
-<p>
-      The odeint library defines three concepts for stepping objects.
-    </p>
-<div class="section">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="boost_sandbox_numeric_odeint.concepts.basic_stepper"></a><a class="link" href="concepts.html#boost_sandbox_numeric_odeint.concepts.basic_stepper" title="Basic stepper">Basic
-      stepper</a>
-</h3></div></div></div>
-<p>
-        Basic steppers execute one timestep of a specific order with a given stepsize.
-        They usually allocate internal memory to store intermediate function call
-        results. If state types with variable size are used (e.g. <code class="computeroutput"><span class="identifier">vector</span></code>),
-        it has to be assured that the stepper gets informed about any change of the
-        state size by calling its <code class="computeroutput"><span class="identifier">adjust_size</span></code>
-        method.
-      </p>
-<p>
-        <span class="bold"><strong>Associated Types</strong></span>
-      </p>
-<div class="informaltable"><table class="table">
-<colgroup>
-<col>
-<col>
-<col>
-</colgroup>
-<thead><tr>
-<th>
-              </th>
-<th>
-              </th>
-<th>
-                <p>
-                  Description
-                </p>
-              </th>
-</tr></thead>
-<tbody>
-<tr>
-<td>
-                <p>
-                  Time
-                </p>
-              </td>
-<td>
-                <p>
-                  Stepper::time_type
-                </p>
-              </td>
-<td>
-                <p>
-                  Type of the time variable, e.g. <code class="computeroutput"><span class="keyword">double</span></code>
-                </p>
-              </td>
-</tr>
-<tr>
-<td>
-                <p>
-                  Container
-                </p>
-              </td>
-<td>
-                <p>
-                  Stepper::container_type
-                </p>
-              </td>
-<td>
-                <p>
-                  Type of the system state, e.g. <code class="computeroutput"><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span></code>
-                </p>
-              </td>
-</tr>
-<tr>
-<td>
-                <p>
-                  Value
-                </p>
-              </td>
-<td>
-                <p>
-                  Stepper::value_type
-                </p>
-              </td>
-<td>
-                <p>
-                  Value type of the state, e.g. <code class="computeroutput"><span class="keyword">double</span></code>
-                </p>
-              </td>
-</tr>
-<tr>
-<td>
-                <p>
-                  Order Type
-                </p>
-              </td>
-<td>
-                <p>
-                  Stepper::order_type
-                </p>
-              </td>
-<td>
-                <p>
-                  Type of the order parameter, usually <code class="computeroutput"><span class="keyword">unsigned</span>
-                  <span class="keyword">short</span></code>
-                </p>
-              </td>
-</tr>
-</tbody>
-</table></div>
-<p>
-        <span class="bold"><strong>Methods</strong></span>
-      </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
-<li class="listitem">
-            <code class="computeroutput"><span class="identifier">Stepper</span><span class="special">()</span></code>
-            Constructor.
-          </li>
-<li class="listitem">
-            <code class="computeroutput"><span class="identifier">Stepper</span><span class="special">(</span>
-            <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">)</span></code>
-            Constructor that allocates internal memory to store intermediate results
-            of the same size as <code class="computeroutput"><span class="identifier">x</span></code>.
-          </li>
-<li class="listitem">
-            <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">DynamicalSystem</span>
-            <span class="special">&amp;</span><span class="identifier">system</span>
-            <span class="special">,</span> <span class="identifier">container_type</span>
-            <span class="special">&amp;</span><span class="identifier">x</span>
-            <span class="special">,</span> <span class="identifier">time_type</span>
-            <span class="identifier">t</span> <span class="special">,</span>
-            <span class="identifier">time_type</span> <span class="identifier">dt</span>
-            <span class="special">)</span></code>
-          </li>
-</ul></div>
-<p>
-        Executes one timestep with the given parameters:
-      </p>
-<div class="informaltable"><table class="table">
-<colgroup>
-<col>
-<col>
-<col>
-</colgroup>
-<thead><tr>
-<th>
-                <p>
-                  Parameter
-                </p>
-              </th>
-<th>
-                <p>
-                  Type
-                </p>
-              </th>
-<th>
-                <p>
-                  Description
-                </p>
-              </th>
-</tr></thead>
-<tbody>
-<tr>
-<td>
-                <p>
-                  system
-                </p>
-              </td>
-<td>
-                <p>
-                  DynamicalSystem
-                </p>
-              </td>
-<td>
-                <p>
-                  Function (callable object) that computes the rhs of the ode
-                </p>
-              </td>
-</tr>
-<tr>
-<td>
-                <p>
-                  x
-                </p>
-              </td>
-<td>
-                <p>
-                  container_type
-                </p>
-              </td>
-<td>
-                <p>
-                  The current state of the system <span class="bold"><strong>x(t)</strong></span>
-                </p>
-              </td>
-</tr>
-<tr>
-<td>
-                <p>
-                  t
-                </p>
-              </td>
-<td>
-                <p>
-                  time_type
-                </p>
-              </td>
-<td>
-                <p>
-                  The current time <span class="bold"><strong>t</strong></span>
-                </p>
-              </td>
-</tr>
-<tr>
-<td>
-                <p>
-                  dt
-                </p>
-              </td>
-<td>
-                <p>
-                  time_type
-                </p>
-              </td>
-<td>
-                <p>
-                  Length of the timestep to be executed
-                </p>
-              </td>
-</tr>
-</tbody>
-</table></div>
-<p>
-        The result of this method is the (approximate) state of the system <span class="bold"><strong>x(t+dt)</strong></span> and is stored in the variable <code class="computeroutput"><span class="identifier">x</span></code> (in-place). Note, that the time <code class="computeroutput"><span class="identifier">t</span></code> is not automatically increased by this
-        method.
-      </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
-            <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">DynamicalSystem</span>
-            <span class="special">&amp;</span><span class="identifier">system</span>
-            <span class="special">,</span> <span class="identifier">container_type</span>
-            <span class="special">&amp;</span><span class="identifier">x</span>
-            <span class="special">,</span> <span class="keyword">const</span>
-            <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="identifier">time_type</span> <span class="identifier">t</span>
-            <span class="special">,</span> <span class="identifier">time_type</span>
-            <span class="identifier">dt</span> <span class="special">)</span></code>
-          </li></ul></div>
-<p>
-        The same as above but with the additional parameter <code class="computeroutput"><span class="identifier">dxdt</span></code>
-        that represents the derivative <span class="bold"><strong>x'(t) = f(x,t)</strong></span>
-        at the time <span class="bold"><strong>t</strong></span>.
-      </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
-<li class="listitem">
-            <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">adjust_size</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">)</span></code>
-            Adjusts the internal memory to store intermediate results of the same
-            size as <code class="computeroutput"><span class="identifier">x</span></code>. This function
-            <span class="emphasis"><em>must</em></span> be called whenever the system size changes
-            during the integration.
-          </li>
-<li class="listitem">
-            <code class="computeroutput"><span class="identifier">order_type</span> <span class="identifier">order_step</span><span class="special">()</span></code> Returns the order of the algorithm.
-            If <span class="bold"><strong>n</strong></span> is the order of a method, then
-            the result of one iteration with the timestep <span class="bold"><strong>dt</strong></span>
-            is accurate up to <span class="bold"><strong>dt^n</strong></span>. That means the
-            error made by the time discretization is of order <span class="bold"><strong>dt^(n+1)</strong></span>.
-          </li>
-</ul></div>
-<p>
-        <span class="bold"><strong>Stepper that model this concept</strong></span>
-      </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
-<li class="listitem">
-            <code class="computeroutput"><span class="identifier">stepper_euler</span></code>
-          </li>
-<li class="listitem">
-            <code class="computeroutput"><span class="identifier">stepper_rk4</span></code>
-          </li>
-<li class="listitem">
-            <code class="computeroutput"><span class="identifier">stepper_rk78_fehlberg</span></code>
-          </li>
-</ul></div>
-</div>
-<p>
-      see the wiki
-    </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
@@ -326,7 +40,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="extend_odeint/adapt_your_own_operations.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="concepts/error_stepper.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p" href="extend_odeint/adapt_your_own_operations.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="concepts/concept_stepper.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
