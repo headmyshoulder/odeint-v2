@@ -107,3 +107,20 @@ exe gsl_rk54ck
 exe gsl_rk54ck_lorenz
     : gsl_rk54ck_lorenz.cpp libgsl libgslcblas
     ;
+    
+exe generic_rk4_phase_lattice 
+    : generic_rk4_phase_lattice.cpp
+    : <toolset>intel:<cxxflags>-inline-forceinline
+    ;
+    
+exe odeint_rk4_phase_lattice
+	: odeint_rk4_phase_lattice.cpp
+	;
+	
+exe nr_rk4_phase_lattice
+	: nr_rk4_phase_lattice.cpp
+	;
+	
+exe rt_generic_rk4_phase_lattice
+	: rt_generic_rk4_phase_lattice.cpp
+	;
