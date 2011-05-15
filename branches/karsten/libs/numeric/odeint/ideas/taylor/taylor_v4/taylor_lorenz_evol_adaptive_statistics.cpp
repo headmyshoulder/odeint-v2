@@ -26,14 +26,14 @@
 #define tab "\t"
 
 template< typename T , size_t N >
-std::ostream& operator<<( std::ostream& out , const std::tr1::array< T , N > &x )
+std::ostream& operator<<( std::ostream& out , const boost::array< T , N > &x )
 {
 	if( !x.empty() ) out << x[0];
 	for( size_t i=1 ; i<x.size() ; ++i ) out << "\t" << x[i];
 	return out;
 }
 
-typedef std::tr1::array< double , 3 > state_type;
+typedef boost::array< double , 3 > state_type;
 
 typedef boost::numeric::odeint::explicit_error_rk54_ck< state_type > rk54_type;
 

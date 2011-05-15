@@ -13,7 +13,7 @@
 #include <boost/fusion/include/make_vector.hpp>
 
 template< typename T , size_t N >
-std::ostream& operator<<( std::ostream& out , const std::tr1::array< T , N > &x )
+std::ostream& operator<<( std::ostream& out , const boost::array< T , N > &x )
 {
 	if( !x.empty() ) out << x[0];
 	for( size_t i=1 ; i<x.size() ; ++i ) out << "\t" << x[i];

@@ -10,7 +10,7 @@
 
 #include <ostream>
 #include <cmath>
-#include <tr1/array>
+#include <boost/array.hpp>
 
 #include <iostream>
 using namespace std;
@@ -82,7 +82,7 @@ namespace taylor_adf
 	struct taylor_context
 	{
 		typedef State state_type;
-		typedef std::tr1::array< state_type , MaxOrder > deriv_type;
+		typedef boost::array< state_type , MaxOrder > deriv_type;
 
 		size_t which;
 		const state_type &x;
@@ -363,7 +363,13 @@ namespace taylor_adf
 		void operator()( Index )
 		{
 			typedef typename fusion::result_of::at< System , Index >::type expr_type;
-			const expr_type &expr = boost::fusion::at< Index >( m_sys );
+			
+			/* Mario: changed to make it compile with msvc 9.0
+			 * error: invalid type: reference to reference
+			 */
+			//const expr_type &expr = boost::fusion::at< Index >( m_sys );
+			expr_type expr = boost::fusion::at< Index >( m_sys );
+			/* end changes */
 
 			double deriv = taylor_transform()( expr , 0.0 , m_data );
 			m_data.derivs[ m_data.which ][ Index::value ] = m_data.dt_fac / double( m_data.which + 1 ) * deriv;
@@ -371,7 +377,7 @@ namespace taylor_adf
 	};
 
 	template< class System , class State , size_t Order >
-	eval_derivs< System , State , Order > make_eval_derivs( System sys , const State &x , std::tr1::array< State , Order > &derivs , double &dt_fac , size_t i )
+	eval_derivs< System , State , Order > make_eval_derivs( System sys , const State &x , boost::array< State , Order > &derivs , double &dt_fac , size_t i )
 	{
 		return eval_derivs< System , State , Order >( sys , x , derivs , dt_fac , i );
 	}
@@ -388,9 +394,9 @@ public:
 	typedef value_type time_type;
 	typedef unsigned short order_type;
 
-	typedef std::tr1::array< value_type , dim > state_type;
+	typedef boost::array< value_type , dim > state_type;
 	typedef state_type deriv_type;
-	typedef std::tr1::array< state_type , order_value > derivs_type;
+	typedef boost::array< state_type , order_value > derivs_type;
 
 	taylor( value_type rel_error = 1.0e-14 , value_type abs_error = 1.0e-14 )
 	: m_derivs() , m_dt_fac( 1.0 ) , m_rel_error( rel_error ) , m_abs_error( abs_error ) { }
