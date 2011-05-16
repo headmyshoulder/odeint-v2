@@ -4,6 +4,8 @@ Concept Sytem
 
 [section Description]
 
+Attention, this concepts is not valid for all steppers. For example the symplectic steppers, as well as the implicit steppers have a different system concept.
+
 The System concept models the algorithmic implementation of the rhs. of the ODE, that is ['f(x,t)].
 The only requirement for this concept is that it should be callable with a specific parameter syntax (see below).
 A System is typically implemented as a function or a functor.
@@ -12,7 +14,8 @@ A System is typically implemented as a function or a functor.
 
 [section Notation]
 
-[variablelist 
+[variablelist
+  [[System] [A type that is a model of System]] 
   [[State] [A type that is the `state_type` of Stepper]]
   [[Deriv] [A type that is the `deriv_type` of Stepper]]
   [[Time] [A type that is the `time_type` of Stepper]]
@@ -27,7 +30,7 @@ A System is typically implemented as a function or a functor.
 [section Valid expressions]
 
 [table
-  [[Name] [Expression] [Returns] [Semantics]]
+  [[Name] [Expression] [Type] [Semantics]]
   [[Calculate ['dx/dt := f(x,t)]] [`sys( x , dxdt , t )`] [`void`] [Calculates f(x,t), the result is stored into dxdt] ]
 ]
 

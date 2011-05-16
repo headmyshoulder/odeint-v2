@@ -15,10 +15,11 @@
 #include <boost/numeric/odeint/util/construct.hpp>
 #include <boost/numeric/odeint/util/destruct.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
+#include <boost/numeric/odeint/util/is_pair.hpp>
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
-#include <boost/numeric/odeint/stepper/detail/is_pair.hpp>
+
 
 namespace boost {
 namespace numeric {
@@ -117,14 +118,14 @@ public:
 	void do_step( System system , const StateInOut &state , const time_type &t , const time_type &dt )
 	{
 		typedef typename boost::unwrap_reference< System >::type system_type;
-		do_step_impl( system , state , t , state , dt , typename detail::is_pair< system_type >::type() );
+		do_step_impl( system , state , t , state , dt , typename is_pair< system_type >::type() );
 	}
 
 	template< class System , class StateInOut >
 	void do_step( System system , StateInOut &state , const time_type &t , const time_type &dt )
 	{
 		typedef typename boost::unwrap_reference< System >::type system_type;
-		do_step_impl( system , state , t , state , dt , typename detail::is_pair< system_type >::type() );
+		do_step_impl( system , state , t , state , dt , typename is_pair< system_type >::type() );
 	}
 
 
@@ -160,7 +161,7 @@ public:
 	void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt )
 	{
 		typedef typename boost::unwrap_reference< System >::type system_type;
-		do_step_impl( system , in , t , out , dt , typename detail::is_pair< system_type >::type() );
+		do_step_impl( system , in , t , out , dt , typename is_pair< system_type >::type() );
 	}
 
 

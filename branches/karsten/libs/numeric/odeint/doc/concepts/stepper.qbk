@@ -1,4 +1,4 @@
-[section Concept stepper]
+[section Stepper]
 
 Concept Stepper
 
@@ -59,7 +59,7 @@ tba.
 [section Valid expressions]
 
 [table
-  [[Name] [Expression] [Returns] [Semantics]]
+  [[Name] [Expression] [Type] [Semantics]]
   [[Get the order] [`stepper.order()`] [`Order`] [Returns the order of the stepper which is used for error calculation.] ]
   [[Do step in-place] [`stepper.do_step( sys , x , t , dt )`] [`void`] [Performs one step of step size `dt`.  The newly obtained state is written in place in `x`.] ]
   [[Do step out-of-place] [`stepper.do_step( sys , in , t , out , dt )`] [`void`] [Performs one step. The newly obtained state is written to `out`] ]

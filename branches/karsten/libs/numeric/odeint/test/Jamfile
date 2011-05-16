@@ -28,5 +28,6 @@ test-suite "odeint"
 	 [ run stepper_with_ranges.cpp ]
 	 [ run rosenbrock4.cpp ]
 	 [ run is_pair.cpp ]
+	 [ run adams_bashforth_moulton.cpp ]
 	: <testing.launcher>valgrind
 	;    
