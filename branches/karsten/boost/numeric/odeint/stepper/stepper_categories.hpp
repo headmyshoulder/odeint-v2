@@ -24,8 +24,8 @@ namespace odeint {
  */
 
 struct stepper_tag {};
-struct explicit_stepper_tag : stepper_tag {};
-//struct implicit_stepper_tag : stepper_tag {};
+// struct explicit_stepper_tag : stepper_tag {};
+// struct implicit_stepper_tag : stepper_tag {};
 
 
 struct error_stepper_tag {};

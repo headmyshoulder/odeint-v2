@@ -10,6 +10,11 @@
 
 #include <boost/ref.hpp>
 
+#include <boost/numeric/odeint/stepper/stepper_categories.hpp>
+#include <boost/numeric/odeint/algebra/range_algebra.hpp>
+#include <boost/numeric/odeint/algebra/default_operations.hpp>
+#include <boost/numeric/odeint/util/size_adjuster.hpp>
+
 /*
  * # Introduce the number of states
  */
@@ -49,7 +54,7 @@ public :
 	typedef Algebra algebra_type;
 	typedef Operations operations_type;
 	typedef AdjustSizePolicy adjust_size_policy;
-	typedef explicit_stepper_tag stepper_category;
+	typedef stepper_tag stepper_category;
 
 	static const size_t steps = Steps;
 
