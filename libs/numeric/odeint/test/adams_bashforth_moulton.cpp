@@ -16,8 +16,6 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <boost/numeric/odeint/stepper/detail/adams_bashforth_coefficients.hpp>
-#include <boost/numeric/odeint/stepper/adams_bashforth.hpp>
 #include <boost/numeric/odeint/stepper/adams_bashforth_moulton.hpp>
 
 using namespace boost::unit_test;
@@ -27,17 +25,9 @@ typedef double value_type;
 
 BOOST_AUTO_TEST_SUITE( adams_bashforth_moulton_test )
 
-BOOST_AUTO_TEST_CASE( test_adams_bashforth_coefficients )
+BOOST_AUTO_TEST_CASE( test_dummy )
 {
-	detail::adams_bashforth_coefficients< value_type , 1 > c1;
-	detail::adams_bashforth_coefficients< value_type , 2 > c2;
-	detail::adams_bashforth_coefficients< value_type , 3 > c3;
-	detail::adams_bashforth_coefficients< value_type , 4 > c4;
-	detail::adams_bashforth_coefficients< value_type , 5 > c5;
-	detail::adams_bashforth_coefficients< value_type , 6 > c6;
-	detail::adams_bashforth_coefficients< value_type , 7 > c7;
-	detail::adams_bashforth_coefficients< value_type , 8 > c8;
-}
 
+}
 
 BOOST_AUTO_TEST_SUITE_END()
