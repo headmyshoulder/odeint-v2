@@ -33,7 +33,7 @@ which includes all headers in the library. All functions and classes from odeint
 
 [section Short Example]
 
-Image, you want to numerically integrate a harmonic oscillator with friction. The equations of motion are given by ['x'' = -x + gamma x']. This can be transformed to a system of two coupled first-order differential equations with new variables ['x] and ['p=x']. To apply numerical integration one first has to design the right hand side of the equation ['w' = f(w)] where in this case ['w = (x,p)]:
+Imaging, you want to numerically integrate a harmonic oscillator with friction. The equations of motion are given by ['x'' = -x + __gamma x']. This can be transformed to a system of two coupled first-order differential equations with new variables ['x] and ['p=x']. To apply numerical integration one first has to design the right hand side of the equation ['w' = f(w)] where in this case ['w = (x,p)]:
 
 [import ../examples/harmonic_oscillator.cpp]
 [rhs_function]
