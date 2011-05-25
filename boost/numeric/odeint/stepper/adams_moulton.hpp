@@ -53,10 +53,13 @@ private:
 
 	void initialize( void )
 	{
+		boost::numeric::odeint::construct( m_dxdt );
+		m_size_adjuster.register_state( 0 , m_dxdt );
 	}
 
 	void copy( const adam_moulton &stepper )
 	{
+		boost::numeric::odeint::copy( stepper.m_dxdt , m_dxdt );
 	}
 
 public :
@@ -83,13 +86,13 @@ public :
 
 
 	adam_moulton( void )
-	: m_coefficients()
+	: m_coefficients() , m_dxdt() , m_size_adjuster()
 	{
 		initialize();
 	}
 
 	adam_moulton( const adam_moulton &stepper )
-	: m_coefficients()
+	: m_coefficients() , m_dxdt() , m_size_adjuster()
 	{
 		initialize();
 		copy( stepper );
@@ -107,35 +110,31 @@ public :
 	 *
 	 * solves the forwarding problem
 	 */
-	template< class System , class StateInOut >
-	void do_step( System system , StateInOut &x , const time_type &t , const time_type &dt , const )
+	template< class System , class StateIn , class StateOut , class ABBuf >
+	void do_step( System system , const StateIn &in , const StateOut &out , const time_type &t , const const ABBuf &buf )
 	{
-		do_step( system , x , t , x , dt );
+		typename boost::unwrap_reference< System >::type &sys = system;
+
+		m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
+
+		sys( in , m_dxdt , t );
+
+		//		detail::call_algebra< steps , algebra_type , operations_type >()( in , out , buf , m_coefficients , dt );
 	}
 
-	template< class System , class StateInOut >
-	void do_step( System system , const StateInOut &x , const time_type &t , const time_type &dt )
+
+	template< class StateType >
+	void adjust_size( const StateType &x )
 	{
-		do_step( system , x , t , x , dt );
+		m_size_adjuster.adjust_size();
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 private:
 
 	const detail::adams_moulton_coefficients< value_type , steps > m_coefficients;
+	deriv_type m_dxdt;
+	size_adjuster< deriv_type > m_size_adjuster;
 };
 
 
