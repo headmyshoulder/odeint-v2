@@ -1,0 +1,231 @@
+/*
+ * explicit_generic_rk.hpp
+ *
+ *  Created on: May 19th, 2011
+ *      Author: mario
+ */
+
+#ifndef EXPLICIT_GENERIC_RK_HPP_
+#define EXPLICIT_GENERIC_RK_HPP_
+
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/push_back.hpp>
+#include <boost/mpl/for_each.hpp>
+#include <boost/mpl/range_c.hpp>
+#include <boost/mpl/copy.hpp>
+#include <boost/mpl/size_t.hpp>
+
+#include <boost/fusion/container.hpp>
+#include <boost/fusion/algorithm.hpp>
+#include <boost/fusion/iterator.hpp>
+#include <boost/fusion/mpl.hpp>
+#include <boost/fusion/sequence.hpp>
+
+#include <boost/array.hpp>
+
+#include <boost/ref.hpp>
+
+#include <boost/numeric/odeint/stepper/base/explicit_stepper_base.hpp>
+#include <boost/numeric/odeint/algebra/default_operations.hpp>
+#include <boost/numeric/odeint/stepper/detail/macros.hpp>
+#include <boost/numeric/odeint/algebra/generic_algebra.hpp>
+//#include "fusion_foreach_performance.hpp"
+
+#include <iostream>
+
+namespace mpl = boost::mpl;
+namespace fusion = boost::fusion;
+
+
+namespace boost {
+namespace numeric {
+namespace odeint {
+
+template< class T , class Constant >
+struct array_wrapper
+{
+    typedef const typename boost::array< T , Constant::value > type;
+};
+
+template< class T , size_t i >
+struct stage
+{
+    T c;
+    boost::array< T , i > a;
+};
+
+
+template< class T , class Constant >
+struct stage_wrapper
+{
+    typedef stage< T , Constant::value > type;
+};
+
+
+template<
+	size_t StageCount,
+	size_t Order,
+    class State ,
+    class Value = double ,
+    class Deriv = State ,
+    class Time = Value ,
+	class Algebra = generic_algebra ,
+	class Operations = default_operations ,
+	class AdjustSizePolicy = adjust_size_initially_tag
+	>
+class explicit_generic_rk : public explicit_stepper_base<
+	  explicit_generic_rk< StageCount , Order , State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy > ,
+	  Order , State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy >
+{
+
+public:
+
+	typedef explicit_stepper_base<
+explicit_generic_rk< StageCount , Order , State , Value , Deriv ,Time , Algebra , Operations , AdjustSizePolicy > ,
+Order , State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy > stepper_base_type;
+
+	typedef typename stepper_base_type::state_type state_type;
+	typedef typename stepper_base_type::value_type value_type;
+	typedef typename stepper_base_type::deriv_type deriv_type;
+	typedef typename stepper_base_type::time_type time_type;
+	typedef typename stepper_base_type::algebra_type algebra_type;
+	typedef typename stepper_base_type::operations_type operations_type;
+	typedef typename stepper_base_type::adjust_size_policy adjust_size_policy;
+	typedef typename stepper_base_type::stepper_type stepper_type;
+
+
+    typedef mpl::range_c< size_t , 1 , StageCount > stage_indices;
+
+    typedef typename fusion::result_of::as_vector
+    <
+        typename mpl::copy
+        <
+            stage_indices ,
+            mpl::inserter
+            <
+                mpl::vector0< > ,
+                mpl::push_back< mpl::_1 , array_wrapper< double , mpl::_2 > >
+            >
+        >::type
+    >::type coef_a_type;
+
+    typedef boost::array< double , StageCount > coef_b_type;
+    typedef boost::array< double , StageCount > coef_c_type;
+
+    typedef typename fusion::result_of::as_vector
+    <
+        typename mpl::push_back
+        <
+            typename mpl::copy
+            <
+                stage_indices,
+                mpl::inserter
+                <
+                    mpl::vector0<> ,
+                    mpl::push_back< mpl::_1 , stage_wrapper< Value , mpl::_2 > >
+                >
+            >::type ,
+            stage< Value , StageCount >
+        >::type
+    >::type stage_vector_base;
+
+
+    struct stage_vector : public stage_vector_base
+    {
+        struct do_insertion
+        {
+            stage_vector_base &m_base;
+            const coef_a_type &m_a;
+            const coef_c_type &m_c;
+
+            do_insertion( stage_vector_base &base , const coef_a_type &a , const coef_c_type &c )
+            : m_base( base ) , m_a( a ) , m_c( c ) { }
+
+            template< class Index >
+            void operator()( Index ) const
+            {
+                //fusion::at< Index >( m_base ) = stage< double , Index::value+1 , intermediate_stage >( m_c[ Index::value ] , fusion::at< Index >( m_a ) );
+                fusion::at< Index >( m_base ).c  = m_c[ Index::value ];
+                fusion::at< Index >( m_base ).a = fusion::at< Index >( m_a );
+            }
+        };
+
+        stage_vector( const coef_a_type &a , const coef_b_type &b , const coef_c_type &c )
+        {
+            typedef mpl::range_c< size_t , 0 , StageCount-1 > indices;
+            mpl::for_each< indices >( do_insertion( *this , a , c ) );
+            fusion::at_c< StageCount - 1 >( *this ).c = c[ StageCount - 1 ];
+            fusion::at_c< StageCount - 1 >( *this ).a = b;
+        }
+    };
+
+
+
+    template< class System , class StateIn , class DerivIn , class StateOut >
+    struct calculate_stage
+    {
+        System &system;
+        const StateIn &x;
+		state_type &x_tmp;
+		StateOut &x_out;
+		const DerivIn &dxdt;
+        state_type *F;
+        const double t;
+        const double dt;
+
+        calculate_stage( System &_system , const StateIn &_x , const DerivIn &_dxdt , StateOut &_out , 
+			state_type &_x_tmp , state_type *_F , const time_type &_t , const time_type &_dt )
+        : system( _system ) , x( _x ) , x_tmp( _x_tmp ) , x_out( _out) , dxdt( _dxdt ) , F( _F ) , t( _t ) , dt( _dt )
+        {}
+
+
+        template< typename T , size_t stage_number >
+        void inline operator()( stage< T , stage_number > const &stage ) const
+        //typename stage_fusion_wrapper< T , mpl::size_t< stage_number > , intermediate_stage >::type const &stage ) const
+        {
+            if( stage_number > 1 )
+				#pragma warning( disable : 4307 34 )
+                system( x_tmp , F[stage_number-2] , t + stage.c * dt );
+				#pragma warning( default : 4307 34 )
+			//std::cout << stage_number-2 << ", t': " << t + stage.c * dt << std::endl;
+
+			if( stage_number < StageCount )
+				generic_algebra::foreach<stage_number>( x_tmp , x , stage.a , dxdt , F , dt);
+			else
+				generic_algebra::foreach<stage_number>( x_out , x , stage.a , dxdt , F , dt);
+        }
+
+    };
+
+public:
+
+    explicit_generic_rk( const coef_a_type &a ,
+                  const coef_b_type &b ,
+                  const coef_c_type &c )
+    : m_stages( a , b , c )
+
+    { }
+
+
+    template< class System , class StateIn , class DerivIn , class StateOut >
+	void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt )
+	{
+        fusion::for_each( m_stages , calculate_stage< System , StateIn , DerivIn , StateOut >
+			( system , in , dxdt , out , m_x_tmp , m_F , t , dt ) );
+    }
+
+private:
+
+    const stage_vector m_stages;
+    state_type m_x_tmp;
+
+protected:
+    state_type m_F[StageCount-1];
+
+};
+
+}
+}
+}
+
+#endif /* EXPLICIT_GENERIC_RK_HPP_ */
