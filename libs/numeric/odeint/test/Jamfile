@@ -30,5 +30,6 @@ test-suite "odeint"
 	 [ run is_pair.cpp ]
 	 [ run adams_bashforth.cpp ]
 	 [ run adams_bashforth_moulton.cpp ]
+	 [ run generic_stepper.cpp ]
 	: <testing.launcher>valgrind
 	;    
