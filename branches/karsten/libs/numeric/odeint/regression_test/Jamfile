@@ -37,3 +37,7 @@ exe integrate_functions
 exe hamiltonian_steppers
 	: hamiltonian_steppers.cpp
 	;
+	
+exe adams_bashforth
+	: adams_bashforth.cpp
+	;

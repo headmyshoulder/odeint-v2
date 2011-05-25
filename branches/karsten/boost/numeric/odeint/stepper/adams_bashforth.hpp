@@ -9,8 +9,6 @@
 #define BOOST_NUMERIC_ODEINT_STEPPER_ADAMS_BASHFORTH_HPP_
 
 #include <boost/ref.hpp>
-#include <boost/array.hpp>
-#include <boost/circular_buffer.hpp>
 
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
@@ -225,17 +223,22 @@ public :
 	}
 
 	template< class ExplicitStepper , class System , class StateIn >
-	void initialize( ExplicitStepper explicit_stepper , System system , const StateIn &x , const time_type &t , const time_type &dt )
+	void initialize( ExplicitStepper explicit_stepper , System system , StateIn &x , time_type &t , const time_type &dt )
 	{
 		typename boost::unwrap_reference< ExplicitStepper >::type &stepper = explicit_stepper;
 		typename boost::unwrap_reference< System >::type &sys = system;
 
-		// ToDo : implement
-
+		for( size_t i=0 ; i<steps-1 ; ++i )
+		{
+			if( i != 0 ) m_step_storage.rotate();
+			sys( x , m_step_storage[0] , t );
+			stepper.do_step( system , x , m_step_storage[0] , t , dt );
+			t += dt;
+		}
 	}
 
 	template< class System , class StateIn >
-	void initialize( System system , const StateIn &x , const time_type &t , const time_type &dt )
+	void initialize( System system , StateIn &x , time_type &t , const time_type &dt )
 	{
 		explicit_rk4< state_type , value_type , deriv_type , time_type , algebra_type , operations_type , adjust_size_initially_tag > rk4;
 		initialize( boost::ref( rk4 ) , system , x , t , dt );

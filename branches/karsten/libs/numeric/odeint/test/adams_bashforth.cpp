@@ -18,6 +18,11 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <boost/mpl/list.hpp>
+#include <boost/mpl/size_t.hpp>
+#include <boost/mpl/range_c.hpp>
+
+
 #include <boost/numeric/odeint/stepper/detail/adams_bashforth_coefficients.hpp>
 #include <boost/numeric/odeint/stepper/detail/rotating_buffer.hpp>
 #include <boost/numeric/odeint/stepper/adams_bashforth.hpp>
@@ -99,6 +104,24 @@ BOOST_AUTO_TEST_CASE( test_copying )
 	BOOST_CHECK_CLOSE( s1.step_storage()[1][0] , s3.step_storage()[1][0] , 1.0e-14 );
 }
 
+typedef boost::mpl::range_c< size_t , 1 , 6 > vector_of_steps;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_init_and_steps , step_type , vector_of_steps )
+{
+	const static size_t steps = step_type::value;
+	typedef boost::array< value_type , 3 > state_type;
+
+	adams_bashforth< steps , state_type > stepper;
+	state_type x = {{ 10.0 , 10.0 , 10.0 }};
+	const value_type dt = 0.01;
+	value_type t = 0.0;
+
+	stepper.initialize( lorenz() , x , t , dt );
+	BOOST_CHECK_CLOSE( t , value_type( steps - 1 ) * dt , 1.0e-14 );
+
+	stepper.do_step( lorenz() , x , t , dt );
+}
+
 BOOST_AUTO_TEST_CASE( test_instantiation )
 {
 	typedef boost::array< double , 3 > state_type;
@@ -119,8 +142,8 @@ BOOST_AUTO_TEST_CASE( test_instantiation )
 	s4.do_step( lorenz() , x , t , dt );
 	s5.do_step( lorenz() , x , t , dt );
 	s6.do_step( lorenz() , x , t , dt );
-	s7.do_step( lorenz() , x , t , dt );
-	s8.do_step( lorenz() , x , t , dt );
+//	s7.do_step( lorenz() , x , t , dt );
+//	s8.do_step( lorenz() , x , t , dt );
 }
 
 
