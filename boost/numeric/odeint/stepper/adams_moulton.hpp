@@ -18,7 +18,7 @@
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
 
-#include <boost/numeric/odeint/stepper/detail/adams_bashforth_call_algebra.hpp>
+#include <boost/numeric/odeint/stepper/detail/adams_moulton_call_algebra.hpp>
 #include <boost/numeric/odeint/stepper/detail/adams_moulton_coefficients.hpp>
 #include <boost/numeric/odeint/stepper/detail/rotating_buffer.hpp>
 
@@ -106,21 +106,48 @@ public :
 
 
 	/*
-	 * Version 1 : do_step( system , x , t , dt );
+	 * Version 1 : do_step( system , x , t , dt , buf );
 	 *
 	 * solves the forwarding problem
 	 */
+    template< class System , class StateInOut , class ABBuf >
+    void do_step( System system , StateInOut &in , const time_type &t , const time_type &dt , const ABBuf &buf )
+    {
+        do_step( system , in , t , in , dt , buf );
+    }
+
+    template< class System , class StateInOut , class ABBuf >
+    void do_step( System system , const StateInOut &in , const time_type &t , const time_type &dt , const ABBuf &buf )
+    {
+        do_step( system , in , t , in , dt , buf );
+    }
+
+
+
+    /*
+     * Version 2 : do_step( system , in , t , out , dt , buf );
+     *
+     * solves the forwarding problem
+     */
+    template< class System , class StateIn , class StateOut , class ABBuf >
+    void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt , const ABBuf &buf )
+    {
+        typename boost::unwrap_reference< System >::type &sys = system;
+        m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
+        sys( in , m_dxdt , t );
+        detail::adams_moulton_call_algebra< steps , algebra_type , operations_type >()( in , out , m_dxdt , buf , m_coefficients , dt );
+    }
+
 	template< class System , class StateIn , class StateOut , class ABBuf >
-	void do_step( System system , const StateIn &in , const StateOut &out , const time_type &t , const ABBuf &buf )
+	void do_step( System system , const StateIn &in , const time_type &t , const StateOut &out , const time_type &dt , const ABBuf &buf )
 	{
 		typename boost::unwrap_reference< System >::type &sys = system;
-
 		m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
-
 		sys( in , m_dxdt , t );
-
-		//		detail::call_algebra< steps , algebra_type , operations_type >()( in , out , buf , m_coefficients , dt );
+		detail::adams_moulton_call_algebra< steps , algebra_type , operations_type >()( in , out , m_dxdt , buf , m_coefficients , dt );
 	}
+
+
 
 
 	template< class StateType >

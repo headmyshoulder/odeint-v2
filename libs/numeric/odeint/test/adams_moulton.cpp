@@ -49,38 +49,14 @@ BOOST_AUTO_TEST_SUITE( adams_moulton_test )
 
 BOOST_AUTO_TEST_CASE( test_adams_moulton_coefficients )
 {
-//	detail::adams_bashforth_coefficients< value_type , 1 > c1;
-//	detail::adams_bashforth_coefficients< value_type , 2 > c2;
-//	detail::adams_bashforth_coefficients< value_type , 3 > c3;
-//	detail::adams_bashforth_coefficients< value_type , 4 > c4;
-//	detail::adams_bashforth_coefficients< value_type , 5 > c5;
-//	detail::adams_bashforth_coefficients< value_type , 6 > c6;
-//	detail::adams_bashforth_coefficients< value_type , 7 > c7;
-//	detail::adams_bashforth_coefficients< value_type , 8 > c8;
-}
-
-BOOST_AUTO_TEST_CASE( test_copying )
-{
-	typedef boost::array< double , 1 > state_type;
-	typedef adams_moulton< 2 , state_type > stepper_type;
-
-//	stepper_type s1;
-//	s1.step_storage()[0][0] = 1.5;
-//	s1.step_storage()[1][0] = 2.25;
-//
-//	stepper_type s2( s1 );
-//	BOOST_CHECK_CLOSE( s1.step_storage()[0][0] , s2.step_storage()[0][0] , 1.0e-14 );
-//	BOOST_CHECK_CLOSE( s1.step_storage()[1][0] , s2.step_storage()[1][0] , 1.0e-14 );
-//	BOOST_CHECK( ( &(s1.step_storage()[0]) ) != ( &(s2.step_storage()[0]) ) );
-//
-//	stepper_type s3;
-//	state_type *p1 = &( s3.step_storage()[0] ) , *p2 = &( s3.step_storage()[1] );
-//	s3 = s1;
-//	BOOST_CHECK( p1 == ( &( s3.step_storage()[0] ) ) );
-//	BOOST_CHECK( p2 == ( &( s3.step_storage()[1] ) ) );
-//
-//	BOOST_CHECK_CLOSE( s1.step_storage()[0][0] , s3.step_storage()[0][0] , 1.0e-14 );
-//	BOOST_CHECK_CLOSE( s1.step_storage()[1][0] , s3.step_storage()[1][0] , 1.0e-14 );
+	detail::adams_moulton_coefficients< value_type , 1 > c1;
+	detail::adams_moulton_coefficients< value_type , 2 > c2;
+	detail::adams_moulton_coefficients< value_type , 3 > c3;
+	detail::adams_moulton_coefficients< value_type , 4 > c4;
+	detail::adams_moulton_coefficients< value_type , 5 > c5;
+	detail::adams_moulton_coefficients< value_type , 6 > c6;
+	detail::adams_moulton_coefficients< value_type , 7 > c7;
+	detail::adams_moulton_coefficients< value_type , 8 > c8;
 }
 
 typedef boost::mpl::range_c< size_t , 1 , 6 > vector_of_steps;
@@ -94,35 +70,24 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_init_and_steps , step_type , vector_of_steps
 //	state_type x = {{ 10.0 , 10.0 , 10.0 }};
 //	const value_type dt = 0.01;
 //	value_type t = 0.0;
-//
-//	stepper.initialize( lorenz() , x , t , dt );
-//	BOOST_CHECK_CLOSE( t , value_type( steps - 1 ) * dt , 1.0e-14 );
-//
+
 //	stepper.do_step( lorenz() , x , t , dt );
 }
 
 BOOST_AUTO_TEST_CASE( test_instantiation )
 {
-//	typedef boost::array< double , 3 > state_type;
-//	adams_bashforth< 1 , state_type > s1;
-//	adams_bashforth< 2 , state_type > s2;
-//	adams_bashforth< 3 , state_type > s3;
-//	adams_bashforth< 4 , state_type > s4;
-//	adams_bashforth< 5 , state_type > s5;
-//	adams_bashforth< 6 , state_type > s6;
-//	adams_bashforth< 7 , state_type > s7;
-//	adams_bashforth< 8 , state_type > s8;
-//
+	typedef boost::array< double , 3 > state_type;
+	adams_moulton< 1 , state_type > s1;
+	adams_moulton< 2 , state_type > s2;
+	adams_moulton< 3 , state_type > s3;
+	adams_moulton< 4 , state_type > s4;
+	adams_moulton< 5 , state_type > s5;
+	adams_moulton< 6 , state_type > s6;
+	adams_moulton< 7 , state_type > s7;
+	adams_moulton< 8 , state_type > s8;
+
 //	state_type x = {{ 10.0 , 10.0 , 10.0 }};
 //	value_type t = 0.0 , dt = 0.01;
-//	s1.do_step( lorenz() , x , t , dt );
-//	s2.do_step( lorenz() , x , t , dt );
-//	s3.do_step( lorenz() , x , t , dt );
-//	s4.do_step( lorenz() , x , t , dt );
-//	s5.do_step( lorenz() , x , t , dt );
-//	s6.do_step( lorenz() , x , t , dt );
-////	s7.do_step( lorenz() , x , t , dt );
-////	s8.do_step( lorenz() , x , t , dt );
 }
 
 
