@@ -23,8 +23,6 @@
 #include <boost/mpl/range_c.hpp>
 
 
-#include <boost/numeric/odeint/stepper/detail/adams_bashforth_coefficients.hpp>
-#include <boost/numeric/odeint/stepper/detail/rotating_buffer.hpp>
 #include <boost/numeric/odeint/stepper/adams_bashforth.hpp>
 
 using namespace boost::unit_test;

@@ -41,3 +41,8 @@ exe hamiltonian_steppers
 exe adams_bashforth
 	: adams_bashforth.cpp
 	;
+	
+exe adams_bashforth_moulton
+	: adams_bashforth_moulton.cpp
+	;
+		

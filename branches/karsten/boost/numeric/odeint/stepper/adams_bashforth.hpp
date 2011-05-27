@@ -135,7 +135,7 @@ public :
 		typename boost::unwrap_reference< System >::type &sys = system;
 		m_step_storage.rotate();
 		sys( in , m_step_storage[0] , t );
-		detail::call_algebra< steps , algebra_type , operations_type >()( in , out , m_step_storage , m_coefficients , dt );
+		detail::adams_bashforth_call_algebra< steps , algebra_type , operations_type >()( in , out , m_step_storage , m_coefficients , dt );
 	}
 
 	template< class System , class StateIn , class StateOut >
@@ -144,7 +144,7 @@ public :
 		typename boost::unwrap_reference< System >::type &sys = system;
 		m_step_storage.rotate();
 		sys( in , m_step_storage[0] , t );
-		detail::call_algebra< steps , algebra_type , operations_type >()( in , out , m_step_storage , m_coefficients , dt );
+		detail::adams_bashforth_call_algebra< steps , algebra_type , operations_type >()( in , out , m_step_storage , m_coefficients , dt );
 	}
 
 
