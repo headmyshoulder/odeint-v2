@@ -184,9 +184,15 @@ Order , State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy >
         //typename stage_fusion_wrapper< T , mpl::size_t< stage_number > , intermediate_stage >::type const &stage ) const
         {
             if( stage_number > 1 )
+            {
+				#ifdef BOOST_MSVC
 				#pragma warning( disable : 4307 34 )
+				#endif
                 system( x_tmp , F[stage_number-2] , t + stage.c * dt );
+				#ifdef BOOST_MSVC
 				#pragma warning( default : 4307 34 )
+				#endif
+            }
 			//std::cout << stage_number-2 << ", t': " << t + stage.c * dt << std::endl;
 
 			if( stage_number < StageCount )
