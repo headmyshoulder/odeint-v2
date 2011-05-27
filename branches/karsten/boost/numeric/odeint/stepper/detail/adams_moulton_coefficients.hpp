@@ -1,5 +1,5 @@
 /*
- * adam_moulton_coefficients.hpp
+ * adams_moulton_coefficients.hpp
  *
  *  Created on: May 15, 2011
  *      Author: karsten
@@ -17,13 +17,13 @@ namespace odeint {
 namespace detail {
 
 template< class Value , size_t Steps >
-class adam_moulton_coefficients ;
+class adams_moulton_coefficients ;
 
 template< class Value >
-class adam_moulton_coefficients< Value , 1 > : public boost::array< Value , 1 >
+class adams_moulton_coefficients< Value , 1 > : public boost::array< Value , 1 >
 {
 public:
-	adam_moulton_coefficients( void )
+	adams_moulton_coefficients( void )
 	: boost::array< Value , 1 >()
 	{
 		(*this)[0] = static_cast< Value >( 1.0 );
@@ -32,10 +32,10 @@ public:
 
 
 template< class Value >
-class adam_moulton_coefficients< Value , 2 > : public boost::array< Value , 2 >
+class adams_moulton_coefficients< Value , 2 > : public boost::array< Value , 2 >
 {
 public:
-	adam_moulton_coefficients( void )
+	adams_moulton_coefficients( void )
 	: boost::array< Value , 2 >()
 	{
 		(*this)[0] = static_cast< Value >( 1.0 ) / static_cast< Value >( 2.0 );
@@ -45,10 +45,10 @@ public:
 
 
 template< class Value >
-class adam_moulton_coefficients< Value , 3 > : public boost::array< Value , 3 >
+class adams_moulton_coefficients< Value , 3 > : public boost::array< Value , 3 >
 {
 public:
-	adam_moulton_coefficients( void )
+	adams_moulton_coefficients( void )
 	: boost::array< Value , 3 >()
 	{
 		(*this)[0] = static_cast< Value >( 5.0 ) / static_cast< Value >( 12.0 );
@@ -59,10 +59,10 @@ public:
 
 
 template< class Value >
-class adam_moulton_coefficients< Value , 4 > : public boost::array< Value , 4 >
+class adams_moulton_coefficients< Value , 4 > : public boost::array< Value , 4 >
 {
 public:
-	adam_moulton_coefficients( void )
+	adams_moulton_coefficients( void )
 	: boost::array< Value , 4 >()
 	{
 		(*this)[0] = static_cast< Value >( 3.0 ) / static_cast< Value >( 8.0 );
@@ -74,10 +74,10 @@ public:
 
 
 template< class Value >
-class adam_moulton_coefficients< Value , 5 > : public boost::array< Value , 5 >
+class adams_moulton_coefficients< Value , 5 > : public boost::array< Value , 5 >
 {
 public:
-	adam_moulton_coefficients( void )
+	adams_moulton_coefficients( void )
 	: boost::array< Value , 5 >()
 	{
 		(*this)[0] = static_cast< Value >( 251.0 ) / static_cast< Value >( 720.0 );
@@ -90,10 +90,10 @@ public:
 
 
 template< class Value >
-class adam_moulton_coefficients< Value , 6 > : public boost::array< Value , 6 >
+class adams_moulton_coefficients< Value , 6 > : public boost::array< Value , 6 >
 {
 public:
-	adam_moulton_coefficients( void )
+	adams_moulton_coefficients( void )
 	: boost::array< Value , 6 >()
 	{
 		(*this)[0] = static_cast< Value >( 95.0 ) / static_cast< Value >( 288.0 );
@@ -106,10 +106,10 @@ public:
 };
 
 template< class Value >
-class adam_moulton_coefficients< Value , 7 > : public boost::array< Value , 7 >
+class adams_moulton_coefficients< Value , 7 > : public boost::array< Value , 7 >
 {
 public:
-	adam_moulton_coefficients( void )
+	adams_moulton_coefficients( void )
 	: boost::array< Value , 7 >()
 	{
 		(*this)[0] = static_cast< Value >( 19087.0 ) / static_cast< Value >( 60480.0 );
@@ -124,10 +124,10 @@ public:
 
 
 template< class Value >
-class adam_moulton_coefficients< Value , 8 > : public boost::array< Value , 8 >
+class adams_moulton_coefficients< Value , 8 > : public boost::array< Value , 8 >
 {
 public:
-	adam_moulton_coefficients( void )
+	adams_moulton_coefficients( void )
 	: boost::array< Value , 8 >()
 	{
 		(*this)[0] = static_cast< Value >( 5257.0 ) / static_cast< Value >( 17280.0 );

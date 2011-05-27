@@ -1,5 +1,5 @@
 /*
- * adam_moulton.hpp
+ * adams_moulton.hpp
  *
  *  Created on: May 15, 2011
  *      Author: karsten
@@ -47,7 +47,7 @@ template<
 	class Operations = default_operations ,
 	class AdjustSizePolicy = adjust_size_initially_tag
 	>
-class adam_moulton
+class adams_moulton
 {
 private:
 
@@ -57,7 +57,7 @@ private:
 		m_size_adjuster.register_state( 0 , m_dxdt );
 	}
 
-	void copy( const adam_moulton &stepper )
+	void copy( const adams_moulton &stepper )
 	{
 		boost::numeric::odeint::copy( stepper.m_dxdt , m_dxdt );
 	}
@@ -85,20 +85,20 @@ public :
 
 
 
-	adam_moulton( void )
+	adams_moulton( void )
 	: m_coefficients() , m_dxdt() , m_size_adjuster()
 	{
 		initialize();
 	}
 
-	adam_moulton( const adam_moulton &stepper )
+	adams_moulton( const adams_moulton &stepper )
 	: m_coefficients() , m_dxdt() , m_size_adjuster()
 	{
 		initialize();
 		copy( stepper );
 	}
 
-	adam_moulton& operator=( const adam_moulton &stepper )
+	adams_moulton& operator=( const adams_moulton &stepper )
 	{
 		copy( stepper );
 		return *this;
@@ -111,7 +111,7 @@ public :
 	 * solves the forwarding problem
 	 */
 	template< class System , class StateIn , class StateOut , class ABBuf >
-	void do_step( System system , const StateIn &in , const StateOut &out , const time_type &t , const const ABBuf &buf )
+	void do_step( System system , const StateIn &in , const StateOut &out , const time_type &t , const ABBuf &buf )
 	{
 		typename boost::unwrap_reference< System >::type &sys = system;
 
@@ -134,7 +134,7 @@ private:
 
 	const detail::adams_moulton_coefficients< value_type , steps > m_coefficients;
 	deriv_type m_dxdt;
-	size_adjuster< deriv_type > m_size_adjuster;
+	size_adjuster< deriv_type , 1 > m_size_adjuster;
 };
 
 
