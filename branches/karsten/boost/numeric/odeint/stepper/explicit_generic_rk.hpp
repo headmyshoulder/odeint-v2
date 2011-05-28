@@ -69,7 +69,7 @@ template<
     class Value = double ,
     class Deriv = State ,
     class Time = Value ,
-	class Algebra = generic_algebra ,
+	class Algebra = range_algebra ,
 	class Operations = default_operations ,
 	class AdjustSizePolicy = adjust_size_initially_tag
 	>
@@ -196,9 +196,11 @@ Order , State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy >
 			//std::cout << stage_number-2 << ", t': " << t + stage.c * dt << std::endl;
 
 			if( stage_number < StageCount )
-				generic_algebra::foreach<stage_number>( x_tmp , x , stage.a , dxdt , F , dt);
+				algebra_type::for_eachn<stage_number>( x_tmp , x , dxdt , F , 
+					typename operations_type::template scale_sumn< stage_number , time_type >( stage.a , dt ) );
 			else
-				generic_algebra::foreach<stage_number>( x_out , x , stage.a , dxdt , F , dt);
+				algebra_type::for_eachn<stage_number>( x_out , x , dxdt , F , 
+					typename operations_type::template scale_sumn< stage_number , time_type >( stage.a , dt ) );
         }
 
     };
@@ -233,5 +235,4 @@ protected:
 }
 }
 }
-
 #endif /* EXPLICIT_GENERIC_RK_HPP_ */

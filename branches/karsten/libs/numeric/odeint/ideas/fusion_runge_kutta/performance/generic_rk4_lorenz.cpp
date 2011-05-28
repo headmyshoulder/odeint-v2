@@ -13,7 +13,7 @@ typedef rk4_fusion_type::coef_a_type coef_a_type;
 typedef rk4_fusion_type::coef_b_type coef_b_type;
 typedef rk4_fusion_type::coef_c_type coef_c_type;
 
-
+const boost::array< double , 1 > a1 = {{ 0.5 }};
 const boost::array< double , 2 > a2 = {{ 0.0 , 0.5 }};
 const boost::array< double , 3 > a3 = {{ 0.0 , 0.0 , 1.0 }};
 

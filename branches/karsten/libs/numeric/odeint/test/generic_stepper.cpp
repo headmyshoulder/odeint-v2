@@ -17,6 +17,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <boost/numeric/odeint/stepper/explicit_generic_rk.hpp>
+#include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
 
 #include <boost/array.hpp>
 
@@ -42,11 +43,15 @@ const stepper_type::coef_a_type a = fusion::make_vector( a1 , a2 , a3 );
 const stepper_type::coef_b_type b = {{ 1.0/6 , 1.0/3 , 1.0/3 , 1.0/6 }};
 const stepper_type::coef_c_type c = {{ 0.0 , 0.5 , 0.5 , 1.0 }};
 
+typedef explicit_rk4< state_type > rk4_stepper_type;
+
 BOOST_AUTO_TEST_SUITE( generic_stepper_test )
 
 BOOST_AUTO_TEST_CASE( test_generic_stepper )
 {
 	stepper_type stepper( a , b , c );
+
+	rk4_stepper_type rk4;
 
 	typedef stepper_type::state_type state_type;
 	typedef stepper_type::value_type stepper_value_type;
@@ -54,16 +59,16 @@ BOOST_AUTO_TEST_CASE( test_generic_stepper )
 	typedef stepper_type::time_type time_type;
 
 	state_type x = {{ 0.0 , 1.0 }};
+	state_type y = x;
 	
 	stepper.do_step( sys , x , 0.0 , 0.1 );
 
-	/*using std::abs;
-	value_type eps = 1E-12;
+	rk4.do_step( sys , y , 0.0 , 0.1 );
 
 	// compare with analytic solution of above system
-	BOOST_CHECK_SMALL( abs( x[0] - 20.0/81.0 ) , eps );
-	BOOST_CHECK_SMALL( abs( x[1] - 10.0/9.0 ) , eps );
-	*/
+	BOOST_CHECK_EQUAL( x[0] , y[0] );
+	BOOST_CHECK_EQUAL( x[1] , y[1] );
+
 }
 
 BOOST_AUTO_TEST_SUITE_END()

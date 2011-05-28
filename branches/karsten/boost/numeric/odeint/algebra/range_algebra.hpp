@@ -14,6 +14,7 @@
 #define BOOST_BOOST_NUMERIC_ODEINT_STANDARD_ALGEBRA_HPP_INCLUDED
 
 #include <boost/range.hpp>
+#include <boost/mpl/size_t.hpp>
 
 #include <boost/numeric/odeint/algebra/detail/macros.hpp>
 #include <boost/numeric/odeint/algebra/detail/for_each.hpp>
@@ -82,6 +83,61 @@ struct range_algebra
 	}
 
 
+
+	/* for the generic stepper 
+	*/
+	template< size_t n , class S1 , class S2 , class S3 , class S4 , class Op >
+    inline static void for_eachn( S1 &s1 , S2 &s2 ,	S3 &s3 , S4 s4_array[n] , Op op )
+    {
+		for_eachn_fw( s1 , s2 , s3 , s4_array , op , boost::mpl::size_t< n-1 >() );
+    }
+
+	template< class S1 , class S2 , class S3 , class S4 , class Op  >
+    inline static void for_eachn_fw( S1 &s1 , S2 &s2 , S3 &s3 , S4 s4_array[0] , Op op , 
+			boost::mpl::size_t< 0 > c )
+    {
+		detail::for_each3( boost::begin( s1 ) , boost::end( s1 ) , boost::begin( s2 ) , 
+							boost::begin( s3 ) , op );
+	}
+
+	template< class S1 , class S2 , class S3 , class S4 , class Op >
+    inline static void for_eachn_fw( S1 &s1 , S2 &s2 , S3 &s3 , S4 s4_array[1] , Op op ,
+			boost::mpl::size_t< 1 > c )
+    {
+		detail::for_each4( boost::begin( s1 ) , boost::end( s1 ) , boost::begin( s2 ) , 
+							boost::begin( s3 ) , boost::begin( s4_array[0] ) , op );
+	}
+
+	template< class S1 , class S2 , class S3 , class S4 , class Op >
+    inline static void for_eachn_fw( S1 &s1 , S2 &s2 ,	S3 &s3 , S4 s4_array[2] , Op op ,
+            boost::mpl::size_t< 2 > c )
+    {
+		detail::for_each5( boost::begin( s1 ) , boost::end( s1 ) , boost::begin( s2 ) , 
+							boost::begin( s3 ) , boost::begin( s4_array[0] ) , 
+                            boost::begin( s4_array[1] ) , op );
+	}
+
+	template< class S1 , class S2 , class S3 , class S4 , class Op >
+    inline static void for_eachn_fw( S1 &s1 , S2 &s2 , S3 &s3 , S4 s4_array[3] , Op op ,
+            boost::mpl::size_t< 3 > c )
+    {
+		detail::for_each6( boost::begin( s1 ) , boost::end( s1 ) , boost::begin( s2 ) , 
+							boost::begin( s3 ) , boost::begin( s4_array[0] ) , 
+                            boost::begin( s4_array[1] ) , boost::begin( s4_array[2] ) , op );
+	}
+
+    /*template< size_t n , class StateOut , class StateIn , class DerivIn , typename T >
+    inline static void foreach( StateOut &x_tmp ,
+                const boost::array< T , n > &a ,
+				const DerivIn &dxdt , const StateIn k_vector[n] , const T dt )
+    {
+        for( size_t i=0 ; i<x.size() ; ++i )
+        {
+            x_tmp[i] = a[0]*dt*dxdt[i];
+            for( size_t j = 1 ; j<n ; ++j )
+                x_tmp[i] += a[j]*dt*k_vector[j-1][i];
+         }
+    }*/
 };
 
 } // odeint
