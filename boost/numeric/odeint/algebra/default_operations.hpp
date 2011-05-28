@@ -227,11 +227,51 @@ struct default_operations
 	};
 
 
+	/*
+	 * For generic case
+	 */
 
+	template< size_t n , class Fac = double >
+	struct scale_sumn
+	{
+		BOOST_STATIC_ASSERT( false );
+	};
 
+	template< class Fac >
+	struct scale_sumn< 1 , Fac > : public scale_sum2< Fac >
+	{
+		scale_sumn( const boost::array<Fac,1> &a , const Fac &dt ) : scale_sum2( 1.0 , a[0]*dt )
+		{ }
 
+		typedef void result_type;
+	};
 
+	template< class Fac >
+	struct scale_sumn< 2 , Fac > : public scale_sum3< Fac >
+	{
+		scale_sumn( const boost::array<Fac,2> &a , const Fac &dt ) : scale_sum3( 1.0 , a[0]*dt , a[1]*dt )
+		{ }
 
+		typedef void result_type;
+	};
+
+	template< class Fac >
+	struct scale_sumn< 3 , Fac > : public scale_sum4< Fac >
+	{
+		scale_sumn( const boost::array<Fac,3> &a , const Fac &dt ) : scale_sum4( 1.0 , a[0]*dt , a[1]*dt , a[2]*dt )
+		{ }
+
+		typedef void result_type;
+	};
+
+	template< class Fac >
+	struct scale_sumn< 4 , Fac > : public scale_sum5< Fac >
+	{
+		scale_sumn( const boost::array<Fac,4> &a , const Fac &dt ) : scale_sum5( 1.0 , a[0]*dt , a[1]*dt , a[2]*dt , a[3]*dt )
+		{ }
+
+		typedef void result_type;
+	};
 
 	/*
 	 * for usage in for_each2

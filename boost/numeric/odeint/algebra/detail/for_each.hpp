@@ -84,8 +84,14 @@ inline void for_each8( Iterator1 first1 , Iterator1 last1 , Iterator2 first2 , I
 	for( ; first1 != last1 ; )
 		op( *first1++ , *first2++ , *first3++ , *first4++ , *first5++ , *first6++ , *first7++ , *first8++ );
 }
-
-
+//
+//template< size_t n , class Iterator1 , class Iterator2 , class Iterator3 , class Iterator4 , class Operation >
+//inline void for_eachn( Iterator1 first1 , Iterator1 last1 , Iterator2 first2 , Iterator4 first3 , Iterator4 first_array[n-1] , Operation op )
+//{
+//	while( first1 != last1 )
+//	{
+//		op( *first1++ , *first2++ , *first3++ , first_array , 
+//}
 
 } // detail
 } // odeint
