@@ -1,0 +1,15 @@
+project
+    : requirements
+      <include>../../../../..
+    ;
+    
+lib libgsl : : <name>gsl ;
+lib libgslcblas : : <name>gslcblas ;
+
+exe test_vector
+    : test_vector.cpp
+    ;
+ 
+ exe test_gsl_vector
+    : test_gsl_vector.cpp libgsl libgslcblas
+    ;
