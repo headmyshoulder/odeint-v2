@@ -56,5 +56,5 @@ int main()
 
     odeint_wrapper stepper;
 
-    run( stepper , 1000 , 1E-2 );
+    run( stepper , 10000 , 1E-6 );
 }
