@@ -26,9 +26,9 @@
 #include <boost/ref.hpp>
 
 #include <boost/numeric/odeint/stepper/base/explicit_stepper_base.hpp>
-#include <boost/numeric/odeint/algebra/default_operations.hpp>
 #include <boost/numeric/odeint/stepper/detail/macros.hpp>
-#include <boost/numeric/odeint/algebra/generic_algebra.hpp>
+#include <boost/numeric/odeint/algebra/range_algebra.hpp>
+#include <boost/numeric/odeint/algebra/default_operations.hpp>
 //#include "fusion_foreach_performance.hpp"
 
 #include <iostream>
@@ -196,11 +196,11 @@ Order , State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy >
 			//std::cout << stage_number-2 << ", t': " << t + stage.c * dt << std::endl;
 
 			if( stage_number < StageCount )
-				algebra_type::for_eachn<stage_number>( x_tmp , x , dxdt , F , 
-					typename operations_type::template scale_sumn< stage_number , time_type >( stage.a , dt ) );
+				    algebra_type::template for_eachn<stage_number>( x_tmp , x , dxdt , F ,
+				            typename operations_type::template scale_sumn< stage_number , time_type >( stage.a , dt ) );
 			else
-				algebra_type::for_eachn<stage_number>( x_out , x , dxdt , F , 
-					typename operations_type::template scale_sumn< stage_number , time_type >( stage.a , dt ) );
+				    algebra_type::template for_eachn<stage_number>( x_out , x , dxdt , F ,
+				            typename operations_type::template scale_sumn< stage_number , time_type >( stage.a , dt ) );
         }
 
     };

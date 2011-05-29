@@ -68,7 +68,9 @@ private:
 
 int main()
 {
+	srand( 12312354 );
+
     rt_generic_wrapper stepper;
 
-    run( stepper , 1000 , 1E-2 );
+    run( stepper , 10000 , 1E-6 );
 }

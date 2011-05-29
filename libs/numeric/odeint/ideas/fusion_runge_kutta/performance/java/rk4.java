@@ -32,18 +32,31 @@ public class rk4 {
 
     public static void main( String[] args )
     {
-        double dt = 1E-10;
-        int steps = 20000000;
+        final int loops = 20;
+        final double dt = 1E-10;
+        final int steps = 20000000;
+        double mean = 0.0;
+
         FirstOrderIntegrator rk4 = new ClassicalRungeKuttaIntegrator( dt );
-        FirstOrderDifferentialEquations ode = new Lorenz();
-        double[] y = new double[] { 0.0, 1.0 , 1.0 }; // initial state
-        try {
-            rk4.integrate(ode, 0.0, y, dt*steps , y);
-        } catch(DerivativeException de) {
-            System.out.println("wrong exception caught");
-        } catch(IntegratorException ie) {
+        final FirstOrderDifferentialEquations ode = new Lorenz();
+
+        for( int n=0 ; n<loops+3 ; n++ )
+        {
+            double[] y = new double[] { 0.0, 1.0 , 1.0 }; // initial state
+            long start = System.currentTimeMillis();
+            try {
+                rk4.integrate(ode, 0.0, y, dt*steps , y);
+            } catch(DerivativeException de) {
+                System.out.println("wrong exception caught");
+            } catch(IntegratorException ie) {
+            }
+            System.out.println( y[0] + "  " + y[1] + "  " + y[2] );
+            long end = System.currentTimeMillis();
+            System.out.println( "Time: " + (end-start) + " ms" );
+            if( n > 2 )
+                mean += end - start;
         }
-        System.out.println( y[0] + "  " + y[1] + "  " + y[2] );
+        System.out.println("Average run time: " + (mean/loops) + " ms" );
     }
 
 }

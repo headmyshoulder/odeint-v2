@@ -83,7 +83,6 @@ struct range_algebra
 	}
 
 
-
 	/* for the generic stepper 
 	*/
 	template< size_t n , class S1 , class S2 , class S3 , class S4 , class Op >
