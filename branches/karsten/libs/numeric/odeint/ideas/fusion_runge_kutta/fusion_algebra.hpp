@@ -53,7 +53,7 @@ struct fusion_algebra
  * Update: It increases performance on msvc 9.0 by about 30%, so it is activated for MSVC
  */
 
-#ifdef BOOST_MSVC
+//#ifdef BOOST_MSVC
 
 template<>
 struct fusion_algebra< 1 >
@@ -192,6 +192,6 @@ struct fusion_algebra< 6 >
 
 };
 
-#endif /* BOOST_MSVC */
+//#endif /* BOOST_MSVC */
 
 #endif /* FUSION_ALGEBRA_HPP_ */
