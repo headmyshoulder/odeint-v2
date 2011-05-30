@@ -26,6 +26,11 @@ exe generic_rk4_lorenz
     : generic_rk4_lorenz.cpp
     : <toolset>intel:<cxxflags>-inline-forceinline
     ;
+    
+exe generic_odeint_rk4_lorenz 
+    : generic_odeint_rk4_lorenz.cpp
+    : <toolset>intel:<cxxflags>-inline-forceinline
+    ;
    
 #exe odeint_rk4
 #    : odeint_rk4.cpp
