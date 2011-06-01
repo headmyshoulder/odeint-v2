@@ -24,9 +24,6 @@
 
 
 
-
-
-
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -34,8 +31,6 @@ namespace odeint {
 
 /*
  * Static explicit Adams-Bashforth multistep-solver without step size control and without dense output.
- *
- * # Define the number of steps
  */
 template<
 	size_t Steps ,

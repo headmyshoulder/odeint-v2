@@ -52,7 +52,7 @@ struct adams_bashforth_call_algebra< 3 , Algebra , Operations >
 	{
 		typedef typename Coefficients::value_type value_type;
 		Algebra::for_each5( out , in , steps[0] , steps[1] , steps[2] ,
-				typename Operations::template scale_sum4< value_type , Time , Time >( 1.0 , dt * coef[0] , dt * coef[1] , dt * coef[2] ) );
+				typename Operations::template scale_sum4< value_type , Time , Time , Time >( 1.0 , dt * coef[0] , dt * coef[1] , dt * coef[2] ) );
 	}
 };
 
