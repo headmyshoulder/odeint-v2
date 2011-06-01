@@ -69,25 +69,6 @@ public :
 
 	order_type order( void ) const { return order_value; }
 
-
-
-	adams_bashforth_moulton( void )
-	{
-	}
-
-	~adams_bashforth_moulton( void )
-	{
-	}
-
-	adams_bashforth_moulton( const adams_bashforth_moulton &stepper )
-	{
-	}
-
-	adams_bashforth_moulton& operator=( const adams_bashforth_moulton &stepper )
-	{
-		return *this;
-	}
-
 	template< class System , class StateInOut >
 	void do_step( System system , StateInOut &x , const time_type &t , const time_type &dt )
 	{

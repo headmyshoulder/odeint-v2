@@ -70,8 +70,10 @@ public:
 
 	void rotate( void )
 	{
-		++m_first;
-		if( m_first == dim ) m_first = 0;
+		if( m_first == 0 )
+			m_first = dim-1;
+		else
+			--m_first;
 	}
 
 protected:

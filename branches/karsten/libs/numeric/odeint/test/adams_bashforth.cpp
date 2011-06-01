@@ -73,9 +73,9 @@ BOOST_AUTO_TEST_CASE( test_rotating_buffer )
 
 	buffer.rotate();
 
-	for( size_t i=0 ; i<N-1 ; ++i )
-		BOOST_CHECK_EQUAL( buffer[i] , i + 1 );
-	BOOST_CHECK_EQUAL( buffer[N-1] , size_t( 0 ) );
+	for( size_t i=1 ; i<N ; ++i )
+		BOOST_CHECK_EQUAL( buffer[i] , i - 1 );
+	BOOST_CHECK_EQUAL( buffer[0] , size_t( N-1 ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_copying )

@@ -56,8 +56,8 @@ int main( int argc , char **argv )
 	const double dt = 0.01;
 	double t = 0.0;
 
-	adams_bashforth_moulton< 3 , state_type > stepper;
+	adams_bashforth_moulton< 5 , state_type > stepper;
 	stepper.initialize( lorenz() , x , t , dt );
 
-	integrate_n_steps( stepper , lorenz() , x , t , dt , 1000 , writing_observer( cout ) );
+	integrate_n_steps( stepper , lorenz() , x , t , dt , 10000 , writing_observer( cout ) );
 }
