@@ -5,6 +5,7 @@
 
 import quickbook ;
 import boostbook ;
+import doxygen ;
 
 project
     : requirements
@@ -15,7 +16,7 @@ xml odeint_xml
 	: 
 	  odeint.qbk
 	 ;
-
+	 
 boostbook odeint
 	:
 	  odeint_xml
@@ -34,3 +35,11 @@ boostbook odeint
 #        <xsl:param>generate.section.toc.level=10
         
 	;
+
+	
+# doxygen reference.doxy
+# cd xml
+# xsltproc combine.xsd index.xml > all.xml
+# cd ..
+# xsltproc /photon/karsten_local/boost/boost_1_45_0/tools/boostbook/xsl/doxygen/doxygen2boostbook.xsl all.xml > reference.xml
+
