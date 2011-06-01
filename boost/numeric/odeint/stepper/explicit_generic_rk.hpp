@@ -33,7 +33,7 @@
 #include <boost/numeric/odeint/stepper/detail/generic_rk_operations.hpp>
 //#include "fusion_foreach_performance.hpp"
 
-#include <iostream>
+//#include <iostream>
 
 namespace mpl = boost::mpl;
 namespace fusion = boost::fusion;
@@ -96,7 +96,7 @@ Order , State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy >
 	typedef typename stepper_base_type::stepper_type stepper_type;
 
 
-    typedef mpl::range_c< size_t , 1 , StageCount > stage_indices;
+	typedef mpl::range_c< size_t , 1 , StageCount > stage_indices;
 
     typedef typename fusion::result_of::as_vector
     <
@@ -211,14 +211,47 @@ Order , State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy >
 
     };
 
+
+private:
+
+    void initialize( void )
+    {
+        boost::numeric::odeint::construct( m_x_tmp );
+    }
+
+    void copy( const explicit_generic_rk &rk )
+    {
+        boost::numeric::odeint::copy( rk.m_x_tmp , m_x_tmp );
+    }
+
+
 public:
 
-    explicit_generic_rk( const coef_a_type &a ,
-                  const coef_b_type &b ,
-                  const coef_c_type &c )
-    : m_stages( a , b , c )
+    explicit_generic_rk( const coef_a_type &a , const coef_b_type &b , const coef_c_type &c )
+        : m_stages( a , b , c ) , m_x_tmp()
 
-    { }
+    {
+        initialize();
+    }
+
+    explicit_generic_rk( const explicit_generic_rk &rk )
+        : stepper_base_type( rk ) , m_stages( rk.m_stages ) , m_x_tmp()
+    {
+        initialize();
+        copy( rk );
+    }
+
+    explicit_generic_rk& operator=( const explicit_generic_rk &rk )
+    {
+        stepper_base_type::operator=( rk );
+        copy( rk );
+        return *this;
+    }
+
+    ~explicit_generic_rk( void )
+    {
+        boost::numeric::odeint::destruct( m_x_tmp );
+    }
 
 
     template< class System , class StateIn , class DerivIn , class StateOut >
@@ -234,7 +267,7 @@ private:
     state_type m_x_tmp;
 
 protected:
-    state_type m_F[StageCount-1];
+    deriv_type m_F[StageCount-1];
 
 };
 
