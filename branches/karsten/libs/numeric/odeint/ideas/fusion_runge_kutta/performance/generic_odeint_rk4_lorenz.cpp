@@ -1,6 +1,7 @@
 #include <boost/array.hpp>
 
-#include <boost/numeric/odeint/stepper/explicit_generic_rk.hpp>
+//#include <boost/numeric/odeint/stepper/explicit_generic_rk.hpp>
+#include <boost/numeric/odeint/stepper/explicit_rk4_generic.hpp>
 #include <boost/numeric/odeint/algebra/array_algebra.hpp>
 
 #include "rk_performance_test_case.hpp"
@@ -10,7 +11,7 @@
 using namespace boost::numeric::odeint;
 
 typedef boost::array< double , 3 > state_type;
-typedef explicit_generic_rk< 4 , 4 , state_type , double , state_type , double , array_algebra > rk4_type;
+/*typedef explicit_generic_rk< 4 , 4 , state_type , double , state_type , double , array_algebra > rk4_type;
 
 typedef rk4_type::coef_a_type coef_a_type;
 typedef rk4_type::coef_b_type coef_b_type;
@@ -23,13 +24,17 @@ const boost::array< double , 3 > a3 = {{ 0.0 , 0.0 , 1.0 }};
 const coef_a_type a = fusion::make_vector( a1 , a2 , a3 );
 const coef_b_type b = {{ 1.0/6 , 1.0/3 , 1.0/3 , 1.0/6 }};
 const coef_c_type c = {{ 0.0 , 0.5 , 0.5 , 1.0 }};
+*/
+
+typedef explicit_rk4_generic< state_type , double , state_type , double , array_algebra > rk4_type;
+
 
 class rk4_wrapper
 {
 
 public:
 
-    rk4_wrapper() : m_stepper( a , b , c )
+    rk4_wrapper()
     { }
 
     void reset_init_cond()

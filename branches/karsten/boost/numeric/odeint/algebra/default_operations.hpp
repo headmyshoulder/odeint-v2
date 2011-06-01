@@ -29,46 +29,62 @@ namespace odeint {
 /*
  * Conversion of boost::units for use in standard_operations::rel_error and standard_operations::maximum
  */
-namespace detail
-{
+namespace detail {
 
-		template< class T >
-		struct get_value_impl
-		{
-			static T value( const T &t ) { return t; }
-			typedef T result_type;
-		};
+    template<class T>
+    struct get_value_impl
+    {
+        static T value(const T &t)
+        {
+            return t;
+        }
+        typedef T result_type;
+    };
 
-		#ifndef __CUDACC__
-		template< class Unit , class T >
-		struct get_value_impl< boost::units::quantity< Unit , T > >
-		{
-			static T value( const boost::units::quantity< Unit , T > &t ) { return t.value(); }
-			typedef T result_type;
-		};
-		#endif
+    #ifndef __CUDACC__
+    template<class Unit , class T>
+    struct get_value_impl<boost::units::quantity<Unit , T> >
+    {
+        static T value(const boost::units::quantity<Unit , T> &t)
+        {
+            return t.value();
+        }
+        typedef T result_type;
+    };
+    #endif
 
-		template< class T >
-		typename get_value_impl< T >::result_type get_value( const T &t ) { return get_value_impl< T >::value( t ); }
+    template<class T>
+    typename get_value_impl<T>::result_type get_value(const T &t)
+    {
+        return get_value_impl<T>::value(t);
+    }
 
+    template<class T , class V>
+    struct set_value_impl
+    {
+        static void set_value(T &t , const V &v)
+        {
+            t = v;
+        }
+    };
 
+    #ifndef __CUDACC__
+    template<class Unit , class T , class V>
+    struct set_value_impl<boost::units::quantity<Unit , T> , V>
+    {
+        static void set_value(boost::units::quantity<Unit , T> &t , const V &v)
+        {
+            t = boost::units::quantity<Unit , T>::from_value(v);
+        }
+    };
+    #endif
 
-		template< class T , class V >
-		struct set_value_impl
-		{
-			static void set_value( T &t , const V &v ) { t = v; }
-		};
+    template<class T , class V>
 
-		#ifndef __CUDACC__
-		template< class Unit , class T , class V >
-		struct set_value_impl< boost::units::quantity< Unit , T > , V >
-		{
-			static void set_value( boost::units::quantity< Unit , T > &t , const V &v ) { t = boost::units::quantity< Unit , T >::from_value( v ); }
-		};
-		#endif
-
-		template< class T , class V >
-		void set_value( T &t , const V &v ) { return set_value_impl< T , V >::set_value( t , v ); }
+    void set_value(T &t , const V &v)
+    {
+        return set_value_impl<T , V>::set_value(t , v);
+    }
 
 }
 

@@ -16,6 +16,7 @@
 
 #include <boost/numeric/odeint/stepper/explicit_euler.hpp>
 #include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
+#include <boost/numeric/odeint/stepper/explicit_rk4_generic.hpp>
 #include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
 #include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
@@ -167,6 +168,7 @@ typedef test_array< double , 3 > state_type;
 typedef test_array2< double , 3 > deriv_type;
 typedef boost::numeric::odeint::explicit_euler< state_type , double , deriv_type > euler_type;
 typedef boost::numeric::odeint::explicit_rk4< state_type , double , deriv_type > rk4_type;
+typedef boost::numeric::odeint::explicit_rk4_generic< state_type , double , deriv_type > rk4_generic_type;
 typedef boost::numeric::odeint::explicit_error_rk54_ck< state_type , double , deriv_type > rk54_type;
 typedef boost::numeric::odeint::explicit_error_dopri5< state_type , double , deriv_type > dopri5_type;
 typedef boost::numeric::odeint::controlled_error_stepper< rk54_type > controlled_rk54_type;
@@ -289,6 +291,65 @@ BOOST_AUTO_TEST_CASE( explicit_rk4_assign )
 		rk4 = rk4_2;
 	}
 	CHECK_COUNTERS( 2 , 8 , 2 , 8 , 1 , 4 );
+}
+
+
+/*
+ * Construct + Destruct
+ * 1 deriv_type in explicit_stepper_base
+ * 3 deriv_type in explicit_rk4
+ * 1 state_type in explicit_rk4
+ */
+BOOST_AUTO_TEST_CASE( explicit_rk4_generic_construct )
+{
+    reset_counter();
+    {
+        rk4_generic_type rk4;
+    }
+    CHECK_COUNTERS( 1 , 4 , 1 , 4 , 0 , 0 );
+}
+
+/*
+ * Construct + Destruct
+ * 2 * 1 deriv_type in explicit_stepper_base
+ * 2 * 3 deriv_type in explicit_rk4
+ * 2 * 1 state_type in explicit_rk4
+ *
+ * Copying
+ * 1 deriv_type in explicit_stepper_base
+ * 3 deriv_type in explicit_stepper_base
+ * 1 state_type in explicit_stepper_base
+ */
+BOOST_AUTO_TEST_CASE( explicit_rk4_generic_copy_construct )
+{
+    reset_counter();
+    {
+        rk4_generic_type rk4;
+        rk4_generic_type rk4_2( rk4 );
+    }
+    CHECK_COUNTERS( 2 , 8 , 2 , 8 , 1 , 4 );
+}
+
+/*
+ * Construct + Destruct
+ * 2 * 1 deriv_type in explicit_stepper_base
+ * 2 * 3 deriv_type in explicit_rk4
+ * 2 * 1 state_type in explicit_rk4
+ *
+ * Copying
+ * 1 deriv_type in explicit_stepper_base
+ * 3 deriv_type in explicit_stepper_base
+ * 1 state_type in explicit_stepper_base
+ */
+BOOST_AUTO_TEST_CASE( explicit_rk4_generic_assign )
+{
+    reset_counter();
+    {
+        rk4_generic_type rk4;
+        rk4_generic_type rk4_2;
+        rk4 = rk4_2;
+    }
+    CHECK_COUNTERS( 2 , 8 , 2 , 8 , 1 , 4 );
 }
 
 /*
