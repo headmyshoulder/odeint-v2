@@ -31,6 +31,7 @@
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
 #include <boost/numeric/odeint/stepper/detail/generic_rk_call_algebra.hpp>
 #include <boost/numeric/odeint/stepper/detail/generic_rk_operations.hpp>
+
 //#include "fusion_foreach_performance.hpp"
 
 #include <iostream>
@@ -38,10 +39,29 @@
 namespace mpl = boost::mpl;
 namespace fusion = boost::fusion;
 
+//forward declarations
+namespace boost { namespace numeric { namespace odeint {
+template<
+    size_t StageCount,
+    size_t Order,
+    class State ,
+    class Value = double ,
+    class Deriv = State ,
+    class Time = Value ,
+    class Algebra = range_algebra ,
+    class Operations = default_operations ,
+    class AdjustSizePolicy = adjust_size_initially_tag
+    >
+class explicit_generic_rk;
+struct stage_vector;
+} } }
+
+#include <boost/numeric/odeint/stepper/explicit_error_generic_rk.hpp>
 
 namespace boost {
 namespace numeric {
 namespace odeint {
+
 
 template< class T , class Constant >
 struct array_wrapper
@@ -63,20 +83,6 @@ struct stage_wrapper
     typedef stage< T , Constant::value > type;
 };
 
-template<
-    size_t StageCount,
-    size_t Order,
-    class State ,
-    class Value = double ,
-    class Deriv = State ,
-    class Time = Value ,
-    class Algebra = range_algebra ,
-    class Operations = default_operations ,
-    class AdjustSizePolicy = adjust_size_initially_tag
-    >
-class explicit_generic_rk;
-
-struct stage_vector;
 
 template<
     size_t StageCount,
@@ -141,7 +147,7 @@ Order , State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy >
             mpl::inserter
             <
                 mpl::vector0< > ,
-                mpl::push_back< mpl::_1 , array_wrapper< double , mpl::_2 > >
+                mpl::push_back< mpl::_1 , array_wrapper< Value , mpl::_2 > >
             >
         >::type
     >::type coef_a_type;
@@ -259,7 +265,7 @@ Order , State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy >
         const double t;
         const double dt;
 
-        calculate_stage( System &_system , const StateIn &_x , const DerivIn &_dxdt , StateOut &_out , 
+        calculate_stage( System &_system , const StateIn &_x , const DerivIn &_dxdt , StateOut &_out ,
 			state_type &_x_tmp , state_type *_F , const time_type &_t , const time_type &_dt )
         : system( _system ) , x( _x ) , x_tmp( _x_tmp ) , x_out( _out) , dxdt( _dxdt ) , F( _F ) , t( _t ) , dt( _dt )
         {}
@@ -355,13 +361,17 @@ public:
 
 
     template< class System , class StateIn , class DerivIn , class StateOut >
-	void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt )
+	void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt ,
+	                     const time_type &t , StateOut &out , const time_type &dt )
 	{
+        typedef typename boost::unwrap_reference< System >::type unwrapped_system_type;
+        unwrapped_system_type &sys = system;
+
         m_deriv_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
         m_state_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
 
-        fusion::for_each( m_stages , calculate_stage< System , StateIn , DerivIn , StateOut >
-			( system , in , dxdt , out , m_x_tmp , m_F , t , dt ) );
+        fusion::for_each( m_stages , calculate_stage< unwrapped_system_type , StateIn , DerivIn , StateOut >
+			( sys , in , dxdt , out , m_x_tmp , m_F , t , dt ) );
     }
 
     template< class StateType >
@@ -373,6 +383,10 @@ public:
     }
 
     friend std::ostream& operator << <>( std::ostream &os , const explicit_generic_rk &rk );
+
+    template< size_t , size_t , size_t , size_t ,
+        typename , typename , typename , typename, typename , typename, typename >
+    friend class explicit_error_generic_rk;
 
 private:
 

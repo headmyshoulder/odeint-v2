@@ -18,6 +18,7 @@
 #include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
 #include <boost/numeric/odeint/stepper/explicit_rk4_generic.hpp>
 #include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
+#include <boost/numeric/odeint/stepper/explicit_error_rk54_ck_generic.hpp>
 #include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_explicit.hpp>
@@ -170,8 +171,10 @@ typedef boost::numeric::odeint::explicit_euler< state_type , double , deriv_type
 typedef boost::numeric::odeint::explicit_rk4< state_type , double , deriv_type > rk4_type;
 typedef boost::numeric::odeint::explicit_rk4_generic< state_type , double , deriv_type > rk4_generic_type;
 typedef boost::numeric::odeint::explicit_error_rk54_ck< state_type , double , deriv_type > rk54_type;
+typedef boost::numeric::odeint::explicit_error_rk54_ck_generic< state_type , double , deriv_type > rk54_generic_type;
 typedef boost::numeric::odeint::explicit_error_dopri5< state_type , double , deriv_type > dopri5_type;
 typedef boost::numeric::odeint::controlled_error_stepper< rk54_type > controlled_rk54_type;
+typedef boost::numeric::odeint::controlled_error_stepper< rk54_generic_type > controlled_rk54_generic_type;
 typedef boost::numeric::odeint::controlled_error_stepper< dopri5_type > controlled_dopri5_type;
 typedef boost::numeric::odeint::dense_output_explicit< euler_type > dense_output_euler_type;
 typedef boost::numeric::odeint::dense_output_controlled_explicit_fsal< controlled_dopri5_type > dense_output_dopri5_type;
@@ -444,6 +447,103 @@ BOOST_AUTO_TEST_CASE( controlled_rk54_assign )
 	}
 	CHECK_COUNTERS( 8 , 26 , 8 , 26 , 5 , 19 );
 }
+
+
+
+/*
+ * Construct + Destruct
+ * 2 explicit_rk54_ck_generic:
+ * 2 * 1 deriv_type in explicit_error_stepper_base
+ * 2 * 5 deriv_type in explicit_error_rk54_ck_generic
+ * 2 * 1 state_type in explicit_error_rk4_generic
+ * 1 controlled_stepper:
+ * 1 deriv_type
+ * 2 state_type
+ *
+ * Copying
+ * 1 copy process of explicit_rk54_ck_generic:
+ * 1 deriv_type from explicit_error_stepper_base
+ * 5 deriv_type from explicit_error_rk54_ck_generic
+ * 1 state_type from explicit_error_rk54_ck_generic
+ */
+BOOST_AUTO_TEST_CASE( controlled_rk54_generic_construct )
+{
+    reset_counter();
+    {
+        controlled_rk54_generic_type stepper;
+    }
+    CHECK_COUNTERS( 4 , 13 , 4 , 13 , 1 , 6 );
+}
+
+
+/*
+ * Construct + Destruct
+ * 3 explicit_rk54_ck_generic:
+ * 3 * 1 deriv_type in explicit_error_stepper_base
+ * 3 * 5 deriv_type in explicit_error_rk54_ck_generic
+ * 3 * 1 state_type in explicit_error_rk4_generic
+ * 2 controlled_stepper:
+ * 2 * 1 deriv_type
+ * 2 * 2 state_type
+ *
+ * Copying
+ * 1 copy process of explicit_rk54_ck_generic:
+ * 1 deriv_type from explicit_error_stepper_base
+ * 5 deriv_type from explicit_error_rk54_ck_generic
+ * 1 state_type from explicit_error_rk54_ck_generic
+ *
+ * 1 process of copying controlled_error_stepper
+ * 1 deriv_type from explicit_error_stepper_base
+ * 5 deriv_type from explicit_error_rk54_ck_generic
+ * 1 state_type from explicit_error_rk54_ck_generic
+ * 1 deriv_type from controlled_error_stepper
+ * 2 state_type from controlled_error_stepper
+ */
+BOOST_AUTO_TEST_CASE( controlled_rk54_generic_copy_construct )
+{
+    reset_counter();
+    {
+        controlled_rk54_generic_type stepper;
+        controlled_rk54_generic_type stepper2( stepper );
+    }
+    CHECK_COUNTERS( 7 , 20 , 7 , 20 , 4 , 13 );
+}
+
+/*
+ * Construct + Destruct
+ * 4 explicit_rk54_ck_generic:
+ * 4 * 1 deriv_type in explicit_error_stepper_base
+ * 4 * 5 deriv_type in explicit_error_rk54_ck_generic
+ * 4 * 1 state_type in explicit_error_rk4_generic
+ * 2 controlled_stepper:
+ * 2 * 1 deriv_type
+ * 2 * 2 state_type
+ *
+ * Copying
+ * 2 copy process of explicit_rk54_ck_generic:
+ * 2 * 1 deriv_type from explicit_error_stepper_base
+ * 2 * 5 deriv_type from explicit_error_rk54_ck_generic
+ * 2 * 1 state_type from explicit_error_rk54_ck_generic
+ *
+ * 1 process of copying controlled_error_stepper
+ * 1 deriv_type from explicit_error_stepper_base
+ * 5 deriv_type from explicit_error_rk54_ck_generic
+ * 1 state_type from explicit_error_rk54_ck_generic
+ * 1 deriv_type from controlled_error_stepper
+ * 2 state_type from controlled_error_stepper
+ */
+BOOST_AUTO_TEST_CASE( controlled_rk54_generic_assign )
+{
+    reset_counter();
+    {
+        controlled_rk54_generic_type stepper;
+        controlled_rk54_generic_type stepper2;
+        stepper2 = stepper;
+    }
+    CHECK_COUNTERS( 8 , 26 , 8 , 26 , 5 , 19 );
+}
+
+
 
 
 BOOST_AUTO_TEST_CASE( controlled_dopri5_construct )

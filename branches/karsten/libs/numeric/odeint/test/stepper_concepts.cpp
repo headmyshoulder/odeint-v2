@@ -6,7 +6,7 @@
  This file tests the use of the all different steppers with several state types:
  std::vector< double >
  vector_space_1d< double >  (see vector_space_1d.hpp)
- std::tr1::array< double , 1 >
+ boost::array< double , 1 >
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
@@ -19,7 +19,7 @@
 #include <cmath>
 #include <iostream>
 
-#include <tr1/array>
+#include <boost/array.hpp>
 
 #include <boost/test/unit_test.hpp>
 
@@ -38,7 +38,9 @@
 
 #include <boost/numeric/odeint/stepper/explicit_euler.hpp>
 #include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
+#include <boost/numeric/odeint/stepper/explicit_rk4_generic.hpp>
 #include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
+#include <boost/numeric/odeint/stepper/explicit_error_rk54_ck_generic.hpp>
 #include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
@@ -55,7 +57,7 @@ namespace mpl = boost::mpl;
 
 typedef std::vector< double > vector_type;
 typedef vector_space_1d< double > vector_space_type;
-typedef std::tr1::array< double , 1 > array_type;
+typedef boost::array< double , 1 > array_type;
 
 
 const double result = 2.2;
@@ -183,7 +185,9 @@ struct perform_stepper_test< Stepper , array_type >
 template< class State > class stepper_methods : public mpl::vector<
 	explicit_euler< State , double , State , double , typename algebra_dispatcher< State >::type > ,
 	explicit_rk4< State , double , State , double , typename algebra_dispatcher< State >::type > ,
+	explicit_rk4_generic< State , double , State , double , typename algebra_dispatcher< State >::type > ,
 	explicit_error_rk54_ck< State , double , State , double , typename algebra_dispatcher< State >::type > ,
+	explicit_error_rk54_ck_generic< State , double , State , double , typename algebra_dispatcher< State >::type > ,
 	explicit_error_dopri5< State , double , State , double , typename algebra_dispatcher< State >::type >
 > { };
 
@@ -280,6 +284,7 @@ struct perform_error_stepper_test< Stepper , array_type >
 
 template< class State > class error_stepper_methods : public mpl::vector<
 	explicit_error_rk54_ck< State , double , State , double , typename algebra_dispatcher< State >::type > ,
+	explicit_error_rk54_ck_generic< State , double , State , double , typename algebra_dispatcher< State >::type > ,
 	explicit_error_dopri5< State , double , State , double , typename algebra_dispatcher< State >::type >
 > { };
 
