@@ -12,6 +12,7 @@
 
 #define BOOST_TEST_MODULE odeint_generic_stepper
 
+#include <iostream>
 #include <utility>
 
 #include <boost/test/unit_test.hpp>
@@ -49,7 +50,10 @@ BOOST_AUTO_TEST_SUITE( generic_stepper_test )
 
 BOOST_AUTO_TEST_CASE( test_generic_stepper )
 {
-	stepper_type stepper( a , b , c );
+	stepper_type stepper_( a , b , c );
+	stepper_type stepper = stepper_;
+
+	//std::cout << stepper;
 
 	rk4_stepper_type rk4;
 
