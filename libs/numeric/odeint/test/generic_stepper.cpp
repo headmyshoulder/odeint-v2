@@ -18,6 +18,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <boost/numeric/odeint/stepper/explicit_generic_rk.hpp>
+#include <boost/numeric/odeint/stepper/explicit_rk4_generic.hpp>
 #include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
 
 #include <boost/array.hpp>
@@ -34,44 +35,57 @@ void sys( const state_type &x , state_type &dxdt , const value_type &t )
     dxdt[ 1 ] = x[ 1 ];
 }
 
-typedef explicit_generic_rk< 4 , 4 , state_type> stepper_type;
+typedef explicit_generic_rk< 4 , 4 , state_type> rk_generic_type;
+typedef explicit_rk4_generic< state_type > rk4_generic_type;
 
 const boost::array< double , 1 > a1 = {{ 0.5 }};
 const boost::array< double , 2 > a2 = {{ 0.0 , 0.5 }};
 const boost::array< double , 3 > a3 = {{ 0.0 , 0.0 , 1.0 }};
 
-const stepper_type::coef_a_type a = fusion::make_vector( a1 , a2 , a3 );
-const stepper_type::coef_b_type b = {{ 1.0/6 , 1.0/3 , 1.0/3 , 1.0/6 }};
-const stepper_type::coef_c_type c = {{ 0.0 , 0.5 , 0.5 , 1.0 }};
+const rk_generic_type::coef_a_type a = fusion::make_vector( a1 , a2 , a3 );
+const rk_generic_type::coef_b_type b = {{ 1.0/6 , 1.0/3 , 1.0/3 , 1.0/6 }};
+const rk_generic_type::coef_c_type c = {{ 0.0 , 0.5 , 0.5 , 1.0 }};
 
-typedef explicit_rk4< state_type > rk4_stepper_type;
+typedef explicit_rk4< state_type > rk4_type;
 
 BOOST_AUTO_TEST_SUITE( generic_stepper_test )
 
 BOOST_AUTO_TEST_CASE( test_generic_stepper )
 {
-	stepper_type stepper_( a , b , c );
-	stepper_type stepper = stepper_;
+    //simultaneously test copying
+	rk_generic_type rk_generic_( a , b , c );
+	rk_generic_type rk_generic = rk_generic_;
+
+	rk4_generic_type rk4_generic_;
+	rk4_generic_type rk4_generic = rk4_generic_;
 
 	//std::cout << stepper;
 
-	rk4_stepper_type rk4;
+	rk4_type rk4_;
+	rk4_type rk4 = rk4_;
 
-	typedef stepper_type::state_type state_type;
-	typedef stepper_type::value_type stepper_value_type;
-	typedef stepper_type::deriv_type deriv_type;
-	typedef stepper_type::time_type time_type;
+	typedef rk_generic_type::state_type state_type;
+	typedef rk_generic_type::value_type stepper_value_type;
+	typedef rk_generic_type::deriv_type deriv_type;
+	typedef rk_generic_type::time_type time_type;
 
 	state_type x = {{ 0.0 , 1.0 }};
 	state_type y = x;
+	state_type z = x;
+
+	rk_generic.do_step( sys , x , 0.0 , 0.1 );
 	
-	stepper.do_step( sys , x , 0.0 , 0.1 );
+	rk4_generic.do_step( sys , y , 0.0 , 0.1 );
 
-	rk4.do_step( sys , y , 0.0 , 0.1 );
+	rk4.do_step( sys , z , 0.0 , 0.1 );
 
+	BOOST_CHECK_NE( 0.0 , x[0] );
+	BOOST_CHECK_NE( 1.0 , x[1] );
 	// compare with analytic solution of above system
 	BOOST_CHECK_EQUAL( x[0] , y[0] );
 	BOOST_CHECK_EQUAL( x[1] , y[1] );
+	BOOST_CHECK_EQUAL( x[0] , z[0] );
+	BOOST_CHECK_EQUAL( x[1] , z[1] );
 
 }
 

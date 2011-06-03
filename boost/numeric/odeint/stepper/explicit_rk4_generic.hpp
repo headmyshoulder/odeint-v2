@@ -24,16 +24,61 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-namespace constants_generic {
+template< class Value = double >
+struct rk4_coefficients_a1 : boost::array< Value , 1 >
+{
+    rk4_coefficients_a1( void )
+    {
+        (*this)[0] = static_cast< Value >( 0.5 );
+    }
+};
 
-    const boost::array< double , 1 > rk4_a1 = {{ 0.5 }};
-    const boost::array< double , 2 > rk4_a2 = {{ 0.0 , 0.5 }};
-    const boost::array< double , 3 > rk4_a3 = {{ 0.0 , 0.0 , 1.0 }};
+template< class Value = double >
+struct rk4_coefficients_a2 : boost::array< Value , 2 >
+{
+    rk4_coefficients_a2( void )
+    {
+        (*this)[0] = static_cast<Value>(0.0);
+        (*this)[1] = static_cast<Value>(0.5);
+    }
+};
 
-    const boost::array< double , 4 > rk4_b = {{ 1.0/6 , 1.0/3 , 1.0/3 , 1.0/6 }};
-    const boost::array< double , 4 > rk4_c = {{ 0.0 , 0.5 , 0.5 , 1.0 }};
 
-}
+template< class Value = double >
+struct rk4_coefficients_a3 : boost::array< Value , 3 >
+{
+    rk4_coefficients_a3( void )
+    {
+        (*this)[0] = static_cast<Value>(0.0);
+        (*this)[1] = static_cast<Value>(0.0);
+        (*this)[2] = static_cast<Value>(1.0);
+    }
+};
+
+template< class Value = double >
+struct rk4_coefficients_b : boost::array< Value , 4 >
+{
+    rk4_coefficients_b( void )
+    {
+        (*this)[0] = static_cast<Value>(1.0)/static_cast<Value>(6.0);
+        (*this)[1] = static_cast<Value>(1.0)/static_cast<Value>(3.0);
+        (*this)[2] = static_cast<Value>(1.0)/static_cast<Value>(3.0);
+        (*this)[3] = static_cast<Value>(1.0)/static_cast<Value>(6.0);
+    }
+};
+
+template< class Value = double >
+struct rk4_coefficients_c : boost::array< Value , 4 >
+{
+    rk4_coefficients_c( void )
+    {
+        (*this)[0] = static_cast<Value>(0.0);
+        (*this)[1] = static_cast<Value>(0.5);
+        (*this)[2] = static_cast<Value>(0.5);
+        (*this)[3] = static_cast<Value>(1.0);
+    }
+};
+
 
 template<
     class State ,
@@ -63,8 +108,8 @@ public:
     typedef typename stepper_base_type::stepper_type stepper_type;
 
     explicit_rk4_generic( void ) : stepper_base_type(
-            fusion::make_vector( constants_generic::rk4_a1 , constants_generic::rk4_a2 , constants_generic::rk4_a3 ) ,
-            constants_generic::rk4_b , constants_generic::rk4_c )
+            fusion::make_vector( rk4_coefficients_a1<Value>() , rk4_coefficients_a2<Value>() , rk4_coefficients_a3<Value>() ) ,
+            rk4_coefficients_b<Value>() , rk4_coefficients_c<Value>() )
     { }
 
 };

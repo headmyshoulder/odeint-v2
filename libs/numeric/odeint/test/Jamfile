@@ -32,5 +32,6 @@ test-suite "odeint"
 	 [ run adams_moulton.cpp ]
 	 [ run adams_bashforth_moulton.cpp ]
 	 [ run generic_stepper.cpp ]
+	 [ run generic_error_stepper.cpp ]
 	: <testing.launcher>valgrind
 	;    
