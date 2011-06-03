@@ -33,7 +33,7 @@
 #include <boost/numeric/odeint/stepper/detail/generic_rk_operations.hpp>
 //#include "fusion_foreach_performance.hpp"
 
-//#include <iostream>
+#include <iostream>
 
 namespace mpl = boost::mpl;
 namespace fusion = boost::fusion;
@@ -63,17 +63,52 @@ struct stage_wrapper
     typedef stage< T , Constant::value > type;
 };
 
+template<
+    size_t StageCount,
+    size_t Order,
+    class State ,
+    class Value = double ,
+    class Deriv = State ,
+    class Time = Value ,
+    class Algebra = range_algebra ,
+    class Operations = default_operations ,
+    class AdjustSizePolicy = adjust_size_initially_tag
+    >
+class explicit_generic_rk;
+
+struct stage_vector;
+
+template<
+    size_t StageCount,
+    size_t Order,
+    class State ,
+    class Value ,
+    class Deriv ,
+    class Time ,
+    class Algebra ,
+    class Operations ,
+    class AdjustSizePolicy
+    >
+std::ostream& operator <<( std::ostream &os ,
+        const explicit_generic_rk< StageCount , Order , State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy > &rk )
+{
+      os << "Generic RK with " << rk.stage_count << " stages." << std::endl;
+      os << "Butcher Tableau: " << std::endl;
+      rk.m_stages.print( os );
+      return os;
+}
+
 
 template<
 	size_t StageCount,
 	size_t Order,
     class State ,
-    class Value = double ,
-    class Deriv = State ,
-    class Time = Value ,
-	class Algebra = range_algebra ,
-	class Operations = default_operations ,
-	class AdjustSizePolicy = adjust_size_initially_tag
+    class Value ,
+    class Deriv ,
+    class Time ,
+	class Algebra ,
+	class Operations ,
+	class AdjustSizePolicy
 	>
 class explicit_generic_rk : public explicit_stepper_base<
 	  explicit_generic_rk< StageCount , Order , State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy > ,
@@ -152,12 +187,61 @@ Order , State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy >
             }
         };
 
+
+        struct do_insertion_from_stage
+        {
+            stage_vector_base &m_base;
+            const stage_vector_base &m_source;
+
+            do_insertion_from_stage( stage_vector_base &base, const stage_vector_base &source )
+                    : m_base(base) , m_source( source )
+            { }
+
+            template<class Index>
+            void operator()(Index) const {
+                //fusion::at< Index >( m_base ) = stage< double , Index::value+1 , intermediate_stage >( m_c[ Index::value ] , fusion::at< Index >( m_a ) );
+                fusion::at<Index>(m_base).c = fusion::at<Index>(m_source).c;
+                fusion::at<Index>(m_base).a = fusion::at<Index>(m_source).a;
+            }
+        };
+
+        struct print_butcher
+        {
+            const stage_vector_base &m_base;
+            std::ostream &m_os;
+
+            print_butcher( const stage_vector_base &base , std::ostream &os )
+                : m_base( base ) , m_os( os )
+            { }
+
+            template<class Index>
+            void operator()(Index) const {
+                m_os << fusion::at<Index>(m_base).c << " | ";
+                for( size_t i=0 ; i<Index::value ; ++i )
+                    m_os << fusion::at<Index>(m_base).a[i] << " ";
+                m_os << std::endl;
+            }
+        };
+
+
         stage_vector( const coef_a_type &a , const coef_b_type &b , const coef_c_type &c )
         {
             typedef mpl::range_c< size_t , 0 , StageCount-1 > indices;
             mpl::for_each< indices >( do_insertion( *this , a , c ) );
             fusion::at_c< StageCount - 1 >( *this ).c = c[ StageCount - 1 ];
             fusion::at_c< StageCount - 1 >( *this ).a = b;
+        }
+
+        stage_vector( const stage_vector &s )
+        {
+            typedef mpl::range_c< size_t , 0 , StageCount > indices;
+            mpl::for_each< indices >( do_insertion_from_stage( *this , s ) );
+        }
+
+        void print( std::ostream &os ) const
+        {
+            typedef mpl::range_c< size_t , 0 , StageCount > indices;
+            mpl::for_each< indices >( print_butcher( *this , os ) );
         }
     };
 
@@ -217,15 +301,25 @@ private:
     void initialize( void )
     {
         boost::numeric::odeint::construct( m_x_tmp );
+        for( size_t i = 0 ; i < StageCount-1 ; ++i )
+        {
+            boost::numeric::odeint::construct( m_F[i] );
+        }
     }
 
     void copy( const explicit_generic_rk &rk )
     {
         boost::numeric::odeint::copy( rk.m_x_tmp , m_x_tmp );
+        for( size_t i = 0 ; i < StageCount-1 ; ++i )
+        {
+            boost::numeric::odeint::copy( rk.m_F[i] , m_F[i] );
+        }
     }
 
 
 public:
+
+    static const size_t stage_count = StageCount;
 
     explicit_generic_rk( const coef_a_type &a , const coef_b_type &b , const coef_c_type &c )
         : m_stages( a , b , c ) , m_x_tmp()
@@ -251,6 +345,10 @@ public:
     ~explicit_generic_rk( void )
     {
         boost::numeric::odeint::destruct( m_x_tmp );
+        for( size_t i = 0 ; i < StageCount-1 ; ++i )
+        {
+            boost::numeric::odeint::destruct( m_F[i] );
+        }
     }
 
 
@@ -260,6 +358,8 @@ public:
         fusion::for_each( m_stages , calculate_stage< System , StateIn , DerivIn , StateOut >
 			( system , in , dxdt , out , m_x_tmp , m_F , t , dt ) );
     }
+
+    friend std::ostream& operator << <>( std::ostream &os , const explicit_generic_rk &rk );
 
 private:
 
