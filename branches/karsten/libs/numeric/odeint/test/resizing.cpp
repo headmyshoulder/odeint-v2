@@ -27,6 +27,7 @@
 
 #include <boost/numeric/odeint/stepper/explicit_euler.hpp>
 #include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
+#include <boost/numeric/odeint/stepper/explicit_rk4_generic.hpp>
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 
 using namespace boost::unit_test;
@@ -85,13 +86,21 @@ typedef explicit_rk4< test_array_type , double , test_array_type , double , rang
 typedef explicit_rk4< test_array_type , double , test_array_type , double , range_algebra , default_operations , adjust_size_always_tag > rk4_always_type;
 
 
+typedef explicit_rk4_generic< test_array_type , double , test_array_type , double , range_algebra , default_operations , adjust_size_manually_tag > rk4_gen_manual_type;
+typedef explicit_rk4_generic< test_array_type , double , test_array_type , double , range_algebra , default_operations , adjust_size_initially_tag > rk4_gen_initially_type;
+typedef explicit_rk4_generic< test_array_type , double , test_array_type , double , range_algebra , default_operations , adjust_size_always_tag > rk4_gen_always_type;
+
+
 typedef mpl::vector<
 	mpl::vector< euler_manual_type , mpl::int_<1> , mpl::int_<0> > ,
 	mpl::vector< euler_initially_type , mpl::int_<1> , mpl::int_<1> > ,
 	mpl::vector< euler_always_type , mpl::int_<1> , mpl::int_<3> > ,
 	mpl::vector< rk4_manual_type , mpl::int_<5> , mpl::int_<0> > ,
 	mpl::vector< rk4_initially_type , mpl::int_<5> , mpl::int_<1> > ,
-	mpl::vector< rk4_always_type , mpl::int_<5> , mpl::int_<3> >
+	mpl::vector< rk4_always_type , mpl::int_<5> , mpl::int_<3> > ,
+	mpl::vector< rk4_gen_manual_type , mpl::int_<5> , mpl::int_<0> > ,
+    mpl::vector< rk4_gen_initially_type , mpl::int_<5> , mpl::int_<1> > ,
+    mpl::vector< rk4_gen_always_type , mpl::int_<5> , mpl::int_<3> >
 >::type resize_check_types;
 
 

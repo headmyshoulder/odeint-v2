@@ -301,9 +301,11 @@ private:
     void initialize( void )
     {
         boost::numeric::odeint::construct( m_x_tmp );
+        m_state_adjuster.register_state( 0 , m_x_tmp );
         for( size_t i = 0 ; i < StageCount-1 ; ++i )
         {
             boost::numeric::odeint::construct( m_F[i] );
+            m_deriv_adjuster.register_state( i , m_F[i] );
         }
     }
 
@@ -355,8 +357,19 @@ public:
     template< class System , class StateIn , class DerivIn , class StateOut >
 	void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt )
 	{
+        m_deriv_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
+        m_state_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
+
         fusion::for_each( m_stages , calculate_stage< System , StateIn , DerivIn , StateOut >
 			( system , in , dxdt , out , m_x_tmp , m_F , t , dt ) );
+    }
+
+    template< class StateType >
+    void adjust_size( const StateType &x )
+    {
+        m_deriv_adjuster.adjust_size( x );
+        m_state_adjuster.adjust_size( x );
+        stepper_base_type::adjust_size( x );
     }
 
     friend std::ostream& operator << <>( std::ostream &os , const explicit_generic_rk &rk );
@@ -365,6 +378,9 @@ private:
 
     const stage_vector m_stages;
     state_type m_x_tmp;
+
+    size_adjuster< deriv_type , StageCount-1 > m_deriv_adjuster;
+    size_adjuster< state_type , 1 > m_state_adjuster;
 
 protected:
     deriv_type m_F[StageCount-1];

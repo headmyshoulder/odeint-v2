@@ -67,13 +67,6 @@ public:
             constants_generic::rk4_b , constants_generic::rk4_c )
     { }
 
-    explicit_rk4_generic& operator=( const explicit_rk4_generic &rk )
-    {
-        stepper_base_type::operator=( rk );
-        return *this;
-    }
-
-
 };
 
 }
