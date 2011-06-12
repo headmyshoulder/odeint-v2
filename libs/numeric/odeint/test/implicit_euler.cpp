@@ -10,11 +10,18 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
+// disable checked iterator warning for msvc
+#include <boost/config.hpp>
+#ifdef BOOST_MSVC
+    #pragma warning(disable:4996)
+#endif
+
 #define BOOST_TEST_MODULE odeint_implicit_euler
 
-#include <utility>
-
 #include <boost/test/unit_test.hpp>
+
+#include <utility>
+#include <iostream>
 
 #include <boost/numeric/odeint/stepper/implicit_euler.hpp>
 #include <boost/numeric/odeint/util/ublas_resize.hpp>
@@ -29,20 +36,26 @@ typedef double value_type;
 typedef boost::numeric::ublas::vector< value_type > state_type;
 typedef boost::numeric::ublas::matrix< value_type > matrix_type;
 
-
-void sys( const state_type &x , state_type &dxdt , const value_type t )
+/* use functors, because functions don't work with msvc 10, I guess this is a bug */
+struct sys
 {
-    dxdt( 0 ) = x( 0 ) + 2 * x( 1 );
-    dxdt( 1 ) = x( 1 );
-}
+    void operator()( const state_type &x , state_type &dxdt , const value_type t ) const
+    {
+        dxdt( 0 ) = x( 0 ) + 2 * x( 1 );
+        dxdt( 1 ) = x( 1 );
+    }
+};
 
-void jacobi( const state_type &x , matrix_type &jacobi , const value_type t )
+struct jacobi 
 {
-    jacobi( 0 , 0 ) = 1;
-    jacobi( 0 , 1 ) = 2;
-    jacobi( 1 , 0 ) = 0;
-    jacobi( 1 , 1 ) = 1;
-}
+    void operator()( const state_type &x , matrix_type &jacobi , const value_type t ) const
+    {
+        jacobi( 0 , 0 ) = 1;
+        jacobi( 0 , 1 ) = 2;
+        jacobi( 1 , 0 ) = 0;
+        jacobi( 1 , 1 ) = 1;
+    }
+};
 
 BOOST_AUTO_TEST_SUITE( implicit_euler_test )
 
@@ -54,7 +67,8 @@ BOOST_AUTO_TEST_CASE( test_euler )
 
     value_type eps = 1E-12;
 
-    stepper.do_step( std::make_pair( sys , jacobi ) , x , 0.0 , 0.1 );
+	/* make_pair doesn't work with function pointers on msvc 10 */
+    stepper.do_step( std::make_pair( sys() , jacobi() ) , x , 0.0 , 0.1 );
 
     using std::abs;
 
