@@ -5,14 +5,20 @@
  *      Author: karsten
  */
 
+// disable checked iterator warning for msvc
+#include <boost/config.hpp>
+#ifdef BOOST_MSVC
+    #pragma warning(disable:4996)
+#endif
+
 #define BOOST_TEST_MODULE odeint_stepper_with_ranges
 
 #include <boost/test/unit_test.hpp>
 
 #include <vector>
-#include <tr1/array>
 #include <utility>
 
+#include <boost/array.hpp>
 #include <boost/range.hpp>
 #include <boost/ref.hpp>
 
@@ -25,7 +31,7 @@
 #include <boost/numeric/odeint/stepper/dense_output_controlled_explicit_fsal.hpp>
 
 typedef std::vector< double > state_type;
-typedef std::tr1::array< double , 3 > state_type2;
+typedef boost::array< double , 3 > state_type2;
 
 
 /*
@@ -114,9 +120,9 @@ struct ham_sys
 struct vector_fixture
 {
 	const static size_t dim = 6;
-	std::tr1::array< double , dim > in;
-	std::tr1::array< double , dim > q;
-	std::tr1::array< double , dim > p;
+	boost::array< double , dim > in;
+	boost::array< double , dim > q;
+	boost::array< double , dim > p;
 	state_type err;
 
 	vector_fixture( void )

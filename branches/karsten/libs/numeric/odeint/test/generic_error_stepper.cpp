@@ -10,6 +10,12 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
+// disable checked iterator warning for msvc
+#include <boost/config.hpp>
+#ifdef BOOST_MSVC
+    #pragma warning(disable:4996)
+#endif
+
 #define BOOST_TEST_MODULE odeint_generic_error_stepper
 
 #include <iostream>

@@ -9,6 +9,7 @@
 #define STEPPER_ROSENBROCK4_DENSE_OUTPUT_HPP_
 
 #include <utility>
+#include <iostream>
 
 #include <boost/numeric/odeint/stepper/rosenbrock4_controller.hpp>
 
@@ -58,17 +59,20 @@ public:
 
 	rosenbrock4_dense_output( const controlled_stepper_type &stepper = controlled_stepper_type() )
 	: m_stepper( stepper ) , m_state_adjuster() ,
-	  m_x1() , m_x2() , m_current_state( &m_x1 ) , m_old_state( &m_x2 ) ,
-	  m_t() , m_t_old() , m_dt()
+	  m_x1() , m_x2() ,  m_t() , m_t_old() , m_dt()
 	{
+        m_current_state = &m_x1;
+        m_old_state = &m_x2;
 		initialize_variables();
 	}
 
 	rosenbrock4_dense_output( const rosenbrock4_dense_output &rb )
 	: m_stepper() , m_state_adjuster() ,
-	  m_x1() , m_x2() , m_current_state( &m_x1 ) , m_old_state( &m_x2 ) ,
+	  m_x1() , m_x2() ,
 	  m_t() , m_t_old() , m_dt()
 	{
+        m_current_state = &m_x1;
+        m_old_state = &m_x2;
 		initialize_variables();
 		copy_variables( rb );
 	}

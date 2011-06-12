@@ -13,6 +13,8 @@
 
 #include <boost/numeric/odeint/stepper/rosenbrock4.hpp>
 
+#include <iostream>
+
 
 namespace boost {
 namespace numeric {
@@ -30,8 +32,12 @@ private:
 
 	void copy_variables( const rosenbrock4_controller &rb )
 	{
+        /** @ToDo: MSVC 10 fails on these copy operations with invalid null pointer exception, find out why
+         * maybe add rosenbrock4 to stepper_copying test cases
+         */
 		m_stepper = rb.m_stepper;
 		m_xerr = rb.m_xerr;
+        /* end MSVC 10 error */
 		m_atol = rb.m_atol;
 		m_rtol = rb.m_rtol;
 		m_first_step = rb.m_first_step;
@@ -66,7 +72,7 @@ public:
       m_first_step( true ) , m_err_old( 0.0 ) , m_dt_old( 0.0 ) ,
       m_last_rejected( false )
 	{
-		initialize_variables();
+        initialize_variables();
 		copy_variables( rb );
 	}
 
