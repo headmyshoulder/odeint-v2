@@ -9,6 +9,7 @@
 #define BOOST_NUMERIC_ODEINT_UTIL_RESIZE_HPP_
 
 #include <boost/range/size.hpp>
+#include <boost/numeric/odeint/util/same_size.hpp>
 
 namespace boost {
 namespace numeric {
@@ -33,7 +34,6 @@ void resize( const Container1 &x1 , Container2 &x2 )
 {
 	resize_impl< Container1 , Container2 >::resize( x1 , x2 );
 }
-
 
 
 } // namespace odeint
