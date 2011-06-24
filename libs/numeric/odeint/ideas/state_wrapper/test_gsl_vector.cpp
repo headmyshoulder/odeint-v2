@@ -2,6 +2,7 @@
 #include <gsl/gsl_vector.h>
 
 #include "explicit_euler.hpp"
+#include <boost/numeric/odeint/external/gsl/gsl_vector_adaptor.hpp>
 
 using namespace std;
 
@@ -25,10 +26,6 @@ struct state_wrapper< state_type >
 
     state_type m_v;
 
-    state_wrapper( state_type &v ) : m_v( v ) {
-        cout << m_v->size << endl;
-    }
-
     state_wrapper( )
     {
         m_v->owner = 0;
@@ -38,38 +35,6 @@ struct state_wrapper< state_type >
         m_v->block = 0;
     }
 
-    double* begin()
-    { return m_v->data; }
-
-    double* end()
-    { return m_v->data + m_v->size; }
-
-    void resize( state_type &v )
-    {
-        cout << v->size << " " << m_v->owner << " " << v->owner << endl;
-
-        if( m_v->owner != 0 )
-        {
-            gsl_block_free( m_v->block );
-        }
-        m_v->size = 0;
-
-        cout << v->size << endl;
-
-        if( v->size == 0 ) return;
-
-        gsl_block *block = gsl_block_alloc( v->size );
-        if( block == 0 ) throw std::bad_alloc( );
-
-        m_v->data = block->data ;
-        m_v->size = v->size;
-        m_v->stride = 1;
-        m_v->block = block;
-        m_v->owner = 1;
-    }
-
-    bool same_size( state_type &v )
-    { return ( m_v->size == v->size ); }
 };
 
 int main() {

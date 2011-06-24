@@ -14,6 +14,7 @@
 
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/lu.hpp>
 
 #include <boost/type_traits/integral_constant.hpp> //for true_type and false_type
 
@@ -51,6 +52,10 @@ struct resize_impl< boost::numeric::ublas::matrix< T , L , A > , boost::numeric:
 	}
 };
 
+
+/*
+ * specialization for vector-matrix resizing
+ */
 template< class T , class L , class A >
 struct same_size_impl< boost::numeric::ublas::matrix< T , L , A > , boost::numeric::ublas::matrix< T , L , A > >
 {
@@ -61,7 +66,36 @@ struct same_size_impl< boost::numeric::ublas::matrix< T , L , A > , boost::numer
 };
 
 
+template< class T_V , class A_V , class T_M , class L_M , class A_M >
+struct resize_impl< boost::numeric::ublas::vector< T_V , A_V > , boost::numeric::ublas::matrix< T_M , L_M , A_M > >
+{
+    static void resize( const boost::numeric::ublas::vector< T_V , A_V > &x1 ,
+                          boost::numeric::ublas::matrix< T_M , L_M , A_M > &x2 )
+    {
+        x2.resize( x1.size() , x1.size() );
+    }
+};
 
+template< class T_V , class A_V , class T_M , class L_M , class A_M >
+struct same_size_impl< boost::numeric::ublas::vector< T_V , A_V > , boost::numeric::ublas::matrix< T_M , L_M , A_M > >
+{
+    static bool same_size( const boost::numeric::ublas::vector< T_V , A_V > &x1 ,
+                             const boost::numeric::ublas::matrix< T_M , L_M , A_M > &x2 )
+    {
+        return ( ( x1.size() == x2.size1() ) && ( x1.size() == x2.size2() ) );
+    }
+};
+
+/*
+ * specialization for boost::numeric::ublas::permutation_matrix
+ */
+
+template< class T , class A >
+struct is_resizeable< boost::numeric::ublas::permutation_matrix< T , A > >
+{
+    struct type : public boost::true_type { };
+    const static bool value = type::value;
+};
 
 
 } // namespace odeint

@@ -19,7 +19,8 @@
 #include <boost/array.hpp>
 
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
-#include <boost/numeric/odeint/util/default_adjust_size.hpp>
+#include <boost/numeric/odeint/util/resize.hpp>
+//#include <boost/numeric/odeint/util/default_adjust_size.hpp>
 
 
 namespace boost {
@@ -42,14 +43,13 @@ struct adjust_size_always_tag {};
 /*
  * Adjust size functionality with policies and resizeability
  */
-template< class Container , size_t Dim , class AdjustSizeCaller = default_adjust_size >
+template< class Container , size_t Dim >
 class size_adjuster : boost::noncopyable
 {
 public:
 
 	typedef Container container_type;
 	static const size_t dim = Dim;
-	typedef AdjustSizeCaller adjust_size_caller;
 
 	size_adjuster() : m_is_initialized( false ) , m_states()
 	{
@@ -99,17 +99,33 @@ private:
 	template< class State >
 	bool adjust_size_by_resizeability( const State &x , boost::true_type )
 	{
+	    bool resized = false;
 		for( size_t i=0 ; i<dim ; ++i )
 		{
-            adjust_size_caller::adjust_size( x , *(m_states[i]) );
+            resized |= adjust_size_impl( x , *(m_states[i]) );
 		}
-		return ( dim > 0 );
+		return resized;
 	}
 
 	template< class State >
 	bool adjust_size_by_resizeability( const State &x , boost::false_type )
 	{
 	    return false;
+	}
+
+	/* adjust size implementation - resizes only if sizes aren't equal */
+	template< class Container1 , class Container2 >
+	static bool adjust_size_impl( const Container1 &x1 , Container2 &x2 )
+	{
+	    if( !same_size( x1 , x2 ) )
+	    {
+	        resize( x1 , x2 );
+	        return true;
+	    }
+	    else
+	    {
+	        return false;
+	    }
 	}
 
 

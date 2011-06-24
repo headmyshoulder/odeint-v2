@@ -18,9 +18,7 @@
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
 #include <boost/numeric/odeint/util/size_adjuster.hpp>
-#include <boost/numeric/odeint/util/matrix_vector_adjust_size.hpp>
 #include <boost/numeric/odeint/util/ublas_resize.hpp>
-#include <boost/numeric/odeint/util/ublas_permutation_matrix_resize.hpp>
 
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
@@ -284,7 +282,7 @@ public:
 private:
 
 	size_adjuster< state_type , 11 > m_state_adjuster;
-    size_adjuster< matrix_type , 1 , matrix_vector_adjust_size > m_matrix_adjuster;
+    size_adjuster< matrix_type , 1 > m_matrix_adjuster;
     size_adjuster< pmatrix_type , 1 > m_pmatrix_adjuster;
 
 	matrix_type m_jac;

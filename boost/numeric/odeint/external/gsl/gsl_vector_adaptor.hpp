@@ -21,6 +21,12 @@
 #include <boost/range.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 
+#include <boost/numeric/odeint/util/construct.hpp>
+#include <boost/numeric/odeint/util/destruct.hpp>
+#include <boost/numeric/odeint/util/copy.hpp>
+#include <boost/numeric/odeint/util/resize.hpp>
+#include <boost/numeric/odeint/util/default_adjust_size.hpp>
+
 using namespace std;
 
 
@@ -220,11 +226,14 @@ bool same_size( const gsl_vector &x1 , const gsl_vector &x2 )
 	return x1.size == x2.size;
 }
 
-template<>
-void adjust_size( const gsl_vector &x1 , gsl_vector &x2 )
-{
-	if( !same_size( x1 , x2 ) ) resize( x1 , x2 );
-}
+struct default_adjust_size {
+
+    template<>
+    void adjust_size( const gsl_vector &x1 , gsl_vector &x2 )
+    {
+        if( !same_size( x1 , x2 ) ) resize( x1 , x2 );
+    }
+};
 
 template<>
 void copy( const gsl_vector &from , gsl_vector &to )
