@@ -25,7 +25,6 @@
 #include <boost/numeric/odeint/util/destruct.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
 #include <boost/numeric/odeint/util/resize.hpp>
-#include <boost/numeric/odeint/util/default_adjust_size.hpp>
 
 using namespace std;
 
@@ -175,73 +174,79 @@ struct is_resizeable< gsl_vector >
 };
 
 template<>
-void construct( gsl_vector &x )
+struct construct_impl< gsl_vector >
 {
-	x.owner = 0;
-	x.size = 0;
-	x.stride = 0;
-	x.block = 0;
-	x.data = 0;
-}
-
-template<>
-void destruct( gsl_vector &x )
-{
-	if( x.owner != 0 )
-	{
-		gsl_block_free( x.block );
-	}
-	x.owner = 0;
-	x.size = 0;
-	x.stride = 0;
-	x.block = 0;
-	x.data = 0;
-}
-
-
-template<>
-void resize( const gsl_vector &x , gsl_vector &dxdt )
-{
-	if( dxdt.owner != 0 )
-	{
-		gsl_block_free( dxdt.block );
-	}
-	dxdt.size = 0;
-
-	if( x.size == 0 ) return;
-
-	gsl_block *block = gsl_block_alloc( x.size );
-	if( block == 0 ) throw std::bad_alloc( );
-
-	dxdt.data = block->data ;
-	dxdt.size = x.size;
-	dxdt.stride = 1;
-	dxdt.block = block;
-	dxdt.owner = 1;
-}
-
-template<>
-bool same_size( const gsl_vector &x1 , const gsl_vector &x2 )
-{
-	return x1.size == x2.size;
-}
-
-struct default_adjust_size {
-
-    template<>
-    void adjust_size( const gsl_vector &x1 , gsl_vector &x2 )
+    static void construct( gsl_vector &x )
     {
-        if( !same_size( x1 , x2 ) ) resize( x1 , x2 );
+        x.owner = 0;
+        x.size = 0;
+        x.stride = 0;
+        x.block = 0;
+        x.data = 0;
     }
 };
 
 template<>
-void copy( const gsl_vector &from , gsl_vector &to )
+struct destruct_impl< gsl_vector >
 {
-	adjust_size( from , to );
-	gsl_vector_memcpy( &to , &from );
-}
+    static void destruct( gsl_vector &x )
+    {
+        if( x.owner != 0 )
+        {
+            gsl_block_free( x.block );
+        }
+        x.owner = 0;
+        x.size = 0;
+        x.stride = 0;
+        x.block = 0;
+        x.data = 0;
+    }
+};
 
+
+template<>
+struct resize_impl< gsl_vector , gsl_vector >
+{
+    static void resize( const gsl_vector &x , gsl_vector &dxdt )
+    {
+        if( dxdt.owner != 0 )
+        {
+            gsl_block_free( dxdt.block );
+        }
+        dxdt.size = 0;
+
+        if( x.size == 0 ) return;
+
+        gsl_block *block = gsl_block_alloc( x.size );
+        if( block == 0 ) throw std::bad_alloc( );
+
+        dxdt.data = block->data ;
+        dxdt.size = x.size;
+        dxdt.stride = 1;
+        dxdt.block = block;
+        dxdt.owner = 1;
+    }
+};
+
+template<>
+struct same_size_impl< gsl_vector , gsl_vector >
+{
+    static bool same_size( const gsl_vector &x1 , const gsl_vector &x2 )
+    {
+        return x1.size == x2.size;
+    }
+};
+
+
+template<>
+struct copy_impl< gsl_vector , gsl_vector >
+{
+    static void copy( const gsl_vector &from , gsl_vector &to )
+    {
+        resize( from , to );
+        gsl_vector_memcpy( &to , &from );
+    }
+};
 
 } // odeint
 } // numeric
