@@ -14,7 +14,7 @@
 #define BOOST_NUMERIC_ODEINT_GSL_VECTOR_ADAPTOR_HPP_INCLUDED
 
 #include <new>
-#include <iostream>
+//#include <iostream>
 
 #include <gsl/gsl_vector.h>
 
@@ -41,8 +41,8 @@ class gsl_vector_iterator : public boost::iterator_facade< gsl_vector_iterator ,
 public :
 
 	gsl_vector_iterator( void ): m_p(0) , m_stride( 0 ) { }
-	explicit gsl_vector_iterator( gsl_vector &p ) : m_p( p.data ) , m_stride( p.stride ) { }
-	friend gsl_vector_iterator end_iterator( gsl_vector & );
+	explicit gsl_vector_iterator( gsl_vector *p ) : m_p( p->data ) , m_stride( p->stride ) { }
+	friend gsl_vector_iterator end_iterator( gsl_vector * );
 
 private :
 
@@ -70,14 +70,14 @@ class const_gsl_vector_iterator : public boost::iterator_facade< const_gsl_vecto
 public :
 
 	const_gsl_vector_iterator( void ): m_p(0) , m_stride( 0 ) { }
-	explicit const_gsl_vector_iterator( const gsl_vector &p ) : m_p( p.data ) , m_stride( p.stride ) { }
+	explicit const_gsl_vector_iterator( const gsl_vector *p ) : m_p( p->data ) , m_stride( p->stride ) { }
 	const_gsl_vector_iterator( const gsl_vector_iterator &p ) : m_p( p.m_p ) , m_stride( p.m_stride ) { }
 
 private :
 
 	friend class boost::iterator_core_access;
 	friend class gsl_vector_iterator;
-	friend const_gsl_vector_iterator end_iterator( const gsl_vector & );
+	friend const_gsl_vector_iterator end_iterator( const gsl_vector * );
 
 	void increment( void ) { m_p += m_stride; }
 	void decrement( void ) { m_p -= m_stride; }
@@ -94,17 +94,17 @@ private :
 bool gsl_vector_iterator::equal( const const_gsl_vector_iterator &other ) const { return this->m_p == other.m_p; }
 
 
-gsl_vector_iterator end_iterator( gsl_vector &x )
+gsl_vector_iterator end_iterator( gsl_vector *x )
 {
 	gsl_vector_iterator iter( x );
-	iter.m_p += iter.m_stride * x.size;
+	iter.m_p += iter.m_stride * x->size;
 	return iter;
 }
 
-const_gsl_vector_iterator end_iterator( const gsl_vector &x )
+const_gsl_vector_iterator end_iterator( const gsl_vector *x )
 {
 	const_gsl_vector_iterator iter( x );
-	iter.m_p += iter.m_stride * x.size;
+	iter.m_p += iter.m_stride * x->size;
 	return iter;
 }
 
@@ -116,13 +116,13 @@ const_gsl_vector_iterator end_iterator( const gsl_vector &x )
 namespace boost
 {
 	template<>
-	struct range_mutable_iterator< gsl_vector >
+	struct range_mutable_iterator< gsl_vector* >
 	{
 		typedef gsl_vector_iterator type;
 	};
 
 	template<>
-	struct range_const_iterator< gsl_vector >
+	struct range_const_iterator< gsl_vector* >
 	{
 		typedef const_gsl_vector_iterator type;
 	};
@@ -132,25 +132,25 @@ namespace boost
 
 
 // template<>
-inline gsl_vector_iterator range_begin( gsl_vector &x )
+inline gsl_vector_iterator range_begin( gsl_vector *x )
 {
 	return gsl_vector_iterator( x );
 }
 
 // template<>
-inline const_gsl_vector_iterator range_begin( const gsl_vector &x )
+inline const_gsl_vector_iterator range_begin( const gsl_vector *x )
 {
 	return const_gsl_vector_iterator( x );
 }
 
 // template<>
-inline gsl_vector_iterator range_end( gsl_vector &x )
+inline gsl_vector_iterator range_end( gsl_vector *x )
 {
 	return end_iterator( x );
 }
 
 // template<>
-inline const_gsl_vector_iterator range_end( const gsl_vector &x )
+inline const_gsl_vector_iterator range_end( const gsl_vector *x )
 {
 	return end_iterator( x );
 }
@@ -167,84 +167,60 @@ namespace odeint {
 
 
 template<>
-struct is_resizeable< gsl_vector >
+struct is_resizeable< gsl_vector* >
 {
 	struct type : public boost::true_type { };
 	const static bool value = type::value;
 };
 
 template<>
-struct construct_impl< gsl_vector >
+struct construct_impl< gsl_vector* >
 {
-    static void construct( gsl_vector &x )
+    static void construct( gsl_vector *&x )
     {
-        x.owner = 0;
-        x.size = 0;
-        x.stride = 0;
-        x.block = 0;
-        x.data = 0;
+        x = gsl_vector_alloc( 1 ); // gsl wants vector length > 0, so we give 1 arbitrarily
     }
 };
 
 template<>
-struct destruct_impl< gsl_vector >
+struct destruct_impl< gsl_vector* >
 {
-    static void destruct( gsl_vector &x )
+    static void destruct( gsl_vector *x )
     {
-        if( x.owner != 0 )
-        {
-            gsl_block_free( x.block );
-        }
-        x.owner = 0;
-        x.size = 0;
-        x.stride = 0;
-        x.block = 0;
-        x.data = 0;
+        gsl_vector_free( x );
     }
 };
 
 
 template<>
-struct resize_impl< gsl_vector , gsl_vector >
+struct resize_impl< gsl_vector* , gsl_vector* >
 {
-    static void resize( const gsl_vector &x , gsl_vector &dxdt )
+    static void resize( const gsl_vector *x , gsl_vector *&dxdt )
     {
-        if( dxdt.owner != 0 )
-        {
-            gsl_block_free( dxdt.block );
-        }
-        dxdt.size = 0;
+        if( x->size == 0 ) return;
 
-        if( x.size == 0 ) return;
-
-        gsl_block *block = gsl_block_alloc( x.size );
-        if( block == 0 ) throw std::bad_alloc( );
-
-        dxdt.data = block->data ;
-        dxdt.size = x.size;
-        dxdt.stride = 1;
-        dxdt.block = block;
-        dxdt.owner = 1;
+        gsl_vector_free( dxdt );
+        dxdt = gsl_vector_alloc( x->size );
     }
 };
 
 template<>
-struct same_size_impl< gsl_vector , gsl_vector >
+struct same_size_impl< gsl_vector* , gsl_vector* >
 {
-    static bool same_size( const gsl_vector &x1 , const gsl_vector &x2 )
+    static bool same_size( const gsl_vector *x1 , const gsl_vector *x2 )
     {
-        return x1.size == x2.size;
+        return x1->size == x2->size;
     }
 };
 
 
 template<>
-struct copy_impl< gsl_vector , gsl_vector >
+struct copy_impl< gsl_vector* , gsl_vector* >
 {
-    static void copy( const gsl_vector &from , gsl_vector &to )
+    static void copy( const gsl_vector *from , gsl_vector *to )
     {
-        resize( from , to );
-        gsl_vector_memcpy( &to , &from );
+        resize_impl< gsl_vector* , gsl_vector* >::resize( from , to );
+        gsl_vector_memcpy( to , from );
     }
 };
 
