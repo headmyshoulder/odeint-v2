@@ -6,7 +6,7 @@
 
 using namespace std;
 
-typedef gsl_vector *state_type;
+typedef gsl_vector state_type;
 
 const double sigma = 10.0;
 const double R = 28.0;
