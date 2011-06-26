@@ -23,7 +23,8 @@ namespace odeint {
 template< class Container >
 struct is_resizeable
 {
-	struct type : public boost::false_type { };
+	//struct type : public boost::false_type { };
+	typedef boost::false_type type;
 	const static bool value = type::value;
 };
 
@@ -33,7 +34,8 @@ struct is_resizeable
 template< class V, class A >
 struct is_resizeable< std::vector< V , A  > >
 {
-	struct type : public boost::true_type { };
+	//struct type : public boost::true_type { };
+    typedef boost::true_type type;
 	const static bool value = type::value;
 };
 

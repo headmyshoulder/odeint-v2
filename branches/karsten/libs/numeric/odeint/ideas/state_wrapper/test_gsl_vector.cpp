@@ -37,6 +37,19 @@ struct state_wrapper< state_type >
         gsl_vector_free( m_v );
     }
 
+    bool same_size( const gsl_vector *x )
+    {
+        return ( m_v->size == x->size );
+    }
+
+    void resize( const gsl_vector *x )
+    {
+        if( x->size == 0 ) return;
+
+        gsl_vector_free( m_v );
+        m_v = gsl_vector_alloc( x->size );
+    }
+
 };
 
 int main() {

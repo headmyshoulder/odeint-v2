@@ -4,10 +4,17 @@
 
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
-#include <boost/numeric/odeint/util/resize.hpp>
+#include <boost/numeric/odeint/util/is_resizeable.hpp>
+#include <boost/type_traits/integral_constant.hpp>
+
+
+template< class V , typename resizeable = typename boost::numeric::odeint::is_resizeable< V >::type>
+struct state_wrapper;
+
+//two standard implementations, with and without resizing depending on is_resizeable< StateType >
 
 template< class V >
-struct state_wrapper
+struct state_wrapper< V , boost::true_type > // with resizing
 {
     typedef typename V::value_type value_type;
 
@@ -15,6 +22,30 @@ struct state_wrapper
 
     state_wrapper() : m_v() { }
 
+    template< class StateIn >
+    bool same_size( const StateIn &x ) const
+    {
+        return ( boost::size( m_v ) == boost::size( x ) );
+    }
+
+    template< class StateIn >
+    void resize( const StateIn &x )
+    {
+        m_v.resize( x.size() );
+    }
+};
+
+
+template< class V >
+struct state_wrapper< V , boost::false_type > // without resizing
+{
+    typedef typename V::value_type value_type;
+
+    V m_v;
+
+    state_wrapper() : m_v() { }
+
+    //no resize method
 };
 
 
@@ -45,9 +76,9 @@ public:
     template< class State >
     bool adjust_size( const State &x )
     {
-        if( boost::numeric::odeint::same_size( x , m_dxdt.m_v ) )
+        if( m_dxdt.same_size( x ) )
         {
-            boost::numeric::odeint::resize( x , m_dxdt.m_v );
+            m_dxdt.resize( x );
             return true;
         } else
             return false;
