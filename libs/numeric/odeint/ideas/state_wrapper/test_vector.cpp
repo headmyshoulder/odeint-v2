@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "explicit_euler.hpp"
+#include "size_adjuster.hpp"
 
 using namespace std;
 
@@ -20,7 +21,7 @@ void lorenz( const state_type &x , state_type &dxdt , double t )
 
 int main()
 {
-    explicit_euler< state_type > euler;
+    explicit_euler< state_type , initially_resizer > euler;
 
     state_type x(3);
     x[0] = 1.0; x[1] = 1.0; x[2] = 2.0;
