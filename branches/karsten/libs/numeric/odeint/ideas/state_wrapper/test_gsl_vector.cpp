@@ -2,11 +2,12 @@
 #include <gsl/gsl_vector.h>
 
 #include "explicit_euler.hpp"
+#include "size_adjuster.hpp"
 #include <boost/numeric/odeint/external/gsl/gsl_vector_adaptor.hpp>
 
 using namespace std;
 
-typedef gsl_vector state_type;
+typedef gsl_vector* state_type;
 
 const double sigma = 10.0;
 const double R = 28.0;
@@ -28,18 +29,19 @@ struct state_wrapper< state_type >
 
     state_wrapper( )
     {
-        m_v->owner = 0;
-        m_v->size = 0;
-        m_v->stride = 0;
-        m_v->data = 0;
-        m_v->block = 0;
+        m_v = gsl_vector_alloc( 1 );
+    }
+
+    ~state_wrapper()
+    {
+        gsl_vector_free( m_v );
     }
 
 };
 
 int main() {
 
-    explicit_euler< state_type > euler;
+    explicit_euler< state_type , initially_resizer > euler;
 
     state_type x = gsl_vector_alloc( 3 );
     gsl_vector_set( x , 0 , 1.0);
