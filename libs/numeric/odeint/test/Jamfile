@@ -4,14 +4,15 @@
 
 # bring in rules for testing
 
-import testing ;
 
+import testing ;
+use-project boost : $(BOOST_ROOT) ;
 
 project
     : requirements
+	  <library>/boost/test//boost_unit_test_framework
       <define>BOOST_ALL_NO_LIB=1
       <include>../../../..
-      <library>/boost/test//boost_unit_test_framework 
 	  <link>static
     ;
 
