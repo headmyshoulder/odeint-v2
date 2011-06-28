@@ -13,6 +13,9 @@ project
    : requirements 
      <include>$(BOOST_ROOT) ;
 
+#
+
+#use-project /boost : c:/users/mario/boost_1_46_1 ;
 
 # tests, regression tests and examples
 build-project libs/numeric/odeint/test ;
@@ -45,8 +48,8 @@ build-project libs/numeric/odeint/ideas/algebra ;
 ###### The following is copied from another sandbox project #####
 ###### to get the quickbook and boostbook working ...       #####
 
-local boost-root = [ modules.peek : BOOST_ROOT ] ;
-local explore-header-include = $(top)/../.. ;
-use-project /boost/regex : $(boost-root)/libs/regex/build ;
+# local boost-root = [ modules.peek : BOOST_ROOT ] ;
+# local explore-header-include = $(top)/../.. ;
+# use-project /boost/regex : $(boost-root)/libs/regex/build ;
 
 ##################################################################
