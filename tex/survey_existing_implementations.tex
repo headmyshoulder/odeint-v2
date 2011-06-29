@@ -38,5 +38,70 @@ showstringspaces=false
  \maketitle
 
 \section{Numerical Recipes}
+The famous book ``Numerical Recipes in C++'', published in the 3rd version in 2007, provides a detailed description over the whole range of scientific computing including numerical integration of ODEs.
+The book is shipped with an extensive software library implementing the algorithms presented in the text.
+These implementations serve as reference for basically any programmer who deals with numerical methods.
+
+However, the first edition of this publication dates back to 1992 and although the authors formally switched to C++ in the latest release the design and usability of the library is very poor with respect to modern principles.
+In the following, a quick review of the methods for solving ODEs is given together with some comments on their disadvantages and how our library design will try to improve that.
+
+One of the most important points when using this library is the fact that it brings its own vector type, called \lstinline+NRVec< T >+.
+This class provides basic assignment and random access methods, but does not support iterators.
+Furthermore, the routines for ODEs are restricted to the \lstinline+NRVec< double >+ specializations of the vectors.
+The Numerical Recipes provide several standard routines for solving ODEs, like the classical Runge-Kutta-4 scheme, the RK54 Cash-Karp method with error estimates, the controlled Burlish-Stoer scheme and many others.
+These routines execute one step with constant or adjusted step-size of a given system.
+The system, namely the right hand side of the ODE, is providede to these routines in terms of a function pointer \lstinline+void rhs(const DP, Vec_I_DP &, Vec_O_DP &)+.
+Additionally, a driver is provided in terms of a function which integrates an ODE from some start- to some end-point by successively calling the single step functions and adjusting the step size according to some desired error levels.
+
+This design exhibits several disadvantages.
+Most of these points are due to the fact that the code relies on its own, fixed vector type and these apply to all of the libraries that are presented here.
+\begin{itemize}
+ \item Connection with other libraries, like STL, requires mapping of the \lstinline+NRVec+ to other vector types.
+ \item Impossible to solve ODEs with complex valued date types or multi-precision data types.
+ \item Impossible to solve ODEs on resizing lattices.
+ \item Impossible to solve ODEs on nontrivial state types like complex networks.
+ \item Impossible to represent the ODE as a class due to restriction to function pointers.
+\end{itemize}
+
+\section{GNU Scientfic Library}
+The GNU Scientfic Library (GSL) provides many numerical algorithms as a precompiled library.
+In terms of functionality its ODE routines are comparable with the Numerical Recipes.
+It includes standard Runge-Kutta as well as several implicit schemes.
+The interface use plain C which results in cumbersume usage, especially within an otherwise modern C++ environment.
+As for the Numerical Recipes, the GSL also brings its own vector type, \lstinline+gsl_vector+, that is extremely uncomfortable to use as its element access is realized by global functions.
+Moreover, stepper and driver routines require the call of allocation functions and so the programmer must also take care for deallocation.
+Additionally, the GSL shows rather poor performance simply because it is pre-compiled which prevents the compiler from employing optimized function inlining.
+And just like for the Numerical Recipes the right hand side of the ODE has to be provided in terms of a function pointer which rules out the possibility to represent the ODE as a class.
+
+To summarize, the GSL suffers from the same disadvantages as the Numerical Recipes because it also uses its own vector type and requires functions pointers.
+Additionally, it shows worse performance due to its pre-compiled nature.
+Finally, its C interfaces are unacceptable from a modern point of view.
+
+\section{Apache Math}
+The Apache Commons Math Library is mathematical component written in Java.
+Besides many other subjects it also addresses solving of ODEs.
+The library is well designed making heavy use of object-orientation techniques.
+The ODE is defined as a class implementing a certain interface and the solver algorithm is also represented by a class providing an integrate function which does integration steps by successive iteration of single steps with (possibly) step size control.
+
+However, we again have the disadvantage that the whole library works only with a fixed vector type, namely array of doubles \lstinline+double[]+.
+So there is no chance to use it with complex valued data types, resizing states or on self written state types like complex networks.
+Additionally, the performance of this Java library is about ten times worse than a good C or C++ approach.
+However, the library is well designed in terms of OO principles and it is easy to add new solver algorithms, for example.
+
+\section{Python SciPy}
+The Python.SciPy package contains a function for solving ODEs, called scipy.integrate.odeint.
+This function is highly convenient and very easy to use.
+In its simplest form the programmer just provides any callable object representing the right hand side of the ODE, a starting condition and an array of times at which the solution should be evaluated.
+This easy-to-use method automatically chooses integration routine and step size and provides a convenient way to solve ODEs quick-n-dirty.
+
+However, it is impossible to choose the actual algorithm used by this routine which makes it not suitable for real scientific work.
+Furthermore, the performance is by no means comparable to a C/C++ library.
+But in terms of convenivence this function is what we want to reach with \odeint, without loosing the possibility to configure the algorithm and the details of the integration.
+
+\section*{Summary}
+To our knowledge, all libraries dealing with ODEs are implemented in a way that nails down the vector type to some sort of array of doubles.
+This is, in our opinion, a major disadvantage that can be solved by using modern template techniques in C++.
+So our aim with \odeint\ is to provide standard integration routines for ODEs, but completely separate the algorithms from the vector types.
+We currently don't know of any comparable approach towards numerical libraries but we do believe that with this separation we are able to overcome the downfalls of the existing libraries presented before.
 
 \end{document}
