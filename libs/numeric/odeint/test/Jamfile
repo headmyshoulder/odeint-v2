@@ -18,6 +18,7 @@ project
 
 test-suite "odeint"
 	:
+	 [ run euler_stepper.cpp ]
 	 [ run stepper_concepts.cpp ]
 	 [ run resizing.cpp ]
 	 [ run default_operations.cpp ]

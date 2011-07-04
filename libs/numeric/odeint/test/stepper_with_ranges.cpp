@@ -17,6 +17,7 @@
 
 #include <vector>
 #include <utility>
+#include <iostream>
 
 #include <boost/array.hpp>
 #include <boost/range.hpp>
@@ -25,10 +26,10 @@
 #include <boost/numeric/odeint/stepper/explicit_euler.hpp>
 #include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
 #include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
-#include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
+/*#include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 #include <boost/numeric/odeint/stepper/symplectic_euler.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_explicit.hpp>
-#include <boost/numeric/odeint/stepper/dense_output_controlled_explicit_fsal.hpp>
+#include <boost/numeric/odeint/stepper/dense_output_controlled_explicit_fsal.hpp>*/
 
 typedef std::vector< double > state_type;
 typedef boost::array< double , 3 > state_type2;
@@ -45,6 +46,8 @@ struct system1
 	template< class State , class Deriv >
 	void operator()( const State &x_ , Deriv &dxdt_ , double t )
 	{
+	    std::cout << dxdt_.size() << std::endl;
+
 		typename boost::range_iterator< const State >::type x = boost::begin( x_ );
 		typename boost::range_iterator< Deriv >::type dxdt = boost::begin( dxdt_ );
 
@@ -160,9 +163,13 @@ BOOST_AUTO_TEST_CASE( explicit_euler_with_range_v1 )
 {
 	vector_fixture f;
 	boost::numeric::odeint::explicit_euler< state_type > euler;
+	std::cout << "do step!" << std::endl;
 	euler.do_step( system1() , std::make_pair( f.in.begin() + 1 , f.in.begin() + 4 ) , 0.1 , 0.1 );
+	std::cout << "end step!" << std::endl;
 	CHECK_VALUES( f.in , 0.0 , 1.1 , 2.2 , 3.3 , 4.0 , 5.0 );
 }
+
+
 
 BOOST_AUTO_TEST_CASE( explicit_error_k54_with_range_v1 )
 {
@@ -189,6 +196,7 @@ BOOST_AUTO_TEST_CASE( explicit_error_dopri5_with_range_v1 )
 	CHECK_VALUES( f.in , 0.0 , 1.1 , 2.2 , 3.3 , 4.0 , 5.0 );
 }
 
+
 BOOST_AUTO_TEST_CASE( explicit_error_dopri5_with_range_v5 )
 {
 	vector_fixture f;
@@ -197,6 +205,7 @@ BOOST_AUTO_TEST_CASE( explicit_error_dopri5_with_range_v5 )
 	CHECK_VALUES( f.in , 0.0 , 1.1 , 2.2 , 3.3 , 4.0 , 5.0 );
 }
 
+/*
 BOOST_AUTO_TEST_CASE( controlled_error_stepper_rk54 )
 {
 	double t = 0.0 , dt = 0.1;
@@ -263,7 +272,7 @@ BOOST_AUTO_TEST_CASE( dense_output_dopri5_with_ranges )
 	stepper.calc_state( 0.05 , std::make_pair( f.in.begin() + 1 ,f.in.begin() +4 ) );
 	CHECK_VALUES( f.in , 0.0 , 1.05 , 2.1 , 3.15 , 4.0 , 5.0 );
 }
-
+*/
 
 
 

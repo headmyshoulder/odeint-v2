@@ -34,15 +34,15 @@ template<
     class Time = double ,
 	class Algebra = range_algebra ,
 	class Operations = default_operations ,
-	class AdjustSizePolicy = adjust_size_initially_tag
+	class Resizer = initially_resizer
 	>
 class explicit_error_dopri5
 : public explicit_stepper_and_error_stepper_fsal_base<
-	  explicit_error_dopri5< State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy > ,
-	  5 , 5 , 4 , State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy >
+	  explicit_error_dopri5< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
+	  5 , 5 , 4 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
 {
 
-	void initialize( void )
+/*	void initialize( void )
 	{
 		boost::numeric::odeint::construct( m_x_tmp );
 		boost::numeric::odeint::construct( m_k2 );
@@ -68,13 +68,13 @@ class explicit_error_dopri5
 		boost::numeric::odeint::copy( d.m_k6 , m_k6 );
 	}
 
-
+*/
 
 public :
 
 	BOOST_ODEINT_EXPLICIT_STEPPERS_AND_ERROR_STEPPERS_FSAL_TYPEDEFS( explicit_error_dopri5 , 5 , 5 , 4 );
 
-
+/*
 	explicit_error_dopri5( void )
 	: stepper_base_type() , m_state_adjuster() , m_deriv_adjuster() , m_x_tmp() , m_k2() , m_k3() , m_k4() , m_k5() , m_k6()
 	{
@@ -105,7 +105,7 @@ public :
 		return *this;
 	}
 
-
+*/
 
 
 
@@ -145,35 +145,32 @@ public :
         const value_type c5 = static_cast<value_type> ( -2187.0 ) / static_cast<value_type>( 6784.0 );
         const value_type c6 = static_cast<value_type> ( 11.0 ) / static_cast<value_type>( 84.0 );
 
-	    m_state_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
-	    m_deriv_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
-
 		typename boost::unwrap_reference< System >::type &sys = system;
 
         //m_x_tmp = x + dt*b21*dxdt
-        algebra_type::for_each3( m_x_tmp , in , dxdt_in ,
+        algebra_type::for_each3( m_x_tmp.m_v , in , dxdt_in ,
         		typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , dt*b21 ) );
 
-        sys( m_x_tmp , m_k2 , t + dt*a2 );
+        sys( m_x_tmp.m_v , m_k2.m_v , t + dt*a2 );
         // m_x_tmp = x + dt*b31*dxdt + dt*b32*m_k2
-        algebra_type::for_each4( m_x_tmp , in , dxdt_in , m_k2 ,
+        algebra_type::for_each4( m_x_tmp.m_v , in , dxdt_in , m_k2.m_v ,
         		typename operations_type::template scale_sum3< value_type , time_type , time_type >( 1.0 , dt*b31 , dt*b32 ));
 
-        sys( m_x_tmp , m_k3 , t + dt*a3 );
+        sys( m_x_tmp.m_v , m_k3.m_v , t + dt*a3 );
         // m_x_tmp = x + dt * (b41*dxdt + b42*m_k2 + b43*m_k3)
-        algebra_type::for_each5( m_x_tmp , in , dxdt_in , m_k2 , m_k3 ,
+        algebra_type::for_each5( m_x_tmp.m_v , in , dxdt_in , m_k2.m_v , m_k3.m_v ,
         		typename operations_type::template scale_sum4< value_type , time_type , time_type , time_type >( 1.0 , dt*b41 , dt*b42 , dt*b43 ));
 
-        sys( m_x_tmp, m_k4 , t + dt*a4 );
-        algebra_type::for_each6( m_x_tmp , in , dxdt_in , m_k2 , m_k3 , m_k4 ,
+        sys( m_x_tmp.m_v, m_k4.m_v , t + dt*a4 );
+        algebra_type::for_each6( m_x_tmp.m_v , in , dxdt_in , m_k2.m_v , m_k3.m_v , m_k4.m_v ,
         		typename operations_type::template scale_sum5< value_type , time_type , time_type , time_type , time_type >( 1.0 , dt*b51 , dt*b52 , dt*b53 , dt*b54 ));
 
-        sys( m_x_tmp , m_k5 , t + dt*a5 );
-        algebra_type::for_each7( m_x_tmp , in , dxdt_in , m_k2 , m_k3 , m_k4 , m_k5 ,
+        sys( m_x_tmp.m_v , m_k5.m_v , t + dt*a5 );
+        algebra_type::for_each7( m_x_tmp.m_v , in , dxdt_in , m_k2.m_v , m_k3.m_v , m_k4.m_v , m_k5.m_v ,
         		typename operations_type::template scale_sum6< value_type , time_type , time_type , time_type , time_type , time_type >( 1.0 , dt*b61 , dt*b62 , dt*b63 , dt*b64 , dt*b65 ));
 
-        sys( m_x_tmp , m_k6 , t + dt );
-        algebra_type::for_each7( out , in , dxdt_in , m_k3 , m_k4 , m_k5 , m_k6 ,
+        sys( m_x_tmp.m_v , m_k6.m_v , t + dt );
+        algebra_type::for_each7( out , in , dxdt_in , m_k3.m_v , m_k4.m_v , m_k5.m_v , m_k6.m_v ,
         		typename operations_type::template scale_sum6< value_type , time_type , time_type , time_type , time_type , time_type >( 1.0 , dt*c1 , dt*c3 , dt*c4 , dt*c5 , dt*c6 ));
 
         // the new derivative
@@ -201,7 +198,7 @@ public :
         do_step_impl( system , in , dxdt_in , t , out , dxdt_out , dt );
 
         //error estimate
-        algebra_type::for_each7( xerr , dxdt_in , m_k3 , m_k4 , m_k5 , m_k6 , dxdt_out ,
+        algebra_type::for_each7( xerr , dxdt_in , m_k3.m_v , m_k4.m_v , m_k5.m_v , m_k6.m_v , dxdt_out ,
                     typename operations_type::template scale_sum6< time_type , time_type , time_type , time_type , time_type , time_type >( dt*dc1 , dt*dc3 , dt*dc4 , dt*dc5 , dt*dc6 , dt*dc7 ) );
 	}
 
@@ -271,29 +268,29 @@ public :
 //		const state_type &k6 = dopri5().m_k6;
 //		const state_type &k7 = *m_current_deriv;
 
-		algebra_type::for_each8( x , x_old , deriv_old , m_k3 , m_k4 , m_k5 , m_k6 , deriv_new ,
+		algebra_type::for_each8( x , x_old , deriv_old , m_k3.m_v , m_k4.m_v , m_k5.m_v , m_k6.m_v , deriv_new ,
 			typename operations_type::template scale_sum7< value_type , time_type , time_type , time_type , time_type , time_type , time_type >( 1.0 , dt * b1_theta , dt * b3_theta , dt * b4_theta , dt * b5_theta , dt * b6_theta , dt * b7_theta ) );
 	}
 
 
 
 
-
-	void adjust_size( const state_type &x )
+	template< class StateType >
+	void resize_impl( const StateType &x )
 	{
-		m_state_adjuster.adjust_size( x );
-		m_deriv_adjuster.adjust_size( x );
-		stepper_base_type::adjust_size( x );
+	    m_x_tmp.resize( x );
+	    m_k2.resize( x );
+	    m_k3.resize( x );
+	    m_k4.resize( x );
+	    m_k5.resize( x );
+	    m_k6.resize( x );
 	}
 
 
 private:
 
-    size_adjuster< state_type , 1 > m_state_adjuster;
-    size_adjuster< deriv_type , 5 > m_deriv_adjuster;
-
-    state_type m_x_tmp;
-    deriv_type m_k2 , m_k3 , m_k4 , m_k5 , m_k6 ;
+    wrapped_state_type m_x_tmp;
+    wrapped_deriv_type m_k2 , m_k3 , m_k4 , m_k5 , m_k6 ;
 
 };
 

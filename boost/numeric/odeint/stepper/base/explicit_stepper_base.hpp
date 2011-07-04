@@ -13,12 +13,17 @@
 #ifndef BOOST_NUMERIC_ODEINT_EXPLICIT_STEPPER_BASE_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_EXPLICIT_STEPPER_BASE_HPP_INCLUDED
 
+#include <iostream>
+
 #include <boost/ref.hpp>
 
-#include <boost/numeric/odeint/util/size_adjuster.hpp>
-#include <boost/numeric/odeint/util/construct.hpp>
-#include <boost/numeric/odeint/util/destruct.hpp>
-#include <boost/numeric/odeint/util/copy.hpp>
+//#include <boost/numeric/odeint/util/size_adjuster.hpp>
+//#include <boost/numeric/odeint/util/construct.hpp>
+//#include <boost/numeric/odeint/util/destruct.hpp>
+//#include <boost/numeric/odeint/util/copy.hpp>
+
+#include <boost/numeric/odeint/util/state_wrapper.hpp>
+#include <boost/numeric/odeint/util/resizer.hpp>
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
@@ -40,7 +45,7 @@ template<
 	class Time ,
 	class Algebra ,
 	class Operations ,
-	class AdjustSizePolicy
+	class Resizer
 >
 class explicit_stepper_base
 {
@@ -53,11 +58,13 @@ public:
 	typedef Time time_type;
 	typedef Algebra algebra_type;
 	typedef Operations operations_type;
-	typedef AdjustSizePolicy adjust_size_policy;
+	typedef Resizer resizer_type;
 	typedef Stepper stepper_type;
 	typedef stepper_tag stepper_category;
+	typedef state_wrapper< state_type > wrapped_state_type;
+	typedef state_wrapper< deriv_type > wrapped_deriv_type;
 
-	typedef explicit_stepper_base< Stepper , Order , State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy > internal_stepper_base_type;
+	typedef explicit_stepper_base< Stepper , Order , State , Value , Deriv , Time , Algebra , Operations , Resizer > internal_stepper_base_type;
 
 	typedef unsigned short order_type;
 	static const order_type order_value = Order;
@@ -69,29 +76,19 @@ public:
     }
 
 
-	explicit_stepper_base( void ) : m_size_adjuster() , m_dxdt()
-	{
-		boost::numeric::odeint::construct( m_dxdt );
-		m_size_adjuster.register_state( 0 , m_dxdt );
-	}
+/*	explicit_stepper_base( void ) : m_resizer() , m_dxdt()
+	{ }
 
-	~explicit_stepper_base( void )
-	{
-		boost::numeric::odeint::destruct( m_dxdt );
-	}
-
-	explicit_stepper_base( const explicit_stepper_base &b ) : m_size_adjuster() , m_dxdt()
-	{
-		boost::numeric::odeint::construct( m_dxdt );
-		m_size_adjuster.register_state( 0 , m_dxdt );
-		boost::numeric::odeint::copy( b.m_dxdt , m_dxdt );
-	}
+	explicit_stepper_base( const explicit_stepper_base &b ) : m_resizer() , m_dxdt( b.m_dxdt )
+	{ }
 
 	explicit_stepper_base& operator=( const explicit_stepper_base &b )
 	{
 		boost::numeric::odeint::copy( b.m_dxdt , m_dxdt );
+
 		return *this;
 	}
+*/
 
 
 	/*
@@ -133,7 +130,7 @@ public:
 	void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt )
 	{
 		typename boost::unwrap_reference< System >::type &sys = system;
-		m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
+		m_resizer.adjust_size( *this , in );
 		sys( in , m_dxdt ,t );
 		this->stepper().do_step_impl( system , in , m_dxdt , t , out , dt );
 	}
@@ -154,9 +151,9 @@ public:
 
 
 	template< class StateType >
-	void adjust_size( const StateType &x )
+	bool adjust_size( const StateType &x )
 	{
-		m_size_adjuster.adjust_size( x );
+        return adjust_size_by_resizability( x , typename boost::numeric::odeint::is_resizeable< deriv_type >::type() );
 	}
 
 
@@ -166,10 +163,30 @@ private:
 	void do_step_v1( System system , StateInOut &x , const time_type &t , const time_type &dt )
 	{
 		typename boost::unwrap_reference< System >::type &sys = system;
-		m_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
-		sys( x , m_dxdt ,t );
-		this->stepper().do_step_impl( system , x , m_dxdt , t , x , dt );
+		m_resizer.adjust_size( *this , x );
+		sys( x , m_dxdt.m_v ,t );
+		this->stepper().do_step_impl( system , x , m_dxdt.m_v , t , x , dt );
 	}
+
+
+	template< class StateType >
+	bool adjust_size_by_resizability( const StateType &x , boost::true_type )
+	{
+	    if( !m_dxdt.same_size( x ) )
+        {
+            m_dxdt.resize( x );
+            this->stepper().resize_impl( x );
+            return true;
+        } else {
+            return false;
+        }
+	}
+
+	template< class StateType >
+    bool adjust_size_by_resizablity( const StateType &x , boost::false_type )
+    {
+	    return false;
+    }
 
 
 protected:
@@ -185,8 +202,8 @@ protected:
     }
 
 
-	size_adjuster< deriv_type , 1 > m_size_adjuster;
-	deriv_type m_dxdt;
+	resizer_type m_resizer;
+	wrapped_deriv_type m_dxdt;
 };
 
 

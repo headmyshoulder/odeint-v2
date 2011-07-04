@@ -17,10 +17,13 @@
 
 #include <boost/ref.hpp>
 
-#include <boost/numeric/odeint/util/size_adjuster.hpp>
-#include <boost/numeric/odeint/util/construct.hpp>
-#include <boost/numeric/odeint/util/destruct.hpp>
-#include <boost/numeric/odeint/util/copy.hpp>
+//#include <boost/numeric/odeint/util/size_adjuster.hpp>
+//#include <boost/numeric/odeint/util/construct.hpp>
+//#include <boost/numeric/odeint/util/destruct.hpp>
+//#include <boost/numeric/odeint/util/copy.hpp>
+
+#include <boost/numeric/odeint/util/state_wrapper.hpp>
+#include <boost/numeric/odeint/util/resizer.hpp>
 
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
@@ -98,7 +101,7 @@ template<
     class ErrorChecker = default_error_checker< typename ErrorStepper::value_type ,
                                                  typename ErrorStepper::algebra_type ,
                                                  typename ErrorStepper::operations_type > ,
-    class AdjustSizePolicy = typename ErrorStepper::adjust_size_policy ,
+    class Resizer = typename ErrorStepper::resizer_type ,
     class ErrorStepperCategory = typename ErrorStepper::stepper_category
 >
 class controlled_error_stepper { };
@@ -112,11 +115,11 @@ class controlled_error_stepper { };
 template<
 	class ErrorStepper ,
 	class ErrorChecker ,
-	class AdjustSizePolicy
+	class Resizer
 	>
-class controlled_error_stepper< ErrorStepper , ErrorChecker , AdjustSizePolicy , explicit_error_stepper_tag >
+class controlled_error_stepper< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag >
 {
-	void initialize( void )
+/*	void initialize( void )
 	{
 		boost::numeric::odeint::construct( m_dxdt );
 		boost::numeric::odeint::construct( m_xerr );
@@ -133,7 +136,7 @@ class controlled_error_stepper< ErrorStepper , ErrorChecker , AdjustSizePolicy ,
 		boost::numeric::odeint::copy( stepper.m_xnew , m_xnew );
 		m_max_rel_error = stepper.m_max_rel_error;
 	}
-
+*/
 public:
 
 	typedef ErrorStepper stepper_type;
@@ -142,12 +145,14 @@ public:
 	typedef typename stepper_type::deriv_type deriv_type;
 	typedef typename stepper_type::time_type time_type;
 	typedef typename stepper_type::order_type order_type;
-	typedef AdjustSizePolicy adjust_size_policy;
+	typedef Resizer resizer_type;
 	typedef ErrorChecker error_checker_type;
 	typedef controlled_stepper_tag stepper_category;
+	typedef typename stepper_type::wrapped_state_type wrapped_state_type;
+	typedef typename stepper_type::wrapped_deriv_type wrapped_deriv_type;
 
 
-
+/*
 	controlled_error_stepper(
 			const stepper_type &stepper = stepper_type() ,
 			const error_checker_type &error_checker = error_checker_type()
@@ -182,7 +187,7 @@ public:
 		copy( stepper );
 		return *this;
 	}
-
+*/
 
 
 	/*
