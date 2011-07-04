@@ -1,0 +1,131 @@
+# (C) Copyright 2010 : Karsten Ahnert, Mario Mulansky
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+import os ;
+import modules ;
+import path ; 
+
+project
+    : requirements
+      <define>BOOST_ALL_NO_LIB=1
+      <include>../../../../../..
+    : default-build release
+    ;
+    
+    
+lib libgsl : : <name>gsl ;
+lib libgslcblas : : <name>gslcblas ;
+
+#exe generic_rk4 
+#    : generic_rk4.cpp
+#    : <toolset>intel:<cxxflags>-inline-forceinline
+#    ;
+   
+exe generic_rk4_lorenz 
+    : generic_rk4_lorenz.cpp
+    : <toolset>intel:<cxxflags>-inline-forceinline
+    ;
+    
+exe generic_odeint_rk4_lorenz 
+    : generic_odeint_rk4_lorenz.cpp
+    : <toolset>intel:<cxxflags>-inline-forceinline
+    ;
+   
+#exe odeint_rk4
+#    : odeint_rk4.cpp
+#    : <cxxflags>-Winline
+#    ;
+    
+exe odeint_rk4_lorenz
+    : odeint_rk4_lorenz.cpp
+    ;
+    
+exe odeint_rk4_lorenz_def_alg
+    :   odeint_rk4_lorenz_def_alg.cpp
+    ;
+    
+#exe nr_rk4
+#    : nr_rk4.cpp
+#    ;
+    
+exe nr_rk4_lorenz
+    : nr_rk4_lorenz.cpp
+    ;
+    
+   
+#exe rt_generic_rk4
+#	: rt_generic_rk4.cpp
+#	;
+	
+exe rt_generic_rk4_lorenz
+    : rt_generic_rk4_lorenz.cpp
+    ;
+ 
+    
+#exe gsl_rk4
+#    : gsl_rk4.cpp libgsl libgslcblas
+#    ;
+    
+exe gsl_rk4_lorenz
+    : gsl_rk4_lorenz.cpp libgsl libgslcblas
+    ;
+
+exe generic_rk54ck
+    : generic_rk54ck.cpp
+    : <toolset>intel:<cxxflags>-inline-forceinline
+    ;
+    
+exe generic_rk54ck_lorenz
+    : generic_rk54ck_lorenz.cpp
+    : <toolset>intel:<cxxflags>-inline-forceinline
+    ;
+    
+exe odeint_rk54ck
+    : odeint_rk54ck.cpp
+    ;
+
+exe odeint_rk54ck_lorenz
+    : odeint_rk54ck_lorenz.cpp
+    ;
+    
+exe odeint_rk54ck_def_alg
+    : odeint_rk54ck_def_alg.cpp
+    ;
+
+exe odeint_rk54ck_lorenz_def_alg
+    : odeint_rk54ck_lorenz_def_alg.cpp
+    ;
+    
+exe nr_rk54ck
+    : nr_rk54ck.cpp
+    ;
+    
+exe nr_rk54ck_lorenz
+    : nr_rk54ck_lorenz.cpp
+    ;    
+    
+exe gsl_rk54ck
+    : gsl_rk54ck.cpp libgsl libgslcblas
+    ;
+    
+exe gsl_rk54ck_lorenz
+    : gsl_rk54ck_lorenz.cpp libgsl libgslcblas
+    ;
+    
+exe generic_rk4_phase_lattice 
+    : generic_rk4_phase_lattice.cpp
+    : <toolset>intel:<cxxflags>-inline-forceinline
+    ;
+    
+exe odeint_rk4_phase_lattice
+	: odeint_rk4_phase_lattice.cpp
+	;
+	
+exe nr_rk4_phase_lattice
+	: nr_rk4_phase_lattice.cpp
+	;
+	
+exe rt_generic_rk4_phase_lattice
+	: rt_generic_rk4_phase_lattice.cpp
+	;
