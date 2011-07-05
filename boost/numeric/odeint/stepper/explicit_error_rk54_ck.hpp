@@ -14,6 +14,7 @@
 #define BOOST_NUMERIC_ODEINT_STEPPER_EXPLICIT_ERROR_RK54_CK_HPP_INCLUDED
 
 #include <boost/ref.hpp>
+#include <boost/bind.hpp>
 
 #include <boost/numeric/odeint/stepper/base/explicit_stepper_and_error_stepper_base.hpp>
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
@@ -78,6 +79,8 @@ class explicit_error_rk54_ck
 public :
 
 	BOOST_ODEINT_EXPLICIT_STEPPERS_AND_ERROR_STEPPERS_TYPEDEFS( explicit_error_rk54_ck , 5 , 5 , 4);
+
+	typedef explicit_error_rk54_ck< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
 
 /*	explicit_error_rk54_ck( void )
 	: stepper_base_type() , m_state_adjuster() , m_deriv_adjuster() , m_x_tmp() , m_k2.m_v() , m_k3() , m_k4() , m_k5() , m_k6()
@@ -165,6 +168,8 @@ public :
 
 		typename boost::unwrap_reference< System >::type &sys = system;
 
+		m_resizer.adjust_size( in , boost::bind( &stepper_type::resize<StateIn> , boost::ref( *this ) , _1 ) );
+
 		//m_x1 = x + dt*b21*dxdt
 		algebra_type::for_each3( m_x_tmp.m_v , in , dxdt ,
 				typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , dt*b21 ) );
@@ -193,23 +198,24 @@ public :
 
 	}
 
-
-	template< class StateType >
-	void resize_impl( const StateType &x )
+	template< class StateIn >
+	bool resize( const StateIn &x )
 	{
-		m_x_tmp.resize( x );
-		m_k2.resize( x );
-		m_k3.resize( x );
-		m_k4.resize( x );
-		m_k5.resize( x );
-		m_k6.resize( x );
+	    bool resized = false;
+	    resized |= adjust_size_by_resizeability( m_x_tmp , x , typename wrapped_state_type::is_resizeable() );
+	    resized |= adjust_size_by_resizeability( m_k2 , x , typename wrapped_deriv_type::is_resizeable() );
+	    resized |= adjust_size_by_resizeability( m_k3 , x , typename wrapped_deriv_type::is_resizeable() );
+	    resized |= adjust_size_by_resizeability( m_k4 , x , typename wrapped_deriv_type::is_resizeable() );
+	    resized |= adjust_size_by_resizeability( m_k5 , x , typename wrapped_deriv_type::is_resizeable() );
+	    resized |= adjust_size_by_resizeability( m_k6 , x , typename wrapped_deriv_type::is_resizeable() );
+	    return resized;
 	}
-
 
 private:
 
 	wrapped_state_type m_x_tmp;
     wrapped_deriv_type m_k2, m_k3, m_k4, m_k5, m_k6;
+    resizer_type m_resizer;
 
 };
 

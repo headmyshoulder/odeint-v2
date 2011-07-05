@@ -14,6 +14,7 @@
 #define BOOST_NUMERIC_ODEINT_EXPLICIT_STEPPER_AND_ERROR_STEPPER_FSAL_BASE_HPP_INCLUDED
 
 #include <boost/ref.hpp>
+#include <boost/bind.hpp>
 
 //#include <boost/numeric/odeint/util/size_adjuster.hpp>
 //#include <boost/numeric/odeint/util/construct.hpp>
@@ -64,6 +65,9 @@ public:
 	typedef explicit_error_stepper_fsal_tag stepper_category;
 	typedef state_wrapper< state_type > wrapped_state_type;
 	typedef state_wrapper< deriv_type > wrapped_deriv_type;
+
+	typedef explicit_stepper_and_error_stepper_fsal_base< Stepper , Order , StepperOrder , ErrorOrder ,
+            State , Value , Deriv , Time , Algebra , Operations , Resizer > internal_stepper_base_type;
 
 	typedef unsigned short order_type;
 	static const order_type order_value = Order;
@@ -158,7 +162,7 @@ public:
 	template< class System , class StateIn , class StateOut >
 	void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt )
 	{
-		if( m_resizer.adjust_size( *this , in ) || m_first_call )
+		if( m_resizer.adjust_size( in , boost::bind( &internal_stepper_base_type::resize< StateIn > , boost::ref( *this ) , _1 ) ) || m_first_call )
 		{
 			typename boost::unwrap_reference< System >::type &sys = system;
 			sys( in , m_dxdt.m_v ,t );
@@ -224,7 +228,7 @@ public:
 	template< class System , class StateIn , class StateOut , class Err >
 	void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt , Err &xerr )
 	{
-	    if( m_resizer.adjust_size( *this , in ) || m_first_call )
+	    if( m_resizer.adjust_size( in , boost::bind( &internal_stepper_base_type::resize< StateIn > , boost::ref( *this ) , _1 ) ) || m_first_call )
 	    {
 	    	typename boost::unwrap_reference< System >::type &sys = system;
 	        sys( in , m_dxdt.m_v ,t );
@@ -250,10 +254,10 @@ public:
 
 
 
-	template< class StateType >
-    bool adjust_size( const StateType &x )
+	template< class StateIn >
+    bool resize( const StateIn &x )
     {
-        return adjust_size_by_resizability( x , typename boost::numeric::odeint::is_resizeable< deriv_type >::type() );
+        return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
     }
 
 
@@ -262,7 +266,7 @@ private:
 	template< class System , class StateInOut >
 	void do_step_v1( System system , StateInOut &x , const time_type &t , const time_type &dt )
 	{
-		if( m_resizer.adjust_size( *this , x ) || m_first_call )
+		if( m_resizer.adjust_size( x , boost::bind( &internal_stepper_base_type::resize< StateInOut > , boost::ref( *this ) , _1 ) ) || m_first_call )
 	    {
 			typename boost::unwrap_reference< System >::type &sys = system;
 	        sys( x , m_dxdt.m_v ,t );
@@ -274,7 +278,7 @@ private:
 	template< class System , class StateInOut , class Err >
 	void do_step_v5( System system , StateInOut &x , const time_type &t , const time_type &dt , Err &xerr )
 	{
-	    if( m_resizer.adjust_size( *this , x ) || m_first_call )
+	    if( m_resizer.adjust_size( x , boost::bind( &internal_stepper_base_type::resize< StateInOut > , boost::ref( *this ) , _1 ) ) || m_first_call )
 	    {
 	    	typename boost::unwrap_reference< System >::type &sys = system;
 	        sys( x , m_dxdt.m_v ,t );
@@ -282,25 +286,6 @@ private:
 	    }
 		this->stepper().do_step_impl( system , x , m_dxdt.m_v , t , x , m_dxdt.m_v , dt , xerr );
 	}
-
-	template< class StateType >
-    bool adjust_size_by_resizability( const StateType &x , boost::true_type )
-    {
-        if( !m_dxdt.same_size( x ) )
-        {
-            m_dxdt.resize( x );
-            this->stepper().resize_impl( x );
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    template< class StateType >
-    bool adjust_size_by_resizablity( const StateType &x , boost::false_type )
-    {
-        return false;
-    }
 
     stepper_type& stepper( void )
     {

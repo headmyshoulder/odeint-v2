@@ -46,8 +46,6 @@ struct system1
 	template< class State , class Deriv >
 	void operator()( const State &x_ , Deriv &dxdt_ , double t )
 	{
-	    std::cout << dxdt_.size() << std::endl;
-
 		typename boost::range_iterator< const State >::type x = boost::begin( x_ );
 		typename boost::range_iterator< Deriv >::type dxdt = boost::begin( dxdt_ );
 
@@ -163,9 +161,7 @@ BOOST_AUTO_TEST_CASE( explicit_euler_with_range_v1 )
 {
 	vector_fixture f;
 	boost::numeric::odeint::explicit_euler< state_type > euler;
-	std::cout << "do step!" << std::endl;
 	euler.do_step( system1() , std::make_pair( f.in.begin() + 1 , f.in.begin() + 4 ) , 0.1 , 0.1 );
-	std::cout << "end step!" << std::endl;
 	CHECK_VALUES( f.in , 0.0 , 1.1 , 2.2 , 3.3 , 4.0 , 5.0 );
 }
 

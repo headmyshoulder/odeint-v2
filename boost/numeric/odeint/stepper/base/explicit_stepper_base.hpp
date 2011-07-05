@@ -16,6 +16,7 @@
 #include <iostream>
 
 #include <boost/ref.hpp>
+#include <boost/bind.hpp>
 
 //#include <boost/numeric/odeint/util/size_adjuster.hpp>
 //#include <boost/numeric/odeint/util/construct.hpp>
@@ -130,7 +131,7 @@ public:
 	void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt )
 	{
 		typename boost::unwrap_reference< System >::type &sys = system;
-		m_resizer.adjust_size( *this , in );
+		m_resizer.adjust_size( in , boost::bind( &internal_stepper_base_type::resize<StateIn> , boost::ref( *this ) , _1 ) );
 		sys( in , m_dxdt ,t );
 		this->stepper().do_step_impl( system , in , m_dxdt , t , out , dt );
 	}
@@ -147,13 +148,10 @@ public:
 		this->stepper().do_step_impl( system , in , dxdt , t , out , dt );
 	}
 
-
-
-
-	template< class StateType >
-	bool adjust_size( const StateType &x )
+	template< class StateIn >
+	bool resize( const StateIn &x )
 	{
-        return adjust_size_by_resizability( x , typename boost::numeric::odeint::is_resizeable< deriv_type >::type() );
+	    return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
 	}
 
 
@@ -163,31 +161,10 @@ private:
 	void do_step_v1( System system , StateInOut &x , const time_type &t , const time_type &dt )
 	{
 		typename boost::unwrap_reference< System >::type &sys = system;
-		m_resizer.adjust_size( *this , x );
+		m_resizer.adjust_size( x , boost::bind( &internal_stepper_base_type::resize< StateInOut > , boost::ref( *this ) , _1 ) );
 		sys( x , m_dxdt.m_v ,t );
 		this->stepper().do_step_impl( system , x , m_dxdt.m_v , t , x , dt );
 	}
-
-
-	template< class StateType >
-	bool adjust_size_by_resizability( const StateType &x , boost::true_type )
-	{
-	    if( !m_dxdt.same_size( x ) )
-        {
-            m_dxdt.resize( x );
-            this->stepper().resize_impl( x );
-            return true;
-        } else {
-            return false;
-        }
-	}
-
-	template< class StateType >
-    bool adjust_size_by_resizablity( const StateType &x , boost::false_type )
-    {
-	    return false;
-    }
-
 
 protected:
 

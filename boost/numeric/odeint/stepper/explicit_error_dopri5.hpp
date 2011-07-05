@@ -73,6 +73,7 @@ class explicit_error_dopri5
 public :
 
 	BOOST_ODEINT_EXPLICIT_STEPPERS_AND_ERROR_STEPPERS_FSAL_TYPEDEFS( explicit_error_dopri5 , 5 , 5 , 4 );
+	typedef explicit_error_dopri5< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
 
 /*
 	explicit_error_dopri5( void )
@@ -146,6 +147,8 @@ public :
         const value_type c6 = static_cast<value_type> ( 11.0 ) / static_cast<value_type>( 84.0 );
 
 		typename boost::unwrap_reference< System >::type &sys = system;
+
+		m_resizer.adjust_size( in , boost::bind( &stepper_type::resize<StateIn> , boost::ref( *this ) , _1 ) );
 
         //m_x_tmp = x + dt*b21*dxdt
         algebra_type::for_each3( m_x_tmp.m_v , in , dxdt_in ,
@@ -275,15 +278,17 @@ public :
 
 
 
-	template< class StateType >
-	void resize_impl( const StateType &x )
+	template< class StateIn >
+	bool resize( const StateIn &x )
 	{
-	    m_x_tmp.resize( x );
-	    m_k2.resize( x );
-	    m_k3.resize( x );
-	    m_k4.resize( x );
-	    m_k5.resize( x );
-	    m_k6.resize( x );
+	    bool resized = false;
+        resized |= adjust_size_by_resizeability( m_x_tmp , x , typename wrapped_state_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_k2 , x , typename wrapped_deriv_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_k3 , x , typename wrapped_deriv_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_k4 , x , typename wrapped_deriv_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_k5 , x , typename wrapped_deriv_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_k6 , x , typename wrapped_deriv_type::is_resizeable() );
+        return resized;
 	}
 
 
@@ -291,7 +296,7 @@ private:
 
     wrapped_state_type m_x_tmp;
     wrapped_deriv_type m_k2 , m_k3 , m_k4 , m_k5 , m_k6 ;
-
+    resizer_type m_resizer;
 };
 
 

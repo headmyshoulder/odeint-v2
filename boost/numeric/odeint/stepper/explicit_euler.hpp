@@ -46,6 +46,8 @@ public :
 
 	BOOST_ODEINT_EXPLICIT_STEPPERS_TYPEDEFS( explicit_euler , 1 );
 
+	typedef explicit_euler< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
+
 	template< class System , class StateIn , class DerivIn , class StateOut >
 	void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt )
 	{
@@ -58,12 +60,6 @@ public :
 	{
 		time_type delta = t - t_old;
 		algebra_type::for_each3( x , old_state , stepper_base_type::m_dxdt , typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , delta ) );
-	}
-
-	template< class StateType >
-	void resize_impl( StateType &x )
-	{
-	    //nothing to do here because there are no internal states
 	}
 
 };

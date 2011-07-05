@@ -26,12 +26,13 @@ template< class V >
 struct state_wrapper< V , boost::true_type > // with resizing
 {
     typedef state_wrapper< V , boost::false_type > state_wrapper_type;
-
     typedef typename V::value_type value_type;
+    typedef boost::true_type is_resizeable;
 
     V m_v;
 
-    state_wrapper() : m_v() { }
+    state_wrapper() : m_v()
+    { }
 
     state_wrapper( V v ) : m_v( v )
     { }
@@ -53,10 +54,15 @@ struct state_wrapper< V , boost::true_type > // with resizing
     }
 
     template< class StateIn >
-    void resize( const StateIn &x )
+    bool resize( const StateIn &x )
     {
         //standard resizing done like for std::vector
-        m_v.resize( boost::size( x ) );
+        if( !same_size( x ) )
+        {
+            m_v.resize( boost::size( x ) );
+            return true;
+        } else
+            return false;
     }
 };
 
@@ -65,8 +71,8 @@ template< class V >
 struct state_wrapper< V , boost::false_type > // without resizing
 {
     typedef state_wrapper< V , boost::false_type > state_wrapper_type;
-
     typedef typename V::value_type value_type;
+    typedef boost::false_type is_resizeable;
 
     V m_v;
 

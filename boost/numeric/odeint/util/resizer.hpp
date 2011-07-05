@@ -14,44 +14,54 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+template< class ResizeState , class State >
+bool adjust_size_by_resizeability( ResizeState &x , const State &y , boost::true_type )
+{
+    return x.resize( y );
+}
+
+template< class ResizeState , class State >
+bool adjust_size_by_resizeability( ResizeState &x , const State &y , boost::false_type )
+{
+    return false;
+}
 
 struct always_resizer
 {
-
-    template< class Stepper , class State >
-    bool adjust_size( Stepper& stepper, const State &x )
+    template< class State , class ResizeFunction >
+    bool adjust_size( const State &x , ResizeFunction f )
     {
-        return stepper.adjust_size( x );
+        return f( x );
     }
-
 };
 
 
 struct initially_resizer
 {
+
     bool m_initialized;
 
-    initially_resizer(): m_initialized( false )
+    initially_resizer() : m_initialized( false )
     { }
 
-    template< class Stepper , class State >
-    bool adjust_size( Stepper& stepper, const State &x )
+    template< class State , class ResizeFunction >
+    bool adjust_size( const State &x , ResizeFunction f )
     {
         if( !m_initialized )
-        {
-            m_initialized = true;
-            return stepper.adjust_size( x );
-        }
-        return false;
+            return f( x );
+        else
+            return false;
     }
 };
 
 
 struct never_resizer
 {
-    template< class Stepper , class State >
-    void adjust_size( Stepper& stepper, const State &x )
-    { }
+    template< class State , class ResizeFunction >
+    bool adjust_size( const State &x , ResizeFunction f )
+    {
+        return false;
+    }
 };
 
 
