@@ -24,7 +24,7 @@ typedef typename stepper_base_type::deriv_type deriv_type; \
 typedef typename stepper_base_type::time_type time_type; \
 typedef typename stepper_base_type::algebra_type algebra_type; \
 typedef typename stepper_base_type::operations_type operations_type; \
-typedef typename stepper_base_type::resizer_type resizer; \
+typedef typename stepper_base_type::resizer_type resizer_type; \
 typedef typename stepper_base_type::wrapped_state_type wrapped_state_type; \
 typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type
 

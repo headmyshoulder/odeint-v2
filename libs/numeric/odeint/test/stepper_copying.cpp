@@ -15,10 +15,13 @@
 #define BOOST_TEST_MODULE odeint_stepper_copying
 
 #include <boost/test/unit_test.hpp>
+#include <boost/type_traits/integral_constant.hpp>
 
-#include <boost/numeric/odeint/util/construct.hpp>
-#include <boost/numeric/odeint/util/destruct.hpp>
+//#include <boost/numeric/odeint/util/construct.hpp>
+//#include <boost/numeric/odeint/util/destruct.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
+
+#include <boost/numeric/odeint/util/state_wrapper.hpp>
 
 #include <boost/numeric/odeint/stepper/explicit_euler.hpp>
 #include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
@@ -109,7 +112,7 @@ void reset_counter( void )
 
 
 namespace boost { namespace numeric { namespace odeint {
-
+/*
 template< class T , size_t Dim >
 struct construct_impl< test_array< T , Dim > >
 {
@@ -151,19 +154,101 @@ struct destruct_impl< test_array2< T , Dim > >
 template< class T , size_t Dim >
 struct copy_impl< test_array< T , Dim > , test_array< T , Dim > >
 {
-	static void copy( const test_array< T , Dim > &from , test_array< T , Dim > &to )
-	{
-		++copy_count;
-	}
+    static void copy( const test_array< T , Dim > &from , test_array< T , Dim > &to )
+    {
+        ++copy_count;
+    }
 };
 
 template< class T , size_t Dim >
 struct copy_impl< test_array2< T , Dim > , test_array2< T , Dim > >
 {
-	static void copy( const test_array2< T , Dim > &from , test_array2< T , Dim > &to )
-	{
-		++copy2_count;
-	}
+    static void copy( const test_array2< T , Dim > &from , test_array2< T , Dim > &to )
+    {
+        ++copy2_count;
+    }
+};
+
+*/
+
+//provide the state_wrapper
+template< class T , size_t Dim >
+struct state_wrapper< test_array< T , Dim > , boost::false_type >
+{
+    typedef state_wrapper< test_array< T , Dim > , boost::false_type > state_wrapper_type;
+    typedef test_array< T , Dim > state_type;
+    typedef T value_type;
+    typedef boost::false_type is_resizeable;
+
+    state_type m_v;
+
+    state_wrapper() : m_v()
+    {
+        construct_count++;
+    }
+
+    state_wrapper( const state_type &v ) : m_v( v )
+    {
+        construct_count++;
+        copy_count++;
+    }
+
+    state_wrapper( const state_wrapper_type &x ) : m_v( x.m_v )
+    {
+        construct_count++;
+        copy_count++;
+    }
+
+    state_wrapper_type& operator=( const state_wrapper_type &x )
+    {
+        copy_count++;
+        return *this;
+    }
+
+    ~state_wrapper()
+    {
+        destruct_count++;
+    }
+};
+
+//provide the state_wrapper
+template< class T , size_t Dim >
+struct state_wrapper< test_array2< T , Dim > , boost::false_type >
+{
+    typedef state_wrapper< test_array2< T , Dim > , boost::false_type > state_wrapper_type;
+    typedef test_array2< T , Dim > state_type;
+    typedef T value_type;
+    typedef boost::false_type is_resizeable;
+
+    state_type m_v;
+
+    state_wrapper() : m_v()
+    {
+        construct2_count++;
+    }
+
+    state_wrapper( const state_type &v ) : m_v( v )
+    {
+        construct2_count++;
+        copy2_count++;
+    }
+
+    state_wrapper( const state_wrapper_type &x ) : m_v( x.m_v )
+    {
+        construct2_count++;
+        copy2_count++;
+    }
+
+    state_wrapper_type& operator=( const state_wrapper_type &x )
+    {
+        copy2_count++;
+        return *this;
+    }
+
+    ~state_wrapper()
+    {
+        destruct2_count++;
+    }
 };
 
 

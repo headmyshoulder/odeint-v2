@@ -11,10 +11,13 @@
 #include <utility>
 #include <stdexcept>
 
-#include <boost/numeric/odeint/util/size_adjuster.hpp>
-#include <boost/numeric/odeint/util/construct.hpp>
-#include <boost/numeric/odeint/util/destruct.hpp>
+//#include <boost/numeric/odeint/util/size_adjuster.hpp>
+//#include <boost/numeric/odeint/util/construct.hpp>
+//#include <boost/numeric/odeint/util/destruct.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
+
+#include <boost/numeric/odeint/util/state_wrapper.hpp>
+#include <boost/numeric/odeint/util/resizer.hpp>
 
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
@@ -110,8 +113,8 @@ public:
 	dense_output_controlled_explicit_fsal( const dense_output_controlled_explicit_fsal &dense_output )
 	: m_stepper( dense_output.m_stepper ) ,
 	  //m_state_adjuster() , m_deriv_adjuster() ,
-	  m_x1() , m_x2() , m_current_state( &m_x1 ) , m_old_state( &m_x2 ) ,
-	  m_dxdt1() , m_dxdt2() , m_current_deriv( &m_dxdt1 ) , m_old_deriv( &m_dxdt2 ) ,
+	  m_x1() , m_x2() , m_current_state( &m_x1.m_v ) , m_old_state( &m_x2.m_v ) ,
+	  m_dxdt1() , m_dxdt2() , m_current_deriv( &m_dxdt1.m_v ) , m_old_deriv( &m_dxdt2.m_v ) ,
 	  m_t( 0.0 ) , m_t_old( 0.0 ) , m_dt( 1.0 ) , m_is_deriv_initialized( false )
 	{
 		//initialize_variables();
@@ -204,6 +207,7 @@ public:
 	void adjust_size( const StateType &x )
 	{
 	    resize( x );
+	    m_stepper.stepper().resize( x );
 	}
 
 	const state_type& current_state( void ) const

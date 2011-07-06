@@ -291,6 +291,13 @@ public :
         return resized;
 	}
 
+	template< class StateIn >
+    void adjust_size( const StateIn &x )
+    {
+        resize( x );
+        stepper_base_type::adjust_size( x );
+    }
+
 
 private:
 

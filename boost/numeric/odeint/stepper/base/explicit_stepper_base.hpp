@@ -76,16 +76,16 @@ public:
     	return order_value;
     }
 
-
-/*	explicit_stepper_base( void ) : m_resizer() , m_dxdt()
+/*
+	explicit_stepper_base( void ) : m_dxdt()
 	{ }
 
-	explicit_stepper_base( const explicit_stepper_base &b ) : m_resizer() , m_dxdt( b.m_dxdt )
+	explicit_stepper_base( const explicit_stepper_base &b ) : m_dxdt( b.m_dxdt )
 	{ }
 
 	explicit_stepper_base& operator=( const explicit_stepper_base &b )
 	{
-		boost::numeric::odeint::copy( b.m_dxdt , m_dxdt );
+		boost::numeric::odeint::copy( b.m_dxdt.m_v , m_dxdt.m_v );
 
 		return *this;
 	}

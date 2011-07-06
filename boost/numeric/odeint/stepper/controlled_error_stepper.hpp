@@ -154,32 +154,33 @@ public:
 	typedef controlled_error_stepper< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag > controlled_stepper_type;
 
 
-/*
-	controlled_error_stepper(
-			const stepper_type &stepper = stepper_type() ,
-			const error_checker_type &error_checker = error_checker_type()
-			)
-	: m_stepper( stepper ) , m_error_checker( error_checker ) ,
-	  m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_xnew_size_adjuster() ,
-	  m_dxdt() , m_xerr() , m_xnew() , m_max_rel_error()
-	{
-		initialize();
-	}
+
+    controlled_error_stepper(
+            const stepper_type &stepper = stepper_type() ,
+            const error_checker_type &error_checker = error_checker_type()
+            )
+    : m_stepper( stepper ) , m_error_checker( error_checker ) ,
+      //m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_xnew_size_adjuster() ,
+      m_dxdt() , m_xerr() , m_xnew() , m_max_rel_error()
+    {
+        //initialize();
+    }
+
+/*    controlled_error_stepper( const controlled_error_stepper &stepper )
+    : m_stepper( stepper.m_stepper ) , m_error_checker( stepper.m_error_checker ) ,
+      //m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_xnew_size_adjuster() ,
+      m_dxdt() , m_xerr() , m_xnew() , m_max_rel_error()
+    {
+        //initialize();
+        //copy( stepper );
+    }
+
 
 	~controlled_error_stepper( void )
 	{
 		boost::numeric::odeint::destruct( m_dxdt );
 		boost::numeric::odeint::destruct( m_xerr );
 		boost::numeric::odeint::destruct( m_xnew );
-	}
-
-	controlled_error_stepper( const controlled_error_stepper &stepper )
-	: m_stepper( stepper.m_stepper ) , m_error_checker( stepper.m_error_checker ) ,
-	  m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_xnew_size_adjuster() ,
-	  m_dxdt() , m_xerr() , m_xnew() , m_max_rel_error()
-	{
-		initialize();
-		copy( stepper );
 	}
 
 	controlled_error_stepper& operator=( const controlled_error_stepper &stepper )
@@ -298,6 +299,7 @@ public:
 		resize_m_xerr( x );
 		resize_m_dxdt( x );
 		resize_m_xnew( x );
+		m_stepper.adjust_size( x );
 	}
 
 	template< class StateIn >
@@ -412,29 +414,29 @@ public:
 
 	typedef controlled_error_stepper< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag > controlled_stepper_type;
 
-/*    controlled_error_stepper(
+    controlled_error_stepper(
             const stepper_type &stepper = stepper_type() ,
             const error_checker_type &error_checker = error_checker_type()
             )
     : m_stepper( stepper ) , m_error_checker( error_checker ) ,
-      m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_x_new_size_adjuster() , m_dxdt_new_size_adjuster() ,
+      //m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_x_new_size_adjuster() , m_dxdt_new_size_adjuster() ,
       m_dxdt() , m_xerr() , m_xnew() , m_dxdtnew() ,
       m_first_call( true )
     {
-    	initialize();
+    	//initialize();
     }
 
     controlled_error_stepper( const controlled_error_stepper &stepper )
     : m_stepper( stepper.m_stepper ) , m_error_checker( stepper.m_error_checker ) ,
-      m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_x_new_size_adjuster() , m_dxdt_new_size_adjuster() ,
+      //m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_x_new_size_adjuster() , m_dxdt_new_size_adjuster() ,
       m_dxdt() , m_xerr() , m_xnew() , m_dxdtnew() ,
       m_first_call( true )
     {
-    	initialize();
-    	copy( stepper );
+    	//initialize();
+    	//copy( stepper );
     }
 
-    ~controlled_error_stepper( void )
+/*    ~controlled_error_stepper( void )
     {
         boost::numeric::odeint::destruct( m_dxdt );
         boost::numeric::odeint::destruct( m_xerr );
@@ -447,10 +449,7 @@ public:
     	copy( stepper );
     	return *this;
     }
-
-	*/
-
-
+*/
 
 	/*
 	 * Version 1 : try_step( sys , x , t , dt )

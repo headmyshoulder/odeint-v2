@@ -155,6 +155,7 @@ struct perform_stepper_test< Stepper , vector_type >
 		Stepper stepper;
 		check_stepper_concept( stepper , constant_system_vector , x );
 		check_stepper_concept( stepper , boost::cref( constant_system_vector_class() ) , x );
+		std::cout << x[0] << " ?= " << result << std::endl;
 		BOOST_CHECK_SMALL( fabs( x[0] - result ) , eps );
 	}
 };
@@ -169,6 +170,7 @@ struct perform_stepper_test< Stepper , vector_space_type >
 		Stepper stepper;
 		check_stepper_concept( stepper , constant_system_vector_space , x );
 		check_stepper_concept( stepper , boost::cref( constant_system_vector_space_class() ) , x );
+		std::cout << x.m_x << " ?= " << result << std::endl;
 		BOOST_CHECK_SMALL( fabs( x.m_x - result ) , eps );
 	}
 };
@@ -183,6 +185,7 @@ struct perform_stepper_test< Stepper , array_type >
 		Stepper stepper;
 		check_stepper_concept( stepper , constant_system_array , x );
 		check_stepper_concept( stepper , boost::cref( constant_system_array_class() ) , x );
+		std::cout << x[0] << " ?= " << result << std::endl;
 		BOOST_CHECK_SMALL( fabs( x[0] - result ) , eps );
 	}
 };

@@ -83,6 +83,12 @@ struct state_wrapper< V , boost::false_type > // without resizing
     state_wrapper( const state_wrapper_type &x ) : m_v( x.m_v )
     { }
 
+    state_wrapper_type& operator=( const state_wrapper_type &x )
+    {
+        m_v = x.m_v;
+        return *this;
+    }
+
     //no resize method
 };
 

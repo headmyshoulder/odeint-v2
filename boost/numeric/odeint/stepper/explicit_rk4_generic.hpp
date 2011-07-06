@@ -16,6 +16,8 @@
 
 #include <boost/array.hpp>
 
+#include <boost/numeric/odeint/util/resizer.hpp>
+
 
 namespace fusion = boost::fusion;
 
@@ -87,25 +89,28 @@ template<
     class Time = Value ,
     class Algebra = range_algebra ,
     class Operations = default_operations ,
-    class AdjustSizePolicy = adjust_size_initially_tag
+    class Resizer = initially_resizer
     >
 class explicit_rk4_generic : public explicit_generic_rk< 4 , 4 , State , Value , Deriv , Value ,
-                                                          Algebra , Operations , AdjustSizePolicy >
+                                                          Algebra , Operations , Resizer >
 {
 
 public:
 
     typedef explicit_generic_rk< 4 , 4 , State , Value , Deriv , Value ,
-                               Algebra , Operations , AdjustSizePolicy > stepper_base_type;
+                               Algebra , Operations , Resizer > stepper_base_type;
 
     typedef typename stepper_base_type::state_type state_type;
+    typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
     typedef typename stepper_base_type::value_type value_type;
     typedef typename stepper_base_type::deriv_type deriv_type;
+    typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
     typedef typename stepper_base_type::time_type time_type;
     typedef typename stepper_base_type::algebra_type algebra_type;
     typedef typename stepper_base_type::operations_type operations_type;
-    typedef typename stepper_base_type::adjust_size_policy adjust_size_policy;
+    typedef typename stepper_base_type::resizer_type resizer_type;
     typedef typename stepper_base_type::stepper_type stepper_type;
+    //typedef explicit_rk4_generic< State , Value , Deriv , Value , Algebra , Operations , Resizer > stepper_type;
 
     explicit_rk4_generic( void ) : stepper_base_type(
             fusion::make_vector( rk4_coefficients_a1<Value>() , rk4_coefficients_a2<Value>() , rk4_coefficients_a3<Value>() ) ,

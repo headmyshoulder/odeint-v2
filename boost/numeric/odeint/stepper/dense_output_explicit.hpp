@@ -163,6 +163,7 @@ public:
 	void adjust_size( const StateType &x )
 	{
 		resize( x );
+		m_stepper.stepper().resize( x );
 	}
 
 	const state_type& current_state( void ) const

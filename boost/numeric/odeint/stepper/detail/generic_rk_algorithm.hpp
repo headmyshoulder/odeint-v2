@@ -210,7 +210,7 @@ public:
                 #ifdef BOOST_MSVC
                 #pragma warning( disable : 4307 34 )
                 #endif
-                system( x_tmp , F[stage_number-2] , t + stage.c * dt );
+                system( x_tmp , F[stage_number-2].m_v , t + stage.c * dt );
                 #ifdef BOOST_MSVC
                 #pragma warning( default : 4307 34 )
                 #endif
