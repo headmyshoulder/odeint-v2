@@ -59,7 +59,7 @@ public :
 	void calc_state( StateOut &x , const time_type &t ,  const StateIn1 &old_state , const time_type &t_old , const StateIn2 &current_state , const time_type &t_new )
 	{
 		time_type delta = t - t_old;
-		algebra_type::for_each3( x , old_state , stepper_base_type::m_dxdt , typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , delta ) );
+		algebra_type::for_each3( x , old_state , stepper_base_type::m_dxdt.m_v , typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , delta ) );
 	}
 
 };

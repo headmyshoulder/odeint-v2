@@ -27,9 +27,9 @@
 #include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
 #include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
-/*#include <boost/numeric/odeint/stepper/symplectic_euler.hpp>
+#include <boost/numeric/odeint/stepper/symplectic_euler.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_explicit.hpp>
-#include <boost/numeric/odeint/stepper/dense_output_controlled_explicit_fsal.hpp>*/
+#include <boost/numeric/odeint/stepper/dense_output_controlled_explicit_fsal.hpp>
 
 typedef std::vector< double > state_type;
 typedef boost::array< double , 3 > state_type2;
@@ -219,7 +219,7 @@ BOOST_AUTO_TEST_CASE( controlled_error_stepper_dopri5 )
 	stepper.try_step( system2() , std::make_pair( f.in.begin() + 1 , f.in.begin() + 4 ) , t , dt );
 	CHECK_VALUES( f.in , 0.0 , 1.1 , 2.2 , 3.3 , 4.0 , 5.0 );
 }
-/*
+
 BOOST_AUTO_TEST_CASE( symplectic_euler_coor_func )
 {
 	vector_fixture f;
@@ -243,6 +243,7 @@ BOOST_AUTO_TEST_CASE( symplectic_euler_coor_and_mom_func )
 	CHECK_VALUES( f.q , 0.0 , 1.1 , 2.2 , 3.3 , 4.0 , 5.0 );
 	CHECK_VALUES( f.p , 0.0 , 1.0 , 2.0 , 3.1 , 4.2 , 5.3 );
 }
+
 
 BOOST_AUTO_TEST_CASE( dense_output_euler_with_ranges )
 {
@@ -268,7 +269,6 @@ BOOST_AUTO_TEST_CASE( dense_output_dopri5_with_ranges )
 	stepper.calc_state( 0.05 , std::make_pair( f.in.begin() + 1 ,f.in.begin() +4 ) );
 	CHECK_VALUES( f.in , 0.0 , 1.05 , 2.1 , 3.15 , 4.0 , 5.0 );
 }
-*/
 
 
 

@@ -11,11 +11,15 @@
 #include <boost/ref.hpp>
 #include <boost/array.hpp>
 
-#include <boost/numeric/odeint/util/size_adjuster.hpp>
-#include <boost/numeric/odeint/util/construct.hpp>
-#include <boost/numeric/odeint/util/destruct.hpp>
+//#include <boost/numeric/odeint/util/size_adjuster.hpp>
+//#include <boost/numeric/odeint/util/construct.hpp>
+//#include <boost/numeric/odeint/util/destruct.hpp>
+
 #include <boost/numeric/odeint/util/copy.hpp>
 #include <boost/numeric/odeint/util/is_pair.hpp>
+
+#include <boost/numeric/odeint/util/state_wrapper.hpp>
+#include <boost/numeric/odeint/util/resizer.hpp>
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
@@ -40,11 +44,11 @@ template<
 	class Time ,
 	class Algebra ,
 	class Operations ,
-	class AdjustSizePolicy
+	class Resizer
 	>
 class symplectic_nystroem_stepper_base
 {
-
+/*
 	void initialize( void )
 	{
 		boost::numeric::odeint::construct( m_dqdt );
@@ -58,7 +62,7 @@ class symplectic_nystroem_stepper_base
 		boost::numeric::odeint::copy( b.m_dqdt , m_dqdt );
 		boost::numeric::odeint::copy( b.m_dpdt , m_dpdt );
 	}
-
+*/
 public:
 
 	const static size_t num_of_stages = NumOfStages;
@@ -66,26 +70,30 @@ public:
 	typedef Momentum momentum_type;
 	typedef std::pair< coor_type , momentum_type > state_type;
 	typedef CoorDeriv coor_deriv_type;
+	typedef state_wrapper< coor_deriv_type> wrapped_coor_deriv_type;
 	typedef MomentumDeriv momentum_deriv_type;
+	typedef state_wrapper< momentum_deriv_type > wrapped_momentum_deriv_type;
 	typedef std::pair< coor_deriv_type , momentum_deriv_type > deriv_type;
 	typedef Value value_type;
 	typedef Time time_type;
 	typedef Algebra algebra_type;
 	typedef Operations operations_type;
-	typedef AdjustSizePolicy adjust_size_policy;
+	typedef Resizer resizer_type;
 	typedef Stepper stepper_type;
 	typedef stepper_tag stepper_category;
+	typedef symplectic_nystroem_stepper_base< NumOfStages , Stepper , Coor , Momentum , Value ,
+        CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer > internal_stepper_base_type;
 
 	typedef boost::array< value_type , num_of_stages > coef_type;
 
 	symplectic_nystroem_stepper_base( const coef_type &coef_a , const coef_type &coef_b )
-	: m_coef_a( coef_a ) , m_coef_b( coef_b ) ,
-	  m_coor_deriv_adjuster() , m_momentum_deriv_adjuster() ,
-	  m_dqdt() , m_dpdt()
+	: m_coef_a( coef_a ) , m_coef_b( coef_b )
+	  //m_coor_deriv_adjuster() , m_momentum_deriv_adjuster() ,
+	  //m_dqdt() , m_dpdt()
 	{
-		initialize();
+		//initialize();
 	}
-
+/*
 	symplectic_nystroem_stepper_base( const symplectic_nystroem_stepper_base &b )
 	: m_coef_a( b.m_coef_a ) , m_coef_b( b.m_coef_b ) ,
 	  m_coor_deriv_adjuster() , m_momentum_deriv_adjuster(),
@@ -107,7 +115,7 @@ public:
 		return *this;
 	}
 
-
+*/
 
 	/*
 	 * Version 1 : do_step( system , x , t , dt )
@@ -165,13 +173,23 @@ public:
 	}
 
 
+    template< class StateIn >
+    bool resize_dqdt( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_dqdt , x , typename wrapped_coor_deriv_type::is_resizeable() );
+    }
 
+    template< class StateIn >
+    bool resize_dpdt( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_dpdt , x , typename wrapped_momentum_deriv_type::is_resizeable() );
+    }
 
 	template< class StateType >
 	void adjust_size( const StateType &x )
 	{
-		m_coor_deriv_adjuster.adjust_size( x );
-		m_momentum_deriv_adjuster.adjust_size( x );
+		resize_dqdt( x );
+		resize_dpdt( x );
 	}
 
 	const coef_type& coef_a( void ) const { return m_coef_a; }
@@ -204,9 +222,8 @@ private:
     	coor_out_type &coor_out = state_out.first;
     	momentum_out_type &momentum_out = state_out.second;
 
-
-		m_coor_deriv_adjuster.adjust_size_by_policy( coor_in , adjust_size_policy() );
-		m_momentum_deriv_adjuster.adjust_size_by_policy( coor_in , adjust_size_policy() );
+    	m_dqdt_resizer.adjust_size( coor_in , boost::bind( &internal_stepper_base_type::resize_dqdt< coor_in_type > , boost::ref( *this ) , _1 ) );
+    	m_dpdt_resizer.adjust_size( momentum_in , boost::bind( &internal_stepper_base_type::resize_dpdt< momentum_in_type > , boost::ref( *this ) , _1 ) );
 
 		// ToDo: check sizes?
 
@@ -214,20 +231,20 @@ private:
 		{
 			if( l == 0 )
 			{
-				coor_func( momentum_in , m_dqdt );
-				algebra_type::for_each3( coor_out , coor_in , m_dqdt ,
+				coor_func( momentum_in , m_dqdt.m_v );
+				algebra_type::for_each3( coor_out , coor_in , m_dqdt.m_v ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_a[l] * dt ) );
-				momentum_func( coor_out , m_dpdt );
-				algebra_type::for_each3( momentum_out , momentum_in , m_dpdt ,
+				momentum_func( coor_out , m_dpdt.m_v );
+				algebra_type::for_each3( momentum_out , momentum_in , m_dpdt.m_v ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[l] * dt ) );
 			}
 			else
 			{
-				coor_func( momentum_out , m_dqdt );
-				algebra_type::for_each3( coor_out , coor_out , m_dqdt ,
+				coor_func( momentum_out , m_dqdt.m_v );
+				algebra_type::for_each3( coor_out , coor_out , m_dqdt.m_v ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_a[l] * dt ) );
-				momentum_func( coor_out , m_dpdt );
-				algebra_type::for_each3( momentum_out , momentum_out , m_dpdt ,
+				momentum_func( coor_out , m_dpdt.m_v );
+				algebra_type::for_each3( momentum_out , momentum_out , m_dpdt.m_v ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[l] * dt ) );
 			}
 		}
@@ -238,58 +255,59 @@ private:
 	template< class System , class StateIn , class StateOut >
 	void do_step_impl( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt , boost::mpl::false_ )
 	{
-    	typedef typename boost::unwrap_reference< System >::type momentum_deriv_func_type;
-    	momentum_deriv_func_type &momentum_func = system;
+        typedef typename boost::unwrap_reference< System >::type momentum_deriv_func_type;
+        momentum_deriv_func_type &momentum_func = system;
 
-    	typedef typename boost::unwrap_reference< StateIn >::type state_in_type;
-    	typedef typename boost::unwrap_reference< typename state_in_type::first_type >::type coor_in_type;
-    	typedef typename boost::unwrap_reference< typename state_in_type::second_type >::type momentum_in_type;
-    	const state_in_type &state_in = in;
-    	const coor_in_type &coor_in = state_in.first;
-    	const momentum_in_type &momentum_in = state_in.second;
+        typedef typename boost::unwrap_reference< StateIn >::type state_in_type;
+        typedef typename boost::unwrap_reference< typename state_in_type::first_type >::type coor_in_type;
+        typedef typename boost::unwrap_reference< typename state_in_type::second_type >::type momentum_in_type;
+        const state_in_type &state_in = in;
+        const coor_in_type &coor_in = state_in.first;
+        const momentum_in_type &momentum_in = state_in.second;
 
-    	typedef typename boost::unwrap_reference< StateOut >::type state_out_type;
-    	typedef typename boost::unwrap_reference< typename state_out_type::first_type >::type coor_out_type;
-    	typedef typename boost::unwrap_reference< typename state_out_type::second_type >::type momentum_out_type;
-    	state_out_type &state_out = out;
-    	coor_out_type &coor_out = state_out.first;
-    	momentum_out_type &momentum_out = state_out.second;
-
-
-		m_coor_deriv_adjuster.adjust_size_by_policy( coor_in , adjust_size_policy() );
-		m_momentum_deriv_adjuster.adjust_size_by_policy( coor_in , adjust_size_policy() );
-
-		// ToDo: check sizes?
+        typedef typename boost::unwrap_reference< StateOut >::type state_out_type;
+        typedef typename boost::unwrap_reference< typename state_out_type::first_type >::type coor_out_type;
+        typedef typename boost::unwrap_reference< typename state_out_type::second_type >::type momentum_out_type;
+        state_out_type &state_out = out;
+        coor_out_type &coor_out = state_out.first;
+        momentum_out_type &momentum_out = state_out.second;
 
 
-		for( size_t l=0 ; l<num_of_stages ; ++l )
-		{
-			if( l == 0 )
-			{
-				algebra_type::for_each3( coor_out  , coor_in , momentum_in ,
-					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_a[l] * dt ) );
-				momentum_func( coor_out , m_dqdt );
-				algebra_type::for_each3( momentum_out , momentum_in , m_dqdt ,
-					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[l] * dt ) );
-			}
-			else
-			{
-				algebra_type::for_each3( coor_out , coor_out , momentum_out ,
-					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_a[l] * dt ) );
-				momentum_func( coor_out , m_dqdt );
-				algebra_type::for_each3( momentum_out , momentum_out , m_dqdt ,
-					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[l] * dt ) );
-			}
-		}
+        m_dqdt_resizer.adjust_size( coor_in , boost::bind( &internal_stepper_base_type::resize_dqdt< coor_in_type > , boost::ref( *this ) , _1 ) );
+        m_dpdt_resizer.adjust_size( momentum_in , boost::bind( &internal_stepper_base_type::resize_dpdt< momentum_in_type > , boost::ref( *this ) , _1 ) );
+
+
+        // ToDo: check sizes?
+
+
+        for( size_t l=0 ; l<num_of_stages ; ++l )
+        {
+            if( l == 0 )
+            {
+                algebra_type::for_each3( coor_out  , coor_in , momentum_in ,
+                    typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_a[l] * dt ) );
+                momentum_func( coor_out , m_dqdt.m_v );
+                algebra_type::for_each3( momentum_out , momentum_in , m_dqdt.m_v ,
+                    typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[l] * dt ) );
+            }
+            else
+            {
+                algebra_type::for_each3( coor_out , coor_out , momentum_out ,
+                    typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_a[l] * dt ) );
+                momentum_func( coor_out , m_dqdt.m_v );
+                algebra_type::for_each3( momentum_out , momentum_out , m_dqdt.m_v ,
+                    typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[l] * dt ) );
+            }
+        }
 	}
 
 	const coef_type m_coef_a;
 	const coef_type m_coef_b;
 
-	size_adjuster< coor_deriv_type , 1 > m_coor_deriv_adjuster;
-	size_adjuster< momentum_deriv_type , 1 > m_momentum_deriv_adjuster;
-	coor_deriv_type m_dqdt;
-	momentum_deriv_type m_dpdt;
+	resizer_type m_dqdt_resizer;
+	resizer_type m_dpdt_resizer;
+	wrapped_coor_deriv_type m_dqdt;
+	wrapped_momentum_deriv_type m_dpdt;
 };
 
 } // namespace odeint

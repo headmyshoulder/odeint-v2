@@ -132,8 +132,8 @@ public:
 	{
 		typename boost::unwrap_reference< System >::type &sys = system;
 		m_resizer.adjust_size( in , boost::bind( &internal_stepper_base_type::resize<StateIn> , boost::ref( *this ) , _1 ) );
-		sys( in , m_dxdt ,t );
-		this->stepper().do_step_impl( system , in , m_dxdt , t , out , dt );
+		sys( in , m_dxdt.m_v ,t );
+		this->stepper().do_step_impl( system , in , m_dxdt.m_v , t , out , dt );
 	}
 
 
