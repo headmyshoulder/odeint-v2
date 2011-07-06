@@ -48,8 +48,10 @@ struct initially_resizer
     bool adjust_size( const State &x , ResizeFunction f )
     {
         if( !m_initialized )
+        {
+            m_initialized = true;
             return f( x );
-        else
+        } else
             return false;
     }
 };

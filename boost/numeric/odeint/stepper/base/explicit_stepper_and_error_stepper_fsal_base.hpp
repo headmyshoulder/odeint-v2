@@ -94,13 +94,13 @@ public:
 
 
 
-/*
-    explicit_stepper_and_error_stepper_fsal_base( void ) : m_size_adjuster() , m_dxdt() , m_first_call( true )
-	{
-		boost::numeric::odeint::construct( m_dxdt );
-		m_size_adjuster.register_state( 0 , m_dxdt );
-	}
 
+    explicit_stepper_and_error_stepper_fsal_base( void ) : m_first_call( true )
+	{
+        //boost::numeric::odeint::construct( m_dxdt );
+        //m_size_adjuster.register_state( 0 , m_dxdt );
+	}
+/*
 	~explicit_stepper_and_error_stepper_fsal_base( void )
 	{
 		boost::numeric::odeint::destruct( m_dxdt );

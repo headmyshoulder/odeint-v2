@@ -25,8 +25,8 @@ struct state_wrapper;
 template< class V >
 struct state_wrapper< V , boost::true_type > // with resizing
 {
-    typedef state_wrapper< V , boost::false_type > state_wrapper_type;
-    typedef typename V::value_type value_type;
+    typedef state_wrapper< V , boost::true_type > state_wrapper_type;
+    //typedef typename V::value_type value_type;
     typedef boost::true_type is_resizeable;
 
     V m_v;
@@ -42,7 +42,7 @@ struct state_wrapper< V , boost::true_type > // with resizing
 
     state_wrapper_type& operator=( state_wrapper_type &x )
     {
-        x.m_v = m_v;
+        m_v = x.m_v;
         return *this;
     }
 
@@ -71,7 +71,7 @@ template< class V >
 struct state_wrapper< V , boost::false_type > // without resizing
 {
     typedef state_wrapper< V , boost::false_type > state_wrapper_type;
-    typedef typename V::value_type value_type;
+    //typedef typename V::value_type value_type;
     typedef boost::false_type is_resizeable;
 
     V m_v;

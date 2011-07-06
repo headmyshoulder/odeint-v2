@@ -13,7 +13,7 @@
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
 
-#include <boost/numeric/odeint/util/size_adjuster.hpp>
+#include <boost/numeric/odeint/util/resizer.hpp>
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
@@ -40,18 +40,18 @@ template<
     class Time = Value ,
 	class Algebra = range_algebra ,
 	class Operations = default_operations ,
-	class AdjustSizePolicy = adjust_size_initially_tag
+	class Resizer = initially_resizer
 	>
 class adams_bashforth
 {
 private:
 
-	void initialize( void )
+/*	void initialize( void )
 	{
 		for( size_t i=0 ; i<steps ; ++i )
 			m_size_adjuster.register_state( i , m_step_storage[i] );
 	}
-
+*/
 	void copy( const adams_bashforth &stepper )
 	{
 		m_step_storage = stepper.m_step_storage;
@@ -65,7 +65,7 @@ public :
 	typedef Time time_type;
 	typedef Algebra algebra_type;
 	typedef Operations operations_type;
-	typedef AdjustSizePolicy adjust_size_policy;
+	typedef Resizer resizer_type;
 	typedef stepper_tag stepper_category;
 
 	static const size_t steps = Steps;
@@ -81,15 +81,15 @@ public :
 
 
 	adams_bashforth( void )
-	: m_step_storage() , m_size_adjuster() , m_coefficients()
+	: m_step_storage() , m_coefficients()
 	{
-		initialize();
+		//initialize();
 	}
 
 	adams_bashforth( const adams_bashforth &stepper )
-	: m_step_storage() , m_size_adjuster() , m_coefficients()
+	: m_step_storage()  , m_coefficients()
 	{
-		initialize();
+		//initialize();
 		copy( stepper );
 	}
 
