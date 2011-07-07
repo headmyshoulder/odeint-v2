@@ -15,6 +15,7 @@
 #include <utility>
 
 #include <boost/ref.hpp>
+#include <boost/bind.hpp>
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
@@ -67,7 +68,7 @@ public:
     typedef ValueType value_type;
     typedef value_type time_type;
     typedef boost::numeric::ublas::vector< value_type > state_type;
-    typedef state_wrapper< state_type , boost::true_type > wrapped_state_type;
+    typedef state_wrapper< state_type > wrapped_state_type;
     typedef state_type deriv_type;
     typedef state_wrapper< deriv_type > wrapped_deriv_type;
     typedef boost::numeric::ublas::matrix< value_type > matrix_type;
@@ -76,6 +77,7 @@ public:
     typedef state_wrapper< pmatrix_type > wrapped_pmatrix_type;
     typedef Resizer resizer_type;
 	typedef stepper_tag stepper_category;
+	typedef implicit_euler< ValueType , Resizer > stepper_type;
 
     implicit_euler( const value_type epsilon = 1E-6 )
     : m_epsilon( epsilon ) 
@@ -175,9 +177,9 @@ private:
 
     void solve( state_type &x , matrix_type &m )
     {
-        int res = boost::numeric::ublas::lu_factorize( m , m_pm );
+        int res = boost::numeric::ublas::lu_factorize( m , m_pm.m_v );
         if( res != 0 ) exit(0);
-        boost::numeric::ublas::lu_substitute( m , m_pm , x );
+        boost::numeric::ublas::lu_substitute( m , m_pm.m_v , x );
     }
 
 private:

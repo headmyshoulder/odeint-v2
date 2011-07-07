@@ -29,7 +29,7 @@ namespace odeint {
 template< class T , class A >
 struct is_resizeable< boost::numeric::ublas::vector< T , A > >
 {
-    struct type : public boost::true_type { };
+    typedef boost::true_type type;
     const static bool value = type::value;
 };
 
@@ -40,7 +40,7 @@ struct is_resizeable< boost::numeric::ublas::vector< T , A > >
 template< class T , class L , class A >
 struct is_resizeable< boost::numeric::ublas::matrix< T , L , A > >
 {
-	struct type : public boost::true_type { };
+    typedef boost::true_type type;
 	const static bool value = type::value;
 };
 
@@ -51,16 +51,19 @@ struct is_resizeable< boost::numeric::ublas::matrix< T , L , A > >
 template< class T , class A >
 struct is_resizeable< boost::numeric::ublas::permutation_matrix< T , A > >
 {
-    struct type : public boost::true_type { };
+    typedef boost::true_type type;
     const static bool value = type::value;
 };
 
+} } }
+
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
 
+namespace boost { namespace numeric { namespace odeint {
 
 /* specialization for matrizes because we need to provide matrix-vector resizing */
 template< class T , class L , class A >
-struct state_wrapper< boost::numeric::ublas::matrix< T , L , A > > // with resizing
+struct state_wrapper< boost::numeric::ublas::matrix< T , L , A > , boost::true_type > // with resizing
 {
     typedef boost::numeric::ublas::matrix< T , L , A > state_type;
     typedef state_wrapper< state_type > state_wrapper_type;
@@ -84,14 +87,14 @@ struct state_wrapper< boost::numeric::ublas::matrix< T , L , A > > // with resiz
         return *this;
     }
 
-    template< class T , class A >
-    bool same_size( const boost::numeric::ublas::vector< T , A > &x )
+    template< class T_V , class A_V >
+    bool same_size( const boost::numeric::ublas::vector< T_V , A_V > &x )
     {
         return ( ( x.size() == m_v.size1() ) && ( x.size() == m_v.size2() ) );
     }
 
-    template< class T , class A >
-    bool resize( const boost::numeric::ublas::vector< T , A > &x )
+    template< class T_V , class A_V >
+    bool resize( const boost::numeric::ublas::vector< T_V , A_V > &x )
     {
         //standard resizing done like for std::vector
         if( !same_size( x ) )
@@ -106,7 +109,7 @@ struct state_wrapper< boost::numeric::ublas::matrix< T , L , A > > // with resiz
 
 /* specialization for permutation matrizes because we need to provide matrix-vector resizing */
 template< class T , class A >
-struct state_wrapper< boost::numeric::ublas::permutation_matrix< T , A > > // with resizing
+struct state_wrapper< boost::numeric::ublas::permutation_matrix< T , A > , boost::true_type > // with resizing
 {
     typedef boost::numeric::ublas::permutation_matrix< T , A > state_type;
     typedef state_wrapper< state_type > state_wrapper_type;
@@ -115,7 +118,7 @@ struct state_wrapper< boost::numeric::ublas::permutation_matrix< T , A > > // wi
 
     state_type m_v;
 
-    state_wrapper() : m_v()
+    state_wrapper() : m_v( 1 )
     { }
 
     state_wrapper( state_type v ) : m_v( v )
@@ -130,19 +133,19 @@ struct state_wrapper< boost::numeric::ublas::permutation_matrix< T , A > > // wi
         return *this;
     }
 
-    template< class T , class A >
-    bool same_size( const boost::numeric::ublas::vector< T , A > &x )
+    template< class T_V , class A_V >
+    bool same_size( const boost::numeric::ublas::vector< T_V , A_V > &x )
     {
-        return ( ( x.size() == m_v.size1() ) && ( x.size() == m_v.size2() ) );
+        return ( x.size() == m_v.size() );
     }
 
-    template< class T , class A >
-    bool resize( const boost::numeric::ublas::vector< T , A > &x )
+    template< class T_V , class A_V >
+    bool resize( const boost::numeric::ublas::vector< T_V , A_V > &x )
     {
         //standard resizing done like for std::vector
         if( !same_size( x ) )
         {
-            m_v.resize( boost::size( x ) , boost::size( x ) );
+            m_v.resize( boost::size( x ) );
             return true;
         } else
             return false;

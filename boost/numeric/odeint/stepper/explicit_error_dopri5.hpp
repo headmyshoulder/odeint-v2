@@ -13,6 +13,7 @@
 #define BOOST_BOOST_NUMERIC_ODEINT_STEPPER_EXPLICIT_ERROR_DOPRI5_HPP_INCLUDED
 
 #include <boost/ref.hpp>
+#include <boost/bind.hpp>
 
 #include <boost/numeric/odeint/stepper/base/explicit_stepper_and_error_stepper_fsal_base.hpp>
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
