@@ -11,6 +11,9 @@
 #include <utility>
 #include <stdexcept>
 
+#include <boost/ref.hpp>
+#include <boost/bind.hpp>
+
 //#include <boost/numeric/odeint/util/size_adjuster.hpp>
 //#include <boost/numeric/odeint/util/construct.hpp>
 //#include <boost/numeric/odeint/util/destruct.hpp>

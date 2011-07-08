@@ -16,6 +16,7 @@
 #include <cmath>
 
 #include <boost/ref.hpp>
+#include <boost/bind.hpp>
 
 //#include <boost/numeric/odeint/util/size_adjuster.hpp>
 //#include <boost/numeric/odeint/util/construct.hpp>
@@ -426,6 +427,7 @@ public:
     	//initialize();
     }
 
+    /*
     controlled_error_stepper( const controlled_error_stepper &stepper )
     : m_stepper( stepper.m_stepper ) , m_error_checker( stepper.m_error_checker ) ,
       //m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_x_new_size_adjuster() , m_dxdt_new_size_adjuster() ,
@@ -436,7 +438,7 @@ public:
     	//copy( stepper );
     }
 
-/*    ~controlled_error_stepper( void )
+    ~controlled_error_stepper( void )
     {
         boost::numeric::odeint::destruct( m_dxdt );
         boost::numeric::odeint::destruct( m_xerr );

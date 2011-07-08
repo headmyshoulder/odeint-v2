@@ -11,6 +11,9 @@
 #include <utility>
 #include <iostream>
 
+#include <boost/ref.hpp>
+#include <boost/bind.hpp>
+
 #include <boost/numeric/odeint/stepper/rosenbrock4_controller.hpp>
 
 namespace boost {
@@ -20,12 +23,12 @@ namespace odeint {
 template< class ControlledStepper >
 class rosenbrock4_dense_output
 {
-	void initialize_variables( void )
+/*	void initialize_variables( void )
 	{
 		m_state_adjuster.register_state( 0 , m_x1 );
 		m_state_adjuster.register_state( 1 , m_x2 );
 	}
-
+*/
 	void copy_variables( const rosenbrock4_dense_output &rb )
 	{
 		m_stepper = rb.m_stepper;
@@ -52,29 +55,30 @@ public:
 	typedef typename controlled_stepper_type::stepper_type stepper_type;
 	typedef typename stepper_type::value_type value_type;
 	typedef typename stepper_type::state_type state_type;
+	typedef typename stepper_type::wrapped_state_type wrapped_state_type;
 	typedef typename stepper_type::time_type time_type;
 	typedef typename stepper_type::deriv_type deriv_type;
-	typedef typename stepper_type::adjust_size_policy adjust_size_policy;
+	typedef typename stepper_type::wrapped_deriv_type wrapped_deriv_type;
+	typedef typename stepper_type::resizer_type resizer_type;
 	typedef dense_output_stepper_tag stepper_category;
 
+	typedef rosenbrock4_dense_output< ControlledStepper > dense_output_stepper_type;
+
 	rosenbrock4_dense_output( const controlled_stepper_type &stepper = controlled_stepper_type() )
-	: m_stepper( stepper ) , m_state_adjuster() ,
-	  m_x1() , m_x2() ,  m_t() , m_t_old() , m_dt()
-	{
-        m_current_state = &m_x1;
-        m_old_state = &m_x2;
-		initialize_variables();
-	}
+	: m_stepper( stepper ) ,
+	  m_x1() , m_x2() , m_current_state( &m_x1.m_v ) , m_old_state( &m_x1.m_v ) ,
+	  m_t() , m_t_old() , m_dt()
+	{ }
 
 	rosenbrock4_dense_output( const rosenbrock4_dense_output &rb )
-	: m_stepper() , m_state_adjuster() ,
-	  m_x1() , m_x2() ,
+	: m_stepper() ,
+	  m_x1() , m_x2() , m_current_state( &m_x1.m_v ) , m_old_state( &m_x1.m_v ) ,
 	  m_t() , m_t_old() , m_dt()
 	{
-        m_current_state = &m_x1;
-        m_old_state = &m_x2;
-		initialize_variables();
-		copy_variables( rb );
+//        m_current_state = &m_x1;
+//        m_old_state = &m_x2;
+//		initialize_variables();
+//		copy_variables( rb );
 	}
 
 	rosenbrock4_dense_output& operator=( const rosenbrock4_dense_output &rb )
@@ -88,7 +92,7 @@ public:
 	template< class StateType >
 	void initialize( const StateType &x0 , const time_type &t0 , const time_type &dt0 )
 	{
-		m_state_adjuster.adjust_size_by_policy( x0 , adjust_size_policy() );
+		m_resizer.adjust_size( x0 , boost::bind( &dense_output_stepper_type::resize< StateType > , boost::ref( *this ) , _1 ) );
 		*m_current_state = x0;
 		m_t = t0;
 		m_dt = dt0;
@@ -131,11 +135,20 @@ public:
 	}
 
 
+	template< class StateIn >
+    bool resize( const StateIn &x )
+    {
+        bool resized = false;
+        resized |= adjust_size_by_resizeability( m_x1 , x , typename wrapped_state_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_x2 , x , typename wrapped_state_type::is_resizeable() );
+        return resized;
+    }
+
 	template< class StateType >
 	void adjust_size( const StateType &x )
 	{
 		m_stepper.adjust_size( x );
-		m_state_adjuster.adjust_size( x );
+		resize( x );
 	}
 
 
@@ -172,8 +185,8 @@ public:
 private:
 
 	controlled_stepper_type m_stepper;
-	size_adjuster< state_type , 2 > m_state_adjuster;
-	state_type m_x1 , m_x2;
+	resizer_type m_resizer;
+	wrapped_state_type m_x1 , m_x2;
 	state_type *m_current_state , *m_old_state;
 	time_type m_t , m_t_old , m_dt;
 };

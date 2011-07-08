@@ -17,6 +17,7 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/lu.hpp>
 
+#include <boost/numeric/odeint/util/state_wrapper.hpp>
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
 
 namespace boost {
@@ -55,11 +56,7 @@ struct is_resizeable< boost::numeric::ublas::permutation_matrix< T , A > >
     const static bool value = type::value;
 };
 
-} } }
 
-#include <boost/numeric/odeint/util/state_wrapper.hpp>
-
-namespace boost { namespace numeric { namespace odeint {
 
 /* specialization for matrizes because we need to provide matrix-vector resizing */
 template< class T , class L , class A >
@@ -96,7 +93,6 @@ struct state_wrapper< boost::numeric::ublas::matrix< T , L , A > , boost::true_t
     template< class T_V , class A_V >
     bool resize( const boost::numeric::ublas::vector< T_V , A_V > &x )
     {
-        //standard resizing done like for std::vector
         if( !same_size( x ) )
         {
             m_v.resize( boost::size( x ) , boost::size( x ) );

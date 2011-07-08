@@ -9,11 +9,14 @@
 #define BOOST_NUMERIC_ODEINT_STEPPER_ADAMS_MOULTON_HPP_
 
 #include <boost/ref.hpp>
+#include <boost/bind.hpp>
 
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
 
-#include <boost/numeric/odeint/util/size_adjuster.hpp>
+//#include <boost/numeric/odeint/util/size_adjuster.hpp>
+#include <boost/numeric/odeint/util/state_wrapper.hpp>
+#include <boost/numeric/odeint/util/resizer.hpp>
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
@@ -45,13 +48,13 @@ template<
     class Time = Value ,
 	class Algebra = range_algebra ,
 	class Operations = default_operations ,
-	class AdjustSizePolicy = adjust_size_initially_tag
+	class Resizer = initially_resizer
 	>
 class adams_moulton
 {
 private:
 
-	void initialize( void )
+/*	void initialize( void )
 	{
 		boost::numeric::odeint::construct( m_dxdt );
 		m_size_adjuster.register_state( 0 , m_dxdt );
@@ -61,24 +64,29 @@ private:
 	{
 		boost::numeric::odeint::copy( stepper.m_dxdt , m_dxdt );
 	}
+*/
 
 public :
 
 	typedef State state_type;
+	typedef state_wrapper< state_type > wrapped_state_type;
 	typedef Value value_type;
 	typedef Deriv deriv_type;
+	typedef state_wrapper< deriv_type > wrapped_deriv_type;
 	typedef Time time_type;
 	typedef Algebra algebra_type;
 	typedef Operations operations_type;
-	typedef AdjustSizePolicy adjust_size_policy;
+	typedef Resizer resizer_type;
 	typedef stepper_tag stepper_category;
+
+	typedef adams_moulton< Steps , State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
 
 	static const size_t steps = Steps;
 
 	typedef unsigned short order_type;
 	static const order_type order_value = steps + 1;
 
-	typedef detail::rotating_buffer< deriv_type , steps > step_storage_type;
+	typedef detail::rotating_buffer< wrapped_deriv_type , steps > step_storage_type;
 
 
 	order_type order( void ) const { return order_value; }
@@ -86,21 +94,21 @@ public :
 
 
 	adams_moulton( void )
-	: m_coefficients() , m_dxdt() , m_size_adjuster()
+	: m_coefficients() //, m_dxdt() , m_size_adjuster()
 	{
-		initialize();
+		//initialize();
 	}
 
-	adams_moulton( const adams_moulton &stepper )
+/*	adams_moulton( const adams_moulton &stepper )
 	: m_coefficients() , m_dxdt() , m_size_adjuster()
 	{
 		initialize();
 		copy( stepper );
 	}
-
+*/
 	adams_moulton& operator=( const adams_moulton &stepper )
 	{
-		copy( stepper );
+		m_dxdt = stepper.m_dxdt;
 		return *this;
 	}
 
@@ -133,35 +141,41 @@ public :
     void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt , const ABBuf &buf )
     {
         typename boost::unwrap_reference< System >::type &sys = system;
-        m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
-        sys( in , m_dxdt , t );
-        detail::adams_moulton_call_algebra< steps , algebra_type , operations_type >()( in , out , m_dxdt , buf , m_coefficients , dt );
+        m_resizer.adjust_size( in , boost::bind( &stepper_type::resize<StateIn> , boost::ref( *this ) , _1 ) );
+        sys( in , m_dxdt.m_v , t );
+        detail::adams_moulton_call_algebra< steps , algebra_type , operations_type >()( in , out , m_dxdt.m_v , buf , m_coefficients , dt );
     }
 
 	template< class System , class StateIn , class StateOut , class ABBuf >
 	void do_step( System system , const StateIn &in , const time_type &t , const StateOut &out , const time_type &dt , const ABBuf &buf )
 	{
 		typename boost::unwrap_reference< System >::type &sys = system;
-		m_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
-		sys( in , m_dxdt , t );
-		detail::adams_moulton_call_algebra< steps , algebra_type , operations_type >()( in , out , m_dxdt , buf , m_coefficients , dt );
+        m_resizer.adjust_size( in , boost::bind( &stepper_type::resize<StateIn> , boost::ref( *this ) , _1 ) );
+		sys( in , m_dxdt.m_v , t );
+		detail::adams_moulton_call_algebra< steps , algebra_type , operations_type >()( in , out , m_dxdt.m_v , buf , m_coefficients , dt );
 	}
 
 
+
+	template< class StateIn >
+	bool resize( const StateIn &x )
+	{
+	    return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
+	}
 
 
 	template< class StateType >
 	void adjust_size( const StateType &x )
 	{
-		m_size_adjuster.adjust_size();
+		resize( x );
 	}
 
 
 private:
 
 	const detail::adams_moulton_coefficients< value_type , steps > m_coefficients;
-	deriv_type m_dxdt;
-	size_adjuster< deriv_type , 1 > m_size_adjuster;
+	wrapped_deriv_type m_dxdt;
+	resizer_type m_resizer;
 };
 
 

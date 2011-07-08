@@ -38,7 +38,7 @@ struct adams_moulton_call_algebra< 2 , Algebra , Operations >
     void operator()( const StateIn &in , StateOut &out , const DerivIn &dxdt , const StepStorage &steps , const Coefficients &coef , const Time &dt ) const
     {
         typedef typename Coefficients::value_type value_type;
-        Algebra::for_each4( out , in , dxdt , steps[0] ,
+        Algebra::for_each4( out , in , dxdt , steps[0].m_v ,
                 typename Operations::template scale_sum3< value_type , Time , Time >( 1.0 , dt * coef[0] , dt * coef[1] ) );
     }
 };
@@ -51,7 +51,7 @@ struct adams_moulton_call_algebra< 3 , Algebra , Operations >
     void operator()( const StateIn &in , StateOut &out , const DerivIn &dxdt , const StepStorage &steps , const Coefficients &coef , const Time &dt ) const
     {
         typedef typename Coefficients::value_type value_type;
-        Algebra::for_each5( out , in , dxdt , steps[0] , steps[1] ,
+        Algebra::for_each5( out , in , dxdt , steps[0].m_v , steps[1].m_v ,
                 typename Operations::template scale_sum4< value_type , Time , Time >( 1.0 , dt * coef[0] , dt * coef[1] , dt * coef[2] ) );
     }
 };
@@ -64,7 +64,7 @@ struct adams_moulton_call_algebra< 4 , Algebra , Operations >
     void operator()( const StateIn &in , StateOut &out , const DerivIn &dxdt , const StepStorage &steps , const Coefficients &coef , const Time &dt ) const
     {
         typedef typename Coefficients::value_type value_type;
-        Algebra::for_each6( out , in , dxdt , steps[0] , steps[1] , steps[2] ,
+        Algebra::for_each6( out , in , dxdt , steps[0].m_v , steps[1].m_v , steps[2].m_v ,
                 typename Operations::template scale_sum5< value_type , Time , Time , Time >(
                         1.0 , dt * coef[0] , dt * coef[1] , dt * coef[2] , dt * coef[3] ) );
     }
@@ -78,7 +78,7 @@ struct adams_moulton_call_algebra< 5 , Algebra , Operations >
     void operator()( const StateIn &in , StateOut &out , const DerivIn &dxdt , const StepStorage &steps , const Coefficients &coef , const Time &dt ) const
     {
         typedef typename Coefficients::value_type value_type;
-        Algebra::for_each7( out , in , dxdt , steps[0] , steps[1] , steps[2] , steps[3] ,
+        Algebra::for_each7( out , in , dxdt , steps[0].m_v , steps[1].m_v , steps[2].m_v , steps[3].m_v ,
                 typename Operations::template scale_sum6< value_type , Time , Time , Time , Time >(
                         1.0 , dt * coef[0] , dt * coef[1] , dt * coef[2] , dt * coef[3] , dt * coef[4] ) );
     }
@@ -92,7 +92,7 @@ struct adams_moulton_call_algebra< 6 , Algebra , Operations >
     void operator()( const StateIn &in , StateOut &out , const DerivIn &dxdt , const StepStorage &steps , const Coefficients &coef , const Time &dt ) const
     {
         typedef typename Coefficients::value_type value_type;
-        Algebra::for_each8( out , in , dxdt , steps[0] , steps[1] , steps[2] , steps[3] , steps[4] ,
+        Algebra::for_each8( out , in , dxdt , steps[0].m_v , steps[1].m_v , steps[2].m_v , steps[3].m_v , steps[4].m_v ,
                 typename Operations::template scale_sum7< value_type , Time , Time , Time , Time , Time >(
                         1.0 , dt * coef[0] , dt * coef[1] , dt * coef[2] , dt * coef[3] , dt * coef[4] , dt * coef[5] ) );
     }

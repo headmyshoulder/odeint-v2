@@ -8,8 +8,13 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_ROSENBROCK4_CONTROLLER_HPP_
 #define BOOST_NUMERIC_ODEINT_STEPPER_ROSENBROCK4_CONTROLLER_HPP_
 
+#include <boost/ref.hpp>
+#include <boost/bind.hpp>
+
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
+
+#include <boost/numeric/odeint/util/copy.hpp>
 
 #include <boost/numeric/odeint/stepper/rosenbrock4.hpp>
 
@@ -25,19 +30,19 @@ class rosenbrock4_controller
 {
 private:
 
-	void initialize_variables( void )
+/*	void initialize_variables( void )
 	{
 		m_state_adjuster.register_state( 0 , m_xerr );
 	}
 
 	void copy_variables( const rosenbrock4_controller &rb )
 	{
-        /** @ToDo: MSVC 10 fails on these copy operations with invalid null pointer exception, find out why
-         * maybe add rosenbrock4 to stepper_copying test cases
-         */
+//         @ToDo: MSVC 10 fails on these copy operations with invalid null pointer exception, find out why
+//         maybe add rosenbrock4 to stepper_copying test cases
+
 		m_stepper = rb.m_stepper;
 		m_xerr = rb.m_xerr;
-        /* end MSVC 10 error */
+//        end MSVC 10 error
 		m_atol = rb.m_atol;
 		m_rtol = rb.m_rtol;
 		m_first_step = rb.m_first_step;
@@ -45,27 +50,33 @@ private:
 		m_dt_old = rb.m_dt_old;
 		m_last_rejected = rb.m_last_rejected;
 	}
+*/
 
 public:
 
 	typedef Stepper stepper_type;
 	typedef typename stepper_type::value_type value_type;
 	typedef typename stepper_type::state_type state_type;
+	typedef typename stepper_type::wrapped_state_type wrapped_state_type;
 	typedef typename stepper_type::time_type time_type;
 	typedef typename stepper_type::deriv_type deriv_type;
-	typedef typename stepper_type::adjust_size_policy adjust_size_policy;
+	typedef typename stepper_type::wrapped_deriv_type wrapped_deriv_type;
+	typedef typename stepper_type::resizer_type resizer_type;
 	typedef controlled_stepper_tag stepper_category;
+
+	typedef rosenbrock4_controller< Stepper > controller_type;
 
 
 	rosenbrock4_controller( value_type atol = 1.0e-6 , value_type rtol = 1.0e-6 , const stepper_type &stepper = stepper_type() )
-    : m_stepper() , m_state_adjuster() , m_xerr() ,
+    : //m_stepper() , m_state_adjuster() , m_xerr() ,
       m_atol( atol ) , m_rtol( rtol ) ,
       m_first_step( true ) , m_err_old( 0.0 ) , m_dt_old( 0.0 ) ,
       m_last_rejected( false )
 	{
-		initialize_variables();
+		//initialize_variables();
 	}
 
+	/*
 	rosenbrock4_controller( const rosenbrock4_controller &rb )
 	: m_stepper() , m_state_adjuster() , m_xerr() ,
       m_atol( 1.0e-6l ) , m_rtol( 1.0e-6 ) ,
@@ -81,7 +92,7 @@ public:
 		copy_variables( rb );
 		return *this;
 	}
-
+*/
 	value_type error( const state_type &x , const state_type &xold , const state_type &xerr )
 	{
 		const size_t n = x.size();
@@ -110,9 +121,12 @@ public:
 	boost::numeric::odeint::controlled_step_result
 	try_step( System sys , state_type &x , value_type &t , value_type &dt )
 	{
-		state_type xout( x.size() );
-		boost::numeric::odeint::controlled_step_result res = try_step( sys , x , t , xout , dt );
-		x = xout;
+		m_xnew_resizer.adjust_size( x , boost::bind( &controller_type::resize_m_xnew< state_type > , boost::ref( *this ) , _1 ) );
+		boost::numeric::odeint::controlled_step_result res = try_step( sys , x , t , m_xnew.m_v , dt );
+		if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged ) )
+        {
+            boost::numeric::odeint::copy( m_xnew.m_v , x );
+        }
 		return res;
 	}
 
@@ -126,10 +140,10 @@ public:
 	{
 		static const value_type safe = 0.9 , fac1 = 5.0 , fac2 = 1.0 / 6.0;
 
-		m_state_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
+		m_xerr_resizer.adjust_size( x , boost::bind( &controller_type::resize_m_xerr< state_type > , boost::ref( *this ) , _1 ) );
 
-		m_stepper.do_step( sys , x , t , xout , dt , m_xerr );
-		value_type err = error( xout , x , m_xerr );
+		m_stepper.do_step( sys , x , t , xout , dt , m_xerr.m_v );
+		value_type err = error( xout , x , m_xerr.m_v );
 
 		value_type fac = std::max( fac2 ,std::min( fac1 , std::pow( err , 0.25 ) / safe ) );
 		value_type dt_new = dt / fac;
@@ -168,11 +182,22 @@ public:
 	template< class StateType >
 	void adjust_size( const StateType &x )
 	{
-		m_stepper.adjust_size( x );
-		m_state_adjuster.adjust_size( x );
+		resize_m_xerr( x );
+		resize_m_xnew( x );
 	}
 
 
+    template< class StateIn >
+    bool resize_m_xerr( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_xerr , x , typename wrapped_state_type::is_resizeable() );
+    }
+
+    template< class StateIn >
+    bool resize_m_xnew( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_xnew , x , typename wrapped_state_type::is_resizeable() );
+    }
 
 
 
@@ -192,8 +217,10 @@ public:
 private:
 
 	stepper_type m_stepper;
-	size_adjuster< state_type , 1 > m_state_adjuster;
-	state_type m_xerr;
+	resizer_type m_xerr_resizer;
+	resizer_type m_xnew_resizer;
+	wrapped_state_type m_xerr;
+	wrapped_state_type m_xnew;
 	value_type m_atol , m_rtol;
 	bool m_first_step;
 	value_type m_err_old , m_dt_old;
