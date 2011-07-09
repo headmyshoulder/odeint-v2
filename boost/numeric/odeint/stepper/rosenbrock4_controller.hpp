@@ -30,27 +30,6 @@ class rosenbrock4_controller
 {
 private:
 
-/*	void initialize_variables( void )
-	{
-		m_state_adjuster.register_state( 0 , m_xerr );
-	}
-
-	void copy_variables( const rosenbrock4_controller &rb )
-	{
-//         @ToDo: MSVC 10 fails on these copy operations with invalid null pointer exception, find out why
-//         maybe add rosenbrock4 to stepper_copying test cases
-
-		m_stepper = rb.m_stepper;
-		m_xerr = rb.m_xerr;
-//        end MSVC 10 error
-		m_atol = rb.m_atol;
-		m_rtol = rb.m_rtol;
-		m_first_step = rb.m_first_step;
-		m_err_old = rb.m_err_old;
-		m_dt_old = rb.m_dt_old;
-		m_last_rejected = rb.m_last_rejected;
-	}
-*/
 
 public:
 
@@ -68,31 +47,12 @@ public:
 
 
 	rosenbrock4_controller( value_type atol = 1.0e-6 , value_type rtol = 1.0e-6 , const stepper_type &stepper = stepper_type() )
-    : //m_stepper() , m_state_adjuster() , m_xerr() ,
-      m_atol( atol ) , m_rtol( rtol ) ,
+    : m_atol( atol ) , m_rtol( rtol ) ,
       m_first_step( true ) , m_err_old( 0.0 ) , m_dt_old( 0.0 ) ,
       m_last_rejected( false )
-	{
-		//initialize_variables();
-	}
+	{ }
 
-	/*
-	rosenbrock4_controller( const rosenbrock4_controller &rb )
-	: m_stepper() , m_state_adjuster() , m_xerr() ,
-      m_atol( 1.0e-6l ) , m_rtol( 1.0e-6 ) ,
-      m_first_step( true ) , m_err_old( 0.0 ) , m_dt_old( 0.0 ) ,
-      m_last_rejected( false )
-	{
-        initialize_variables();
-		copy_variables( rb );
-	}
 
-	rosenbrock4_controller& operator=( const rosenbrock4_controller &rb )
-	{
-		copy_variables( rb );
-		return *this;
-	}
-*/
 	value_type error( const state_type &x , const state_type &xold , const state_type &xerr )
 	{
 		const size_t n = x.size();

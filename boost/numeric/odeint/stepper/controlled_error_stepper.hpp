@@ -18,9 +18,6 @@
 #include <boost/ref.hpp>
 #include <boost/bind.hpp>
 
-//#include <boost/numeric/odeint/util/size_adjuster.hpp>
-//#include <boost/numeric/odeint/util/construct.hpp>
-//#include <boost/numeric/odeint/util/destruct.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
 
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
@@ -60,24 +57,30 @@ public:
 
 
 	default_error_checker(
-			value_type eps_abs = static_cast< value_type >( 1.0e-6 ) ,
-			value_type eps_rel = static_cast< value_type >( 1.0e-6 ) ,
-			value_type a_x = static_cast< value_type >( 1.0 ) ,
-			value_type a_dxdt = static_cast< value_type >( 1.0 ) )
+			const value_type eps_abs = static_cast< value_type >( 1.0e-6 ) ,
+			const value_type eps_rel = static_cast< value_type >( 1.0e-6 ) ,
+			const value_type a_x = static_cast< value_type >( 1.0 ) ,
+			const value_type a_dxdt = static_cast< value_type >( 1.0 ) )
 	: m_eps_abs( eps_abs ) , m_eps_rel( eps_rel ) , m_a_x( a_x ) , m_a_dxdt( a_dxdt )
-	{}
+	{ }
 
 
 	template< class State , class Deriv , class Err , class Time >
 	value_type error( const State &x_old , const Deriv &dxdt_old , Err &x_err , const Time &dt )
 	{
-		// this overwrites x_err !
-		algebra_type::for_each3( x_old , dxdt_old , x_err ,
-					             typename operations_type::template rel_error< value_type >( m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt * detail::get_value( dt ) ) );
-
-		value_type res = algebra_type::reduce( x_err , typename operations_type::template maximum< value_type >() , 0.0 );
-		return res;
+	    return error( algebra_type() , x_old , dxdt_old , x_err , dt );
 	}
+
+	template< class State , class Deriv , class Err , class Time >
+    value_type error( algebra_type &algebra , const State &x_old , const Deriv &dxdt_old , Err &x_err , const Time &dt )
+    {
+        // this overwrites x_err !
+        algebra.for_each3( x_old , dxdt_old , x_err ,
+                                 typename operations_type::template rel_error< value_type >( m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt * detail::get_value( dt ) ) );
+
+        value_type res = algebra.reduce( x_err , typename operations_type::template maximum< value_type >() , 0.0 );
+        return res;
+    }
 
 private:
 
@@ -85,6 +88,7 @@ private:
 	value_type m_eps_rel;
 	value_type m_a_x;
 	value_type m_a_dxdt;
+
 };
 
 
@@ -120,24 +124,7 @@ template<
 	>
 class controlled_error_stepper< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag >
 {
-/*	void initialize( void )
-	{
-		boost::numeric::odeint::construct( m_dxdt );
-		boost::numeric::odeint::construct( m_xerr );
-		boost::numeric::odeint::construct( m_xnew );
-		m_dxdt_size_adjuster.register_state( 0 , m_dxdt );
-		m_xerr_size_adjuster.register_state( 0 , m_xerr );
-		m_xnew_size_adjuster.register_state( 0 , m_xnew );
-	}
 
-	void copy( const controlled_error_stepper &stepper )
-	{
-		boost::numeric::odeint::copy( stepper.m_dxdt , m_dxdt );
-		boost::numeric::odeint::copy( stepper.m_xerr , m_xerr );
-		boost::numeric::odeint::copy( stepper.m_xnew , m_xnew );
-		m_max_rel_error = stepper.m_max_rel_error;
-	}
-*/
 public:
 
 	typedef ErrorStepper stepper_type;
@@ -157,41 +144,12 @@ public:
 
 
     controlled_error_stepper(
-            const stepper_type &stepper = stepper_type() ,
-            const error_checker_type &error_checker = error_checker_type()
+            const stepper_type &stepper = stepper_type( ) ,
+            const error_checker_type &error_checker = error_checker_type( )
             )
-    : m_stepper( stepper ) , m_error_checker( error_checker ) ,
-      //m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_xnew_size_adjuster() ,
-      m_dxdt() , m_xerr() , m_xnew() , m_max_rel_error()
-    {
-        //initialize();
-    }
+    : m_stepper( stepper ) , m_error_checker( error_checker )
+    { }
 
-/*    controlled_error_stepper( const controlled_error_stepper &stepper )
-    : m_stepper( stepper.m_stepper ) , m_error_checker( stepper.m_error_checker ) ,
-      //m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_xnew_size_adjuster() ,
-      m_dxdt() , m_xerr() , m_xnew() , m_max_rel_error()
-    {
-        //initialize();
-        //copy( stepper );
-    }
-
-
-	~controlled_error_stepper( void )
-	{
-		boost::numeric::odeint::destruct( m_dxdt );
-		boost::numeric::odeint::destruct( m_xerr );
-		boost::numeric::odeint::destruct( m_xnew );
-	}
-
-	controlled_error_stepper& operator=( const controlled_error_stepper &stepper )
-	{
-		m_stepper = stepper.m_stepper;
-		m_error_checker = stepper.m_error_checker;
-		copy( stepper );
-		return *this;
-	}
-*/
 
 
 	/*
@@ -262,7 +220,7 @@ public:
 		// do one step with error calculation
 		m_stepper.do_step( system , in , dxdt , t , out , dt , m_xerr.m_v );
 
-		m_max_rel_error = m_error_checker.error( in , dxdt , m_xerr.m_v , dt );
+		m_max_rel_error = m_error_checker.error( m_stepper.get_algebra() , in , dxdt , m_xerr.m_v , dt );
 
 		if( m_max_rel_error > 1.1 )
 		{
@@ -378,27 +336,7 @@ template<
     >
 class controlled_error_stepper< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_fsal_tag >
 {
-/*	void initialize( void )
-	{
-		boost::numeric::odeint::construct( m_dxdt );
-		boost::numeric::odeint::construct( m_xerr );
-		boost::numeric::odeint::construct( m_xnew );
-		boost::numeric::odeint::construct( m_dxdtnew );
-		m_dxdt_size_adjuster.register_state( 0 , m_dxdt );
-		m_xerr_size_adjuster.register_state( 0 , m_xerr );
-		m_x_new_size_adjuster.register_state( 0 , m_xnew );
-		m_dxdt_new_size_adjuster.register_state( 0 , m_dxdtnew );
-	}
 
-	void copy( const controlled_error_stepper &stepper )
-	{
-		boost::numeric::odeint::copy( stepper.m_dxdt , m_dxdt );
-		boost::numeric::odeint::copy( stepper.m_xerr , m_xerr );
-		boost::numeric::odeint::copy( stepper.m_xnew , m_xnew );
-		boost::numeric::odeint::copy( stepper.m_dxdtnew , m_dxdtnew );
-		m_first_call = stepper.m_first_call;
-	}
-*/
 public:
 
     typedef ErrorStepper stepper_type;
@@ -417,41 +355,11 @@ public:
 
     controlled_error_stepper(
             const stepper_type &stepper = stepper_type() ,
-            const error_checker_type &error_checker = error_checker_type()
+            const error_checker_type &error_checker = error_checker_type( )
             )
     : m_stepper( stepper ) , m_error_checker( error_checker ) ,
-      //m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_x_new_size_adjuster() , m_dxdt_new_size_adjuster() ,
-      m_dxdt() , m_xerr() , m_xnew() , m_dxdtnew() ,
       m_first_call( true )
-    {
-    	//initialize();
-    }
-
-    /*
-    controlled_error_stepper( const controlled_error_stepper &stepper )
-    : m_stepper( stepper.m_stepper ) , m_error_checker( stepper.m_error_checker ) ,
-      //m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_x_new_size_adjuster() , m_dxdt_new_size_adjuster() ,
-      m_dxdt() , m_xerr() , m_xnew() , m_dxdtnew() ,
-      m_first_call( true )
-    {
-    	//initialize();
-    	//copy( stepper );
-    }
-
-    ~controlled_error_stepper( void )
-    {
-        boost::numeric::odeint::destruct( m_dxdt );
-        boost::numeric::odeint::destruct( m_xerr );
-        boost::numeric::odeint::destruct( m_xnew );
-        boost::numeric::odeint::destruct( m_dxdtnew );
-    }
-
-    controlled_error_stepper& operator=( const controlled_error_stepper &stepper )
-    {
-    	copy( stepper );
-    	return *this;
-    }
-*/
+    { }
 
 	/*
 	 * Version 1 : try_step( sys , x , t , dt )
@@ -530,7 +438,7 @@ public:
         m_stepper.do_step( system , in , dxdt_in , t , out , dxdt_out , dt , m_xerr.m_v );
 
         // this potentially overwrites m_x_err! (standard_error_checker does, at least)
-        value_type max_rel_err = m_error_checker.error( in , dxdt_in , m_xerr.m_v , dt );
+        value_type max_rel_err = m_error_checker.error( m_stepper.get_algebra() , in , dxdt_in , m_xerr.m_v , dt );
 
         if( max_rel_err > 1.1 )
         {

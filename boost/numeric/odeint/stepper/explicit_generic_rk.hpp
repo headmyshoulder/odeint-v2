@@ -20,8 +20,6 @@
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 
-//#include "fusion_foreach_performance.hpp"
-
 #include <iostream>
 
 namespace mpl = boost::mpl;
@@ -122,7 +120,7 @@ public:
 	typedef typename stepper_base_type::algebra_type algebra_type;
 	typedef typename stepper_base_type::operations_type operations_type;
 	typedef typename stepper_base_type::resizer_type resizer_type;
-	//typedef typename stepper_base_type::stepper_type stepper_type;
+
 	typedef explicit_generic_rk< StageCount , Order , State , Value , Deriv ,Time , Algebra , Operations , Resizer > stepper_type;
 
 	typedef detail::generic_rk_algorithm< StageCount , Value , Algebra , Operations > rk_algorithm_type;
@@ -136,59 +134,13 @@ public:
 
 private:
 
-/*    void initialize( void )
-    {
-        boost::numeric::odeint::construct( m_x_tmp );
-        m_state_adjuster.register_state( 0 , m_x_tmp );
-        for( size_t i = 0 ; i < StageCount-1 ; ++i )
-        {
-            boost::numeric::odeint::construct( m_F[i] );
-            m_deriv_adjuster.register_state( i , m_F[i] );
-        }
-    }
-
-    void copy( const explicit_generic_rk &rk )
-    {
-        boost::numeric::odeint::copy( rk.m_x_tmp , m_x_tmp );
-        for( size_t i = 0 ; i < StageCount-1 ; ++i )
-        {
-            boost::numeric::odeint::copy( rk.m_F[i] , m_F[i] );
-        }
-    }
-*/
-
 public:
 
     explicit_generic_rk( const coef_a_type &a , const coef_b_type &b , const coef_c_type &c )
         : m_rk_algorithm( a , b , c )
 
-    {
-        //initialize();
-    }
+    { }
 
-/*    explicit_generic_rk( const explicit_generic_rk &rk )
-        : stepper_base_type( rk ) , m_rk_algorithm( rk.m_rk_algorithm) , m_x_tmp()
-    {
-        initialize();
-        copy( rk );
-    }
-
-    explicit_generic_rk& operator=( const explicit_generic_rk &rk )
-    {
-        stepper_base_type::operator=( rk );
-        copy( rk );
-        return *this;
-    }
-
-    ~explicit_generic_rk( void )
-    {
-        boost::numeric::odeint::destruct( m_x_tmp );
-        for( size_t i = 0 ; i < StageCount-1 ; ++i )
-        {
-            boost::numeric::odeint::destruct( m_F[i] );
-        }
-    }
-*/
 
     template< class System , class StateIn , class DerivIn , class StateOut >
 	void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt ,
@@ -200,7 +152,7 @@ public:
         m_resizer.adjust_size( in , boost::bind( &stepper_type::resize< StateIn > , boost::ref( *this ) , _1 ) );
 
         // actual calculation done in generic_rk.hpp
-        m_rk_algorithm.do_step( sys , in , dxdt , t , out , dt , m_x_tmp.m_v , m_F );
+        m_rk_algorithm.do_step( m_algebra , sys , in , dxdt , t , out , dt , m_x_tmp.m_v , m_F );
     }
 
     template< class StateIn >
@@ -222,6 +174,11 @@ public:
         stepper_base_type::adjust_size( x );
     }
 
+    algebra_type& get_algebra()
+    {
+        return m_algebra;
+    }
+
     friend std::ostream& operator << <>( std::ostream &os , const explicit_generic_rk &rk );
 
 private:
@@ -232,6 +189,9 @@ private:
 
     wrapped_state_type m_x_tmp;
     wrapped_deriv_type m_F[StageCount-1];
+
+protected:
+    algebra_type m_algebra;
 
 };
 

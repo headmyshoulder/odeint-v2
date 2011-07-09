@@ -23,10 +23,10 @@ template< class Algebra , class Operations >
 struct adams_bashforth_call_algebra< 1 , Algebra , Operations >
 {
 	template< class StateIn , class StateOut , class StepStorage , class Coefficients , class Time >
-	void operator()( const StateIn &in , StateOut &out , const StepStorage &steps , const Coefficients &coef , const Time &dt ) const
+	void operator()( Algebra &algebra , const StateIn &in , StateOut &out , const StepStorage &steps , const Coefficients &coef , const Time &dt ) const
 	{
 		typedef typename Coefficients::value_type value_type;
-		Algebra::for_each3( out , in , steps[0].m_v , typename Operations::template scale_sum2< value_type , Time >( 1.0 , dt * coef[0] ) );
+		algebra.for_each3( out , in , steps[0].m_v , typename Operations::template scale_sum2< value_type , Time >( 1.0 , dt * coef[0] ) );
 	}
 };
 
@@ -35,10 +35,10 @@ template< class Algebra , class Operations >
 struct adams_bashforth_call_algebra< 2 , Algebra , Operations >
 {
 	template< class StateIn , class StateOut , class StepStorage , class Coefficients , class Time >
-	void operator()( const StateIn &in , StateOut &out , const StepStorage &steps , const Coefficients &coef , const Time &dt ) const
+	void operator()( Algebra &algebra , const StateIn &in , StateOut &out , const StepStorage &steps , const Coefficients &coef , const Time &dt ) const
 	{
 		typedef typename Coefficients::value_type value_type;
-		Algebra::for_each4( out , in , steps[0].m_v , steps[1].m_v ,
+		algebra.for_each4( out , in , steps[0].m_v , steps[1].m_v ,
 				typename Operations::template scale_sum3< value_type , Time , Time >( 1.0 , dt * coef[0] , dt * coef[1] ) );
 	}
 };
@@ -48,10 +48,10 @@ template< class Algebra , class Operations >
 struct adams_bashforth_call_algebra< 3 , Algebra , Operations >
 {
 	template< class StateIn , class StateOut , class StepStorage , class Coefficients , class Time >
-	void operator()( const StateIn &in , StateOut &out , const StepStorage &steps , const Coefficients &coef , const Time &dt ) const
+	void operator()( Algebra &algebra , const StateIn &in , StateOut &out , const StepStorage &steps , const Coefficients &coef , const Time &dt ) const
 	{
 		typedef typename Coefficients::value_type value_type;
-		Algebra::for_each5( out , in , steps[0].m_v , steps[1].m_v , steps[2].m_v ,
+		algebra.for_each5( out , in , steps[0].m_v , steps[1].m_v , steps[2].m_v ,
 				typename Operations::template scale_sum4< value_type , Time , Time , Time >( 1.0 , dt * coef[0] , dt * coef[1] , dt * coef[2] ) );
 	}
 };
@@ -61,10 +61,10 @@ template< class Algebra , class Operations >
 struct adams_bashforth_call_algebra< 4 , Algebra , Operations >
 {
 	template< class StateIn , class StateOut , class StepStorage , class Coefficients , class Time >
-	void operator()( const StateIn &in , StateOut &out , const StepStorage &steps , const Coefficients &coef , const Time &dt ) const
+	void operator()( Algebra &algebra , const StateIn &in , StateOut &out , const StepStorage &steps , const Coefficients &coef , const Time &dt ) const
 	{
 		typedef typename Coefficients::value_type value_type;
-		Algebra::for_each6( out , in , steps[0].m_v , steps[1].m_v , steps[2].m_v , steps[3].m_v ,
+		algebra.for_each6( out , in , steps[0].m_v , steps[1].m_v , steps[2].m_v , steps[3].m_v ,
 				typename Operations::template scale_sum5< value_type , Time , Time , Time >(
 						1.0 , dt * coef[0] , dt * coef[1] , dt * coef[2] , dt * coef[3] ) );
 	}
@@ -75,10 +75,10 @@ template< class Algebra , class Operations >
 struct adams_bashforth_call_algebra< 5 , Algebra , Operations >
 {
 	template< class StateIn , class StateOut , class StepStorage , class Coefficients , class Time >
-	void operator()( const StateIn &in , StateOut &out , const StepStorage &steps , const Coefficients &coef , const Time &dt ) const
+	void operator()( Algebra &algebra , const StateIn &in , StateOut &out , const StepStorage &steps , const Coefficients &coef , const Time &dt ) const
 	{
 		typedef typename Coefficients::value_type value_type;
-		Algebra::for_each7( out , in , steps[0].m_v , steps[1].m_v , steps[2].m_v , steps[3].m_v , steps[4].m_v ,
+		algebra.for_each7( out , in , steps[0].m_v , steps[1].m_v , steps[2].m_v , steps[3].m_v , steps[4].m_v ,
 				typename Operations::template scale_sum6< value_type , Time , Time , Time , Time >(
 						1.0 , dt * coef[0] , dt * coef[1] , dt * coef[2] , dt * coef[3] , dt * coef[4] ) );
 	}
@@ -89,10 +89,10 @@ template< class Algebra , class Operations >
 struct adams_bashforth_call_algebra< 6 , Algebra , Operations >
 {
 	template< class StateIn , class StateOut , class StepStorage , class Coefficients , class Time >
-	void operator()( const StateIn &in , StateOut &out , const StepStorage &steps , const Coefficients &coef , const Time &dt ) const
+	void operator()( Algebra &algebra , const StateIn &in , StateOut &out , const StepStorage &steps , const Coefficients &coef , const Time &dt ) const
 	{
 		typedef typename Coefficients::value_type value_type;
-		Algebra::for_each8( out , in , steps[0].m_v , steps[1].m_v , steps[2].m_v , steps[3].m_v , steps[4].m_v , steps[5].m_v ,
+		algebra.for_each8( out , in , steps[0].m_v , steps[1].m_v , steps[2].m_v , steps[3].m_v , steps[4].m_v , steps[5].m_v ,
 				typename Operations::template scale_sum7< value_type , Time , Time , Time , Time , Time >(
 						1.0 , dt * coef[0] , dt * coef[1] , dt * coef[2] , dt * coef[3] , dt * coef[4] , dt * coef[5] ) );
 	}
@@ -103,7 +103,7 @@ template< class Algebra , class Operations >
 struct adams_bashforth_call_algebra< 7 , Algebra , Operations >
 {
 	template< class StateIn , class StateOut , class StepStorage , class Coefficients , class Time >
-	void operator()( const StateIn &in , StateOut &out , const StepStorage &steps , const Coefficients &coef , const Time &dt ) const
+	void operator()( Algebra &algebra , const StateIn &in , StateOut &out , const StepStorage &steps , const Coefficients &coef , const Time &dt ) const
 	{
 		assert( false ); // not implemented
 //		typedef typename Coefficients::value_type value_type;
@@ -118,7 +118,7 @@ template< class Algebra , class Operations >
 struct adams_bashforth_call_algebra< 8 , Algebra , Operations >
 {
 	template< class StateIn , class StateOut , class StepStorage , class Coefficients , class Time >
-	void operator()( const StateIn &in , StateOut &out , const StepStorage &steps , const Coefficients &coef , const Time &dt ) const
+	void operator()( Algebra &algebra , const StateIn &in , StateOut &out , const StepStorage &steps , const Coefficients &coef , const Time &dt ) const
 	{
 		assert( false ); // not implemented
 //		typedef typename Coefficients::value_type value_type;

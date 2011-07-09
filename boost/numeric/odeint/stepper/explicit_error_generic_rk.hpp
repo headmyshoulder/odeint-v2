@@ -80,26 +80,6 @@ public:
 
 private:
 
-/*    void initialize( void )
-    {
-        boost::numeric::odeint::construct( m_x_tmp );
-        m_state_adjuster.register_state( 0 , m_x_tmp );
-        for( size_t i = 0 ; i < StageCount-1 ; ++i )
-        {
-            boost::numeric::odeint::construct( m_F[i] );
-            m_deriv_adjuster.register_state( i , m_F[i] );
-        }
-    }
-
-    void copy( const explicit_error_generic_rk &rk )
-    {
-        boost::numeric::odeint::copy( rk.m_x_tmp , m_x_tmp );
-        for( size_t i = 0 ; i < StageCount-1 ; ++i )
-        {
-            boost::numeric::odeint::copy( rk.m_F[i] , m_F[i] );
-        }
-    }
-    */
 
 public:
 
@@ -110,33 +90,9 @@ public:
                                   const coef_b_type &b2 ,
                                   const coef_c_type &c )
         : m_rk_algorithm( a , b , c ) , m_b2( b2 )
-    {
-        // initialize();
-    }
-/*
-    explicit_error_generic_rk( const explicit_error_generic_rk &rk )
-        : stepper_base_type( rk )  , m_rk_algorithm( rk.m_rk_algorithm ) , m_b2( rk.m_b2 ) , m_x_tmp()
-    {
-        initialize();
-        copy( rk );
-    }
+    { }
 
-    explicit_error_generic_rk& operator=( const explicit_error_generic_rk &rk )
-    {
-        stepper_base_type::operator=( rk );
-        copy( rk );
-        return *this;
-    }
 
-    ~explicit_error_generic_rk( void )
-   {
-       boost::numeric::odeint::destruct( m_x_tmp );
-       for( size_t i = 0 ; i < StageCount-1 ; ++i )
-       {
-           boost::numeric::odeint::destruct( m_F[i] );
-       }
-   }
-*/
     template< class System , class StateIn , class DerivIn , class StateOut , class Err >
     void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt ,
             const time_type &t , StateOut &out , const time_type &dt , Err &xerr )
@@ -145,8 +101,8 @@ public:
         do_step_impl( system , in , dxdt , t , out , dt );
 
         // additionally, perform the error calculation
-        detail::template generic_rk_call_algebra< StageCount , algebra_type >()( xerr , dxdt , m_F ,
-                    detail::generic_rk_scale_sum_err< StageCount , operations_type , time_type >( m_b2 , dt) );
+        detail::template generic_rk_call_algebra< StageCount , algebra_type >()( stepper_base_type::m_algebra ,
+                xerr , dxdt , m_F , detail::generic_rk_scale_sum_err< StageCount , operations_type , time_type >( m_b2 , dt) );
     }
 
     template< class System , class StateIn , class DerivIn , class StateOut >
@@ -159,7 +115,7 @@ public:
         m_resizer.adjust_size( in , boost::bind( &stepper_type::resize< StateIn > , boost::ref( *this ) , _1 ) );
 
         // actual calculation done in generic_rk.hpp
-        m_rk_algorithm.do_step( sys , in , dxdt , t , out , dt , m_x_tmp.m_v , m_F );
+        m_rk_algorithm.do_step( stepper_base_type::m_algebra , sys , in , dxdt , t , out , dt , m_x_tmp.m_v , m_F );
     }
 
     template< class StateIn >
@@ -181,6 +137,7 @@ public:
         stepper_base_type::adjust_size( x );
     }
 
+
 private:
 
     rk_algorithm_type m_rk_algorithm;
@@ -190,6 +147,8 @@ private:
 
     wrapped_state_type m_x_tmp;
     wrapped_deriv_type m_F[StageCount-1];
+
+
 };
 
 }

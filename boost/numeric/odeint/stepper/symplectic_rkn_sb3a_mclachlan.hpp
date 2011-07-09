@@ -84,14 +84,14 @@ template<
 	class Time = Value ,
 	class Algebra = range_algebra ,
 	class Operations = default_operations ,
-	class AdjustSizePolicy = adjust_size_initially_tag
+	class Resizer = initially_resizer
 	>
 class symplectic_rkn_sb3a_mclachlan :
 	public symplectic_nystroem_stepper_base
 	<
 		6 ,
-		symplectic_rkn_sb3a_mclachlan< Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , AdjustSizePolicy > ,
-		Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , AdjustSizePolicy
+		symplectic_rkn_sb3a_mclachlan< Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer > ,
+		Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer
 	>
 {
 public:

@@ -220,6 +220,7 @@ BOOST_AUTO_TEST_CASE( controlled_error_stepper_dopri5 )
 	CHECK_VALUES( f.in , 0.0 , 1.1 , 2.2 , 3.3 , 4.0 , 5.0 );
 }
 
+
 BOOST_AUTO_TEST_CASE( symplectic_euler_coor_func )
 {
 	vector_fixture f;

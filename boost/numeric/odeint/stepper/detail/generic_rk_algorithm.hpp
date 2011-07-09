@@ -186,6 +186,7 @@ public:
                class StateOut , class Time >
     struct calculate_stage
     {
+        Algebra &algebra;
         System &system;
         const StateIn &x;
         StateTemp &x_tmp;
@@ -195,9 +196,9 @@ public:
         const Time t;
         const Time dt;
 
-        calculate_stage( System &_system , const StateIn &_x , const DerivIn &_dxdt , StateOut &_out ,
+        calculate_stage( Algebra &_algebra , System &_system , const StateIn &_x , const DerivIn &_dxdt , StateOut &_out ,
             StateTemp &_x_tmp , Deriv *_F , const Time &_t , const Time &_dt )
-        : system( _system ) , x( _x ) , x_tmp( _x_tmp ) , x_out( _out) , dxdt( _dxdt ) , F( _F ) , t( _t ) , dt( _dt )
+        : algebra( _algebra ) , system( _system ) , x( _x ) , x_tmp( _x_tmp ) , x_out( _out) , dxdt( _dxdt ) , F( _F ) , t( _t ) , dt( _dt )
         {}
 
 
@@ -218,12 +219,12 @@ public:
             //std::cout << stage_number-2 << ", t': " << t + stage.c * dt << std::endl;
 
             if( stage_number < StageCount )
-                detail::template generic_rk_call_algebra< stage_number , Algebra >()( x_tmp , x , dxdt , F ,
+                detail::template generic_rk_call_algebra< stage_number , Algebra >()( algebra , x_tmp , x , dxdt , F ,
                             detail::generic_rk_scale_sum< stage_number , Operations , Time >( stage.a , dt) );
 //                  algebra_type::template for_eachn<stage_number>( x_tmp , x , dxdt , F ,
 //                          typename operations_type::template scale_sumn< stage_number , time_type >( stage.a , dt ) );
             else
-                detail::template generic_rk_call_algebra< stage_number , Algebra >()( x_out , x , dxdt , F ,
+                detail::template generic_rk_call_algebra< stage_number , Algebra >()( algebra , x_out , x , dxdt , F ,
                             detail::generic_rk_scale_sum< stage_number , Operations , Time >( stage.a , dt) );
 //                algebra_type::template for_eachn<stage_number>( x_out , x , dxdt , F ,
 //                            typename operations_type::template scale_sumn< stage_number , time_type >( stage.a , dt ) );
@@ -236,13 +237,13 @@ public:
     { }
 
     template< class System , class StateIn , class DerivIn , class Time , class StateOut , class StateTemp , class Deriv >
-    void inline do_step( System system , const StateIn &in , const DerivIn &dxdt ,
+    void inline do_step( Algebra &algebra , System system , const StateIn &in , const DerivIn &dxdt ,
                     const Time &t , StateOut &out , const Time &dt ,
                     StateTemp &x_tmp , Deriv F[StageCount-1] )
     {
         fusion::for_each( m_stages , calculate_stage<
                 System , StateIn , StateTemp , DerivIn , Deriv , StateOut , Time >
-            ( system , in , dxdt , out , x_tmp , F , t , dt ) );
+            ( algebra , system , in , dxdt , out , x_tmp , F , t , dt ) );
     }
 
 private:

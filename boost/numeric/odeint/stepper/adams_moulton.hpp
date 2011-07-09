@@ -14,7 +14,6 @@
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
 
-//#include <boost/numeric/odeint/util/size_adjuster.hpp>
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 
@@ -54,17 +53,6 @@ class adams_moulton
 {
 private:
 
-/*	void initialize( void )
-	{
-		boost::numeric::odeint::construct( m_dxdt );
-		m_size_adjuster.register_state( 0 , m_dxdt );
-	}
-
-	void copy( const adams_moulton &stepper )
-	{
-		boost::numeric::odeint::copy( stepper.m_dxdt , m_dxdt );
-	}
-*/
 
 public :
 
@@ -88,29 +76,21 @@ public :
 
 	typedef detail::rotating_buffer< wrapped_deriv_type , steps > step_storage_type;
 
+    adams_moulton( ) : m_algebra( m_algebra_instance )
+    { }
 
-	order_type order( void ) const { return order_value; }
+    adams_moulton( algebra_type &algebra ) : m_algebra( algebra )
+    { }
 
-
-
-	adams_moulton( void )
-	: m_coefficients() //, m_dxdt() , m_size_adjuster()
-	{
-		//initialize();
-	}
-
-/*	adams_moulton( const adams_moulton &stepper )
-	: m_coefficients() , m_dxdt() , m_size_adjuster()
-	{
-		initialize();
-		copy( stepper );
-	}
-*/
 	adams_moulton& operator=( const adams_moulton &stepper )
 	{
 		m_dxdt = stepper.m_dxdt;
+		m_resizer = stepper.m_resizer;
+		m_algebra = stepper.m_algebra;
 		return *this;
 	}
+
+    order_type order( void ) const { return order_value; }
 
 
 	/*
@@ -143,7 +123,7 @@ public :
         typename boost::unwrap_reference< System >::type &sys = system;
         m_resizer.adjust_size( in , boost::bind( &stepper_type::resize<StateIn> , boost::ref( *this ) , _1 ) );
         sys( in , m_dxdt.m_v , t );
-        detail::adams_moulton_call_algebra< steps , algebra_type , operations_type >()( in , out , m_dxdt.m_v , buf , m_coefficients , dt );
+        detail::adams_moulton_call_algebra< steps , algebra_type , operations_type >()( m_algebra , in , out , m_dxdt.m_v , buf , m_coefficients , dt );
     }
 
 	template< class System , class StateIn , class StateOut , class ABBuf >
@@ -152,7 +132,7 @@ public :
 		typename boost::unwrap_reference< System >::type &sys = system;
         m_resizer.adjust_size( in , boost::bind( &stepper_type::resize<StateIn> , boost::ref( *this ) , _1 ) );
 		sys( in , m_dxdt.m_v , t );
-		detail::adams_moulton_call_algebra< steps , algebra_type , operations_type >()( in , out , m_dxdt.m_v , buf , m_coefficients , dt );
+		detail::adams_moulton_call_algebra< steps , algebra_type , operations_type >()( m_algebra , in , out , m_dxdt.m_v , buf , m_coefficients , dt );
 	}
 
 
@@ -170,12 +150,21 @@ public :
 		resize( x );
 	}
 
+    algebra_type& get_algebra()
+    {
+        return m_algebra;
+    }
+
 
 private:
 
 	const detail::adams_moulton_coefficients< value_type , steps > m_coefficients;
 	wrapped_deriv_type m_dxdt;
 	resizer_type m_resizer;
+
+protected:
+	algebra_type m_algebra_instance;
+	algebra_type &m_algebra;
 };
 
 

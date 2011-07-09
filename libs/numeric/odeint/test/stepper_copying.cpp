@@ -546,7 +546,7 @@ BOOST_AUTO_TEST_CASE( controlled_rk54_assign )
  * 2 explicit_rk54_ck_generic:
  * 2 * 1 deriv_type in explicit_error_stepper_base
  * 2 * 5 deriv_type in explicit_error_rk54_ck_generic
- * 2 * 1 state_type in explicit_error_rk4_generic
+ * 2 * 1 state_type in explicit_error_rk54_ck_generic
  * 1 controlled_stepper:
  * 1 deriv_type
  * 2 state_type
@@ -635,7 +635,22 @@ BOOST_AUTO_TEST_CASE( controlled_rk54_generic_assign )
 }
 
 
-
+/*
+ * Construct + Destruct
+ * 2 explicit_error_dopri5:
+ * 2 * 1 deriv_type in explicit_error_stepper_base_fsal
+ * 2 * 5 deriv_type in explicit_error_dopri5
+ * 2 * 1 state_type in explicit_error_dopri5
+ * 1 controlled_error_stepper (fsal):
+ * 2 deriv_type
+ * 2 state_type
+ *
+ * Copying
+ * 1 copy process of explicit_dopri5:
+ * 1 deriv_type from explicit_error_stepper_base_fsal
+ * 5 deriv_type from explicit_error_dopri5
+ * 1 state_type from explicit_error_dopri5
+ */
 
 BOOST_AUTO_TEST_CASE( controlled_dopri5_construct )
 {
@@ -643,9 +658,33 @@ BOOST_AUTO_TEST_CASE( controlled_dopri5_construct )
 	{
 		controlled_dopri5_type dopri5;
 	}
-	// CHECK_COUNTERS( 1 , 1 , 1 , 1 , 1 );
+	CHECK_COUNTERS( 2 * 1 + 2 , 2 * (5+1) + 2 , 2 * 1 + 2 , 2 * (5+1) + 2 , 1 , 1 + 5 );
 }
 
+
+/*
+ * Construct + Destruct
+ * 3 explicit_error_dopri5:
+ * 3 * 1 deriv_type in explicit_error_stepper_base_fsal
+ * 3 * 5 deriv_type in explicit_error_dopri5
+ * 3 * 1 state_type in explicit_error_dopri5
+ * 2 controlled_error_stepper (fsal):
+ * 2 * 2 deriv_type
+ * 2 * 2 state_type
+ *
+ * Copying
+ * 1 copy process of explicit_error_dopri5:
+ * 1 deriv_type from explicit_error_stepper_base_fsal
+ * 5 deriv_type from explicit_error_error_dopri5
+ * 1 state_type from explicit_error_error_dopri5
+ *
+ * 1 process of copying controlled_error_stepper
+ * 1 deriv_type from explicit_error_stepper_base_fsal
+ * 5 deriv_type from explicit_error_dopri5
+ * 1 state_type from explicit_error_dopri5
+ * 2 deriv_type from controlled_error_stepper (fsal)
+ * 2 state_type from controlled_error_stepper (fsal)
+ */
 BOOST_AUTO_TEST_CASE( controlled_dopri5_copy_construct )
 {
 	reset_counter();
@@ -653,9 +692,32 @@ BOOST_AUTO_TEST_CASE( controlled_dopri5_copy_construct )
 		controlled_dopri5_type dopri5;
 		controlled_dopri5_type dopri5_2( dopri5 );
 	}
-	// CHECK_COUNTERS( 1 , 1 , 1 , 1 , 1 );
+	CHECK_COUNTERS( 3 * 1 + 2 * 2 , 3 * (5+1) + 2 * 2 ,  3 * 1 + 2 * 2 , 3 * (5+1) + 2 * 2 , 1 + 1 + 2 , 1 + 5 + 1 + 5 + 2 );
 }
 
+/*
+ * Construct + Destruct
+ * 4 explicit_error_dopri5:
+ * 4 * 1 deriv_type in explicit_error_stepper_base_fsal
+ * 4 * 5 deriv_type in explicit_error_dopri5
+ * 4 * 1 state_type in explicit_error_dopri5
+ * 2 controlled_error_stepper (fsal):
+ * 2 * 2 deriv_type
+ * 2 * 2 state_type
+ *
+ * Copying
+ * 2 copy process of explicit_error_dopri5:
+ * 2 * 1 deriv_type from explicit_error_stepper_base_fsal
+ * 2 * 5 deriv_type from explicit_error_dopri5
+ * 2 * 1 state_type from explicit_error_dopri5
+ *
+ * 1 process of copying controlled_error_stepper
+ * 1 deriv_type from explicit_error_stepper_base
+ * 5 deriv_type from explicit_error_dopri5
+ * 1 state_type from explicit_error_dopri5
+ * 2 deriv_type from controlled_error_stepper (fsal)
+ * 2 state_type from controlled_error_stepper (fsal)
+ */
 BOOST_AUTO_TEST_CASE( controlled_dopri5_assign )
 {
 	reset_counter();
@@ -664,8 +726,11 @@ BOOST_AUTO_TEST_CASE( controlled_dopri5_assign )
 		controlled_dopri5_type dopri5_2;
 		dopri5_2 = dopri5;
 	}
-	// CHECK_COUNTERS( 1 , 1 , 1 , 1 , 1 );
+	CHECK_COUNTERS( 4 * 1 + 2 * 2 , 4 * (1+5) + 2 * 2 , 4 * 1 + 2 * 2 , 4 * (1+5) + 2 * 2 , 2 * 1 + 1 + 2 , 2 * (5+1) + 1 + 5 + 2 );
 }
+
+
+
 
 BOOST_AUTO_TEST_CASE( dense_output_euler_construct )
 {

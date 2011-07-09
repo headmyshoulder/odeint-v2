@@ -19,9 +19,6 @@
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
-//#include <boost/numeric/odeint/util/size_adjuster.hpp>
-//#include <boost/numeric/odeint/util/ublas_resize.hpp>
-
 #include <boost/numeric/odeint/util/ublas_wrapper.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 
@@ -43,26 +40,7 @@ namespace odeint {
 template< class ValueType , class Resizer = initially_resizer >
 class implicit_euler
 {
-	/*void initialize( void )
-	{
-		m_state_adjuster.register_state( 0 , m_dxdt );
-		m_state_adjuster.register_state( 1 , m_x );
-		m_state_adjuster.register_state( 2 , m_b );
-		m_matrix_adjuster.register_state( 0 , m_jacobi );
-		m_pmatrix_adjuster.register_state( 0 , m_pm );
 
-	}
-
-	void copy( const implicit_euler &euler )
-	{
-		m_dxdt = euler.m_dxdt;
-		m_x = euler.m_x;
-		m_b = euler.m_b;
-		m_jacobi = euler.m_jacobi;
-		m_pm = euler.m_pm;
-		m_epsilon = euler.m_epsilon;
-	}
-    */
 public:
 
     typedef ValueType value_type;
@@ -81,29 +59,9 @@ public:
 
     implicit_euler( const value_type epsilon = 1E-6 )
     : m_epsilon( epsilon ) 
-      //m_state_adjuster() , m_matrix_adjuster() , m_pmatrix_adjuster() ,
-      //m_dxdt() , m_x() , m_b() ,
-      //m_jacobi() , m_pm( 1 )
-    {
-    	//initialize();
-    }
-/*
-    implicit_euler( const implicit_euler &euler )
-    : m_epsilon( 1.0e-6 ) ,
-      m_state_adjuster() , m_matrix_adjuster() , m_pmatrix_adjuster() ,
-      m_dxdt() , m_x() , m_b() ,
-      m_jacobi() , m_pm( 1 )
-    {
-    	initialize();
-    	copy( euler );
-    }
+    { }
 
-    implicit_euler& operator=( const implicit_euler &euler )
-    {
-    	copy( euler );
-    	return *this;
-    }
-*/
+
     template< class System >
     void do_step( System system , state_type &x , value_type t , value_type dt )
     {

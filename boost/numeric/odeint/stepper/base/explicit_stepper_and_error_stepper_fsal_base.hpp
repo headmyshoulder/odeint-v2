@@ -16,11 +16,6 @@
 #include <boost/ref.hpp>
 #include <boost/bind.hpp>
 
-//#include <boost/numeric/odeint/util/size_adjuster.hpp>
-//#include <boost/numeric/odeint/util/construct.hpp>
-//#include <boost/numeric/odeint/util/destruct.hpp>
-//#include <boost/numeric/odeint/util/copy.hpp>
-
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 
@@ -75,7 +70,7 @@ public:
 	static const order_type error_order_value = ErrorOrder;
 
 
-
+//	explicit_stepper_and_error_stepper_fsal_base( const algebra_type &algebra ) : m_algebra( algebra ) { }
 
     order_type order( void ) const
     {
@@ -96,31 +91,7 @@ public:
 
 
     explicit_stepper_and_error_stepper_fsal_base( void ) : m_first_call( true )
-	{
-        //boost::numeric::odeint::construct( m_dxdt );
-        //m_size_adjuster.register_state( 0 , m_dxdt );
-	}
-/*
-	~explicit_stepper_and_error_stepper_fsal_base( void )
-	{
-		boost::numeric::odeint::destruct( m_dxdt );
-	}
-
-    explicit_stepper_and_error_stepper_fsal_base( const explicit_stepper_and_error_stepper_fsal_base &b )
-    : m_size_adjuster() , m_dxdt() , m_first_call( true )
-	{
-		boost::numeric::odeint::construct( m_dxdt );
-		m_size_adjuster.register_state( 0 , m_dxdt );
-		boost::numeric::odeint::copy( b.m_dxdt , m_dxdt );
-	}
-
-    explicit_stepper_and_error_stepper_fsal_base& operator=( const explicit_stepper_and_error_stepper_fsal_base &b )
-    {
-    	boost::numeric::odeint::copy( b.m_dxdt , m_dxdt );
-    	m_first_call = true;
-		return *this;
-    }
-*/
+	{ }
 
 
     /*
@@ -252,14 +223,23 @@ public:
 	}
 
 
-
-
 	template< class StateIn >
     bool resize( const StateIn &x )
     {
         return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
     }
 
+	template< class StateIn >
+	void adjust_size( const StateIn &x )
+	{
+	    resize( x );
+	}
+
+
+	algebra_type& get_algebra()
+    {
+        return m_algebra;
+    }
 
 private:
 
@@ -302,6 +282,8 @@ private:
 	wrapped_deriv_type m_dxdt;
 	bool m_first_call;
 
+protected:
+	algebra_type m_algebra;
 };
 
 

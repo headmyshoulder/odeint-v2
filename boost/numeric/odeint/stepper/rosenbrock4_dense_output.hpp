@@ -23,12 +23,7 @@ namespace odeint {
 template< class ControlledStepper >
 class rosenbrock4_dense_output
 {
-/*	void initialize_variables( void )
-	{
-		m_state_adjuster.register_state( 0 , m_x1 );
-		m_state_adjuster.register_state( 1 , m_x2 );
-	}
-*/
+
 	void copy_variables( const rosenbrock4_dense_output &rb )
 	{
 		m_stepper = rb.m_stepper;
@@ -71,15 +66,8 @@ public:
 	{ }
 
 	rosenbrock4_dense_output( const rosenbrock4_dense_output &rb )
-	: m_stepper() ,
-	  m_x1() , m_x2() , m_current_state( &m_x1.m_v ) , m_old_state( &m_x1.m_v ) ,
-	  m_t() , m_t_old() , m_dt()
-	{
-//        m_current_state = &m_x1;
-//        m_old_state = &m_x2;
-//		initialize_variables();
-//		copy_variables( rb );
-	}
+	: m_current_state( &m_x1.m_v ) , m_old_state( &m_x1.m_v )
+	{ }
 
 	rosenbrock4_dense_output& operator=( const rosenbrock4_dense_output &rb )
 	{

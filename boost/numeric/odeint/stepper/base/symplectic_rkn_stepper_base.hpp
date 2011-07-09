@@ -11,10 +11,6 @@
 #include <boost/ref.hpp>
 #include <boost/array.hpp>
 
-//#include <boost/numeric/odeint/util/size_adjuster.hpp>
-//#include <boost/numeric/odeint/util/construct.hpp>
-//#include <boost/numeric/odeint/util/destruct.hpp>
-
 #include <boost/numeric/odeint/util/copy.hpp>
 #include <boost/numeric/odeint/util/is_pair.hpp>
 
@@ -48,21 +44,7 @@ template<
 	>
 class symplectic_nystroem_stepper_base
 {
-/*
-	void initialize( void )
-	{
-		boost::numeric::odeint::construct( m_dqdt );
-		boost::numeric::odeint::construct( m_dpdt );
-		m_coor_deriv_adjuster.register_state( 0 , m_dqdt );
-		m_momentum_deriv_adjuster.register_state( 0 , m_dpdt );
-	}
 
-	void copy( const symplectic_nystroem_stepper_base &b )
-	{
-		boost::numeric::odeint::copy( b.m_dqdt , m_dqdt );
-		boost::numeric::odeint::copy( b.m_dpdt , m_dpdt );
-	}
-*/
 public:
 
 	const static size_t num_of_stages = NumOfStages;
@@ -88,34 +70,7 @@ public:
 
 	symplectic_nystroem_stepper_base( const coef_type &coef_a , const coef_type &coef_b )
 	: m_coef_a( coef_a ) , m_coef_b( coef_b )
-	  //m_coor_deriv_adjuster() , m_momentum_deriv_adjuster() ,
-	  //m_dqdt() , m_dpdt()
-	{
-		//initialize();
-	}
-/*
-	symplectic_nystroem_stepper_base( const symplectic_nystroem_stepper_base &b )
-	: m_coef_a( b.m_coef_a ) , m_coef_b( b.m_coef_b ) ,
-	  m_coor_deriv_adjuster() , m_momentum_deriv_adjuster(),
-	  m_dqdt() , m_dpdt()
-	{
-		initialize();
-		copy( b );
-	}
-
-	~symplectic_nystroem_stepper_base( void )
-	{
-		boost::numeric::odeint::destruct( m_dqdt );
-		boost::numeric::odeint::destruct( m_dpdt );
-	}
-
-	symplectic_nystroem_stepper_base& operator=( const symplectic_nystroem_stepper_base &b )
-	{
-		copy( b );
-		return *this;
-	}
-
-*/
+	{ }
 
 	/*
 	 * Version 1 : do_step( system , x , t , dt )
@@ -192,6 +147,11 @@ public:
 		resize_dpdt( x );
 	}
 
+	algebra_type& get_algebra()
+    {
+        return m_algebra;
+    }
+
 	const coef_type& coef_a( void ) const { return m_coef_a; }
 	const coef_type& coef_b( void ) const { return m_coef_b; }
 
@@ -232,19 +192,19 @@ private:
 			if( l == 0 )
 			{
 				coor_func( momentum_in , m_dqdt.m_v );
-				algebra_type::for_each3( coor_out , coor_in , m_dqdt.m_v ,
+				m_algebra.for_each3( coor_out , coor_in , m_dqdt.m_v ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_a[l] * dt ) );
 				momentum_func( coor_out , m_dpdt.m_v );
-				algebra_type::for_each3( momentum_out , momentum_in , m_dpdt.m_v ,
+				m_algebra.for_each3( momentum_out , momentum_in , m_dpdt.m_v ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[l] * dt ) );
 			}
 			else
 			{
 				coor_func( momentum_out , m_dqdt.m_v );
-				algebra_type::for_each3( coor_out , coor_out , m_dqdt.m_v ,
+				m_algebra.for_each3( coor_out , coor_out , m_dqdt.m_v ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_a[l] * dt ) );
 				momentum_func( coor_out , m_dpdt.m_v );
-				algebra_type::for_each3( momentum_out , momentum_out , m_dpdt.m_v ,
+				m_algebra.for_each3( momentum_out , momentum_out , m_dpdt.m_v ,
 					typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[l] * dt ) );
 			}
 		}
@@ -284,18 +244,18 @@ private:
         {
             if( l == 0 )
             {
-                algebra_type::for_each3( coor_out  , coor_in , momentum_in ,
+                m_algebra.for_each3( coor_out  , coor_in , momentum_in ,
                     typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_a[l] * dt ) );
                 momentum_func( coor_out , m_dqdt.m_v );
-                algebra_type::for_each3( momentum_out , momentum_in , m_dqdt.m_v ,
+                m_algebra.for_each3( momentum_out , momentum_in , m_dqdt.m_v ,
                     typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[l] * dt ) );
             }
             else
             {
-                algebra_type::for_each3( coor_out , coor_out , momentum_out ,
+                m_algebra.for_each3( coor_out , coor_out , momentum_out ,
                     typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_a[l] * dt ) );
                 momentum_func( coor_out , m_dqdt.m_v );
-                algebra_type::for_each3( momentum_out , momentum_out , m_dqdt.m_v ,
+                m_algebra.for_each3( momentum_out , momentum_out , m_dqdt.m_v ,
                     typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[l] * dt ) );
             }
         }
@@ -308,6 +268,9 @@ private:
 	resizer_type m_dpdt_resizer;
 	wrapped_coor_deriv_type m_dqdt;
 	wrapped_momentum_deriv_type m_dpdt;
+
+protected:
+	algebra_type m_algebra;
 };
 
 } // namespace odeint

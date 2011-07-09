@@ -16,11 +16,6 @@
 #include <boost/ref.hpp>
 #include <boost/bind.hpp>
 
-//#include <boost/numeric/odeint/util/size_adjuster.hpp>
-//#include <boost/numeric/odeint/util/construct.hpp>
-//#include <boost/numeric/odeint/util/destruct.hpp>
-//#include <boost/numeric/odeint/util/copy.hpp>
-
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 
@@ -72,8 +67,7 @@ public:
 	static const order_type stepper_order_value = StepperOrder;
 	static const order_type error_order_value = ErrorOrder;
 
-
-
+//	explicit_stepper_and_error_stepper_base( const algebra_type &algebra ) : m_algebra( algebra ) { }
 
     order_type order( void ) const
     {
@@ -90,33 +84,6 @@ public:
     	return error_order_value;
     }
 
-
-
-
-/*	explicit_stepper_and_error_stepper_base( void ) : m_size_adjuster() , m_dxdt()
-	{
-		boost::numeric::odeint::construct( m_dxdt );
-		m_size_adjuster.register_state( 0 , m_dxdt );
-	}
-
-	~explicit_stepper_and_error_stepper_base( void )
-	{
-		boost::numeric::odeint::destruct( m_dxdt );
-	}
-
-	explicit_stepper_and_error_stepper_base( const explicit_stepper_and_error_stepper_base &b ) : m_size_adjuster() , m_dxdt()
-	{
-		boost::numeric::odeint::construct( m_dxdt );
-		m_size_adjuster.register_state( 0 , m_dxdt );
-		boost::numeric::odeint::copy( b.m_dxdt , m_dxdt );
-	}
-
-	explicit_stepper_and_error_stepper_base& operator=( const explicit_stepper_and_error_stepper_base &b )
-	{
-		boost::numeric::odeint::copy( b.m_dxdt , m_dxdt );
-		return *this;
-	}
-*/
 
 
 	/*
@@ -240,6 +207,19 @@ public:
         return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
     }
 
+
+	template< class StateIn >
+    void adjust_size( const StateIn &x )
+    {
+        resize( x );
+    }
+
+
+    algebra_type& get_algebra()
+    {
+        return m_algebra;
+    }
+
 private:
 
 	template< class System , class StateInOut >
@@ -273,6 +253,9 @@ private:
 
 	resizer_type m_resizer;
 	wrapped_deriv_type m_dxdt;
+
+protected:
+	algebra_type m_algebra;
 
 };
 

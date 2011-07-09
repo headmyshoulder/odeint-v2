@@ -35,14 +35,14 @@ namespace odeint {
 struct fusion_algebra
 {
 	template< class S1 , class Op >
-	static void for_each1( S1 &s1 , Op op )
+	void for_each1( S1 &s1 , Op op )
 	{
 		boost::fusion::for_each( s1 , op );
 	};
 
 
 	template< class S1 , class S2 , class Op >
-	static void for_each2( S1 &s1 , S2 &s2 , Op op )
+	void for_each2( S1 &s1 , S2 &s2 , Op op )
 	{
 		typedef boost::fusion::vector< S1& , S2& > Sequences;
 		Sequences sequences( s1 , s2 );
@@ -51,7 +51,7 @@ struct fusion_algebra
 
 
 	template< class S1 , class S2 , class S3 , class Op >
-	static void for_each3( S1 &s1 , S2 &s2 , S3 &s3 , Op op )
+	void for_each3( S1 &s1 , S2 &s2 , S3 &s3 , Op op )
 	{
 		typedef boost::fusion::vector< S1& , S2& , S3& > Sequences;
 		Sequences sequences( s1 , s2 , s3 );
@@ -59,7 +59,7 @@ struct fusion_algebra
 	}
 
 	template< class S1 , class S2 , class S3 , class S4 , class Op >
-	static void for_each4( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , Op op )
+	void for_each4( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , Op op )
 	{
 		typedef boost::fusion::vector< S1& , S2& , S3& , S4& > Sequences;
 		Sequences sequences( s1 , s2 , s3 , s4 );
@@ -68,7 +68,7 @@ struct fusion_algebra
 
 
 	template< class S1 , class S2 , class S3 , class S4 , class S5 , class Op >
-	static void for_each5( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , S5 &s5 , Op op )
+	void for_each5( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , S5 &s5 , Op op )
 	{
 		typedef boost::fusion::vector< S1& , S2& , S3& , S4& , S5& > Sequences;
 		Sequences sequences( s1 , s2 , s3 , s4 , s5 );
@@ -77,7 +77,7 @@ struct fusion_algebra
 
 
 	template< class S1 , class S2 , class S3 , class S4 , class S5 , class S6 , class Op >
-	static void for_each6( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , S5 &s5 , S6 &s6 , Op op )
+	void for_each6( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , S5 &s5 , S6 &s6 , Op op )
 	{
 		typedef boost::fusion::vector< S1& , S2& , S3& , S4& , S5& , S6& > Sequences;
 		Sequences sequences( s1 , s2 , s3 , s4 , s5 , s6 );
@@ -86,7 +86,7 @@ struct fusion_algebra
 
 
 	template< class S1 , class S2 , class S3 , class S4 , class S5 , class S6 , class S7 , class Op >
-	static void for_each7( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , S5 &s5 , S6 &s6 , S7 &s7 , Op op )
+	void for_each7( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , S5 &s5 , S6 &s6 , S7 &s7 , Op op )
 	{
 		typedef boost::fusion::vector< S1& , S2& , S3& , S4& , S5& , S6& , S7& > Sequences;
 		Sequences sequences( s1 , s2 , s3 , s4 , s5 , s6 , s7 );
@@ -95,7 +95,7 @@ struct fusion_algebra
 
 
 	template< class S1 , class S2 , class S3 , class S4 , class S5 , class S6 , class S7 , class S8 , class Op >
-	static void for_each8( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , S5 &s5 , S6 &s6 , S7 &s7 , S8 &s8 , Op op )
+	void for_each8( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , S5 &s5 , S6 &s6 , S7 &s7 , S8 &s8 , Op op )
 	{
 		typedef boost::fusion::vector< S1& , S2& , S3& , S4& , S5& , S6& , S7& , S8& > Sequences;
 		Sequences sequences( s1 , s2 , s3 , s4 , s5 , s6 , s7 , s8 );
@@ -104,7 +104,7 @@ struct fusion_algebra
 
 
 	template< class Value , class S , class Reduction >
-	static Value reduce( const S &s , Reduction red , Value init)
+	Value reduce( const S &s , Reduction red , Value init)
 	{
 		return boost::fusion::accumulate( s , init , red );
 	}

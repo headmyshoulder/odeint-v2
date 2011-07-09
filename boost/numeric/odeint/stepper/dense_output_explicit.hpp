@@ -10,9 +10,6 @@
 
 #include <utility>
 
-//#include <boost/numeric/odeint/util/size_adjuster.hpp>
-//#include <boost/numeric/odeint/util/construct.hpp>
-//#include <boost/numeric/odeint/util/destruct.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
 
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
@@ -31,17 +28,10 @@ template
 >
 class dense_output_explicit
 {
+
 private:
 
-/*	void initialize_variables( void )
-	{
-		boost::numeric::odeint::construct( m_x1 );
-		boost::numeric::odeint::construct( m_x2 );
-		m_size_adjuster.register_state( 0 , m_x1 );
-		m_size_adjuster.register_state( 1 , m_x2 );
-	}
-*/
-	void copy_variables( const dense_output_explicit &dense_output )
+    void copy_variables( const dense_output_explicit &dense_output )
 	{
 		m_stepper = dense_output.m_stepper;
 		boost::numeric::odeint::copy( dense_output.m_x1.m_v , m_x1.m_v );
@@ -83,30 +73,15 @@ public:
 
 	dense_output_explicit( const stepper_type &stepper = stepper_type() )
 	: m_stepper( stepper ) ,
-	  //m_size_adjuster() ,
-	  m_x1() , m_x2() ,
-	  m_current_state( &m_x1.m_v ) , m_old_state( &m_x2.m_v ) ,
-	  m_t() , m_t_old() , m_dt()
-	{
-		//initialize_variables();
-	}
+	  m_current_state( &m_x1.m_v ) , m_old_state( &m_x2.m_v )
+	{ }
 
-	/*
-	~dense_output_explicit( void )
-	{
-		boost::numeric::odeint::destruct( m_x1 );
-		boost::numeric::odeint::destruct( m_x2 );
-	}
-	*/
 
 	dense_output_explicit( const dense_output_explicit &dense_output )
 	: m_stepper( dense_output.m_stepper ) ,
-	  //m_size_adjuster() ,
-	  m_x1() , m_x2() ,
 	  m_current_state( &m_x1.m_v ) , m_old_state( &m_x2.m_v ) ,
 	  m_t( 0.0 ) , m_t_old( 0.0 ) , m_dt( 1.0 )
 	{
-		//initialize_variables();
 		copy_variables( dense_output );
 	}
 

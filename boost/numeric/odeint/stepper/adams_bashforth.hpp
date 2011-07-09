@@ -48,18 +48,6 @@ class adams_bashforth
 {
 private:
 
-/*	void initialize( void )
-	{
-		for( size_t i=0 ; i<steps ; ++i )
-			m_size_adjuster.register_state( i , m_step_storage[i] );
-	}
-
-	void copy( const adams_bashforth &stepper )
-	{
-		m_step_storage = stepper.m_step_storage;
-	}
-*/
-
 public :
 
 	typedef State state_type;
@@ -85,21 +73,6 @@ public :
 
 	order_type order( void ) const { return order_value; }
 
-
-
-	adams_bashforth( void )
-	: m_step_storage() , m_coefficients()
-	{
-		//initialize();
-	}
-/*
-	adams_bashforth( const adams_bashforth &stepper )
-	: m_step_storage()  , m_coefficients()
-	{
-		//initialize();
-		copy( stepper );
-	}
-*/
 	adams_bashforth& operator=( const adams_bashforth &stepper )
 	{
 		m_step_storage = stepper.m_step_storage;
@@ -138,7 +111,7 @@ public :
 		m_resizer.adjust_size( in , boost::bind( &stepper_type::resize<StateIn> , boost::ref( *this ) , _1 ) );
 		m_step_storage.rotate();
 		sys( in , m_step_storage[0].m_v , t );
-		detail::adams_bashforth_call_algebra< steps , algebra_type , operations_type >()( in , out , m_step_storage , m_coefficients , dt );
+		detail::adams_bashforth_call_algebra< steps , algebra_type , operations_type >()( m_algebra , in , out , m_step_storage , m_coefficients , dt );
 	}
 
 	template< class System , class StateIn , class StateOut >
@@ -148,7 +121,7 @@ public :
 		m_resizer.adjust_size( in , boost::bind( &stepper_type::resize<StateIn> , boost::ref( *this ) , _1 ) );
 		m_step_storage.rotate();
 		sys( in , m_step_storage[0].m_v , t );
-		detail::adams_bashforth_call_algebra< steps , algebra_type , operations_type >()( in , out , m_step_storage , m_coefficients , dt );
+		detail::adams_bashforth_call_algebra< steps , algebra_type , operations_type >()( m_algebra , in , out , m_step_storage , m_coefficients , dt );
 	}
 
 
@@ -225,6 +198,11 @@ public :
         resize( x );
 	}
 
+    algebra_type& get_algebra()
+    {
+        return m_algebra;
+    }
+
 	const step_storage_type& step_storage( void ) const
 	{
 		return m_step_storage;
@@ -255,6 +233,9 @@ public :
 	template< class System , class StateIn >
 	void initialize( System system , StateIn &x , time_type &t , const time_type &dt )
 	{
+	    /**
+	     * ToDo: rk4 here has its own algebra instance! good? bad?
+	     */
 		explicit_rk4< state_type , value_type , deriv_type , time_type , algebra_type , operations_type , resizer_type > rk4;
 		initialize( boost::ref( rk4 ) , system , x , t , dt );
 	}
@@ -265,6 +246,9 @@ private:
 	step_storage_type m_step_storage;
 	resizer_type m_resizer;
 	const detail::adams_bashforth_coefficients< value_type , steps > m_coefficients;
+
+protected:
+	algebra_type m_algebra;
 };
 
 

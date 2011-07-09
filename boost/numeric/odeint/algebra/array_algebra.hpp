@@ -22,7 +22,7 @@ namespace odeint {
 struct array_algebra
 {
     template< typename T , size_t dim , class Op >
-    static void for_each1( boost::array< T , dim > &s1 , Op op )
+    void for_each1( boost::array< T , dim > &s1 , Op op )
     {
         for( size_t i=0 ; i<dim ; ++i )
             op( s1[i] );
@@ -30,7 +30,7 @@ struct array_algebra
 
 
     template< typename T , size_t dim , class Op >
-    static void for_each2( boost::array< T , dim > &s1 ,
+    void for_each2( boost::array< T , dim > &s1 ,
                               const boost::array< T , dim > &s2 , Op op )
     {
         for( size_t i=0 ; i<dim ; ++i )
@@ -38,7 +38,7 @@ struct array_algebra
     }
 
     template< typename T , size_t dim , class Op >
-    static void for_each3( boost::array< T , dim > &s1 ,
+    void for_each3( boost::array< T , dim > &s1 ,
                              const boost::array< T , dim > &s2 ,
                              const boost::array< T , dim > &s3 , Op op )
     {
@@ -47,7 +47,7 @@ struct array_algebra
     }
 
     template< typename T , size_t dim , class Op >
-    static void for_each4( boost::array< T , dim > &s1 ,
+    void for_each4( boost::array< T , dim > &s1 ,
                               const boost::array< T , dim > &s2 ,
                               const boost::array< T , dim > &s3 ,
                               const boost::array< T , dim > &s4 , Op op )
@@ -57,7 +57,7 @@ struct array_algebra
     }
 
     template< typename T , size_t dim , class Op >
-    static void for_each5( boost::array< T , dim > &s1 ,
+    void for_each5( boost::array< T , dim > &s1 ,
                               const boost::array< T , dim > &s2 ,
                               const boost::array< T , dim > &s3 ,
                               const boost::array< T , dim > &s4 ,
@@ -68,7 +68,7 @@ struct array_algebra
     }
 
     template< typename T , size_t dim , class Op >
-    static void for_each6( boost::array< T , dim > &s1 ,
+    void for_each6( boost::array< T , dim > &s1 ,
                               const boost::array< T , dim > &s2 ,
                               const boost::array< T , dim > &s3 ,
                               const boost::array< T , dim > &s4 ,
@@ -80,7 +80,7 @@ struct array_algebra
     }
 
     template< typename T , size_t dim , class Op >
-    static void for_each7( boost::array< T , dim > &s1 ,
+    void for_each7( boost::array< T , dim > &s1 ,
                               const boost::array< T , dim > &s2 ,
                               const boost::array< T , dim > &s3 ,
                               const boost::array< T , dim > &s4 ,

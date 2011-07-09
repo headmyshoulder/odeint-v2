@@ -18,10 +18,6 @@
 #include <boost/ref.hpp>
 #include <boost/bind.hpp>
 
-//#include <boost/numeric/odeint/util/size_adjuster.hpp>
-//#include <boost/numeric/odeint/util/construct.hpp>
-//#include <boost/numeric/odeint/util/destruct.hpp>
-//#include <boost/numeric/odeint/util/copy.hpp>
 
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
@@ -71,25 +67,12 @@ public:
 	static const order_type order_value = Order;
 
 
+//	explicit_stepper_base( const algebra_type &algebra ) : m_algebra( algebra ) { }
+
 	order_type order( void ) const
     {
     	return order_value;
     }
-
-/*
-	explicit_stepper_base( void ) : m_dxdt()
-	{ }
-
-	explicit_stepper_base( const explicit_stepper_base &b ) : m_dxdt( b.m_dxdt )
-	{ }
-
-	explicit_stepper_base& operator=( const explicit_stepper_base &b )
-	{
-		boost::numeric::odeint::copy( b.m_dxdt.m_v , m_dxdt.m_v );
-
-		return *this;
-	}
-*/
 
 
 	/*
@@ -154,6 +137,11 @@ public:
 	    return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
 	}
 
+	algebra_type& get_algebra()
+	{
+	    return m_algebra;
+	}
+
 
 private:
 
@@ -181,6 +169,7 @@ protected:
 
 	resizer_type m_resizer;
 	wrapped_deriv_type m_dxdt;
+	algebra_type m_algebra;
 };
 
 

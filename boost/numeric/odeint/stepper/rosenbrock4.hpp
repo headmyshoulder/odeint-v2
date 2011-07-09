@@ -18,9 +18,6 @@
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
-//#include <boost/numeric/odeint/util/size_adjuster.hpp>
-//#include <boost/numeric/odeint/util/ublas_resize.hpp>
-
 #include <boost/numeric/odeint/util/ublas_wrapper.hpp>
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
@@ -89,42 +86,6 @@ class rosenbrock4
 {
 private:
 
-/*	void initialize( void )
-	{
-		m_matrix_adjuster.register_state( 0 , m_jac );
-
-		m_pmatrix_adjuster.register_state( 0 , m_pm );
-
-		m_state_adjuster.register_state( 0 , m_dfdt );
-		m_state_adjuster.register_state( 1 , m_dxdt );
-		m_state_adjuster.register_state( 2 , m_g1 );
-		m_state_adjuster.register_state( 3 , m_g2 );
-		m_state_adjuster.register_state( 4 , m_g3 );
-		m_state_adjuster.register_state( 5 , m_g4 );
-		m_state_adjuster.register_state( 6 , m_g5 );
-		m_state_adjuster.register_state( 7 , m_cont3 );
-		m_state_adjuster.register_state( 8 , m_cont4 );
-		m_state_adjuster.register_state( 9 , m_xtmp );
-		m_state_adjuster.register_state( 10 , m_dxdtnew );
-	}
-
-	void copy( const rosenbrock4 &rb )
-	{
-		m_jac = rb.m_jac;
-		m_pm = rb.m_pm;
-		m_dfdt =rb.m_dfdt;
-		m_dxdt = rb.m_dxdt;
-		m_g1 = rb.m_g1;
-		m_g2 = rb.m_g2;
-		m_g3 = rb.m_g3;
-		m_g4 = rb.m_g4;
-		m_g5 = rb.m_g5;
-		m_cont3 = rb.m_cont3;
-		m_cont4 = rb.m_cont4;
-		m_xtmp = rb.m_xtmp;
-		m_dxdtnew = rb.m_dxdtnew;
-	}
-*/
 public:
 
 	typedef Value value_type;
@@ -148,17 +109,8 @@ public:
 
 	rosenbrock4( const rosenbrock4 &rb )
 	: m_coef()
-	{
-//		initialize();
-//		copy( rb );
-	}
-/*
-	rosenbrock4& operator=( const rosenbrock4 &rb )
-	{
-		copy( rb );
-		return *this;
-	}
-*/
+	{ }
+
 	template< class System >
 	void do_step( System system , const state_type &x , time_type t , state_type &xout , time_type dt , state_type &xerr )
 	{
@@ -171,11 +123,6 @@ public:
     	jacobi_func_type &jacobi_func = sys.second;
 
     	const size_t n = x.size();
-
-    	// adjust size
-//		m_matrix_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
-//		m_pmatrix_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
-//		m_state_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
 
 		m_resizer.adjust_size( x , boost::bind( &stepper_type::resize<state_type> , boost::ref( *this ) , _1 ) );
 

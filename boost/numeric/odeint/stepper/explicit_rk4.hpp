@@ -42,26 +42,6 @@ class explicit_rk4
 	  explicit_rk4< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
 	  4 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
 {
-/*	void initialize( void )
-	{
-		boost::numeric::odeint::construct( m_dxt );
-		boost::numeric::odeint::construct( m_dxm );
-		boost::numeric::odeint::construct( m_dxh );
-		boost::numeric::odeint::construct( m_x_tmp );
-		m_deriv_adjuster.register_state( 0 , m_dxt );
-		m_deriv_adjuster.register_state( 1 , m_dxm );
-		m_deriv_adjuster.register_state( 2 , m_dxh );
-		m_state_adjuster.register_state( 0 , m_x_tmp );
-	}
-
-	void copy( const explicit_rk4 &rk )
-	{
-		boost::numeric::odeint::copy( rk.m_dxt , m_dxt );
-		boost::numeric::odeint::copy( rk.m_dxm , m_dxm );
-		boost::numeric::odeint::copy( rk.m_dxh , m_dxh );
-		boost::numeric::odeint::copy( rk.m_x_tmp , m_x_tmp );
-	}
-	*/
 
 public :
 
@@ -70,35 +50,6 @@ public :
 
 	typedef explicit_rk4< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
 
-/*
-	explicit_rk4( void )
-	: stepper_base_type() , m_deriv_adjuster() , m_state_adjuster() , m_dxt() , m_dxm() , m_dxh() , m_x_tmp()
-	{
-		initialize();
-	}
-
-	~explicit_rk4( void )
-	{
-		boost::numeric::odeint::destruct( m_dxt );
-		boost::numeric::odeint::destruct( m_dxm );
-		boost::numeric::odeint::destruct( m_dxh );
-		boost::numeric::odeint::destruct( m_x_tmp );
-	}
-
-	explicit_rk4( const explicit_rk4 &rk )
-	: stepper_base_type( rk ) , m_deriv_adjuster() , m_state_adjuster() , m_dxt() , m_dxm() , m_dxh() , m_x_tmp()
-	{
-		initialize();
-		copy( rk );
-	}
-
-	explicit_rk4& operator=( const explicit_rk4 &rk )
-	{
-		stepper_base_type::operator=( rk );
-		copy( rk );
-		return *this;
-	}
-*/
 
 	template< class System , class StateIn , class DerivIn , class StateOut >
 	void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt )
@@ -116,7 +67,7 @@ public :
 
         // dt * dxdt = k1
         // m_x_tmp = x + dh*dxdt
-        algebra_type::for_each3( m_x_tmp.m_v , in , dxdt ,
+        stepper_base_type::m_algebra.for_each3( m_x_tmp.m_v , in , dxdt ,
         		typename operations_type::template scale_sum2< value_type , time_type >( val1 , dh ) );
 
 
@@ -124,14 +75,14 @@ public :
         sys( m_x_tmp.m_v , m_dxt.m_v , th );
 
         // m_x_tmp = x + dh*m_dxt
-        algebra_type::for_each3( m_x_tmp.m_v , in , m_dxt.m_v ,
+        stepper_base_type::m_algebra.for_each3( m_x_tmp.m_v , in , m_dxt.m_v ,
         		typename operations_type::template scale_sum2< value_type , time_type >( val1 , dh ) );
 
 
         // dt * m_dxm = k3
         sys( m_x_tmp.m_v , m_dxm.m_v , th );
         //m_x_tmp = x + dt*m_dxm
-        algebra_type::for_each3( m_x_tmp.m_v , in , m_dxm.m_v ,
+        stepper_base_type::m_algebra.for_each3( m_x_tmp.m_v , in , m_dxm.m_v ,
         		typename operations_type::template scale_sum2< value_type , time_type >( val1 , dt ) );
 
 
@@ -140,7 +91,7 @@ public :
         //x += dt/6 * ( m_dxdt + m_dxt + val2*m_dxm )
         time_type dt6 = dt / static_cast< value_type >( 6.0 );
         time_type dt3 = dt / static_cast< value_type >( 3.0 );
-        algebra_type::for_each6( out , in , dxdt , m_dxt.m_v , m_dxm.m_v , m_dxh.m_v ,
+        stepper_base_type::m_algebra.for_each6( out , in , dxdt , m_dxt.m_v , m_dxm.m_v , m_dxh.m_v ,
         		typename operations_type::template scale_sum5< value_type , time_type , time_type , time_type , time_type >( 1.0 , dt6 , dt3 , dt3 , dt6 ) );
 	}
 
