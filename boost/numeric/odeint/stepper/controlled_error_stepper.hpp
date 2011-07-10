@@ -109,7 +109,7 @@ template<
     class Resizer = typename ErrorStepper::resizer_type ,
     class ErrorStepperCategory = typename ErrorStepper::stepper_category
 >
-class controlled_error_stepper { };
+class controlled_error_stepper ;
 
 
 
