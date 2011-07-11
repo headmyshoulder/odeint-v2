@@ -14,7 +14,7 @@
 
 #include <gsl/gsl_vector.h>
 #include <boost/numeric/odeint/stepper/explicit_euler.hpp>
-#include <boost/numeric/odeint/external/gsl/gsl_vector_adaptor.hpp>
+#include <boost/numeric/odeint/external/gsl/gsl_wrapper.hpp>
 
 #include <boost/test/unit_test.hpp>
 

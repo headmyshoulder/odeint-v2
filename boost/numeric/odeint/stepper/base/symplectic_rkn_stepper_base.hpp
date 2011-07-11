@@ -9,6 +9,7 @@
 #define BOOST_NUMERIC_ODEINT_STEPPER_SYMPLECTIC_NYSTROEM_STEPPER_BASE_HPP_INCLUDED
 
 #include <boost/ref.hpp>
+#include <boost/bind.hpp>
 #include <boost/array.hpp>
 
 #include <boost/numeric/odeint/util/copy.hpp>
@@ -69,8 +70,23 @@ public:
 	typedef boost::array< value_type , num_of_stages > coef_type;
 
 	symplectic_nystroem_stepper_base( const coef_type &coef_a , const coef_type &coef_b )
-	: m_coef_a( coef_a ) , m_coef_b( coef_b )
+	    : m_coef_a( coef_a ) , m_coef_b( coef_b )
 	{ }
+
+	symplectic_nystroem_stepper_base( const symplectic_nystroem_stepper_base &stepper )
+	: m_coef_a( stepper.m_coef_a ) , m_coef_b( stepper.m_coef_b ) ,
+	  m_dqdt_resizer( stepper.m_dqdt_resizer ) , m_dpdt_resizer( stepper.m_dpdt_resizer ) ,
+	  m_dqdt( stepper.m_dqdt ) , m_dpdt( stepper.m_dpdt )
+    { }
+
+	symplectic_nystroem_stepper_base& operator = ( const symplectic_nystroem_stepper_base &stepper )
+	{
+	    m_dqdt_resizer = stepper.m_dqdt_resizer;
+	    m_dpdt_resizer = stepper.m_dpdt_resizer;
+	    m_dqdt = stepper.m_dqdt;
+	    m_dpdt = stepper.m_dpdt;
+	    return *this;
+	}
 
 	/*
 	 * Version 1 : do_step( system , x , t , dt )

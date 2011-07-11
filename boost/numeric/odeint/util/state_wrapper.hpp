@@ -34,17 +34,11 @@ struct state_wrapper< V , boost::true_type > // with resizing
     state_wrapper() : m_v()
     { }
 
-    state_wrapper( V v ) : m_v( v )
-    { }
-
     state_wrapper( const state_wrapper_type &x ) : m_v( x.m_v )
     { }
 
-    state_wrapper_type& operator=( state_wrapper_type &x )
-    {
-        m_v = x.m_v;
-        return *this;
-    }
+    state_wrapper( V v ) : m_v( v )
+    { }
 
     template< class StateIn >
     bool same_size( const StateIn &x ) const
