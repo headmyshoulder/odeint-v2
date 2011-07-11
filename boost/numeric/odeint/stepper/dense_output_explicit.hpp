@@ -31,11 +31,8 @@ class dense_output_explicit
 
 private:
 
-    void copy_variables( const dense_output_explicit &dense_output )
+    void copy_pointers( const dense_output_explicit &dense_output )
 	{
-		m_stepper = dense_output.m_stepper;
-		boost::numeric::odeint::copy( dense_output.m_x1.m_v , m_x1.m_v );
-		boost::numeric::odeint::copy( dense_output.m_x2.m_v , m_x2.m_v );
 		if( dense_output.m_current_state == (&dense_output.m_x1.m_v ) )
 		{
 			m_current_state = &m_x1.m_v;
@@ -46,9 +43,6 @@ private:
 			m_current_state = &m_x2.m_v;
 			m_old_state = &m_x1.m_v;
 		}
-		m_t = dense_output.m_t;
-		m_t_old = dense_output.m_t_old;
-		m_dt = dense_output.m_dt;
 	}
 
 public:
@@ -78,16 +72,22 @@ public:
 
 
 	dense_output_explicit( const dense_output_explicit &dense_output )
-	: m_stepper( dense_output.m_stepper ) ,
+        : m_stepper( dense_output.m_stepper ) , m_x1( dense_output.m_x1 ) , m_x2( dense_output.m_x2 ) ,
 	  m_current_state( &m_x1.m_v ) , m_old_state( &m_x2.m_v ) ,
-	  m_t( 0.0 ) , m_t_old( 0.0 ) , m_dt( 1.0 )
+	  m_t( dense_output.m_t ) , m_t_old( dense_output.m_t_old ) , m_dt( dense_output.m_dt )
 	{
-		copy_variables( dense_output );
+		copy_pointers( dense_output );
 	}
 
 	dense_output_explicit& operator=( const dense_output_explicit &dense_output )
 	{
-		copy_variables( dense_output );
+        m_stepper = dense_output.m_stepper;
+        m_x1 = dense_output.m_x1;
+        m_x2 = dense_output.m_x2;
+        m_t = dense_output.m_t;
+        m_t_old = dense_output.m_t_old;
+        m_dt = dense_output.m_dt;
+		copy_pointers( dense_output );
 		return *this;
 	}
 

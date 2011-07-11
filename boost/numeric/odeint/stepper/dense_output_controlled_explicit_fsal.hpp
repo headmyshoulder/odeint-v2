@@ -35,13 +35,8 @@ class dense_output_controlled_explicit_fsal
 {
 private:
 
-    void copy_variables( const dense_output_controlled_explicit_fsal &dense_output )
+    void copy_pointers( const dense_output_controlled_explicit_fsal &dense_output )
 	{
-		m_stepper = dense_output.m_stepper;
-		boost::numeric::odeint::copy( dense_output.m_x1.m_v , m_x1.m_v );
-		boost::numeric::odeint::copy( dense_output.m_x2.m_v , m_x2.m_v );
-		boost::numeric::odeint::copy( dense_output.m_dxdt1.m_v , m_dxdt1.m_v );
-		boost::numeric::odeint::copy( dense_output.m_dxdt2.m_v , m_dxdt2.m_v );
 		if( dense_output.m_current_state == (&dense_output.m_x1.m_v ) )
 		{
 			m_current_state = &m_x1.m_v;
@@ -62,10 +57,6 @@ private:
 			m_current_deriv = &m_dxdt2.m_v;
 			m_old_deriv = &m_dxdt1.m_v;
 		}
-		m_t = dense_output.m_t;
-		m_t_old = dense_output.m_t_old;
-		m_dt = dense_output.m_dt;
-		m_is_deriv_initialized = dense_output.m_is_deriv_initialized;
 	}
 
 public:
@@ -91,22 +82,24 @@ public:
 	dense_output_controlled_explicit_fsal( const controlled_stepper_type &stepper = controlled_stepper_type() )
 	: m_stepper( stepper ) ,
 	  m_current_state( &m_x1.m_v ) , m_old_state( &m_x2.m_v ) ,
-	  m_dxdt1() , m_dxdt2() , m_current_deriv( &m_dxdt1.m_v ) , m_old_deriv( &m_dxdt2.m_v ) ,
+	  m_current_deriv( &m_dxdt1.m_v ) , m_old_deriv( &m_dxdt2.m_v ) ,
 	  m_is_deriv_initialized( false )
 	{ }
 
 	dense_output_controlled_explicit_fsal( const dense_output_controlled_explicit_fsal &dense_output )
-	: m_stepper( dense_output.m_stepper ) ,
+	: m_stepper( dense_output.m_stepper ) , 
+      m_x1( dense_output.m_x1 ) , m_x2( dense_output.m_x2 ) ,
+      m_dxdt1( dense_output.m_dxdt1 ) , m_dxdt2( dense_output.m_dxdt2 ) ,
 	  m_current_state( &m_x1.m_v ) , m_old_state( &m_x2.m_v ) ,
 	  m_current_deriv( &m_dxdt1.m_v ) , m_old_deriv( &m_dxdt2.m_v ) ,
-	  m_t( 0.0 ) , m_t_old( 0.0 ) , m_dt( 1.0 ) , m_is_deriv_initialized( false )
+      m_t( dense_output.m_t ) , m_t_old( dense_output.m_t_old ) , m_dt( dense_output.m_dt ) , m_is_deriv_initialized( dense_output.m_is_deriv_initialized )
 	{
-		copy_variables( dense_output );
+		copy_pointers( dense_output );
 	}
 
 	dense_output_controlled_explicit_fsal& operator=( const dense_output_controlled_explicit_fsal &dense_output )
 	{
-		copy_variables( dense_output );
+		copy_pointers( dense_output );
 		return *this;
 	}
 
