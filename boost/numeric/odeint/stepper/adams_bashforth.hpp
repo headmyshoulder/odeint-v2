@@ -76,7 +76,7 @@ public :
     adams_bashforth( ) { }
 
     adams_bashforth( const adams_bashforth &stepper ) 
-        : m_resizer( stepper.m_resizer ) , m_step_storage( stepper.m_step_storage ) , m_algebra( stepper.m_algebra )
+        : m_step_storage( stepper.m_step_storage ) , m_resizer( stepper.m_resizer ) , m_algebra( stepper.m_algebra )
     { }
 
 	adams_bashforth& operator=( const adams_bashforth &stepper )
