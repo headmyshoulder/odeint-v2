@@ -6,7 +6,7 @@
  */
 
 #include <iostream>
-#include <tr1/array>
+#include <boost/array.hpp>
 
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
@@ -40,7 +40,7 @@ typedef boost::timer timer_type;
 
 
 
-typedef std::tr1::array< double , 1 > container_type;
+typedef boost::array< double , 1 > container_type;
 typedef std::pair< container_type , container_type > state_type;
 
 

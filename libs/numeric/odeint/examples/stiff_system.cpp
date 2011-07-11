@@ -8,7 +8,6 @@
 #include <iostream>
 #include <fstream>
 #include <utility>
-#include <tr1/array>
 
 #include <boost/numeric/odeint.hpp>
 

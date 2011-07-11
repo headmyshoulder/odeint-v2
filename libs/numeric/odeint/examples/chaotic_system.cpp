@@ -10,7 +10,7 @@
  */
 
 #include <iostream>
-#include <tr1/array>
+#include <boost/array.hpp>
 
 #include <boost/numeric/odeint.hpp>
 
@@ -47,8 +47,8 @@ const size_t n = 3;
 const size_t num_of_lyap = 3;
 const size_t N = n + n*num_of_lyap;
 
-typedef std::tr1::array< double , N > state_type;
-typedef std::tr1::array< double , num_of_lyap > lyap_type;
+typedef boost::array< double , N > state_type;
+typedef boost::array< double , num_of_lyap > lyap_type;
 
 void lorenz_with_lyap( const state_type &x , state_type &dxdt , double t )
 {
@@ -95,7 +95,7 @@ int main( int argc , char **argv )
     while( true )
     {
     	t = integrate_n_steps( rk4 , lorenz_with_lyap , x , t , dt , 100 );
-    	gram_schmidt( x , lyap , n , num_of_lyap );
+    	gram_schmidt< num_of_lyap >( x , lyap , n );
     	++count;
 
         if( !(count % 100000) )

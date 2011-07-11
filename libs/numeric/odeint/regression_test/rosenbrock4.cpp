@@ -8,7 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <utility>
-#include <tr1/array>
+#include <boost/array.hpp>
 
 #include <boost/numeric/odeint/stepper/rosenbrock4.hpp>
 #include <boost/numeric/odeint/stepper/rosenbrock4_controller.hpp>
@@ -120,7 +120,7 @@ void test_rosenbrock_stepper_with_lorenz( void )
 
 void rk54_ck_stepper_with_lorenz( void )
 {
-	typedef std::tr1::array< double , 3 > state_type2;
+	typedef boost::array< double , 3 > state_type2;
 	typedef explicit_error_rk54_ck< state_type2 > stepper_type2;
 	stepper_type2 rk_stepper;
 
@@ -229,7 +229,7 @@ void test_dense_output_rosenbrock_with_stiff_system( void )
 
 void rk54_ck_controlled_with_stiff_system( void )
 {
-	typedef std::tr1::array< double , 2 > state_type2;
+	typedef boost::array< double , 2 > state_type2;
 	typedef explicit_error_rk54_ck< state_type2 > stepper_type2;
 	typedef controlled_error_stepper< stepper_type2 > controlled_stepper_type2;
 	controlled_stepper_type2 stepper;
