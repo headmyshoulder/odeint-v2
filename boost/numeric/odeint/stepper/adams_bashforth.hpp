@@ -73,6 +73,13 @@ public :
 
 	order_type order( void ) const { return order_value; }
 
+
+    adams_bashforth( void ) { }
+
+    adams_bashforth( const adams_bashforth &stepper )
+        : m_resizer( stepper.m_resizer ) , m_step_storage( stepper.m_step_storage ) , m_coefficients() , m_algebra( stepper.m_algebra )
+    { }
+
 	adams_bashforth& operator=( const adams_bashforth &stepper )
 	{
         m_resizer = stepper.m_resizer;
