@@ -69,8 +69,8 @@ public:
 
 	typedef boost::array< value_type , num_of_stages > coef_type;
 
-	symplectic_nystroem_stepper_base( const coef_type &coef_a , const coef_type &coef_b )
-	    : m_coef_a( coef_a ) , m_coef_b( coef_b )
+	symplectic_nystroem_stepper_base( const coef_type &coef_a , const coef_type &coef_b , const algebra_type &algebra = algebra_type() )
+	    : m_coef_a( coef_a ) , m_coef_b( coef_b ) , m_algebra( algebra )
 	{ }
 
 	symplectic_nystroem_stepper_base( const symplectic_nystroem_stepper_base &stepper )
@@ -163,10 +163,11 @@ public:
 		resize_dpdt( x );
 	}
 
-	algebra_type& get_algebra()
-    {
-        return m_algebra;
-    }
+	algebra_type& algebra()
+    {   return m_algebra; }
+
+	const algebra_type& algebra() const
+    {   return m_algebra; }
 
 	const coef_type& coef_a( void ) const { return m_coef_a; }
 	const coef_type& coef_b( void ) const { return m_coef_b; }

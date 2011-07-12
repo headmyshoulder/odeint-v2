@@ -152,7 +152,7 @@ public:
         m_resizer.adjust_size( in , boost::bind( &stepper_type::resize< StateIn > , boost::ref( *this ) , _1 ) );
 
         // actual calculation done in generic_rk.hpp
-        m_rk_algorithm.do_step( m_algebra , sys , in , dxdt , t , out , dt , m_x_tmp.m_v , m_F );
+        m_rk_algorithm.do_step( stepper_base_type::m_algebra , sys , in , dxdt , t , out , dt , m_x_tmp.m_v , m_F );
     }
 
     template< class StateIn >
@@ -174,11 +174,6 @@ public:
         stepper_base_type::adjust_size( x );
     }
 
-    algebra_type& get_algebra()
-    {
-        return m_algebra;
-    }
-
     friend std::ostream& operator << <>( std::ostream &os , const explicit_generic_rk &rk );
 
 private:
@@ -189,9 +184,6 @@ private:
 
     wrapped_state_type m_x_tmp;
     wrapped_deriv_type m_F[StageCount-1];
-
-protected:
-    algebra_type m_algebra;
 
 };
 

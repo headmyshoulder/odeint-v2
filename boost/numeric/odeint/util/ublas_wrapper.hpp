@@ -69,15 +69,6 @@ struct state_wrapper< boost::numeric::ublas::matrix< T , L , A > , boost::true_t
 
     state_type m_v;
 
-    state_wrapper() : m_v()
-    { }
-
-    state_wrapper( const state_wrapper_type &x ) : m_v( x.m_v )
-    { }
-
-    state_wrapper( const state_type v ) : m_v( v )
-    { }
-
     template< class T_V , class A_V >
     bool same_size( const boost::numeric::ublas::vector< T_V , A_V > &x )
     {
@@ -110,18 +101,6 @@ struct state_wrapper< boost::numeric::ublas::permutation_matrix< T , A > , boost
 
     state_wrapper() : m_v( 1 )
     { }
-
-    state_wrapper( state_type v ) : m_v( v )
-    { }
-
-    state_wrapper( const state_wrapper_type &x ) : m_v( x.m_v )
-    { }
-
-    state_wrapper_type& operator=( state_wrapper_type &x )
-    {
-        m_v = x.m_v;
-        return *this;
-    }
 
     template< class T_V , class A_V >
     bool same_size( const boost::numeric::ublas::vector< T_V , A_V > &x )

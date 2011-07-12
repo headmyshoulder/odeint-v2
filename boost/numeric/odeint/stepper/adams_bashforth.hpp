@@ -73,14 +73,6 @@ public :
 
 	order_type order( void ) const { return order_value; }
 
-	adams_bashforth( void )
-	: m_step_storage() , m_resizer() , m_coefficients() , m_algebra()
-	{ }
-
-    adams_bashforth( const adams_bashforth &stepper )
-    : m_step_storage( stepper.m_step_storage ) , m_resizer( stepper.m_resizer ) , m_coefficients() , m_algebra( stepper.m_algebra )
-    { }
-
 	adams_bashforth& operator=( const adams_bashforth &stepper )
 	{
         m_resizer = stepper.m_resizer;
@@ -88,7 +80,7 @@ public :
         m_algebra = stepper.m_algebra;
 		return *this;
 	}
-    
+
 
 	/*
 	 * Version 1 : do_step( system , x , t , dt );
@@ -208,10 +200,11 @@ public :
         resize( x );
 	}
 
-    algebra_type& get_algebra()
-    {
-        return m_algebra;
-    }
+    algebra_type& algebra()
+    {   return m_algebra; }
+
+    const algebra_type& algebra() const
+    {   return m_algebra; }
 
 	const step_storage_type& step_storage( void ) const
 	{

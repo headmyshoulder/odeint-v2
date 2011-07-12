@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE( test_mkl )
 {
 
     //to use mkl routines we have to use the vector_space_algebra and the mkl_operations
-    explicit_euler< state_type , value_type , vector_space_algebra , mkl_operations > stepper;
+    explicit_euler< state_type , value_type , state_type , value_type , vector_space_algebra , mkl_operations > stepper;
     state_type x;
     x[0] = 0.0;
 

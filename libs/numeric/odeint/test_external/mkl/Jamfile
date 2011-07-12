@@ -5,6 +5,7 @@
 # bring in rules for testing
 
 import testing ;
+use-project boost : $(BOOST_ROOT) ;
 
 project
     : requirements

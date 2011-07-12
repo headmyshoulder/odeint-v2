@@ -122,24 +122,6 @@ public:
             }
         };
 
-
-        struct do_insertion_from_stage
-        {
-            stage_vector_base &m_base;
-            const stage_vector_base &m_source;
-
-            do_insertion_from_stage( stage_vector_base &base, const stage_vector_base &source )
-                    : m_base(base) , m_source( source )
-            { }
-
-            template<class Index>
-            void operator()(Index) const {
-                //fusion::at< Index >( m_base ) = stage< double , Index::value+1 , intermediate_stage >( m_c[ Index::value ] , fusion::at< Index >( m_a ) );
-                fusion::at<Index>(m_base).c = fusion::at<Index>(m_source).c;
-                fusion::at<Index>(m_base).a = fusion::at<Index>(m_source).a;
-            }
-        };
-
         struct print_butcher
         {
             const stage_vector_base &m_base;
@@ -165,12 +147,6 @@ public:
             mpl::for_each< indices >( do_insertion( *this , a , c ) );
             fusion::at_c< StageCount - 1 >( *this ).c = c[ StageCount - 1 ];
             fusion::at_c< StageCount - 1 >( *this ).a = b;
-        }
-
-        stage_vector( const stage_vector &s )
-        {
-            typedef mpl::range_c< size_t , 0 , StageCount > indices;
-            mpl::for_each< indices >( do_insertion_from_stage( *this , s ) );
         }
 
         void print( std::ostream &os ) const

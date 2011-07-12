@@ -15,6 +15,7 @@
 #define BOOST_NUMERIC_ODEINT_MKL_OPERATIONS_HPP_INCLUDED
 
 #include <mkl_blas.h>
+#include <boost/numeric/odeint/algebra/default_operations.hpp>
 
 /* exemplary example for writing bindings to the Intel MKL library
  * see test/mkl for how to use mkl with odeint
@@ -29,11 +30,11 @@ namespace odeint {
 /* only defined for doubles */
 struct mkl_operations
 {
-	template< class Fac1 , class Fac2 > struct scale_sum2;
+	//template< class Fac1 , class Fac2 > struct scale_sum2;
 
 
-	template<>
-    struct scale_sum2< double , double >
+    template< class F1 , class F2 >
+    struct scale_sum2
     {
 		typedef double Fac1;
 		typedef double Fac2;

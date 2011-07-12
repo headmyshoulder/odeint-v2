@@ -67,7 +67,9 @@ public:
 	static const order_type order_value = Order;
 
 
-//	explicit_stepper_base( const algebra_type &algebra ) : m_algebra( algebra ) { }
+	explicit_stepper_base( const algebra_type &algebra = algebra_type() )
+	    : m_algebra( algebra )
+	{ }
 
 	order_type order( void ) const
     {
@@ -137,10 +139,22 @@ public:
 	    return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
 	}
 
-	algebra_type& get_algebra()
-	{
-	    return m_algebra;
-	}
+	algebra_type& algebra()
+	{   return m_algebra; }
+
+	const algebra_type& algebra() const
+    {   return m_algebra; }
+
+
+    stepper_type& stepper( void )
+    {
+        return *static_cast< stepper_type* >( this );
+    }
+
+    const stepper_type& stepper( void ) const
+    {
+        return *static_cast< const stepper_type* >( this );
+    }
 
 
 private:
@@ -154,20 +168,11 @@ private:
 		this->stepper().do_step_impl( system , x , m_dxdt.m_v , t , x , dt );
 	}
 
-protected:
-
-    stepper_type& stepper( void )
-    {
-    	return *static_cast< stepper_type* >( this );
-    }
-
-    const stepper_type& stepper( void ) const
-    {
-    	return *static_cast< const stepper_type* >( this );
-    }
-
 
 	resizer_type m_resizer;
+
+protected:
+
 	wrapped_deriv_type m_dxdt;
 	algebra_type m_algebra;
 };

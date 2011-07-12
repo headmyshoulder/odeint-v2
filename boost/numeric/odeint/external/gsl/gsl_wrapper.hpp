@@ -183,15 +183,10 @@ struct state_wrapper< gsl_vector* >
         m_v = gsl_vector_alloc( 1 );
     }
 
-    state_wrapper( const state_type v )
-    {
-        resize( v );
-        gsl_vector_memcpy( m_v , v );
-    }
-
     state_wrapper( const state_wrapper_type &x )
     {
-        state_wrapper( x.m_v );
+        resize( x.m_v );
+        gsl_vector_memcpy( m_v , x.m_v );
     }
 
 
@@ -207,12 +202,13 @@ struct state_wrapper< gsl_vector* >
 
     bool resize( const gsl_vector *x )
     {
-        if( x->size == 0 )
+        if( !same_size( x ) )
+        {
+            gsl_vector_free( m_v );
+            m_v = gsl_vector_alloc( x->size );
+            return true;
+        } else
             return false;
-
-        gsl_vector_free( m_v );
-        m_v = gsl_vector_alloc( x->size );
-        return true;
 
     }
 

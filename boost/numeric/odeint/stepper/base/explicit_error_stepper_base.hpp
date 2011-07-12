@@ -63,6 +63,10 @@ public:
 	static const order_type stepper_order_value = StepperOrder;
 	static const order_type error_order_value = ErrorOrder;
 
+	explicit_error_stepper_base( const algebra_type &algebra = algebra_type() )
+        : m_algebra( algebra )
+    { }
+
     order_type stepper_order( void ) const
     {
     	return stepper_order_value;
@@ -144,11 +148,11 @@ public:
 		resize( x );
 	}
 
-	algebra_type& get_algebra()
-    {
-        return m_algebra;
-    }
+	algebra_type& algebra()
+    {   return m_algebra; }
 
+	const algebra_type& algebra() const
+	{   return m_algebra; }
 
 private:
 
@@ -176,10 +180,10 @@ private:
 
 
 	resizer_type m_resizer;
-	deriv_type m_dxdt;
 
 protected:
 	algebra_type m_algebra;
+	wrapped_deriv_type m_dxdt;
 };
 
 

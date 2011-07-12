@@ -220,7 +220,7 @@ public:
 		// do one step with error calculation
 		m_stepper.do_step( system , in , dxdt , t , out , dt , m_xerr.m_v );
 
-		m_max_rel_error = m_error_checker.error( m_stepper.get_algebra() , in , dxdt , m_xerr.m_v , dt );
+		m_max_rel_error = m_error_checker.error( m_stepper.algebra() , in , dxdt , m_xerr.m_v , dt );
 
 		if( m_max_rel_error > 1.1 )
 		{
@@ -438,7 +438,7 @@ public:
         m_stepper.do_step( system , in , dxdt_in , t , out , dxdt_out , dt , m_xerr.m_v );
 
         // this potentially overwrites m_x_err! (standard_error_checker does, at least)
-        value_type max_rel_err = m_error_checker.error( m_stepper.get_algebra() , in , dxdt_in , m_xerr.m_v , dt );
+        value_type max_rel_err = m_error_checker.error( m_stepper.algebra() , in , dxdt_in , m_xerr.m_v , dt );
 
         if( max_rel_err > 1.1 )
         {

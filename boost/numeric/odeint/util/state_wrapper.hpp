@@ -31,15 +31,6 @@ struct state_wrapper< V , boost::true_type > // with resizing
 
     V m_v;
 
-    state_wrapper() : m_v()
-    { }
-
-    state_wrapper( const state_wrapper_type &x ) : m_v( x.m_v )
-    { }
-
-    state_wrapper( V v ) : m_v( v )
-    { }
-
     template< class StateIn >
     bool same_size( const StateIn &x ) const
     {
@@ -69,19 +60,6 @@ struct state_wrapper< V , boost::false_type > // without resizing
     typedef boost::false_type is_resizeable;
 
     V m_v;
-
-    state_wrapper() : m_v() { }
-
-    state_wrapper( const V &v ) : m_v( v ) { }
-
-    state_wrapper( const state_wrapper_type &x ) : m_v( x.m_v )
-    { }
-
-    state_wrapper_type& operator=( const state_wrapper_type &x )
-    {
-        m_v = x.m_v;
-        return *this;
-    }
 
     //no resize method
 };

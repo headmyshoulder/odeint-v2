@@ -73,7 +73,7 @@ public :
 	typedef unsigned short order_type;
 	static const order_type order_value = steps + 1;
 
-	adams_bashforth_moulton( ) : m_adams_moulton( m_adams_bashforth.get_algebra() )
+	adams_bashforth_moulton( ) : m_adams_moulton( m_adams_bashforth.algebra() )
 	{ }
 
 	order_type order( void ) const { return order_value; }

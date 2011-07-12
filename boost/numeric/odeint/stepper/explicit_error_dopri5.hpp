@@ -25,9 +25,7 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-/*
- * ToDo: Check orders rk_ckc
- */
+
 template<
     class State ,
     class Value = double ,

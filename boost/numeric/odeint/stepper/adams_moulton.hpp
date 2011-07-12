@@ -150,10 +150,11 @@ public :
 		resize( x );
 	}
 
-    algebra_type& get_algebra()
-    {
-        return m_algebra;
-    }
+    algebra_type& algebra()
+    {   return m_algebra; }
+
+    const algebra_type& algebra() const
+    {   return m_algebra; }
 
 
 private:

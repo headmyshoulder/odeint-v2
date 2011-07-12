@@ -70,7 +70,9 @@ public:
 	static const order_type error_order_value = ErrorOrder;
 
 
-//	explicit_stepper_and_error_stepper_fsal_base( const algebra_type &algebra ) : m_algebra( algebra ) { }
+	explicit_stepper_and_error_stepper_fsal_base( const algebra_type &algebra = algebra_type() )
+	    : m_first_call( true ) , m_algebra( algebra )
+	{ }
 
     order_type order( void ) const
     {
@@ -86,12 +88,6 @@ public:
     {
     	return error_order_value;
     }
-
-
-
-
-    explicit_stepper_and_error_stepper_fsal_base( void ) : m_first_call( true )
-	{ }
 
 
     /*
@@ -236,10 +232,11 @@ public:
 	}
 
 
-	algebra_type& get_algebra()
-    {
-        return m_algebra;
-    }
+	algebra_type& algebra()
+    {   return m_algebra; }
+
+	const algebra_type& algebra() const
+    {   return m_algebra; }
 
 private:
 
@@ -279,11 +276,11 @@ private:
 
 
 	resizer_type m_resizer;
-	wrapped_deriv_type m_dxdt;
 	bool m_first_call;
 
 protected:
 	algebra_type m_algebra;
+    wrapped_deriv_type m_dxdt;
 };
 
 
