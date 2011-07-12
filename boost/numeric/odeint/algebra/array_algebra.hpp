@@ -31,7 +31,7 @@ struct array_algebra
 
     template< typename T , size_t dim , class Op >
     void for_each2( boost::array< T , dim > &s1 ,
-                              const boost::array< T , dim > &s2 , Op op )
+                      const boost::array< T , dim > &s2 , Op op )
     {
         for( size_t i=0 ; i<dim ; ++i )
             op( s1[i] , s2[i] );
@@ -39,8 +39,17 @@ struct array_algebra
 
     template< typename T , size_t dim , class Op >
     void for_each3( boost::array< T , dim > &s1 ,
-                             const boost::array< T , dim > &s2 ,
-                             const boost::array< T , dim > &s3 , Op op )
+                      const boost::array< T , dim > &s2 ,
+                      const boost::array< T , dim > &s3 , Op op )
+    {
+        for( size_t i=0 ; i<dim ; ++i )
+            op( s1[i] , s2[i] , s3[i] );
+    }
+
+    template< typename T , size_t dim , class Op >
+    void for_each3( boost::array< T , dim > &s1 ,
+                      boost::array< T , dim > &s2 ,
+                      const boost::array< T , dim > &s3 , Op op )
     {
         for( size_t i=0 ; i<dim ; ++i )
             op( s1[i] , s2[i] , s3[i] );
@@ -90,6 +99,29 @@ struct array_algebra
     {
         for( size_t i=0 ; i<dim ; ++i )
             op( s1[i] , s2[i] , s3[i] , s4[i] , s5[i] , s6[i] , s7[i] );
+    }
+
+    template< typename T , size_t dim , class Op >
+    void for_each8( boost::array< T , dim > &s1 ,
+                              const boost::array< T , dim > &s2 ,
+                              const boost::array< T , dim > &s3 ,
+                              const boost::array< T , dim > &s4 ,
+                              const boost::array< T , dim > &s5 ,
+                              const boost::array< T , dim > &s6 ,
+                              const boost::array< T , dim > &s7 ,
+                              const boost::array< T , dim > &s8 , Op op )
+    {
+        for( size_t i=0 ; i<dim ; ++i )
+            op( s1[i] , s2[i] , s3[i] , s4[i] , s5[i] , s6[i] , s7[i] , s8[i] );
+    }
+
+
+    template< typename T , size_t dim , class Red >
+    T reduce( const boost::array< T , dim > &s , Red red , T init)
+    {
+        for( size_t i=0 ; i<dim ; ++i )
+            init = red( init , s[i] );
+        return init;
     }
 };
 

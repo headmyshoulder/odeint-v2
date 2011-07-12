@@ -201,7 +201,7 @@ public:
 
 private:
 
-    const stage_vector m_stages;
+    stage_vector m_stages;
     state_type m_x_tmp;
 
 protected:

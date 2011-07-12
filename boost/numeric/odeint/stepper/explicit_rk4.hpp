@@ -59,7 +59,7 @@ public :
 	{
 		// ToDo : check if size of in,dxdt,out are equal?
 
-        const value_type val1 = static_cast< value_type >( 1.0 );
+        static const value_type val1 = static_cast< value_type >( 1.0 );
 
 		m_resizer.adjust_size( in , boost::bind( &stepper_type::resize< StateIn > , boost::ref( *this ) , _1 ) );
 

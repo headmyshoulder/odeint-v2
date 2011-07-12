@@ -43,6 +43,7 @@
 #include <boost/mpl/inserter.hpp>
 
 #include <boost/numeric/odeint/stepper/explicit_euler.hpp>
+#include <boost/numeric/odeint/stepper/explicit_midpoint.hpp>
 #include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
 #include <boost/numeric/odeint/stepper/explicit_rk4_generic.hpp>
 #include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
@@ -50,8 +51,10 @@
 #include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
+#include <boost/numeric/odeint/algebra/array_algebra.hpp>
 
 #include "vector_space_1d.hpp"
+
 
 
 using std::vector;
@@ -72,6 +75,7 @@ typedef mpl::vector< vector_type , vector_space_type , array_type >::type contai
 
 
 template< class State > struct algebra_dispatcher { typedef range_algebra type; };
+template<> struct algebra_dispatcher< array_type > { typedef array_algebra type; };
 template<> struct algebra_dispatcher< vector_space_type > { typedef vector_space_algebra type; };
 template<> struct algebra_dispatcher< double > { typedef vector_space_algebra type; };
 
@@ -193,6 +197,7 @@ struct perform_stepper_test< Stepper , array_type >
 
 template< class State > class stepper_methods : public mpl::vector<
 	explicit_euler< State , double , State , double , typename algebra_dispatcher< State >::type > ,
+	explicit_midpoint< State , double , State , double , typename algebra_dispatcher< State >::type > ,
 	explicit_rk4< State , double , State , double , typename algebra_dispatcher< State >::type > ,
 	explicit_rk4_generic< State , double , State , double , typename algebra_dispatcher< State >::type > ,
 	explicit_error_rk54_ck< State , double , State , double , typename algebra_dispatcher< State >::type > ,
@@ -351,7 +356,9 @@ struct perform_controlled_stepper_test< ControlledStepper , vector_type >
 	{
 		vector_type x( 1 , 2.0 );
 		typename ControlledStepper::stepper_type error_stepper;
-		default_error_checker< typename ControlledStepper::value_type > error_checker;
+		default_error_checker< typename ControlledStepper::value_type ,
+                               typename ControlledStepper::algebra_type ,
+                               typename ControlledStepper::operations_type > error_checker;
 		ControlledStepper controlled_stepper( error_stepper , error_checker );
 		check_controlled_stepper_concept( controlled_stepper , constant_system_vector , x );
 		check_controlled_stepper_concept( controlled_stepper , boost::cref( constant_system_vector_class() ) , x );
@@ -367,7 +374,9 @@ struct perform_controlled_stepper_test< ControlledStepper , vector_space_type >
 		vector_space_type x;
 		x.m_x = 2.0;
 		typename ControlledStepper::stepper_type error_stepper;
-		default_error_checker< typename ControlledStepper::value_type , vector_space_algebra > error_checker;
+		default_error_checker< typename ControlledStepper::value_type ,
+                               typename ControlledStepper::algebra_type ,
+                               typename ControlledStepper::operations_type > error_checker;
 		ControlledStepper controlled_stepper( error_stepper , error_checker );
 		check_controlled_stepper_concept( controlled_stepper , constant_system_vector_space , x );
 		check_controlled_stepper_concept( controlled_stepper , boost::cref( constant_system_vector_space_class() ) , x );
@@ -383,7 +392,9 @@ struct perform_controlled_stepper_test< ControlledStepper , array_type >
 		array_type x;
 		x[0] = 2.0;
 		typename ControlledStepper::stepper_type error_stepper;
-		default_error_checker< typename ControlledStepper::value_type > error_checker;
+		default_error_checker< typename ControlledStepper::value_type ,
+		                       typename ControlledStepper::algebra_type ,
+		                       typename ControlledStepper::operations_type > error_checker;
 		ControlledStepper controlled_stepper( error_stepper , error_checker );
 		check_controlled_stepper_concept( controlled_stepper , constant_system_array , x );
 		check_controlled_stepper_concept( controlled_stepper , boost::cref( constant_system_array_class() ) , x );

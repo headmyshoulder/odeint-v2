@@ -75,7 +75,7 @@ public:
     value_type error( algebra_type &algebra , const State &x_old , const Deriv &dxdt_old , Err &x_err , const Time &dt )
     {
         // this overwrites x_err !
-        algebra.for_each3( x_old , dxdt_old , x_err ,
+        algebra.for_each3( x_err , x_old , dxdt_old ,
                                  typename operations_type::template rel_error< value_type >( m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt * detail::get_value( dt ) ) );
 
         value_type res = algebra.reduce( x_err , typename operations_type::template maximum< value_type >() , 0.0 );
@@ -133,6 +133,8 @@ public:
 	typedef typename stepper_type::deriv_type deriv_type;
 	typedef typename stepper_type::time_type time_type;
 	typedef typename stepper_type::order_type order_type;
+	typedef typename stepper_type::algebra_type algebra_type;
+	typedef typename stepper_type::operations_type operations_type;
 	typedef Resizer resizer_type;
 	typedef ErrorChecker error_checker_type;
 	typedef controlled_stepper_tag stepper_category;
@@ -345,6 +347,8 @@ public:
     typedef typename stepper_type::deriv_type deriv_type;
     typedef typename stepper_type::time_type time_type;
     typedef typename stepper_type::order_type order_type;
+    typedef typename stepper_type::algebra_type algebra_type;
+    typedef typename stepper_type::operations_type operations_type;
     typedef Resizer resizer_type;
     typedef ErrorChecker error_checker_type;
 	typedef controlled_stepper_tag stepper_category;
@@ -355,7 +359,7 @@ public:
 
     controlled_error_stepper(
             const stepper_type &stepper = stepper_type() ,
-            const error_checker_type &error_checker = error_checker_type( )
+            const error_checker_type &error_checker = error_checker_type()
             )
     : m_stepper( stepper ) , m_error_checker( error_checker ) ,
       m_first_call( true )

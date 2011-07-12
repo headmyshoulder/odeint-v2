@@ -196,7 +196,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( rel_error_test , T , test_types )
 	f.res = -1.1;
 	typedef default_operations::rel_error< T > Op;
 	Op op( 0.1 , 0.2 , 0.15 , 0.12 );
-	op( -f.x1 , -f.x2 , f.res );
+	op( f.res , -f.x1 , -f.x2 );
 	BOOST_CHECK_SMALL( abs( f.res - T( 6.17978 ) ) , typename fix_type::compare_type( 1.0e-4 ) );
 }
 
