@@ -98,10 +98,11 @@ public:
 
     BOOST_ODEINT_SYMPLECTIC_NYSTROEM_STEPPER_TYPEDEFS( symplectic_rkn_sb3a_mclachlan , 6 );
 
-	symplectic_rkn_sb3a_mclachlan( void )
+	symplectic_rkn_sb3a_mclachlan( const algebra_type &algebra = algebra_type() )
         : stepper_base_type(
             detail::symplectic_rkn_sb3a_mclachlan::coef_a_type< value_type >() ,
-            detail::symplectic_rkn_sb3a_mclachlan::coef_b_type< value_type >() )
+            detail::symplectic_rkn_sb3a_mclachlan::coef_b_type< value_type >() ,
+            algebra )
     { }
 
 

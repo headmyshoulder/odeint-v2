@@ -152,13 +152,14 @@ public:
     typedef typename stepper_base_type::resizer_type resizer_typ;
     typedef typename stepper_base_type::stepper_type stepper_type;
 
-    explicit_error_rk54_ck_generic( void ) : stepper_base_type(
+    explicit_error_rk54_ck_generic( const algebra_type &algebra = algebra_type() ) : stepper_base_type(
             fusion::make_vector( rk54_ck_coefficients_a1<Value>() ,
                                  rk54_ck_coefficients_a2<Value>() ,
                                  rk54_ck_coefficients_a3<Value>() ,
                                  rk54_ck_coefficients_a4<Value>() ,
                                  rk54_ck_coefficients_a5<Value>() ) ,
-            rk54_ck_coefficients_b<Value>() , rk54_ck_coefficients_db<Value>() , rk54_ck_coefficients_c<Value>() )
+            rk54_ck_coefficients_b<Value>() , rk54_ck_coefficients_db<Value>() , rk54_ck_coefficients_c<Value>() ,
+            algebra )
     { }
 };
 

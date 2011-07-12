@@ -88,8 +88,9 @@ public:
     explicit_error_generic_rk( const coef_a_type &a ,
                                   const coef_b_type &b ,
                                   const coef_b_type &b2 ,
-                                  const coef_c_type &c )
-        : m_rk_algorithm( a , b , c ) , m_b2( b2 )
+                                  const coef_c_type &c ,
+                                  const algebra_type &algebra = algebra_type() )
+        : stepper_base_type( algebra ) , m_rk_algorithm( a , b , c ) , m_b2( b2 )
     { }
 
 

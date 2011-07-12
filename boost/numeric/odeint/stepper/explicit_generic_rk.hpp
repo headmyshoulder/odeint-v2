@@ -136,9 +136,9 @@ private:
 
 public:
 
-    explicit_generic_rk( const coef_a_type &a , const coef_b_type &b , const coef_c_type &c )
-        : m_rk_algorithm( a , b , c )
-
+    explicit_generic_rk( const coef_a_type &a , const coef_b_type &b , const coef_c_type &c ,
+            const algebra_type &algebra = algebra_type() )
+        : stepper_base_type( algebra ) , m_rk_algorithm( a , b , c )
     { }
 
 

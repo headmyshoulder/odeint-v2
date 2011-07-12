@@ -111,9 +111,9 @@ public:
     typedef typename stepper_base_type::resizer_type resizer_type;
     typedef typename stepper_base_type::stepper_type stepper_type;
 
-    explicit_rk4_generic( void ) : stepper_base_type(
+    explicit_rk4_generic( const algebra_type &algebra = algebra_type() ) : stepper_base_type(
             fusion::make_vector( rk4_coefficients_a1<Value>() , rk4_coefficients_a2<Value>() , rk4_coefficients_a3<Value>() ) ,
-            rk4_coefficients_b<Value>() , rk4_coefficients_c<Value>() )
+            rk4_coefficients_b<Value>() , rk4_coefficients_c<Value>() , algebra )
     { }
 
 };

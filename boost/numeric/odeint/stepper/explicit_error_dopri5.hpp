@@ -46,7 +46,8 @@ public :
 	BOOST_ODEINT_EXPLICIT_STEPPERS_AND_ERROR_STEPPERS_FSAL_TYPEDEFS( explicit_error_dopri5 , 5 , 5 , 4 );
 	typedef explicit_error_dopri5< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
 
-
+	explicit_error_dopri5( const algebra_type &algebra = algebra_type() ) : stepper_base_type( algebra )
+	{ }
 
 
 	template< class System , class StateIn , class DerivIn , class StateOut , class DerivOut >

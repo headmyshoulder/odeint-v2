@@ -57,6 +57,9 @@ public :
 
 	typedef explicit_error_rk54_ck< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
 
+	explicit_error_rk54_ck( const algebra_type &algebra = algebra_type() ) : stepper_base_type( algebra )
+	{ }
+
 
 	template< class System , class StateIn , class DerivIn , class StateOut , class Err >
 	void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt , Err &xerr )

@@ -904,12 +904,5 @@ BOOST_AUTO_TEST_CASE( dense_output_dopri5_assign )
 }
 
 
-
-
-
-
-
-
-
 BOOST_AUTO_TEST_SUITE_END()
 

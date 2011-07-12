@@ -74,7 +74,8 @@ public :
 	order_type order( void ) const { return order_value; }
 
 
-    adams_bashforth( void ) { }
+    adams_bashforth( const algebra_type &algebra = algebra_type() ) : m_algebra( algebra )
+    { }
 
     adams_bashforth( const adams_bashforth &stepper )
         : m_step_storage( stepper.m_step_storage ) , m_resizer( stepper.m_resizer ) , m_coefficients() , m_algebra( stepper.m_algebra )

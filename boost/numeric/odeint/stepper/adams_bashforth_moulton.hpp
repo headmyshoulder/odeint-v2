@@ -76,6 +76,10 @@ public :
 	adams_bashforth_moulton( ) : m_adams_moulton( m_adams_bashforth.algebra() )
 	{ }
 
+	adams_bashforth_moulton( const algebra_type &algebra )
+	    : m_adams_bashforth( algebra ) , m_adams_moulton( m_adams_bashforth.algebra() )
+	{ }
+
 	order_type order( void ) const { return order_value; }
 
 	template< class System , class StateInOut >

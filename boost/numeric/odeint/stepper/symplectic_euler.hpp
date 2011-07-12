@@ -70,10 +70,11 @@ public:
 
 		BOOST_ODEINT_SYMPLECTIC_NYSTROEM_STEPPER_TYPEDEFS( symplectic_euler , 1 );
 
-		symplectic_euler( void )
-		: stepper_base_type( detail::symplectic_euler_coef::coef_a_type< value_type >() , detail::symplectic_euler_coef::coef_b_type< value_type >() )
-		{
-		}
+		symplectic_euler( const algebra_type &algebra = algebra_type() )
+		    : stepper_base_type( detail::symplectic_euler_coef::coef_a_type< value_type >() ,
+		                         detail::symplectic_euler_coef::coef_b_type< value_type >() ,
+		                         algebra )
+		{ }
 };
 
 
