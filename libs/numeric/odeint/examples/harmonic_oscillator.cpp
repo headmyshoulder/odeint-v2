@@ -47,17 +47,17 @@ public:
 //[ integrate_observer
 struct push_back_state_and_time
 {
-	std::vector< state_type >& m_states;
-	std::vector< double >& m_times;
+    std::vector< state_type >& m_states;
+    std::vector< double >& m_times;
 
-	push_back_state_and_time( std::vector< state_type > &states , std::vector< double > &times )
-	: m_states( states ) , m_times( times ) { }
+    push_back_state_and_time( std::vector< state_type > &states , std::vector< double > &times )
+    : m_states( states ) , m_times( times ) { }
 
-	void operator()( const state_type &x , double t )
-	{
-		m_states.push_back( x );
-		m_times.push_back( t );
-	}
+    void operator()( const state_type &x , double t )
+    {
+        m_states.push_back( x );
+        m_times.push_back( t );
+    }
 };
 //]
 
@@ -78,7 +78,7 @@ int main(int argc, char **argv)
 
     //[ integration
     size_t steps = integrate( harmonic_oscillator ,
-                              x , 0.0 , 10.0 , 0.1 );
+            x , 0.0 , 10.0 , 0.1 );
     //]
 
 
@@ -86,7 +86,7 @@ int main(int argc, char **argv)
     //[ integration_class
     harm_osc ho(0.15);
     steps = integrate( ho ,
-                       x , 0.0 , 10.0 , 0.1 );
+            x , 0.0 , 10.0 , 0.1 );
     //]
 
 
@@ -98,8 +98,8 @@ int main(int argc, char **argv)
     vector<double> times;
 
     steps = integrate( harmonic_oscillator ,
-                       x , 0.0 , 10.0 , 0.1 ,
-                       push_back_state_and_time( x_vec , times ) );
+            x , 0.0 , 10.0 , 0.1 ,
+            push_back_state_and_time( x_vec , times ) );
 
     /* output */
     for( size_t i=0; i<=steps; i++ )
@@ -125,7 +125,7 @@ int main(int argc, char **argv)
     //[ integrate_const_loop
     const double dt = 0.01;
     for( double t=0.0 ; t<10.0 ; t+= dt )
-    	stepper.do_step( harmonic_oscillator , x , t , dt );
+        stepper.do_step( harmonic_oscillator , x , t , dt );
     //]
 
 

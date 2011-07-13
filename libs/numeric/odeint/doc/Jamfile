@@ -12,14 +12,14 @@ project
     ;
 
 
-xml odeint_xml
-	: 
-	  odeint.qbk
-	 ;
+#xml odeint_xml
+#	: 
+#	  odeint.qbk
+#	 ;
 	 
 boostbook odeint
 	:
-	  odeint_xml
+	  odeint.qbk
 	:
           <xsl:param>navig.graphics=1
           <xsl:param>boost.root=../../../..

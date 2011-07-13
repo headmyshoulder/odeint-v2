@@ -16,3 +16,6 @@ exe harmonic_oscillator : harmonic_oscillator.cpp ;
 exe solar_system : solar_system.cpp ;
 exe chaotic_system : chaotic_system.cpp ;
 exe stiff_system : stiff_system.cpp ;
+exe fpu : fpu.cpp ;
+exe phase_oscillator_lattice : phase_oscillator_lattice.cpp ;
+exe harmonic_oscillator_units : harmonic_oscillator_units.cpp ;

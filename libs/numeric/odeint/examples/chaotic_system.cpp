@@ -27,16 +27,16 @@ const double b = 8.0 / 3.0;
 //[ system_function_without_perturbations
 struct lorenz
 {
-	template< class State , class Deriv >
-	void operator()( const State &x_ , Deriv &dxdt_ , double t ) const
-	{
-		typename boost::range_iterator< const State >::type x = boost::begin( x_ );
-		typename boost::range_iterator< Deriv >::type dxdt = boost::begin( dxdt_ );
+    template< class State , class Deriv >
+    void operator()( const State &x_ , Deriv &dxdt_ , double t ) const
+    {
+        typename boost::range_iterator< const State >::type x = boost::begin( x_ );
+        typename boost::range_iterator< Deriv >::type dxdt = boost::begin( dxdt_ );
 
-		dxdt[0] = sigma * ( x[1] - x[0] );
-		dxdt[1] = R * x[0] - x[1] - x[0] * x[2];
-		dxdt[2] = -b * x[2] + x[0] * x[1];
-	}
+        dxdt[0] = sigma * ( x[1] - x[0] );
+        dxdt[1] = R * x[0] - x[1] - x[0] * x[2];
+        dxdt[2] = -b * x[2] + x[0] * x[1];
+    }
 };
 //]
 
@@ -52,12 +52,12 @@ typedef std::tr1::array< double , num_of_lyap > lyap_type;
 
 void lorenz_with_lyap( const state_type &x , state_type &dxdt , double t )
 {
-	lorenz()( x , dxdt , t );
+    lorenz()( x , dxdt , t );
 
-	for( size_t l=0 ; l<num_of_lyap ; ++l )
+    for( size_t l=0 ; l<num_of_lyap ; ++l )
     {
-		const double *pert = x.begin() + 3 + l * 3;
-		double *dpert = dxdt.begin() + 3 + l * 3;
+        const double *pert = x.begin() + 3 + l * 3;
+        double *dpert = dxdt.begin() + 3 + l * 3;
         dpert[0] = - sigma * pert[0] + 10.0 * pert[1];
         dpert[1] = ( R - x[2] ) * pert[0] - pert[1] - x[0] * pert[2];
         dpert[2] = x[1] * pert[0] + x[0] * pert[1] - b * pert[2];
@@ -94,9 +94,9 @@ int main( int argc , char **argv )
     size_t count = 0;
     while( true )
     {
-    	t = integrate_n_steps( rk4 , lorenz_with_lyap , x , t , dt , 100 );
-    	gram_schmidt( x , lyap , n , num_of_lyap );
-    	++count;
+        t = integrate_n_steps( rk4 , lorenz_with_lyap , x , t , dt , 100 );
+        gram_schmidt( x , lyap , n , num_of_lyap );
+        ++count;
 
         if( !(count % 100000) )
         {

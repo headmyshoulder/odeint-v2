@@ -26,80 +26,8 @@ Overview and table
 
 [endsect]
 
-[section Special topics]
+[include tutorial_special_topics.qbk]
 
-[section Complex state types]
-
-typedef vector< complex< double > > state_type;
-
-Stuart landau
-
-DNLS
-
-[endsect]
-
-[section Lattice systems]
-
-Fermi-Pasta-Ulam system
-
-[endsect]
-
-[section Partial differential equations]
-
-Wave equation
-
-KdV
-
-Ginzburg-Landau
-
-[endsect]
-
-
-[section Using boost::units]
-
-blah blah
-
-[endsect] 
-
-[section Using Cuda and Thrust]
-
-blah blah
-
-[endsect]
-
-[section Using matrices as state types]
-
-Expanding resizing
-
-[endsect]
-
-[section Ordinary differential equations on networks]
-
-[endsect]
-
-[section Pass by value or by reference]
-
-blah blah
-
-[endsect]
-
-[section Using boost::range]
-
-blah blah
-
-[endsect]
-
-[section Using arbitrary precision floating point types]
-
-GMP
-
-[endsect]
-
-[section Self expanding lattices]
-
-[endsect]
-
-[endsect]
 
 
 [section All examples]
@@ -141,6 +69,11 @@ The following table gives an overview over all examples.
 [6] Haruo Yoshida, “Construction of higher order symplectic integrators,” Physics Letters A 150, no. 5 (November 12, 1990): 262-268.
 
 [7] Robert I. McLachlan, “On the numerical integration of ordinary differential equations by symmetric composition methods,” SIAM J. Sci. Comput. 16, no. 1 (1995): 151-168.
+
+
+[*Special systems:]
+
+[8]  [@http://www.scholarpedia.org/article/Fermi-Pasta-Ulam_nonlinear_lattice_oscillations Fermi-Pasta-Ulam nonlinear lattice oscillations]
 
 [endsect]
 

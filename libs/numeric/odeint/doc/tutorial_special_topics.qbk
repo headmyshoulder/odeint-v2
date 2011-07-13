@@ -1,0 +1,139 @@
+[section Special topics]
+
+[section Complex state types]
+
+Of course, odeint can handle complex state types, hence ODEs which are defined on complex vector spaces. An example is the Stuart-Landau oscillator
+
+['dx / dt = ( 1 + i ) x]
+
+where ['x] is a complex variable. Such systems can easily be represent by an state type like
+
+Hier gehts weiter
+
+[endsect]
+
+[section Lattice systems]
+
+[import ../examples/fpu.cpp]
+
+
+odeint can also be used to solved ordinary differential equations defined on lattices. A prominent example is the Fermi-Pasta-Ulam system [8]. It is a Hamiltonian system of nonlinear coupled harmonic oscillators. The Hamiltonian is
+
+[' H = __Sigma[subl i] p[subl i][super 2]/2 + 1/2 ( q[subl i+1] - q[subl i] )^2 + __beta / 4 ( q[subl i+1] - q[subl i] )^4 ]
+
+Remarkably, the Fermi-Pasta-Ulam system was the first numerical experiment which has been implemented on a computer in 1953. It was studied at Los Alamos on one of the first computer (a MANIAC I) and it triggered a whole new tree of mathematical and physical science.
+ 
+The FPU is solved again by a symplectic solver, but in our case we can speed up the computation because the ['q] components trivially reduce to ['dq[subl i] / dt = p[subl i]]. odeint is capable of doing this peformance improvement. All you have to do is to call the symplectic solver with an state function for the ['p] components. Here, is how this function looks like
+
+[fpu_system_function]
+
+Of course, you can also use `std::tr1::array< double , N >` for the state type.
+
+Now, you have to define your initial values and perform the integration. All this can be easily done with the following piece of code:
+
+[fpu_integration]
+
+The observer is more or less trivial
+
+[fpu_observer]
+
+[import ../examples/phase_oscillator_lattice.cpp]
+
+Another very easy to solve lattice is an ensemble of ['N] all-to-all coupled phase oscillators. It is defined as
+
+[' d__phi[subl k] / dt = __omega[subl k] + __epsilon / N __Sigma[subl j] sin( __phi[subl j] - __phi[subl k] )]
+
+The natural frequencies ['__omega[subl i]] of each oscialltor follow some distribution and ['__epsilon] is the coupling strength. We choose here a Lorentzian distribution for ['__omega[subl i]]. The definition of the system function is now a bit more complex since we also need to store the individual frequencies of each oscillator.
+
+[phase_oscillator_lattice_system_function]
+
+Interestingly a phase transition can be observed if the coupling strenght exceeds a critical value. Above this value synchronization sets in and some of the oscillators oscillate with the same frequency despite their different natural frequencies. This behavior can be analyzed by employing the mean field of the phase
+
+['Z = K e[super i __Theta] = 1 / N __Sigma[subl k]e[super i __phi[subl k]]]
+
+Therefore, we create an observer which computes the value of ['Z] and we record ['Z] for different values of ['__epsilon].
+
+[phase_oscillator_lattice_observer]
+
+Now, we do several integration for different values of xyz and record this variance. The result is a very nice confirmation of the phase transition.
+
+[phase_oscillator_lattice_integration]
+
+[endsect]
+
+[section Partial differential equations]
+
+Wave equation
+
+KdV
+
+Ginzburg-Landau
+
+[endsect]
+
+
+[section Using boost::units]
+
+[import ../examples/harmonic_oscillator_units.cpp]
+
+odeint also works well with __boost_units - a library for compile type unit and dimension analysis. The main problem here is, that the `state_type` is now heterogeneous, meaning that every entry has a different type. To overcome this problem compile-type sequences from __boost_fusion can be used.
+
+To illustrate how odeint works with __boost_units we use the harmonic oscillator as primary example. We start with defining all quantities
+
+[units_define_basic_quantities]
+
+Note, that the `state_type` and the `deriv_type` are now a compile-time fusion sequences. They have to be explicitly defined. Next, we define the ordinary differential equation which is completety equivalent to the example in the first section of this tutorial
+
+[units_define_ode]
+
+Having done this, the most difficulties have been done. Next, we instantiate an appropriate stepper. We must explicitly parametrize the stepper with the `state_type`, `deriv_type`, `time_type`. Furthermore, the basic calculations are now performed by the `fusion_algebra` which must also be given.
+
+[units_define_stepper]
+
+It is quite easy but the compilation time might take very long. Furthermore, the observer is defined a bit different
+
+[units_observer]
+
+The full cpp file for this example can be found here [@../../examples/harmonic_oscillator_units.cpp]
+
+[endsect] 
+
+[section Using Cuda and Thrust]
+
+blah blah
+
+[endsect]
+
+[section Using matrices as state types]
+
+Expanding resizing
+
+[endsect]
+
+[section Ordinary differential equations on networks]
+
+[endsect]
+
+[section Pass by value or by reference]
+
+blah blah
+
+[endsect]
+
+[section Using boost::range]
+
+blah blah
+
+[endsect]
+
+[section Using arbitrary precision floating point types]
+
+GMP
+
+[endsect]
+
+[section Self expanding lattices]
+
+[endsect]
+
+[endsect]
