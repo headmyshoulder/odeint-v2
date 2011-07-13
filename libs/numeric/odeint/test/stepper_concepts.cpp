@@ -50,6 +50,7 @@
 #include <boost/numeric/odeint/stepper/explicit_error_rk54_ck_generic.hpp>
 #include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
+#include <boost/numeric/odeint/stepper/controlled_error_bs.hpp>
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 #include <boost/numeric/odeint/algebra/array_algebra.hpp>
 
@@ -136,7 +137,7 @@ void check_controlled_stepper_concept( Stepper &stepper , System system , typena
 {
 	typedef Stepper stepper_type;
     typedef typename stepper_type::deriv_type container_type;
-    typedef typename stepper_type::order_type order_type;
+    //typedef typename stepper_type::order_type order_type;  controlled_error_stepper don't necessarily have a order (burlish-stoer)
     typedef typename stepper_type::time_type time_type;
 
     time_type t = 0.0 , dt = 0.1;
@@ -355,11 +356,12 @@ struct perform_controlled_stepper_test< ControlledStepper , vector_type >
 	void operator()( void )
 	{
 		vector_type x( 1 , 2.0 );
-		typename ControlledStepper::stepper_type error_stepper;
-		default_error_checker< typename ControlledStepper::value_type ,
-                               typename ControlledStepper::algebra_type ,
-                               typename ControlledStepper::operations_type > error_checker;
-		ControlledStepper controlled_stepper( error_stepper , error_checker );
+        //typename ControlledStepper::stepper_type error_stepper;
+        //default_error_checker< typename ControlledStepper::value_type ,
+  //                             typename ControlledStepper::algebra_type ,
+  //                             typename ControlledStepper::operations_type > error_checker;
+        //ControlledStepper controlled_stepper( error_stepper , error_checker );
+        ControlledStepper controlled_stepper;
 		check_controlled_stepper_concept( controlled_stepper , constant_system_vector , x );
 		check_controlled_stepper_concept( controlled_stepper , boost::cref( constant_system_vector_class() ) , x );
 		BOOST_CHECK_SMALL( fabs( x[0] - result ) , eps );
@@ -373,11 +375,12 @@ struct perform_controlled_stepper_test< ControlledStepper , vector_space_type >
 	{
 		vector_space_type x;
 		x.m_x = 2.0;
-		typename ControlledStepper::stepper_type error_stepper;
+		/*typename ControlledStepper::stepper_type error_stepper;
 		default_error_checker< typename ControlledStepper::value_type ,
                                typename ControlledStepper::algebra_type ,
                                typename ControlledStepper::operations_type > error_checker;
-		ControlledStepper controlled_stepper( error_stepper , error_checker );
+		ControlledStepper controlled_stepper( error_stepper , error_checker );*/
+        ControlledStepper controlled_stepper;
 		check_controlled_stepper_concept( controlled_stepper , constant_system_vector_space , x );
 		check_controlled_stepper_concept( controlled_stepper , boost::cref( constant_system_vector_space_class() ) , x );
 		BOOST_CHECK_SMALL( fabs( x.m_x - result ) , eps );
@@ -391,11 +394,12 @@ struct perform_controlled_stepper_test< ControlledStepper , array_type >
 	{
 		array_type x;
 		x[0] = 2.0;
-		typename ControlledStepper::stepper_type error_stepper;
+		/*typename ControlledStepper::stepper_type error_stepper;
 		default_error_checker< typename ControlledStepper::value_type ,
 		                       typename ControlledStepper::algebra_type ,
 		                       typename ControlledStepper::operations_type > error_checker;
-		ControlledStepper controlled_stepper( error_stepper , error_checker );
+		ControlledStepper controlled_stepper( error_stepper , error_checker );*/
+        ControlledStepper controlled_stepper;
 		check_controlled_stepper_concept( controlled_stepper , constant_system_array , x );
 		check_controlled_stepper_concept( controlled_stepper , boost::cref( constant_system_array_class() ) , x );
 		BOOST_CHECK_SMALL( fabs( x[0] - result ) , eps );
@@ -404,7 +408,8 @@ struct perform_controlled_stepper_test< ControlledStepper , array_type >
 
 template< class State > class controlled_stepper_methods : public mpl::vector<
 	controlled_error_stepper< explicit_error_rk54_ck< State , double , State , double , typename algebra_dispatcher< State >::type > > ,
-	controlled_error_stepper< explicit_error_dopri5< State , double , State , double , typename algebra_dispatcher< State >::type > >
+	controlled_error_stepper< explicit_error_dopri5< State , double , State , double , typename algebra_dispatcher< State >::type > > , 
+    controlled_error_bs< State , double , State , double , typename algebra_dispatcher< State >::type >
 > { };
 
 typedef mpl::copy
