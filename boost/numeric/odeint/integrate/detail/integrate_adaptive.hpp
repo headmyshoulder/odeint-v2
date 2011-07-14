@@ -12,6 +12,8 @@
 
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 
+#include <boost/ref.hpp>
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -45,12 +47,14 @@ size_t integrate_adaptive(
 		Observer observer , controlled_stepper_tag
 		)
 {
+	typename boost::unwrap_reference< Observer >::type &obs = observer;
+
 	const size_t max_attempts = 1000;
 	const char *error_string = "Integrate adaptive : Maximal number of iterations reached. A step size could not be found.";
 	size_t count = 0;
 	while( start_time < end_time )
 	{
-		observer( start_state , start_time );
+		obs( start_state , start_time );
 		if( ( start_time + dt ) > end_time )
 		{
 			dt = end_time - start_time;
@@ -68,7 +72,7 @@ size_t integrate_adaptive(
 
 		++count;
 	}
-	observer( start_state , start_time );
+	obs( start_state , start_time );
 	return count;
 }
 
@@ -84,15 +88,17 @@ size_t integrate_adaptive(
 		Time start_time , Time end_time , Time dt ,
 		Observer observer , dense_output_stepper_tag )
 {
+	typename boost::unwrap_reference< Observer >::type &obs = observer;
+
 	size_t count = 0;
 	stepper.initialize( start_state , start_time , dt );
 	while( stepper.current_time() < end_time )
 	{
-		observer( stepper.current_state() , stepper.current_time() );
+		obs( stepper.current_state() , stepper.current_time() );
 		stepper.do_step( system );
 		++count;
 	}
-	observer( stepper.current_state() , stepper.current_time() );
+	obs( stepper.current_state() , stepper.current_time() );
 	return count;
 }
 

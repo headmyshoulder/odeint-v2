@@ -10,6 +10,8 @@
 
 #include <boost/numeric/odeint/integrate/detail/integrate_adaptive.hpp>
 
+#include <boost/ref.hpp>
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -28,15 +30,17 @@ size_t integrate_const(
 		Observer observer , stepper_tag
 		)
 {
+	typename boost::unwrap_reference< Observer >::type &obs = observer;
+
 	size_t count = 0;
 	while( start_time < end_time )
 	{
-		observer( start_state , start_time );
+		obs( start_state , start_time );
 		stepper.do_step( system , start_state , start_time , dt );
 		start_time += dt;
 		++count;
 	}
-	observer( start_state , start_time );
+	obs( start_state , start_time );
 	return count;
 }
 
@@ -53,18 +57,20 @@ size_t integrate_const(
 		Observer observer , controlled_stepper_tag
 		)
 {
+	typename boost::unwrap_reference< Observer >::type &obs = observer;
+
 	size_t count = 0;
 	Time time_step = dt;
 	while( start_time < end_time )
 	{
-		observer( start_state , start_time );
+		obs( start_state , start_time );
 		Time next_time = start_time + time_step;
 		if( next_time > end_time ) next_time = end_time;
 		count += detail::integrate_adaptive(
 					stepper , system , start_state , start_time , next_time , dt ,
 					do_nothing_observer() , controlled_stepper_tag() );
 	}
-	observer( start_state , start_time );
+	obs( start_state , start_time );
 	return count;
 }
 
@@ -81,6 +87,8 @@ size_t integrate_const(
 		Time start_time , Time end_time , Time dt ,
 		Observer observer , dense_output_stepper_tag )
 {
+	typename boost::unwrap_reference< Observer >::type &obs = observer;
+
 	stepper.initialize( start_state , start_time , dt );
 
 	size_t count = 0;
@@ -89,7 +97,7 @@ size_t integrate_const(
 		while( ( start_time < stepper.current_time() ) && ( start_time < end_time ) )
 		{
 			stepper.calc_state( start_time , start_state );
-			observer( start_state , start_time );
+			obs( start_state , start_time );
 			start_time += dt;
 		}
 
