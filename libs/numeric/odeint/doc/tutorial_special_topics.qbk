@@ -37,27 +37,35 @@ The observer is more or less trivial
 
 [fpu_observer]
 
-[import ../examples/phase_oscillator_lattice.cpp]
+The full cpp file for this FPU example can be found here [@../../examples/fpu.cpp]
 
-Another very easy to solve lattice is an ensemble of ['N] all-to-all coupled phase oscillators. It is defined as
+[endsect]
+
+[section Ensembles of oscillators]
+
+[import ../examples/phase_oscillator_ensemble.cpp]
+
+Another import high dimensional system of coupled ordinary differential equations is an ensemble of ['N] all-to-all coupled phase oscillators [9]. It is defined as
 
 [' d__phi[subl k] / dt = __omega[subl k] + __epsilon / N __Sigma[subl j] sin( __phi[subl j] - __phi[subl k] )]
 
-The natural frequencies ['__omega[subl i]] of each oscialltor follow some distribution and ['__epsilon] is the coupling strength. We choose here a Lorentzian distribution for ['__omega[subl i]]. The definition of the system function is now a bit more complex since we also need to store the individual frequencies of each oscillator.
-
-[phase_oscillator_lattice_system_function]
-
-Interestingly a phase transition can be observed if the coupling strenght exceeds a critical value. Above this value synchronization sets in and some of the oscillators oscillate with the same frequency despite their different natural frequencies. This behavior can be analyzed by employing the mean field of the phase
+The natural frequencies ['__omega[subl i]] of each oscialltor follow some distribution and ['__epsilon] is the coupling strength. We choose here a Lorentzian distribution for ['__omega[subl i]]. Interestingly a phase transition can be observed if the coupling strenght exceeds a critical value. Above this value synchronization sets in and some of the oscillators oscillate with the same frequency despite their different natural frequencies. The transition is also called Kuramoto transition. Its behavior can be analyzed by employing the mean field of the phase
 
 ['Z = K e[super i __Theta] = 1 / N __Sigma[subl k]e[super i __phi[subl k]]]
 
-Therefore, we create an observer which computes the value of ['Z] and we record ['Z] for different values of ['__epsilon].
+The definition of the system function is now a bit more complex since we also need to store the individual frequencies of each oscillator.
 
-[phase_oscillator_lattice_observer]
+[phase_oscillator_ensemble_system_function]
 
-Now, we do several integration for different values of xyz and record this variance. The result is a very nice confirmation of the phase transition.
+Note, that we have used ['Z] to simplify the equations of motion. Next, we create an observer which computes the value of ['Z] and we record ['Z] for different values of ['__epsilon].
 
-[phase_oscillator_lattice_integration]
+[phase_oscillator_ensemble_observer]
+
+Now, we do several integrations for different values of ['__epsilon] and record ['Z]. The result nicely confirms the analytical result of the phase transition, i.e. in our example the standard deviation of the Lorentzian is 1 such that the transition will be observed at ['__epsilon = 2].
+
+[phase_oscillator_ensemble_integration]
+
+The full cpp file for this example can be found here [@../../examples/phase_oscillator_ensemble.cpp]
 
 [endsect]
 

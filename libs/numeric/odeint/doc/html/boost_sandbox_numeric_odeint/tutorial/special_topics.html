@@ -25,6 +25,8 @@
         state types</a></span></dt>
 <dt><span class="section"><a href="special_topics.html#boost_sandbox_numeric_odeint.tutorial.special_topics.lattice_systems">Lattice
         systems</a></span></dt>
+<dt><span class="section"><a href="special_topics.html#boost_sandbox_numeric_odeint.tutorial.special_topics.ensembles_of_oscillators">Ensembles
+        of oscillators</a></span></dt>
 <dt><span class="section"><a href="special_topics.html#boost_sandbox_numeric_odeint.tutorial.special_topics.partial_differential_equations">Partial
         differential equations</a></span></dt>
 <dt><span class="section"><a href="special_topics.html#boost_sandbox_numeric_odeint.tutorial.special_topics.using_boost__units">Using
@@ -207,85 +209,173 @@
 <p>
         </p>
 <p>
-          Another very easy to solve lattice is an ensemble of <span class="emphasis"><em>N</em></span>
-          all-to-all coupled phase oscillators. It is defined as
+          The full cpp file for this FPU example can be found here <a href="../../../../examples/fpu.cpp" target="_top">../../examples/fpu.cpp</a>
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sandbox_numeric_odeint.tutorial.special_topics.ensembles_of_oscillators"></a><a class="link" href="special_topics.html#boost_sandbox_numeric_odeint.tutorial.special_topics.ensembles_of_oscillators" title="Ensembles of oscillators">Ensembles
+        of oscillators</a>
+</h4></div></div></div>
+<p>
+          Another import high dimensional system of coupled ordinary differential
+          equations is an ensemble of <span class="emphasis"><em>N</em></span> all-to-all coupled phase
+          oscillators [9]. It is defined as
         </p>
 <p>
-          <span class="emphasis"><em>d&#966;<sub>&#8203;i</sub> / dt = &#969;<sub>&#8203;i</sub> + &#949; / N &#931;<sub>&#8203;j</sub> sin( &#966;<sub>&#8203;j</sub> - &#966;<sub>&#8203;i</sub> )</em></span>
+          <span class="emphasis"><em>d&#966;<sub>&#8203;k</sub> / dt = &#969;<sub>&#8203;k</sub> + &#949; / N &#931;<sub>&#8203;j</sub> sin( &#966;<sub>&#8203;j</sub> - &#966;<sub>&#8203;k</sub> )</em></span>
         </p>
 <p>
           The natural frequencies <span class="emphasis"><em>&#969;<sub>&#8203;i</sub></em></span> of each oscialltor follow
           some distribution and <span class="emphasis"><em>&#949;</em></span> is the coupling strength. We
-          choose here a Lorentzian distribution for <span class="emphasis"><em>&#969;<sub>&#8203;i</sub></em></span>. The definition
-          of the system function is now a bit more complex since we also need to
-          store the individual frequencies of each oscillator.
+          choose here a Lorentzian distribution for <span class="emphasis"><em>&#969;<sub>&#8203;i</sub></em></span>. Interestingly
+          a phase transition can be observed if the coupling strenght exceeds a critical
+          value. Above this value synchronization sets in and some of the oscillators
+          oscillate with the same frequency despite their different natural frequencies.
+          The transition is also called Kuramoto transition. Its behavior can be
+          analyzed by employing the mean field of the phase
+        </p>
+<p>
+          <span class="emphasis"><em>Z = K e<sup>i __Theta</sup> = 1 / N &#931;<sub>&#8203;k</sub>e<sup>i &#966;<sub>&#8203;k</sub></sup></em></span>
+        </p>
+<p>
+          The definition of the system function is now a bit more complex since we
+          also need to store the individual frequencies of each oscillator.
         </p>
 <p>
           
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">container_type</span><span class="special">;</span>
 
-<span class="keyword">struct</span> <span class="identifier">phase_lattice</span>
+
+<span class="identifier">pair</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">calc_mean_field</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">)</span>
+        <span class="special">{</span>
+    <span class="identifier">size_t</span> <span class="identifier">n</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span>
+    <span class="keyword">double</span> <span class="identifier">cos_sum</span> <span class="special">=</span> <span class="number">0.0</span> <span class="special">,</span> <span class="identifier">sin_sum</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
+    <span class="keyword">for</span><span class="special">(</span> <span class="identifier">size_t</span> <span class="identifier">i</span><span class="special">=</span><span class="number">0</span> <span class="special">;</span> <span class="identifier">i</span><span class="special">&lt;</span><span class="identifier">n</span> <span class="special">;</span> <span class="special">++</span><span class="identifier">i</span> <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">cos_sum</span> <span class="special">+=</span> <span class="identifier">cos</span><span class="special">(</span> <span class="identifier">x</span><span class="special">[</span><span class="identifier">i</span><span class="special">]</span> <span class="special">);</span>
+        <span class="identifier">sin_sum</span> <span class="special">+=</span> <span class="identifier">sin</span><span class="special">(</span> <span class="identifier">x</span><span class="special">[</span><span class="identifier">i</span><span class="special">]</span> <span class="special">);</span>
+    <span class="special">}</span>
+    <span class="identifier">cos_sum</span> <span class="special">/=</span> <span class="keyword">double</span><span class="special">(</span> <span class="identifier">n</span> <span class="special">);</span>
+    <span class="identifier">sin_sum</span> <span class="special">/=</span> <span class="keyword">double</span><span class="special">(</span> <span class="identifier">n</span> <span class="special">);</span>
+
+    <span class="keyword">double</span> <span class="identifier">K</span> <span class="special">=</span> <span class="identifier">sqrt</span><span class="special">(</span> <span class="identifier">cos_sum</span> <span class="special">*</span> <span class="identifier">cos_sum</span> <span class="special">+</span> <span class="identifier">sin_sum</span> <span class="special">*</span> <span class="identifier">sin_sum</span> <span class="special">);</span>
+    <span class="keyword">double</span> <span class="identifier">Theta</span> <span class="special">=</span> <span class="identifier">atan2</span><span class="special">(</span> <span class="identifier">sin_sum</span> <span class="special">,</span> <span class="identifier">cos_sum</span> <span class="special">);</span>
+
+    <span class="keyword">return</span> <span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">K</span> <span class="special">,</span> <span class="identifier">Theta</span> <span class="special">);</span>
+        <span class="special">}</span>
+
+
+<span class="keyword">struct</span> <span class="identifier">phase_ensemble</span>
 <span class="special">{</span>
     <span class="identifier">container_type</span> <span class="identifier">m_omega</span><span class="special">;</span>
+    <span class="keyword">double</span> <span class="identifier">m_epsilon</span><span class="special">;</span>
 
-    <span class="identifier">phase_lattice</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">n</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">sigma</span> <span class="special">=</span> <span class="number">1.0</span> <span class="special">)</span> <span class="special">:</span> <span class="identifier">m_omega</span><span class="special">(</span> <span class="identifier">n</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">)</span>
+    <span class="identifier">phase_ensemble</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">n</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">g</span> <span class="special">=</span> <span class="number">1.0</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">epsilon</span> <span class="special">=</span> <span class="number">1.0</span> <span class="special">)</span>
+    <span class="special">:</span> <span class="identifier">m_omega</span><span class="special">(</span> <span class="identifier">n</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">m_epsilon</span><span class="special">(</span> <span class="identifier">epsilon</span> <span class="special">)</span>
     <span class="special">{</span>
-        <span class="identifier">set_omega</span><span class="special">(</span> <span class="identifier">sigma</span> <span class="special">);</span>
+        <span class="identifier">create_frequencies</span><span class="special">(</span> <span class="identifier">g</span> <span class="special">);</span>
     <span class="special">}</span>
 
-    <span class="keyword">void</span> <span class="identifier">set_omega</span><span class="special">(</span> <span class="keyword">double</span> <span class="identifier">sigma</span> <span class="special">)</span>
+    <span class="keyword">void</span> <span class="identifier">create_frequencies</span><span class="special">(</span> <span class="keyword">double</span> <span class="identifier">g</span> <span class="special">)</span>
     <span class="special">{</span>
-        <span class="identifier">generate</span><span class="special">(</span> <span class="identifier">m_omega</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">m_omega</span><span class="special">.</span><span class="identifier">end</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">drand48</span> <span class="special">);</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mt19937</span> <span class="identifier">rng</span><span class="special">;</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">cauchy_distribution</span><span class="special">&lt;&gt;</span> <span class="identifier">cauchy</span><span class="special">(</span> <span class="number">0.0</span> <span class="special">,</span> <span class="identifier">g</span> <span class="special">);</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">variate_generator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mt19937</span><span class="special">&amp;,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">cauchy_distribution</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span> <span class="identifier">gen</span><span class="special">(</span> <span class="identifier">rng</span> <span class="special">,</span> <span class="identifier">cauchy</span> <span class="special">);</span>
+        <span class="identifier">generate</span><span class="special">(</span> <span class="identifier">m_omega</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">m_omega</span><span class="special">.</span><span class="identifier">end</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">gen</span> <span class="special">);</span>
     <span class="special">}</span>
+
+    <span class="keyword">void</span> <span class="identifier">set_epsilon</span><span class="special">(</span> <span class="keyword">double</span> <span class="identifier">epsilon</span> <span class="special">)</span> <span class="special">{</span> <span class="identifier">m_epsilon</span> <span class="special">=</span> <span class="identifier">epsilon</span><span class="special">;</span> <span class="special">}</span>
+
+    <span class="keyword">double</span> <span class="identifier">get_epsilon</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">m_epsilon</span><span class="special">;</span> <span class="special">}</span>
 
     <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span> <span class="keyword">const</span>
     <span class="special">{</span>
+        <span class="identifier">pair</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">mean</span> <span class="special">=</span> <span class="identifier">calc_mean_field</span><span class="special">(</span> <span class="identifier">x</span> <span class="special">);</span>
+        <span class="keyword">for</span><span class="special">(</span> <span class="identifier">size_t</span> <span class="identifier">i</span><span class="special">=</span><span class="number">0</span> <span class="special">;</span> <span class="identifier">i</span><span class="special">&lt;</span><span class="identifier">x</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span> <span class="special">;</span> <span class="special">++</span><span class="identifier">i</span> <span class="special">)</span>
+            <span class="identifier">dxdt</span><span class="special">[</span><span class="identifier">i</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">m_omega</span><span class="special">[</span><span class="identifier">i</span><span class="special">]</span> <span class="special">+</span> <span class="identifier">m_epsilon</span> <span class="special">*</span> <span class="identifier">mean</span><span class="special">.</span><span class="identifier">first</span> <span class="special">*</span> <span class="identifier">sin</span><span class="special">(</span> <span class="identifier">mean</span><span class="special">.</span><span class="identifier">second</span> <span class="special">-</span> <span class="identifier">x</span><span class="special">[</span><span class="identifier">i</span><span class="special">]</span> <span class="special">);</span>
     <span class="special">}</span>
 <span class="special">};</span>
 </pre>
 <p>
         </p>
 <p>
-          Interestingly a phase transition can be observed in the system. The transition
-          takes place from an unsynchronized to a synchronized state, meaning that
-          all oscillators have the same frequency despite their different individual
-          frequencies. To analyse this behaviour we create an observer which calculates
-          the variance of the phases of the oscillators
+          Note, that we have used <span class="emphasis"><em>Z</em></span> to simplify the equations
+          of motion. Next, we create an observer which computes the value of <span class="emphasis"><em>Z</em></span>
+          and we record <span class="emphasis"><em>Z</em></span> for different values of <span class="emphasis"><em>&#949;</em></span>.
         </p>
 <p>
           
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">statistics_observer</span>
 <span class="special">{</span>
+    <span class="keyword">double</span> <span class="identifier">m_K_mean</span><span class="special">;</span>
+    <span class="identifier">size_t</span> <span class="identifier">m_count</span><span class="special">;</span>
+
+    <span class="identifier">statistics_observer</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+    <span class="special">:</span> <span class="identifier">m_K_mean</span><span class="special">(</span> <span class="number">0.0</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">m_count</span><span class="special">(</span> <span class="number">0</span> <span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+
     <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">State</span> <span class="special">&gt;</span>
-    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span> <span class="keyword">const</span>
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span>
     <span class="special">{</span>
+        <span class="identifier">pair</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">mean</span> <span class="special">=</span> <span class="identifier">calc_mean_field</span><span class="special">(</span> <span class="identifier">x</span> <span class="special">);</span>
+        <span class="identifier">m_K_mean</span> <span class="special">+=</span> <span class="identifier">mean</span><span class="special">.</span><span class="identifier">first</span><span class="special">;</span>
+        <span class="special">++</span><span class="identifier">m_count</span><span class="special">;</span>
     <span class="special">}</span>
+
+    <span class="keyword">double</span> <span class="identifier">get_K_mean</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="special">(</span> <span class="identifier">m_count</span> <span class="special">!=</span> <span class="number">0</span> <span class="special">)</span> <span class="special">?</span> <span class="identifier">m_K_mean</span> <span class="special">/</span> <span class="keyword">double</span><span class="special">(</span> <span class="identifier">m_count</span> <span class="special">)</span> <span class="special">:</span> <span class="number">0.0</span> <span class="special">;</span> <span class="special">}</span>
+
+    <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="special">{</span> <span class="identifier">m_K_mean</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span> <span class="identifier">m_count</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="special">}</span>
 <span class="special">};</span>
 </pre>
 <p>
         </p>
 <p>
-          Now, we do several integration for different values of xyz and record this
-          variance. The result is a very nice confirmation of the phase transition.
+          Now, we do several integrations for different values of <span class="emphasis"><em>&#949;</em></span>
+          and record <span class="emphasis"><em>Z</em></span>. The result nicely confirms the analytical
+          result of the phase transition, i.e. in our example the standard deviation
+          of the Lorentzian is 1 such that the transition will be observed at <span class="emphasis"><em>&#949; =
+          2</em></span>.
         </p>
 <p>
           
 </p>
 <pre class="programlisting"><span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">n</span> <span class="special">=</span> <span class="number">16384</span><span class="special">;</span>
-<span class="identifier">container_type</span> <span class="identifier">x</span><span class="special">(</span> <span class="identifier">n</span> <span class="special">);</span>
-<span class="identifier">generate</span><span class="special">(</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">end</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">drand48</span> <span class="special">);</span>
-
-
 <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">dt</span> <span class="special">=</span> <span class="number">0.1</span><span class="special">;</span>
 
-<span class="identifier">phase_lattice</span> <span class="identifier">lattice</span><span class="special">(</span> <span class="identifier">n</span> <span class="special">);</span>
+<span class="identifier">container_type</span> <span class="identifier">x</span><span class="special">(</span> <span class="identifier">n</span> <span class="special">);</span>
+
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">mt19937</span> <span class="identifier">rng</span><span class="special">;</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">uniform_real</span><span class="special">&lt;&gt;</span> <span class="identifier">unif</span><span class="special">(</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">2.0</span> <span class="special">*</span> <span class="identifier">M_PI</span> <span class="special">);</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">variate_generator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mt19937</span><span class="special">&amp;,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">uniform_real</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span> <span class="identifier">gen</span><span class="special">(</span> <span class="identifier">rng</span> <span class="special">,</span> <span class="identifier">unif</span> <span class="special">);</span>
+
+<span class="comment">// gamma = 1, the phase transition occurs at epsilon = 2
+</span><span class="identifier">phase_ensemble</span> <span class="identifier">ensemble</span><span class="special">(</span> <span class="identifier">n</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">);</span>
 <span class="identifier">statistics_observer</span> <span class="identifier">obs</span><span class="special">;</span>
 
-<span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">explicit_rk4</span><span class="special">&lt;</span> <span class="identifier">container_type</span> <span class="special">&gt;()</span> <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">lattice</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10000.0</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">,</span> <span class="identifier">obs</span> <span class="special">);</span>
+<span class="keyword">for</span><span class="special">(</span> <span class="keyword">double</span> <span class="identifier">epsilon</span> <span class="special">=</span> <span class="number">0.0</span> <span class="special">;</span> <span class="identifier">epsilon</span> <span class="special">&lt;</span> <span class="number">5.0</span> <span class="special">;</span> <span class="identifier">epsilon</span> <span class="special">+=</span> <span class="number">0.1</span> <span class="special">)</span>
+<span class="special">{</span>
+    <span class="identifier">ensemble</span><span class="special">.</span><span class="identifier">set_epsilon</span><span class="special">(</span> <span class="identifier">epsilon</span> <span class="special">);</span>
+    <span class="identifier">obs</span><span class="special">.</span><span class="identifier">reset</span><span class="special">();</span>
+
+    <span class="comment">// start with random initial conditions
+</span>    <span class="identifier">generate</span><span class="special">(</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">end</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">gen</span> <span class="special">);</span>
+
+    <span class="comment">// calculate some transients steps
+</span>    <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">explicit_rk4</span><span class="special">&lt;</span> <span class="identifier">container_type</span> <span class="special">&gt;()</span> <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">ensemble</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
+
+    <span class="comment">// integrate and compute the statistics
+</span>    <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">explicit_rk4</span><span class="special">&lt;</span> <span class="identifier">container_type</span> <span class="special">&gt;()</span> <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">ensemble</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">100.0</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">obs</span> <span class="special">)</span> <span class="special">);</span>
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">epsilon</span> <span class="special">&lt;&lt;</span> <span class="string">"\t"</span> <span class="special">&lt;&lt;</span> <span class="identifier">obs</span><span class="special">.</span><span class="identifier">get_K_mean</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+
+
 </pre>
 <p>
+        </p>
+<p>
+          The full cpp file for this example can be found here <a href="../../../../examples/phase_oscillator_ensemble.cpp" target="_top">../../examples/phase_oscillator_ensemble.cpp</a>
         </p>
 </div>
 <div class="section">
