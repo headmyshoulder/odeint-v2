@@ -1,14 +1,30 @@
 [section Special topics]
 
+explain boost::ref 
+
 [section Complex state types]
+
+[import ../examples/stuart_landau.cpp]
 
 Of course, odeint can handle complex state types, hence ODEs which are defined on complex vector spaces. An example is the Stuart-Landau oscillator
 
-['dx / dt = ( 1 + i ) x]
+['d __Psi / dt = ( 1 + i __eta ) __Psi + ( 1 + i __alpha ) | __Psi |[super 2] __Psi ]
 
-where ['x] is a complex variable. Such systems can easily be represent by an state type like
+where ['__Psi] and ['i] is a complex variable. Such systems can easily be represent by an state type like `array< complex< double > , 1 >`. The definition of this ODE in C++ code is very simple
 
-Hier gehts weiter
+[stuart_landau_system_function]
+
+Of courst, one can also use classical functions to implement the state function. In this cast the Stuart-Landau oscillator looks like
+
+[stuart_landau_system_function_alternative]
+
+We strongly recommend to use the first ansatz. In this case you have explicit control over the parameters of the system and are not restricted to use global variables to parametrize the oscillator.
+
+Integration is also very easy:
+
+[stuart_landau_integration]
+
+The full cpp file for the Stuart Landau example can be found here [@../../examples/stuart_landau.cpp]
 
 [endsect]
 

@@ -46,6 +46,9 @@
 <dt><span class="section"><a href="special_topics.html#boost_sandbox_numeric_odeint.tutorial.special_topics.self_expanding_lattices">Self
         expanding lattices</a></span></dt>
 </dl></div>
+<p>
+        explain boost::ref
+      </p>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.special_topics.complex_state_types"></a><a class="link" href="special_topics.html#boost_sandbox_numeric_odeint.tutorial.special_topics.complex_state_types" title="Complex state types">Complex
@@ -56,14 +59,78 @@
           defined on complex vector spaces. An example is the Stuart-Landau oscillator
         </p>
 <p>
-          <span class="emphasis"><em>dx / dt = ( 1 + i ) x</em></span>
+          <span class="emphasis"><em>d &#936; / dt = ( 1 + i &#951; ) &#936; + ( 1 + i &#945; ) | &#936; |<sup>2</sup> &#936; </em></span>
         </p>
 <p>
-          where <span class="emphasis"><em>x</em></span> is a complex variable. Such systems can easily
-          be represent by an state type like
+          where <span class="emphasis"><em>&#936;</em></span> and <span class="emphasis"><em>i</em></span> is a complex variable.
+          Such systems can easily be represent by an state type like <code class="computeroutput"><span class="identifier">array</span><span class="special">&lt;</span> <span class="identifier">complex</span><span class="special">&lt;</span>
+          <span class="keyword">double</span> <span class="special">&gt;</span>
+          <span class="special">,</span> <span class="number">1</span> <span class="special">&gt;</span></code>. The definition of this ODE in C++
+          code is very simple
         </p>
 <p>
-          Hier gehts weiter
+          
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">tr1</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="identifier">complex</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="special">,</span> <span class="number">1</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">stuart_landau</span>
+<span class="special">{</span>
+    <span class="keyword">double</span> <span class="identifier">m_eta</span><span class="special">;</span>
+    <span class="keyword">double</span> <span class="identifier">m_alpha</span><span class="special">;</span>
+
+    <span class="identifier">stuart_landau</span><span class="special">(</span> <span class="keyword">double</span> <span class="identifier">eta</span> <span class="special">=</span> <span class="number">1.0</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">alpha</span> <span class="special">=</span> <span class="number">1.0</span> <span class="special">)</span>
+    <span class="special">:</span> <span class="identifier">m_eta</span><span class="special">(</span> <span class="identifier">eta</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">m_alpha</span><span class="special">(</span> <span class="identifier">alpha</span> <span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span> <span class="keyword">const</span>
+    <span class="special">{</span>
+        <span class="keyword">const</span> <span class="identifier">complex</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">I</span><span class="special">(</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">);</span>
+        <span class="identifier">dxdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="special">(</span> <span class="number">1.0</span> <span class="special">+</span> <span class="identifier">m_eta</span> <span class="special">*</span> <span class="identifier">I</span> <span class="special">)</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">+</span> <span class="special">(</span> <span class="number">1.0</span> <span class="special">+</span> <span class="identifier">m_alpha</span> <span class="special">*</span><span class="identifier">I</span> <span class="special">)</span> <span class="special">*</span> <span class="identifier">norm</span><span class="special">(</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">)</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">];</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+        </p>
+<p>
+          Of courst, one can also use classical functions to implement the state
+          function. In this cast the Stuart-Landau oscillator looks like
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">double</span> <span class="identifier">eta</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span>
+<span class="keyword">double</span> <span class="identifier">alpha</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span>
+
+<span class="keyword">void</span> <span class="identifier">stuart_landau</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span>
+<span class="special">{</span>
+    <span class="keyword">const</span> <span class="identifier">complex</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">I</span><span class="special">(</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">);</span>
+    <span class="identifier">dxdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="special">(</span> <span class="number">1.0</span> <span class="special">+</span> <span class="identifier">m_eta</span> <span class="special">*</span> <span class="identifier">I</span> <span class="special">)</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">+</span> <span class="special">(</span> <span class="number">1.0</span> <span class="special">+</span> <span class="identifier">m_alpha</span> <span class="special">*</span><span class="identifier">I</span> <span class="special">)</span> <span class="special">*</span> <span class="identifier">norm</span><span class="special">(</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">)</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">];</span>
+<span class="special">}</span>
+</pre>
+<p>
+        </p>
+<p>
+          We strongly recommend to use the first ansatz. In this case you have explicit
+          control over the parameters of the system and are not restricted to use
+          global variables to parametrize the oscillator.
+        </p>
+<p>
+          Integration is also very easy:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="identifier">state_type</span> <span class="identifier">x</span> <span class="special">=</span> <span class="special">{{</span> <span class="identifier">complex</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;(</span> <span class="number">1.0</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">)</span> <span class="special">}};</span>
+
+<span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">dt</span> <span class="special">=</span> <span class="number">0.1</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">explicit_rk4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">stepper_type</span><span class="special">;</span>
+
+<span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">stepper_type</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">stuart_landau</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">,</span> <span class="identifier">streaming_observer</span><span class="special">(</span> <span class="identifier">cout</span> <span class="special">)</span> <span class="special">);</span>
+</pre>
+<p>
+        </p>
+<p>
+          The full cpp file for the Stuart Landau example can be found here <a href="../../../../examples/stuart_landau.cpp" target="_top">../../examples/stuart_landau.cpp</a>
         </p>
 </div>
 <div class="section">
