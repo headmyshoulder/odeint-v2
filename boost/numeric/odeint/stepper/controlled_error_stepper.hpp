@@ -224,7 +224,7 @@ public:
 
 		m_max_rel_error = m_error_checker.error( m_stepper.algebra() , in , dxdt , m_xerr.m_v , dt );
 
-		if( m_max_rel_error > 1.1 )
+		if( m_max_rel_error > 1.0 )
 		{
 			// error too large - decrease dt ,limit scaling factor to 0.2 and reset state
 			dt *= max( 0.9 * pow( m_max_rel_error , -1.0 / ( m_stepper.error_order() - 1.0 ) ) , 0.2 );
