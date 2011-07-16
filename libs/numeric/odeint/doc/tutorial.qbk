@@ -8,6 +8,8 @@
 
 [include tutorial_stiff_systems.qbk]
 
+[include tutorial_special_topics.qbk]
+
 [section Odeint in detail]
 
 Different steppers
@@ -22,11 +24,12 @@ dense output
 
 Algebras and operations
 
+boost::range and boost::ref
+
 Overview and table
 
 [endsect]
 
-[include tutorial_special_topics.qbk]
 
 
 

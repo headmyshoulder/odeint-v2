@@ -20,3 +20,4 @@ exe fpu : fpu.cpp ;
 exe phase_oscillator_ensemble : phase_oscillator_ensemble.cpp ;
 exe harmonic_oscillator_units : harmonic_oscillator_units.cpp ;
 exe stuart_landau : stuart_landau.cpp ;
+exe two_dimensional_phase_lattice : two_dimensional_phase_lattice.cpp ; 

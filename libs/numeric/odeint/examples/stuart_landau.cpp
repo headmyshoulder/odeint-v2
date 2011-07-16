@@ -35,7 +35,7 @@ struct stuart_landau
     void operator()( const state_type &x , state_type &dxdt , double t ) const
     {
         const complex< double > I( 0.0 , 1.0 );
-        dxdt[0] = ( 1.0 + m_eta * I ) * x[0] + ( 1.0 + m_alpha *I ) * norm( x[0] ) * x[0];
+        dxdt[0] = ( 1.0 + m_eta * I ) * x[0] - ( 1.0 + m_alpha * I ) * norm( x[0] ) * x[0];
     }
 };
 //]
@@ -49,7 +49,7 @@ double alpha = 1.0;
 void stuart_landau( const state_type &x , state_type &dxdt , double t )
 {
     const complex< double > I( 0.0 , 1.0 );
-    dxdt[0] = ( 1.0 + m_eta * I ) * x[0] + ( 1.0 + m_alpha *I ) * norm( x[0] ) * x[0];
+    dxdt[0] = ( 1.0 + m_eta * I ) * x[0] - ( 1.0 + m_alpha * I ) * norm( x[0] ) * x[0];
 }
 //]
 */
@@ -65,7 +65,7 @@ struct streaming_observer
     void operator()( const State &x , double t ) const
     {
         m_out << t;
-        for( size_t i=0 ; i<x.size() ; ++i ) m_out << "\t" << x[i];
+        for( size_t i=0 ; i<x.size() ; ++i ) m_out << "\t" << x[i].real() << "\t" << x[i].imag() ;
         m_out << "\n";
     }
 };
@@ -82,7 +82,7 @@ int main( int argc , char **argv )
 
     typedef explicit_rk4< state_type > stepper_type;
 
-    integrate_const( stepper_type() , stuart_landau() , x , 0.0 , 10.0 , dt , streaming_observer( cout ) );
+    integrate_const( stepper_type() , stuart_landau( 2.0 , 1.0 ) , x , 0.0 , 10.0 , dt , streaming_observer( cout ) );
     //]
 
     return 0;

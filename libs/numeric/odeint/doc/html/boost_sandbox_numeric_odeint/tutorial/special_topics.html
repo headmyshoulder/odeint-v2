@@ -6,14 +6,14 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
 <link rel="up" href="../tutorial.html" title="Tutorial">
-<link rel="prev" href="odeint_in_detail.html" title="Odeint in detail">
-<link rel="next" href="all_examples.html" title="All examples">
+<link rel="prev" href="stiff_systems.html" title="Stiff systems">
+<link rel="next" href="odeint_in_detail.html" title="Odeint in detail">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="odeint_in_detail.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="all_examples.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="stiff_systems.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="odeint_in_detail.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
@@ -37,10 +37,6 @@
         matrices as state types</a></span></dt>
 <dt><span class="section"><a href="special_topics.html#boost_sandbox_numeric_odeint.tutorial.special_topics.ordinary_differential_equations_on_networks">Ordinary
         differential equations on networks</a></span></dt>
-<dt><span class="section"><a href="special_topics.html#boost_sandbox_numeric_odeint.tutorial.special_topics.pass_by_value_or_by_reference">Pass
-        by value or by reference</a></span></dt>
-<dt><span class="section"><a href="special_topics.html#boost_sandbox_numeric_odeint.tutorial.special_topics.using_boost__range">Using
-        boost::range</a></span></dt>
 <dt><span class="section"><a href="special_topics.html#boost_sandbox_numeric_odeint.tutorial.special_topics.using_arbitrary_precision_floating_point_types">Using
         arbitrary precision floating point types</a></span></dt>
 <dt><span class="section"><a href="special_topics.html#boost_sandbox_numeric_odeint.tutorial.special_topics.self_expanding_lattices">Self
@@ -84,7 +80,7 @@
     <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span> <span class="keyword">const</span>
     <span class="special">{</span>
         <span class="keyword">const</span> <span class="identifier">complex</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">I</span><span class="special">(</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">);</span>
-        <span class="identifier">dxdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="special">(</span> <span class="number">1.0</span> <span class="special">+</span> <span class="identifier">m_eta</span> <span class="special">*</span> <span class="identifier">I</span> <span class="special">)</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">+</span> <span class="special">(</span> <span class="number">1.0</span> <span class="special">+</span> <span class="identifier">m_alpha</span> <span class="special">*</span><span class="identifier">I</span> <span class="special">)</span> <span class="special">*</span> <span class="identifier">norm</span><span class="special">(</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">)</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">];</span>
+        <span class="identifier">dxdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="special">(</span> <span class="number">1.0</span> <span class="special">+</span> <span class="identifier">m_eta</span> <span class="special">*</span> <span class="identifier">I</span> <span class="special">)</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">-</span> <span class="special">(</span> <span class="number">1.0</span> <span class="special">+</span> <span class="identifier">m_alpha</span> <span class="special">*</span> <span class="identifier">I</span> <span class="special">)</span> <span class="special">*</span> <span class="identifier">norm</span><span class="special">(</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">)</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">];</span>
     <span class="special">}</span>
 <span class="special">};</span>
 </pre>
@@ -103,7 +99,7 @@
 <span class="keyword">void</span> <span class="identifier">stuart_landau</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span>
 <span class="special">{</span>
     <span class="keyword">const</span> <span class="identifier">complex</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">I</span><span class="special">(</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">);</span>
-    <span class="identifier">dxdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="special">(</span> <span class="number">1.0</span> <span class="special">+</span> <span class="identifier">m_eta</span> <span class="special">*</span> <span class="identifier">I</span> <span class="special">)</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">+</span> <span class="special">(</span> <span class="number">1.0</span> <span class="special">+</span> <span class="identifier">m_alpha</span> <span class="special">*</span><span class="identifier">I</span> <span class="special">)</span> <span class="special">*</span> <span class="identifier">norm</span><span class="special">(</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">)</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">];</span>
+    <span class="identifier">dxdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="special">(</span> <span class="number">1.0</span> <span class="special">+</span> <span class="identifier">m_eta</span> <span class="special">*</span> <span class="identifier">I</span> <span class="special">)</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">-</span> <span class="special">(</span> <span class="number">1.0</span> <span class="special">+</span> <span class="identifier">m_alpha</span> <span class="special">*</span> <span class="identifier">I</span> <span class="special">)</span> <span class="special">*</span> <span class="identifier">norm</span><span class="special">(</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">)</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">];</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -125,7 +121,7 @@
 
 <span class="keyword">typedef</span> <span class="identifier">explicit_rk4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">stepper_type</span><span class="special">;</span>
 
-<span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">stepper_type</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">stuart_landau</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">,</span> <span class="identifier">streaming_observer</span><span class="special">(</span> <span class="identifier">cout</span> <span class="special">)</span> <span class="special">);</span>
+<span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">stepper_type</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">stuart_landau</span><span class="special">(</span> <span class="number">2.0</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">,</span> <span class="identifier">streaming_observer</span><span class="special">(</span> <span class="identifier">cout</span> <span class="special">)</span> <span class="special">);</span>
 </pre>
 <p>
         </p>
@@ -619,24 +615,6 @@
 </h4></div></div></div></div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_sandbox_numeric_odeint.tutorial.special_topics.pass_by_value_or_by_reference"></a><a class="link" href="special_topics.html#boost_sandbox_numeric_odeint.tutorial.special_topics.pass_by_value_or_by_reference" title="Pass by value or by reference">Pass
-        by value or by reference</a>
-</h4></div></div></div>
-<p>
-          blah blah
-        </p>
-</div>
-<div class="section">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="boost_sandbox_numeric_odeint.tutorial.special_topics.using_boost__range"></a><a class="link" href="special_topics.html#boost_sandbox_numeric_odeint.tutorial.special_topics.using_boost__range" title="Using boost::range">Using
-        boost::range</a>
-</h4></div></div></div>
-<p>
-          blah blah
-        </p>
-</div>
-<div class="section">
-<div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.special_topics.using_arbitrary_precision_floating_point_types"></a><a class="link" href="special_topics.html#boost_sandbox_numeric_odeint.tutorial.special_topics.using_arbitrary_precision_floating_point_types" title="Using arbitrary precision floating point types">Using
         arbitrary precision floating point types</a>
 </h4></div></div></div>
@@ -659,7 +637,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="odeint_in_detail.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="all_examples.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="stiff_systems.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="odeint_in_detail.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

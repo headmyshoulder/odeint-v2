@@ -59,7 +59,7 @@ struct resize_impl< boost::numeric::ublas::matrix< T , L , A > , boost::numeric:
 template< class T , class L , class A >
 struct same_size_impl< boost::numeric::ublas::matrix< T , L , A > , boost::numeric::ublas::matrix< T , L , A > >
 {
-	static bool same_size( const boost::numeric::ublas::matrix< T , L , A > &x1 , boost::numeric::ublas::matrix< T , L , A > &x2 )
+	static bool same_size( const boost::numeric::ublas::matrix< T , L , A > &x1 , const boost::numeric::ublas::matrix< T , L , A > &x2 )
 	{
 		return ( ( x1.size1() == x2.size1() ) && ( x1.size2() == x2.size2() ) );
 	}
@@ -97,9 +97,65 @@ struct is_resizeable< boost::numeric::ublas::permutation_matrix< T , A > >
     const static bool value = type::value;
 };
 
-
 } // namespace odeint
 } // namespace numeric
 } // namespace boost
+
+
+
+
+/*
+ * preparing ublas::matrix for boost::range, such that ublas::matrix can be used in all steppers with the range algebra
+ */
+
+namespace boost
+{
+    template< class T , class L , class A >
+    struct range_mutable_iterator< boost::numeric::ublas::matrix< T , L , A > >
+    {
+        typedef typename boost::numeric::ublas::matrix< T , L , A >::array_type::iterator type;
+    };
+
+    template< class T , class L , class A >
+    struct range_const_iterator< boost::numeric::ublas::matrix< T , L , A > >
+    {
+        typedef typename boost::numeric::ublas::matrix< T , L , A >::array_type::const_iterator type;
+    };
+
+} // namespace boost
+
+
+namespace boost { namespace numeric { namespace ublas {
+
+template< class T , class L , class A >
+inline typename matrix< T , L , A >::array_type::iterator
+range_begin( matrix< T , L , A > &x )
+{
+    return x.data().begin();
+}
+
+template< class T , class L , class A >
+inline typename matrix< T , L , A >::array_type::const_iterator
+range_begin( const matrix< T , L , A > &x )
+{
+    return x.data().begin();
+}
+
+template< class T , class L , class A >
+inline typename matrix< T , L , A >::array_type::iterator
+range_end( matrix< T , L , A > &x )
+{
+    return x.data().end();
+}
+
+template< class T , class L , class A >
+inline typename matrix< T , L , A >::array_type::const_iterator
+range_end( const matrix< T , L , A > &x )
+{
+    return x.data().end();
+}
+
+} } } // nampespace boost::numeric::ublas
+
 
 #endif /* BOOST_NUMERIC_ODEINT_UTIL_UBLAS_RESIZE_HPP_INCLUDED */

@@ -85,17 +85,6 @@ The full cpp file for this example can be found here [@../../examples/phase_osci
 
 [endsect]
 
-[section Partial differential equations]
-
-Wave equation
-
-KdV
-
-Ginzburg-Landau
-
-[endsect]
-
-
 [section Using boost::units]
 
 [import ../examples/harmonic_oscillator_units.cpp]
@@ -134,19 +123,17 @@ Expanding resizing
 
 [endsect]
 
+[section Partial differential equations]
+
+Wave equation
+
+KdV
+
+Ginzburg-Landau
+
+[endsect]
+
 [section Ordinary differential equations on networks]
-
-[endsect]
-
-[section Pass by value or by reference]
-
-blah blah
-
-[endsect]
-
-[section Using boost::range]
-
-blah blah
 
 [endsect]
 
