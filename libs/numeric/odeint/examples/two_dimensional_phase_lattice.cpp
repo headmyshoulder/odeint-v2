@@ -14,13 +14,7 @@
 
 #include <iostream>
 
-#include <boost/numeric/ublas/fwd.hpp>
-#include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/odeint.hpp>
-
-
-
-
 
 
 using namespace boost::numeric::odeint;
