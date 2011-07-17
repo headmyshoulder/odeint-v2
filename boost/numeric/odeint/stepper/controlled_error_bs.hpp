@@ -16,6 +16,7 @@
 #include <boost/bind.hpp>
 
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
+#include <boost/numeric/odeint/stepper/explicit_midpoint.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
@@ -50,6 +51,7 @@ public:
     typedef Resizer resizer_type;
     typedef state_wrapper< state_type > wrapped_state_type;
     typedef state_wrapper< deriv_type > wrapped_deriv_type;
+    typedef controlled_stepper_tag stepper_category;
 
     typedef controlled_error_bs< State , Value , Deriv , Time , Algebra , Operations , Resizer > controlled_error_bs_type;
 
@@ -90,13 +92,14 @@ public:
             {
                 const time_type r = static_cast< time_type >( m_interval_sequence[i] ) / static_cast< time_type >( m_interval_sequence[k] );
                 m_coeff[i][k] = 1.0 / ( r*r - static_cast< time_type >( 1.0 ) ); // coefficients for extrapolation
-                std::cout << i << "," << k << " " << m_coeff[i][k] << '\t' ;
+                //std::cout << i << "," << k << " " << m_coeff[i][k] << '\t' ;
             }
-            std ::cout << std::endl;
+            //std ::cout << std::endl;
             // crude estimate of optimal order
             const time_type logfact( -log10( std::max( eps_rel , 1.0E-12 ) ) * 0.6 + 0.5 );
             m_current_k_opt = std::max( 1 , std::min( static_cast<int>( m_k_max-1 ) , static_cast<int>( logfact ) ));
             //m_current_k_opt = m_k_max - 1;
+            std::cout << m_cost[i] << std::endl;
         }
 
     }
@@ -163,32 +166,39 @@ public:
 
 		bool reject( true );
 		m_dt_last = dt;
-		time_type h( dt );
+
 		value_vector h_opt( m_k_max+1 );
 		value_vector work( m_k_max+1 );
 
 		size_t k_final = 0;
 
+		std::cout << "t=" << t <<", dt=" << dt << ", k_opt=" << m_current_k_opt << std::endl;
+
         for( size_t k = 0 ; k <= m_current_k_opt+1 ; k++ )
         {
+            std::cout << "k=" << k <<": " << std::endl;
             m_midpoint.set_steps( m_interval_sequence[k] );
             if( k == 0 )
             {
-                m_midpoint.do_step( sys , in , dxdt , t , out , h );
-            } else
+                m_midpoint.do_step( sys , in , dxdt , t , out , dt );
+            }
+            else
             {
-                m_midpoint.do_step( sys , in , dxdt , t , m_table[k-1].m_v , h );
+                m_midpoint.do_step( sys , in , dxdt , t , m_table[k-1].m_v , dt );
                 extrapolate( k , out );
                 // get error estimate
                 m_algebra.for_each3( m_err.m_v , out , m_table[0].m_v ,
                         typename operations_type::template scale_sum2< time_type , time_type >( val1 , -val1 ) );
                 const time_type error = m_error_checker.error( m_algebra , in , dxdt , m_err.m_v , dt );
-                h_opt[k] = calc_h_opt( h , error , k );
+                h_opt[k] = calc_h_opt( dt , error , k );
                 work[k] = m_cost[k]/h_opt[k];
-
+                std::cout << '\t' << "h_opt=" << h_opt[k] << ", work=" << work[k] << std::endl;
+                std::cout << '\t' << "error: " << error << std::endl;
                 if( m_first && (error <= static_cast< time_type >( 1.0 )) )
                 { // this is the first step, convergence does not have to be in order window
-                    m_last_step_rejected = false;
+                    std::cout << '\t' << "convergence in first step" << std::endl;
+                    reject = false;
+                    k_final = k;
                     break; // leave k-loop
                 }
                 if( in_convergence_window( k ) )
@@ -217,6 +227,10 @@ public:
         m_last_step_rejected = reject;
         if( reject )
             result = step_size_decreased;
+        else
+            t += m_dt_last;
+
+        m_dt_last = dt;
 
         m_first = false;
 
@@ -280,15 +294,15 @@ private:
     void extrapolate( const size_t k , StateInOut &xest )
     //polynomial extrapolation, see http://www.nr.com/webnotes/nr3web21.pdf
     {
-        std::cout << "extrapolate k=" << k << ":" << std::endl;
+        //std::cout << "extrapolate k=" << k << ":" << std::endl;
         static const time_type val1 = static_cast< time_type >( 1.0 );
         for( int j=k-1 ; j>0 ; --j )
         {
-            std::cout << '\t' << m_coeff[k][j];
+            //std::cout << '\t' << m_coeff[k][j];
             m_algebra.for_each3( m_table[j-1].m_v , m_table[j].m_v , m_table[j-1].m_v ,
                     typename operations_type::template scale_sum2< time_type , time_type >( val1 + m_coeff[k][j] , -m_coeff[k][j] ) );
         }
-        std::cout << std::endl << m_coeff[k][0] << std::endl;
+        //std::cout << std::endl << m_coeff[k][0] << std::endl;
         m_algebra.for_each3( xest , m_table[0].m_v , xest ,
                     typename operations_type::template scale_sum2< time_type , time_type >( val1 + m_coeff[k][0] , -m_coeff[k][0]) );
     }
@@ -303,13 +317,19 @@ private:
         else
         {
             fac = STEPFAC2 / std::pow( error / STEPFAC1 , expo );
-            fac = std::min( facmin/STEPFAC4 , std::min( 1.0/facmin , fac ) );
+            fac = std::max( facmin/STEPFAC4 , std::min( 1.0/facmin , fac ) );
         }
         return std::abs(h*fac);
     }
 
     controlled_step_result set_k_opt( const size_t k , const value_vector &work , const value_vector &h_opt , time_type &dt )
     {
+        if( k == 1 )
+        {
+            m_current_k_opt = 2;
+            //dt = h_opt[ m_current_k_opt-1 ] * m_cost[ m_current_k_opt ] / m_cost[ m_current_k_opt-1 ] ;
+            return success_step_size_increased;
+        }
         if( work[k-1] < KFAC1*work[k] )
         {   // order decrease
             m_current_k_opt = k-1;
