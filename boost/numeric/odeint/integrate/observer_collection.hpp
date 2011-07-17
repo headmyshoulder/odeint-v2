@@ -22,7 +22,7 @@ class observer_collection
 public:
 
     typedef boost::function< void( const State& , const Time& ) > observer_type;
-    typedef std::vector< observer_type > observer_collection_type;
+    typedef std::vector< observer_type > collection_type;
 
     void operator()( const State& x , const Time &t )
     {
@@ -30,12 +30,12 @@ public:
             m_observers[i]( x , t );
     }
 
-    observer_collection_type& observers( void ) { return m_observers; }
-    const observer_collection_type& observers( void ) const { return m_observers; }
+    collection_type& observers( void ) { return m_observers; }
+    const collection_type& observers( void ) const { return m_observers; }
 
 private:
 
-    observer_collection_type m_observers;
+    collection_type m_observers;
 };
 
 } // namespace odeint

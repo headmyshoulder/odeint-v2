@@ -45,6 +45,9 @@ struct two_dimensional_phase_lattice
                         coupling_func( x( i , j - 1 ) - x( i , j ) );
             }
         }
+
+        for( size_t i=0 ; i<x.size1() ; ++i ) dxdt( i , 0 ) = dxdt( i , x.size2() -1 ) = 0.0;
+        for( size_t j=0 ; j<x.size2() ; ++j ) dxdt( 0 , j ) = dxdt( 0 , x.size1() -1 ) = 0.0;
     }
 
     double coupling_func( double x ) const
@@ -82,38 +85,45 @@ struct write_for_gnuplot
     }
 };
 
-struct write_snapshots
+class write_snapshots
 {
-    size_t m_count;
-    map< size_t , string > snapshots;
+public:
+
+    typedef std::map< size_t , std::string > map_type;
 
     write_snapshots( void ) : m_count( 0 ) { }
 
     void operator()( const state_type &x , double t )
     {
-        map< size_t , string >::const_iterator it = snapshots.find( m_count );
-        if( it != snapshots.end() )
+        map< size_t , string >::const_iterator it = m_snapshots.find( m_count );
+        if( it != m_snapshots.end() )
         {
-            clog << m_count << "\t" << it->first << "\t" << it->second.c_str() << "\t" << x.size1() << "\t" << x.size2() << "\t" << t << endl;
             ofstream fout( it->second.c_str() );
-//            for( size_t i=0 ; i<x.size1() ; ++i )
-//            {
-//                for( size_t j=0 ; j<x.size2() ; ++j )
-//                {
-//                    fout << i << "\t" << j << "\t" << x( i , j ) << "\t" << sin( x( i , j ) ) << "\n";
-//                }
-//                fout << "\n";
-//            }
-            fout.close();
+            for( size_t i=0 ; i<x.size1() ; ++i )
+            {
+                for( size_t j=0 ; j<x.size2() ; ++j )
+                {
+                    fout << i << "\t" << j << "\t" << x( i , j ) << "\t" << sin( x( i , j ) ) << "\n";
+                }
+                fout << "\n";
+            }
         }
         ++m_count;
     }
+
+    map_type& snapshots( void ) { return m_snapshots; }
+    const map_type& snapshots( void ) const { return m_snapshots; }
+
+private:
+
+    size_t m_count;
+    map_type m_snapshots;
 };
 
 
 int main( int argc , char **argv )
 {
-    size_t size1 = 32 , size2 = 32;
+    size_t size1 = 128 , size2 = 128;
     state_type x( size1 , size2 , 0.0 );
 
     for( size_t i=(size1/2-10) ; i<(size1/2+10) ; ++i )
@@ -121,9 +131,9 @@ int main( int argc , char **argv )
             x( i , j ) = drand48() * 2.0 * M_PI;
 
     write_snapshots snapshots;
-    snapshots.snapshots.insert( make_pair( size_t( 0 ) , string( "lat_0000.dat" ) ) );
-    snapshots.snapshots.insert( make_pair( size_t( 100 ) , string( "lat_0100.dat" ) ) );
-    snapshots.snapshots.insert( make_pair( size_t( 1000 ) , string( "lat_1000.dat" ) ) );
+    snapshots.snapshots().insert( make_pair( size_t( 0 ) , string( "lat_0000.dat" ) ) );
+    snapshots.snapshots().insert( make_pair( size_t( 100 ) , string( "lat_0100.dat" ) ) );
+    snapshots.snapshots().insert( make_pair( size_t( 1000 ) , string( "lat_1000.dat" ) ) );
     observer_collection< state_type , double > obs;
     obs.observers().push_back( write_for_gnuplot( 1 ) );
     obs.observers().push_back( snapshots );
@@ -131,7 +141,7 @@ int main( int argc , char **argv )
     cout << "set term x11" << endl;
     cout << "set pm3d map" << endl;
     integrate_const( explicit_rk4< state_type >() , two_dimensional_phase_lattice( 1.2 ) ,
-            x , 0.0 , 101.0 , 0.1 , obs );
+            x , 0.0 , 101.0 , 0.1 , boost::ref( snapshots ) );
 
 
     return 0;
