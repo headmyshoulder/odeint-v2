@@ -45,5 +45,6 @@
 #include <boost/numeric/odeint/integrate/integrate_const.hpp>
 #include <boost/numeric/odeint/integrate/integrate_n_steps.hpp>
 
+#include <boost/numeric/odeint/integrate/observer_collection.hpp>
 
 #endif // BOOST_NUMERIC_ODEINT_HPP
