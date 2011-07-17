@@ -94,8 +94,8 @@ struct write_snapshots
         map< size_t , string >::const_iterator it = snapshots.find( m_count );
         if( it != snapshots.end() )
         {
-            clog << it->first << "\t" << it->second.c_str() << endl;
-//            ofstream fout( it->second.c_str() );
+            clog << m_count << "\t" << it->first << "\t" << it->second.c_str() << "\t" << x.size1() << "\t" << x.size2() << "\t" << t << endl;
+            ofstream fout( it->second.c_str() );
 //            for( size_t i=0 ; i<x.size1() ; ++i )
 //            {
 //                for( size_t j=0 ; j<x.size2() ; ++j )
@@ -104,7 +104,7 @@ struct write_snapshots
 //                }
 //                fout << "\n";
 //            }
-//            fout.close();
+            fout.close();
         }
         ++m_count;
     }
@@ -113,7 +113,7 @@ struct write_snapshots
 
 int main( int argc , char **argv )
 {
-    size_t size1 = 128 , size2 = 128;
+    size_t size1 = 32 , size2 = 32;
     state_type x( size1 , size2 , 0.0 );
 
     for( size_t i=(size1/2-10) ; i<(size1/2+10) ; ++i )
@@ -125,13 +125,13 @@ int main( int argc , char **argv )
     snapshots.snapshots.insert( make_pair( size_t( 100 ) , string( "lat_0100.dat" ) ) );
     snapshots.snapshots.insert( make_pair( size_t( 1000 ) , string( "lat_1000.dat" ) ) );
     observer_collection< state_type , double > obs;
-    obs.observers.push_back( write_for_gnuplot( 10 ) );
-    obs.observers.push_back( snapshots );
+    obs.observers().push_back( write_for_gnuplot( 1 ) );
+    obs.observers().push_back( snapshots );
 
     cout << "set term x11" << endl;
     cout << "set pm3d map" << endl;
     integrate_const( explicit_rk4< state_type >() , two_dimensional_phase_lattice( 1.2 ) ,
-            x , 0.0 , 10000.0 , 0.1 , obs );
+            x , 0.0 , 101.0 , 0.1 , obs );
 
 
     return 0;

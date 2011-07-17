@@ -17,17 +17,25 @@ namespace numeric {
 namespace odeint {
 
 template< class State , class Time >
-struct observer_collection
+class observer_collection
 {
-    typedef boost::function< void( const State& , const Time& ) > observer_type;
+public:
 
-    std::vector< observer_type > observers;
+    typedef boost::function< void( const State& , const Time& ) > observer_type;
+    typedef std::vector< observer_type > observer_collection_type;
 
     void operator()( const State& x , const Time &t )
     {
-        for( size_t i=0 ; i<observers.size() ; ++i )
-            observers[i]( x , t );
+        for( size_t i=0 ; i<m_observers.size() ; ++i )
+            m_observers[i]( x , t );
     }
+
+    observer_collection_type& observers( void ) { return m_observers; }
+    const observer_collection_type& observers( void ) const { return m_observers; }
+
+private:
+
+    observer_collection_type m_observers;
 };
 
 } // namespace odeint
