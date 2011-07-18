@@ -1,22 +1,22 @@
 /*
- * integrate_const.hpp
- *
- *
- * Overview:
- *
- * size_t integrate( stepper , system , start_state , start_time , end_time , dt , observer );
- *
- * Time integrate_n_steps( stepper , system , start_state , start_time , dt , num_of_steps , observer );
- *
- * size_t integrate_adaptive( stepper , system , start_state , start_time , end_time , start_dt , observer );
- *
- *
- *  Created on: Jan 31, 2011
- *      Author: karsten
+ [auto_generated]
+ boost/numeric/odeint/integrate/integrate.hpp
+
+ [begin_description]
+ Convenience methods which choose the stepper for the current ODE.
+ [end_description]
+
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_HPP_
-#define BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_HPP_
+
+#ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_HPP_INCLUDED
 
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
@@ -40,13 +40,13 @@ namespace odeint {
 template< class System , class State , class Time , class Observer >
 size_t integrate( System system , State &start_state , Time start_time , Time end_time , Time dt , Observer observer )
 {
-	return integrate_adaptive( controlled_error_stepper< runge_kutta_cash_karp54_classic< State > >() , system , start_state , start_time , end_time , dt , observer );
+    return integrate_adaptive( controlled_error_stepper< runge_kutta_cash_karp54_classic< State > >() , system , start_state , start_time , end_time , dt , observer );
 }
 
 template< class System , class State , class Time , class Observer >
 size_t integrate( System system , const State &start_state , Time start_time , Time end_time , Time dt , Observer observer )
 {
-	return integrate_adaptive( controlled_error_stepper< runge_kutta_cash_karp54_classic< State > >() , system , start_state , start_time , end_time , dt , observer );
+    return integrate_adaptive( controlled_error_stepper< runge_kutta_cash_karp54_classic< State > >() , system , start_state , start_time , end_time , dt , observer );
 }
 
 
@@ -61,13 +61,13 @@ size_t integrate( System system , const State &start_state , Time start_time , T
 template< class System , class State , class Time >
 size_t integrate( System system , State &start_state , Time start_time , Time end_time , Time dt )
 {
-	return integrate( system , start_state , start_time , end_time , dt , do_nothing_observer() );
+    return integrate( system , start_state , start_time , end_time , dt , do_nothing_observer() );
 }
 
 template< class System , class State , class Time >
 size_t integrate( System system , const State &start_state , Time start_time , Time end_time , Time dt )
 {
-	return integrate( system , start_state , start_time , end_time , dt , do_nothing_observer() );
+    return integrate( system , start_state , start_time , end_time , dt , do_nothing_observer() );
 }
 
 
@@ -79,4 +79,4 @@ size_t integrate( System system , const State &start_state , Time start_time , T
 
 
 
-#endif /* BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_HPP_ */
+#endif // BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_HPP_INCLUDED

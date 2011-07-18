@@ -1,12 +1,24 @@
 /*
- * adams_moulton.hpp
- *
- *  Created on: May 15, 2011
- *      Author: karsten
+ [auto_generated]
+ boost/numeric/odeint/stepper/adams_moulton.hpp
+
+ [begin_description]
+ Implementation of the Adams-Moulton method. This is method is not a real stepper, it is more a helper class
+ which computes the corrector step in the Adams-Bashforth-Moulton method.
+ [end_description]
+
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_NUMERIC_ODEINT_STEPPER_ADAMS_MOULTON_HPP_
-#define BOOST_NUMERIC_ODEINT_STEPPER_ADAMS_MOULTON_HPP_
+
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_ADAMS_MOULTON_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STEPPER_ADAMS_MOULTON_HPP_INCLUDED
+
 
 #include <boost/ref.hpp>
 #include <boost/bind.hpp>
@@ -40,15 +52,15 @@ namespace odeint {
  * # Define the number of steps
  */
 template<
-	size_t Steps ,
-    class State ,
-    class Value = double ,
-    class Deriv = State ,
-    class Time = Value ,
-	class Algebra = range_algebra ,
-	class Operations = default_operations ,
-	class Resizer = initially_resizer
-	>
+size_t Steps ,
+class State ,
+class Value = double ,
+class Deriv = State ,
+class Time = Value ,
+class Algebra = range_algebra ,
+class Operations = default_operations ,
+class Resizer = initially_resizer
+>
 class adams_moulton
 {
 private:
@@ -56,25 +68,25 @@ private:
 
 public :
 
-	typedef State state_type;
-	typedef state_wrapper< state_type > wrapped_state_type;
-	typedef Value value_type;
-	typedef Deriv deriv_type;
-	typedef state_wrapper< deriv_type > wrapped_deriv_type;
-	typedef Time time_type;
-	typedef Algebra algebra_type;
-	typedef Operations operations_type;
-	typedef Resizer resizer_type;
-	typedef stepper_tag stepper_category;
+    typedef State state_type;
+    typedef state_wrapper< state_type > wrapped_state_type;
+    typedef Value value_type;
+    typedef Deriv deriv_type;
+    typedef state_wrapper< deriv_type > wrapped_deriv_type;
+    typedef Time time_type;
+    typedef Algebra algebra_type;
+    typedef Operations operations_type;
+    typedef Resizer resizer_type;
+    typedef stepper_tag stepper_category;
 
-	typedef adams_moulton< Steps , State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
+    typedef adams_moulton< Steps , State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
 
-	static const size_t steps = Steps;
+    static const size_t steps = Steps;
 
-	typedef unsigned short order_type;
-	static const order_type order_value = steps + 1;
+    typedef unsigned short order_type;
+    static const order_type order_value = steps + 1;
 
-	typedef detail::rotating_buffer< wrapped_deriv_type , steps > step_storage_type;
+    typedef detail::rotating_buffer< wrapped_deriv_type , steps > step_storage_type;
 
     adams_moulton( ) : m_algebra( m_algebra_instance )
     { }
@@ -82,22 +94,22 @@ public :
     adams_moulton( algebra_type &algebra ) : m_algebra( algebra )
     { }
 
-	adams_moulton& operator=( const adams_moulton &stepper )
-	{
-		m_dxdt = stepper.m_dxdt;
-		m_resizer = stepper.m_resizer;
-		m_algebra = stepper.m_algebra;
-		return *this;
-	}
+    adams_moulton& operator=( const adams_moulton &stepper )
+    {
+        m_dxdt = stepper.m_dxdt;
+        m_resizer = stepper.m_resizer;
+        m_algebra = stepper.m_algebra;
+        return *this;
+    }
 
     order_type order( void ) const { return order_value; }
 
 
-	/*
-	 * Version 1 : do_step( system , x , t , dt , buf );
-	 *
-	 * solves the forwarding problem
-	 */
+    /*
+     * Version 1 : do_step( system , x , t , dt , buf );
+     *
+     * solves the forwarding problem
+     */
     template< class System , class StateInOut , class ABBuf >
     void do_step( System system , StateInOut &in , const time_type &t , const time_type &dt , const ABBuf &buf )
     {
@@ -126,29 +138,29 @@ public :
         detail::adams_moulton_call_algebra< steps , algebra_type , operations_type >()( m_algebra , in , out , m_dxdt.m_v , buf , m_coefficients , dt );
     }
 
-	template< class System , class StateIn , class StateOut , class ABBuf >
-	void do_step( System system , const StateIn &in , const time_type &t , const StateOut &out , const time_type &dt , const ABBuf &buf )
-	{
-		typename boost::unwrap_reference< System >::type &sys = system;
+    template< class System , class StateIn , class StateOut , class ABBuf >
+    void do_step( System system , const StateIn &in , const time_type &t , const StateOut &out , const time_type &dt , const ABBuf &buf )
+    {
+        typename boost::unwrap_reference< System >::type &sys = system;
         m_resizer.adjust_size( in , boost::bind( &stepper_type::resize<StateIn> , boost::ref( *this ) , _1 ) );
-		sys( in , m_dxdt.m_v , t );
-		detail::adams_moulton_call_algebra< steps , algebra_type , operations_type >()( m_algebra , in , out , m_dxdt.m_v , buf , m_coefficients , dt );
-	}
+        sys( in , m_dxdt.m_v , t );
+        detail::adams_moulton_call_algebra< steps , algebra_type , operations_type >()( m_algebra , in , out , m_dxdt.m_v , buf , m_coefficients , dt );
+    }
 
 
 
-	template< class StateIn >
-	bool resize( const StateIn &x )
-	{
-	    return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
-	}
+    template< class StateIn >
+    bool resize( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
+    }
 
 
-	template< class StateType >
-	void adjust_size( const StateType &x )
-	{
-		resize( x );
-	}
+    template< class StateType >
+    void adjust_size( const StateType &x )
+    {
+        resize( x );
+    }
 
     algebra_type& algebra()
     {   return m_algebra; }
@@ -159,13 +171,13 @@ public :
 
 private:
 
-	const detail::adams_moulton_coefficients< value_type , steps > m_coefficients;
-	wrapped_deriv_type m_dxdt;
-	resizer_type m_resizer;
+    const detail::adams_moulton_coefficients< value_type , steps > m_coefficients;
+    wrapped_deriv_type m_dxdt;
+    resizer_type m_resizer;
 
 protected:
-	algebra_type m_algebra_instance;
-	algebra_type &m_algebra;
+    algebra_type m_algebra_instance;
+    algebra_type &m_algebra;
 };
 
 
@@ -177,4 +189,4 @@ protected:
 
 
 
-#endif /* BOOST_NUMERIC_ODEINT_STEPPER_ADAMS_MOULTON_HPP_ */
+#endif // BOOST_NUMERIC_ODEINT_STEPPER_ADAMS_MOULTON_HPP_INCLUDED

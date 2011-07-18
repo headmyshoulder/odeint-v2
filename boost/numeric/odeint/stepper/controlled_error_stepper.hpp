@@ -1,17 +1,23 @@
 /*
- boost header: NUMERIC_ODEINT_STEPPER/controlled_error_stepper.hpp
+ [auto_generated]
+ boost/numeric/odeint/stepper/controlled_error_stepper.hpp
 
- Copyright 2009 Karsten Ahnert
- Copyright 2009 Mario Mulansky
- Copyright 2009 Andre Bergner
+ [begin_description]
+ The default controlled stepper which can be used with all explicit Runge-Kutta error steppers.
+ [end_description]
+
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
  copy at http://www.boost.org/LICENSE_1_0.txt)
-*/
+ */
+
 
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLED_ERROR_STEPPER_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLED_ERROR_STEPPER_HPP_INCLUDED
+
 
 #include <cmath>
 
@@ -43,40 +49,40 @@ namespace odeint {
  */
 template
 <
-	class Value ,
-	class Algebra = range_algebra ,
-	class Operations = default_operations
+class Value ,
+class Algebra = range_algebra ,
+class Operations = default_operations
 >
 class default_error_checker
 {
 public:
 
-	typedef Value value_type;
-	typedef Algebra algebra_type;
-	typedef Operations operations_type;
+    typedef Value value_type;
+    typedef Algebra algebra_type;
+    typedef Operations operations_type;
 
 
-	default_error_checker(
-			const value_type eps_abs = static_cast< value_type >( 1.0e-6 ) ,
-			const value_type eps_rel = static_cast< value_type >( 1.0e-6 ) ,
-			const value_type a_x = static_cast< value_type >( 1.0 ) ,
-			const value_type a_dxdt = static_cast< value_type >( 1.0 ) )
-	: m_eps_abs( eps_abs ) , m_eps_rel( eps_rel ) , m_a_x( a_x ) , m_a_dxdt( a_dxdt )
-	{ }
+    default_error_checker(
+            const value_type eps_abs = static_cast< value_type >( 1.0e-6 ) ,
+            const value_type eps_rel = static_cast< value_type >( 1.0e-6 ) ,
+            const value_type a_x = static_cast< value_type >( 1.0 ) ,
+            const value_type a_dxdt = static_cast< value_type >( 1.0 ) )
+    : m_eps_abs( eps_abs ) , m_eps_rel( eps_rel ) , m_a_x( a_x ) , m_a_dxdt( a_dxdt )
+    { }
 
 
-	template< class State , class Deriv , class Err , class Time >
-	value_type error( const State &x_old , const Deriv &dxdt_old , Err &x_err , const Time &dt )
-	{
-	    return error( algebra_type() , x_old , dxdt_old , x_err , dt );
-	}
+    template< class State , class Deriv , class Err , class Time >
+    value_type error( const State &x_old , const Deriv &dxdt_old , Err &x_err , const Time &dt )
+    {
+        return error( algebra_type() , x_old , dxdt_old , x_err , dt );
+    }
 
-	template< class State , class Deriv , class Err , class Time >
+    template< class State , class Deriv , class Err , class Time >
     value_type error( algebra_type &algebra , const State &x_old , const Deriv &dxdt_old , Err &x_err , const Time &dt )
     {
         // this overwrites x_err !
         algebra.for_each3( x_err , x_old , dxdt_old ,
-                                 typename operations_type::template rel_error< value_type >( m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt * detail::get_value( dt ) ) );
+                typename operations_type::template rel_error< value_type >( m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt * detail::get_value( dt ) ) );
 
         value_type res = algebra.reduce( x_err , typename operations_type::template maximum< value_type >() , 0.0 );
         return res;
@@ -84,10 +90,10 @@ public:
 
 private:
 
-	value_type m_eps_abs;
-	value_type m_eps_rel;
-	value_type m_a_x;
-	value_type m_a_dxdt;
+    value_type m_eps_abs;
+    value_type m_eps_rel;
+    value_type m_a_x;
+    value_type m_a_dxdt;
 
 };
 
@@ -102,12 +108,12 @@ private:
  * error stepper category dispatcher
  */
 template<
-    class ErrorStepper ,
-    class ErrorChecker = default_error_checker< typename ErrorStepper::value_type ,
-                                                 typename ErrorStepper::algebra_type ,
-                                                 typename ErrorStepper::operations_type > ,
-    class Resizer = typename ErrorStepper::resizer_type ,
-    class ErrorStepperCategory = typename ErrorStepper::stepper_category
+class ErrorStepper ,
+class ErrorChecker = default_error_checker< typename ErrorStepper::value_type ,
+typename ErrorStepper::algebra_type ,
+typename ErrorStepper::operations_type > ,
+class Resizer = typename ErrorStepper::resizer_type ,
+class ErrorStepperCategory = typename ErrorStepper::stepper_category
 >
 class controlled_error_stepper ;
 
@@ -118,203 +124,203 @@ class controlled_error_stepper ;
  * explicit stepper version
  */
 template<
-	class ErrorStepper ,
-	class ErrorChecker ,
-	class Resizer
-	>
+class ErrorStepper ,
+class ErrorChecker ,
+class Resizer
+>
 class controlled_error_stepper< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag >
 {
 
 public:
 
-	typedef ErrorStepper stepper_type;
-	typedef typename stepper_type::state_type state_type;
-	typedef typename stepper_type::value_type value_type;
-	typedef typename stepper_type::deriv_type deriv_type;
-	typedef typename stepper_type::time_type time_type;
-	typedef typename stepper_type::order_type order_type;
-	typedef typename stepper_type::algebra_type algebra_type;
-	typedef typename stepper_type::operations_type operations_type;
-	typedef Resizer resizer_type;
-	typedef ErrorChecker error_checker_type;
-	typedef controlled_stepper_tag stepper_category;
-	typedef typename stepper_type::wrapped_state_type wrapped_state_type;
-	typedef typename stepper_type::wrapped_deriv_type wrapped_deriv_type;
+    typedef ErrorStepper stepper_type;
+    typedef typename stepper_type::state_type state_type;
+    typedef typename stepper_type::value_type value_type;
+    typedef typename stepper_type::deriv_type deriv_type;
+    typedef typename stepper_type::time_type time_type;
+    typedef typename stepper_type::order_type order_type;
+    typedef typename stepper_type::algebra_type algebra_type;
+    typedef typename stepper_type::operations_type operations_type;
+    typedef Resizer resizer_type;
+    typedef ErrorChecker error_checker_type;
+    typedef controlled_stepper_tag stepper_category;
+    typedef typename stepper_type::wrapped_state_type wrapped_state_type;
+    typedef typename stepper_type::wrapped_deriv_type wrapped_deriv_type;
 
-	typedef controlled_error_stepper< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag > controlled_stepper_type;
+    typedef controlled_error_stepper< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag > controlled_stepper_type;
 
 
 
     controlled_error_stepper(
             const stepper_type &stepper = stepper_type( ) ,
             const error_checker_type &error_checker = error_checker_type( )
-            )
+    )
     : m_stepper( stepper ) , m_error_checker( error_checker )
     { }
 
 
 
-	/*
-	 * Version 1 : try_step( sys , x , t , dt )
-	 *
-	 * The overloads are needed to solve the forwarding problem
-	 */
-	template< class System , class StateInOut >
-	controlled_step_result try_step( System system , StateInOut &x , time_type &t , time_type &dt )
-	{
-		return try_step_v1( system , x , t, dt );
-	}
+    /*
+     * Version 1 : try_step( sys , x , t , dt )
+     *
+     * The overloads are needed to solve the forwarding problem
+     */
+    template< class System , class StateInOut >
+    controlled_step_result try_step( System system , StateInOut &x , time_type &t , time_type &dt )
+    {
+        return try_step_v1( system , x , t, dt );
+    }
 
-	template< class System , class StateInOut >
-	controlled_step_result try_step( System system , const StateInOut &x , time_type &t , time_type &dt )
-	{
-		return try_step_v1( system , x , t, dt );
-	}
-
-
-
-	/*
-	 * Version 2 : try_step( sys , x , dxdt , t , dt )
-	 *
-	 * this version does not solve the forwarding problem, boost.range can not be used
-	 */
-	template< class System , class StateInOut , class DerivIn >
-	controlled_step_result try_step( System system , StateInOut &x , const DerivIn &dxdt , time_type &t , time_type &dt )
-	{
-		m_xnew_resizer.adjust_size( x , boost::bind( &controlled_error_stepper::resize_m_xnew< StateInOut > , boost::ref( *this ) , _1 ) );
-		controlled_step_result res = try_step( system , x , dxdt , t , m_xnew.m_v , dt );
-		if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged ) )
-		{
-			boost::numeric::odeint::copy( m_xnew.m_v , x );
-		}
-		return res;
-	}
-
-	/*
-	 * Version 3 : try_step( sys , in , t , out , dt )
-	 *
-	 * this version does not solve the forwarding problem, boost.range can not be used
-	 */
-	template< class System , class StateIn , class StateOut >
-	controlled_step_result try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
-	{
-		typename boost::unwrap_reference< System >::type &sys = system;
-		m_dxdt_resizer.adjust_size( in , boost::bind( &controlled_error_stepper::resize_m_dxdt< StateIn > , boost::ref( *this ) , _1 ) );
-		sys( in , m_dxdt.m_v , t );
-		return try_step( system , in , m_dxdt.m_v , t , out , dt );
-	}
-
-
-	/*
-	 * Version 4 : try_step( sys , in , dxdt , t , out , dt )
-	 *
-	 * this version does not solve the forwarding problem, boost.range can not be used
-	 */
-	template< class System , class StateIn , class DerivIn , class StateOut >
-	controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt , time_type &t , StateOut &out , time_type &dt )
-	{
-		using std::max;
-		using std::min;
-		using std::pow;
-
-		m_xerr_resizer.adjust_size( in , boost::bind( &controlled_error_stepper::resize_m_xerr< StateIn > , boost::ref( *this ) , _1 ) );
-
-		// do one step with error calculation
-		m_stepper.do_step( system , in , dxdt , t , out , dt , m_xerr.m_v );
-
-		m_max_rel_error = m_error_checker.error( m_stepper.algebra() , in , dxdt , m_xerr.m_v , dt );
-
-		if( m_max_rel_error > 1.0 )
-		{
-			// error too large - decrease dt ,limit scaling factor to 0.2 and reset state
-			dt *= max( 0.9 * pow( m_max_rel_error , -1.0 / ( m_stepper.error_order() - 1.0 ) ) , 0.2 );
-			return step_size_decreased;
-		}
-		else
-		{
-			if( m_max_rel_error < 0.5 )
-			{
-				//error too small - increase dt and keep the evolution and limit scaling factor to 5.0
-				t += dt;
-				dt *= min( 0.9 * pow( m_max_rel_error , -1.0 / m_stepper.stepper_order() ) , 5.0 );
-				return success_step_size_increased;
-			}
-			else
-			{
-				t += dt;
-				return success_step_size_unchanged;
-			}
-		}
-	}
-
-	value_type last_error( void ) const
-	{
-		return m_max_rel_error;
-	}
+    template< class System , class StateInOut >
+    controlled_step_result try_step( System system , const StateInOut &x , time_type &t , time_type &dt )
+    {
+        return try_step_v1( system , x , t, dt );
+    }
 
 
 
-	template< class StateType >
-	void adjust_size( const StateType &x )
-	{
-		resize_m_xerr( x );
-		resize_m_dxdt( x );
-		resize_m_xnew( x );
-		m_stepper.adjust_size( x );
-	}
+    /*
+     * Version 2 : try_step( sys , x , dxdt , t , dt )
+     *
+     * this version does not solve the forwarding problem, boost.range can not be used
+     */
+    template< class System , class StateInOut , class DerivIn >
+    controlled_step_result try_step( System system , StateInOut &x , const DerivIn &dxdt , time_type &t , time_type &dt )
+    {
+        m_xnew_resizer.adjust_size( x , boost::bind( &controlled_error_stepper::resize_m_xnew< StateInOut > , boost::ref( *this ) , _1 ) );
+        controlled_step_result res = try_step( system , x , dxdt , t , m_xnew.m_v , dt );
+        if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged ) )
+        {
+            boost::numeric::odeint::copy( m_xnew.m_v , x );
+        }
+        return res;
+    }
 
-	template< class StateIn >
-	bool resize_m_xerr( const StateIn &x )
-	{
-	    return adjust_size_by_resizeability( m_xerr , x , typename wrapped_state_type::is_resizeable() );
-	}
+    /*
+     * Version 3 : try_step( sys , in , t , out , dt )
+     *
+     * this version does not solve the forwarding problem, boost.range can not be used
+     */
+    template< class System , class StateIn , class StateOut >
+    controlled_step_result try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
+    {
+        typename boost::unwrap_reference< System >::type &sys = system;
+        m_dxdt_resizer.adjust_size( in , boost::bind( &controlled_error_stepper::resize_m_dxdt< StateIn > , boost::ref( *this ) , _1 ) );
+        sys( in , m_dxdt.m_v , t );
+        return try_step( system , in , m_dxdt.m_v , t , out , dt );
+    }
 
-	template< class StateIn >
-	bool resize_m_dxdt( const StateIn &x )
-	{
-	    return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
-	}
 
-	template< class StateIn >
-	bool resize_m_xnew( const StateIn &x )
-	{
-	    return adjust_size_by_resizeability( m_xnew , x , typename wrapped_state_type::is_resizeable() );
-	}
+    /*
+     * Version 4 : try_step( sys , in , dxdt , t , out , dt )
+     *
+     * this version does not solve the forwarding problem, boost.range can not be used
+     */
+    template< class System , class StateIn , class DerivIn , class StateOut >
+    controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt , time_type &t , StateOut &out , time_type &dt )
+    {
+        using std::max;
+        using std::min;
+        using std::pow;
 
-	stepper_type& stepper( void )
-	{
-		return m_stepper;
-	}
+        m_xerr_resizer.adjust_size( in , boost::bind( &controlled_error_stepper::resize_m_xerr< StateIn > , boost::ref( *this ) , _1 ) );
 
-	const stepper_type& stepper( void ) const
-	{
-		return m_stepper;
-	}
+        // do one step with error calculation
+        m_stepper.do_step( system , in , dxdt , t , out , dt , m_xerr.m_v );
+
+        m_max_rel_error = m_error_checker.error( m_stepper.algebra() , in , dxdt , m_xerr.m_v , dt );
+
+        if( m_max_rel_error > 1.0 )
+        {
+            // error too large - decrease dt ,limit scaling factor to 0.2 and reset state
+            dt *= max( 0.9 * pow( m_max_rel_error , -1.0 / ( m_stepper.error_order() - 1.0 ) ) , 0.2 );
+            return step_size_decreased;
+        }
+        else
+        {
+            if( m_max_rel_error < 0.5 )
+            {
+                //error too small - increase dt and keep the evolution and limit scaling factor to 5.0
+                t += dt;
+                dt *= min( 0.9 * pow( m_max_rel_error , -1.0 / m_stepper.stepper_order() ) , 5.0 );
+                return success_step_size_increased;
+            }
+            else
+            {
+                t += dt;
+                return success_step_size_unchanged;
+            }
+        }
+    }
+
+    value_type last_error( void ) const
+    {
+        return m_max_rel_error;
+    }
+
+
+
+    template< class StateType >
+    void adjust_size( const StateType &x )
+    {
+        resize_m_xerr( x );
+        resize_m_dxdt( x );
+        resize_m_xnew( x );
+        m_stepper.adjust_size( x );
+    }
+
+    template< class StateIn >
+    bool resize_m_xerr( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_xerr , x , typename wrapped_state_type::is_resizeable() );
+    }
+
+    template< class StateIn >
+    bool resize_m_dxdt( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
+    }
+
+    template< class StateIn >
+    bool resize_m_xnew( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_xnew , x , typename wrapped_state_type::is_resizeable() );
+    }
+
+    stepper_type& stepper( void )
+    {
+        return m_stepper;
+    }
+
+    const stepper_type& stepper( void ) const
+    {
+        return m_stepper;
+    }
 
 private:
 
 
-	template< class System , class StateInOut >
-	controlled_step_result try_step_v1( System system , StateInOut &x , time_type &t , time_type &dt )
-	{
-		typename boost::unwrap_reference< System >::type &sys = system;
-		m_dxdt_resizer.adjust_size( x , boost::bind( &controlled_error_stepper::resize_m_dxdt< StateInOut > , boost::ref( *this ) , _1 ) );
-		sys( x , m_dxdt.m_v ,t );
-		return try_step( system , x , m_dxdt.m_v , t , dt );
-	}
+    template< class System , class StateInOut >
+    controlled_step_result try_step_v1( System system , StateInOut &x , time_type &t , time_type &dt )
+    {
+        typename boost::unwrap_reference< System >::type &sys = system;
+        m_dxdt_resizer.adjust_size( x , boost::bind( &controlled_error_stepper::resize_m_dxdt< StateInOut > , boost::ref( *this ) , _1 ) );
+        sys( x , m_dxdt.m_v ,t );
+        return try_step( system , x , m_dxdt.m_v , t , dt );
+    }
 
 
-	stepper_type m_stepper;
-	error_checker_type m_error_checker;
+    stepper_type m_stepper;
+    error_checker_type m_error_checker;
 
-	resizer_type m_dxdt_resizer;
-	resizer_type m_xerr_resizer;
-	resizer_type m_xnew_resizer;
+    resizer_type m_dxdt_resizer;
+    resizer_type m_xerr_resizer;
+    resizer_type m_xnew_resizer;
 
-	wrapped_deriv_type m_dxdt;
-	wrapped_state_type m_xerr;
-	wrapped_state_type m_xnew;
-	value_type m_max_rel_error;
+    wrapped_deriv_type m_dxdt;
+    wrapped_state_type m_xerr;
+    wrapped_state_type m_xnew;
+    value_type m_max_rel_error;
 };
 
 
@@ -332,10 +338,10 @@ private:
  * ToDo : introduce the same functions as for the above stepper
  */
 template<
-    class ErrorStepper ,
-    class ErrorChecker ,
-	class Resizer
-    >
+class ErrorStepper ,
+class ErrorChecker ,
+class Resizer
+>
 class controlled_error_stepper< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_fsal_tag >
 {
 
@@ -351,50 +357,50 @@ public:
     typedef typename stepper_type::operations_type operations_type;
     typedef Resizer resizer_type;
     typedef ErrorChecker error_checker_type;
-	typedef controlled_stepper_tag stepper_category;
-	typedef typename stepper_type::wrapped_state_type wrapped_state_type;
-	typedef typename stepper_type::wrapped_deriv_type wrapped_deriv_type;
+    typedef controlled_stepper_tag stepper_category;
+    typedef typename stepper_type::wrapped_state_type wrapped_state_type;
+    typedef typename stepper_type::wrapped_deriv_type wrapped_deriv_type;
 
-	typedef controlled_error_stepper< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag > controlled_stepper_type;
+    typedef controlled_error_stepper< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag > controlled_stepper_type;
 
     controlled_error_stepper(
             const stepper_type &stepper = stepper_type() ,
             const error_checker_type &error_checker = error_checker_type()
-            )
+    )
     : m_stepper( stepper ) , m_error_checker( error_checker ) ,
       m_first_call( true )
     { }
 
-	/*
-	 * Version 1 : try_step( sys , x , t , dt )
-	 *
-	 * The two overloads are needed in order to solve the forwarding problem
-	 */
+    /*
+     * Version 1 : try_step( sys , x , t , dt )
+     *
+     * The two overloads are needed in order to solve the forwarding problem
+     */
     template< class System , class StateInOut >
     controlled_step_result try_step( System system , StateInOut &x , time_type &t , time_type &dt )
     {
-    	return try_step_v1( system , x , t , dt );
+        return try_step_v1( system , x , t , dt );
     }
 
     template< class System , class StateInOut >
     controlled_step_result try_step( System system , const StateInOut &x , time_type &t , time_type &dt )
     {
-    	return try_step_v1( system , x , t , dt );
+        return try_step_v1( system , x , t , dt );
     }
 
 
 
-	/*
-	 * Version 2 : try_step( sys , in , t , out , dt );
-	 *
-	 * This version does not solve the forwarding problem, boost::range can not be used.
-	 */
+    /*
+     * Version 2 : try_step( sys , in , t , out , dt );
+     *
+     * This version does not solve the forwarding problem, boost::range can not be used.
+     */
     template< class System , class StateIn , class StateOut >
     controlled_step_result try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
     {
         if( m_dxdt_resizer.adjust_size( in , boost::bind( &controlled_error_stepper::resize_m_dxdt< StateIn > , boost::ref( *this ) , _1 ) ) || m_first_call )
         {
-    		typename boost::unwrap_reference< System >::type &sys = system;
+            typename boost::unwrap_reference< System >::type &sys = system;
             sys( in , m_dxdt.m_v ,t );
             m_first_call = false;
         }
@@ -402,41 +408,41 @@ public:
     }
 
 
-	/*
-	 * Version 3 : try_step( sys , x , dxdt , t , dt )
-	 *
-	 * This version does not solve the forwarding problem, boost::range can not be used.
-	 */
+    /*
+     * Version 3 : try_step( sys , x , dxdt , t , dt )
+     *
+     * This version does not solve the forwarding problem, boost::range can not be used.
+     */
     template< class System , class StateInOut , class DerivInOut >
     controlled_step_result try_step( System system , StateInOut &x , DerivInOut &dxdt , time_type &t , time_type &dt )
     {
-    	m_xnew_resizer.adjust_size( x , boost::bind( &controlled_error_stepper::resize_m_xnew< StateInOut > , boost::ref( *this ) , _1 ) );
-    	m_dxdt_new_resizer.adjust_size( x , boost::bind( &controlled_error_stepper::resize_m_dxdt_new< StateInOut > , boost::ref( *this ) , _1 ) );
-		controlled_step_result res = try_step( system , x , dxdt , t , m_xnew.m_v , m_dxdtnew.m_v , dt );
-    	if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged) )
-    	{
-    		boost::numeric::odeint::copy( m_xnew.m_v , x );
-    		boost::numeric::odeint::copy( m_dxdtnew.m_v , dxdt );
-    	}
-    	return res;
+        m_xnew_resizer.adjust_size( x , boost::bind( &controlled_error_stepper::resize_m_xnew< StateInOut > , boost::ref( *this ) , _1 ) );
+        m_dxdt_new_resizer.adjust_size( x , boost::bind( &controlled_error_stepper::resize_m_dxdt_new< StateInOut > , boost::ref( *this ) , _1 ) );
+        controlled_step_result res = try_step( system , x , dxdt , t , m_xnew.m_v , m_dxdtnew.m_v , dt );
+        if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged) )
+        {
+            boost::numeric::odeint::copy( m_xnew.m_v , x );
+            boost::numeric::odeint::copy( m_dxdtnew.m_v , dxdt );
+        }
+        return res;
     }
 
 
-	/*
-	 * Version 3 : try_step( sys , in , dxdt , t , out , dt )
-	 *
-	 * This version does not solve the forwarding problem, boost::range can not be used.
-	 */
+    /*
+     * Version 3 : try_step( sys , in , dxdt , t , out , dt )
+     *
+     * This version does not solve the forwarding problem, boost::range can not be used.
+     */
     template< class System , class StateIn , class DerivIn , class StateOut , class DerivOut >
     controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt_in , time_type &t ,
-    		StateOut &out , DerivOut &dxdt_out , time_type &dt )
+            StateOut &out , DerivOut &dxdt_out , time_type &dt )
     {
         using std::max;
         using std::min;
         using std::pow;
 
-		m_xerr_resizer.adjust_size( in , boost::bind( &controlled_error_stepper::resize_m_xerr< StateIn > , boost::ref( *this ) , _1 ) );
-		
+        m_xerr_resizer.adjust_size( in , boost::bind( &controlled_error_stepper::resize_m_xerr< StateIn > , boost::ref( *this ) , _1 ) );
+
         //fsal: m_stepper.get_dxdt( dxdt );
         //fsal: m_stepper.do_step( sys , x , dxdt , t , dt , m_x_err );
         m_stepper.do_step( system , in , dxdt_in , t , out , dxdt_out , dt , m_xerr.m_v );
@@ -471,49 +477,49 @@ public:
 
 
     template< class StateType >
-	void adjust_size( const StateType &x )
-	{
-		resize_m_xerr( x );
-		resize_m_dxdt( x );
-		resize_m_dxdt_new( x );
-		resize_m_xnew( x );
-	}
+    void adjust_size( const StateType &x )
+    {
+        resize_m_xerr( x );
+        resize_m_dxdt( x );
+        resize_m_dxdt_new( x );
+        resize_m_xnew( x );
+    }
 
-	template< class StateIn >
-	bool resize_m_xerr( const StateIn &x )
-	{
-	    return adjust_size_by_resizeability( m_xerr , x , typename wrapped_state_type::is_resizeable() );
-	}
+    template< class StateIn >
+    bool resize_m_xerr( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_xerr , x , typename wrapped_state_type::is_resizeable() );
+    }
 
-	template< class StateIn >
-	bool resize_m_dxdt( const StateIn &x )
-	{
-	    return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
-	}
+    template< class StateIn >
+    bool resize_m_dxdt( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
+    }
 
-	template< class StateIn >
-	bool resize_m_dxdt_new( const StateIn &x )
-	{
-	    return adjust_size_by_resizeability( m_dxdtnew , x , typename wrapped_deriv_type::is_resizeable() );
-	}
+    template< class StateIn >
+    bool resize_m_dxdt_new( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_dxdtnew , x , typename wrapped_deriv_type::is_resizeable() );
+    }
 
-	template< class StateIn >
-	bool resize_m_xnew( const StateIn &x )
-	{
-	    return adjust_size_by_resizeability( m_xnew , x , typename wrapped_state_type::is_resizeable() );
-	}
+    template< class StateIn >
+    bool resize_m_xnew( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_xnew , x , typename wrapped_state_type::is_resizeable() );
+    }
 
 
 
-	stepper_type& stepper( void )
-	{
-		return m_stepper;
-	}
+    stepper_type& stepper( void )
+    {
+        return m_stepper;
+    }
 
-	const stepper_type& stepper( void ) const
-	{
-		return m_stepper;
-	}
+    const stepper_type& stepper( void ) const
+    {
+        return m_stepper;
+    }
 
 
 
@@ -524,7 +530,7 @@ private:
     {
         if( m_dxdt_resizer.adjust_size( x , boost::bind( &controlled_error_stepper::resize_m_dxdt< StateInOut > , boost::ref( *this ) , _1 ) ) || m_first_call )
         {
-    		typename boost::unwrap_reference< System >::type &sys = system;
+            typename boost::unwrap_reference< System >::type &sys = system;
             sys( x , m_dxdt.m_v , t );
             m_first_call = false;
         }
@@ -555,4 +561,4 @@ private:
 } // boost
 
 
-#endif //BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLED_ERROR_STEPPER_HPP_INCLUDED
+#endif // BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLED_ERROR_STEPPER_HPP_INCLUDED

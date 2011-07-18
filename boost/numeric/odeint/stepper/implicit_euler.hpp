@@ -1,16 +1,23 @@
 /*
- boost header: BOOST_NUMERIC_ODEINT/implicit_euler.hpp
+ [auto_generated]
+ boost/numeric/odeint/stepper/implicit_euler.hpp
 
- Copyright 2009 Karsten Ahnert
- Copyright 2009 Mario Mulansky
+ [begin_description]
+ Impementation of the implicit Euler method. Works with ublas::vector as state type.
+ [end_description]
+
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
  copy at http://www.boost.org/LICENSE_1_0.txt)
-*/
+ */
 
-#ifndef BOOST_BOOST_NUMERIC_ODEINT_IMPLICIT_EULER_HPP_INCLUDED
-#define BOOST_BOOST_NUMERIC_ODEINT_IMPLICIT_EULER_HPP_INCLUDED
+
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_IMPLICIT_EULER_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STEPPER_IMPLICIT_EULER_HPP_INCLUDED
+
 
 #include <utility>
 
@@ -54,8 +61,8 @@ public:
     typedef boost::numeric::ublas::permutation_matrix< size_t > pmatrix_type;
     typedef state_wrapper< pmatrix_type > wrapped_pmatrix_type;
     typedef Resizer resizer_type;
-	typedef stepper_tag stepper_category;
-	typedef implicit_euler< ValueType , Resizer > stepper_type;
+    typedef stepper_tag stepper_category;
+    typedef implicit_euler< ValueType , Resizer > stepper_type;
 
     implicit_euler( const value_type epsilon = 1E-6 )
     : m_epsilon( epsilon ) 
@@ -65,17 +72,17 @@ public:
     template< class System >
     void do_step( System system , state_type &x , value_type t , value_type dt )
     {
-    	typedef typename boost::unwrap_reference< System >::type system_type;
-    	typedef typename boost::unwrap_reference< typename system_type::first_type >::type deriv_func_type;
-    	typedef typename boost::unwrap_reference< typename system_type::second_type >::type jacobi_func_type;
-    	system_type &sys = system;
-    	deriv_func_type &deriv_func = sys.first;
-    	jacobi_func_type &jacobi_func = sys.second;
+        typedef typename boost::unwrap_reference< System >::type system_type;
+        typedef typename boost::unwrap_reference< typename system_type::first_type >::type deriv_func_type;
+        typedef typename boost::unwrap_reference< typename system_type::second_type >::type jacobi_func_type;
+        system_type &sys = system;
+        deriv_func_type &deriv_func = sys.first;
+        jacobi_func_type &jacobi_func = sys.second;
 
         m_resizer.adjust_size( x , boost::bind( &stepper_type::resize<state_type> , boost::ref( *this ) , _1 ) );
 
-		for( size_t i=0 ; i<x.size() ; ++i )
-			m_pm.m_v[i] = i;
+        for( size_t i=0 ; i<x.size() ; ++i )
+            m_pm.m_v[i] = i;
 
         t += dt;
 
@@ -100,9 +107,9 @@ public:
             m_b.m_v = x - m_x.m_v + dt*m_dxdt.m_v;
 
             // simplified version, only the first Jacobian is used
-//            jacobi( m_x , m_jacobi , t );
-//            m_jacobi *= dt;
-//            m_jacobi -= boost::numeric::ublas::identity_matrix< value_type >( x.size() );
+            //            jacobi( m_x , m_jacobi , t );
+            //            m_jacobi *= dt;
+            //            m_jacobi -= boost::numeric::ublas::identity_matrix< value_type >( x.size() );
 
             solve( m_b.m_v , m_jacobi.m_v );
 
@@ -116,7 +123,7 @@ public:
     bool resize( const StateIn &x )
     {
         bool resized = false;
-	    resized |= adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
         resized |= adjust_size_by_resizeability( m_x , x , typename wrapped_state_type::is_resizeable() );
         resized |= adjust_size_by_resizeability( m_b , x , typename wrapped_deriv_type::is_resizeable() );
         resized |= adjust_size_by_resizeability( m_jacobi , x , typename wrapped_matrix_type::is_resizeable() );
@@ -124,11 +131,11 @@ public:
         return resized;
     }
 
-	template< class StateType >
-	void adjust_size( const StateType &x )
-	{
-		resize( x );
-	}
+    template< class StateType >
+    void adjust_size( const StateType &x )
+    {
+        resize( x );
+    }
 
 
 private:
@@ -159,4 +166,4 @@ private:
 } // boost
 
 
-#endif //BOOST_BOOST_NUMERIC_ODEINT_IMPLICIT_EULER_HPP_INCLUDED
+#endif // BOOST_NUMERIC_ODEINT_STEPPER_IMPLICIT_EULER_HPP_INCLUDED

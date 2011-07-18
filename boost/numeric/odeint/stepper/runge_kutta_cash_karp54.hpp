@@ -1,9 +1,22 @@
 /*
- * runge_kutta_cash_karp54.hpp
- *
- *  Created on: Jun 3, 2011
- *      Author: mario
- */
+ [auto_generated]
+ boost/numeric/odeint/stepper/runge_kutta_cash_karp54.hpp
+ 
+ [begin_description]
+ Implementation of the Runge Kutta Cash Karp 5(4) method. It uses the generic error stepper.
+ [end_description]
+ 
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+ 
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+*/
+
+
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA_CASH_KARP54_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA_CASH_KARP54_HPP_INCLUDED
 
 #include <boost/fusion/container.hpp>
 
@@ -166,3 +179,5 @@ public:
 }
 }
 }
+
+#endif // BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA_CASH_KARP54_HPP_INCLUDED

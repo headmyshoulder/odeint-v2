@@ -1,12 +1,22 @@
 /*
- * explicit_error_generic_rk.hpp
- *
- *  Created on: Jun 3, 2011
- *      Author: mario
+ [auto_generated]
+ boost/numeric/odeint/stepper/explicit_error_generic_rk.hpp
+
+ [begin_description]
+ Implementation of the generic Runge Kutta error stepper. Base class for many RK error steppers.
+ [end_description]
+
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef EXPLICIT_ERROR_GENERIC_RK_HPP_
-#define EXPLICIT_ERROR_GENERIC_RK_HPP_
+
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_EXPLICIT_ERROR_GENERIC_RK_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STEPPER_EXPLICIT_ERROR_GENERIC_RK_HPP_INCLUDED
 
 #include <boost/numeric/odeint/stepper/base/explicit_stepper_and_error_stepper_base.hpp>
 
@@ -29,31 +39,31 @@ namespace numeric {
 namespace odeint {
 
 template<
-    size_t StageCount,
-    size_t Order,
-    size_t StepperOrder ,
-    size_t ErrorOrder ,
-    class State ,
-    class Value = double ,
-    class Deriv = State ,
-    class Time = Value ,
-    class Algebra = range_algebra ,
-    class Operations = default_operations ,
-    class Resizer = initially_resizer
-    >
+size_t StageCount,
+size_t Order,
+size_t StepperOrder ,
+size_t ErrorOrder ,
+class State ,
+class Value = double ,
+class Deriv = State ,
+class Time = Value ,
+class Algebra = range_algebra ,
+class Operations = default_operations ,
+class Resizer = initially_resizer
+>
 class explicit_error_generic_rk
 : public explicit_stepper_and_error_stepper_base<
-      explicit_error_generic_rk< StageCount , Order , StepperOrder , ErrorOrder , State ,
-                                 Value , Deriv , Time , Algebra , Operations , Resizer > ,
-      Order , StepperOrder , ErrorOrder , State , Value , Deriv , Time , Algebra ,
-      Operations , Resizer >
+  explicit_error_generic_rk< StageCount , Order , StepperOrder , ErrorOrder , State ,
+  Value , Deriv , Time , Algebra , Operations , Resizer > ,
+  Order , StepperOrder , ErrorOrder , State , Value , Deriv , Time , Algebra ,
+  Operations , Resizer >
 {
 
 public:
 
     typedef explicit_stepper_and_error_stepper_base<
             explicit_error_generic_rk< StageCount , Order , StepperOrder , ErrorOrder , State ,
-                                       Value , Deriv , Time , Algebra , Operations , Resizer > ,
+            Value , Deriv , Time , Algebra , Operations , Resizer > ,
             Order , StepperOrder , ErrorOrder , State , Value , Deriv , Time , Algebra ,
             Operations , Resizer > stepper_base_type;
 
@@ -68,7 +78,7 @@ public:
     typedef typename stepper_base_type::resizer_type resizer_type;
     //typedef typename stepper_base_type::stepper_type stepper_type;
     typedef explicit_error_generic_rk< StageCount , Order , StepperOrder , ErrorOrder , State ,
-                                        Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
+            Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
 
     typedef detail::generic_rk_algorithm< StageCount , Value , Algebra , Operations > rk_algorithm_type;
 
@@ -86,11 +96,11 @@ public:
     // we use an explicit_generic_rk to do the normal rk step
     // and add a separate calculation of the error estimate afterwards
     explicit_error_generic_rk( const coef_a_type &a ,
-                                  const coef_b_type &b ,
-                                  const coef_b_type &b2 ,
-                                  const coef_c_type &c ,
-                                  const algebra_type &algebra = algebra_type() )
-        : stepper_base_type( algebra ) , m_rk_algorithm( a , b , c ) , m_b2( b2 )
+            const coef_b_type &b ,
+            const coef_b_type &b2 ,
+            const coef_c_type &c ,
+            const algebra_type &algebra = algebra_type() )
+    : stepper_base_type( algebra ) , m_rk_algorithm( a , b , c ) , m_b2( b2 )
     { }
 
 
@@ -157,4 +167,4 @@ private:
 }
 
 
-#endif /* EXPLICIT_ERROR_GENERIC_RK_HPP_ */
+#endif // BOOST_NUMERIC_ODEINT_STEPPER_EXPLICIT_ERROR_GENERIC_RK_HPP_INCLUDED

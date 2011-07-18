@@ -1,12 +1,23 @@
 /*
- * symplectic_rkn_sb3a_mclachlan.hpp
- *
- *  Created on: Feb 13, 2011
- *      Author: karsten
- */
+ [auto_generated]
+ boost/numeric/odeint/stepper/symplectic_rkn_sb3a_mclachlan.hpp
+ 
+ [begin_description]
+ Implementation of the symplectic MacLachlan stepper for separable Hamiltonian system.
+ [end_description]
+ 
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+ 
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+*/
 
-#ifndef SYMPLECTIC_RKN_SB3A_MCLACHLAN_HPP_
-#define SYMPLECTIC_RKN_SB3A_MCLACHLAN_HPP_
+
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_SYMPLECTIC_RKN_SB3A_MCLACHLAN_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STEPPER_SYMPLECTIC_RKN_SB3A_MCLACHLAN_HPP_INCLUDED
+
 
 #include <boost/numeric/odeint/stepper/base/symplectic_rkn_stepper_base.hpp>
 
@@ -124,4 +135,4 @@ public:
 } // namespace numeric
 } // namespace boost
 
-#endif /* SYMPLECTIC_RKN_SB3A_MCLACHLAN_HPP_ */
+#endif // BOOST_NUMERIC_ODEINT_STEPPER_SYMPLECTIC_RKN_SB3A_MCLACHLAN_HPP_INCLUDED

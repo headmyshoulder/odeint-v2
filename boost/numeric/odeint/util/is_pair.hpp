@@ -1,12 +1,23 @@
 /*
- * is_pair.hpp
- *
- *  Created on: Feb 12, 2011
- *      Author: karsten
+ [auto_generated]
+ boost/numeric/odeint/util/is_pair.hpp
+
+ [begin_description]
+ Metafunction to determine if a type is a std::pair<>.
+ [end_description]
+
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_NUMERIC_ODEINT_UTIL_IS_PAIR_HPP_
-#define BOOST_NUMERIC_ODEINT_UTIL_IS_PAIR_HPP_
+
+#ifndef BOOST_NUMERIC_ODEINT_UTIL_IS_PAIR_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_UTIL_IS_PAIR_HPP_INCLUDED
+
 
 #include <boost/mpl/bool.hpp>
 #include <utility>
@@ -30,4 +41,5 @@ struct is_pair< std::pair< T1 , T2 > > : public boost::mpl::true_
 } // namespace numeric
 } // namespace boost
 
-#endif /* BOOST_NUMERIC_ODEINT_UTIL_IS_PAIR_HPP_ */
+
+#endif // BOOST_NUMERIC_ODEINT_UTIL_IS_PAIR_HPP_INCLUDED

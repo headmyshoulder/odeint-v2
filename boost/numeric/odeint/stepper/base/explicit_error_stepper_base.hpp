@@ -1,17 +1,22 @@
 /*
- boost header: numeric/odeint/explicit_error_stepper_base.hpp
+ [auto_generated]
+ boost/numeric/odeint/stepper/base/explicit_error_stepper_base.hpp
 
- Copyright 2009 Karsten Ahnert
- Copyright 2009 Mario Mulansky
- Copyright 2009 Andre Bergner
+ [begin_description]
+ Base class for all explicit runge error steppers.
+ [end_description]
+
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
  copy at http://www.boost.org/LICENSE_1_0.txt)
-*/
+ */
 
-#ifndef BOOST_NUMERIC_ODEINT_EXPLICIT_ERROR_STEPPER_BASE_HPP_INCLUDED
-#define BOOST_NUMERIC_ODEINT_EXPLICIT_ERROR_STEPPER_BASE_HPP_INCLUDED
+
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_BASE_EXPLICIT_ERROR_STEPPER_BASE_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STEPPER_BASE_EXPLICIT_ERROR_STEPPER_BASE_HPP_INCLUDED
 
 #include <boost/ref.hpp>
 #include <boost/bind.hpp>
@@ -32,158 +37,158 @@ namespace odeint {
  * ToDo : test
  */
 template<
-	class ErrorStepper ,
-	unsigned short StepperOrder ,
-	unsigned short ErrorOrder ,
-	class State ,
-	class Value ,
-	class Deriv ,
-	class Time ,
-	class Algebra ,
-	class Operations ,
-	class Resizer
+class ErrorStepper ,
+unsigned short StepperOrder ,
+unsigned short ErrorOrder ,
+class State ,
+class Value ,
+class Deriv ,
+class Time ,
+class Algebra ,
+class Operations ,
+class Resizer
 >
 class explicit_error_stepper_base
 {
 public:
 
-	typedef State state_type;
-	typedef state_wrapper< state_type > wrapped_state_type;
-	typedef Value value_type;
-	typedef Deriv deriv_type;
-	typedef state_wrapper< deriv_type > wrapped_deriv_type;
-	typedef Time time_type;
-	typedef Algebra algebra_type;
-	typedef Operations operations_type;
-	typedef Resizer resizer_type;
-	typedef ErrorStepper stepper_type;
-	typedef explicit_error_stepper_tag stepper_category;
+    typedef State state_type;
+    typedef state_wrapper< state_type > wrapped_state_type;
+    typedef Value value_type;
+    typedef Deriv deriv_type;
+    typedef state_wrapper< deriv_type > wrapped_deriv_type;
+    typedef Time time_type;
+    typedef Algebra algebra_type;
+    typedef Operations operations_type;
+    typedef Resizer resizer_type;
+    typedef ErrorStepper stepper_type;
+    typedef explicit_error_stepper_tag stepper_category;
 
-	typedef unsigned short order_type;
-	static const order_type stepper_order_value = StepperOrder;
-	static const order_type error_order_value = ErrorOrder;
+    typedef unsigned short order_type;
+    static const order_type stepper_order_value = StepperOrder;
+    static const order_type error_order_value = ErrorOrder;
 
-	explicit_error_stepper_base( const algebra_type &algebra = algebra_type() )
-        : m_algebra( algebra )
+    explicit_error_stepper_base( const algebra_type &algebra = algebra_type() )
+    : m_algebra( algebra )
     { }
 
     order_type stepper_order( void ) const
     {
-    	return stepper_order_value;
+        return stepper_order_value;
     }
 
     order_type error_order( void ) const
     {
-    	return error_order_value;
+        return error_order_value;
     }
 
-//    explicit_error_stepper_base( const algebra_type &algebra ) : m_algebra( algebra ) { }
+    //    explicit_error_stepper_base( const algebra_type &algebra ) : m_algebra( algebra ) { }
 
-	/*
-	 * Version 1 : do_step( system , x , t , dt , xerr )
-	 *
-	 * the two overloads are needed in order to solve the forwarding problem
-	 */
-	template< class System , class StateInOut , class Err >
-	void do_step( System system , StateInOut &x , const time_type &t , const time_type &dt , Err &xerr )
-	{
-		do_step_v1( system , x , t , dt , xerr );
-	}
+    /*
+     * Version 1 : do_step( system , x , t , dt , xerr )
+     *
+     * the two overloads are needed in order to solve the forwarding problem
+     */
+    template< class System , class StateInOut , class Err >
+    void do_step( System system , StateInOut &x , const time_type &t , const time_type &dt , Err &xerr )
+    {
+        do_step_v1( system , x , t , dt , xerr );
+    }
 
-	template< class System , class StateInOut , class Err >
-	void do_step( System system , StateInOut &x , const time_type &t , const time_type &dt , Err &xerr )
-	{
-		do_step_v1( system , x , t , dt , xerr );
-	}
-
-
-	/*
-	 * Version 2 : do_step( system , x , dxdt , t , dt , xerr )
-	 *
-	 * this version does not solve the forwarding problem, boost.range can not be used
-	 */
-	template< class System , class StateInOut , class DerivIn , class Err >
-	void do_step( System system , StateInOut &x , const DerivIn &dxdt , const time_type &t , const time_type &dt , Err &xerr )
-	{
-		this->stepper().do_step_impl( system , x , dxdt , t , x , dt , xerr );
-	}
+    template< class System , class StateInOut , class Err >
+    void do_step( System system , StateInOut &x , const time_type &t , const time_type &dt , Err &xerr )
+    {
+        do_step_v1( system , x , t , dt , xerr );
+    }
 
 
-	/*
-	 * Version 3 : do_step( system , in , t , out , dt , xerr )
-	 *
-	 * this version does not solve the forwarding problem, boost.range can not be used
-	 */
-	template< class System , class StateIn , class StateOut , class Err >
-	void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt , Err &xerr )
-	{
-		typename boost::unwrap_reference< System >::type &sys = system;
-		m_resizer.adjust_size( in , boost::bind( &internal_stepper_base_type::resize<StateIn> , boost::ref( *this ) , _1 ) );
-		sys( in , m_dxdt.m_v ,t );
-		this->stepper().do_step_impl( system , in , m_dxdt.m_v , t , out , dt , xerr );
-	}
+    /*
+     * Version 2 : do_step( system , x , dxdt , t , dt , xerr )
+     *
+     * this version does not solve the forwarding problem, boost.range can not be used
+     */
+    template< class System , class StateInOut , class DerivIn , class Err >
+    void do_step( System system , StateInOut &x , const DerivIn &dxdt , const time_type &t , const time_type &dt , Err &xerr )
+    {
+        this->stepper().do_step_impl( system , x , dxdt , t , x , dt , xerr );
+    }
 
 
-	/*
-	 * Version 4 : do_step( system , in , dxdt , t , out , dt , xerr )
-	 *
-	 * this version does not solve the forwarding problem, boost.range can not be used
-	 */
-	template< class System , class StateIn , class DerivIn , class StateOut , class Err >
-	void do_step( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt , Err &xerr )
-	{
-		this->stepper().do_step_impl( system , in , dxdt , t , out , dt , xerr );
-	}
+    /*
+     * Version 3 : do_step( system , in , t , out , dt , xerr )
+     *
+     * this version does not solve the forwarding problem, boost.range can not be used
+     */
+    template< class System , class StateIn , class StateOut , class Err >
+    void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt , Err &xerr )
+    {
+        typename boost::unwrap_reference< System >::type &sys = system;
+        m_resizer.adjust_size( in , boost::bind( &internal_stepper_base_type::resize<StateIn> , boost::ref( *this ) , _1 ) );
+        sys( in , m_dxdt.m_v ,t );
+        this->stepper().do_step_impl( system , in , m_dxdt.m_v , t , out , dt , xerr );
+    }
 
 
-	template< class StateIn >
-	bool resize( const StateIn &x )
-	{
-	    return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
-	}
+    /*
+     * Version 4 : do_step( system , in , dxdt , t , out , dt , xerr )
+     *
+     * this version does not solve the forwarding problem, boost.range can not be used
+     */
+    template< class System , class StateIn , class DerivIn , class StateOut , class Err >
+    void do_step( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt , Err &xerr )
+    {
+        this->stepper().do_step_impl( system , in , dxdt , t , out , dt , xerr );
+    }
 
-	template< class StateType >
-	void adjust_size( const StateType &x )
-	{
-		resize( x );
-	}
 
-	algebra_type& algebra()
+    template< class StateIn >
+    bool resize( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
+    }
+
+    template< class StateType >
+    void adjust_size( const StateType &x )
+    {
+        resize( x );
+    }
+
+    algebra_type& algebra()
     {   return m_algebra; }
 
-	const algebra_type& algebra() const
-	{   return m_algebra; }
+    const algebra_type& algebra() const
+    {   return m_algebra; }
 
 private:
 
 
-	template< class System , class StateInOut , class Err >
-	void do_step_v1( System system , StateInOut &x , const time_type &t , const time_type &dt , Err &xerr )
-	{
-		typename boost::unwrap_reference< System >::type &sys = system;
-		m_resizer.adjust_size( in , boost::bind( &internal_stepper_base_type::resize<StateIn> , boost::ref( *this ) , _1 ) );
-		sys( x , m_dxdt.m_v ,t );
-		this->stepper().do_step_impl( system , x , m_dxdt.m_v , t , x , dt , xerr );
-	}
+    template< class System , class StateInOut , class Err >
+    void do_step_v1( System system , StateInOut &x , const time_type &t , const time_type &dt , Err &xerr )
+    {
+        typename boost::unwrap_reference< System >::type &sys = system;
+        m_resizer.adjust_size( in , boost::bind( &internal_stepper_base_type::resize<StateIn> , boost::ref( *this ) , _1 ) );
+        sys( x , m_dxdt.m_v ,t );
+        this->stepper().do_step_impl( system , x , m_dxdt.m_v , t , x , dt , xerr );
+    }
 
 
-	// ToDo : make the next two methods private?
+    // ToDo : make the next two methods private?
     stepper_type& stepper( void )
     {
-    	return *static_cast< stepper_type* >( this );
+        return *static_cast< stepper_type* >( this );
     }
 
     const stepper_type& stepper( void ) const
     {
-    	return *static_cast< const stepper_type* >( this );
+        return *static_cast< const stepper_type* >( this );
     }
 
 
-	resizer_type m_resizer;
+    resizer_type m_resizer;
 
 protected:
-	algebra_type m_algebra;
-	wrapped_deriv_type m_dxdt;
+    algebra_type m_algebra;
+    wrapped_deriv_type m_dxdt;
 };
 
 
@@ -191,4 +196,4 @@ protected:
 } // numeric
 } // boost
 
-#endif //BOOST_NUMERIC_ODEINT_EXPLICIT_ERROR_STEPPER_BASE_HPP_INCLUDED
+#endif // BOOST_NUMERIC_ODEINT_STEPPER_BASE_EXPLICIT_ERROR_STEPPER_BASE_HPP_INCLUDED

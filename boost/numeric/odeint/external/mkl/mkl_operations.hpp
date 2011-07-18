@@ -1,18 +1,22 @@
 /*
- boost header: BOOST_NUMERIC_ODEINT/mkl_operations.hpp
+ [auto_generated]
+ boost/numeric/odeint/external/mkl/mkl_operations.hpp
 
- Algebra for using the Intel Math Kernel Library Blas1 routines in odeint
+ [begin_description]
+ Wrapper classes for intel math kernel library types.
+ [end_description]
 
- Copyright 2009 Karsten Ahnert
- Copyright 2009 Mario Mulansky
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
  copy at http://www.boost.org/LICENSE_1_0.txt)
-*/
+ */
 
-#ifndef BOOST_NUMERIC_ODEINT_MKL_OPERATIONS_HPP_INCLUDED
-#define BOOST_NUMERIC_ODEINT_MKL_OPERATIONS_HPP_INCLUDED
+
+#ifndef BOOST_NUMERIC_ODEINT_EXTERNAL_MKL_MKL_OPERATIONS_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_EXTERNAL_MKL_MKL_OPERATIONS_HPP_INCLUDED
 
 #include <mkl_blas.h>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
@@ -30,15 +34,15 @@ namespace odeint {
 /* only defined for doubles */
 struct mkl_operations
 {
-	//template< class Fac1 , class Fac2 > struct scale_sum2;
+    //template< class Fac1 , class Fac2 > struct scale_sum2;
 
 
     template< class F1 , class F2 >
     struct scale_sum2
     {
-		typedef double Fac1;
-		typedef double Fac2;
-		const Fac1 m_alpha1;
+        typedef double Fac1;
+        typedef double Fac2;
+        const Fac1 m_alpha1;
         const Fac2 m_alpha2;
 
         scale_sum2( const Fac1 alpha1 , const Fac2 alpha2 ) : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) { }
@@ -63,4 +67,4 @@ struct mkl_operations
 } // numeric
 } // boost
 
-#endif /* BOOST_NUMERIC_ODEINT_MKL_OPERATIONS_HPP_INCLUDED */
+#endif // BOOST_NUMERIC_ODEINT_EXTERNAL_MKL_MKL_OPERATIONS_HPP_INCLUDED

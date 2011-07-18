@@ -1,12 +1,23 @@
 /*
- * controlled_error_bs.hpp
- *
- *  Created on: Jul 12, 2011
- *      Author: mario
+ [auto_generated]
+ boost/numeric/odeint/stepper/bulirsch_stoer.hpp
+
+ [begin_description]
+ Implementaiton of the Burlish-Stoer method.
+ [end_description]
+
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLED_ERROR_BS_HPP_
-#define BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLED_ERROR_BS_HPP_
+
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_BULIRSCH_STOER_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STEPPER_BULIRSCH_STOER_HPP_INCLUDED
+
 
 #include <iostream>
 
@@ -30,14 +41,14 @@ namespace numeric {
 namespace odeint {
 
 template<
-    class State ,
-    class Value = double ,
-    class Deriv = State ,
-    class Time = Value ,
-    class Algebra = range_algebra ,
-    class Operations = default_operations ,
-    class Resizer = initially_resizer
-    >
+class State ,
+class Value = double ,
+class Deriv = State ,
+class Time = Value ,
+class Algebra = range_algebra ,
+class Operations = default_operations ,
+class Resizer = initially_resizer
+>
 class bulirsch_stoer {
 
 public:
@@ -62,22 +73,22 @@ public:
     bulirsch_stoer(
             time_type eps_abs = 1E-6 , time_type eps_rel = 1E-6 ,
             time_type factor_x = 1.0 , time_type factor_dxdt = 1.0 )
-        : m_error_checker( eps_abs , eps_rel , factor_x, factor_dxdt ),
-          m_k_max(8) ,
-          m_safety1(0.25) , m_safety2(0.7),
-          m_max_dt_factor( 0.1 ) , m_min_step_scale(5E-5) , m_max_step_scale(0.7),
-          m_last_step_rejected( false ) , m_first( true ) ,
-          m_dt_last( 1.0E30 ) ,
-          m_current_eps( -1.0 ) ,
-          m_error( m_k_max ) ,
-          m_a( m_k_max+1 ) ,
-          m_alpha( m_k_max , value_vector( m_k_max ) ) ,
-          m_interval_sequence( m_k_max+1 ) ,
-          m_coeff( m_k_max+1 ) ,
-          m_cost( m_k_max+1 ) ,
-          m_times( m_k_max ) ,
-          m_table( m_k_max ) ,
-          STEPFAC1( 0.65 ) , STEPFAC2( 0.94 ) , STEPFAC3( 0.02 ) , STEPFAC4( 4.0 ) , KFAC1( 0.8 ) , KFAC2( 0.9 )
+    : m_error_checker( eps_abs , eps_rel , factor_x, factor_dxdt ),
+      m_k_max(8) ,
+      m_safety1(0.25) , m_safety2(0.7),
+      m_max_dt_factor( 0.1 ) , m_min_step_scale(5E-5) , m_max_step_scale(0.7),
+      m_last_step_rejected( false ) , m_first( true ) ,
+      m_dt_last( 1.0E30 ) ,
+      m_current_eps( -1.0 ) ,
+      m_error( m_k_max ) ,
+      m_a( m_k_max+1 ) ,
+      m_alpha( m_k_max , value_vector( m_k_max ) ) ,
+      m_interval_sequence( m_k_max+1 ) ,
+      m_coeff( m_k_max+1 ) ,
+      m_cost( m_k_max+1 ) ,
+      m_times( m_k_max ) ,
+      m_table( m_k_max ) ,
+      STEPFAC1( 0.65 ) , STEPFAC2( 0.94 ) , STEPFAC3( 0.02 ) , STEPFAC4( 4.0 ) , KFAC1( 0.8 ) , KFAC2( 0.9 )
     {
         for( unsigned short i = 0; i < m_k_max+1; i++ )
         {
@@ -104,74 +115,74 @@ public:
     }
 
     /*
-	 * Version 1 : try_step( sys , x , t , dt )
-	 *
-	 * The overloads are needed to solve the forwarding problem
-	 */
-	template< class System , class StateInOut >
-	controlled_step_result try_step( System system , StateInOut &x , time_type &t , time_type &dt )
-	{
-		return try_step_v1( system , x , t, dt );
-	}
+     * Version 1 : try_step( sys , x , t , dt )
+     *
+     * The overloads are needed to solve the forwarding problem
+     */
+    template< class System , class StateInOut >
+    controlled_step_result try_step( System system , StateInOut &x , time_type &t , time_type &dt )
+    {
+        return try_step_v1( system , x , t, dt );
+    }
 
-	template< class System , class StateInOut >
-	controlled_step_result try_step( System system , const StateInOut &x , time_type &t , time_type &dt )
-	{
-		return try_step_v1( system , x , t, dt );
-	}
+    template< class System , class StateInOut >
+    controlled_step_result try_step( System system , const StateInOut &x , time_type &t , time_type &dt )
+    {
+        return try_step_v1( system , x , t, dt );
+    }
 
-	/*
-	 * Version 2 : try_step( sys , x , dxdt , t , dt )
-	 *
-	 * this version does not solve the forwarding problem, boost.range can not be used
-	 */
-	template< class System , class StateInOut , class DerivIn >
-	controlled_step_result try_step( System system , StateInOut &x , const DerivIn &dxdt , time_type &t , time_type &dt )
-	{
-		m_xnew_resizer.adjust_size( x , boost::bind( &controlled_error_bs_type::resize_m_xnew< StateInOut > , boost::ref( *this ) , _1 ) );
-		controlled_step_result res = try_step( system , x , dxdt , t , m_xnew.m_v , dt );
-		if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged ) )
-		{
-			boost::numeric::odeint::copy( m_xnew.m_v , x );
-		}
-		return res;
-	}
+    /*
+     * Version 2 : try_step( sys , x , dxdt , t , dt )
+     *
+     * this version does not solve the forwarding problem, boost.range can not be used
+     */
+    template< class System , class StateInOut , class DerivIn >
+    controlled_step_result try_step( System system , StateInOut &x , const DerivIn &dxdt , time_type &t , time_type &dt )
+    {
+        m_xnew_resizer.adjust_size( x , boost::bind( &controlled_error_bs_type::resize_m_xnew< StateInOut > , boost::ref( *this ) , _1 ) );
+        controlled_step_result res = try_step( system , x , dxdt , t , m_xnew.m_v , dt );
+        if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged ) )
+        {
+            boost::numeric::odeint::copy( m_xnew.m_v , x );
+        }
+        return res;
+    }
 
-	/*
-	 * Version 3 : try_step( sys , in , t , out , dt )
-	 *
-	 * this version does not solve the forwarding problem, boost.range can not be used
-	 */
-	template< class System , class StateIn , class StateOut >
-	controlled_step_result try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
-	{
-		typename boost::unwrap_reference< System >::type &sys = system;
-		m_dxdt_resizer.adjust_size( in , boost::bind( &controlled_error_bs_type::resize_m_dxdt< StateIn > , boost::ref( *this ) , _1 ) );
-		sys( in , m_dxdt.m_v , t );
-		return try_step( system , in , m_dxdt.m_v , t , out , dt );
-	}
+    /*
+     * Version 3 : try_step( sys , in , t , out , dt )
+     *
+     * this version does not solve the forwarding problem, boost.range can not be used
+     */
+    template< class System , class StateIn , class StateOut >
+    controlled_step_result try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
+    {
+        typename boost::unwrap_reference< System >::type &sys = system;
+        m_dxdt_resizer.adjust_size( in , boost::bind( &controlled_error_bs_type::resize_m_dxdt< StateIn > , boost::ref( *this ) , _1 ) );
+        sys( in , m_dxdt.m_v , t );
+        return try_step( system , in , m_dxdt.m_v , t , out , dt );
+    }
 
 
     template< class System , class StateIn , class DerivIn , class StateOut >
-	controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt , time_type &t , StateOut &out , time_type &dt )
-	{
+    controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt , time_type &t , StateOut &out , time_type &dt )
+    {
         static const time_type val1( static_cast< time_type >( 1.0 ) );
 
         typename boost::unwrap_reference< System >::type &sys = system;
-		if( m_resizer.adjust_size( in , boost::bind( &controlled_error_bs_type::resize< StateIn > , boost::ref( *this ) , _1 ) ) )
-		    reset(); // system resized -> reset
-		if( dt != m_dt_last )
-		    reset(); // step size changed from outside -> reset
+        if( m_resizer.adjust_size( in , boost::bind( &controlled_error_bs_type::resize< StateIn > , boost::ref( *this ) , _1 ) ) )
+            reset(); // system resized -> reset
+        if( dt != m_dt_last )
+            reset(); // step size changed from outside -> reset
 
-		bool reject( true );
-		m_dt_last = dt;
+        bool reject( true );
+        m_dt_last = dt;
 
-		value_vector h_opt( m_k_max+1 );
-		value_vector work( m_k_max+1 );
+        value_vector h_opt( m_k_max+1 );
+        value_vector work( m_k_max+1 );
 
-		size_t k_final = 0;
+        size_t k_final = 0;
 
-		//std::cout << "t=" << t <<", dt=" << dt << ", k_opt=" << m_current_k_opt << std::endl;
+        //std::cout << "t=" << t <<", dt=" << dt << ", k_opt=" << m_current_k_opt << std::endl;
 
         for( size_t k = 0 ; k <= m_current_k_opt+1 ; k++ )
         {
@@ -252,10 +263,10 @@ public:
     }
 
     template< class StateIn >
-	bool resize_m_xnew( const StateIn &x )
-	{
-	    return adjust_size_by_resizeability( m_xnew , x , typename wrapped_state_type::is_resizeable() );
-	}
+    bool resize_m_xnew( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_xnew , x , typename wrapped_state_type::is_resizeable() );
+    }
 
     template< class StateIn >
     bool resize( const StateIn &x )
@@ -280,13 +291,13 @@ public:
 private:
 
     template< class System , class StateInOut >
-	controlled_step_result try_step_v1( System system , StateInOut &x , time_type &t , time_type &dt )
-	{
-		typename boost::unwrap_reference< System >::type &sys = system;
-		m_dxdt_resizer.adjust_size( x , boost::bind( &controlled_error_bs_type::resize_m_dxdt< StateInOut > , boost::ref( *this ) , _1 ) );
-		sys( x , m_dxdt.m_v ,t );
-		return try_step( system , x , m_dxdt.m_v , t , dt );
-	}
+    controlled_step_result try_step_v1( System system , StateInOut &x , time_type &t , time_type &dt )
+    {
+        typename boost::unwrap_reference< System >::type &sys = system;
+        m_dxdt_resizer.adjust_size( x , boost::bind( &controlled_error_bs_type::resize_m_dxdt< StateInOut > , boost::ref( *this ) , _1 ) );
+        sys( x , m_dxdt.m_v ,t );
+        return try_step( system , x , m_dxdt.m_v , t , dt );
+    }
 
 
     template< class StateInOut >
@@ -303,7 +314,7 @@ private:
         }
         //std::cout << std::endl << m_coeff[k][0] << std::endl;
         m_algebra.for_each3( xest , m_table[0].m_v , xest ,
-                    typename operations_type::template scale_sum2< time_type , time_type >( val1 + m_coeff[k][0] , -m_coeff[k][0]) );
+                typename operations_type::template scale_sum2< time_type , time_type >( val1 + m_coeff[k][0] , -m_coeff[k][0]) );
     }
 
     time_type calc_h_opt( const time_type h , const value_type error , const size_t k ) const
@@ -422,4 +433,4 @@ private:
 }
 }
 
-#endif /* BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLED_ERROR_BS_HPP_ */
+#endif // BOOST_NUMERIC_ODEINT_STEPPER_BULIRSCH_STOER_HPP_INCLUDED

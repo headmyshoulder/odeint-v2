@@ -1,19 +1,24 @@
 /*
- boost header: xyz/gsl_wrapper.hpp
+ [auto_generated]
+ boost/numeric/odeint/external/gsl/gsl_wrapper.hpp
 
- Copyright 2009 Karsten Ahnert
- Copyright 2009 Mario Mulansky
+ [begin_description]
+ Wrapper for gsl_vector.
+ [end_description]
+
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
  copy at http://www.boost.org/LICENSE_1_0.txt)
-*/
+ */
 
-#ifndef BOOST_NUMERIC_ODEINT_GSL_WRAPPER_HPP_INCLUDED
-#define BOOST_NUMERIC_ODEINT_GSL_WRAPPER_HPP_INCLUDED
+
+#ifndef BOOST_NUMERIC_ODEINT_EXTERNAL_GSL_GSL_WRAPPER_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_EXTERNAL_GSL_GSL_WRAPPER_HPP_INCLUDED
 
 #include <new>
-//#include <iostream>
 
 #include <gsl/gsl_vector.h>
 
@@ -37,24 +42,24 @@ class gsl_vector_iterator : public boost::iterator_facade< gsl_vector_iterator ,
 {
 public :
 
-	gsl_vector_iterator( void ): m_p(0) , m_stride( 0 ) { }
-	explicit gsl_vector_iterator( gsl_vector *p ) : m_p( p->data ) , m_stride( p->stride ) { }
-	friend gsl_vector_iterator end_iterator( gsl_vector * );
+    gsl_vector_iterator( void ): m_p(0) , m_stride( 0 ) { }
+    explicit gsl_vector_iterator( gsl_vector *p ) : m_p( p->data ) , m_stride( p->stride ) { }
+    friend gsl_vector_iterator end_iterator( gsl_vector * );
 
 private :
 
-	friend class boost::iterator_core_access;
-	friend class const_gsl_vector_iterator;
+    friend class boost::iterator_core_access;
+    friend class const_gsl_vector_iterator;
 
-	void increment( void ) { m_p += m_stride; }
-	void decrement( void ) { m_p -= m_stride; }
-	void advance( ptrdiff_t n ) { m_p += n*m_stride; }
-	bool equal( const gsl_vector_iterator &other ) const { return this->m_p == other.m_p; }
-	bool equal( const const_gsl_vector_iterator &other ) const;
-	double& dereference( void ) const { return *m_p; }
+    void increment( void ) { m_p += m_stride; }
+    void decrement( void ) { m_p -= m_stride; }
+    void advance( ptrdiff_t n ) { m_p += n*m_stride; }
+    bool equal( const gsl_vector_iterator &other ) const { return this->m_p == other.m_p; }
+    bool equal( const const_gsl_vector_iterator &other ) const;
+    double& dereference( void ) const { return *m_p; }
 
-	double *m_p;
-	size_t m_stride;
+    double *m_p;
+    size_t m_stride;
 };
 
 
@@ -66,25 +71,25 @@ class const_gsl_vector_iterator : public boost::iterator_facade< const_gsl_vecto
 {
 public :
 
-	const_gsl_vector_iterator( void ): m_p(0) , m_stride( 0 ) { }
-	explicit const_gsl_vector_iterator( const gsl_vector *p ) : m_p( p->data ) , m_stride( p->stride ) { }
-	const_gsl_vector_iterator( const gsl_vector_iterator &p ) : m_p( p.m_p ) , m_stride( p.m_stride ) { }
+    const_gsl_vector_iterator( void ): m_p(0) , m_stride( 0 ) { }
+    explicit const_gsl_vector_iterator( const gsl_vector *p ) : m_p( p->data ) , m_stride( p->stride ) { }
+    const_gsl_vector_iterator( const gsl_vector_iterator &p ) : m_p( p.m_p ) , m_stride( p.m_stride ) { }
 
 private :
 
-	friend class boost::iterator_core_access;
-	friend class gsl_vector_iterator;
-	friend const_gsl_vector_iterator end_iterator( const gsl_vector * );
+    friend class boost::iterator_core_access;
+    friend class gsl_vector_iterator;
+    friend const_gsl_vector_iterator end_iterator( const gsl_vector * );
 
-	void increment( void ) { m_p += m_stride; }
-	void decrement( void ) { m_p -= m_stride; }
-	void advance( ptrdiff_t n ) { m_p += n*m_stride; }
-	bool equal( const const_gsl_vector_iterator &other ) const { return this->m_p == other.m_p; }
-	bool equal( const gsl_vector_iterator &other ) const { return this->m_p == other.m_p; }
-	const double& dereference( void ) const { return *m_p; }
+    void increment( void ) { m_p += m_stride; }
+    void decrement( void ) { m_p -= m_stride; }
+    void advance( ptrdiff_t n ) { m_p += n*m_stride; }
+    bool equal( const const_gsl_vector_iterator &other ) const { return this->m_p == other.m_p; }
+    bool equal( const gsl_vector_iterator &other ) const { return this->m_p == other.m_p; }
+    const double& dereference( void ) const { return *m_p; }
 
-	const double *m_p;
-	size_t m_stride;
+    const double *m_p;
+    size_t m_stride;
 };
 
 
@@ -93,16 +98,16 @@ bool gsl_vector_iterator::equal( const const_gsl_vector_iterator &other ) const 
 
 gsl_vector_iterator end_iterator( gsl_vector *x )
 {
-	gsl_vector_iterator iter( x );
-	iter.m_p += iter.m_stride * x->size;
-	return iter;
+    gsl_vector_iterator iter( x );
+    iter.m_p += iter.m_stride * x->size;
+    return iter;
 }
 
 const_gsl_vector_iterator end_iterator( const gsl_vector *x )
 {
-	const_gsl_vector_iterator iter( x );
-	iter.m_p += iter.m_stride * x->size;
-	return iter;
+    const_gsl_vector_iterator iter( x );
+    iter.m_p += iter.m_stride * x->size;
+    return iter;
 }
 
 
@@ -110,17 +115,17 @@ const_gsl_vector_iterator end_iterator( const gsl_vector *x )
 
 namespace boost
 {
-	template<>
-	struct range_mutable_iterator< gsl_vector* >
-	{
-		typedef gsl_vector_iterator type;
-	};
+template<>
+struct range_mutable_iterator< gsl_vector* >
+{
+    typedef gsl_vector_iterator type;
+};
 
-	template<>
-	struct range_const_iterator< gsl_vector* >
-	{
-		typedef const_gsl_vector_iterator type;
-	};
+template<>
+struct range_const_iterator< gsl_vector* >
+{
+    typedef const_gsl_vector_iterator type;
+};
 } // namespace boost
 
 
@@ -129,25 +134,25 @@ namespace boost
 // template<>
 inline gsl_vector_iterator range_begin( gsl_vector *x )
 {
-	return gsl_vector_iterator( x );
+    return gsl_vector_iterator( x );
 }
 
 // template<>
 inline const_gsl_vector_iterator range_begin( const gsl_vector *x )
 {
-	return const_gsl_vector_iterator( x );
+    return const_gsl_vector_iterator( x );
 }
 
 // template<>
 inline gsl_vector_iterator range_end( gsl_vector *x )
 {
-	return end_iterator( x );
+    return end_iterator( x );
 }
 
 // template<>
 inline const_gsl_vector_iterator range_end( const gsl_vector *x )
 {
-	return end_iterator( x );
+    return end_iterator( x );
 }
 
 
@@ -164,8 +169,8 @@ namespace odeint {
 template<>
 struct is_resizeable< gsl_vector* >
 {
-	struct type : public boost::true_type { };
-	const static bool value = type::value;
+    struct type : public boost::true_type { };
+    const static bool value = type::value;
 };
 
 template<>
@@ -221,4 +226,4 @@ struct state_wrapper< gsl_vector* >
 
 
 
-#endif // BOOST_NUMERIC_ODEINT_GSL_VECTOR_ADAPTOR_HPP_INCLUDED
+#endif // BOOST_NUMERIC_ODEINT_EXTERNAL_GSL_GSL_WRAPPER_HPP_INCLUDED
