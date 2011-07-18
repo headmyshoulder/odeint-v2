@@ -54,14 +54,13 @@ BOOST_AUTO_TEST_CASE( test_bulirsch_stoer )
     state_type x;
     x[0] = 10.0 ; x[1] = 10.0 ; x[2] = 5.0;
 
-    double t = 0.0;
     double dt = 0.1;
 
     //stepper.try_step( lorenz() , x , t , dt );
 
-    size_t steps = integrate_adaptive( stepper , lorenz() , x , 0.0 , 1.0 , dt );
+    size_t steps = integrate_adaptive( stepper , lorenz() , x , 0.0 , 10.0 , dt );
 
-
+    std::cout << "required steps: " << steps << std::endl;
 }
 
 BOOST_AUTO_TEST_SUITE_END()

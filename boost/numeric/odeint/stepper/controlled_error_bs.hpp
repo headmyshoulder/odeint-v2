@@ -59,8 +59,6 @@ public:
     typedef std::vector< value_vector > value_matrix;
     typedef std::vector< size_t > int_vector;
 
-    static const time_type STEPFAC1=0.65 , STEPFAC2=0.94 , STEPFAC3=0.02 , STEPFAC4=4.0 , KFAC1=0.8 , KFAC2=0.9;
-
     controlled_error_bs(
             time_type eps_abs = 1E-6 , time_type eps_rel = 1E-6 ,
             time_type factor_x = 1.0 , time_type factor_dxdt = 1.0 )
@@ -78,7 +76,8 @@ public:
           m_coeff( m_k_max+1 ) ,
           m_cost( m_k_max+1 ) ,
           m_times( m_k_max ) ,
-          m_table( m_k_max )
+          m_table( m_k_max ) ,
+          STEPFAC1( 0.65 ) , STEPFAC2( 0.94 ) , STEPFAC3( 0.02 ) , STEPFAC4( 4.0 ) , KFAC1( 0.8 ) , KFAC2( 0.9 )
     {
         for( unsigned short i = 0; i < m_k_max+1; i++ )
         {
@@ -99,7 +98,7 @@ public:
             const time_type logfact( -log10( std::max( eps_rel , 1.0E-12 ) ) * 0.6 + 0.5 );
             m_current_k_opt = std::max( 1 , std::min( static_cast<int>( m_k_max-1 ) , static_cast<int>( logfact ) ));
             //m_current_k_opt = m_k_max - 1;
-            std::cout << m_cost[i] << std::endl;
+            //std::cout << m_cost[i] << std::endl;
         }
 
     }
@@ -172,11 +171,11 @@ public:
 
 		size_t k_final = 0;
 
-		std::cout << "t=" << t <<", dt=" << dt << ", k_opt=" << m_current_k_opt << std::endl;
+		//std::cout << "t=" << t <<", dt=" << dt << ", k_opt=" << m_current_k_opt << std::endl;
 
         for( size_t k = 0 ; k <= m_current_k_opt+1 ; k++ )
         {
-            std::cout << "k=" << k <<": " << std::endl;
+            //std::cout << "k=" << k <<": " << std::endl;
             m_midpoint.set_steps( m_interval_sequence[k] );
             if( k == 0 )
             {
@@ -192,11 +191,11 @@ public:
                 const time_type error = m_error_checker.error( m_algebra , in , dxdt , m_err.m_v , dt );
                 h_opt[k] = calc_h_opt( dt , error , k );
                 work[k] = m_cost[k]/h_opt[k];
-                std::cout << '\t' << "h_opt=" << h_opt[k] << ", work=" << work[k] << std::endl;
-                std::cout << '\t' << "error: " << error << std::endl;
+                //std::cout << '\t' << "h_opt=" << h_opt[k] << ", work=" << work[k] << std::endl;
+                //std::cout << '\t' << "error: " << error << std::endl;
                 if( m_first && (error <= static_cast< time_type >( 1.0 )) )
                 { // this is the first step, convergence does not have to be in order window
-                    std::cout << '\t' << "convergence in first step" << std::endl;
+                    //std::cout << '\t' << "convergence in first step" << std::endl;
                     reject = false;
                     k_final = k;
                     break; // leave k-loop
@@ -324,19 +323,20 @@ private:
 
     controlled_step_result set_k_opt( const size_t k , const value_vector &work , const value_vector &h_opt , time_type &dt )
     {
+        //std::cout << "finding k_opt..." << std::endl;
         if( k == 1 )
         {
             m_current_k_opt = 2;
             //dt = h_opt[ m_current_k_opt-1 ] * m_cost[ m_current_k_opt ] / m_cost[ m_current_k_opt-1 ] ;
             return success_step_size_increased;
         }
-        if( work[k-1] < KFAC1*work[k] )
+        if( (work[k-1] < KFAC1*work[k]) || (k == m_k_max) )
         {   // order decrease
             m_current_k_opt = k-1;
             dt = h_opt[ m_current_k_opt ];
             return success_step_size_increased;
         }
-        else if( (work[k] < KFAC2*work[k-1]) || m_last_step_rejected )
+        else if( (work[k] < KFAC2*work[k-1]) || m_last_step_rejected || (k == m_k_max-1) )
         {   // same order - also do this if last step got rejected
             m_current_k_opt = k;
             dt = h_opt[ m_current_k_opt ];
@@ -415,6 +415,7 @@ private:
     value_vector m_times;
     std::vector< wrapped_state_type > m_table; // sequence of states for extrapolation
 
+    const time_type STEPFAC1 , STEPFAC2 , STEPFAC3 , STEPFAC4 , KFAC1 , KFAC2;
 };
 
 }
