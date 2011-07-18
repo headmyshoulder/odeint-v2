@@ -1,29 +1,9 @@
 /*
  [auto_generated]
- ../../../../boost/numeric/odeint.hpp
- 
- [begin_description]
- 
- [end_description]
- 
- Copyright 2009-2011 Karsten Ahnert
- Copyright 2009-2011 Mario Mulansky
- 
- Distributed under the Boost Software License, Version 1.0.
- (See accompanying file LICENSE_1_0.txt or
- copy at http://www.boost.org/LICENSE_1_0.txt)
-*/
-
-
-#ifndef ____________BOOST_NUMERIC_ODEINT_HPP_INCLUDED
-#define ____________BOOST_NUMERIC_ODEINT_HPP_INCLUDED
-
-/*
- [auto_generated]
  boost/numeric/odeint.hpp
 
  [begin_description]
-
+ Forward include for odeint. Includes nearly everything.
  [end_description]
 
  Copyright 2009-2011 Karsten Ahnert
@@ -72,4 +52,4 @@
 #include <boost/numeric/odeint/integrate/observer_collection.hpp>
 
 #endif // BOOST_NUMERIC_ODEINT_HPP_INCLUDED
-#endif // ____________BOOST_NUMERIC_ODEINT_HPP_INCLUDED
+
