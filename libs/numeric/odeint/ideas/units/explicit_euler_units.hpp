@@ -1,5 +1,5 @@
 /*
- boost header: BOOST_NUMERIC_ODEINT/explicit_euler.hpp
+ boost header: BOOST_NUMERIC_ODEINT/euler.hpp
 
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky

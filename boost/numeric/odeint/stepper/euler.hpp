@@ -1,5 +1,5 @@
 /*
- boost header: BOOST_NUMERIC_ODEINT/explicit_euler.hpp
+ boost header: BOOST_NUMERIC_ODEINT/euler.hpp
 
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky
@@ -35,20 +35,20 @@ template<
 	class Operations = default_operations ,
 	class Resizer = initially_resizer
 	>
-class explicit_euler
+class euler
 : public explicit_stepper_base<
-	  explicit_euler< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
+	  euler< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
 	  1 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
 {
 public :
 
 	friend class dense_output_explicit_euler< State , Value , Deriv , Time , Algebra , Operations , Resizer >;
 
-	BOOST_ODEINT_EXPLICIT_STEPPERS_TYPEDEFS( explicit_euler , 1 );
+	BOOST_ODEINT_EXPLICIT_STEPPERS_TYPEDEFS( euler , 1 );
 
-	typedef explicit_euler< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
+	typedef euler< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
 
-    explicit_euler( const algebra_type &algebra = algebra_type() ) : stepper_base_type( algebra )
+    euler( const algebra_type &algebra = algebra_type() ) : stepper_base_type( algebra )
     { }
 
 	template< class System , class StateIn , class DerivIn , class StateOut >

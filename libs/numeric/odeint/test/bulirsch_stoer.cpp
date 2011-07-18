@@ -20,7 +20,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <boost/numeric/odeint/stepper/controlled_error_bs.hpp>
+#include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
 #include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
 
 using namespace boost::unit_test;
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_SUITE( bulirsch_stoer_test )
 
 BOOST_AUTO_TEST_CASE( test_bulirsch_stoer )
 {
-    typedef controlled_error_bs< state_type > stepper_type;
+    typedef bulirsch_stoer< state_type > stepper_type;
     stepper_type stepper( 1E-9 , 1E-9 , 1.0 , 0.0 );
 
     state_type x;

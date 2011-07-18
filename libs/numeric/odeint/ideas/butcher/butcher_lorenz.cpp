@@ -10,7 +10,7 @@
 
 #include <tr1/array>
 
-#include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4_classic.hpp>
 
 #include "predefined_steppers.hpp"
 
@@ -20,7 +20,7 @@ using namespace std;
 
 typedef std::tr1::array< double , 3 > state_type;
 typedef mpl_rk4_stepper< state_type > stepper_type;
-typedef boost::numeric::odeint::explicit_rk4< state_type > stepper_std_type;
+typedef boost::numeric::odeint::runge_kutta_fehlberg4< state_type > stepper_std_type;
 
 
 const double sigma = 10.0;

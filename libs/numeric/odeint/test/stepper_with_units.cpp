@@ -27,10 +27,12 @@
 #include <boost/fusion/container.hpp>
 #include <boost/mpl/vector.hpp>
 
-#include <boost/numeric/odeint/stepper/explicit_euler.hpp>
-#include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
-#include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
-#include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
+#include <boost/numeric/odeint/stepper/euler.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4_classic.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_explicit.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_controlled_explicit_fsal.hpp>
@@ -232,37 +234,39 @@ void check_dense_output_stepper( Stepper &stepper )
 
 class stepper_types : public mpl::vector
 <
-	explicit_euler< state_type , value_type , deriv_type , time_type , fusion_algebra > ,
-	explicit_rk4< state_type , value_type , deriv_type , time_type , fusion_algebra > ,
-	explicit_error_rk54_ck< state_type , value_type , deriv_type , time_type , fusion_algebra >
+	euler< state_type , value_type , deriv_type , time_type , fusion_algebra >,
+	runge_kutta_fehlberg4< state_type , value_type , deriv_type , time_type , fusion_algebra > ,
+	runge_kutta_fehlberg4_classic< state_type , value_type , deriv_type , time_type , fusion_algebra > ,
+	runge_kutta_cash_karp54< state_type , value_type , deriv_type , time_type , fusion_algebra >,
+	runge_kutta_cash_karp54_classic< state_type , value_type , deriv_type , time_type , fusion_algebra >
 > { };
 
 class fsal_stepper_types : public mpl::vector
 <
-	explicit_error_dopri5< state_type , value_type , deriv_type , time_type , fusion_algebra >
+    runge_kutta_dopri5< state_type , value_type , deriv_type , time_type , fusion_algebra >
 > { };
 
 class error_stepper_types : public mpl::vector
 <
-	explicit_error_rk54_ck< state_type , value_type , deriv_type , time_type , fusion_algebra >
+    runge_kutta_cash_karp54_classic< state_type , value_type , deriv_type , time_type , fusion_algebra >
 > { };
 
 class fsal_error_stepper_types : public mpl::vector
 <
-	explicit_error_dopri5< state_type , value_type , deriv_type , time_type , fusion_algebra >
+	runge_kutta_dopri5< state_type , value_type , deriv_type , time_type , fusion_algebra >
 > { };
 
 class controlled_stepper_types : public mpl::vector
 <
-	controlled_error_stepper< explicit_error_rk54_ck< state_type , value_type , deriv_type , time_type , fusion_algebra > > ,
-	controlled_error_stepper< explicit_error_dopri5< state_type , value_type , deriv_type , time_type , fusion_algebra > >
+	controlled_error_stepper< runge_kutta_cash_karp54_classic< state_type , value_type , deriv_type , time_type , fusion_algebra > > ,
+	controlled_error_stepper< runge_kutta_dopri5< state_type , value_type , deriv_type , time_type , fusion_algebra > >
 > { };
 
 class dense_output_stepper_types : public mpl::vector
 <
-	dense_output_explicit< explicit_euler< state_type , value_type , deriv_type , time_type , fusion_algebra > > ,
+	dense_output_explicit< euler< state_type , value_type , deriv_type , time_type , fusion_algebra > > ,
 	dense_output_controlled_explicit_fsal<
-		controlled_error_stepper< explicit_error_dopri5< state_type , value_type , deriv_type , time_type , fusion_algebra > > >
+		controlled_error_stepper< runge_kutta_dopri5< state_type , value_type , deriv_type , time_type , fusion_algebra > > >
 > { };
 
 

@@ -9,7 +9,7 @@
 #include <iostream>
 
 #include <boost/array.hpp>
-#include <boost/numeric/odeint/stepper/explicit_euler.hpp>
+#include <boost/numeric/odeint/stepper/euler.hpp>
 #include <boost/numeric/odeint/stepper/adams_bashforth.hpp>
 #include <boost/numeric/odeint/integrate/integrate_n_steps.hpp>
 
@@ -58,7 +58,7 @@ int main( int argc , char **argv )
 	double t = 0.0;
 
 	adams_bashforth< 3 , state_type > stepper;
-	explicit_euler< state_type > euler;
+	euler< state_type > euler;
 	stepper.initialize( euler , lorenz() , x , t , dt );
 
 	integrate_n_steps( stepper , lorenz() , x , 0.0 , 0.01 , 10000 , writing_observer( cout ) );

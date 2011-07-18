@@ -1,5 +1,5 @@
 /*
- * explicit_rk4_generic.hpp
+ * runge_kutta_fehlberg4.hpp
  *
  *  Created on: Jun 1, 2011
  *      Author: mario
@@ -91,13 +91,13 @@ template<
     class Operations = default_operations ,
     class Resizer = initially_resizer
     >
-class explicit_rk4_generic : public explicit_generic_rk< 4 , 4 , State , Value , Deriv , Value ,
+class runge_kutta_fehlberg4 : public explicit_generic_rk< 4 , 4 , State , Value , Deriv , Time ,
                                                           Algebra , Operations , Resizer >
 {
 
 public:
 
-    typedef explicit_generic_rk< 4 , 4 , State , Value , Deriv , Value ,
+    typedef explicit_generic_rk< 4 , 4 , State , Value , Deriv , Time ,
                                Algebra , Operations , Resizer > stepper_base_type;
 
     typedef typename stepper_base_type::state_type state_type;
@@ -111,7 +111,7 @@ public:
     typedef typename stepper_base_type::resizer_type resizer_type;
     typedef typename stepper_base_type::stepper_type stepper_type;
 
-    explicit_rk4_generic( const algebra_type &algebra = algebra_type() ) : stepper_base_type(
+    runge_kutta_fehlberg4( const algebra_type &algebra = algebra_type() ) : stepper_base_type(
             fusion::make_vector( rk4_coefficients_a1<Value>() , rk4_coefficients_a2<Value>() , rk4_coefficients_a3<Value>() ) ,
             rk4_coefficients_b<Value>() , rk4_coefficients_c<Value>() , algebra )
     { }

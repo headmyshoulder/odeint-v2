@@ -115,7 +115,7 @@ int main(int argc, char **argv)
 
 
     //[ define_const_stepper
-    explicit_rk4< state_type > stepper;
+    runge_kutta_fehlberg4< state_type > stepper;
     integrate_const( stepper , harmonic_oscillator , x , 0.0 , 10.0 , 0.01 );
     //]
 
@@ -132,7 +132,7 @@ int main(int argc, char **argv)
 
 
     //[ define_adapt_stepper
-    typedef explicit_error_rk54_ck< state_type > error_stepper_type;
+    typedef runge_kutta_cash_karp54_classic< state_type > error_stepper_type;
     error_stepper_type rk54;
     //]
 

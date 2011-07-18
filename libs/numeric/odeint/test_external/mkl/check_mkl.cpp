@@ -14,7 +14,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <boost/numeric/odeint/stepper/explicit_euler.hpp>
+#include <boost/numeric/odeint/stepper/euler.hpp>
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 #include <boost/numeric/odeint/external/mkl/mkl_operations.hpp>
 
@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE( test_mkl )
 {
 
     //to use mkl routines we have to use the vector_space_algebra and the mkl_operations
-    explicit_euler< state_type , value_type , state_type , value_type , vector_space_algebra , mkl_operations > stepper;
+    euler< state_type , value_type , state_type , value_type , vector_space_algebra , mkl_operations > stepper;
     state_type x;
     x[0] = 0.0;
 

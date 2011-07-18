@@ -10,8 +10,8 @@
 #include <iostream>
 #include <boost/array.hpp>
 
-#include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
-#include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 
 #define tab "\t"
@@ -63,8 +63,8 @@ void evolution( Stepper &stepper , double t_end , const state_type &x0 , const s
 
 int main( int argc , char **argv )
 {
-	typedef explicit_error_rk54_ck< state_type > rk54_type;
-	typedef explicit_error_dopri5< state_type > dopri5_type;
+	typedef runge_kutta_cash_karp54_classic< state_type > rk54_type;
+	typedef runge_kutta_dopri5< state_type > dopri5_type;
 
 	rk54_type rk54;
 	dopri5_type dopri5;

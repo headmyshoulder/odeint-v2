@@ -13,7 +13,7 @@
 #define BOOST_TEST_MODULE odeint_gsl
 
 #include <gsl/gsl_vector.h>
-#include <boost/numeric/odeint/stepper/explicit_euler.hpp>
+#include <boost/numeric/odeint/stepper/euler.hpp>
 #include <boost/numeric/odeint/external/gsl/gsl_wrapper.hpp>
 
 #include <boost/test/unit_test.hpp>
@@ -36,7 +36,7 @@ void lorenz( const state_type x , state_type dxdt , double t )
 
 BOOST_AUTO_TEST_CASE( gsl )
 {
-    explicit_euler< state_type > euler;
+    euler< state_type > euler;
 
     state_type x = gsl_vector_alloc( 3 );
     gsl_vector_set( x , 0 , 1.0);

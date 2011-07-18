@@ -28,19 +28,19 @@ template<
     class Operations = default_operations ,
     class Resizer = initially_resizer
     >
-class explicit_midpoint
+class modified_midpoint
 : public explicit_stepper_base<
-      explicit_midpoint< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
+      modified_midpoint< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
       2 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
 {
 
 public :
 
-    BOOST_ODEINT_EXPLICIT_STEPPERS_TYPEDEFS( explicit_midpoint , 2 );
+    BOOST_ODEINT_EXPLICIT_STEPPERS_TYPEDEFS( modified_midpoint , 2 );
 
-    typedef explicit_midpoint< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
+    typedef modified_midpoint< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
 
-    explicit_midpoint( const unsigned short steps = 2 , const algebra_type &algebra = algebra_type() )
+    modified_midpoint( const unsigned short steps = 2 , const algebra_type &algebra = algebra_type() )
         : stepper_base_type( algebra ) , m_steps( steps )
     { }
 

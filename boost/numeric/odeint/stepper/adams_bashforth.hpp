@@ -18,7 +18,7 @@
 #include <boost/numeric/odeint/util/resizer.hpp>
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
-#include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4.hpp>
 
 #include <boost/numeric/odeint/stepper/detail/adams_bashforth_coefficients.hpp>
 #include <boost/numeric/odeint/stepper/detail/adams_bashforth_call_algebra.hpp>
@@ -247,7 +247,7 @@ public :
 	    /**
 	     * ToDo: rk4 here has its own algebra instance! good? bad?
 	     */
-		explicit_rk4< state_type , value_type , deriv_type , time_type , algebra_type , operations_type , resizer_type > rk4;
+		runge_kutta_fehlberg4< state_type , value_type , deriv_type , time_type , algebra_type , operations_type , resizer_type > rk4;
 		initialize( boost::ref( rk4 ) , system , x , t , dt );
 	}
 

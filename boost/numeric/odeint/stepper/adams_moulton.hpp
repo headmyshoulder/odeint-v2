@@ -18,7 +18,7 @@
 #include <boost/numeric/odeint/util/resizer.hpp>
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
-#include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4_classic.hpp>
 
 #include <boost/numeric/odeint/stepper/detail/adams_moulton_call_algebra.hpp>
 #include <boost/numeric/odeint/stepper/detail/adams_moulton_coefficients.hpp>

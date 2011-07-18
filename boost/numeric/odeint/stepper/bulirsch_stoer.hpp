@@ -16,7 +16,7 @@
 #include <boost/bind.hpp>
 
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
-#include <boost/numeric/odeint/stepper/explicit_midpoint.hpp>
+#include <boost/numeric/odeint/stepper/modified_midpoint.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
@@ -38,7 +38,7 @@ template<
     class Operations = default_operations ,
     class Resizer = initially_resizer
     >
-class controlled_error_bs {
+class bulirsch_stoer {
 
 public:
 
@@ -53,13 +53,13 @@ public:
     typedef state_wrapper< deriv_type > wrapped_deriv_type;
     typedef controlled_stepper_tag stepper_category;
 
-    typedef controlled_error_bs< State , Value , Deriv , Time , Algebra , Operations , Resizer > controlled_error_bs_type;
+    typedef bulirsch_stoer< State , Value , Deriv , Time , Algebra , Operations , Resizer > controlled_error_bs_type;
 
     typedef std::vector< time_type > value_vector;
     typedef std::vector< value_vector > value_matrix;
     typedef std::vector< size_t > int_vector;
 
-    controlled_error_bs(
+    bulirsch_stoer(
             time_type eps_abs = 1E-6 , time_type eps_rel = 1E-6 ,
             time_type factor_x = 1.0 , time_type factor_dxdt = 1.0 )
         : m_error_checker( eps_abs , eps_rel , factor_x, factor_dxdt ),
@@ -375,7 +375,7 @@ private:
     }
 
     default_error_checker< value_type, algebra_type , operations_type > m_error_checker;
-    explicit_midpoint< state_type , value_type , deriv_type , time_type , algebra_type , operations_type , resizer_type > m_midpoint;
+    modified_midpoint< state_type , value_type , deriv_type , time_type , algebra_type , operations_type , resizer_type > m_midpoint;
 
     const size_t m_k_max;
 

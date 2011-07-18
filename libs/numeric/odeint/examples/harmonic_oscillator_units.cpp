@@ -84,7 +84,7 @@ int main( int argc , char**argv )
     <
         controlled_error_stepper
         <
-            explicit_error_dopri5< state_type , double , deriv_type , time_type , fusion_algebra >
+            runge_kutta_dopri5< state_type , double , deriv_type , time_type , fusion_algebra >
         >
     > stepper_type;
 

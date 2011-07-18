@@ -1,5 +1,5 @@
 /*
- boost header: NUMERIC_ODEINT_STEPPER/explicit_rk4.hpp
+ boost header: NUMERIC_ODEINT_STEPPER/runge_kutta_fehlberg4_classic.hpp
 
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky
@@ -37,20 +37,20 @@ template<
 	class Operations = default_operations ,
 	class Resizer = initially_resizer
 	>
-class explicit_rk4
-: public explicit_stepper_base<
-	  explicit_rk4< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
+class runge_kutta_fehlberg4_classic
+  : public explicit_stepper_base<
+    runge_kutta_fehlberg4_classic< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
 	  4 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
 {
 
 public :
 
 
-	BOOST_ODEINT_EXPLICIT_STEPPERS_TYPEDEFS( explicit_rk4 , 4 );
+	BOOST_ODEINT_EXPLICIT_STEPPERS_TYPEDEFS( runge_kutta_fehlberg4_classic , 4 );
 
-	typedef explicit_rk4< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
+	typedef runge_kutta_fehlberg4_classic< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
 
-	explicit_rk4( const algebra_type &algebra = algebra_type() ) : stepper_base_type( algebra )
+	runge_kutta_fehlberg4_classic( const algebra_type &algebra = algebra_type() ) : stepper_base_type( algebra )
 	{ }
 
 

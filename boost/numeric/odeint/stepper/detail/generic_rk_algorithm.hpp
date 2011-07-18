@@ -81,8 +81,8 @@ public:
         >::type
     >::type coef_a_type;
 
-    typedef boost::array< double , StageCount > coef_b_type;
-    typedef boost::array< double , StageCount > coef_c_type;
+    typedef boost::array< Value , StageCount > coef_b_type;
+    typedef boost::array< Value , StageCount > coef_c_type;
 
     typedef typename fusion::result_of::as_vector
     <
@@ -196,12 +196,12 @@ public:
 
             if( stage_number < StageCount )
                 detail::template generic_rk_call_algebra< stage_number , Algebra >()( algebra , x_tmp , x , dxdt , F ,
-                            detail::generic_rk_scale_sum< stage_number , Operations , Time >( stage.a , dt) );
+                            detail::generic_rk_scale_sum< stage_number , Operations , Value , Time >( stage.a , dt) );
 //                  algebra_type::template for_eachn<stage_number>( x_tmp , x , dxdt , F ,
 //                          typename operations_type::template scale_sumn< stage_number , time_type >( stage.a , dt ) );
             else
                 detail::template generic_rk_call_algebra< stage_number , Algebra >()( algebra , x_out , x , dxdt , F ,
-                            detail::generic_rk_scale_sum< stage_number , Operations , Time >( stage.a , dt) );
+                            detail::generic_rk_scale_sum< stage_number , Operations , Value , Time >( stage.a , dt ) );
 //                algebra_type::template for_eachn<stage_number>( x_out , x , dxdt , F ,
 //                            typename operations_type::template scale_sumn< stage_number , time_type >( stage.a , dt ) );
         }

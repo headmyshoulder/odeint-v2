@@ -23,9 +23,9 @@
 #include <boost/range.hpp>
 #include <boost/ref.hpp>
 
-#include <boost/numeric/odeint/stepper/explicit_euler.hpp>
-#include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
-#include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
+#include <boost/numeric/odeint/stepper/euler.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 #include <boost/numeric/odeint/stepper/symplectic_euler.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_explicit.hpp>
@@ -160,7 +160,7 @@ BOOST_AUTO_TEST_SUITE( stepper_with_ranges )
 BOOST_AUTO_TEST_CASE( explicit_euler_with_range_v1 )
 {
 	vector_fixture f;
-	boost::numeric::odeint::explicit_euler< state_type > euler;
+	boost::numeric::odeint::euler< state_type > euler;
 	euler.do_step( system1() , std::make_pair( f.in.begin() + 1 , f.in.begin() + 4 ) , 0.1 , 0.1 );
 	CHECK_VALUES( f.in , 0.0 , 1.1 , 2.2 , 3.3 , 4.0 , 5.0 );
 }
@@ -170,7 +170,7 @@ BOOST_AUTO_TEST_CASE( explicit_euler_with_range_v1 )
 BOOST_AUTO_TEST_CASE( explicit_error_k54_with_range_v1 )
 {
 	vector_fixture f;
-	boost::numeric::odeint::explicit_error_rk54_ck< state_type > rk54;
+	boost::numeric::odeint::runge_kutta_cash_karp54_classic< state_type > rk54;
 	rk54.do_step( system2() , std::make_pair( f.in.begin() + 1 , f.in.begin() + 4 ) , 0.1 , 0.1 );
 	CHECK_VALUES( f.in , 0.0 , 1.1 , 2.2 , 3.3 , 4.0 , 5.0 );
 }
@@ -178,25 +178,25 @@ BOOST_AUTO_TEST_CASE( explicit_error_k54_with_range_v1 )
 BOOST_AUTO_TEST_CASE( explicit_error_k54_with_range_v5 )
 {
 	vector_fixture f;
-	boost::numeric::odeint::explicit_error_rk54_ck< state_type > rk54;
+	boost::numeric::odeint::runge_kutta_cash_karp54_classic< state_type > rk54;
 	rk54.do_step( system2() , std::make_pair( f.in.begin() + 1 , f.in.begin() + 4 ) , 0.1 , 0.1 , f.err );
 	CHECK_VALUES( f.in , 0.0 , 1.1 , 2.2 , 3.3 , 4.0 , 5.0 );
 }
 
 
-BOOST_AUTO_TEST_CASE( explicit_error_dopri5_with_range_v1 )
+BOOST_AUTO_TEST_CASE( runge_kutta_dopri5_with_range_v1 )
 {
 	vector_fixture f;
-	boost::numeric::odeint::explicit_error_dopri5< state_type > dopri5;
+	boost::numeric::odeint::runge_kutta_dopri5< state_type > dopri5;
 	dopri5.do_step( system2() , std::make_pair( f.in.begin() + 1 , f.in.begin() + 4 ) , 0.1 , 0.1 );
 	CHECK_VALUES( f.in , 0.0 , 1.1 , 2.2 , 3.3 , 4.0 , 5.0 );
 }
 
 
-BOOST_AUTO_TEST_CASE( explicit_error_dopri5_with_range_v5 )
+BOOST_AUTO_TEST_CASE( runge_kutta_dopri5_with_range_v5 )
 {
 	vector_fixture f;
-	boost::numeric::odeint::explicit_error_dopri5< state_type > dopri5;
+	boost::numeric::odeint::runge_kutta_dopri5< state_type > dopri5;
 	dopri5.do_step( system2() , std::make_pair( f.in.begin() + 1 , f.in.begin() + 4 ) , 0.1 , 0.1 , f.err );
 	CHECK_VALUES( f.in , 0.0 , 1.1 , 2.2 , 3.3 , 4.0 , 5.0 );
 }
@@ -206,7 +206,7 @@ BOOST_AUTO_TEST_CASE( controlled_error_stepper_rk54 )
 {
 	double t = 0.0 , dt = 0.1;
 	vector_fixture f;
-	boost::numeric::odeint::controlled_error_stepper< boost::numeric::odeint::explicit_error_rk54_ck< state_type > > stepper;
+	boost::numeric::odeint::controlled_error_stepper< boost::numeric::odeint::runge_kutta_cash_karp54_classic< state_type > > stepper;
 	stepper.try_step( system2() , std::make_pair( f.in.begin() + 1 , f.in.begin() + 4 ) , t , dt );
 	CHECK_VALUES( f.in , 0.0 , 1.1 , 2.2 , 3.3 , 4.0 , 5.0 );
 }
@@ -215,7 +215,7 @@ BOOST_AUTO_TEST_CASE( controlled_error_stepper_dopri5 )
 {
 	double t = 0.0 , dt = 0.1;
 	vector_fixture f;
-	boost::numeric::odeint::controlled_error_stepper< boost::numeric::odeint::explicit_error_dopri5< state_type > > stepper;
+	boost::numeric::odeint::controlled_error_stepper< boost::numeric::odeint::runge_kutta_dopri5< state_type > > stepper;
 	stepper.try_step( system2() , std::make_pair( f.in.begin() + 1 , f.in.begin() + 4 ) , t , dt );
 	CHECK_VALUES( f.in , 0.0 , 1.1 , 2.2 , 3.3 , 4.0 , 5.0 );
 }
@@ -250,7 +250,7 @@ BOOST_AUTO_TEST_CASE( dense_output_euler_with_ranges )
 {
 	using namespace boost::numeric::odeint;
 	vector_fixture f;
-	dense_output_explicit< explicit_euler< state_type > > stepper;
+	dense_output_explicit< euler< state_type > > stepper;
 	stepper.initialize( std::make_pair( f.in.begin() + 1, f.in.begin() + 4 ) , 0.0 , 0.1 );
 	stepper.do_step( system1() );
 	stepper.calc_state( 0.05 , std::make_pair( f.in.begin() + 1 ,f.in.begin() +4 ) );
@@ -263,7 +263,7 @@ BOOST_AUTO_TEST_CASE( dense_output_dopri5_with_ranges )
 	vector_fixture f;
 	dense_output_controlled_explicit_fsal<
 		controlled_error_stepper<
-			explicit_error_dopri5< state_type >
+            runge_kutta_dopri5< state_type >
 		> > stepper;
 	stepper.initialize( std::make_pair( f.in.begin() + 1, f.in.begin() + 4 ) , 0.0 , 0.1 );
 	stepper.do_step( system2() );

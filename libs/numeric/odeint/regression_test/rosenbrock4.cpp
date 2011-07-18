@@ -13,7 +13,7 @@
 #include <boost/numeric/odeint/stepper/rosenbrock4.hpp>
 #include <boost/numeric/odeint/stepper/rosenbrock4_controller.hpp>
 #include <boost/numeric/odeint/stepper/rosenbrock4_dense_output.hpp>
-#include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 
 using namespace std;
@@ -121,7 +121,7 @@ void test_rosenbrock_stepper_with_lorenz( void )
 void rk54_ck_stepper_with_lorenz( void )
 {
 	typedef boost::array< double , 3 > state_type2;
-	typedef explicit_error_rk54_ck< state_type2 > stepper_type2;
+	typedef runge_kutta_cash_karp54_classic< state_type2 > stepper_type2;
 	stepper_type2 rk_stepper;
 
 	double x0 = -12.0 , y0 = -12.0 , z0 = 20.0;
@@ -230,7 +230,7 @@ void test_dense_output_rosenbrock_with_stiff_system( void )
 void rk54_ck_controlled_with_stiff_system( void )
 {
 	typedef boost::array< double , 2 > state_type2;
-	typedef explicit_error_rk54_ck< state_type2 > stepper_type2;
+	typedef runge_kutta_cash_karp54_classic< state_type2 > stepper_type2;
 	typedef controlled_error_stepper< stepper_type2 > controlled_stepper_type2;
 	controlled_stepper_type2 stepper;
 

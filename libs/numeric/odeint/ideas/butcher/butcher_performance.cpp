@@ -10,7 +10,7 @@
 
 #include <tr1/array>
 
-#include <boost/numeric/odeint/stepper/explicit_euler.hpp>
+#include <boost/numeric/odeint/stepper/euler.hpp>
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
 #include <boost/timer.hpp>
@@ -38,7 +38,7 @@ typedef boost::timer timer_type;
 
 typedef std::tr1::array< double , 3 > state_type;
 typedef mpl_euler_stepper< state_type > stepper_type;
-typedef boost::numeric::odeint::explicit_euler< state_type > stepper_std_type;
+typedef boost::numeric::odeint::euler< state_type > stepper_std_type;
 
 
 void lorenz( const state_type &x , state_type &dxdt , double t )

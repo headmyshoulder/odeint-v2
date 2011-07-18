@@ -7,7 +7,7 @@
 
 #include <boost/array.hpp>
 
-#include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
 #include <boost/numeric/odeint/algebra/array_algebra.hpp>
 
 #include "rk_performance_test_case.hpp"
@@ -15,7 +15,7 @@
 #include "lorenz.hpp"
 
 typedef boost::array< double , 3 > state_type;
-typedef boost::numeric::odeint::explicit_error_rk54_ck< state_type > rk54_odeint_type;
+typedef boost::numeric::odeint::runge_kutta_cash_karp54_classic< state_type > rk54_odeint_type;
 
 class odeint_wrapper
 {

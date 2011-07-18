@@ -17,7 +17,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/array.hpp>
 
-#include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4.hpp>
 
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE( gmp )
 	mpf_div_2exp( eps_ , unity , precision-1 ); // 2^(-precision+1) : smallest number that can be represented with used precision
 	value_type eps( eps_ );
 
-	explicit_rk4< state_type , value_type > stepper;
+	runge_kutta_fehlberg4< state_type , value_type > stepper;
 	state_type x;
 	x[0] = 0.0;
 

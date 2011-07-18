@@ -9,14 +9,14 @@
 #include <fstream>
 #include <vector>
 
-#include <boost/numeric/odeint/stepper/explicit_euler.hpp>
+#include <boost/numeric/odeint/stepper/euler.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_explicit.hpp>
 
 using namespace std;
 using namespace boost::numeric::odeint;
 
 typedef std::vector< double > state_type;
-typedef explicit_euler< state_type > explicit_stepper_type;
+typedef euler< state_type > explicit_stepper_type;
 typedef dense_output_explicit< explicit_stepper_type > stepper_type;
 
 struct lorenz

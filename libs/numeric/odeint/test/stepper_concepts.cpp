@@ -42,15 +42,15 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/inserter.hpp>
 
-#include <boost/numeric/odeint/stepper/explicit_euler.hpp>
-#include <boost/numeric/odeint/stepper/explicit_midpoint.hpp>
-#include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
-#include <boost/numeric/odeint/stepper/explicit_rk4_generic.hpp>
-#include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
-#include <boost/numeric/odeint/stepper/explicit_error_rk54_ck_generic.hpp>
-#include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
+#include <boost/numeric/odeint/stepper/euler.hpp>
+#include <boost/numeric/odeint/stepper/modified_midpoint.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4_classic.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
-#include <boost/numeric/odeint/stepper/controlled_error_bs.hpp>
+#include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 #include <boost/numeric/odeint/algebra/array_algebra.hpp>
 
@@ -197,13 +197,13 @@ struct perform_stepper_test< Stepper , array_type >
 
 
 template< class State > class stepper_methods : public mpl::vector<
-	explicit_euler< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-	explicit_midpoint< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-	explicit_rk4< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-	explicit_rk4_generic< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-	explicit_error_rk54_ck< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-	explicit_error_rk54_ck_generic< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-	explicit_error_dopri5< State , double , State , double , typename algebra_dispatcher< State >::type >
+	euler< State , double , State , double , typename algebra_dispatcher< State >::type > ,
+	modified_midpoint< State , double , State , double , typename algebra_dispatcher< State >::type > ,
+	runge_kutta_fehlberg4_classic< State , double , State , double , typename algebra_dispatcher< State >::type > ,
+	runge_kutta_fehlberg4< State , double , State , double , typename algebra_dispatcher< State >::type > ,
+	runge_kutta_cash_karp54_classic< State , double , State , double , typename algebra_dispatcher< State >::type > ,
+	runge_kutta_cash_karp54< State , double , State , double , typename algebra_dispatcher< State >::type > ,
+	runge_kutta_dopri5< State , double , State , double , typename algebra_dispatcher< State >::type >
 > { };
 
 
@@ -298,9 +298,9 @@ struct perform_error_stepper_test< Stepper , array_type >
 
 
 template< class State > class error_stepper_methods : public mpl::vector<
-	explicit_error_rk54_ck< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-	explicit_error_rk54_ck_generic< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-	explicit_error_dopri5< State , double , State , double , typename algebra_dispatcher< State >::type >
+	runge_kutta_cash_karp54_classic< State , double , State , double , typename algebra_dispatcher< State >::type > ,
+	runge_kutta_cash_karp54< State , double , State , double , typename algebra_dispatcher< State >::type > ,
+	runge_kutta_dopri5< State , double , State , double , typename algebra_dispatcher< State >::type >
 > { };
 
 
@@ -407,9 +407,9 @@ struct perform_controlled_stepper_test< ControlledStepper , array_type >
 };
 
 template< class State > class controlled_stepper_methods : public mpl::vector<
-	controlled_error_stepper< explicit_error_rk54_ck< State , double , State , double , typename algebra_dispatcher< State >::type > > ,
-	controlled_error_stepper< explicit_error_dopri5< State , double , State , double , typename algebra_dispatcher< State >::type > > , 
-    controlled_error_bs< State , double , State , double , typename algebra_dispatcher< State >::type >
+	controlled_error_stepper< runge_kutta_cash_karp54_classic< State , double , State , double , typename algebra_dispatcher< State >::type > > ,
+	controlled_error_stepper< runge_kutta_dopri5< State , double , State , double , typename algebra_dispatcher< State >::type > > , 
+    bulirsch_stoer< State , double , State , double , typename algebra_dispatcher< State >::type >
 > { };
 
 typedef mpl::copy

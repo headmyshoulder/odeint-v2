@@ -1,7 +1,7 @@
 #include <iostream>
 #include <gsl/gsl_vector.h>
 
-#include "explicit_euler.hpp"
+#include "euler.hpp"
 #include "size_adjuster.hpp"
 
 using namespace std;

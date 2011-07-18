@@ -10,7 +10,7 @@
 
 #include "taylor.hpp"
 
-#include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 #include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
 

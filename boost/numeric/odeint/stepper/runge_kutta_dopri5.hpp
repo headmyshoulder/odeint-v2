@@ -1,5 +1,5 @@
 /*
- boost header: boost_numeric_odeint/explicit_error_dopri5.hpp
+ boost header: boost_numeric_odeint/runge_kutta_dopri5.hpp
 
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky
@@ -35,18 +35,18 @@ template<
 	class Operations = default_operations ,
 	class Resizer = initially_resizer
 	>
-class explicit_error_dopri5
+class runge_kutta_dopri5
 : public explicit_stepper_and_error_stepper_fsal_base<
-	  explicit_error_dopri5< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
+	  runge_kutta_dopri5< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
 	  5 , 5 , 4 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
 {
 
 public :
 
-	BOOST_ODEINT_EXPLICIT_STEPPERS_AND_ERROR_STEPPERS_FSAL_TYPEDEFS( explicit_error_dopri5 , 5 , 5 , 4 );
-	typedef explicit_error_dopri5< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
+	BOOST_ODEINT_EXPLICIT_STEPPERS_AND_ERROR_STEPPERS_FSAL_TYPEDEFS( runge_kutta_dopri5 , 5 , 5 , 4 );
+	typedef runge_kutta_dopri5< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
 
-	explicit_error_dopri5( const algebra_type &algebra = algebra_type() ) : stepper_base_type( algebra )
+	runge_kutta_dopri5( const algebra_type &algebra = algebra_type() ) : stepper_base_type( algebra )
 	{ }
 
 

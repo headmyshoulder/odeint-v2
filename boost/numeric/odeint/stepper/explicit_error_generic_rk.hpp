@@ -103,7 +103,7 @@ public:
 
         // additionally, perform the error calculation
         detail::template generic_rk_call_algebra< StageCount , algebra_type >()( stepper_base_type::m_algebra ,
-                xerr , dxdt , m_F , detail::generic_rk_scale_sum_err< StageCount , operations_type , time_type >( m_b2 , dt) );
+                xerr , dxdt , m_F , detail::generic_rk_scale_sum_err< StageCount , operations_type , value_type , time_type >( m_b2 , dt) );
     }
 
     template< class System , class StateIn , class DerivIn , class StateOut >

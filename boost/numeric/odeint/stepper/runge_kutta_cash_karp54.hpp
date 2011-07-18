@@ -1,5 +1,5 @@
 /*
- * explicit_error_rk54_ck_generic.hpp
+ * runge_kutta_cash_karp54.hpp
  *
  *  Created on: Jun 3, 2011
  *      Author: mario
@@ -132,13 +132,13 @@ template<
     class Operations = default_operations ,
     class Resizer = initially_resizer
     >
-class explicit_error_rk54_ck_generic : public explicit_error_generic_rk< 6 , 5 , 5 , 4 ,
+class runge_kutta_cash_karp54 : public explicit_error_generic_rk< 6 , 5 , 5 , 4 ,
         State , Value , Deriv , Time , Algebra , Operations , Resizer >
 {
 
 public:
 
-    typedef explicit_error_generic_rk< 6 , 5 , 5 , 4 , State , Value , Deriv , Value ,
+    typedef explicit_error_generic_rk< 6 , 5 , 5 , 4 , State , Value , Deriv , Time ,
                                Algebra , Operations , Resizer > stepper_base_type;
 
     typedef typename stepper_base_type::state_type state_type;
@@ -152,7 +152,7 @@ public:
     typedef typename stepper_base_type::resizer_type resizer_typ;
     typedef typename stepper_base_type::stepper_type stepper_type;
 
-    explicit_error_rk54_ck_generic( const algebra_type &algebra = algebra_type() ) : stepper_base_type(
+    runge_kutta_cash_karp54( const algebra_type &algebra = algebra_type() ) : stepper_base_type(
             fusion::make_vector( rk54_ck_coefficients_a1<Value>() ,
                                  rk54_ck_coefficients_a2<Value>() ,
                                  rk54_ck_coefficients_a3<Value>() ,

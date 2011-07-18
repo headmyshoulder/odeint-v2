@@ -1,5 +1,5 @@
 /*
- boost header: NUMERIC_ODEINT_STEPPER/explicit_error_rk54_ck.hpp
+ boost header: NUMERIC_ODEINT_STEPPER/runge_kutta_cash_karp54_classic.hpp
 
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky
@@ -44,20 +44,20 @@ template<
 	class Operations = default_operations ,
 	class Resizer = initially_resizer
 	>
-class explicit_error_rk54_ck
+class runge_kutta_cash_karp54_classic
 : public explicit_stepper_and_error_stepper_base<
-	  explicit_error_rk54_ck< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
+	  runge_kutta_cash_karp54_classic< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
 	  5 , 5 , 4 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
 {
 
 
 public :
 
-	BOOST_ODEINT_EXPLICIT_STEPPERS_AND_ERROR_STEPPERS_TYPEDEFS( explicit_error_rk54_ck , 5 , 5 , 4);
+	BOOST_ODEINT_EXPLICIT_STEPPERS_AND_ERROR_STEPPERS_TYPEDEFS( runge_kutta_cash_karp54_classic , 5 , 5 , 4);
 
-	typedef explicit_error_rk54_ck< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
+	typedef runge_kutta_cash_karp54_classic< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
 
-	explicit_error_rk54_ck( const algebra_type &algebra = algebra_type() ) : stepper_base_type( algebra )
+	runge_kutta_cash_karp54_classic( const algebra_type &algebra = algebra_type() ) : stepper_base_type( algebra )
 	{ }
 
 

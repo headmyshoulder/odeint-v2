@@ -24,8 +24,8 @@
 #include <boost/test/unit_test.hpp>
 
 #include <boost/numeric/odeint/stepper/explicit_error_generic_rk.hpp>
-#include <boost/numeric/odeint/stepper/explicit_error_rk54_ck_generic.hpp>
-#include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
 
 #include <boost/array.hpp>
 
@@ -54,8 +54,8 @@ const error_rk_generic_type::coef_b_type b = {{ 37.0/378.0 , 0.0 , 250.0/621.0 ,
 const error_rk_generic_type::coef_b_type b2 = {{ b[0]-2825.0/27648.0 , b[1]-0.0 , b[2]-18575.0/48384.0 , b[3]-13525.0/55296.0 , b[4]-277.0/14336.0 , b[5]-0.25 }};
 const error_rk_generic_type::coef_c_type c = {{ 0.0 , 0.2 , 0.3 , 0.6 , 1.0 , 7.0/8 }};
 
-typedef explicit_error_rk54_ck_generic< state_type > error_rk54_ck_generic_type;
-typedef explicit_error_rk54_ck< state_type > rk54_ck_type;
+typedef runge_kutta_cash_karp54< state_type > error_rk54_ck_generic_type;
+typedef runge_kutta_cash_karp54_classic< state_type > rk54_ck_type;
 
 BOOST_AUTO_TEST_SUITE( generic_error_stepper_test )
 

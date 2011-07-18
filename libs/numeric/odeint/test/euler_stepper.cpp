@@ -13,7 +13,7 @@
 #include <iostream>
 #include <vector>
 
-#include <boost/numeric/odeint/stepper/explicit_euler.hpp>
+#include <boost/numeric/odeint/stepper/euler.hpp>
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 
 using namespace boost::unit_test;
@@ -73,7 +73,7 @@ BOOST_AUTO_TEST_SUITE( explicit_euler_test )
 BOOST_AUTO_TEST_CASE( test_euler )
 {
     range_algebra algebra;
-    explicit_euler< state_type > stepper( algebra );
+    euler< state_type > stepper( algebra );
     state_type x( 2 );
     x[0] = 0.0; x[1] = 1.0;
 

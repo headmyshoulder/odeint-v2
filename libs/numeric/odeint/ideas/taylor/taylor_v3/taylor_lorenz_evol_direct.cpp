@@ -9,7 +9,7 @@
 
 #include "taylor.hpp"
 
-#include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4_classic.hpp>
 
 #include <boost/fusion/include/make_vector.hpp>
 

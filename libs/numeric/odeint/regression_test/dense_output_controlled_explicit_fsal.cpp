@@ -9,7 +9,7 @@
 #include <fstream>
 #include <stdexcept>
 
-#include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_controlled_explicit_fsal.hpp>
 
@@ -17,7 +17,7 @@ using namespace std;
 using namespace boost::numeric::odeint;
 
 typedef vector< double > state_type;
-typedef explicit_error_dopri5< state_type > dopri5_type;
+typedef runge_kutta_dopri5< state_type > dopri5_type;
 typedef controlled_error_stepper< dopri5_type > controlled_error_stepper_type;
 typedef dense_output_controlled_explicit_fsal< controlled_error_stepper_type > stepper_type;
 

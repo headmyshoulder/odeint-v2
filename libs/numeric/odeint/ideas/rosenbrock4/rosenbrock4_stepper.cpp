@@ -11,7 +11,7 @@
 #include <tr1/array>
 
 #include "rosenbrock4.hpp"
-#include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
 
 using namespace std;
 using namespace boost::numeric::odeint;
@@ -119,7 +119,7 @@ int main( int argc , char **argv )
 	if( true )
 	{
 		typedef std::tr1::array< time_type , 3 > state_type2;
-		typedef explicit_error_rk54_ck< state_type2 > stepper_type2;
+		typedef runge_kutta_cash_karp54_classic< state_type2 > stepper_type2;
 		stepper_type2 rk_stepper;
 		state_type2 x = {{ x0 , y0 , z0 }} , xerr = {{ 0.0 , 0.0 , 0.0 }};
 		time_type t = 0.0;
