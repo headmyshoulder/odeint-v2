@@ -1,3 +1,27 @@
+* REFACTORING AND CLEANUP
+  * check if everywhere static_cast< value_type > is used
+  * check header guards
+  * check copyright note
+  * describe every file in the preamble
+  * check spacings, not tabs
+
+* DOCUMENTATION
+  * Tutorials
+  * Concepts
+  * HOWTO extend odeint
+  * use gh-pages, remove html from the source control
+  * doxygen generated reference
+
+* RECHERCHE
+  * Hoisting
+  * C++0x
+  * Factory functions, does the make sense
+  * Steppers with state, like FSAL steppers, dense output and multi-step methods
+    * maybe one initialize( system , x0 , t0 , dt0 )
+  * Generalize and unify controlled steppers, for example rosenbrock controller should be more general
+  * Generalize and unify dense output stepper, for example dense output rosenbrock
+  * same system function interface for implicit_euler and rosenbrock4
+
 * UNIT TEST
   NEARLY DONE * test operations
   * test vector_space_algebra, maybe with some proto lib
@@ -13,31 +37,7 @@
   * symplectic intergrators and ranges
   * adams_moulton complete
   * adams_bashforth_moulton complete
-* DOCUMENTATION
-  * include links to the source of the examples
-  * use classical citations, via []
-* GENERAL:
-  * check if everywhere static_cast< value_type > is used
-  * check header guards
-  * check copyright note
-  * documente every file in the preamble
   * check once more, if all contructor, destructors and assign-operators are present
-* Factory functions for steppers, controlled_steppers, error_checker und dense_output_stepper
-* same interface for implicit_euler and rosenbrock4
-  * implicit euler, include dfdt
-* Controlled stepper and dense output stepper
-  * check if rosenbrock controller and controlled_stepper can both be used with the explicit steppers
-  * check if rosenbrock4_dense_output and dense_output_explicit can be used unified to one dense output stepper
-  * rename controlled_stepper to a more specific name
-* skript for setting the include defines according to the position in file system an writing a general copyright comment at the beginning
-* Documentation
-* Tutorials
-
-* Strategy for values which initializing, resizing etc. if some values change, for example:
-  * dxdt in explicit fsal stepper, if size changes or if time is not appropriate.
-  * the buffer in adams bashforth if dt changes oder the size of x.
-
-
 
 * UNIT TEST Requirements (NEW):
   * test stepper concepts
