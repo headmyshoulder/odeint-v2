@@ -33,17 +33,18 @@ def insert_preamble( content , file_desc ):
 	return ret
 
 	
-
-def glob_dir( dir , pattern ):
+def glob_dir( dir , pattern , exclude = " " ):
 	matches = []
-	for root, dirnames, filenames in os.walk( dir ):
-	  for filename in fnmatch.filter( filenames , pattern ):
-	      matches.append( [ root , filename , os.path.join(root, filename) ] )
+	for root , dirnames, filenames in os.walk( dir ):
+		if root.find( exclude ) == -1:
+			for filename in fnmatch.filter( filenames , pattern ):
+				matches.append( [ root , filename , os.path.join(root, filename) ] )
 	return matches
 
-files = glob_dir( "boost" , "*.hpp")	
+files = glob_dir( "boost" , "*.hpp" , "stepper" )
 
 for f in files:
+	# print f + " " + header_guard( f )
 	file = open( f[2] )
 	content = file.read()
 	content = insert_preamble( content , f )
@@ -51,4 +52,4 @@ for f in files:
 	
 	file = open( f[2] , "w" )
 	file.write( content )
-	file.close()
+	# file.close()
