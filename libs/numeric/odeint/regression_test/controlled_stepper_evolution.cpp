@@ -8,7 +8,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-#include <tr1/array>
+#include <boost/array.hpp>
 
 #include <boost/numeric/odeint/stepper/explicit_error_rk54_ck.hpp>
 #include <boost/numeric/odeint/stepper/explicit_error_dopri5.hpp>
@@ -20,7 +20,7 @@ using namespace std;
 using namespace boost::numeric::odeint;
 
 
-typedef std::tr1::array< double , 2 > state_type;
+typedef boost::array< double , 2 > state_type;
 
 ostream& operator<<( ostream &out , const state_type &x )
 {

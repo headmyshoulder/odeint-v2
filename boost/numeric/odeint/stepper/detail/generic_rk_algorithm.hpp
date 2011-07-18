@@ -122,24 +122,6 @@ public:
             }
         };
 
-
-        struct do_insertion_from_stage
-        {
-            stage_vector_base &m_base;
-            const stage_vector_base &m_source;
-
-            do_insertion_from_stage( stage_vector_base &base, const stage_vector_base &source )
-                    : m_base(base) , m_source( source )
-            { }
-
-            template<class Index>
-            void operator()(Index) const {
-                //fusion::at< Index >( m_base ) = stage< double , Index::value+1 , intermediate_stage >( m_c[ Index::value ] , fusion::at< Index >( m_a ) );
-                fusion::at<Index>(m_base).c = fusion::at<Index>(m_source).c;
-                fusion::at<Index>(m_base).a = fusion::at<Index>(m_source).a;
-            }
-        };
-
         struct print_butcher
         {
             const stage_vector_base &m_base;
@@ -167,12 +149,6 @@ public:
             fusion::at_c< StageCount - 1 >( *this ).a = b;
         }
 
-        stage_vector( const stage_vector &s )
-        {
-            typedef mpl::range_c< size_t , 0 , StageCount > indices;
-            mpl::for_each< indices >( do_insertion_from_stage( *this , s ) );
-        }
-
         void print( std::ostream &os ) const
         {
             typedef mpl::range_c< size_t , 0 , StageCount > indices;
@@ -186,6 +162,7 @@ public:
                class StateOut , class Time >
     struct calculate_stage
     {
+        Algebra &algebra;
         System &system;
         const StateIn &x;
         StateTemp &x_tmp;
@@ -195,9 +172,9 @@ public:
         const Time t;
         const Time dt;
 
-        calculate_stage( System &_system , const StateIn &_x , const DerivIn &_dxdt , StateOut &_out ,
+        calculate_stage( Algebra &_algebra , System &_system , const StateIn &_x , const DerivIn &_dxdt , StateOut &_out ,
             StateTemp &_x_tmp , Deriv *_F , const Time &_t , const Time &_dt )
-        : system( _system ) , x( _x ) , x_tmp( _x_tmp ) , x_out( _out) , dxdt( _dxdt ) , F( _F ) , t( _t ) , dt( _dt )
+        : algebra( _algebra ) , system( _system ) , x( _x ) , x_tmp( _x_tmp ) , x_out( _out) , dxdt( _dxdt ) , F( _F ) , t( _t ) , dt( _dt )
         {}
 
 
@@ -210,7 +187,7 @@ public:
                 #ifdef BOOST_MSVC
                 #pragma warning( disable : 4307 34 )
                 #endif
-                system( x_tmp , F[stage_number-2] , t + stage.c * dt );
+                system( x_tmp , F[stage_number-2].m_v , t + stage.c * dt );
                 #ifdef BOOST_MSVC
                 #pragma warning( default : 4307 34 )
                 #endif
@@ -218,12 +195,12 @@ public:
             //std::cout << stage_number-2 << ", t': " << t + stage.c * dt << std::endl;
 
             if( stage_number < StageCount )
-                detail::template generic_rk_call_algebra< stage_number , Algebra >()( x_tmp , x , dxdt , F ,
+                detail::template generic_rk_call_algebra< stage_number , Algebra >()( algebra , x_tmp , x , dxdt , F ,
                             detail::generic_rk_scale_sum< stage_number , Operations , Time >( stage.a , dt) );
 //                  algebra_type::template for_eachn<stage_number>( x_tmp , x , dxdt , F ,
 //                          typename operations_type::template scale_sumn< stage_number , time_type >( stage.a , dt ) );
             else
-                detail::template generic_rk_call_algebra< stage_number , Algebra >()( x_out , x , dxdt , F ,
+                detail::template generic_rk_call_algebra< stage_number , Algebra >()( algebra , x_out , x , dxdt , F ,
                             detail::generic_rk_scale_sum< stage_number , Operations , Time >( stage.a , dt) );
 //                algebra_type::template for_eachn<stage_number>( x_out , x , dxdt , F ,
 //                            typename operations_type::template scale_sumn< stage_number , time_type >( stage.a , dt ) );
@@ -236,13 +213,13 @@ public:
     { }
 
     template< class System , class StateIn , class DerivIn , class Time , class StateOut , class StateTemp , class Deriv >
-    void inline do_step( System system , const StateIn &in , const DerivIn &dxdt ,
+    void inline do_step( Algebra &algebra , System system , const StateIn &in , const DerivIn &dxdt ,
                     const Time &t , StateOut &out , const Time &dt ,
                     StateTemp &x_tmp , Deriv F[StageCount-1] )
     {
         fusion::for_each( m_stages , calculate_stage<
                 System , StateIn , StateTemp , DerivIn , Deriv , StateOut , Time >
-            ( system , in , dxdt , out , x_tmp , F , t , dt ) );
+            ( algebra , system , in , dxdt , out , x_tmp , F , t , dt ) );
     }
 
 private:

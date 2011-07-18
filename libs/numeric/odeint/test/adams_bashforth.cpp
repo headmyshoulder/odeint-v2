@@ -90,22 +90,22 @@ BOOST_AUTO_TEST_CASE( test_copying )
 	typedef adams_bashforth< 2 , state_type > stepper_type;
 
 	stepper_type s1;
-	s1.step_storage()[0][0] = 1.5;
-	s1.step_storage()[1][0] = 2.25;
+	s1.step_storage()[0].m_v[0] = 1.5;
+	s1.step_storage()[1].m_v[0] = 2.25;
 
 	stepper_type s2( s1 );
-	BOOST_CHECK_CLOSE( s1.step_storage()[0][0] , s2.step_storage()[0][0] , 1.0e-14 );
-	BOOST_CHECK_CLOSE( s1.step_storage()[1][0] , s2.step_storage()[1][0] , 1.0e-14 );
+	BOOST_CHECK_CLOSE( s1.step_storage()[0].m_v[0] , s2.step_storage()[0].m_v[0] , 1.0e-14 );
+	BOOST_CHECK_CLOSE( s1.step_storage()[1].m_v[0] , s2.step_storage()[1].m_v[0] , 1.0e-14 );
 	BOOST_CHECK( ( &(s1.step_storage()[0]) ) != ( &(s2.step_storage()[0]) ) );
 
 	stepper_type s3;
-	state_type *p1 = &( s3.step_storage()[0] ) , *p2 = &( s3.step_storage()[1] );
+	state_type *p1 = &( s3.step_storage()[0].m_v ) , *p2 = &( s3.step_storage()[1].m_v );
 	s3 = s1;
-	BOOST_CHECK( p1 == ( &( s3.step_storage()[0] ) ) );
-	BOOST_CHECK( p2 == ( &( s3.step_storage()[1] ) ) );
+	BOOST_CHECK( p1 == ( &( s3.step_storage()[0].m_v ) ) );
+	BOOST_CHECK( p2 == ( &( s3.step_storage()[1].m_v ) ) );
 
-	BOOST_CHECK_CLOSE( s1.step_storage()[0][0] , s3.step_storage()[0][0] , 1.0e-14 );
-	BOOST_CHECK_CLOSE( s1.step_storage()[1][0] , s3.step_storage()[1][0] , 1.0e-14 );
+	BOOST_CHECK_CLOSE( s1.step_storage()[0].m_v[0] , s3.step_storage()[0].m_v[0] , 1.0e-14 );
+	BOOST_CHECK_CLOSE( s1.step_storage()[1].m_v[0] , s3.step_storage()[1].m_v[0] , 1.0e-14 );
 }
 
 typedef boost::mpl::range_c< size_t , 1 , 6 > vector_of_steps;

@@ -24,6 +24,7 @@
 #include <boost/array.hpp>
 #include <boost/bind.hpp>
 #include <boost/utility.hpp>
+#include <boost/type_traits/integral_constant.hpp>
 
 #include <boost/test/unit_test.hpp>
 
@@ -35,6 +36,10 @@
 #include <boost/numeric/odeint/stepper/explicit_rk4.hpp>
 #include <boost/numeric/odeint/stepper/explicit_rk4_generic.hpp>
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
+
+#include <boost/numeric/odeint/util/state_wrapper.hpp>
+#include <boost/numeric/odeint/util/resizer.hpp>
+#include <boost/numeric/odeint/util/is_resizeable.hpp>
 
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
@@ -51,10 +56,49 @@ namespace boost { namespace numeric { namespace odeint {
 	template<>
 	struct is_resizeable< test_array_type >
 	{
-		struct type : public boost::true_type { };
+		typedef boost::true_type type;
 		const static bool value = type::value;
 	};
 
+	template< >
+	struct state_wrapper< test_array_type > // with resizing
+	{
+	    typedef state_wrapper< test_array_type , boost::true_type > state_wrapper_type;
+	    typedef test_array_type::value_type value_type;
+	    typedef boost::true_type is_resizeable;
+
+	    test_array_type m_v;
+
+	    state_wrapper() : m_v()
+	    { }
+
+	    state_wrapper( test_array_type v ) : m_v( v )
+	    { }
+
+	    state_wrapper( const state_wrapper_type &x ) : m_v( x.m_v )
+	    { }
+
+	    state_wrapper_type& operator=( state_wrapper_type &x )
+	    {
+	        m_v = x.m_v;
+	        return *this;
+	    }
+
+	    template< class StateIn >
+	    bool same_size( const StateIn &x ) const
+	    {
+            return true;
+	    }
+
+	    template< class StateIn >
+	    bool resize( const StateIn &x )
+	    {
+	        adjust_size_count++;
+	        return false;
+	    }
+	};
+
+/*
 	template<>
 	struct same_size_impl< test_array_type , test_array_type >
 	{
@@ -72,7 +116,7 @@ namespace boost { namespace numeric { namespace odeint {
 		{
 		}
 	};
-
+*/
 } } }
 
 
@@ -83,18 +127,18 @@ void constant_system( const test_array_type &x , test_array_type &dxdt , double 
 BOOST_AUTO_TEST_SUITE( check_resize_test )
 
 
-typedef explicit_euler< test_array_type , double , test_array_type , double , range_algebra , default_operations , adjust_size_manually_tag > euler_manual_type;
-typedef explicit_euler< test_array_type , double , test_array_type , double , range_algebra , default_operations , adjust_size_initially_tag > euler_initially_type;
-typedef explicit_euler< test_array_type , double , test_array_type , double , range_algebra , default_operations , adjust_size_always_tag > euler_always_type;
+typedef explicit_euler< test_array_type , double , test_array_type , double , range_algebra , default_operations , never_resizer > euler_manual_type;
+typedef explicit_euler< test_array_type , double , test_array_type , double , range_algebra , default_operations , initially_resizer > euler_initially_type;
+typedef explicit_euler< test_array_type , double , test_array_type , double , range_algebra , default_operations , always_resizer > euler_always_type;
 
-typedef explicit_rk4< test_array_type , double , test_array_type , double , range_algebra , default_operations , adjust_size_manually_tag > rk4_manual_type;
-typedef explicit_rk4< test_array_type , double , test_array_type , double , range_algebra , default_operations , adjust_size_initially_tag > rk4_initially_type;
-typedef explicit_rk4< test_array_type , double , test_array_type , double , range_algebra , default_operations , adjust_size_always_tag > rk4_always_type;
+typedef explicit_rk4< test_array_type , double , test_array_type , double , range_algebra , default_operations , never_resizer > rk4_manual_type;
+typedef explicit_rk4< test_array_type , double , test_array_type , double , range_algebra , default_operations , initially_resizer > rk4_initially_type;
+typedef explicit_rk4< test_array_type , double , test_array_type , double , range_algebra , default_operations , always_resizer > rk4_always_type;
 
 
-typedef explicit_rk4_generic< test_array_type , double , test_array_type , double , range_algebra , default_operations , adjust_size_manually_tag > rk4_gen_manual_type;
-typedef explicit_rk4_generic< test_array_type , double , test_array_type , double , range_algebra , default_operations , adjust_size_initially_tag > rk4_gen_initially_type;
-typedef explicit_rk4_generic< test_array_type , double , test_array_type , double , range_algebra , default_operations , adjust_size_always_tag > rk4_gen_always_type;
+typedef explicit_rk4_generic< test_array_type , double , test_array_type , double , range_algebra , default_operations , never_resizer > rk4_gen_manual_type;
+typedef explicit_rk4_generic< test_array_type , double , test_array_type , double , range_algebra , default_operations , initially_resizer > rk4_gen_initially_type;
+typedef explicit_rk4_generic< test_array_type , double , test_array_type , double , range_algebra , default_operations , always_resizer > rk4_gen_always_type;
 
 
 typedef mpl::vector<
@@ -124,7 +168,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_resize , T, resize_check_types )
 	stepper.do_step( constant_system , x , 0.0 , 0.1 );
 
 	BOOST_TEST_MESSAGE( "adjust_size_count : " << adjust_size_count );
-	BOOST_CHECK_MESSAGE( adjust_size_count == resize_calls * multiplicity , "adjust_size_count : " << adjust_size_count );
+	BOOST_CHECK_MESSAGE( adjust_size_count == resize_calls * multiplicity , "adjust_size_count : " << adjust_size_count << " expected: " << resize_calls * multiplicity );
 }
 
 

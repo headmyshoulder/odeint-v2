@@ -243,6 +243,27 @@ struct default_operations
 		typedef void result_type;
 	};
 
+
+
+	template< class Fac1 = double , class Fac2 = Fac1 >
+    struct scale_sum_swap2
+    {
+        const Fac1 m_alpha1;
+        const Fac2 m_alpha2;
+
+        scale_sum_swap2( const Fac1 &alpha1 , const Fac2 &alpha2 ) : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) { }
+
+        template< class T1 , class T2 , class T3 >
+        void operator()( T1 &t1 , T2 &t2 , const T3 &t3) const
+        {
+            const T1 tmp( t1 );
+            t1 = m_alpha1 * t2 + m_alpha2 * t3;
+            t2 = tmp;
+        }
+
+        typedef void result_type;
+    };
+
 	/*
 	 * for usage in for_each2
 	 *
@@ -258,7 +279,7 @@ struct default_operations
 
 
 		template< class T1 , class T2 , class T3 >
-		void operator()( const T1 &t1 , const T2 &t2 , T3 &t3 ) const
+		void operator()( T3 &t3 , const T1 &t1 , const T2 &t2 ) const
 		{
 			using std::abs;
 			using detail::get_value;

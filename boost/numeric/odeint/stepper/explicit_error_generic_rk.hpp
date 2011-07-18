@@ -16,6 +16,10 @@
 #include <boost/numeric/odeint/stepper/detail/generic_rk_call_algebra.hpp>
 #include <boost/numeric/odeint/stepper/detail/generic_rk_operations.hpp>
 
+#include <boost/numeric/odeint/util/state_wrapper.hpp>
+#include <boost/numeric/odeint/util/resizer.hpp>
+
+
 namespace mpl = boost::mpl;
 namespace fusion = boost::fusion;
 
@@ -35,32 +39,36 @@ template<
     class Time = Value ,
     class Algebra = range_algebra ,
     class Operations = default_operations ,
-    class AdjustSizePolicy = adjust_size_initially_tag
+    class Resizer = initially_resizer
     >
 class explicit_error_generic_rk
 : public explicit_stepper_and_error_stepper_base<
       explicit_error_generic_rk< StageCount , Order , StepperOrder , ErrorOrder , State ,
-                                 Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy > ,
+                                 Value , Deriv , Time , Algebra , Operations , Resizer > ,
       Order , StepperOrder , ErrorOrder , State , Value , Deriv , Time , Algebra ,
-      Operations , AdjustSizePolicy >
+      Operations , Resizer >
 {
 
 public:
 
     typedef explicit_stepper_and_error_stepper_base<
             explicit_error_generic_rk< StageCount , Order , StepperOrder , ErrorOrder , State ,
-                                       Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy > ,
+                                       Value , Deriv , Time , Algebra , Operations , Resizer > ,
             Order , StepperOrder , ErrorOrder , State , Value , Deriv , Time , Algebra ,
-            Operations , AdjustSizePolicy > stepper_base_type;
+            Operations , Resizer > stepper_base_type;
 
     typedef typename stepper_base_type::state_type state_type;
+    typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
     typedef typename stepper_base_type::value_type value_type;
     typedef typename stepper_base_type::deriv_type deriv_type;
+    typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
     typedef typename stepper_base_type::time_type time_type;
     typedef typename stepper_base_type::algebra_type algebra_type;
     typedef typename stepper_base_type::operations_type operations_type;
-    typedef typename stepper_base_type::adjust_size_policy adjust_size_policy;
-    typedef typename stepper_base_type::stepper_type stepper_type;
+    typedef typename stepper_base_type::resizer_type resizer_type;
+    //typedef typename stepper_base_type::stepper_type stepper_type;
+    typedef explicit_error_generic_rk< StageCount , Order , StepperOrder , ErrorOrder , State ,
+                                        Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
 
     typedef detail::generic_rk_algorithm< StageCount , Value , Algebra , Operations > rk_algorithm_type;
 
@@ -72,25 +80,6 @@ public:
 
 private:
 
-    void initialize( void )
-    {
-        boost::numeric::odeint::construct( m_x_tmp );
-        m_state_adjuster.register_state( 0 , m_x_tmp );
-        for( size_t i = 0 ; i < StageCount-1 ; ++i )
-        {
-            boost::numeric::odeint::construct( m_F[i] );
-            m_deriv_adjuster.register_state( i , m_F[i] );
-        }
-    }
-
-    void copy( const explicit_error_generic_rk &rk )
-    {
-        boost::numeric::odeint::copy( rk.m_x_tmp , m_x_tmp );
-        for( size_t i = 0 ; i < StageCount-1 ; ++i )
-        {
-            boost::numeric::odeint::copy( rk.m_F[i] , m_F[i] );
-        }
-    }
 
 public:
 
@@ -99,34 +88,11 @@ public:
     explicit_error_generic_rk( const coef_a_type &a ,
                                   const coef_b_type &b ,
                                   const coef_b_type &b2 ,
-                                  const coef_c_type &c )
-        : m_rk_algorithm( a , b , c ) , m_b2( b2 ) , m_x_tmp()
-    {
-        initialize();
-    }
+                                  const coef_c_type &c ,
+                                  const algebra_type &algebra = algebra_type() )
+        : stepper_base_type( algebra ) , m_rk_algorithm( a , b , c ) , m_b2( b2 )
+    { }
 
-    explicit_error_generic_rk( const explicit_error_generic_rk &rk )
-        : stepper_base_type( rk )  , m_rk_algorithm( rk.m_rk_algorithm ) , m_b2( rk.m_b2 ) , m_x_tmp()
-    {
-        initialize();
-        copy( rk );
-    }
-
-    explicit_error_generic_rk& operator=( const explicit_error_generic_rk &rk )
-    {
-        stepper_base_type::operator=( rk );
-        copy( rk );
-        return *this;
-    }
-
-    ~explicit_error_generic_rk( void )
-   {
-       boost::numeric::odeint::destruct( m_x_tmp );
-       for( size_t i = 0 ; i < StageCount-1 ; ++i )
-       {
-           boost::numeric::odeint::destruct( m_F[i] );
-       }
-   }
 
     template< class System , class StateIn , class DerivIn , class StateOut , class Err >
     void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt ,
@@ -136,8 +102,8 @@ public:
         do_step_impl( system , in , dxdt , t , out , dt );
 
         // additionally, perform the error calculation
-        detail::template generic_rk_call_algebra< StageCount , algebra_type >()( xerr , dxdt , m_F ,
-                    detail::generic_rk_scale_sum_err< StageCount , operations_type , time_type >( m_b2 , dt) );
+        detail::template generic_rk_call_algebra< StageCount , algebra_type >()( stepper_base_type::m_algebra ,
+                xerr , dxdt , m_F , detail::generic_rk_scale_sum_err< StageCount , operations_type , time_type >( m_b2 , dt) );
     }
 
     template< class System , class StateIn , class DerivIn , class StateOut >
@@ -147,31 +113,42 @@ public:
         typedef typename boost::unwrap_reference< System >::type unwrapped_system_type;
         unwrapped_system_type &sys = system;
 
-        m_deriv_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
-        m_state_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
+        m_resizer.adjust_size( in , boost::bind( &stepper_type::resize< StateIn > , boost::ref( *this ) , _1 ) );
 
         // actual calculation done in generic_rk.hpp
-        m_rk_algorithm.do_step( sys , in , dxdt , t , out , dt , m_x_tmp , m_F );
+        m_rk_algorithm.do_step( stepper_base_type::m_algebra , sys , in , dxdt , t , out , dt , m_x_tmp.m_v , m_F );
+    }
+
+    template< class StateIn >
+    bool resize( const StateIn &x )
+    {
+        bool resized( false );
+        resized |= adjust_size_by_resizeability( m_x_tmp , x , typename wrapped_state_type::is_resizeable() );
+        for( size_t i = 0 ; i < StageCount-1 ; ++i )
+        {
+            resized |= adjust_size_by_resizeability( m_F[i] , x , typename wrapped_deriv_type::is_resizeable() );
+        }
+        return resized;
     }
 
     template< class StateType >
     void adjust_size( const StateType &x )
     {
-        m_deriv_adjuster.adjust_size( x );
-        m_state_adjuster.adjust_size( x );
+        resize( x );
         stepper_base_type::adjust_size( x );
     }
+
 
 private:
 
     rk_algorithm_type m_rk_algorithm;
-    const coef_b_type m_b2;
+    coef_b_type m_b2;
 
-    size_adjuster< deriv_type , StageCount-1 > m_deriv_adjuster;
-    size_adjuster< state_type , 1 > m_state_adjuster;
+    resizer_type m_resizer;
 
-    state_type m_x_tmp;
-    deriv_type m_F[StageCount-1];
+    wrapped_state_type m_x_tmp;
+    wrapped_deriv_type m_F[StageCount-1];
+
 
 };
 

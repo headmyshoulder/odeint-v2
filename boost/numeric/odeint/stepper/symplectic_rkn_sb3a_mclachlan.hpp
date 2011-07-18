@@ -84,27 +84,38 @@ template<
 	class Time = Value ,
 	class Algebra = range_algebra ,
 	class Operations = default_operations ,
-	class AdjustSizePolicy = adjust_size_initially_tag
+	class Resizer = initially_resizer
 	>
 class symplectic_rkn_sb3a_mclachlan :
 	public symplectic_nystroem_stepper_base
 	<
 		6 ,
-		symplectic_rkn_sb3a_mclachlan< Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , AdjustSizePolicy > ,
-		Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , AdjustSizePolicy
+		symplectic_rkn_sb3a_mclachlan< Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer > ,
+		Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer
 	>
 {
 public:
 
-		BOOST_ODEINT_SYMPLECTIC_NYSTROEM_STEPPER_TYPEDEFS( symplectic_rkn_sb3a_mclachlan , 6 );
+    BOOST_ODEINT_SYMPLECTIC_NYSTROEM_STEPPER_TYPEDEFS( symplectic_rkn_sb3a_mclachlan , 6 );
 
-		symplectic_rkn_sb3a_mclachlan( void )
-		: stepper_base_type(
-			detail::symplectic_rkn_sb3a_mclachlan::coef_a_type< value_type >() ,
-			detail::symplectic_rkn_sb3a_mclachlan::coef_b_type< value_type >()
-			)
-		{
-		}
+	symplectic_rkn_sb3a_mclachlan( const algebra_type &algebra = algebra_type() )
+        : stepper_base_type(
+            detail::symplectic_rkn_sb3a_mclachlan::coef_a_type< value_type >() ,
+            detail::symplectic_rkn_sb3a_mclachlan::coef_b_type< value_type >() ,
+            algebra )
+    { }
+
+
+    symplectic_rkn_sb3a_mclachlan( const symplectic_rkn_sb3a_mclachlan &stepper )
+        : stepper_base_type( stepper )
+    { }
+
+    symplectic_rkn_sb3a_mclachlan& operator = ( const symplectic_rkn_sb3a_mclachlan &stepper )
+    {
+        stepper_base_type::operator=( stepper );
+        return *this;
+    }
+
 };
 
 

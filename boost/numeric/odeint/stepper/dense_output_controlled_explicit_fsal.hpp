@@ -11,10 +11,13 @@
 #include <utility>
 #include <stdexcept>
 
-#include <boost/numeric/odeint/util/size_adjuster.hpp>
-#include <boost/numeric/odeint/util/construct.hpp>
-#include <boost/numeric/odeint/util/destruct.hpp>
+#include <boost/ref.hpp>
+#include <boost/bind.hpp>
+
 #include <boost/numeric/odeint/util/copy.hpp>
+
+#include <boost/numeric/odeint/util/state_wrapper.hpp>
+#include <boost/numeric/odeint/util/resizer.hpp>
 
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
@@ -32,49 +35,28 @@ class dense_output_controlled_explicit_fsal
 {
 private:
 
-	void initialize_variables( void )
+    void copy_pointers( const dense_output_controlled_explicit_fsal &dense_output )
 	{
-		boost::numeric::odeint::construct( m_x1 );
-		boost::numeric::odeint::construct( m_x2 );
-		boost::numeric::odeint::construct( m_dxdt1 );
-		boost::numeric::odeint::construct( m_dxdt2 );
-		m_state_adjuster.register_state( 0 , m_x1 );
-		m_state_adjuster.register_state( 1 , m_x2 );
-		m_deriv_adjuster.register_state( 0 , m_dxdt1 );
-		m_deriv_adjuster.register_state( 1 , m_dxdt2 );
-	}
-
-	void copy_variables( const dense_output_controlled_explicit_fsal &dense_output )
-	{
-		m_stepper = dense_output.m_stepper;
-		boost::numeric::odeint::copy( dense_output.m_x1 , m_x1 );
-		boost::numeric::odeint::copy( dense_output.m_x2 , m_x2 );
-		boost::numeric::odeint::copy( dense_output.m_dxdt1 , m_dxdt1 );
-		boost::numeric::odeint::copy( dense_output.m_dxdt2 , m_dxdt2 );
-		if( dense_output.m_current_state == (&dense_output.m_x1 ) )
+		if( dense_output.m_current_state == (&dense_output.m_x1.m_v ) )
 		{
-			m_current_state = &m_x1;
-			m_old_state = &m_x2;
+			m_current_state = &m_x1.m_v;
+			m_old_state = &m_x2.m_v;
 		}
 		else
 		{
-			m_current_state = &m_x2;
-			m_old_state = &m_x1;
+			m_current_state = &m_x2.m_v;
+			m_old_state = &m_x1.m_v;
 		}
-		if( dense_output.m_current_deriv == ( &dense_output.m_dxdt1 ) )
+		if( dense_output.m_current_deriv == ( &dense_output.m_dxdt1.m_v ) )
 		{
-			m_current_deriv = &m_dxdt1;
-			m_old_deriv = &m_dxdt2;
+			m_current_deriv = &m_dxdt1.m_v;
+			m_old_deriv = &m_dxdt2.m_v;
 		}
 		else
 		{
-			m_current_deriv = &m_dxdt2;
-			m_old_deriv = &m_dxdt1;
+			m_current_deriv = &m_dxdt2.m_v;
+			m_old_deriv = &m_dxdt1.m_v;
 		}
-		m_t = dense_output.m_t;
-		m_t_old = dense_output.m_t_old;
-		m_dt = dense_output.m_dt;
-		m_is_deriv_initialized = dense_output.m_is_deriv_initialized;
 	}
 
 public:
@@ -86,54 +68,55 @@ public:
 
 	typedef typename controlled_stepper_type::stepper_type stepper_type;
 	typedef typename stepper_type::state_type state_type;
+	typedef typename stepper_type::wrapped_state_type wrapped_state_type;
 	typedef typename stepper_type::value_type value_type;
 	typedef typename stepper_type::deriv_type deriv_type;
+	typedef typename stepper_type::wrapped_deriv_type wrapped_deriv_type;
 	typedef typename stepper_type::time_type time_type;
 	typedef typename stepper_type::algebra_type algebra_type;
 	typedef typename stepper_type::operations_type operations_type;
-	typedef typename stepper_type::adjust_size_policy adjust_size_policy;
+	typedef typename stepper_type::resizer_type resizer_type;
 	typedef dense_output_stepper_tag stepper_category;
+	typedef dense_output_controlled_explicit_fsal< ControlledStepper > dense_output_stepper_type;
 
 	dense_output_controlled_explicit_fsal( const controlled_stepper_type &stepper = controlled_stepper_type() )
 	: m_stepper( stepper ) ,
-	  m_state_adjuster() , m_deriv_adjuster() ,
-	  m_x1() , m_x2() , m_current_state( &m_x1 ) , m_old_state( &m_x2 ) ,
-	  m_dxdt1() , m_dxdt2() , m_current_deriv( &m_dxdt1 ) , m_old_deriv( &m_dxdt2 ) ,
-	  m_t() , m_t_old() , m_dt() , m_is_deriv_initialized( false )
-	{
-		initialize_variables();
-	}
+	  m_current_state( &m_x1.m_v ) , m_old_state( &m_x2.m_v ) ,
+	  m_current_deriv( &m_dxdt1.m_v ) , m_old_deriv( &m_dxdt2.m_v ) ,
+	  m_is_deriv_initialized( false )
+	{ }
 
 	dense_output_controlled_explicit_fsal( const dense_output_controlled_explicit_fsal &dense_output )
-	: m_stepper( dense_output.m_stepper ) ,
-	  m_state_adjuster() , m_deriv_adjuster() ,
-	  m_x1() , m_x2() , m_current_state( &m_x1 ) , m_old_state( &m_x2 ) ,
-	  m_dxdt1() , m_dxdt2() , m_current_deriv( &m_dxdt1 ) , m_old_deriv( &m_dxdt2 ) ,
-	  m_t() , m_t_old() , m_dt() , m_is_deriv_initialized( false )
+	: m_stepper( dense_output.m_stepper ) , 
+      m_x1( dense_output.m_x1 ) , m_x2( dense_output.m_x2 ) ,
+      m_dxdt1( dense_output.m_dxdt1 ) , m_dxdt2( dense_output.m_dxdt2 ) ,
+	  m_current_state( &m_x1.m_v ) , m_old_state( &m_x2.m_v ) ,
+	  m_current_deriv( &m_dxdt1.m_v ) , m_old_deriv( &m_dxdt2.m_v ) ,
+      m_t( dense_output.m_t ) , m_t_old( dense_output.m_t_old ) , m_dt( dense_output.m_dt ) ,
+      m_is_deriv_initialized( dense_output.m_is_deriv_initialized )
 	{
-		initialize_variables();
-		copy_variables( dense_output );
-	}
-
-	~dense_output_controlled_explicit_fsal( void )
-	{
-		boost::numeric::odeint::destruct( m_x1 );
-		boost::numeric::odeint::destruct( m_x2 );
-		boost::numeric::odeint::destruct( m_dxdt1 );
-		boost::numeric::odeint::destruct( m_dxdt2 );
+		copy_pointers( dense_output );
 	}
 
 	dense_output_controlled_explicit_fsal& operator=( const dense_output_controlled_explicit_fsal &dense_output )
 	{
-		copy_variables( dense_output );
+	    m_stepper = dense_output.m_stepper;
+	    m_x1 = dense_output.m_x1;
+	    m_x2 = dense_output.m_x2;
+	    m_dxdt1 = dense_output.m_dxdt1;
+	    m_dxdt2 = dense_output.m_dxdt2;
+	    m_current_state = &m_x1.m_v;
+	    m_old_state = &m_x2.m_v;
+	    m_current_deriv = &m_dxdt1.m_v;
+	    m_old_deriv = &m_dxdt2.m_v;
+		copy_pointers( dense_output );
 		return *this;
 	}
 
 	template< class StateType >
 	void initialize( const StateType &x0 , const time_type &t0 , const time_type &dt0 )
 	{
-		m_state_adjuster.adjust_size_by_policy( x0 , adjust_size_policy() );
-		m_deriv_adjuster.adjust_size_by_policy( x0 , adjust_size_policy() );
+	    m_resizer.adjust_size( x0 , boost::bind( &dense_output_stepper_type::resize< StateType > , boost::ref( *this ) , _1 ) );
 		boost::numeric::odeint::copy( x0 , *m_current_state );
 		m_t = t0;
 		m_dt = dt0;
@@ -184,12 +167,23 @@ public:
 	}
 
 
+	template< class StateIn >
+	bool resize( const StateIn &x )
+	{
+	    bool resized = false;
+	    resized |= adjust_size_by_resizeability( m_x1 , x , typename wrapped_state_type::is_resizeable() );
+	    resized |= adjust_size_by_resizeability( m_x2 , x , typename wrapped_state_type::is_resizeable() );
+	    resized |= adjust_size_by_resizeability( m_dxdt1 , x , typename wrapped_deriv_type::is_resizeable() );
+	    resized |= adjust_size_by_resizeability( m_dxdt2 , x , typename wrapped_deriv_type::is_resizeable() );
+	    return resized;
+	}
+
+
 	template< class StateType >
 	void adjust_size( const StateType &x )
 	{
-		m_state_adjuster.adjust_size( x );
-		m_deriv_adjuster.adjust_size( x );
-		m_stepper.adjust_size( x );
+	    resize( x );
+	    m_stepper.stepper().resize( x );
 	}
 
 	const state_type& current_state( void ) const
@@ -221,11 +215,10 @@ public:
 private:
 
 	controlled_stepper_type m_stepper;
-	size_adjuster< state_type , 2 > m_state_adjuster;
-	size_adjuster< deriv_type , 2 > m_deriv_adjuster;
-	state_type m_x1 , m_x2;
+	resizer_type m_resizer;
+	wrapped_state_type m_x1 , m_x2;
+    wrapped_deriv_type m_dxdt1 , m_dxdt2;
 	state_type *m_current_state , *m_old_state;
-	deriv_type m_dxdt1 , m_dxdt2;
 	deriv_type *m_current_deriv , *m_old_deriv;
 	time_type m_t , m_t_old , m_dt;
 	bool m_is_deriv_initialized;

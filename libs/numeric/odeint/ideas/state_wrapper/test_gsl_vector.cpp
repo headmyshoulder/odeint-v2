@@ -3,7 +3,6 @@
 
 #include "explicit_euler.hpp"
 #include "size_adjuster.hpp"
-#include <boost/numeric/odeint/external/gsl/gsl_vector_adaptor.hpp>
 
 using namespace std;
 

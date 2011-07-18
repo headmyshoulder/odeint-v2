@@ -56,24 +56,25 @@ template<
 	class Time = Value ,
 	class Algebra = range_algebra ,
 	class Operations = default_operations ,
-	class AdjustSizePolicy = adjust_size_initially_tag
+	class Resizer = initially_resizer
 	>
 class symplectic_euler :
 	public symplectic_nystroem_stepper_base
 	<
 		1 ,
-		symplectic_euler< Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , AdjustSizePolicy > ,
-		Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , AdjustSizePolicy
+		symplectic_euler< Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer > ,
+		Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer
 	>
 {
 public:
 
 		BOOST_ODEINT_SYMPLECTIC_NYSTROEM_STEPPER_TYPEDEFS( symplectic_euler , 1 );
 
-		symplectic_euler( void )
-		: stepper_base_type( detail::symplectic_euler_coef::coef_a_type< value_type >() , detail::symplectic_euler_coef::coef_b_type< value_type >() )
-		{
-		}
+		symplectic_euler( const algebra_type &algebra = algebra_type() )
+		    : stepper_base_type( detail::symplectic_euler_coef::coef_a_type< value_type >() ,
+		                         detail::symplectic_euler_coef::coef_b_type< value_type >() ,
+		                         algebra )
+		{ }
 };
 
 

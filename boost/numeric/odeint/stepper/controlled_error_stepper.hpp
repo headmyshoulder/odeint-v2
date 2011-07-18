@@ -16,11 +16,12 @@
 #include <cmath>
 
 #include <boost/ref.hpp>
+#include <boost/bind.hpp>
 
-#include <boost/numeric/odeint/util/size_adjuster.hpp>
-#include <boost/numeric/odeint/util/construct.hpp>
-#include <boost/numeric/odeint/util/destruct.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
+
+#include <boost/numeric/odeint/util/state_wrapper.hpp>
+#include <boost/numeric/odeint/util/resizer.hpp>
 
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
@@ -56,24 +57,30 @@ public:
 
 
 	default_error_checker(
-			value_type eps_abs = static_cast< value_type >( 1.0e-6 ) ,
-			value_type eps_rel = static_cast< value_type >( 1.0e-6 ) ,
-			value_type a_x = static_cast< value_type >( 1.0 ) ,
-			value_type a_dxdt = static_cast< value_type >( 1.0 ) )
+			const value_type eps_abs = static_cast< value_type >( 1.0e-6 ) ,
+			const value_type eps_rel = static_cast< value_type >( 1.0e-6 ) ,
+			const value_type a_x = static_cast< value_type >( 1.0 ) ,
+			const value_type a_dxdt = static_cast< value_type >( 1.0 ) )
 	: m_eps_abs( eps_abs ) , m_eps_rel( eps_rel ) , m_a_x( a_x ) , m_a_dxdt( a_dxdt )
-	{}
+	{ }
 
 
 	template< class State , class Deriv , class Err , class Time >
 	value_type error( const State &x_old , const Deriv &dxdt_old , Err &x_err , const Time &dt )
 	{
-		// this overwrites x_err !
-		algebra_type::for_each3( x_old , dxdt_old , x_err ,
-					             typename operations_type::template rel_error< value_type >( m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt * detail::get_value( dt ) ) );
-
-		value_type res = algebra_type::reduce( x_err , typename operations_type::template maximum< value_type >() , 0.0 );
-		return res;
+	    return error( algebra_type() , x_old , dxdt_old , x_err , dt );
 	}
+
+	template< class State , class Deriv , class Err , class Time >
+    value_type error( algebra_type &algebra , const State &x_old , const Deriv &dxdt_old , Err &x_err , const Time &dt )
+    {
+        // this overwrites x_err !
+        algebra.for_each3( x_err , x_old , dxdt_old ,
+                                 typename operations_type::template rel_error< value_type >( m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt * detail::get_value( dt ) ) );
+
+        value_type res = algebra.reduce( x_err , typename operations_type::template maximum< value_type >() , 0.0 );
+        return res;
+    }
 
 private:
 
@@ -81,6 +88,7 @@ private:
 	value_type m_eps_rel;
 	value_type m_a_x;
 	value_type m_a_dxdt;
+
 };
 
 
@@ -98,10 +106,10 @@ template<
     class ErrorChecker = default_error_checker< typename ErrorStepper::value_type ,
                                                  typename ErrorStepper::algebra_type ,
                                                  typename ErrorStepper::operations_type > ,
-    class AdjustSizePolicy = typename ErrorStepper::adjust_size_policy ,
+    class Resizer = typename ErrorStepper::resizer_type ,
     class ErrorStepperCategory = typename ErrorStepper::stepper_category
 >
-class controlled_error_stepper { };
+class controlled_error_stepper ;
 
 
 
@@ -112,27 +120,10 @@ class controlled_error_stepper { };
 template<
 	class ErrorStepper ,
 	class ErrorChecker ,
-	class AdjustSizePolicy
+	class Resizer
 	>
-class controlled_error_stepper< ErrorStepper , ErrorChecker , AdjustSizePolicy , explicit_error_stepper_tag >
+class controlled_error_stepper< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag >
 {
-	void initialize( void )
-	{
-		boost::numeric::odeint::construct( m_dxdt );
-		boost::numeric::odeint::construct( m_xerr );
-		boost::numeric::odeint::construct( m_xnew );
-		m_dxdt_size_adjuster.register_state( 0 , m_dxdt );
-		m_xerr_size_adjuster.register_state( 0 , m_xerr );
-		m_xnew_size_adjuster.register_state( 0 , m_xnew );
-	}
-
-	void copy( const controlled_error_stepper &stepper )
-	{
-		boost::numeric::odeint::copy( stepper.m_dxdt , m_dxdt );
-		boost::numeric::odeint::copy( stepper.m_xerr , m_xerr );
-		boost::numeric::odeint::copy( stepper.m_xnew , m_xnew );
-		m_max_rel_error = stepper.m_max_rel_error;
-	}
 
 public:
 
@@ -142,46 +133,24 @@ public:
 	typedef typename stepper_type::deriv_type deriv_type;
 	typedef typename stepper_type::time_type time_type;
 	typedef typename stepper_type::order_type order_type;
-	typedef AdjustSizePolicy adjust_size_policy;
+	typedef typename stepper_type::algebra_type algebra_type;
+	typedef typename stepper_type::operations_type operations_type;
+	typedef Resizer resizer_type;
 	typedef ErrorChecker error_checker_type;
 	typedef controlled_stepper_tag stepper_category;
+	typedef typename stepper_type::wrapped_state_type wrapped_state_type;
+	typedef typename stepper_type::wrapped_deriv_type wrapped_deriv_type;
+
+	typedef controlled_error_stepper< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag > controlled_stepper_type;
 
 
 
-	controlled_error_stepper(
-			const stepper_type &stepper = stepper_type() ,
-			const error_checker_type &error_checker = error_checker_type()
-			)
-	: m_stepper( stepper ) , m_error_checker( error_checker ) ,
-	  m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_xnew_size_adjuster() ,
-	  m_dxdt() , m_xerr() , m_xnew() , m_max_rel_error()
-	{
-		initialize();
-	}
-
-	~controlled_error_stepper( void )
-	{
-		boost::numeric::odeint::destruct( m_dxdt );
-		boost::numeric::odeint::destruct( m_xerr );
-		boost::numeric::odeint::destruct( m_xnew );
-	}
-
-	controlled_error_stepper( const controlled_error_stepper &stepper )
-	: m_stepper( stepper.m_stepper ) , m_error_checker( stepper.m_error_checker ) ,
-	  m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_xnew_size_adjuster() ,
-	  m_dxdt() , m_xerr() , m_xnew() , m_max_rel_error()
-	{
-		initialize();
-		copy( stepper );
-	}
-
-	controlled_error_stepper& operator=( const controlled_error_stepper &stepper )
-	{
-		m_stepper = stepper.m_stepper;
-		m_error_checker = stepper.m_error_checker;
-		copy( stepper );
-		return *this;
-	}
+    controlled_error_stepper(
+            const stepper_type &stepper = stepper_type( ) ,
+            const error_checker_type &error_checker = error_checker_type( )
+            )
+    : m_stepper( stepper ) , m_error_checker( error_checker )
+    { }
 
 
 
@@ -212,11 +181,11 @@ public:
 	template< class System , class StateInOut , class DerivIn >
 	controlled_step_result try_step( System system , StateInOut &x , const DerivIn &dxdt , time_type &t , time_type &dt )
 	{
-		m_xnew_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
-		controlled_step_result res = try_step( system , x , dxdt , t , m_xnew , dt );
+		m_xnew_resizer.adjust_size( x , boost::bind( &controlled_error_stepper::resize_m_xnew< StateInOut > , boost::ref( *this ) , _1 ) );
+		controlled_step_result res = try_step( system , x , dxdt , t , m_xnew.m_v , dt );
 		if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged ) )
 		{
-			boost::numeric::odeint::copy( m_xnew , x );
+			boost::numeric::odeint::copy( m_xnew.m_v , x );
 		}
 		return res;
 	}
@@ -230,9 +199,9 @@ public:
 	controlled_step_result try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
 	{
 		typename boost::unwrap_reference< System >::type &sys = system;
-		m_dxdt_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
-		sys( in , m_dxdt , t );
-		return try_step( system , in , m_dxdt , t , out , dt );
+		m_dxdt_resizer.adjust_size( in , boost::bind( &controlled_error_stepper::resize_m_dxdt< StateIn > , boost::ref( *this ) , _1 ) );
+		sys( in , m_dxdt.m_v , t );
+		return try_step( system , in , m_dxdt.m_v , t , out , dt );
 	}
 
 
@@ -248,14 +217,14 @@ public:
 		using std::min;
 		using std::pow;
 
-		m_xerr_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
+		m_xerr_resizer.adjust_size( in , boost::bind( &controlled_error_stepper::resize_m_xerr< StateIn > , boost::ref( *this ) , _1 ) );
 
 		// do one step with error calculation
-		m_stepper.do_step( system , in , dxdt , t , out , dt , m_xerr );
+		m_stepper.do_step( system , in , dxdt , t , out , dt , m_xerr.m_v );
 
-		m_max_rel_error = m_error_checker.error( in , dxdt , m_xerr , dt );
+		m_max_rel_error = m_error_checker.error( m_stepper.algebra() , in , dxdt , m_xerr.m_v , dt );
 
-		if( m_max_rel_error > 1.1 )
+		if( m_max_rel_error > 1.0 )
 		{
 			// error too large - decrease dt ,limit scaling factor to 0.2 and reset state
 			dt *= max( 0.9 * pow( m_max_rel_error , -1.0 / ( m_stepper.error_order() - 1.0 ) ) , 0.2 );
@@ -288,12 +257,29 @@ public:
 	template< class StateType >
 	void adjust_size( const StateType &x )
 	{
-        m_dxdt_size_adjuster.adjust_size( x );
-        m_xerr_size_adjuster.adjust_size( x );
-        m_xnew_size_adjuster.adjust_size( x );
-        m_stepper.adjust_size( x );
+		resize_m_xerr( x );
+		resize_m_dxdt( x );
+		resize_m_xnew( x );
+		m_stepper.adjust_size( x );
 	}
 
+	template< class StateIn >
+	bool resize_m_xerr( const StateIn &x )
+	{
+	    return adjust_size_by_resizeability( m_xerr , x , typename wrapped_state_type::is_resizeable() );
+	}
+
+	template< class StateIn >
+	bool resize_m_dxdt( const StateIn &x )
+	{
+	    return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
+	}
+
+	template< class StateIn >
+	bool resize_m_xnew( const StateIn &x )
+	{
+	    return adjust_size_by_resizeability( m_xnew , x , typename wrapped_state_type::is_resizeable() );
+	}
 
 	stepper_type& stepper( void )
 	{
@@ -305,7 +291,6 @@ public:
 		return m_stepper;
 	}
 
-
 private:
 
 
@@ -313,22 +298,22 @@ private:
 	controlled_step_result try_step_v1( System system , StateInOut &x , time_type &t , time_type &dt )
 	{
 		typename boost::unwrap_reference< System >::type &sys = system;
-		m_dxdt_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
-		sys( x , m_dxdt ,t );
-		return try_step( system , x , m_dxdt , t , dt );
+		m_dxdt_resizer.adjust_size( x , boost::bind( &controlled_error_stepper::resize_m_dxdt< StateInOut > , boost::ref( *this ) , _1 ) );
+		sys( x , m_dxdt.m_v ,t );
+		return try_step( system , x , m_dxdt.m_v , t , dt );
 	}
 
 
 	stepper_type m_stepper;
 	error_checker_type m_error_checker;
 
-	size_adjuster< deriv_type , 1 > m_dxdt_size_adjuster;
-	size_adjuster< state_type , 1 > m_xerr_size_adjuster;
-	size_adjuster< state_type , 1 > m_xnew_size_adjuster;
+	resizer_type m_dxdt_resizer;
+	resizer_type m_xerr_resizer;
+	resizer_type m_xnew_resizer;
 
-	deriv_type m_dxdt;
-	state_type m_xerr;
-	state_type m_xnew;
+	wrapped_deriv_type m_dxdt;
+	wrapped_state_type m_xerr;
+	wrapped_state_type m_xnew;
 	value_type m_max_rel_error;
 };
 
@@ -349,30 +334,10 @@ private:
 template<
     class ErrorStepper ,
     class ErrorChecker ,
-	class AdjustSizePolicy
+	class Resizer
     >
-class controlled_error_stepper< ErrorStepper , ErrorChecker , AdjustSizePolicy , explicit_error_stepper_fsal_tag >
+class controlled_error_stepper< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_fsal_tag >
 {
-	void initialize( void )
-	{
-		boost::numeric::odeint::construct( m_dxdt );
-		boost::numeric::odeint::construct( m_xerr );
-		boost::numeric::odeint::construct( m_xnew );
-		boost::numeric::odeint::construct( m_dxdtnew );
-		m_dxdt_size_adjuster.register_state( 0 , m_dxdt );
-		m_xerr_size_adjuster.register_state( 0 , m_xerr );
-		m_x_new_size_adjuster.register_state( 0 , m_xnew );
-		m_dxdt_new_size_adjuster.register_state( 0 , m_dxdtnew );
-	}
-
-	void copy( const controlled_error_stepper &stepper )
-	{
-		boost::numeric::odeint::copy( stepper.m_dxdt , m_dxdt );
-		boost::numeric::odeint::copy( stepper.m_xerr , m_xerr );
-		boost::numeric::odeint::copy( stepper.m_xnew , m_xnew );
-		boost::numeric::odeint::copy( stepper.m_dxdtnew , m_dxdtnew );
-		m_first_call = stepper.m_first_call;
-	}
 
 public:
 
@@ -382,49 +347,23 @@ public:
     typedef typename stepper_type::deriv_type deriv_type;
     typedef typename stepper_type::time_type time_type;
     typedef typename stepper_type::order_type order_type;
-    typedef AdjustSizePolicy adjust_size_policy;
+    typedef typename stepper_type::algebra_type algebra_type;
+    typedef typename stepper_type::operations_type operations_type;
+    typedef Resizer resizer_type;
     typedef ErrorChecker error_checker_type;
 	typedef controlled_stepper_tag stepper_category;
+	typedef typename stepper_type::wrapped_state_type wrapped_state_type;
+	typedef typename stepper_type::wrapped_deriv_type wrapped_deriv_type;
+
+	typedef controlled_error_stepper< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag > controlled_stepper_type;
 
     controlled_error_stepper(
             const stepper_type &stepper = stepper_type() ,
             const error_checker_type &error_checker = error_checker_type()
             )
     : m_stepper( stepper ) , m_error_checker( error_checker ) ,
-      m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_x_new_size_adjuster() , m_dxdt_new_size_adjuster() ,
-      m_dxdt() , m_xerr() , m_xnew() , m_dxdtnew() ,
       m_first_call( true )
-    {
-    	initialize();
-    }
-
-    controlled_error_stepper( const controlled_error_stepper &stepper )
-    : m_stepper( stepper.m_stepper ) , m_error_checker( stepper.m_error_checker ) ,
-      m_dxdt_size_adjuster() , m_xerr_size_adjuster() , m_x_new_size_adjuster() , m_dxdt_new_size_adjuster() ,
-      m_dxdt() , m_xerr() , m_xnew() , m_dxdtnew() ,
-      m_first_call( true )
-    {
-    	initialize();
-    	copy( stepper );
-    }
-
-    ~controlled_error_stepper( void )
-    {
-        boost::numeric::odeint::destruct( m_dxdt );
-        boost::numeric::odeint::destruct( m_xerr );
-        boost::numeric::odeint::destruct( m_xnew );
-        boost::numeric::odeint::destruct( m_dxdtnew );
-    }
-
-    controlled_error_stepper& operator=( const controlled_error_stepper &stepper )
-    {
-    	copy( stepper );
-    	return *this;
-    }
-
-
-
-
+    { }
 
 	/*
 	 * Version 1 : try_step( sys , x , t , dt )
@@ -453,13 +392,13 @@ public:
     template< class System , class StateIn , class StateOut >
     controlled_step_result try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
     {
-        if( m_dxdt_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() ) || m_first_call )
+        if( m_dxdt_resizer.adjust_size( in , boost::bind( &controlled_error_stepper::resize_m_dxdt< StateIn > , boost::ref( *this ) , _1 ) ) || m_first_call )
         {
     		typename boost::unwrap_reference< System >::type &sys = system;
-            sys( in , m_dxdt ,t );
+            sys( in , m_dxdt.m_v ,t );
             m_first_call = false;
         }
-        return try_step( system , in , m_dxdt , t , out , dt );
+        return try_step( system , in , m_dxdt.m_v , t , out , dt );
     }
 
 
@@ -471,13 +410,13 @@ public:
     template< class System , class StateInOut , class DerivInOut >
     controlled_step_result try_step( System system , StateInOut &x , DerivInOut &dxdt , time_type &t , time_type &dt )
     {
-    	m_x_new_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
-    	m_dxdt_new_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
-    	controlled_step_result res = try_step( system , x , dxdt , t , m_xnew , m_dxdtnew , dt );
+    	m_xnew_resizer.adjust_size( x , boost::bind( &controlled_error_stepper::resize_m_xnew< StateInOut > , boost::ref( *this ) , _1 ) );
+    	m_dxdt_new_resizer.adjust_size( x , boost::bind( &controlled_error_stepper::resize_m_dxdt_new< StateInOut > , boost::ref( *this ) , _1 ) );
+		controlled_step_result res = try_step( system , x , dxdt , t , m_xnew.m_v , m_dxdtnew.m_v , dt );
     	if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged) )
     	{
-    		boost::numeric::odeint::copy( m_xnew , x );
-    		boost::numeric::odeint::copy( m_dxdtnew , dxdt );
+    		boost::numeric::odeint::copy( m_xnew.m_v , x );
+    		boost::numeric::odeint::copy( m_dxdtnew.m_v , dxdt );
     	}
     	return res;
     }
@@ -496,14 +435,14 @@ public:
         using std::min;
         using std::pow;
 
-        m_xerr_size_adjuster.adjust_size_by_policy( in , adjust_size_policy() );
-
+		m_xerr_resizer.adjust_size( in , boost::bind( &controlled_error_stepper::resize_m_xerr< StateIn > , boost::ref( *this ) , _1 ) );
+		
         //fsal: m_stepper.get_dxdt( dxdt );
         //fsal: m_stepper.do_step( sys , x , dxdt , t , dt , m_x_err );
-        m_stepper.do_step( system , in , dxdt_in , t , out , dxdt_out , dt , m_xerr );
+        m_stepper.do_step( system , in , dxdt_in , t , out , dxdt_out , dt , m_xerr.m_v );
 
         // this potentially overwrites m_x_err! (standard_error_checker does, at least)
-        value_type max_rel_err = m_error_checker.error( in , dxdt_in , m_xerr , dt );
+        value_type max_rel_err = m_error_checker.error( m_stepper.algebra() , in , dxdt_in , m_xerr.m_v , dt );
 
         if( max_rel_err > 1.1 )
         {
@@ -532,17 +471,37 @@ public:
 
 
     template< class StateType >
-    void adjust_size( const StateType &x )
-    {
-        bool changed = false;
-        changed |= m_dxdt_size_adjuster.adjust_size( x );
-        changed |= m_xerr_size_adjuster.adjust_size( x );
-        changed |= m_x_new_size_adjuster.adjust_size( x );
-        changed |= m_dxdt_new_size_adjuster.adjust_size( x );
-        changed |= m_stepper.adjust_size( x );
-        if( changed )
-            m_first_call = true;
-    }
+	void adjust_size( const StateType &x )
+	{
+		resize_m_xerr( x );
+		resize_m_dxdt( x );
+		resize_m_dxdt_new( x );
+		resize_m_xnew( x );
+	}
+
+	template< class StateIn >
+	bool resize_m_xerr( const StateIn &x )
+	{
+	    return adjust_size_by_resizeability( m_xerr , x , typename wrapped_state_type::is_resizeable() );
+	}
+
+	template< class StateIn >
+	bool resize_m_dxdt( const StateIn &x )
+	{
+	    return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
+	}
+
+	template< class StateIn >
+	bool resize_m_dxdt_new( const StateIn &x )
+	{
+	    return adjust_size_by_resizeability( m_dxdtnew , x , typename wrapped_deriv_type::is_resizeable() );
+	}
+
+	template< class StateIn >
+	bool resize_m_xnew( const StateIn &x )
+	{
+	    return adjust_size_by_resizeability( m_xnew , x , typename wrapped_state_type::is_resizeable() );
+	}
 
 
 
@@ -563,28 +522,28 @@ private:
     template< class System , class StateInOut >
     controlled_step_result try_step_v1( System system , StateInOut &x , time_type &t , time_type &dt )
     {
-        if( m_dxdt_size_adjuster.adjust_size_by_policy( x , adjust_size_policy() ) || m_first_call )
+        if( m_dxdt_resizer.adjust_size( x , boost::bind( &controlled_error_stepper::resize_m_dxdt< StateInOut > , boost::ref( *this ) , _1 ) ) || m_first_call )
         {
     		typename boost::unwrap_reference< System >::type &sys = system;
-            sys( x , m_dxdt ,t );
+            sys( x , m_dxdt.m_v , t );
             m_first_call = false;
         }
-        return try_step( system , x , m_dxdt , t , dt );
+        return try_step( system , x , m_dxdt.m_v , t , dt );
     }
 
 
     stepper_type m_stepper;
     error_checker_type m_error_checker;
 
-    size_adjuster< deriv_type , 1 > m_dxdt_size_adjuster;
-    size_adjuster< state_type , 1 > m_xerr_size_adjuster;
-    size_adjuster< state_type , 1 > m_x_new_size_adjuster;
-    size_adjuster< deriv_type , 1 > m_dxdt_new_size_adjuster;
+    resizer_type m_dxdt_resizer;
+    resizer_type m_xerr_resizer;
+    resizer_type m_xnew_resizer;
+    resizer_type m_dxdt_new_resizer;
 
-    deriv_type m_dxdt;
-    state_type m_xerr;
-    state_type m_xnew;
-    deriv_type m_dxdtnew;
+    wrapped_deriv_type m_dxdt;
+    wrapped_state_type m_xerr;
+    wrapped_state_type m_xnew;
+    wrapped_deriv_type m_dxdtnew;
     bool m_first_call;
 };
 

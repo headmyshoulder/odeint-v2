@@ -6,7 +6,7 @@
  */
 
 #include <iostream>
-#include <tr1/array>
+#include <boost/array.hpp>
 
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
@@ -17,8 +17,8 @@
 #include <boost/numeric/odeint/stepper/symplectic_euler.hpp>
 #include <boost/numeric/odeint/stepper/symplectic_rkn_sb3a_mclachlan.hpp>
 
-#include <boost/numeric/odeint/hamiltonian_stepper_rk.hpp>
-#include <boost/numeric/odeint/container_traits_tr1_array.hpp>
+//#include <boost/numeric/odeint/hamiltonian_stepper_rk.hpp>
+//#include <boost/numeric/odeint/container_traits_tr1_array.hpp>
 
 
 using namespace std;
@@ -40,7 +40,7 @@ typedef boost::timer timer_type;
 
 
 
-typedef std::tr1::array< double , 1 > container_type;
+typedef boost::array< double , 1 > container_type;
 typedef std::pair< container_type , container_type > state_type;
 
 
@@ -88,7 +88,7 @@ void test_rkn_sb3a_mclachlan( void )
 	stepper_type stepper;
 	stepper_type stepper2( stepper );
 	stepper_type stepper3;
-	stepper3 = stepper;
+	//stepper3 = stepper; //impossible because of const member
 
 	state_type state;
 	state.first[0] = 1.0;
@@ -133,6 +133,7 @@ void compare_euler_rkn( void )
 	}
 }
 
+/*
 void performance_compare( void )
 {
 	typedef boost::numeric::odeint::hamiltonian_stepper_rk_qfunc< container_type > stepper_type1;
@@ -174,14 +175,14 @@ void performance_compare( void )
 
 
 }
-
+*/
 
 int main( int argc , char **argv )
 {
 	test_euler();
 	test_rkn_sb3a_mclachlan();
 	compare_euler_rkn();
-	performance_compare();
+	//performance_compare();
 
 
 	return 0;

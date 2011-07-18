@@ -13,10 +13,11 @@
 
 #include <boost/array.hpp>
 
+/*
 #include <boost/numeric/odeint/util/construct.hpp>
 #include <boost/numeric/odeint/util/destruct.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
-
+*/
 
 namespace boost {
 namespace numeric {
@@ -31,11 +32,9 @@ public:
 	typedef T value_type;
 	const static size_t dim = N;
 
-	rotating_buffer( void )
-	{
-		initialize();
-	}
-
+	rotating_buffer( void ) : m_first( 0 )
+	{ }
+/*
 	rotating_buffer( const rotating_buffer &rb )
 	{
 		initialize();
@@ -52,7 +51,7 @@ public:
 		copy( rb );
 		return *this;
 	}
-
+*/
 	size_t size( void ) const
 	{
 		return dim;
@@ -81,7 +80,7 @@ protected:
 	value_type m_data[N];
 
 private:
-
+    /*
 	void initialize( void )
 	{
 		for( size_t i=0 ; i<N ; ++i )
@@ -100,7 +99,7 @@ private:
 		for( size_t i=0 ; i<N ; ++i )
 			boost::numeric::odeint::destruct( m_data[i] );
 	}
-
+    */
 	size_t get_index( size_t i ) const
 	{
 		return ( ( i + m_first ) % dim );

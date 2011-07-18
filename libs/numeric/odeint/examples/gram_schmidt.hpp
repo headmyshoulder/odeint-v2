@@ -34,8 +34,8 @@ void substract_vector( Iterator first1 , Iterator last1 ,
     while( first1 != last1 ) *first1++ -= val * ( *first2++ );
 }
 
-template< class StateType , class LyapType >
-void gram_schmidt( StateType &x , LyapType &lyap , size_t n , size_t num_of_lyap )
+template< size_t num_of_lyap , class StateType , class LyapType >
+void gram_schmidt( StateType &x , LyapType &lyap , size_t n )
 {
     if( !num_of_lyap ) return;
     if( ptrdiff_t( ( num_of_lyap + 1 ) * n ) != std::distance( x.begin() , x.end() ) )
@@ -44,9 +44,10 @@ void gram_schmidt( StateType &x , LyapType &lyap , size_t n , size_t num_of_lyap
     typedef typename StateType::value_type value_type;
     typedef typename StateType::iterator iterator;
 
-    value_type norm[num_of_lyap] , tmp[num_of_lyap];
-    iterator first = x.begin() + n;
-    iterator beg1 = first , end1 = first + n ;
+	value_type norm[num_of_lyap];
+    value_type tmp[num_of_lyap];
+	iterator first = x.begin() + n;
+	iterator beg1 = first , end1 = first + n ;
 
     std::fill( norm , norm+num_of_lyap , 0.0 );
 

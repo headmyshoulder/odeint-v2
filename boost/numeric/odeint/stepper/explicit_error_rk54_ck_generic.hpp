@@ -11,6 +11,8 @@
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
 
+#include <boost/numeric/odeint/util/resizer.hpp>
+
 #include <boost/array.hpp>
 
 
@@ -128,33 +130,36 @@ template<
     class Time = Value ,
     class Algebra = range_algebra ,
     class Operations = default_operations ,
-    class AdjustSizePolicy = adjust_size_initially_tag
+    class Resizer = initially_resizer
     >
 class explicit_error_rk54_ck_generic : public explicit_error_generic_rk< 6 , 5 , 5 , 4 ,
-        State , Value , Deriv , Time , Algebra , Operations , AdjustSizePolicy >
+        State , Value , Deriv , Time , Algebra , Operations , Resizer >
 {
 
 public:
 
     typedef explicit_error_generic_rk< 6 , 5 , 5 , 4 , State , Value , Deriv , Value ,
-                               Algebra , Operations , AdjustSizePolicy > stepper_base_type;
+                               Algebra , Operations , Resizer > stepper_base_type;
 
     typedef typename stepper_base_type::state_type state_type;
+    typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
     typedef typename stepper_base_type::value_type value_type;
     typedef typename stepper_base_type::deriv_type deriv_type;
+    typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
     typedef typename stepper_base_type::time_type time_type;
     typedef typename stepper_base_type::algebra_type algebra_type;
     typedef typename stepper_base_type::operations_type operations_type;
-    typedef typename stepper_base_type::adjust_size_policy adjust_size_policy;
+    typedef typename stepper_base_type::resizer_type resizer_typ;
     typedef typename stepper_base_type::stepper_type stepper_type;
 
-    explicit_error_rk54_ck_generic( void ) : stepper_base_type(
+    explicit_error_rk54_ck_generic( const algebra_type &algebra = algebra_type() ) : stepper_base_type(
             fusion::make_vector( rk54_ck_coefficients_a1<Value>() ,
                                  rk54_ck_coefficients_a2<Value>() ,
                                  rk54_ck_coefficients_a3<Value>() ,
                                  rk54_ck_coefficients_a4<Value>() ,
                                  rk54_ck_coefficients_a5<Value>() ) ,
-            rk54_ck_coefficients_b<Value>() , rk54_ck_coefficients_db<Value>() , rk54_ck_coefficients_c<Value>() )
+            rk54_ck_coefficients_b<Value>() , rk54_ck_coefficients_db<Value>() , rk54_ck_coefficients_c<Value>() ,
+            algebra )
     { }
 };
 

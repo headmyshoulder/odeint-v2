@@ -10,6 +10,7 @@
 
 #include <boost/ref.hpp>
 #include <boost/noncopyable.hpp>
+#include <boost/bind.hpp>
 
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
@@ -17,8 +18,9 @@
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
-#include <boost/numeric/odeint/util/size_adjuster.hpp>
-#include <boost/numeric/odeint/util/ublas_resize.hpp>
+#include <boost/numeric/odeint/util/ublas_wrapper.hpp>
+#include <boost/numeric/odeint/util/state_wrapper.hpp>
+#include <boost/numeric/odeint/util/resizer.hpp>
 
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
@@ -79,89 +81,35 @@ struct default_rosenbrock_coefficients : boost::noncopyable
 
 
 
-template< class Value , class Coefficients = default_rosenbrock_coefficients< Value > , class AdjustSizePolicy = adjust_size_initially_tag >
+template< class Value , class Coefficients = default_rosenbrock_coefficients< Value > , class Resizer = initially_resizer >
 class rosenbrock4
 {
 private:
-
-	void initialize( void )
-	{
-		m_matrix_adjuster.register_state( 0 , m_jac );
-
-		m_pmatrix_adjuster.register_state( 0 , m_pm );
-
-		m_state_adjuster.register_state( 0 , m_dfdt );
-		m_state_adjuster.register_state( 1 , m_dxdt );
-		m_state_adjuster.register_state( 2 , m_g1 );
-		m_state_adjuster.register_state( 3 , m_g2 );
-		m_state_adjuster.register_state( 4 , m_g3 );
-		m_state_adjuster.register_state( 5 , m_g4 );
-		m_state_adjuster.register_state( 6 , m_g5 );
-		m_state_adjuster.register_state( 7 , m_cont3 );
-		m_state_adjuster.register_state( 8 , m_cont4 );
-		m_state_adjuster.register_state( 9 , m_xtmp );
-		m_state_adjuster.register_state( 10 , m_dxdtnew );
-	}
-
-	void copy( const rosenbrock4 &rb )
-	{
-		m_jac = rb.m_jac;
-		m_pm = rb.m_pm;
-		m_dfdt =rb.m_dfdt;
-		m_dxdt = rb.m_dxdt;
-		m_g1 = rb.m_g1;
-		m_g2 = rb.m_g2;
-		m_g3 = rb.m_g3;
-		m_g4 = rb.m_g4;
-		m_g5 = rb.m_g5;
-		m_cont3 = rb.m_cont3;
-		m_cont4 = rb.m_cont4;
-		m_xtmp = rb.m_xtmp;
-		m_dxdtnew = rb.m_dxdtnew;
-	}
 
 public:
 
 	typedef Value value_type;
     typedef boost::numeric::ublas::vector< value_type > state_type;
+    typedef state_wrapper< state_type > wrapped_state_type;
     typedef state_type deriv_type;
+    typedef state_wrapper< deriv_type > wrapped_deriv_type;
     typedef value_type time_type;
     typedef boost::numeric::ublas::matrix< value_type > matrix_type;
+    typedef state_wrapper< matrix_type > wrapped_matrix_type;
     typedef boost::numeric::ublas::permutation_matrix< size_t > pmatrix_type;
-    typedef AdjustSizePolicy adjust_size_policy;
+    typedef state_wrapper< pmatrix_type > wrapped_pmatrix_type;
+    typedef Resizer resizer_type;
     typedef Coefficients rosenbrock_coefficients;
 	typedef stepper_tag stepper_category;
 
-	rosenbrock4( void )
-	: m_state_adjuster() , m_matrix_adjuster() , m_pmatrix_adjuster() ,
-	  m_jac() , m_pm( 1 ) ,
-	  m_dfdt() , m_dxdt() ,
-	  m_g1() , m_g2() , m_g3() , m_g4() , m_g5() ,
-	  m_cont3() , m_cont4() ,
-	  m_xtmp() , m_dxdtnew() ,
-	  m_coef()
-    {
-		initialize();
-	}
+	typedef rosenbrock4< Value , Coefficients , Resizer > stepper_type;
+
+	rosenbrock4( ) // = default; // c++09 feature, don't know if all compilers understand that
+	{ }
 
 	rosenbrock4( const rosenbrock4 &rb )
-	: m_state_adjuster() , m_matrix_adjuster() , m_pmatrix_adjuster() ,
-	  m_jac() , m_pm( 1 ) ,
-	  m_dfdt() , m_dxdt() ,
-	  m_g1() , m_g2() , m_g3() , m_g4() , m_g5() ,
-	  m_cont3() , m_cont4() ,
-	  m_xtmp() , m_dxdtnew() ,
-	  m_coef()
-	{
-		initialize();
-		copy( rb );
-	}
-
-	rosenbrock4& operator=( const rosenbrock4 &rb )
-	{
-		copy( rb );
-		return *this;
-	}
+	: m_coef()
+	{ }
 
 	template< class System >
 	void do_step( System system , const state_type &x , time_type t , state_type &xout , time_type dt , state_type &xerr )
@@ -176,66 +124,63 @@ public:
 
     	const size_t n = x.size();
 
-    	// adjust size
-		m_matrix_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
-		m_pmatrix_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
-		for( size_t i=0 ; i<n ; ++i )
-			m_pm( i ) = i;
-		m_state_adjuster.adjust_size_by_policy( x , adjust_size_policy() );
-
-
-		deriv_func( x , m_dxdt , t );
-		jacobi_func( x , m_jac , t , m_dfdt );
-
-		m_jac *= -1.0;
-		m_jac += 1.0 / m_coef.gamma / dt * boost::numeric::ublas::identity_matrix< value_type >( n );
-        boost::numeric::ublas::lu_factorize( m_jac , m_pm );
+		m_resizer.adjust_size( x , boost::bind( &stepper_type::resize<state_type> , boost::ref( *this ) , _1 ) );
 
         for( size_t i=0 ; i<n ; ++i )
-        	m_g1[i] = m_dxdt[i] + dt * m_coef.d1 * m_dfdt[i];
-        boost::numeric::ublas::lu_substitute( m_jac , m_pm , m_g1 );
+            m_pm.m_v( i ) = i;
+
+		deriv_func( x , m_dxdt.m_v , t );
+		jacobi_func( x , m_jac.m_v , t , m_dfdt.m_v );
+
+		m_jac.m_v *= -1.0;
+		m_jac.m_v += 1.0 / m_coef.gamma / dt * boost::numeric::ublas::identity_matrix< value_type >( n );
+        boost::numeric::ublas::lu_factorize( m_jac.m_v , m_pm.m_v );
+
+        for( size_t i=0 ; i<n ; ++i )
+        	m_g1.m_v[i] = m_dxdt.m_v[i] + dt * m_coef.d1 * m_dfdt.m_v[i];
+        boost::numeric::ublas::lu_substitute( m_jac.m_v , m_pm.m_v , m_g1.m_v );
 
 
         for( size_t i=0 ; i<n ; ++i )
-        	m_xtmp[i] = x[i] + m_coef.a21 * m_g1[i];
-        deriv_func( m_xtmp , m_dxdtnew , t + m_coef.c2 * dt );
+        	m_xtmp.m_v[i] = x[i] + m_coef.a21 * m_g1.m_v[i];
+        deriv_func( m_xtmp.m_v , m_dxdtnew.m_v , t + m_coef.c2 * dt );
         for( size_t i=0 ; i<n ; ++i )
-        	m_g2[i] = m_dxdtnew[i] + dt * m_coef.d2 * m_dfdt[i] + m_coef.c21 * m_g1[i] / dt;
-        boost::numeric::ublas::lu_substitute( m_jac , m_pm , m_g2 );
+        	m_g2.m_v[i] = m_dxdtnew.m_v[i] + dt * m_coef.d2 * m_dfdt.m_v[i] + m_coef.c21 * m_g1.m_v[i] / dt;
+        boost::numeric::ublas::lu_substitute( m_jac.m_v , m_pm.m_v , m_g2.m_v );
 
 
         for( size_t i=0 ; i<n ; ++i )
-        	m_xtmp[i] = x[i] + m_coef.a31 * m_g1[i] + m_coef.a32 * m_g2[i];
-        deriv_func( m_xtmp , m_dxdtnew , t + m_coef.c3 * dt );
+        	m_xtmp.m_v[i] = x[i] + m_coef.a31 * m_g1.m_v[i] + m_coef.a32 * m_g2.m_v[i];
+        deriv_func( m_xtmp.m_v , m_dxdtnew.m_v , t + m_coef.c3 * dt );
         for( size_t i=0 ; i<n ; ++i )
-        	m_g3[i] = m_dxdtnew[i] + dt * m_coef.d3 * m_dfdt[i] + ( m_coef.c31 * m_g1[i] + m_coef.c32 * m_g2[i] ) / dt;
-        boost::numeric::ublas::lu_substitute( m_jac , m_pm , m_g3 );
+        	m_g3.m_v[i] = m_dxdtnew.m_v[i] + dt * m_coef.d3 * m_dfdt.m_v[i] + ( m_coef.c31 * m_g1.m_v[i] + m_coef.c32 * m_g2.m_v[i] ) / dt;
+        boost::numeric::ublas::lu_substitute( m_jac.m_v , m_pm.m_v , m_g3.m_v );
 
 
         for( size_t i=0 ; i<n ; ++i )
-        	m_xtmp[i] = x[i] + m_coef.a41 * m_g1[i] + m_coef.a42 * m_g2[i] + m_coef.a43 * m_g3[i];
-        deriv_func( m_xtmp , m_dxdtnew , t + m_coef.c4 * dt );
+        	m_xtmp.m_v[i] = x[i] + m_coef.a41 * m_g1.m_v[i] + m_coef.a42 * m_g2.m_v[i] + m_coef.a43 * m_g3.m_v[i];
+        deriv_func( m_xtmp.m_v , m_dxdtnew.m_v , t + m_coef.c4 * dt );
         for( size_t i=0 ; i<n ; ++i )
-        	m_g4[i] = m_dxdtnew[i] + dt * m_coef.d4 * m_dfdt[i] + ( m_coef.c41 * m_g1[i] + m_coef.c42 * m_g2[i] + m_coef.c43 * m_g3[i] ) / dt;
-        boost::numeric::ublas::lu_substitute( m_jac , m_pm , m_g4 );
+        	m_g4.m_v[i] = m_dxdtnew.m_v[i] + dt * m_coef.d4 * m_dfdt.m_v[i] + ( m_coef.c41 * m_g1.m_v[i] + m_coef.c42 * m_g2.m_v[i] + m_coef.c43 * m_g3.m_v[i] ) / dt;
+        boost::numeric::ublas::lu_substitute( m_jac.m_v , m_pm.m_v , m_g4.m_v );
 
 
         for( size_t i=0 ; i<n ; ++i )
-        	m_xtmp[i] = x[i] + m_coef.a51 * m_g1[i] + m_coef.a52 * m_g2[i] + m_coef.a53 * m_g3[i] + m_coef.a54 * m_g4[i];
-        deriv_func( m_xtmp , m_dxdtnew , t + dt );
+        	m_xtmp.m_v[i] = x[i] + m_coef.a51 * m_g1.m_v[i] + m_coef.a52 * m_g2.m_v[i] + m_coef.a53 * m_g3.m_v[i] + m_coef.a54 * m_g4.m_v[i];
+        deriv_func( m_xtmp.m_v , m_dxdtnew.m_v , t + dt );
         for( size_t i=0 ; i<n ; ++i )
-        	m_g5[i] = m_dxdtnew[i] + ( m_coef.c51 * m_g1[i] + m_coef.c52 * m_g2[i] + m_coef.c53 * m_g3[i] + m_coef.c54 * m_g4[i] ) / dt;
-        boost::numeric::ublas::lu_substitute( m_jac , m_pm , m_g5 );
+        	m_g5.m_v[i] = m_dxdtnew.m_v[i] + ( m_coef.c51 * m_g1.m_v[i] + m_coef.c52 * m_g2.m_v[i] + m_coef.c53 * m_g3.m_v[i] + m_coef.c54 * m_g4.m_v[i] ) / dt;
+        boost::numeric::ublas::lu_substitute( m_jac.m_v , m_pm.m_v , m_g5.m_v );
 
         for( size_t i=0 ; i<n ; ++i )
-        	m_xtmp[i] += m_g5[i];
-        deriv_func( m_xtmp , m_dxdtnew , t + dt );
+        	m_xtmp.m_v[i] += m_g5.m_v[i];
+        deriv_func( m_xtmp.m_v , m_dxdtnew.m_v , t + dt );
         for( size_t i=0 ; i<n ; ++i )
-        	xerr[i] = m_dxdtnew[i] + ( m_coef.c61 * m_g1[i] + m_coef.c62 * m_g2[i] + m_coef.c63 * m_g3[i] + m_coef.c64 * m_g4[i] + m_coef.c65 * m_g5[i] ) / dt;
-        boost::numeric::ublas::lu_substitute( m_jac , m_pm , xerr );
+        	xerr[i] = m_dxdtnew.m_v[i] + ( m_coef.c61 * m_g1.m_v[i] + m_coef.c62 * m_g2.m_v[i] + m_coef.c63 * m_g3.m_v[i] + m_coef.c64 * m_g4.m_v[i] + m_coef.c65 * m_g5.m_v[i] ) / dt;
+        boost::numeric::ublas::lu_substitute( m_jac.m_v , m_pm.m_v , xerr );
 
         for( size_t i=0 ; i<n ; ++i )
-        	xout[i] = m_xtmp[i] + xerr[i];
+        	xout[i] = m_xtmp.m_v[i] + xerr[i];
 	}
 
 	template< class System >
@@ -246,11 +191,11 @@ public:
 
 	void prepare_dense_output()
 	{
-		const size_t n = m_g1.size();
+		const size_t n = m_g1.m_v.size();
 		for( size_t i=0 ; i<n ; ++i )
 		{
-			m_cont3[i] = m_coef.d21 * m_g1[i] + m_coef.d22 * m_g2[i] + m_coef.d23 * m_g3[i] + m_coef.d24 * m_g4[i] + m_coef.d25 * m_g5[i];
-			m_cont4[i] = m_coef.d31 * m_g1[i] + m_coef.d32 * m_g2[i] + m_coef.d33 * m_g3[i] + m_coef.d34 * m_g4[i] + m_coef.d35 * m_g5[i];
+			m_cont3.m_v[i] = m_coef.d21 * m_g1.m_v[i] + m_coef.d22 * m_g2.m_v[i] + m_coef.d23 * m_g3.m_v[i] + m_coef.d24 * m_g4.m_v[i] + m_coef.d25 * m_g5.m_v[i];
+			m_cont4.m_v[i] = m_coef.d31 * m_g1.m_v[i] + m_coef.d32 * m_g2.m_v[i] + m_coef.d33 * m_g3.m_v[i] + m_coef.d34 * m_g4.m_v[i] + m_coef.d35 * m_g5.m_v[i];
 		}
 	}
 
@@ -259,38 +204,53 @@ public:
 			const state_type &x_old , const time_type &t_old ,
 			const state_type &x_new , const time_type &t_new )
 	{
-		const size_t n = m_g1.size();
+		const size_t n = m_g1.m_v.size();
 		time_type dt = t_new - t_old;
 		time_type s = ( t - t_old ) / dt;
 		time_type s1 = 1.0 - s;
 		for( size_t i=0 ; i<n ; ++i )
-			x[i] = x_old[i] * s1 + s * ( x_new[i] + s1 * ( m_cont3[i] + s * m_cont4[i] ) );
+			x[i] = x_old[i] * s1 + s * ( x_new[i] + s1 * ( m_cont3.m_v[i] + s * m_cont4.m_v[i] ) );
 	}
 
 
 
+	template< class StateIn >
+	bool resize( const StateIn &x )
+	{
+	    bool resized = false;
+	    resized |= adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
+	    resized |= adjust_size_by_resizeability( m_dfdt , x , typename wrapped_deriv_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_dxdtnew , x , typename wrapped_deriv_type::is_resizeable() );
+	    resized |= adjust_size_by_resizeability( m_xtmp , x , typename wrapped_state_type::is_resizeable() );
+	    resized |= adjust_size_by_resizeability( m_g1 , x , typename wrapped_state_type::is_resizeable() );
+	    resized |= adjust_size_by_resizeability( m_g2 , x , typename wrapped_state_type::is_resizeable() );
+	    resized |= adjust_size_by_resizeability( m_g3 , x , typename wrapped_state_type::is_resizeable() );
+	    resized |= adjust_size_by_resizeability( m_g4 , x , typename wrapped_state_type::is_resizeable() );
+	    resized |= adjust_size_by_resizeability( m_g5 , x , typename wrapped_state_type::is_resizeable() );
+	    resized |= adjust_size_by_resizeability( m_cont3 , x , typename wrapped_state_type::is_resizeable() );
+	    resized |= adjust_size_by_resizeability( m_cont4 , x , typename wrapped_state_type::is_resizeable() );
+	    resized |= adjust_size_by_resizeability( m_jac , x , typename wrapped_matrix_type::is_resizeable() );
+	    resized |= adjust_size_by_resizeability( m_pm , x , typename wrapped_pmatrix_type::is_resizeable() );
+	    return resized;
+	}
 
 	template< class StateType >
 	void adjust_size( const StateType &x )
 	{
-		m_state_adjuster.adjust_size( x );
-		m_matrix_adjuster.adjust_size( x );
-		m_pmatrix_adjuster.adjust_size( x );
+		resize( x );
 	}
 
 
 private:
 
-	size_adjuster< state_type , 11 > m_state_adjuster;
-    size_adjuster< matrix_type , 1 > m_matrix_adjuster;
-    size_adjuster< pmatrix_type , 1 > m_pmatrix_adjuster;
+	resizer_type m_resizer;
 
-	matrix_type m_jac;
-	pmatrix_type m_pm;
-	state_type m_dfdt , m_dxdt;
-	state_type m_g1 , m_g2 , m_g3 , m_g4 , m_g5;
-	state_type m_cont3 , m_cont4;
-	state_type m_xtmp , m_dxdtnew;
+	wrapped_matrix_type m_jac;
+	wrapped_pmatrix_type m_pm;
+	wrapped_deriv_type m_dfdt , m_dxdt , m_dxdtnew;
+	wrapped_state_type m_g1 , m_g2 , m_g3 , m_g4 , m_g5;
+	wrapped_state_type m_cont3 , m_cont4;
+	wrapped_state_type m_xtmp;
 
 	rosenbrock_coefficients m_coef;
 };

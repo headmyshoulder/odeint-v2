@@ -1,35 +1,32 @@
 /*
- boost header: xyz/gsl_vector_adaptor.hpp
+ boost header: xyz/gsl_wrapper.hpp
 
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky
- Copyright 2009 Andre Bergner
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
-#ifndef BOOST_NUMERIC_ODEINT_GSL_VECTOR_ADAPTOR_HPP_INCLUDED
-#define BOOST_NUMERIC_ODEINT_GSL_VECTOR_ADAPTOR_HPP_INCLUDED
+#ifndef BOOST_NUMERIC_ODEINT_GSL_WRAPPER_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_GSL_WRAPPER_HPP_INCLUDED
 
 #include <new>
 //#include <iostream>
 
 #include <gsl/gsl_vector.h>
 
+#include <boost/type_traits/integral_constant.hpp>
 #include <boost/range.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 
-#include <boost/numeric/odeint/util/construct.hpp>
-#include <boost/numeric/odeint/util/destruct.hpp>
+
+#include <boost/numeric/odeint/util/state_wrapper.hpp>
+#include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
-#include <boost/numeric/odeint/util/resize.hpp>
 
 using namespace std;
-
-
-
 
 class const_gsl_vector_iterator;
 
@@ -111,8 +108,6 @@ const_gsl_vector_iterator end_iterator( const gsl_vector *x )
 
 
 
-
-
 namespace boost
 {
 	template<>
@@ -174,54 +169,49 @@ struct is_resizeable< gsl_vector* >
 };
 
 template<>
-struct construct_impl< gsl_vector* >
+struct state_wrapper< gsl_vector* >
 {
-    static void construct( gsl_vector *&x )
+    typedef double value_type;
+    typedef gsl_vector* state_type;
+    typedef state_wrapper< gsl_vector* > state_wrapper_type;
+    typedef boost::true_type is_resizeable;
+
+    state_type m_v;
+
+    state_wrapper( )
     {
-        x = gsl_vector_alloc( 1 ); // gsl wants vector length > 0, so we give 1 arbitrarily
+        m_v = gsl_vector_alloc( 1 );
     }
-};
 
-template<>
-struct destruct_impl< gsl_vector* >
-{
-    static void destruct( gsl_vector *x )
+    state_wrapper( const state_wrapper_type &x )
     {
-        gsl_vector_free( x );
+        resize( x.m_v );
+        gsl_vector_memcpy( m_v , x.m_v );
     }
-};
 
 
-template<>
-struct resize_impl< gsl_vector* , gsl_vector* >
-{
-    static void resize( const gsl_vector *x , gsl_vector *&dxdt )
+    ~state_wrapper()
     {
-        if( x->size == 0 ) return;
-
-        gsl_vector_free( dxdt );
-        dxdt = gsl_vector_alloc( x->size );
+        gsl_vector_free( m_v );
     }
-};
 
-template<>
-struct same_size_impl< gsl_vector* , gsl_vector* >
-{
-    static bool same_size( const gsl_vector *x1 , const gsl_vector *x2 )
+    bool same_size( const gsl_vector *x )
     {
-        return x1->size == x2->size;
+        return ( m_v->size == x->size );
     }
-};
 
-
-template<>
-struct copy_impl< gsl_vector* , gsl_vector* >
-{
-    static void copy( const gsl_vector *from , gsl_vector *to )
+    bool resize( const gsl_vector *x )
     {
-        resize_impl< gsl_vector* , gsl_vector* >::resize( from , to );
-        gsl_vector_memcpy( to , from );
+        if( !same_size( x ) )
+        {
+            gsl_vector_free( m_v );
+            m_v = gsl_vector_alloc( x->size );
+            return true;
+        } else
+            return false;
+
     }
+
 };
 
 } // odeint
