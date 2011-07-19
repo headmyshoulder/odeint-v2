@@ -33,8 +33,8 @@
 #include <boost/mpl/at.hpp>
 
 #include <boost/numeric/odeint/stepper/euler.hpp>
-#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4_classic.hpp>
-#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta4_classic.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
@@ -131,14 +131,14 @@ typedef euler< test_array_type , double , test_array_type , double , range_algeb
 typedef euler< test_array_type , double , test_array_type , double , range_algebra , default_operations , initially_resizer > euler_initially_type;
 typedef euler< test_array_type , double , test_array_type , double , range_algebra , default_operations , always_resizer > euler_always_type;
 
-typedef runge_kutta_fehlberg4_classic< test_array_type , double , test_array_type , double , range_algebra , default_operations , never_resizer > rk4_manual_type;
-typedef runge_kutta_fehlberg4_classic< test_array_type , double , test_array_type , double , range_algebra , default_operations , initially_resizer > rk4_initially_type;
-typedef runge_kutta_fehlberg4_classic< test_array_type , double , test_array_type , double , range_algebra , default_operations , always_resizer > rk4_always_type;
+typedef runge_kutta4_classic< test_array_type , double , test_array_type , double , range_algebra , default_operations , never_resizer > rk4_manual_type;
+typedef runge_kutta4_classic< test_array_type , double , test_array_type , double , range_algebra , default_operations , initially_resizer > rk4_initially_type;
+typedef runge_kutta4_classic< test_array_type , double , test_array_type , double , range_algebra , default_operations , always_resizer > rk4_always_type;
 
 
-typedef runge_kutta_fehlberg4< test_array_type , double , test_array_type , double , range_algebra , default_operations , never_resizer > rk4_gen_manual_type;
-typedef runge_kutta_fehlberg4< test_array_type , double , test_array_type , double , range_algebra , default_operations , initially_resizer > rk4_gen_initially_type;
-typedef runge_kutta_fehlberg4< test_array_type , double , test_array_type , double , range_algebra , default_operations , always_resizer > rk4_gen_always_type;
+typedef runge_kutta4< test_array_type , double , test_array_type , double , range_algebra , default_operations , never_resizer > rk4_gen_manual_type;
+typedef runge_kutta4< test_array_type , double , test_array_type , double , range_algebra , default_operations , initially_resizer > rk4_gen_initially_type;
+typedef runge_kutta4< test_array_type , double , test_array_type , double , range_algebra , default_operations , always_resizer > rk4_gen_always_type;
 
 
 typedef mpl::vector<

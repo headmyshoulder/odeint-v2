@@ -1,7 +1,7 @@
 #include <boost/array.hpp>
 
 //#include <boost/numeric/odeint/stepper/explicit_generic_rk.hpp>
-#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
 #include <boost/numeric/odeint/algebra/array_algebra.hpp>
 
 #include "rk_performance_test_case.hpp"
@@ -26,7 +26,7 @@ const coef_b_type b = {{ 1.0/6 , 1.0/3 , 1.0/3 , 1.0/6 }};
 const coef_c_type c = {{ 0.0 , 0.5 , 0.5 , 1.0 }};
 */
 
-typedef runge_kutta_fehlberg4< state_type , double , state_type , double , array_algebra > rk4_type;
+typedef runge_kutta4< state_type , double , state_type , double , array_algebra > rk4_type;
 
 
 class rk4_wrapper

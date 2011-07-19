@@ -80,7 +80,7 @@ int main( int argc , char **argv )
 
     const double dt = 0.1;
 
-    typedef runge_kutta_fehlberg4< state_type > stepper_type;
+    typedef runge_kutta4< state_type > stepper_type;
 
     integrate_const( stepper_type() , stuart_landau( 2.0 , 1.0 ) , x , 0.0 , 10.0 , dt , streaming_observer( cout ) );
     //]

@@ -7,7 +7,7 @@
 
 #include <boost/array.hpp>
 
-#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4_classic.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta4_classic.hpp>
 #include <boost/numeric/odeint/algebra/array_algebra.hpp>
 
 #include "rk_performance_test_case.hpp"
@@ -15,7 +15,7 @@
 #include "lorenz.hpp"
 
 typedef boost::array< double , 3 > state_type;
-typedef boost::numeric::odeint::runge_kutta_fehlberg4_classic< state_type , double , state_type , double ,
+typedef boost::numeric::odeint::runge_kutta4_classic< state_type , double , state_type , double ,
                                               boost::numeric::odeint::array_algebra > rk4_odeint_type;
 
 

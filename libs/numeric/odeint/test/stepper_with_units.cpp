@@ -28,8 +28,8 @@
 #include <boost/mpl/vector.hpp>
 
 #include <boost/numeric/odeint/stepper/euler.hpp>
-#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4.hpp>
-#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4_classic.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta4_classic.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
@@ -235,8 +235,8 @@ void check_dense_output_stepper( Stepper &stepper )
 class stepper_types : public mpl::vector
 <
 	euler< state_type , value_type , deriv_type , time_type , fusion_algebra >,
-	runge_kutta_fehlberg4< state_type , value_type , deriv_type , time_type , fusion_algebra > ,
-	runge_kutta_fehlberg4_classic< state_type , value_type , deriv_type , time_type , fusion_algebra > ,
+	runge_kutta4< state_type , value_type , deriv_type , time_type , fusion_algebra > ,
+	runge_kutta4_classic< state_type , value_type , deriv_type , time_type , fusion_algebra > ,
 	runge_kutta_cash_karp54< state_type , value_type , deriv_type , time_type , fusion_algebra >,
 	runge_kutta_cash_karp54_classic< state_type , value_type , deriv_type , time_type , fusion_algebra >
 > { };

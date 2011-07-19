@@ -1,6 +1,6 @@
 /*
  [auto_generated]
- boost/numeric/odeint/stepper/runge_kutta_fehlberg4_classic.hpp
+ boost/numeric/odeint/stepper/runge_kutta4_classic.hpp
 
  [begin_description]
  Implementation for the classical Runge Kutta stepper.
@@ -15,8 +15,8 @@
  */
 
 
-#ifndef BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA_FEHLBERG4_CLASSIC_HPP_INCLUDED
-#define BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA_FEHLBERG4_CLASSIC_HPP_INCLUDED
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA4_CLASSIC_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA4_CLASSIC_HPP_INCLUDED
 
 
 #include <boost/ref.hpp>
@@ -43,20 +43,20 @@ class Algebra = range_algebra ,
 class Operations = default_operations ,
 class Resizer = initially_resizer
 >
-class runge_kutta_fehlberg4_classic
+class runge_kutta4_classic
 : public explicit_stepper_base<
-  runge_kutta_fehlberg4_classic< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
+  runge_kutta4_classic< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
   4 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
 {
 
 public :
 
 
-    BOOST_ODEINT_EXPLICIT_STEPPERS_TYPEDEFS( runge_kutta_fehlberg4_classic , 4 );
+    BOOST_ODEINT_EXPLICIT_STEPPERS_TYPEDEFS( runge_kutta4_classic , 4 );
 
-    typedef runge_kutta_fehlberg4_classic< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
+    typedef runge_kutta4_classic< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
 
-    runge_kutta_fehlberg4_classic( const algebra_type &algebra = algebra_type() ) : stepper_base_type( algebra )
+    runge_kutta4_classic( const algebra_type &algebra = algebra_type() ) : stepper_base_type( algebra )
     { }
 
 
@@ -142,4 +142,4 @@ private:
 } // boost
 
 
-#endif // BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA_FEHLBERG4_CLASSIC_HPP_INCLUDED
+#endif // BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA4_CLASSIC_HPP_INCLUDED

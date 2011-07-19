@@ -21,8 +21,8 @@
 #include <boost/config.hpp>
 
 #include <boost/numeric/odeint/stepper/euler.hpp>
-#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4_classic.hpp>
-#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta4_classic.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
 

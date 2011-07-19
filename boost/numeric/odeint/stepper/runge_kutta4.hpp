@@ -1,6 +1,6 @@
 /*
  [auto_generated]
- boost/numeric/odeint/stepper/runge_kutta_fehlberg4.hpp
+ boost/numeric/odeint/stepper/runge_kutta4.hpp
 
  [begin_description]
  Implementation of the classical Runge-Kutta stepper with the generic stepper.
@@ -15,8 +15,8 @@
  */
 
 
-#ifndef BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA_FEHLBERG4_HPP_INCLUDED
-#define BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA_FEHLBERG4_HPP_INCLUDED
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA4_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA4_HPP_INCLUDED
 
 
 #include <boost/fusion/container.hpp>
@@ -102,7 +102,7 @@ class Algebra = range_algebra ,
 class Operations = default_operations ,
 class Resizer = initially_resizer
 >
-class runge_kutta_fehlberg4 : public explicit_generic_rk< 4 , 4 , State , Value , Deriv , Time ,
+class runge_kutta4 : public explicit_generic_rk< 4 , 4 , State , Value , Deriv , Time ,
 Algebra , Operations , Resizer >
 {
 
@@ -122,7 +122,7 @@ public:
     typedef typename stepper_base_type::resizer_type resizer_type;
     typedef typename stepper_base_type::stepper_type stepper_type;
 
-    runge_kutta_fehlberg4( const algebra_type &algebra = algebra_type() ) : stepper_base_type(
+    runge_kutta4( const algebra_type &algebra = algebra_type() ) : stepper_base_type(
             fusion::make_vector( rk4_coefficients_a1<Value>() , rk4_coefficients_a2<Value>() , rk4_coefficients_a3<Value>() ) ,
             rk4_coefficients_b<Value>() , rk4_coefficients_c<Value>() , algebra )
     { }
@@ -134,4 +134,4 @@ public:
 }
 
 
-#endif // BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA_FEHLBERG4_HPP_INCLUDED
+#endif // BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA4_HPP_INCLUDED
