@@ -1,0 +1,39 @@
+# (C) Copyright 2010 : Karsten Ahnert, Mario Mulansky
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+import os ;
+import modules ;
+import path ; 
+
+project
+    : requirements
+      <define>BOOST_ALL_NO_LIB=1
+      <include>../../../..
+    : default-build release
+    ;
+    
+    
+lib libgsl : : <name>gsl ;
+lib libgslcblas : : <name>gslcblas ;
+
+exe odeint_rk4_lorenz_array
+    : odeint_rk4_lorenz_array.cpp
+    ;
+    
+exe odeint_rk4_lorenz_range
+    : odeint_rk4_lorenz_range.cpp
+    ;
+
+exe generic_odeint_rk4_lorenz 
+    : generic_odeint_rk4_lorenz.cpp
+    : <toolset>intel:<cxxflags>-inline-forceinline
+    ;
+
+exe nr_rk4_lorenz
+    : nr_rk4_lorenz.cpp
+    ;
+
+exe rt_generic_rk4_lorenz
+    : rt_generic_rk4_lorenz.cpp
+    ;
