@@ -67,7 +67,7 @@ struct is_resizeable< boost::numeric::ublas::permutation_matrix< T , A > >
 
 /* specialization for matrizes because we need to provide matrix-vector resizing */
 template< class T , class L , class A >
-struct state_wrapper< boost::numeric::ublas::matrix< T , L , A > , boost::true_type > // with resizing
+struct state_wrapper< boost::numeric::ublas::matrix< T , L , A > , true > // with resizing
 {
     typedef boost::numeric::ublas::matrix< T , L , A > state_type;
     typedef state_wrapper< state_type > state_wrapper_type;
@@ -118,7 +118,7 @@ struct state_wrapper< boost::numeric::ublas::matrix< T , L , A > , boost::true_t
 
 /* specialization for permutation matrizes because we need to provide matrix-vector resizing */
 template< class T , class A >
-struct state_wrapper< boost::numeric::ublas::permutation_matrix< T , A > , boost::true_type > // with resizing
+struct state_wrapper< boost::numeric::ublas::permutation_matrix< T , A > , true > // with resizing
 {
     typedef boost::numeric::ublas::permutation_matrix< T , A > state_type;
     typedef state_wrapper< state_type > state_wrapper_type;

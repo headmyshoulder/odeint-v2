@@ -39,18 +39,25 @@ void run( Stepper &stepper , const size_t num_of_steps = 20000000 , const double
 
     srand( 12312354 );
 
-    for( size_t n=0 ; n<loops ; ++n )
+    // transient
+    //stepper.reset_init_cond( );
+    //for( size_t i = 0 ; i < num_of_steps ; ++i )
+    //    stepper.do_step( dt );
+
+    for( size_t n=0 ; n<loops+1 ; ++n )
     {
         stepper.reset_init_cond( );
 
         timer.restart();
         for( size_t i = 0 ; i < num_of_steps ; ++i )
             stepper.do_step( dt );
-        acc(timer.elapsed());
-
-        clog.precision(3);
-        clog.width(5);
-        clog << acc << " " << stepper.state(0) << endl;
+        if( n>0 )
+        {   // take first run as transient
+            acc(timer.elapsed());
+            clog.precision(3);
+            clog.width(5);
+            clog << acc << " " << stepper.state(0) << endl;
+        }
     }
     cout << acc << endl;
 }

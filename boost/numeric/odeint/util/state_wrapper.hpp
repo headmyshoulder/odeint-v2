@@ -29,15 +29,15 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-template< class V , typename resizeable = typename boost::numeric::odeint::is_resizeable< V >::type>
+template< class V , bool resizeable = is_resizeable< V >::value >
 struct state_wrapper;
 
 //two standard implementations, with and without resizing depending on is_resizeable< StateType >
 
 template< class V >
-struct state_wrapper< V , boost::true_type > // with resizing
+struct state_wrapper< V , true > // with resizing
 {
-    typedef state_wrapper< V , boost::true_type > state_wrapper_type;
+    typedef state_wrapper< V , true > state_wrapper_type;
     //typedef typename V::value_type value_type;
     typedef boost::true_type is_resizeable;
 
@@ -65,9 +65,9 @@ struct state_wrapper< V , boost::true_type > // with resizing
 
 
 template< class V >
-struct state_wrapper< V , boost::false_type > // without resizing
+struct state_wrapper< V , false > // without resizing
 {
-    typedef state_wrapper< V , boost::false_type > state_wrapper_type;
+    typedef state_wrapper< V , false > state_wrapper_type;
     //typedef typename V::value_type value_type;
     typedef boost::false_type is_resizeable;
 

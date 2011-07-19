@@ -37,3 +37,7 @@ exe nr_rk4_lorenz
 exe rt_generic_rk4_lorenz
     : rt_generic_rk4_lorenz.cpp
     ;
+    
+exe gsl_rk4_lorenz
+    : gsl_rk4_lorenz.cpp libgsl libgslcblas
+    ;

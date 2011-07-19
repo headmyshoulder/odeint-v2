@@ -63,7 +63,7 @@ namespace boost { namespace numeric { namespace odeint {
 	template< >
 	struct state_wrapper< test_array_type > // with resizing
 	{
-	    typedef state_wrapper< test_array_type , boost::true_type > state_wrapper_type;
+	    typedef state_wrapper< test_array_type , true > state_wrapper_type;
 	    typedef test_array_type::value_type value_type;
 	    typedef boost::true_type is_resizeable;
 

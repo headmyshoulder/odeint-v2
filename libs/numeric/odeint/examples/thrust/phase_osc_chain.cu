@@ -25,6 +25,8 @@
 #include <ctime>
 
 #include <thrust/device_vector.h>
+#include <thrust/iterator/permutation_iterator.h>
+#include <thrust/iterator/counting_iterator.h>
 
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/external/thrust/thrust_algebra.hpp>
@@ -140,8 +142,8 @@ int main( int arc , char* argv[] )
     state_type omega = omega_host;
 
     //create error stepper
-    explicit_rk4< state_type , value_type , state_type , value_type ,
-                  thrust_algebra , thrust_operations , adjust_size_initially_tag  > stepper;
+    runge_kutta4< state_type , value_type , state_type , value_type ,
+                  thrust_algebra , thrust_operations > stepper;
 
     phase_oscillators sys( omega );
 

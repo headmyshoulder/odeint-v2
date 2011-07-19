@@ -27,6 +27,7 @@
 
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
+#include <boost/numeric/odeint/util/is_resizeable.hpp>
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 

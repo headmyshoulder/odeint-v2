@@ -77,7 +77,7 @@ struct stage_wrapper
     typedef stage< T , Constant::value > type;
 };
 
-
+/*
 template<
 size_t StageCount,
 size_t Order,
@@ -97,6 +97,7 @@ std::ostream& operator <<( std::ostream &os ,
     rk.m_stages.print( os );
     return os;
 }
+*/
 
 
 template<
@@ -185,7 +186,7 @@ public:
         stepper_base_type::adjust_size( x );
     }
 
-    friend std::ostream& operator << <>( std::ostream &os , const explicit_generic_rk &rk );
+    //friend std::ostream& operator << <>( std::ostream &os , const explicit_generic_rk &rk );
 
 private:
 

@@ -71,7 +71,7 @@ struct thrust_algebra
 
     template< class StateType1 , class StateType2 , class StateType3 , class StateType4 ,
     class Operation >
-    static void for_each4( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , StateType3 &s4 ,
+    static void for_each4( StateType1 &s1 , StateType2 &s2 , StateType3 &s3 , StateType4 &s4 ,
             Operation op )
     {
         thrust::for_each(
