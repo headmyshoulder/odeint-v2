@@ -107,19 +107,29 @@ It is quite easy but the compilation time might take very long. Furthermore, the
 
 [units_observer]
 
-The full cpp file for this example can be found here [@../../examples/harmonic_oscillator_units.cpp]
+The full cpp file for this example can be found here [@../../examples/harmonic_oscillator_units.cpp].
 
 [endsect] 
 
-[section Using Cuda and Thrust]
-
-blah blah
-
-[endsect]
-
 [section Using matrices as state types]
 
-Expanding resizing
+[import ../examples/two_dimensional_phase_lattice.cpp]
+
+odeint works well with a variety of different state types. It is not restricted to pure vector-wise types, like `vector< double >`, `array< double , N >`, `fusion::vector< double , double >`, etc. but also works with types having a different topology then simple vectors. Here, we show how odeint can be used with matrices as states type, in the next section we will show how can be used to solve ODEs defined on complex networks.
+
+By default, odeint can be used with `ublas::matrix< T >` as state type for matrices. A simple example is a two-dimensional lattice of coupled phase oscillators. We like phas oscillators, they are extremly easy and might serve for different demonstration purposes. Other matrix types like `mtl::dense_matrix` or blitz arrays and matrices can used as well but need some kind of activation in order to work with odeint. This activation is described in following sections,
+
+The definition of the system is
+
+[two_dimensional_phase_lattice_definition]
+
+This is in principle all. Please note, that the above code is far from being optimal. Better performance can be achieved if every interaction is only calculated once and iterators for columns and rows are used. Below are some visualizations of the evolution of this lattice equation.
+
+[$phase_lattice_2d_0000.jpg] [$phase_lattice_2d_0100.jpg] [$phase_lattice_2d_1000.jpg]
+
+The full cpp for this example can be found here [@../../examples/two_dimensional_phase_lattice.cpp].
+
+
 
 [endsect]
 

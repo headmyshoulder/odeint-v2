@@ -25,7 +25,8 @@
 using namespace std;
 using namespace boost::numeric::odeint;
 
-typedef boost::numeric::ublas::matrix< double , boost::numeric::ublas::basic_row_major<> , boost::numeric::ublas::unbounded_array< double > > state_type;
+//[ two_dimensional_phase_lattice_definition
+typedef boost::numeric::ublas::matrix< double > state_type;
 
 struct two_dimensional_phase_lattice
 {
@@ -59,6 +60,8 @@ struct two_dimensional_phase_lattice
 
     double m_gamma;
 };
+//]
+
 
 struct write_for_gnuplot
 {
