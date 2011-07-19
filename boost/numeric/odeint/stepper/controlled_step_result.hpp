@@ -1,12 +1,22 @@
 /*
- * controlled_step_result.hpp
- *
- *  Created on: Jan 27, 2011
- *      Author: karsten
+ [auto_generated]
+ boost/numeric/odeint/stepper/controlled_step_result.hpp
+
+ [begin_description]
+ Defines the result type for all controlled stepper.
+ [end_description]
+
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLED_STEPPER_RESULT_HPP_
-#define BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLED_STEPPER_RESULT_HPP_
+
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLED_STEP_RESULT_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLED_STEP_RESULT_HPP_INCLUDED
 
 
 namespace boost {
@@ -24,4 +34,5 @@ typedef enum
 } // numeric
 } // boost
 
-#endif /* BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLED_STEPPER_RESULT_HPP_ */
+
+#endif // BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLED_STEP_RESULT_HPP_INCLUDED

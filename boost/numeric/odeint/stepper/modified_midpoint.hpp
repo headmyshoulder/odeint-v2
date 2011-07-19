@@ -1,12 +1,23 @@
 /*
- * explicit_midpoint.hpp
- *
- *  Created on: Jul 12, 2011
- *      Author: mario
+ [auto_generated]
+ boost/numeric/odeint/stepper/modified_midpoint.hpp
+
+ [begin_description]
+ Modified midpoint method for the use in Burlish-Stoer stepper.
+ [end_description]
+
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_NUMERIC_ODEINT_EXPLICIT_MIDPOINT_HPP_
-#define BOOST_NUMERIC_ODEINT_EXPLICIT_MIDPOINT_HPP_
+
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_MODIFIED_MIDPOINT_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STEPPER_MODIFIED_MIDPOINT_HPP_INCLUDED
+
 
 #include <boost/numeric/odeint/stepper/base/explicit_stepper_base.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
@@ -20,18 +31,18 @@ namespace numeric {
 namespace odeint {
 
 template<
-    class State ,
-    class Value = double ,
-    class Deriv = State ,
-    class Time = Value ,
-    class Algebra = range_algebra ,
-    class Operations = default_operations ,
-    class Resizer = initially_resizer
-    >
+class State ,
+class Value = double ,
+class Deriv = State ,
+class Time = Value ,
+class Algebra = range_algebra ,
+class Operations = default_operations ,
+class Resizer = initially_resizer
+>
 class modified_midpoint
 : public explicit_stepper_base<
-      modified_midpoint< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
-      2 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
+  modified_midpoint< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
+  2 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
 {
 
 public :
@@ -41,7 +52,7 @@ public :
     typedef modified_midpoint< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
 
     modified_midpoint( const unsigned short steps = 2 , const algebra_type &algebra = algebra_type() )
-        : stepper_base_type( algebra ) , m_steps( steps )
+    : stepper_base_type( algebra ) , m_steps( steps )
     { }
 
     template< class System , class StateIn , class DerivIn , class StateOut >
@@ -127,4 +138,4 @@ private:
 }
 }
 
-#endif /* BOOST_NUMERIC_ODEINT_EXPLICIT_MIDPOINT_HPP_ */
+#endif // BOOST_NUMERIC_ODEINT_STEPPER_MODIFIED_MIDPOINT_HPP_INCLUDED

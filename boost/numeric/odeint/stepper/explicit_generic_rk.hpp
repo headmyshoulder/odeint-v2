@@ -1,12 +1,23 @@
 /*
- * explicit_generic_rk.hpp
- *
- *  Created on: May 19th, 2011
- *      Author: mario
+ [auto_generated]
+ boost/numeric/odeint/stepper/explicit_generic_rk.hpp
+
+ [begin_description]
+ Implementation of the generic Runge-Kutta steppers. This is the base class for many Runge-Kutta steppers.
+ [end_description]
+
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef EXPLICIT_GENERIC_RK_HPP_
-#define EXPLICIT_GENERIC_RK_HPP_
+
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_EXPLICIT_GENERIC_RK_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STEPPER_EXPLICIT_GENERIC_RK_HPP_INCLUDED
+
 
 #include <boost/array.hpp>
 
@@ -32,16 +43,16 @@ namespace odeint {
 //forward declarations
 
 template<
-    size_t StageCount,
-    size_t Order,
-    class State ,
-    class Value = double ,
-    class Deriv = State ,
-    class Time = Value ,
-    class Algebra = range_algebra ,
-    class Operations = default_operations ,
-    class Resizer = initially_resizer
-    >
+size_t StageCount,
+size_t Order,
+class State ,
+class Value = double ,
+class Deriv = State ,
+class Time = Value ,
+class Algebra = range_algebra ,
+class Operations = default_operations ,
+class Resizer = initially_resizer
+>
 class explicit_generic_rk;
 
 struct stage_vector;
@@ -68,64 +79,64 @@ struct stage_wrapper
 
 
 template<
-    size_t StageCount,
-    size_t Order,
-    class State ,
-    class Value ,
-    class Deriv ,
-    class Time ,
-    class Algebra ,
-    class Operations ,
-    class Resizer
-    >
+size_t StageCount,
+size_t Order,
+class State ,
+class Value ,
+class Deriv ,
+class Time ,
+class Algebra ,
+class Operations ,
+class Resizer
+>
 std::ostream& operator <<( std::ostream &os ,
         const explicit_generic_rk< StageCount , Order , State , Value , Deriv , Time , Algebra , Operations , Resizer > &rk )
 {
-      os << "Generic RK with " << rk.stage_count << " stages." << std::endl;
-      os << "Butcher Tableau: " << std::endl;
-      rk.m_stages.print( os );
-      return os;
+    os << "Generic RK with " << rk.stage_count << " stages." << std::endl;
+    os << "Butcher Tableau: " << std::endl;
+    rk.m_stages.print( os );
+    return os;
 }
 
 
 template<
-	size_t StageCount,
-	size_t Order,
-    class State ,
-    class Value ,
-    class Deriv ,
-    class Time ,
-	class Algebra ,
-	class Operations ,
-	class Resizer
-	>
+size_t StageCount,
+size_t Order,
+class State ,
+class Value ,
+class Deriv ,
+class Time ,
+class Algebra ,
+class Operations ,
+class Resizer
+>
 class explicit_generic_rk : public explicit_stepper_base<
-	  explicit_generic_rk< StageCount , Order , State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
-	  Order , State , Value , Deriv , Time , Algebra , Operations , Resizer >
+explicit_generic_rk< StageCount , Order , State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
+Order , State , Value , Deriv , Time , Algebra , Operations , Resizer >
 {
 
 public:
 
-	typedef explicit_stepper_base<
-	        explicit_generic_rk< StageCount , Order , State , Value , Deriv ,Time , Algebra , Operations , Resizer > ,
-	        Order , State , Value , Deriv , Time , Algebra ,
-	        Operations , Resizer > stepper_base_type;
+    typedef explicit_stepper_base<
+            explicit_generic_rk< StageCount , Order , State , Value , Deriv ,Time , Algebra , Operations , Resizer > ,
+            Order , State , Value , Deriv , Time , Algebra ,
+            Operations , Resizer > stepper_base_type;
 
-	typedef typename stepper_base_type::state_type state_type;
-	typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
-	typedef typename stepper_base_type::value_type value_type;
-	typedef typename stepper_base_type::deriv_type deriv_type;
-	typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
-	typedef typename stepper_base_type::time_type time_type;
-	typedef typename stepper_base_type::algebra_type algebra_type;
-	typedef typename stepper_base_type::operations_type operations_type;
-	typedef typename stepper_base_type::resizer_type resizer_type;
+    typedef typename stepper_base_type::state_type state_type;
+    typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
+    typedef typename stepper_base_type::value_type value_type;
+    typedef typename stepper_base_type::deriv_type deriv_type;
+    typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
+    typedef typename stepper_base_type::time_type time_type;
+    typedef typename stepper_base_type::algebra_type algebra_type;
+    typedef typename stepper_base_type::operations_type operations_type;
+    typedef typename stepper_base_type::resizer_type resizer_type;
 
-	typedef explicit_generic_rk< StageCount , Order , State , Value , Deriv ,Time , Algebra , Operations , Resizer > stepper_type;
+    typedef explicit_generic_rk< StageCount , Order , State , Value , Deriv ,Time , Algebra , Operations , Resizer > stepper_type;
 
-	typedef detail::generic_rk_algorithm< StageCount , Value , Algebra , Operations > rk_algorithm_type;
+    typedef detail::generic_rk_algorithm< StageCount , Value , Algebra , Operations > rk_algorithm_type;
 
-	typedef typename rk_algorithm_type::coef_a_type coef_a_type;
+    typedef typename rk_algorithm_type::coef_a_type coef_a_type;
     typedef typename rk_algorithm_type::coef_b_type coef_b_type;
     typedef typename rk_algorithm_type::coef_c_type coef_c_type;
 
@@ -138,14 +149,14 @@ public:
 
     explicit_generic_rk( const coef_a_type &a , const coef_b_type &b , const coef_c_type &c ,
             const algebra_type &algebra = algebra_type() )
-        : stepper_base_type( algebra ) , m_rk_algorithm( a , b , c )
+    : stepper_base_type( algebra ) , m_rk_algorithm( a , b , c )
     { }
 
 
     template< class System , class StateIn , class DerivIn , class StateOut >
-	void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt ,
-	                     const time_type &t , StateOut &out , const time_type &dt )
-	{
+    void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt ,
+            const time_type &t , StateOut &out , const time_type &dt )
+    {
         typedef typename boost::unwrap_reference< System >::type unwrapped_system_type;
         unwrapped_system_type &sys = system;
 
@@ -190,4 +201,4 @@ private:
 }
 }
 }
-#endif /* EXPLICIT_GENERIC_RK_HPP_ */
+#endif // BOOST_NUMERIC_ODEINT_STEPPER_EXPLICIT_GENERIC_RK_HPP_INCLUDED

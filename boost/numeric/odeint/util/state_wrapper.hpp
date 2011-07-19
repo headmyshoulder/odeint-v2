@@ -1,12 +1,24 @@
 /*
- * state_wrapper.hpp
- *
- *  Created on: Jul 4, 2011
- *      Author: mario
+ [auto_generated]
+ boost/numeric/odeint/util/state_wrapper.hpp
+
+ [begin_description]
+ State wrapper for the state type in all stepper. The state wrappers are responsible for contruction,
+ destruction, copying contruction, assignment and resizing.
+ [end_description]
+
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef STATE_WRAPPER_HPP_
-#define STATE_WRAPPER_HPP_
+
+#ifndef BOOST_NUMERIC_ODEINT_UTIL_STATE_WRAPPER_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_UTIL_STATE_WRAPPER_HPP_INCLUDED
+
 
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/type_traits/integral_constant.hpp>
@@ -69,4 +81,5 @@ struct state_wrapper< V , boost::false_type > // without resizing
 }
 
 
-#endif /* STATE_WRAPPER_HPP_ */
+
+#endif // BOOST_NUMERIC_ODEINT_UTIL_STATE_WRAPPER_HPP_INCLUDED

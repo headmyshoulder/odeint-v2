@@ -1,12 +1,22 @@
 /*
- * observer_collection.hpp
- *
- *  Created on: Jul 17, 2011
- *      Author: karsten
+ [auto_generated]
+ boost/numeric/odeint/integrate/observer_collection.hpp
+
+ [begin_description]
+ Collection of observers, which are all called during the evolution of the ODE.
+ [end_description]
+
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_OBSERVER_COLLECTION_HPP_
-#define BOOST_NUMERIC_ODEINT_INTEGRATE_OBSERVER_COLLECTION_HPP_
+
+#ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_OBSERVER_COLLECTION_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_INTEGRATE_OBSERVER_COLLECTION_HPP_INCLUDED
 
 #include <vector>
 
@@ -43,4 +53,4 @@ private:
 } // namespace boost
 
 
-#endif /* BOOST_NUMERIC_ODEINT_INTEGRATE_OBSERVER_COLLECTION_HPP_ */
+#endif // BOOST_NUMERIC_ODEINT_INTEGRATE_OBSERVER_COLLECTION_HPP_INCLUDED

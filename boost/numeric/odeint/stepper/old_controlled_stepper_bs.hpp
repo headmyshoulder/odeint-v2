@@ -1,21 +1,23 @@
-/* Boost odeint/controlled_stepper_bs.hpp header file
+/*
+ [auto_generated]
+ boost/numeric/odeint/stepper/old_controlled_stepper_bs.hpp
  
- Copyright 2009 Karsten Ahnert
- Copyright 2009 Mario Mulansky
+ [begin_description]
+ Implementation of Burlish-Stoer from odeint-v1.
+ [end_description]
  
- This file includes the explicit Burlisch Stoer 
- solver for ordinary differential equations.
-
- It solves any ODE dx/dt = f(x,t) via
- x(t+dt) = x(t) + dt*f(x,t)
-
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+ 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
-#ifndef BOOST_NUMERIC_ODEINT_CONTROLLED_STEPPER_BS_HPP
-#define BOOST_NUMERIC_ODEINT_CONTROLLED_STEPPER_BS_HPP
+
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_OLD_CONTROLLED_STEPPER_BS_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STEPPER_OLD_CONTROLLED_STEPPER_BS_HPP_INCLUDED
+
 
 #include <limits>
 #include <vector>
@@ -378,4 +380,4 @@ namespace odeint {
 }
 }
 
-#endif
+#endif // BOOST_NUMERIC_ODEINT_STEPPER_OLD_CONTROLLED_STEPPER_BS_HPP_INCLUDED

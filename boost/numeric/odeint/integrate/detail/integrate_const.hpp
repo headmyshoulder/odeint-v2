@@ -1,12 +1,22 @@
 /*
- * integrate_const_stepper.hpp
- *
- *  Created on: Jan 31, 2011
- *      Author: karsten
+ [auto_generated]
+ boost/numeric/odeint/integrate/detail/integrate_const.hpp
+
+ [begin_description]
+ Default integrate_const implementaiton
+ [end_description]
+
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_DETAIL_INTEGRATE_CONST_HPP_
-#define BOOST_NUMERIC_ODEINT_INTEGRATE_DETAIL_INTEGRATE_CONST_HPP_
+
+#ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_DETAIL_INTEGRATE_CONST_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_INTEGRATE_DETAIL_INTEGRATE_CONST_HPP_INCLUDED
 
 #include <boost/numeric/odeint/integrate/detail/integrate_adaptive.hpp>
 
@@ -25,23 +35,23 @@ namespace detail {
  */
 template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate_const(
-		Stepper stepper , System system , State &start_state ,
-		Time start_time , Time end_time , Time dt ,
-		Observer observer , stepper_tag
-		)
+        Stepper stepper , System system , State &start_state ,
+        Time start_time , Time end_time , Time dt ,
+        Observer observer , stepper_tag
+)
 {
-	typename boost::unwrap_reference< Observer >::type &obs = observer;
+    typename boost::unwrap_reference< Observer >::type &obs = observer;
 
-	size_t count = 0;
-	while( start_time < end_time )
-	{
-		obs( start_state , start_time );
-		stepper.do_step( system , start_state , start_time , dt );
-		start_time += dt;
-		++count;
-	}
-	obs( start_state , start_time );
-	return count;
+    size_t count = 0;
+    while( start_time < end_time )
+    {
+        obs( start_state , start_time );
+        stepper.do_step( system , start_state , start_time , dt );
+        start_time += dt;
+        ++count;
+    }
+    obs( start_state , start_time );
+    return count;
 }
 
 
@@ -52,26 +62,26 @@ size_t integrate_const(
  */
 template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate_const(
-		Stepper stepper , System system , State &start_state ,
-		Time &start_time , Time end_time , Time &dt ,
-		Observer observer , controlled_stepper_tag
-		)
+        Stepper stepper , System system , State &start_state ,
+        Time &start_time , Time end_time , Time &dt ,
+        Observer observer , controlled_stepper_tag
+)
 {
-	typename boost::unwrap_reference< Observer >::type &obs = observer;
+    typename boost::unwrap_reference< Observer >::type &obs = observer;
 
-	size_t count = 0;
-	Time time_step = dt;
-	while( start_time < end_time )
-	{
-		obs( start_state , start_time );
-		Time next_time = start_time + time_step;
-		if( next_time > end_time ) next_time = end_time;
-		count += detail::integrate_adaptive(
-					stepper , system , start_state , start_time , next_time , dt ,
-					do_nothing_observer() , controlled_stepper_tag() );
-	}
-	obs( start_state , start_time );
-	return count;
+    size_t count = 0;
+    Time time_step = dt;
+    while( start_time < end_time )
+    {
+        obs( start_state , start_time );
+        Time next_time = start_time + time_step;
+        if( next_time > end_time ) next_time = end_time;
+        count += detail::integrate_adaptive(
+                stepper , system , start_state , start_time , next_time , dt ,
+                do_nothing_observer() , controlled_stepper_tag() );
+    }
+    obs( start_state , start_time );
+    return count;
 }
 
 
@@ -83,32 +93,32 @@ size_t integrate_const(
  */
 template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate_const(
-		Stepper stepper , System system , State &start_state ,
-		Time start_time , Time end_time , Time dt ,
-		Observer observer , dense_output_stepper_tag )
+        Stepper stepper , System system , State &start_state ,
+        Time start_time , Time end_time , Time dt ,
+        Observer observer , dense_output_stepper_tag )
 {
-	typename boost::unwrap_reference< Observer >::type &obs = observer;
+    typename boost::unwrap_reference< Observer >::type &obs = observer;
 
-	stepper.initialize( start_state , start_time , dt );
+    stepper.initialize( start_state , start_time , dt );
 
-	size_t count = 0;
-	while( start_time < end_time )
-	{
-		while( ( start_time < stepper.current_time() ) && ( start_time < end_time ) )
-		{
-			stepper.calc_state( start_time , start_state );
-			obs( start_state , start_time );
-			start_time += dt;
-		}
+    size_t count = 0;
+    while( start_time < end_time )
+    {
+        while( ( start_time < stepper.current_time() ) && ( start_time < end_time ) )
+        {
+            stepper.calc_state( start_time , start_state );
+            obs( start_state , start_time );
+            start_time += dt;
+        }
 
-		// we have not reached the end, do another real step
-		if( start_time < end_time )
-		{
-			stepper.do_step( system );
-			++count;
-		}
-	}
-	return count;
+        // we have not reached the end, do another real step
+        if( start_time < end_time )
+        {
+            stepper.do_step( system );
+            ++count;
+        }
+    }
+    return count;
 }
 
 
@@ -117,4 +127,4 @@ size_t integrate_const(
 } // namespace numeric
 } // namespace boost
 
-#endif /* BOOST_NUMERIC_ODEINT_INTEGRATE_DETAIL_INTEGRATE_CONST_HPP_ */
+#endif // BOOST_NUMERIC_ODEINT_INTEGRATE_DETAIL_INTEGRATE_CONST_HPP_INCLUDED

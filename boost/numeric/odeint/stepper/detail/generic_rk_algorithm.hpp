@@ -1,12 +1,22 @@
 /*
- * generic_rk_algorithm.hpp
- *
- *  Created on: Jun 3, 2011
- *      Author: mario
+ [auto_generated]
+ boost/numeric/odeint/stepper/detail/generic_rk_algorithm.hpp
+
+ [begin_description]
+ Implementation of the generic Runge-Kutta method.
+ [end_description]
+
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef GENERIC_RK_ALGORITHM_HPP_
-#define GENERIC_RK_ALGORITHM_HPP_
+
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_DETAIL_GENERIC_RK_ALGORITHM_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STEPPER_DETAIL_GENERIC_RK_ALGORITHM_HPP_INCLUDED
 
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/push_back.hpp>
@@ -58,47 +68,47 @@ struct stage_wrapper
 
 
 template<
-    size_t StageCount,
-    class Value = double ,
-    class Algebra = range_algebra,
-    class Operations = default_operations
-    >
+size_t StageCount,
+class Value = double ,
+class Algebra = range_algebra,
+class Operations = default_operations
+>
 class generic_rk_algorithm {
 
 public:
     typedef mpl::range_c< size_t , 1 , StageCount > stage_indices;
 
     typedef typename fusion::result_of::as_vector
-    <
-        typename mpl::copy
-        <
+            <
+            typename mpl::copy
+            <
             stage_indices ,
             mpl::inserter
             <
-                mpl::vector0< > ,
-                mpl::push_back< mpl::_1 , array_wrapper< Value , mpl::_2 > >
-            >
-        >::type
+            mpl::vector0< > ,
+            mpl::push_back< mpl::_1 , array_wrapper< Value , mpl::_2 > >
+    >
+    >::type
     >::type coef_a_type;
 
     typedef boost::array< Value , StageCount > coef_b_type;
     typedef boost::array< Value , StageCount > coef_c_type;
 
     typedef typename fusion::result_of::as_vector
-    <
-        typename mpl::push_back
-        <
+            <
+            typename mpl::push_back
+            <
             typename mpl::copy
             <
-                stage_indices,
-                mpl::inserter
-                <
-                    mpl::vector0<> ,
-                    mpl::push_back< mpl::_1 , stage_wrapper< Value , mpl::_2 > >
-                >
-            >::type ,
-            stage< Value , StageCount >
-        >::type
+            stage_indices,
+            mpl::inserter
+            <
+            mpl::vector0<> ,
+            mpl::push_back< mpl::_1 , stage_wrapper< Value , mpl::_2 > >
+    >
+    >::type ,
+    stage< Value , StageCount >
+    >::type
     >::type stage_vector_base;
 
 
@@ -128,7 +138,7 @@ public:
             std::ostream &m_os;
 
             print_butcher( const stage_vector_base &base , std::ostream &os )
-                : m_base( base ) , m_os( os )
+            : m_base( base ) , m_os( os )
             { }
 
             template<class Index>
@@ -159,7 +169,7 @@ public:
 
 
     template< class System , class StateIn , class StateTemp , class DerivIn , class Deriv ,
-               class StateOut , class Time >
+    class StateOut , class Time >
     struct calculate_stage
     {
         Algebra &algebra;
@@ -173,7 +183,7 @@ public:
         const Time dt;
 
         calculate_stage( Algebra &_algebra , System &_system , const StateIn &_x , const DerivIn &_dxdt , StateOut &_out ,
-            StateTemp &_x_tmp , Deriv *_F , const Time &_t , const Time &_dt )
+                StateTemp &_x_tmp , Deriv *_F , const Time &_t , const Time &_dt )
         : algebra( _algebra ) , system( _system ) , x( _x ) , x_tmp( _x_tmp ) , x_out( _out) , dxdt( _dxdt ) , F( _F ) , t( _t ) , dt( _dt )
         {}
 
@@ -184,45 +194,45 @@ public:
         {
             if( stage_number > 1 )
             {
-                #ifdef BOOST_MSVC
-                #pragma warning( disable : 4307 34 )
-                #endif
+#ifdef BOOST_MSVC
+#pragma warning( disable : 4307 34 )
+#endif
                 system( x_tmp , F[stage_number-2].m_v , t + stage.c * dt );
-                #ifdef BOOST_MSVC
-                #pragma warning( default : 4307 34 )
-                #endif
+#ifdef BOOST_MSVC
+#pragma warning( default : 4307 34 )
+#endif
             }
             //std::cout << stage_number-2 << ", t': " << t + stage.c * dt << std::endl;
 
             if( stage_number < StageCount )
                 detail::template generic_rk_call_algebra< stage_number , Algebra >()( algebra , x_tmp , x , dxdt , F ,
-                            detail::generic_rk_scale_sum< stage_number , Operations , Value , Time >( stage.a , dt) );
-//                  algebra_type::template for_eachn<stage_number>( x_tmp , x , dxdt , F ,
-//                          typename operations_type::template scale_sumn< stage_number , time_type >( stage.a , dt ) );
+                        detail::generic_rk_scale_sum< stage_number , Operations , Value , Time >( stage.a , dt) );
+            //                  algebra_type::template for_eachn<stage_number>( x_tmp , x , dxdt , F ,
+            //                          typename operations_type::template scale_sumn< stage_number , time_type >( stage.a , dt ) );
             else
                 detail::template generic_rk_call_algebra< stage_number , Algebra >()( algebra , x_out , x , dxdt , F ,
-                            detail::generic_rk_scale_sum< stage_number , Operations , Value , Time >( stage.a , dt ) );
-//                algebra_type::template for_eachn<stage_number>( x_out , x , dxdt , F ,
-//                            typename operations_type::template scale_sumn< stage_number , time_type >( stage.a , dt ) );
+                        detail::generic_rk_scale_sum< stage_number , Operations , Value , Time >( stage.a , dt ) );
+            //                algebra_type::template for_eachn<stage_number>( x_out , x , dxdt , F ,
+            //                            typename operations_type::template scale_sumn< stage_number , time_type >( stage.a , dt ) );
         }
 
     };
 
     generic_rk_algorithm( const coef_a_type &a , const coef_b_type &b , const coef_c_type &c )
-        : m_stages( a , b , c )
+    : m_stages( a , b , c )
     { }
 
     template< class System , class StateIn , class DerivIn , class Time , class StateOut , class StateTemp , class Deriv >
     void inline do_step( Algebra &algebra , System system , const StateIn &in , const DerivIn &dxdt ,
-                    const Time &t , StateOut &out , const Time &dt ,
-                    StateTemp &x_tmp , Deriv F[StageCount-1] )
+            const Time &t , StateOut &out , const Time &dt ,
+            StateTemp &x_tmp , Deriv F[StageCount-1] )
     {
         fusion::for_each( m_stages , calculate_stage<
                 System , StateIn , StateTemp , DerivIn , Deriv , StateOut , Time >
-            ( algebra , system , in , dxdt , out , x_tmp , F , t , dt ) );
+        ( algebra , system , in , dxdt , out , x_tmp , F , t , dt ) );
     }
 
-private:
+    private:
     stage_vector m_stages;
 };
 
@@ -232,4 +242,4 @@ private:
 }
 }
 
-#endif /* GENERIC_RK_ALGORITHM_HPP_ */
+#endif // BOOST_NUMERIC_ODEINT_STEPPER_DETAIL_GENERIC_RK_ALGORITHM_HPP_INCLUDED

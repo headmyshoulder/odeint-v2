@@ -1,19 +1,22 @@
-/* Boost odeint.hpp header file
+/*
+ [auto_generated]
+ boost/numeric/odeint.hpp
 
- Copyright 2009 Karsten Ahnert
- Copyright 2009 Mario Mulansky
- Copyright 2009 Andre Bergner
+ [begin_description]
+ Forward include for odeint. Includes nearly everything.
+ [end_description]
 
- This file includes *all* headers needed for integration of ordinary differential equations.
-
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
  copy at http://www.boost.org/LICENSE_1_0.txt)
-*/
+ */
 
-#ifndef BOOST_NUMERIC_ODEINT_HPP
-#define BOOST_NUMERIC_ODEINT_HPP
+
+#ifndef BOOST_NUMERIC_ODEINT_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_HPP_INCLUDED
 
 #include <boost/config.hpp>
 
@@ -48,4 +51,5 @@
 
 #include <boost/numeric/odeint/integrate/observer_collection.hpp>
 
-#endif // BOOST_NUMERIC_ODEINT_HPP
+#endif // BOOST_NUMERIC_ODEINT_HPP_INCLUDED
+

@@ -1,11 +1,23 @@
 /*
- *  integrate_const.hpp
- *  Created on: Jan 31, 2011
- *      Author: karsten
+ [auto_generated]
+ boost/numeric/odeint/integrate/integrate_const.hpp
+
+ [begin_description]
+ Constant integration of ODEs, meaning that the state of the ODE is observed on constant time intervals.
+ The routines makes full use of adaptive and dense-output methods.
+ [end_description]
+
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_CONST_HPP_
-#define BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_CONST_HPP_
+
+#ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_CONST_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_CONST_HPP_INCLUDED
 
 #include <boost/type_traits/is_same.hpp>
 
@@ -27,55 +39,55 @@ namespace odeint {
  */
 template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate_const(
-		Stepper stepper , System system , State &start_state ,
-		Time start_time , Time end_time , Time dt ,
-		Observer observer
-		)
+        Stepper stepper , System system , State &start_state ,
+        Time start_time , Time end_time , Time dt ,
+        Observer observer
+)
 {
-	// we want to get as fast as possible to the end
-	if( boost::is_same< do_nothing_observer , Observer >::value )
-	{
-	    /**
-	     * ToDo: discuss if it actually makes sense to call integrate_adaptive
-	     * from an integrate_const routine! (mario)
-	     */
-		return detail::integrate_adaptive(
-				stepper , system , start_state ,
-				start_time , end_time  , dt ,
-				observer , typename Stepper::stepper_category() );
-	}
-	else
-	{
-		return detail::integrate_const(
-				stepper , system , start_state ,
-				start_time , end_time  , dt ,
-				observer , typename Stepper::stepper_category() );
-	}
+    // we want to get as fast as possible to the end
+    if( boost::is_same< do_nothing_observer , Observer >::value )
+    {
+        /**
+         * ToDo: discuss if it actually makes sense to call integrate_adaptive
+         * from an integrate_const routine! (mario)
+         */
+        return detail::integrate_adaptive(
+                stepper , system , start_state ,
+                start_time , end_time  , dt ,
+                observer , typename Stepper::stepper_category() );
+    }
+    else
+    {
+        return detail::integrate_const(
+                stepper , system , start_state ,
+                start_time , end_time  , dt ,
+                observer , typename Stepper::stepper_category() );
+    }
 }
 
 
 template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate_const(
-		Stepper stepper , System system , const State &start_state ,
-		Time start_time , Time end_time , Time dt ,
-		Observer observer
-		)
+        Stepper stepper , System system , const State &start_state ,
+        Time start_time , Time end_time , Time dt ,
+        Observer observer
+)
 {
-	// we want to get as fast as possible to the end
-	if( boost::is_same< do_nothing_observer , Observer >::value )
-	{
-		return detail::integrate_adaptive(
-				stepper , system , start_state ,
-				start_time , end_time  , dt ,
-				observer , typename Stepper::stepper_category() );
-	}
-	else
-	{
-		return detail::integrate_const(
-				stepper , system , start_state ,
-				start_time , end_time  , dt ,
-				observer , typename Stepper::stepper_category() );
-	}
+    // we want to get as fast as possible to the end
+    if( boost::is_same< do_nothing_observer , Observer >::value )
+    {
+        return detail::integrate_adaptive(
+                stepper , system , start_state ,
+                start_time , end_time  , dt ,
+                observer , typename Stepper::stepper_category() );
+    }
+    else
+    {
+        return detail::integrate_const(
+                stepper , system , start_state ,
+                start_time , end_time  , dt ,
+                observer , typename Stepper::stepper_category() );
+    }
 }
 
 
@@ -87,20 +99,20 @@ size_t integrate_const(
  */
 template< class Stepper , class System , class State , class Time >
 size_t integrate_const(
-		Stepper stepper , System system , State &start_state ,
-		Time start_time , Time end_time , Time dt
-		)
+        Stepper stepper , System system , State &start_state ,
+        Time start_time , Time end_time , Time dt
+)
 {
-	return integrate_const( stepper , system , start_state , start_time , end_time , dt , do_nothing_observer() );
+    return integrate_const( stepper , system , start_state , start_time , end_time , dt , do_nothing_observer() );
 }
 
 template< class Stepper , class System , class State , class Time >
 size_t integrate_const(
-		Stepper stepper , System system , const State &start_state ,
-		Time start_time , Time end_time , Time dt
-		)
+        Stepper stepper , System system , const State &start_state ,
+        Time start_time , Time end_time , Time dt
+)
 {
-	return integrate_const( stepper , system , start_state , start_time , end_time , dt , do_nothing_observer() );
+    return integrate_const( stepper , system , start_state , start_time , end_time , dt , do_nothing_observer() );
 }
 
 
@@ -115,4 +127,4 @@ size_t integrate_const(
 
 
 
-#endif /* BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_CONST_HPP_ */
+#endif // BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_CONST_HPP_INCLUDED

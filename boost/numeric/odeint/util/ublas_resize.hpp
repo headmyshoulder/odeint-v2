@@ -1,16 +1,23 @@
 /*
- boost header: BOOST_NUMERIC_ODEINT/ublas_resize.hpp
+ [auto_generated]
+ boost/numeric/odeint/util/ublas_resize.hpp
 
- Copyright 2009 Karsten Ahnert
- Copyright 2009 Mario Mulansky
+ [begin_description]
+ Resizing for ublas::vector and ublas::matrix
+ [end_description]
+
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
  copy at http://www.boost.org/LICENSE_1_0.txt)
-*/
+ */
+
 
 #ifndef BOOST_NUMERIC_ODEINT_UTIL_UBLAS_RESIZE_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_UTIL_UBLAS_RESIZE_HPP_INCLUDED
+
 
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
@@ -39,17 +46,17 @@ struct is_resizeable< boost::numeric::ublas::vector< T , A > >
 template< class T , class L , class A >
 struct is_resizeable< boost::numeric::ublas::matrix< T , L , A > >
 {
-	struct type : public boost::true_type { };
-	const static bool value = type::value;
+    struct type : public boost::true_type { };
+    const static bool value = type::value;
 };
 
 template< class T , class L , class A >
 struct resize_impl< boost::numeric::ublas::matrix< T , L , A > , boost::numeric::ublas::matrix< T , L , A > >
 {
-	static void resize( const boost::numeric::ublas::matrix< T , L , A > &x1 , boost::numeric::ublas::matrix< T , L , A > &x2 )
-	{
-		x2.resize( x1.size1() , x1.size2() );
-	}
+    static void resize( const boost::numeric::ublas::matrix< T , L , A > &x1 , boost::numeric::ublas::matrix< T , L , A > &x2 )
+    {
+        x2.resize( x1.size1() , x1.size2() );
+    }
 };
 
 
@@ -59,10 +66,10 @@ struct resize_impl< boost::numeric::ublas::matrix< T , L , A > , boost::numeric:
 template< class T , class L , class A >
 struct same_size_impl< boost::numeric::ublas::matrix< T , L , A > , boost::numeric::ublas::matrix< T , L , A > >
 {
-	static bool same_size( const boost::numeric::ublas::matrix< T , L , A > &x1 , const boost::numeric::ublas::matrix< T , L , A > &x2 )
-	{
-		return ( ( x1.size1() == x2.size1() ) && ( x1.size2() == x2.size2() ) );
-	}
+    static bool same_size( const boost::numeric::ublas::matrix< T , L , A > &x1 , const boost::numeric::ublas::matrix< T , L , A > &x2 )
+    {
+        return ( ( x1.size1() == x2.size1() ) && ( x1.size2() == x2.size2() ) );
+    }
 };
 
 
@@ -70,7 +77,7 @@ template< class T_V , class A_V , class T_M , class L_M , class A_M >
 struct resize_impl< boost::numeric::ublas::vector< T_V , A_V > , boost::numeric::ublas::matrix< T_M , L_M , A_M > >
 {
     static void resize( const boost::numeric::ublas::vector< T_V , A_V > &x1 ,
-                          boost::numeric::ublas::matrix< T_M , L_M , A_M > &x2 )
+            boost::numeric::ublas::matrix< T_M , L_M , A_M > &x2 )
     {
         x2.resize( x1.size() , x1.size() );
     }
@@ -80,7 +87,7 @@ template< class T_V , class A_V , class T_M , class L_M , class A_M >
 struct same_size_impl< boost::numeric::ublas::vector< T_V , A_V > , boost::numeric::ublas::matrix< T_M , L_M , A_M > >
 {
     static bool same_size( const boost::numeric::ublas::vector< T_V , A_V > &x1 ,
-                             const boost::numeric::ublas::matrix< T_M , L_M , A_M > &x2 )
+            const boost::numeric::ublas::matrix< T_M , L_M , A_M > &x2 )
     {
         return ( ( x1.size() == x2.size1() ) && ( x1.size() == x2.size2() ) );
     }
@@ -110,17 +117,17 @@ struct is_resizeable< boost::numeric::ublas::permutation_matrix< T , A > >
 
 namespace boost
 {
-    template< class T , class L , class A >
-    struct range_mutable_iterator< boost::numeric::ublas::matrix< T , L , A > >
-    {
-        typedef typename boost::numeric::ublas::matrix< T , L , A >::array_type::iterator type;
-    };
+template< class T , class L , class A >
+struct range_mutable_iterator< boost::numeric::ublas::matrix< T , L , A > >
+{
+    typedef typename boost::numeric::ublas::matrix< T , L , A >::array_type::iterator type;
+};
 
-    template< class T , class L , class A >
-    struct range_const_iterator< boost::numeric::ublas::matrix< T , L , A > >
-    {
-        typedef typename boost::numeric::ublas::matrix< T , L , A >::array_type::const_iterator type;
-    };
+template< class T , class L , class A >
+struct range_const_iterator< boost::numeric::ublas::matrix< T , L , A > >
+{
+    typedef typename boost::numeric::ublas::matrix< T , L , A >::array_type::const_iterator type;
+};
 
 } // namespace boost
 
@@ -158,4 +165,4 @@ range_end( const matrix< T , L , A > &x )
 } } } // nampespace boost::numeric::ublas
 
 
-#endif /* BOOST_NUMERIC_ODEINT_UTIL_UBLAS_RESIZE_HPP_INCLUDED */
+#endif // BOOST_NUMERIC_ODEINT_UTIL_UBLAS_RESIZE_HPP_INCLUDED
