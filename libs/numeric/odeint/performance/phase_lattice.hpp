@@ -22,12 +22,16 @@ struct phase_lattice
 
 	void inline operator()( const state_type &x , state_type &dxdt , const double t ) const
 	{
-		dxdt[0] = m_omega[0] + sin( x[1] - x[0] );
+	    double c = 0.0;
 
-		for( size_t i=1 ; i<N-1 ; ++i )
-			dxdt[i] = m_omega[i] + sin( x[i] - x[i-1] ) + sin( x[i+1] - x[i] );
+		for( size_t i=0 ; i<N-1 ; ++i )
+		{
+		    dxdt[i] = m_omega[i] + c;
+		    c = sin( x[i+1] - x[i] );
+		    dxdt[i] += c;
+		}
 
-		dxdt[N-1] = m_omega[N-1] + sin( x[N-1] - x[N-2] );
+		//dxdt[N-1] = m_omega[N-1] + sin( x[N-1] - x[N-2] );
 	}
 
 };

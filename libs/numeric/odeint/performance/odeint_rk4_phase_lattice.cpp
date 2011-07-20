@@ -20,7 +20,7 @@
 const size_t N = 1024;
 
 typedef boost::array< double , N > state_type;
-typedef boost::numeric::odeint::runge_kutta4< state_type > rk4_odeint_type;
+typedef boost::numeric::odeint::runge_kutta4_classic< state_type , double , state_type , double , boost::numeric::odeint::array_algebra> rk4_odeint_type;
 
 class odeint_wrapper
 {

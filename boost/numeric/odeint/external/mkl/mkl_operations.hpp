@@ -62,8 +62,9 @@ struct mkl_operations
             {
                 dcopy( &n , &(t2[0]) , &one , &(t1[0]) , &one );
             }
-
-            daxpby( &n , &m_alpha2 , &(t3[0]) , &one , &m_alpha1 , &(t1[0]) , &one );
+            dscal( &n , &m_alpha1 , &(t1[0]) , &one );
+            daxpy( &n , &m_alpha2 , &(t3[0]) , &one , &(t1[0]) , &one );
+            //daxpby( &n , &m_alpha2 , &(t3[0]) , &one , &m_alpha1 , &(t1[0]) , &one );
         }
     };
 
@@ -92,8 +93,9 @@ struct mkl_operations
             {
                 dcopy( &n , &(t2[0]) , &one , &(t1[0]) , &one );
             }
-
-            daxpby( &n , &m_alpha2 , &(t3[0]) , &one , &m_alpha1 , &(t1[0]) , &one );
+            dscal( &n , &m_alpha1 , &(t1[0]) , &one );
+            daxpy( &n , &m_alpha2 , &(t3[0]) , &one , &(t1[0]) , &one );
+            //daxpby( &n , &m_alpha2 , &(t3[0]) , &one , &m_alpha1 , &(t1[0]) , &one );
             daxpy( &n , &m_alpha3 , &(t4[0]) , &one , &(t1[0]) , &one );
         }
     };
@@ -126,7 +128,9 @@ struct mkl_operations
                 dcopy( &n , &(t2[0]) , &one , &(t1[0]) , &one );
             }
 
-            daxpby( &n , &m_alpha2 , &(t3[0]) , &one , &m_alpha1 , &(t1[0]) , &one );
+            dscal( &n , &m_alpha1 , &(t1[0]) , &one );
+            daxpy( &n , &m_alpha2 , &(t3[0]) , &one , &(t1[0]) , &one );
+            //daxpby( &n , &m_alpha2 , &(t3[0]) , &one , &m_alpha1 , &(t1[0]) , &one );
             daxpy( &n , &m_alpha3 , &(t4[0]) , &one , &(t1[0]) , &one );
             daxpy( &n , &m_alpha4 , &(t5[0]) , &one , &(t1[0]) , &one );
         }
@@ -163,7 +167,9 @@ struct mkl_operations
                 dcopy( &n , &(t2[0]) , &one , &(t1[0]) , &one );
             }
 
-            daxpby( &n , &m_alpha2 , &(t3[0]) , &one , &m_alpha1 , &(t1[0]) , &one );
+            dscal( &n , &m_alpha1 , &(t1[0]) , &one );
+            daxpy( &n , &m_alpha2 , &(t3[0]) , &one , &(t1[0]) , &one );
+            //daxpby( &n , &m_alpha2 , &(t3[0]) , &one , &m_alpha1 , &(t1[0]) , &one );
             daxpy( &n , &m_alpha3 , &(t4[0]) , &one , &(t1[0]) , &one );
             daxpy( &n , &m_alpha4 , &(t5[0]) , &one , &(t1[0]) , &one );
             daxpy( &n , &m_alpha5 , &(t6[0]) , &one , &(t1[0]) , &one );
