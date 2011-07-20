@@ -25,6 +25,8 @@
 #include <cmath>
 #include <iostream>
 
+#include <boost/numeric/odeint/config.hpp>
+
 #include <boost/array.hpp>
 
 #include <boost/test/unit_test.hpp>
@@ -49,6 +51,7 @@
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg78.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 #include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
@@ -204,6 +207,7 @@ template< class State > class stepper_methods : public mpl::vector<
 	runge_kutta_cash_karp54_classic< State , double , State , double , typename algebra_dispatcher< State >::type > ,
 	runge_kutta_cash_karp54< State , double , State , double , typename algebra_dispatcher< State >::type > ,
 	runge_kutta_dopri5< State , double , State , double , typename algebra_dispatcher< State >::type >
+    //runge_kutta_fehlberg78< State , double , State , double , typename algebra_dispatcher< State >::type >
 > { };
 
 

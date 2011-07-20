@@ -17,6 +17,10 @@
 #include <string>
 #include <fstream>
 
+#ifndef M_PI //not there on windows
+#define M_PI 3.1415927 //...
+#endif
+
 #include <boost/numeric/odeint.hpp>
 
 #include <boost/numeric/odeint/util/ublas_wrapper.hpp>
@@ -130,7 +134,7 @@ int main( int argc , char **argv )
 
     for( size_t i=(size1/2-10) ; i<(size1/2+10) ; ++i )
         for( size_t j=(size2/2-10) ; j<(size2/2+10) ; ++j )
-            x( i , j ) = drand48() * 2.0 * M_PI;
+            x( i , j ) = rand() * 2.0 * M_PI;
 
     write_snapshots snapshots;
     snapshots.snapshots().insert( make_pair( size_t( 0 ) , string( "lat_0000.dat" ) ) );

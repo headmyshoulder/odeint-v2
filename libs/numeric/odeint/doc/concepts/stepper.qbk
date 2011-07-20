@@ -69,10 +69,10 @@ tba.
 
 [section Models]
 
-* explicit_rk4
-* explicit_euler
-* explicit_error_rk54_ck
-* explicit_error_dopri5
+* runge_kutta4
+* euler
+* runge_kutta_cash_karp54
+* runge_kutta_dopri5
 
 [endsect]
 

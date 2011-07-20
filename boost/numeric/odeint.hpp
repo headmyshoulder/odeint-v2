@@ -18,7 +18,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_HPP_INCLUDED
 
-#include <boost/config.hpp>
+#include <boost/numeric/odeint/config.hpp>
 
 #include <boost/numeric/odeint/stepper/euler.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta4_classic.hpp>

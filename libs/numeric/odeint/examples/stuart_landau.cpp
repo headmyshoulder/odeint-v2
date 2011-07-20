@@ -14,7 +14,7 @@
 
 #include <iostream>
 #include <complex>
-#include <tr1/array>
+#include <boost/array.hpp>
 
 #include <boost/numeric/odeint.hpp>
 
@@ -22,7 +22,7 @@ using namespace std;
 using namespace boost::numeric::odeint;
 
 //[ stuart_landau_system_function
-typedef tr1::array< complex< double > , 1 > state_type;
+typedef boost::array< complex< double > , 1 > state_type;
 
 struct stuart_landau
 {

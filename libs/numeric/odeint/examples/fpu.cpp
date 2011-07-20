@@ -14,9 +14,14 @@
 
 #include <iostream>
 #include <numeric>
-#include <tr1/array>
+#include <cmath>
+#include <vector>
 
 #include <boost/numeric/odeint.hpp>
+
+#ifndef M_PI //not there on windows
+#define M_PI 3.1415927 //...
+#endif
 
 using namespace std;
 using namespace boost::numeric::odeint;

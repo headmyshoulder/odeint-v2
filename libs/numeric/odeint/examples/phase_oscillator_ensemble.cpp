@@ -18,6 +18,10 @@
 
 #include <boost/numeric/odeint.hpp>
 
+#ifndef M_PI //not there on windows
+#define M_PI 3.1415927 //...
+#endif
+
 #include <boost/random.hpp>
 
 using namespace std;
