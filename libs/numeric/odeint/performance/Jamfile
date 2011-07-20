@@ -17,6 +17,12 @@ project
 lib libgsl : : <name>gsl ;
 lib libgslcblas : : <name>gslcblas ;
 
+lib libmkl : : <name>mkl_intel_lp64 <link>shared ;
+lib libmkl_core : : <name>mkl_core <link>shared ;
+lib libmkl_intel_thread : : <name>mkl_intel_thread ;
+lib libiomp5 : : <name>iomp5 ;
+lib libpthread : : <name>pthread ;
+
 exe odeint_rk4_lorenz_array
     : odeint_rk4_lorenz_array.cpp
     ;
@@ -47,5 +53,9 @@ exe odeint_rk4_phase_lattice
     ;
     
 exe odeint_rk4_phase_lattice_mkl
-    : odeint_rk4_phase_lattice_mkl.cpp
-    ;    
+    : odeint_rk4_phase_lattice_mkl.cpp libpthread libiomp5 libmkl_core libmkl_intel_thread libmkl
+    ;
+    
+exe nr_rk4_phase_lattice
+    : nr_rk4_phase_lattice.cpp
+    ;

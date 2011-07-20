@@ -4,6 +4,8 @@
 
  [begin_description]
  Wrapper classes for intel math kernel library types.
+ Get a free, non-commercial download of MKL at
+ http://software.intel.com/en-us/articles/non-commercial-software-download/
  [end_description]
 
  Copyright 2009-2011 Karsten Ahnert
