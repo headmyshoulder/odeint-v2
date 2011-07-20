@@ -18,6 +18,8 @@
 #ifndef BOOST_NUMERIC_ODEINT_EXTERNAL_MKL_MKL_OPERATIONS_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_EXTERNAL_MKL_MKL_OPERATIONS_HPP_INCLUDED
 
+#include <iostream>
+
 #include <mkl_blas.h>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
 
@@ -36,8 +38,7 @@ struct mkl_operations
 {
     //template< class Fac1 , class Fac2 > struct scale_sum2;
 
-
-    template< class F1 , class F2 >
+    template< class F1 = double , class F2 = F1 >
     struct scale_sum2
     {
         typedef double Fac1;
@@ -49,15 +50,121 @@ struct mkl_operations
 
         template< class T1 , class T2 , class T3 >
         void operator()( T1 &t1 , const T2 &t2 , const T3 &t3) const
-        {
+        {   // t1 = m_alpha1 * t2 + m_alpha2 * t3;
             // we get Containers that have size() and [i]-access
+
             const int n = t1.size();
             const int one = 1;
             //boost::numeric::odeint::copy( t1 , t3 );
-            t1 = t2;
-            if ( m_alpha1 != 1.0 )
-                dscal( &n , &m_alpha1 , &(t1[0]) , &one );
-            daxpy( &n , &m_alpha2 , &(t3[0]) , &one , &(t1[0]) , &one );
+            if( &(t2[0]) != &(t1[0]) )
+            {
+                dcopy( &n , &(t2[0]) , &one , &(t1[0]) , &one );
+            }
+
+            daxpby( &n , &m_alpha2 , &(t3[0]) , &one , &m_alpha1 , &(t1[0]) , &one );
+        }
+    };
+
+    template< class F1 = double , class F2 = F1 , class F3 = F2 >
+    struct scale_sum3
+    {
+        typedef double Fac1;
+        typedef double Fac2;
+        typedef double Fac3;
+        const Fac1 m_alpha1;
+        const Fac2 m_alpha2;
+        const Fac3 m_alpha3;
+
+        scale_sum3( const Fac1 alpha1 , const Fac2 alpha2 , const Fac3 alpha3 )
+            : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) { }
+
+        template< class T1 , class T2 , class T3 , class T4 >
+        void operator()( T1 &t1 , const T2 &t2 , const T3 &t3 , const T4 &t4 ) const
+        {   // t1 = m_alpha1 * t2 + m_alpha2 * t3 + m_alpha3 * t4;
+            // we get Containers that have size() and [i]-access
+
+            const int n = t1.size();
+            const int one = 1;
+            //boost::numeric::odeint::copy( t1 , t3 );
+            if( &(t2[0]) != &(t1[0]) )
+            {
+                dcopy( &n , &(t2[0]) , &one , &(t1[0]) , &one );
+            }
+
+            daxpby( &n , &m_alpha2 , &(t3[0]) , &one , &m_alpha1 , &(t1[0]) , &one );
+            daxpy( &n , &m_alpha3 , &(t4[0]) , &one , &(t1[0]) , &one );
+        }
+    };
+
+    template< class F1 = double , class F2 = F1 , class F3 = F2 , class F4 = F3 >
+    struct scale_sum4
+    {
+        typedef double Fac1;
+        typedef double Fac2;
+        typedef double Fac3;
+        typedef double Fac4;
+        const Fac1 m_alpha1;
+        const Fac2 m_alpha2;
+        const Fac3 m_alpha3;
+        const Fac4 m_alpha4;
+
+        scale_sum4( const Fac1 alpha1 , const Fac2 alpha2 , const Fac3 alpha3 , const Fac4 alpha4 )
+            : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) , m_alpha4( alpha4 ) { }
+
+        template< class T1 , class T2 , class T3 , class T4 , class T5 >
+        void operator()( T1 &t1 , const T2 &t2 , const T3 &t3 , const T4 &t4 , const T5 &t5 ) const
+        {   // t1 = m_alpha1 * t2 + m_alpha2 * t3 + m_alpha3 * t4 + m_alpha4 * t5;
+            // we get Containers that have size() and [i]-access
+
+            const int n = t1.size();
+            const int one = 1;
+            //boost::numeric::odeint::copy( t1 , t3 );
+            if( &(t2[0]) != &(t1[0]) )
+            {
+                dcopy( &n , &(t2[0]) , &one , &(t1[0]) , &one );
+            }
+
+            daxpby( &n , &m_alpha2 , &(t3[0]) , &one , &m_alpha1 , &(t1[0]) , &one );
+            daxpy( &n , &m_alpha3 , &(t4[0]) , &one , &(t1[0]) , &one );
+            daxpy( &n , &m_alpha4 , &(t5[0]) , &one , &(t1[0]) , &one );
+        }
+    };
+
+
+    template< class F1 = double , class F2 = F1 , class F3 = F2 , class F4 = F3 , class F5 = F4 >
+    struct scale_sum5
+    {
+        typedef double Fac1;
+        typedef double Fac2;
+        typedef double Fac3;
+        typedef double Fac4;
+        typedef double Fac5;
+        const Fac1 m_alpha1;
+        const Fac2 m_alpha2;
+        const Fac3 m_alpha3;
+        const Fac4 m_alpha4;
+        const Fac5 m_alpha5;
+
+        scale_sum5( const Fac1 alpha1 , const Fac2 alpha2 , const Fac3 alpha3 , const Fac4 alpha4 , const Fac5 alpha5 )
+            : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) , m_alpha4( alpha4 ) , m_alpha5( alpha5 ) { }
+
+        template< class T1 , class T2 , class T3 , class T4 , class T5 , class T6   >
+        void operator()( T1 &t1 , const T2 &t2 , const T3 &t3 , const T4 &t4 , const T5 &t5 , const T6 &t6 ) const
+        {   // t1 = m_alpha1 * t2 + m_alpha2 * t3 + m_alpha3 * t4 + m_alpha4 * t5 + m_alpha5 * t6;
+            // we get Containers that have size() and [i]-access
+
+            const int n = t1.size();
+            const int one = 1;
+            //boost::numeric::odeint::copy( t1 , t3 );
+            if( &(t2[0]) != &(t1[0]) )
+            {
+                dcopy( &n , &(t2[0]) , &one , &(t1[0]) , &one );
+            }
+
+            daxpby( &n , &m_alpha2 , &(t3[0]) , &one , &m_alpha1 , &(t1[0]) , &one );
+            daxpy( &n , &m_alpha3 , &(t4[0]) , &one , &(t1[0]) , &one );
+            daxpy( &n , &m_alpha4 , &(t5[0]) , &one , &(t1[0]) , &one );
+            daxpy( &n , &m_alpha5 , &(t6[0]) , &one , &(t1[0]) , &one );
         }
     };
 

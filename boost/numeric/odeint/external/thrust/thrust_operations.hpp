@@ -25,6 +25,7 @@ namespace odeint {
 #include <thrust/tuple.h>
 #include <thrust/iterator/zip_iterator.h>
 
+/**ToDo extend to scale_sum13 for rk78 */
 
 struct thrust_operations
 {

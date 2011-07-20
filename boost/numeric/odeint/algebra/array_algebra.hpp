@@ -120,6 +120,110 @@ struct array_algebra
             op( s1[i] , s2[i] , s3[i] , s4[i] , s5[i] , s6[i] , s7[i] , s8[i] );
     }
 
+    template< typename T , size_t dim , class Op >
+    void for_each9( boost::array< T , dim > &s1 ,
+            const boost::array< T , dim > &s2 ,
+            const boost::array< T , dim > &s3 ,
+            const boost::array< T , dim > &s4 ,
+            const boost::array< T , dim > &s5 ,
+            const boost::array< T , dim > &s6 ,
+            const boost::array< T , dim > &s7 ,
+            const boost::array< T , dim > &s8 ,
+            const boost::array< T , dim > &s9 , Op op )
+    {
+        for( size_t i=0 ; i<dim ; ++i )
+            op( s1[i] , s2[i] , s3[i] , s4[i] , s5[i] , s6[i] , s7[i] , s8[i] , s9[i] );
+    }
+
+    template< typename T , size_t dim , class Op >
+    void for_each10( boost::array< T , dim > &s1 ,
+            const boost::array< T , dim > &s2 ,
+            const boost::array< T , dim > &s3 ,
+            const boost::array< T , dim > &s4 ,
+            const boost::array< T , dim > &s5 ,
+            const boost::array< T , dim > &s6 ,
+            const boost::array< T , dim > &s7 ,
+            const boost::array< T , dim > &s8 ,
+            const boost::array< T , dim > &s9 ,
+            const boost::array< T , dim > &s10 , Op op )
+    {
+        for( size_t i=0 ; i<dim ; ++i )
+            op( s1[i] , s2[i] , s3[i] , s4[i] , s5[i] , s6[i] , s7[i] , s8[i] , s9[i] , s10[i] );
+    }
+
+    template< typename T , size_t dim , class Op >
+    void for_each11( boost::array< T , dim > &s1 ,
+            const boost::array< T , dim > &s2 ,
+            const boost::array< T , dim > &s3 ,
+            const boost::array< T , dim > &s4 ,
+            const boost::array< T , dim > &s5 ,
+            const boost::array< T , dim > &s6 ,
+            const boost::array< T , dim > &s7 ,
+            const boost::array< T , dim > &s8 ,
+            const boost::array< T , dim > &s9 ,
+            const boost::array< T , dim > &s10 ,
+            const boost::array< T , dim > &s11 , Op op )
+    {
+        for( size_t i=0 ; i<dim ; ++i )
+            op( s1[i] , s2[i] , s3[i] , s4[i] , s5[i] , s6[i] , s7[i] , s8[i] , s9[i] , s10[i] , s11[i] );
+    }
+
+    template< typename T , size_t dim , class Op >
+    void for_each12( boost::array< T , dim > &s1 ,
+            const boost::array< T , dim > &s2 ,
+            const boost::array< T , dim > &s3 ,
+            const boost::array< T , dim > &s4 ,
+            const boost::array< T , dim > &s5 ,
+            const boost::array< T , dim > &s6 ,
+            const boost::array< T , dim > &s7 ,
+            const boost::array< T , dim > &s8 ,
+            const boost::array< T , dim > &s9 ,
+            const boost::array< T , dim > &s10 ,
+            const boost::array< T , dim > &s11 ,
+            const boost::array< T , dim > &s12 , Op op )
+    {
+        for( size_t i=0 ; i<dim ; ++i )
+            op( s1[i] , s2[i] , s3[i] , s4[i] , s5[i] , s6[i] , s7[i] , s8[i] , s9[i] , s10[i] , s11[i] , s12[i] );
+    }
+
+    template< typename T , size_t dim , class Op >
+    void for_each13( boost::array< T , dim > &s1 ,
+            const boost::array< T , dim > &s2 ,
+            const boost::array< T , dim > &s3 ,
+            const boost::array< T , dim > &s4 ,
+            const boost::array< T , dim > &s5 ,
+            const boost::array< T , dim > &s6 ,
+            const boost::array< T , dim > &s7 ,
+            const boost::array< T , dim > &s8 ,
+            const boost::array< T , dim > &s9 ,
+            const boost::array< T , dim > &s10 ,
+            const boost::array< T , dim > &s11 ,
+            const boost::array< T , dim > &s12 ,
+            const boost::array< T , dim > &s13 , Op op )
+    {
+        for( size_t i=0 ; i<dim ; ++i )
+            op( s1[i] , s2[i] , s3[i] , s4[i] , s5[i] , s6[i] , s7[i] , s8[i] , s9[i] , s10[i] , s11[i] , s12[i] , s13[i] );
+    }
+
+    template< typename T , size_t dim , class Op >
+    void for_each14( boost::array< T , dim > &s1 ,
+            const boost::array< T , dim > &s2 ,
+            const boost::array< T , dim > &s3 ,
+            const boost::array< T , dim > &s4 ,
+            const boost::array< T , dim > &s5 ,
+            const boost::array< T , dim > &s6 ,
+            const boost::array< T , dim > &s7 ,
+            const boost::array< T , dim > &s8 ,
+            const boost::array< T , dim > &s9 ,
+            const boost::array< T , dim > &s10 ,
+            const boost::array< T , dim > &s11 ,
+            const boost::array< T , dim > &s12 ,
+            const boost::array< T , dim > &s13 ,
+            const boost::array< T , dim > &s14 , Op op )
+    {
+        for( size_t i=0 ; i<dim ; ++i )
+            op( s1[i] , s2[i] , s3[i] , s4[i] , s5[i] , s6[i] , s7[i] , s8[i] , s9[i] , s10[i] , s11[i] , s12[i] , s13[i] , s14[i] );
+    }
 
     template< typename T , size_t dim , class Red >
     T reduce( const boost::array< T , dim > &s , Red red , T init)

@@ -15,6 +15,7 @@
 
 #define BOOST_TEST_MODULE odeint_stepper_with_units
 
+#include <boost/numeric/odeint/config.hpp>
 
 #include <boost/test/unit_test.hpp>
 
@@ -33,6 +34,7 @@
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg78.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_explicit.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_controlled_explicit_fsal.hpp>
@@ -53,7 +55,6 @@ typedef units::quantity< si::velocity , value_type > velocity_type;
 typedef units::quantity< si::acceleration , value_type > acceleration_type;
 typedef fusion::vector< length_type , velocity_type > state_type;
 typedef fusion::vector< velocity_type , acceleration_type > deriv_type;
-
 
 void oscillator( const state_type &x , deriv_type &dxdt , time_type t )
 {
@@ -239,6 +240,8 @@ class stepper_types : public mpl::vector
 	runge_kutta4_classic< state_type , value_type , deriv_type , time_type , fusion_algebra > ,
 	runge_kutta_cash_karp54< state_type , value_type , deriv_type , time_type , fusion_algebra >,
 	runge_kutta_cash_karp54_classic< state_type , value_type , deriv_type , time_type , fusion_algebra >
+    // don't run rk78 test - gcc requires > 4GB RAM to compile this
+	//runge_kutta_fehlberg78< state_type , value_type , deriv_type , time_type , fusion_algebra >
 > { };
 
 class fsal_stepper_types : public mpl::vector

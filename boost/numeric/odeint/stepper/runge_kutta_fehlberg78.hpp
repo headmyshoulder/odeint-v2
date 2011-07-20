@@ -201,7 +201,7 @@ struct rk78_coefficients_a12 : boost::array< Value , 12 >
         (*this)[0] = static_cast< Value >( -1777 )/static_cast< Value >( 4100 );
         (*this)[1] = static_cast< Value >( 0 );
         (*this)[2] = static_cast< Value >( 0 );
-        (*this)[3] = static_cast< Value >( -341 )/static_cast< Value >( 164 )
+        (*this)[3] = static_cast< Value >( -341 )/static_cast< Value >( 164 );
         (*this)[4] = static_cast< Value >( 4496 )/static_cast< Value >( 1025 );
         (*this)[5] = static_cast< Value >( -289 )/static_cast< Value >( 82 );
         (*this)[6] = static_cast< Value >( 2193 )/static_cast< Value >( 4100 );
@@ -270,7 +270,7 @@ Algebra , Operations , Resizer >
 
 public:
 
-    typedef explicit_generic_rk< 7 , 12 , State , Value , Deriv , Time ,
+    typedef explicit_generic_rk< 12 , 7 , State , Value , Deriv , Time ,
             Algebra , Operations , Resizer > stepper_base_type;
 
     typedef typename stepper_base_type::state_type state_type;
