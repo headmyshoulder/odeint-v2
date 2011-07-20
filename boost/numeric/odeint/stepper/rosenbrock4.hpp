@@ -135,7 +135,7 @@ public:
 
         const size_t n = x.size();
 
-        m_resizer.adjust_size( x , boost::bind( &stepper_type::resize<state_type> , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( x , boost::bind( &stepper_type::template resize<state_type> , boost::ref( *this ) , _1 ) );
 
         for( size_t i=0 ; i<n ; ++i )
             m_pm.m_v( i ) = i;

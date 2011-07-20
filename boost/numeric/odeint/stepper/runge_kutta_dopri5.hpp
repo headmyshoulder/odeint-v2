@@ -94,7 +94,7 @@ public :
 
         typename boost::unwrap_reference< System >::type &sys = system;
 
-        m_resizer.adjust_size( in , boost::bind( &stepper_type::resize<StateIn> , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize<StateIn> , boost::ref( *this ) , _1 ) );
 
         //m_x_tmp = x + dt*b21*dxdt
         stepper_base_type::m_algebra.for_each3( m_x_tmp.m_v , in , dxdt_in ,

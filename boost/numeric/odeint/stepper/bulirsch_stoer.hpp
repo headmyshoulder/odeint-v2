@@ -139,7 +139,7 @@ public:
     template< class System , class StateInOut , class DerivIn >
     controlled_step_result try_step( System system , StateInOut &x , const DerivIn &dxdt , time_type &t , time_type &dt )
     {
-        m_xnew_resizer.adjust_size( x , boost::bind( &controlled_error_bs_type::resize_m_xnew< StateInOut > , boost::ref( *this ) , _1 ) );
+        m_xnew_resizer.adjust_size( x , boost::bind( &controlled_error_bs_type::template resize_m_xnew< StateInOut > , boost::ref( *this ) , _1 ) );
         controlled_step_result res = try_step( system , x , dxdt , t , m_xnew.m_v , dt );
         if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged ) )
         {
@@ -157,7 +157,7 @@ public:
     controlled_step_result try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
     {
         typename boost::unwrap_reference< System >::type &sys = system;
-        m_dxdt_resizer.adjust_size( in , boost::bind( &controlled_error_bs_type::resize_m_dxdt< StateIn > , boost::ref( *this ) , _1 ) );
+        m_dxdt_resizer.adjust_size( in , boost::bind( &controlled_error_bs_type::template resize_m_dxdt< StateIn > , boost::ref( *this ) , _1 ) );
         sys( in , m_dxdt.m_v , t );
         return try_step( system , in , m_dxdt.m_v , t , out , dt );
     }
@@ -169,7 +169,7 @@ public:
         static const time_type val1( static_cast< time_type >( 1.0 ) );
 
         typename boost::unwrap_reference< System >::type &sys = system;
-        if( m_resizer.adjust_size( in , boost::bind( &controlled_error_bs_type::resize< StateIn > , boost::ref( *this ) , _1 ) ) )
+        if( m_resizer.adjust_size( in , boost::bind( &controlled_error_bs_type::template resize< StateIn > , boost::ref( *this ) , _1 ) ) )
             reset(); // system resized -> reset
         if( dt != m_dt_last )
             reset(); // step size changed from outside -> reset
@@ -294,7 +294,7 @@ private:
     controlled_step_result try_step_v1( System system , StateInOut &x , time_type &t , time_type &dt )
     {
         typename boost::unwrap_reference< System >::type &sys = system;
-        m_dxdt_resizer.adjust_size( x , boost::bind( &controlled_error_bs_type::resize_m_dxdt< StateInOut > , boost::ref( *this ) , _1 ) );
+        m_dxdt_resizer.adjust_size( x , boost::bind( &controlled_error_bs_type::template resize_m_dxdt< StateInOut > , boost::ref( *this ) , _1 ) );
         sys( x , m_dxdt.m_v ,t );
         return try_step( system , x , m_dxdt.m_v , t , dt );
     }

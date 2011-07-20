@@ -79,7 +79,7 @@ public:
         deriv_func_type &deriv_func = sys.first;
         jacobi_func_type &jacobi_func = sys.second;
 
-        m_resizer.adjust_size( x , boost::bind( &stepper_type::resize<state_type> , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( x , boost::bind( &stepper_type::template resize<state_type> , boost::ref( *this ) , _1 ) );
 
         for( size_t i=0 ; i<x.size() ; ++i )
             m_pm.m_v[i] = i;

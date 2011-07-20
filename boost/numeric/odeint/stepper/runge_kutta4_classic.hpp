@@ -67,7 +67,7 @@ public :
 
         static const value_type val1 = static_cast< value_type >( 1.0 );
 
-        m_resizer.adjust_size( in , boost::bind( &stepper_type::resize< StateIn > , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize< StateIn > , boost::ref( *this ) , _1 ) );
 
         typename boost::unwrap_reference< System >::type &sys = system;
 

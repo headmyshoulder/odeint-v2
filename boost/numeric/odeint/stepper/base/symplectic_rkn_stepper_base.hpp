@@ -209,8 +209,8 @@ private:
         coor_out_type &coor_out = state_out.first;
         momentum_out_type &momentum_out = state_out.second;
 
-        m_dqdt_resizer.adjust_size( coor_in , boost::bind( &internal_stepper_base_type::resize_dqdt< coor_in_type > , boost::ref( *this ) , _1 ) );
-        m_dpdt_resizer.adjust_size( momentum_in , boost::bind( &internal_stepper_base_type::resize_dpdt< momentum_in_type > , boost::ref( *this ) , _1 ) );
+        m_dqdt_resizer.adjust_size( coor_in , boost::bind( &internal_stepper_base_type::template resize_dqdt< coor_in_type > , boost::ref( *this ) , _1 ) );
+        m_dpdt_resizer.adjust_size( momentum_in , boost::bind( &internal_stepper_base_type::template resize_dpdt< momentum_in_type > , boost::ref( *this ) , _1 ) );
 
         // ToDo: check sizes?
 
@@ -260,8 +260,8 @@ private:
         momentum_out_type &momentum_out = state_out.second;
 
 
-        m_dqdt_resizer.adjust_size( coor_in , boost::bind( &internal_stepper_base_type::resize_dqdt< coor_in_type > , boost::ref( *this ) , _1 ) );
-        m_dpdt_resizer.adjust_size( momentum_in , boost::bind( &internal_stepper_base_type::resize_dpdt< momentum_in_type > , boost::ref( *this ) , _1 ) );
+        m_dqdt_resizer.adjust_size( coor_in , boost::bind( &internal_stepper_base_type::template resize_dqdt< coor_in_type > , boost::ref( *this ) , _1 ) );
+        m_dpdt_resizer.adjust_size( momentum_in , boost::bind( &internal_stepper_base_type::template resize_dpdt< momentum_in_type > , boost::ref( *this ) , _1 ) );
 
 
         // ToDo: check sizes?

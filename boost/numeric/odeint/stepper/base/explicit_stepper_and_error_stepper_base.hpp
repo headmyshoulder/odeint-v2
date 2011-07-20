@@ -133,7 +133,7 @@ public:
     void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt )
     {
         typename boost::unwrap_reference< System >::type &sys = system;
-        m_resizer.adjust_size( in , boost::bind( &internal_stepper_base_type::resize<StateIn> , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( in , boost::bind( &internal_stepper_base_type::template resize<StateIn> , boost::ref( *this ) , _1 ) );
         sys( in , m_dxdt.m_v ,t );
         this->stepper().do_step_impl( system , in , m_dxdt.m_v , t , out , dt );
     }
@@ -192,7 +192,7 @@ public:
     void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt , Err &xerr )
     {
         typename boost::unwrap_reference< System >::type &sys = system;
-        m_resizer.adjust_size( in , boost::bind( &internal_stepper_base_type::resize<StateIn> , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( in , boost::bind( &internal_stepper_base_type::template resize<StateIn> , boost::ref( *this ) , _1 ) );
         sys( in , m_dxdt.m_v ,t );
         this->stepper().do_step_impl( system , in , m_dxdt.m_v , t , out , dt , xerr );
     }
@@ -235,7 +235,7 @@ private:
     void do_step_v1( System system , StateInOut &x , const time_type &t , const time_type &dt )
     {
         typename boost::unwrap_reference< System >::type &sys = system;
-        m_resizer.adjust_size( x , boost::bind( &internal_stepper_base_type::resize<StateInOut> , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( x , boost::bind( &internal_stepper_base_type::template resize<StateInOut> , boost::ref( *this ) , _1 ) );
         sys( x , m_dxdt.m_v ,t );
         this->stepper().do_step_impl( system , x , m_dxdt.m_v , t , x , dt );
     }
@@ -244,7 +244,7 @@ private:
     void do_step_v5( System system , StateInOut &x , const time_type &t , const time_type &dt , Err &xerr )
     {
         typename boost::unwrap_reference< System >::type &sys = system;
-        m_resizer.adjust_size( x , boost::bind( &internal_stepper_base_type::resize<StateInOut> , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( x , boost::bind( &internal_stepper_base_type::template resize<StateInOut> , boost::ref( *this ) , _1 ) );
         sys( x , m_dxdt.m_v ,t );
         this->stepper().do_step_impl( system , x , m_dxdt.m_v , t , x , dt , xerr );
     }

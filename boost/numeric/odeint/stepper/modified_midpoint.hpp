@@ -61,7 +61,7 @@ public :
         static const value_type val1 = static_cast< value_type >( 1.0 );
         static const value_type val05 = static_cast< value_type >( 0.5 );
 
-        m_resizer.adjust_size( in , boost::bind( &stepper_type::resize< StateIn > , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize< StateIn > , boost::ref( *this ) , _1 ) );
 
         const time_type h = dt / static_cast<time_type>( m_steps );
         const time_type h2 = static_cast<time_type>( 2.0 ) * h;
