@@ -1,9 +1,9 @@
 * REFACTORING AND CLEANUP
   * check if everywhere static_cast< value_type > is used
-  * check header guards
-  * check copyright note
-  * describe every file in the preamble
-  * check spacings, not tabs
+  OK * check header guards
+  OK * check copyright note
+  OK * describe every file in the preamble
+  OK * check spacings, not tabs
 
 * DOCUMENTATION
   * Tutorials
