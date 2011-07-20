@@ -10,6 +10,8 @@
 
 [include tutorial_special_topics.qbk]
 
+[include tutorial_thrust_cuda.qbk]
+
 [section Odeint in detail]
 
 Different steppers
