@@ -1,16 +1,23 @@
 /*
- boost header: NUMERIC_ODEINT_STEPPER/util/ublas_wrapper.hpp
+ [auto_generated]
+ boost/numeric/odeint/util/ublas_wrapper.hpp
 
- Copyright 2011 Karsten Ahnert
- Copyright 2011 Mario Mulansky
+ [begin_description]
+ Resizing for ublas::vector and ublas::matrix
+ [end_description]
+
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
  copy at http://www.boost.org/LICENSE_1_0.txt)
-*/
+ */
 
-#ifndef BOOST_NUMERIC_ODEINT_UBLAS_WRAPPER_HPP_INCLUDED
-#define BOOST_NUMERIC_ODEINT_UBLAS_WRAPPER_HPP_INCLUDED
+
+#ifndef BOOST_NUMERIC_ODEINT_UTIL_UBLAS_WRAPPER_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_UTIL_UBLAS_WRAPPER_HPP_INCLUDED
+
 
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/numeric/ublas/vector.hpp>
@@ -42,7 +49,7 @@ template< class T , class L , class A >
 struct is_resizeable< boost::numeric::ublas::matrix< T , L , A > >
 {
     typedef boost::true_type type;
-	const static bool value = type::value;
+    const static bool value = type::value;
 };
 
 
@@ -60,7 +67,7 @@ struct is_resizeable< boost::numeric::ublas::permutation_matrix< T , A > >
 
 /* specialization for matrizes because we need to provide matrix-vector resizing */
 template< class T , class L , class A >
-struct state_wrapper< boost::numeric::ublas::matrix< T , L , A > , boost::true_type > // with resizing
+struct state_wrapper< boost::numeric::ublas::matrix< T , L , A > , true > // with resizing
 {
     typedef boost::numeric::ublas::matrix< T , L , A > state_type;
     typedef state_wrapper< state_type > state_wrapper_type;
@@ -111,7 +118,7 @@ struct state_wrapper< boost::numeric::ublas::matrix< T , L , A > , boost::true_t
 
 /* specialization for permutation matrizes because we need to provide matrix-vector resizing */
 template< class T , class A >
-struct state_wrapper< boost::numeric::ublas::permutation_matrix< T , A > , boost::true_type > // with resizing
+struct state_wrapper< boost::numeric::ublas::permutation_matrix< T , A > , true > // with resizing
 {
     typedef boost::numeric::ublas::permutation_matrix< T , A > state_type;
     typedef state_wrapper< state_type > state_wrapper_type;
@@ -153,17 +160,17 @@ struct state_wrapper< boost::numeric::ublas::permutation_matrix< T , A > , boost
 
 namespace boost
 {
-    template< class T , class L , class A >
-    struct range_mutable_iterator< boost::numeric::ublas::matrix< T , L , A > >
-    {
-        typedef typename boost::numeric::ublas::matrix< T , L , A >::array_type::iterator type;
-    };
+template< class T , class L , class A >
+struct range_mutable_iterator< boost::numeric::ublas::matrix< T , L , A > >
+{
+    typedef typename boost::numeric::ublas::matrix< T , L , A >::array_type::iterator type;
+};
 
-    template< class T , class L , class A >
-    struct range_const_iterator< boost::numeric::ublas::matrix< T , L , A > >
-    {
-        typedef typename boost::numeric::ublas::matrix< T , L , A >::array_type::const_iterator type;
-    };
+template< class T , class L , class A >
+struct range_const_iterator< boost::numeric::ublas::matrix< T , L , A > >
+{
+    typedef typename boost::numeric::ublas::matrix< T , L , A >::array_type::const_iterator type;
+};
 
 } // namespace boost
 
@@ -200,4 +207,5 @@ range_end( const matrix< T , L , A > &x )
 
 } } } // nampespace boost::numeric::ublas
 
-#endif
+
+#endif // BOOST_NUMERIC_ODEINT_UTIL_UBLAS_WRAPPER_HPP_INCLUDED

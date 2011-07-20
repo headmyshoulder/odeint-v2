@@ -9,7 +9,7 @@
 
 #include <boost/array.hpp>
 
-#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4_classic.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta4_classic.hpp>
 #include <boost/numeric/odeint/algebra/array_algebra.hpp>
 
 #include "rk_performance_test_case.hpp"
@@ -19,7 +19,7 @@
 const size_t N = 1024;
 
 typedef boost::array< double , N > state_type;
-typedef boost::numeric::odeint::explicit_rk4< state_type , double , state_type , double ,
+typedef boost::numeric::odeint::runge_kutta4_classic< state_type , double , state_type , double ,
                                               boost::numeric::odeint::array_algebra > rk4_odeint_type;
 
 

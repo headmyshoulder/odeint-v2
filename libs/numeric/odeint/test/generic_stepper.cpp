@@ -24,8 +24,8 @@
 #include <boost/test/unit_test.hpp>
 
 #include <boost/numeric/odeint/stepper/explicit_generic_rk.hpp>
-#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4.hpp>
-#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4_classic.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta4_classic.hpp>
 
 #include <boost/array.hpp>
 
@@ -42,7 +42,7 @@ void sys( const state_type &x , state_type &dxdt , const value_type &t )
 }
 
 typedef explicit_generic_rk< 4 , 4 , state_type> rk_generic_type;
-typedef runge_kutta_fehlberg4< state_type > rk4_generic_type;
+typedef runge_kutta4< state_type > rk4_generic_type;
 
 const boost::array< double , 1 > a1 = {{ 0.5 }};
 const boost::array< double , 2 > a2 = {{ 0.0 , 0.5 }};
@@ -52,7 +52,7 @@ const rk_generic_type::coef_a_type a = fusion::make_vector( a1 , a2 , a3 );
 const rk_generic_type::coef_b_type b = {{ 1.0/6 , 1.0/3 , 1.0/3 , 1.0/6 }};
 const rk_generic_type::coef_c_type c = {{ 0.0 , 0.5 , 0.5 , 1.0 }};
 
-typedef runge_kutta_fehlberg4_classic< state_type > rk4_type;
+typedef runge_kutta4_classic< state_type > rk4_type;
 
 BOOST_AUTO_TEST_SUITE( generic_stepper_test )
 

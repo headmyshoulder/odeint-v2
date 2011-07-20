@@ -145,7 +145,7 @@ int main( int argc , char **argv )
 
     cout << "set term x11" << endl;
     cout << "set pm3d map" << endl;
-    integrate_const( runge_kutta_fehlberg4< state_type >() , two_dimensional_phase_lattice( 1.2 ) ,
+    integrate_const( runge_kutta4< state_type >() , two_dimensional_phase_lattice( 1.2 ) ,
             x , 0.0 , 101.0 , 0.1 , boost::ref( snapshots ) );
 
 

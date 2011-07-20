@@ -10,7 +10,7 @@
 
 #include <boost/array.hpp>
 
-#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4_classic.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta4_classic.hpp>
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
 #include <boost/timer.hpp>

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <boost/array.hpp>
 
-#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4_classic.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta4_classic.hpp>
 
 #include "runge_kutta_stepper.hpp"
 

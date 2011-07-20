@@ -12,7 +12,7 @@
 
 //#include <boost/test/unit_test.hpp>
 
-#include <boost/numeric/odeint/stepper/explicit_euler.hpp>
+#include <boost/numeric/odeint/stepper/euler.hpp>
 #include <boost/numeric/odeint/external/thrust/thrust_algebra.hpp>
 #include <boost/numeric/odeint/external/thrust/thrust_operations.hpp>
 #include <boost/numeric/odeint/external/thrust/thrust_resize.hpp>

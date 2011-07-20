@@ -115,7 +115,7 @@ int main(int argc, char **argv)
 
 
     //[ define_const_stepper
-    runge_kutta_fehlberg4< state_type > stepper;
+    runge_kutta4< state_type > stepper;
     integrate_const( stepper , harmonic_oscillator , x , 0.0 , 10.0 , 0.01 );
     //]
 

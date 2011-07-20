@@ -1,9 +1,9 @@
 #! /usr/bin/python
 
-import fnmatch
-import os
+from glob_dir import *
 
 preamble_template = "/*\n\
+ [auto_generated]\n\
  FILENAME\n\
  \n\
  [begin_description]\n\
@@ -33,18 +33,11 @@ def insert_preamble( content , file_desc ):
 	return ret
 
 	
-def glob_dir( dir , pattern , exclude = " " ):
-	matches = []
-	for root , dirnames, filenames in os.walk( dir ):
-		if root.find( exclude ) == -1:
-			for filename in fnmatch.filter( filenames , pattern ):
-				matches.append( [ root , filename , os.path.join(root, filename) ] )
-	return matches
 
-files = glob_dir( "boost" , "*.hpp" , "stepper" )
+files = glob_dir( "../../../../boost" , "*.hpp" , [ "algebra" , "external" , "integrate" , "util" ] )
 
 for f in files:
-	# print f + " " + header_guard( f )
+	print str( f[2] ) #+ " " + header_guard( f )
 	file = open( f[2] )
 	content = file.read()
 	content = insert_preamble( content , f )
@@ -52,4 +45,4 @@ for f in files:
 	
 	file = open( f[2] , "w" )
 	file.write( content )
-	# file.close()
+	file.close()

@@ -73,7 +73,7 @@ int main( int argc , char **argv )
 {
     state_type x;
     lyap_type lyap;
-    runge_kutta_fehlberg4< state_type > rk4;
+    runge_kutta4< state_type > rk4;
 
     fill( x.begin() , x.end() , 0.0 );
     x[0] = 10.0 ; x[1] = 10.0 ; x[2] = 5.0;

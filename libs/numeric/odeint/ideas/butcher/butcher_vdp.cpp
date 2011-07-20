@@ -10,7 +10,7 @@
 
 #include <tr1/array>
 
-#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg4_classic.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta4_classic.hpp>
 
 #include "predefined_steppers.hpp"
 
@@ -20,7 +20,7 @@ using namespace std;
 
 typedef std::tr1::array< double , 2 > state_type;
 typedef mpl_rk4_stepper< state_type > stepper_type;
-typedef boost::numeric::odeint::runge_kutta_fehlberg4< state_type > stepper_std_type;
+typedef boost::numeric::odeint::runge_kutta4< state_type > stepper_std_type;
 
 void vdp( const state_type &x , state_type &dxdt , double t )
 {

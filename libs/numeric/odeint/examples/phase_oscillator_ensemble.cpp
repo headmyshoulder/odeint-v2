@@ -135,10 +135,10 @@ int main( int argc , char **argv )
         generate( x.begin() , x.end() , gen );
 
         // calculate some transients steps
-        integrate_const( runge_kutta_fehlberg4< container_type >() , boost::ref( ensemble ) , x , 0.0 , 10.0 , dt );
+        integrate_const( runge_kutta4< container_type >() , boost::ref( ensemble ) , x , 0.0 , 10.0 , dt );
 
         // integrate and compute the statistics
-        integrate_const( runge_kutta_fehlberg4< container_type >() , boost::ref( ensemble ) , x , 0.0 , 100.0 , dt , boost::ref( obs ) );
+        integrate_const( runge_kutta4< container_type >() , boost::ref( ensemble ) , x , 0.0 , 100.0 , dt , boost::ref( obs ) );
         cout << epsilon << "\t" << obs.get_K_mean() << endl;
     }
 

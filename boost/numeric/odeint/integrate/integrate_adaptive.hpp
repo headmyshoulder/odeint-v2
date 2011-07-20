@@ -1,12 +1,22 @@
 /*
- *  integrate_adaptive.hpp
- *
- *  Created on: Jan 31, 2011
- *      Author: karsten
+ [auto_generated]
+ boost/numeric/odeint/integrate/integrate_adaptive.hpp
+
+ [begin_description]
+ Adaptive integration of ODEs.
+ [end_description]
+
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_ADAPTIVE_HPP_
-#define BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_ADAPTIVE_HPP_
+
+#ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_ADAPTIVE_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_ADAPTIVE_HPP_INCLUDED
 
 #include <boost/type_traits/is_same.hpp>
 
@@ -25,26 +35,26 @@ namespace odeint {
  */
 template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate_adaptive(
-		Stepper stepper , System system , State &start_state ,
-		Time start_time , Time end_time , Time dt ,
-		Observer observer )
+        Stepper stepper , System system , State &start_state ,
+        Time start_time , Time end_time , Time dt ,
+        Observer observer )
 {
-	return detail::integrate_adaptive(
-			stepper , system , start_state ,
-			start_time , end_time , dt ,
-			observer , typename Stepper::stepper_category() );
+    return detail::integrate_adaptive(
+            stepper , system , start_state ,
+            start_time , end_time , dt ,
+            observer , typename Stepper::stepper_category() );
 }
 
 template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate_adaptive(
-		Stepper stepper , System system , const State &start_state ,
-		Time start_time , Time end_time , Time dt ,
-		Observer observer )
+        Stepper stepper , System system , const State &start_state ,
+        Time start_time , Time end_time , Time dt ,
+        Observer observer )
 {
-	return detail::integrate_adaptive(
-			stepper , system , start_state ,
-			start_time , end_time , dt ,
-			observer , typename Stepper::stepper_category() );
+    return detail::integrate_adaptive(
+            stepper , system , start_state ,
+            start_time , end_time , dt ,
+            observer , typename Stepper::stepper_category() );
 }
 
 
@@ -55,18 +65,18 @@ size_t integrate_adaptive(
  */
 template< class Stepper , class System , class State , class Time >
 size_t integrate_adaptive(
-		Stepper stepper , System system , State &start_state ,
-		Time start_time , Time end_time , Time dt )
+        Stepper stepper , System system , State &start_state ,
+        Time start_time , Time end_time , Time dt )
 {
-	return integrate_adaptive( stepper , system , start_state , start_time , end_time , dt , do_nothing_observer() );
+    return integrate_adaptive( stepper , system , start_state , start_time , end_time , dt , do_nothing_observer() );
 }
 
 template< class Stepper , class System , class State , class Time >
 size_t integrate_adaptive(
-		Stepper stepper , System system , const State &start_state ,
-		Time start_time , Time end_time , Time dt )
+        Stepper stepper , System system , const State &start_state ,
+        Time start_time , Time end_time , Time dt )
 {
-	return integrate_adaptive( stepper , system , start_state , start_time , end_time , dt , do_nothing_observer() );
+    return integrate_adaptive( stepper , system , start_state , start_time , end_time , dt , do_nothing_observer() );
 }
 
 
@@ -79,4 +89,4 @@ size_t integrate_adaptive(
 
 
 
-#endif /* BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_ADAPTIVE_HPP_ */
+#endif // BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_ADAPTIVE_HPP_INCLUDED
