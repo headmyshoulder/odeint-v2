@@ -149,6 +149,14 @@ Ginzburg-Landau
 
 [section Using arbitrary precision floating point types]
 
+Besides the classical floating point number like `float`, `double`, `complex< double >` you can also use arbitrary precision types, like the types from gmpxx and mpfr++. But you have to be carful about instantiating any numbers.
+
+For gmp types you have to set the default precision before any number is instantiated. This can be easily done by calling `mpf_set_default_prec( precision )` as the first function in your main program. Secondly, you can not use any global constant variables since they will not be 
+
+define all constants behind gmp_sef_default_precision
+
+allways use casts
+
 GMP
 
 [endsect]

@@ -1,5 +1,6 @@
 * REFACTORING AND CLEANUP
   * check if everywhere static_cast< value_type > is used
+  * check if rational number are expressed as a / b, neccessary fpr gmpxx
   OK * check header guards
   OK * check copyright note
   OK * describe every file in the preamble
