@@ -22,7 +22,7 @@
 
 #include <iostream>
 
-#include <mkl_blas.h>
+#include <mkl_cblas.h>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
 
 /* exemplary example for writing bindings to the Intel MKL library
@@ -56,14 +56,13 @@ struct mkl_operations
             // we get Containers that have size() and [i]-access
 
             const int n = t1.size();
-            const int one = 1;
             //boost::numeric::odeint::copy( t1 , t3 );
             if( &(t2[0]) != &(t1[0]) )
             {
-                dcopy( &n , &(t2[0]) , &one , &(t1[0]) , &one );
+                cblas_dcopy( n , &(t2[0]) , 1 , &(t1[0]) , 1 );
             }
-            dscal( &n , &m_alpha1 , &(t1[0]) , &one );
-            daxpy( &n , &m_alpha2 , &(t3[0]) , &one , &(t1[0]) , &one );
+            cblas_dscal( n , m_alpha1 , &(t1[0]) , 1 );
+            cblas_daxpy( n , m_alpha2 , &(t3[0]) , 1 , &(t1[0]) , 1 );
             //daxpby( &n , &m_alpha2 , &(t3[0]) , &one , &m_alpha1 , &(t1[0]) , &one );
         }
     };
@@ -87,16 +86,15 @@ struct mkl_operations
             // we get Containers that have size() and [i]-access
 
             const int n = t1.size();
-            const int one = 1;
             //boost::numeric::odeint::copy( t1 , t3 );
             if( &(t2[0]) != &(t1[0]) )
             {
-                dcopy( &n , &(t2[0]) , &one , &(t1[0]) , &one );
+                cblas_dcopy( n , &(t2[0]) , 1 , &(t1[0]) , 1 );
             }
-            dscal( &n , &m_alpha1 , &(t1[0]) , &one );
-            daxpy( &n , &m_alpha2 , &(t3[0]) , &one , &(t1[0]) , &one );
+            cblas_dscal( n , m_alpha1 , &(t1[0]) , 1 );
+            cblas_daxpy( n , m_alpha2 , &(t3[0]) , 1 , &(t1[0]) , 1 );
             //daxpby( &n , &m_alpha2 , &(t3[0]) , &one , &m_alpha1 , &(t1[0]) , &one );
-            daxpy( &n , &m_alpha3 , &(t4[0]) , &one , &(t1[0]) , &one );
+            cblas_daxpy( n , m_alpha3 , &(t4[0]) , 1 , &(t1[0]) , 1 );
         }
     };
 
@@ -121,18 +119,17 @@ struct mkl_operations
             // we get Containers that have size() and [i]-access
 
             const int n = t1.size();
-            const int one = 1;
             //boost::numeric::odeint::copy( t1 , t3 );
             if( &(t2[0]) != &(t1[0]) )
             {
-                dcopy( &n , &(t2[0]) , &one , &(t1[0]) , &one );
+                cblas_dcopy( n , &(t2[0]) , 1 , &(t1[0]) , 1 );
             }
 
-            dscal( &n , &m_alpha1 , &(t1[0]) , &one );
-            daxpy( &n , &m_alpha2 , &(t3[0]) , &one , &(t1[0]) , &one );
+            cblas_dscal( n , m_alpha1 , &(t1[0]) , 1 );
+            cblas_daxpy( n , m_alpha2 , &(t3[0]) , 1 , &(t1[0]) , 1 );
             //daxpby( &n , &m_alpha2 , &(t3[0]) , &one , &m_alpha1 , &(t1[0]) , &one );
-            daxpy( &n , &m_alpha3 , &(t4[0]) , &one , &(t1[0]) , &one );
-            daxpy( &n , &m_alpha4 , &(t5[0]) , &one , &(t1[0]) , &one );
+            cblas_daxpy( n , m_alpha3 , &(t4[0]) , 1 , &(t1[0]) , 1 );
+            cblas_daxpy( n , m_alpha4 , &(t5[0]) , 1 , &(t1[0]) , 1 );
         }
     };
 
@@ -160,19 +157,18 @@ struct mkl_operations
             // we get Containers that have size() and [i]-access
 
             const int n = t1.size();
-            const int one = 1;
             //boost::numeric::odeint::copy( t1 , t3 );
             if( &(t2[0]) != &(t1[0]) )
             {
-                dcopy( &n , &(t2[0]) , &one , &(t1[0]) , &one );
+                cblas_dcopy( n , &(t2[0]) , 1 , &(t1[0]) , 1 );
             }
 
-            dscal( &n , &m_alpha1 , &(t1[0]) , &one );
-            daxpy( &n , &m_alpha2 , &(t3[0]) , &one , &(t1[0]) , &one );
+            cblas_dscal( n , m_alpha1 , &(t1[0]) , 1 );
+            cblas_daxpy( n , m_alpha2 , &(t3[0]) , 1 , &(t1[0]) , 1 );
             //daxpby( &n , &m_alpha2 , &(t3[0]) , &one , &m_alpha1 , &(t1[0]) , &one );
-            daxpy( &n , &m_alpha3 , &(t4[0]) , &one , &(t1[0]) , &one );
-            daxpy( &n , &m_alpha4 , &(t5[0]) , &one , &(t1[0]) , &one );
-            daxpy( &n , &m_alpha5 , &(t6[0]) , &one , &(t1[0]) , &one );
+            cblas_daxpy( n , m_alpha3 , &(t4[0]) , 1 , &(t1[0]) , 1 );
+            cblas_daxpy( n , m_alpha4 , &(t5[0]) , 1 , &(t1[0]) , 1 );
+            cblas_daxpy( n , m_alpha5 , &(t6[0]) , 1 , &(t1[0]) , 1 );
         }
     };
 

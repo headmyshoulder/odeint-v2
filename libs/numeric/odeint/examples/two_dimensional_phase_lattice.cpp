@@ -78,6 +78,7 @@ struct write_for_gnuplot
     {
         if( ( m_count % m_every ) == 0 )
         {
+            clog << t << endl;
             cout << "sp '-'" << endl;
             for( size_t i=0 ; i<x.size1() ; ++i )
             {
@@ -144,13 +145,13 @@ int main( int argc , char **argv )
     snapshots.snapshots().insert( make_pair( size_t( 100 ) , string( "lat_0100.dat" ) ) );
     snapshots.snapshots().insert( make_pair( size_t( 1000 ) , string( "lat_1000.dat" ) ) );
     observer_collection< state_type , double > obs;
-    obs.observers().push_back( write_for_gnuplot( 1 ) );
+    obs.observers().push_back( write_for_gnuplot( 10 ) );
     obs.observers().push_back( snapshots );
 
     cout << "set term x11" << endl;
     cout << "set pm3d map" << endl;
     integrate_const( runge_kutta4< state_type >() , two_dimensional_phase_lattice( 1.2 ) ,
-            x , 0.0 , 101.0 , 0.1 , boost::ref( snapshots ) );
+            x , 0.0 , 1001.0 , 0.1 , boost::ref( obs ) );
 
 
     return 0;

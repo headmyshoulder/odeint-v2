@@ -58,6 +58,4 @@ int main()
     odeint_wrapper stepper;
 
     run( stepper , 10000 , 1E-6 );
-
-    std::cout << BOOST_INTEL_CXX_VERSION << std::endl;
 }

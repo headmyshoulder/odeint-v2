@@ -40,6 +40,8 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+/** ToDo try_step stepsize changed return values doesn't make too much sense here as we have order control as well */
+
 template<
 class State ,
 class Value = double ,
