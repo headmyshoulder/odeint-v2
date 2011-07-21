@@ -418,6 +418,38 @@ struct default_operations
         typedef void result_type;
     };
 
+    template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac2 , class Fac4 = Fac3 , class Fac5 = Fac4 , class Fac6 = Fac5 , class Fac7 = Fac6 , class Fac8 = Fac7 , class Fac9 = Fac8 , class Fac10 = Fac9 , class Fac11 = Fac10 , class Fac12 = Fac11 , class Fac13 = Fac12 , class Fac14 = Fac13 >
+    struct scale_sum14
+    {
+        const Fac1 m_alpha1;
+        const Fac2 m_alpha2;
+        const Fac3 m_alpha3;
+        const Fac4 m_alpha4;
+        const Fac5 m_alpha5;
+        const Fac6 m_alpha6;
+        const Fac7 m_alpha7;
+        const Fac8 m_alpha8;
+        const Fac9 m_alpha9;
+        const Fac10 m_alpha10;
+        const Fac11 m_alpha11;
+        const Fac12 m_alpha12;
+        const Fac13 m_alpha13;
+        const Fac14 m_alpha14;
+
+        scale_sum14( const Fac1 &alpha1 , const Fac2 &alpha2 , const Fac3 &alpha3 , const Fac4 &alpha4 ,
+                const Fac5 &alpha5 , const Fac6 &alpha6 , const Fac7 &alpha7 , const Fac8 &alpha8 , const Fac9 &alpha9 ,
+                const Fac10 &alpha10 , const Fac11 &alpha11 , const Fac12 &alpha12 , const Fac13 &alpha13 , const Fac14 &alpha14 )
+        : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) , m_alpha4( alpha4 ) , m_alpha5( alpha5 ) , m_alpha6( alpha6 ) , m_alpha7( alpha7 ) , m_alpha8( alpha8 ) , m_alpha9( alpha9 ) , m_alpha10( alpha10 ) , m_alpha11( alpha11 ) , m_alpha12( alpha12 ) , m_alpha13( alpha13 ) , m_alpha14( alpha14 ) { }
+
+        template< class T1 , class T2 , class T3 , class T4 , class T5 , class T6 , class T7 , class T8 , class T9 , class T10 , class T11 , class T12 , class T13 , class T14 , class T15 >
+        void operator()( T1 &t1 , const T2 &t2 , const T3 &t3 , const T4 &t4 , const T5 &t5 , const T6 &t6 , const T7 &t7 , const T8 &t8 , const T9 &t9 , const T10 &t10 , const T11 &t11 , const T12 &t12 , const T13 &t13 , const T14 &t14 , const T15 &t15 ) const
+        {
+            t1 = m_alpha1 * t2 + m_alpha2 * t3 + m_alpha3 * t4 + m_alpha4 * t5 + m_alpha5 * t6 + m_alpha6 * t7 + m_alpha7 * t8 + m_alpha8 * t9 + m_alpha9 * t10 + m_alpha10 * t11 + m_alpha11 * t12 + m_alpha12 * t13 + m_alpha13 * t14 + m_alpha14 * t15;
+        }
+
+        typedef void result_type;
+    };
+
     template< class Fac1 = double , class Fac2 = Fac1 >
     struct scale_sum_swap2
     {

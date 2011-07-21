@@ -145,6 +145,16 @@ inline void for_each14( Iterator1 first1 , Iterator1 last1 , Iterator2 first2 , 
         op( *first1++ , *first2++ , *first3++ , *first4++ , *first5++ , *first6++ , *first7++ , *first8++ , *first9++ , *first10++ , *first11++ , *first12++ , *first13++ , *first14++ );
 }
 
+template< class Iterator1 , class Iterator2 , class Iterator3 , class Iterator4 , class Iterator5 , class Iterator6 , class Iterator7 , class Iterator8 , class Iterator9 , class Iterator10 , class Iterator11 , class Iterator12 , class Iterator13 , class Iterator14 , class Iterator15 , class Operation >
+inline void for_each15( Iterator1 first1 , Iterator1 last1 , Iterator2 first2 , Iterator3 first3,
+        Iterator4 first4, Iterator5 first5, Iterator6 first6 , Iterator7 first7 , Iterator8 first8 ,
+        Iterator9 first9 , Iterator10 first10 , Iterator11 first11 , Iterator12 first12 , Iterator13 first13 ,
+        Iterator14 first14 , Iterator15 first15 , Operation op )
+{
+    for( ; first1 != last1 ; )
+        op( *first1++ , *first2++ , *first3++ , *first4++ , *first5++ , *first6++ , *first7++ , *first8++ , *first9++ , *first10++ , *first11++ , *first12++ , *first13++ , *first14++ , *first15++ );
+}
+
 //
 //template< size_t n , class Iterator1 , class Iterator2 , class Iterator3 , class Iterator4 , class Operation >
 //inline void for_eachn( Iterator1 first1 , Iterator1 last1 , Iterator2 first2 , Iterator4 first3 , Iterator4 first_array[n-1] , Operation op )

@@ -152,6 +152,17 @@ struct generic_rk_scale_sum< 12 , Operations , Fac , Time > : public Operations:
     typedef void result_type;
 };
 
+template< class Operations , class Fac , class Time >
+struct generic_rk_scale_sum< 13 , Operations , Fac , Time > : public Operations::template scale_sum14< Fac , Time >
+{
+    generic_rk_scale_sum( const boost::array<Fac,13> &a , const Time &dt )
+                    : Operations::template scale_sum14< Fac , Time >( 1.0 , a[0]*dt , a[1]*dt , a[2]*dt , a[3]*dt , a[4]*dt ,
+                            a[5]*dt , a[6]*dt , a[7]*dt , a[8]*dt , a[9]*dt , a[10]*dt , a[11]*dt , a[12]*dt  )
+                      { }
+
+    typedef void result_type;
+};
+
 
 // for error estimates
 template< size_t StageNumber , class Operations , class Fac , class Time >
@@ -217,6 +228,20 @@ struct generic_rk_scale_sum_err< 6 , Operations , Fac , Time > : public Operatio
 
     typedef void result_type;
 };
+
+
+// for rk87
+template< class Operations , class Fac , class Time >
+struct generic_rk_scale_sum_err< 13 , Operations , Fac , Time > : public Operations::template scale_sum13< Fac , Time >
+{
+    generic_rk_scale_sum_err( const boost::array<Fac,13> &a , const Time &dt )
+                    : Operations::template scale_sum13< Fac , Time >( a[0]*dt , a[1]*dt , a[2]*dt , a[3]*dt , a[4]*dt , a[5]*dt ,
+                        a[6]*dt , a[7]*dt , a[8]*dt , a[9]*dt , a[10]*dt , a[11]*dt , a[12]*dt )
+                      { }
+
+    typedef void result_type;
+};
+
 
 }
 }
