@@ -13,33 +13,15 @@
 
 #include <gmpxx.h>
 
-//mpf_class pow( const mpf_class &x , double p )
-//{
-//    return x;
-//}
-//
-//mpf_class min( const mpf_class &x , const mpf_class &y )
-//{
-//    return ( x < y ) ? x : y ;
-//}
-//
-//mpf_class max( const mpf_class &x , const mpf_class &y )
-//{
-//    return ( x > y ) ? x : y;
-//}
-
-
 #include <boost/numeric/odeint.hpp>
 
 using namespace std;
 using namespace boost::numeric::odeint;
 
-const int precision = 1024;
-
+//[ gmpxx_lorenz
 typedef mpf_class value_type;
 typedef boost::array< value_type , 3 > state_type;
 
-//[ gmpxx_lorenz
 struct lorenz
 {
     void operator()( const state_type &x , state_type &dxdt , value_type t ) const
@@ -81,6 +63,7 @@ struct streaming_observer
 int main( int argc , char **argv )
 {
     //[ gmpxx_integration
+    const int precision = 1024;
     mpf_set_default_prec( precision );
 
     state_type x = {{ value_type( 10.0 ) , value_type( 10.0 ) , value_type( 10.0 ) }};

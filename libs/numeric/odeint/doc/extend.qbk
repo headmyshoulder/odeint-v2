@@ -14,6 +14,8 @@ gsl_vector, gsl_matrix, ublas::matrix, blitz::matrix, thrust
 
 gsl_complex, complex, thrust
 
+min, max, pow
+
 [endsect]
 
 [endsect]
