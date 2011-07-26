@@ -1,5 +1,5 @@
 /*
- * phase_oscillator_example.cu
+ * phase_oscillator_ensemble.cu
  *
  * The example how the phase_oscillator ensemble can be implemented using CUDA and thrust
  *
@@ -10,15 +10,20 @@
 
 #include <iostream>
 #include <cmath>
-#include <cstdlib>
-#include <ctime>
+#include <utility>
 
 #include <thrust/device_vector.h>
+#include <thrust/reduce.h>
+#include <thrust/functional.h>
 
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/external/thrust/thrust_algebra.hpp>
 #include <boost/numeric/odeint/external/thrust/thrust_operations.hpp>
 #include <boost/numeric/odeint/external/thrust/thrust_resize.hpp>
+
+#include <boost/random.hpp>
+
+
 
 using namespace std;
 
@@ -30,135 +35,169 @@ typedef double value_type;
 //change this to host_vector< ... > of you want to run on CPU
 typedef thrust::device_vector< value_type > state_type;
 typedef thrust::device_vector< size_t > index_vector_type;
-//typedef thrust::host_vector< value_type > state_type;
-//typedef thrust::host_vector< size_t > index_vector_type;
+// typedef thrust::host_vector< value_type > state_type;
+// typedef thrust::host_vector< size_t > index_vector_type;
 
 
+struct calc_mean_field
+{
+    struct sin_functor : public thrust::unary_function< value_type , value_type >
+    {
+        __host__ __device__
+        value_type operator()( value_type x) const
+        {
+            return sin( x );
+        }
+    };
 
+    struct cos_functor : public thrust::unary_function< value_type , value_type >
+    {
+        __host__ __device__
+        value_type operator()( value_type x) const
+        {
+            return cos( x );
+        }
+    };
 
-/*
- * This implements the rhs of the dynamical equation:
- * \phi'_0 = \omega_0 + sin( \phi_1 - \phi_0 )
- * \phi'_i  = \omega_i + sin( \phi_i+1 - \phi_i ) + sin( \phi_i - \phi_i-1 )
- * \phi'_N-1 = \omega_N-1 + sin( \phi_N-1 - \phi_N-2 )
- */
+    std::pair< value_type , value_type > get_mean( const state_type &x ) const
+    {
+        value_type sin_sum = thrust::reduce(
+                thrust::make_transform_iterator( x.begin() , sin_functor() ) ,
+                thrust::make_transform_iterator( x.end() , sin_functor() ) );
+        value_type cos_sum = thrust::reduce(
+                thrust::make_transform_iterator( x.begin() , cos_functor() ) ,
+                thrust::make_transform_iterator( x.end() , cos_functor() ) );
+
+        cos_sum /= value_type( x.size() );
+        sin_sum /= value_type( x.size() );
+
+        value_type K = sqrt( cos_sum * cos_sum + sin_sum * sin_sum );
+        value_type Theta = atan2( sin_sum , cos_sum );
+
+        return std::make_pair( K , Theta );
+    }
+};
+
 class phase_oscillator_ensemble
 {
 
 public:
 
-    struct mean_field_functor
-    {
-        template< class Tuple >
-        __host__ __device__
-        void operator()( Tuple t )
-        {
-
-        }
-    };
-
     struct sys_functor
     {
-        value_type m_K , m_Theta;
-        sys_functor( value_type K , value_type Theta )
-        : m_K( K ) , m_Theta( Theta ) { }
+        value_type m_K , m_Theta , m_epsilon;
+        sys_functor( value_type K , value_type Theta , value_type epsilon )
+        : m_K( K ) , m_Theta( Theta ) , m_epsilon( epsilon ) { }
 
         template< class Tuple >
         __host__ __device__
         void operator()( Tuple t )
         {
-//            thrust::get<4>(t) = omega + sin( phi_right - phi ) + sin( phi - phi_left );
+            thrust::get<2>(t) = thrust::get<1>(t) + m_epsilon * m_K * sin( m_Theta - thrust::get<0>(t) );
         }
     };
 
-    phase_oscillators( state_type &omega )
-        : m_omega( omega ) , m_N( omega.size() ) , m_prev( m_N ) , m_next( m_N )
+    phase_oscillator_ensemble( size_t N , value_type g = 1.0 , value_type epsilon = 1.0 )
+        : m_omega() , m_N( N ) , m_epsilon( epsilon )
     {
-        // build indices pointing to left and right neighbours
-        thrust::counting_iterator<size_t> c( 0 );
-        thrust::copy( c , c+m_N-1 , m_prev.begin()+1 );
-        m_prev[0] = 0; // m_prev = { 0 , 0 , 1 , 2 , 3 , ... , N-1 }
-
-        thrust::copy( c+1 , c+m_N , m_next.begin() );
-        m_next[m_N-1] = m_N-1; // m_next = { 1 , 2 , 3 , ... , N-1 , N-1 }
-
-        /*thrust::copy( m_prev.begin() , m_prev.end() ,
-                    std::ostream_iterator< size_t >(std::cout, " ") );
-        std::cout << std::endl;*/
+        create_frequencies( g );
     }
 
-
-
-    void operator() ( const state_type &x , state_type &dxdt , const value_type dt )
+    void create_frequencies( value_type g )
     {
+        boost::mt19937 rng;
+        boost::cauchy_distribution< value_type > cauchy( 0.0 , g );
+        boost::variate_generator< boost::mt19937&, boost::cauchy_distribution< value_type > > gen( rng , cauchy );
+        vector< value_type > omega( m_N );
+        generate( omega.begin() , omega.end() , gen );
+        m_omega = omega;
+    }
+
+    void set_epsilon( value_type epsilon ) { m_epsilon = epsilon; }
+
+    value_type get_epsilon( void ) const { return m_epsilon; }
+
+    void operator() ( const state_type &x , state_type &dxdt , const value_type dt ) const
+    {
+        calc_mean_field mean_field_calculator;
+        std::pair< value_type , value_type > mean_field = mean_field_calculator.get_mean( x );
+
         thrust::for_each(
-                thrust::make_zip_iterator(
-                        thrust::make_tuple(
-                                x.begin() ,
-                                thrust::make_permutation_iterator( x.begin() , m_prev.begin() ) ,
-                                thrust::make_permutation_iterator( x.begin() , m_next.begin() ) ,
-                                m_omega.begin() ,
-                                dxdt.begin()
-                                ) ),
-                thrust::make_zip_iterator(
-                        thrust::make_tuple(
-                                x.end() ,
-                                thrust::make_permutation_iterator( x.begin() , m_prev.end() ) ,
-                                thrust::make_permutation_iterator( x.begin() , m_next.end() ) ,
-                                m_omega.end() ,
-                                dxdt.end()) ) ,
-                sys_functor()
+                thrust::make_zip_iterator( thrust::make_tuple( x.begin() , m_omega.begin() , dxdt.begin() ) ),
+                thrust::make_zip_iterator( thrust::make_tuple( x.end() , m_omega.end() , dxdt.end()) ) ,
+                sys_functor( mean_field.first , mean_field.second , m_epsilon )
                 );
     }
 
 private:
-    const state_type &m_omega;
+
+    state_type m_omega;
     const size_t m_N;
-    index_vector_type m_prev;
-    index_vector_type m_next;
+    value_type m_epsilon;
 };
 
 
-const size_t N = 16;
-const value_type epsilon = 6.0/(N*N); // should be < 8/N^2 to see phase locking
+//[ phase_oscillator_ensemble_observer
+struct statistics_observer
+{
+    value_type m_K_mean;
+    size_t m_count;
+
+    statistics_observer( void )
+    : m_K_mean( 0.0 ) , m_count( 0 ) { }
+
+    template< class State >
+    void operator()( const State &x , value_type t )
+    {
+        calc_mean_field mean_field_calculator;
+        std::pair< value_type , value_type > mean = mean_field_calculator.get_mean( x );
+        m_K_mean += mean.first;
+        ++m_count;
+    }
+
+    value_type get_K_mean( void ) const { return ( m_count != 0 ) ? m_K_mean / value_type( m_count ) : 0.0 ; }
+
+    void reset( void ) { m_K_mean = 0.0; m_count = 0; }
+};
+//]
+
+
+
+// const size_t N = 16384 * 128;
+const size_t N = 16384;
+const value_type pi = 3.1415926535897932384626433832795029;
+const value_type dt = 0.1;
 
 int main( int arc , char* argv[] )
 {
-    srand( time(NULL) );
-    // create initial conditions on host:
-    vector< value_type > x_host( N );
-    //create omegas on host
-    vector< value_type > omega_host( N );
-    for( size_t i=0 ; i<N ; ++i )
-    {
-        x_host[i] = 2.0*3.14159265*(double)(rand())/RAND_MAX;
-        omega_host[i] = (N-i)*epsilon; // decreasing frequencies
-    }
+    boost::mt19937 rng;
+    boost::uniform_real< value_type > unif( 0.0 , 2.0 * pi );
+    boost::variate_generator< boost::mt19937&, boost::uniform_real< value_type > > gen( rng , unif );
 
-    //copy to device
-    state_type x = x_host;
-    state_type omega = omega_host;
+    // vectors for host and device
+    vector< value_type > x_host( N );
+    state_type x( N );
+
 
     //create error stepper
-    explicit_rk4< state_type , value_type , state_type , value_type ,
-                  thrust_algebra , thrust_operations , adjust_size_initially_tag  > stepper;
+    runge_kutta4< state_type , value_type , state_type , value_type , thrust_algebra , thrust_operations > stepper;
+    phase_oscillator_ensemble ensemble( N , 1.0 );
+    statistics_observer obs;
 
-    phase_oscillators sys( omega );
-
-    value_type t = 0.0;
-    const value_type dt = 0.1;
-    while( t < 10.0 )
+    for( value_type epsilon = 0.0 ; epsilon < 5.0 ; epsilon += 0.1 )
     {
-        stepper.do_step( sys , x , t , dt );
-        t += dt;
+        ensemble.set_epsilon( epsilon );
+        obs.reset();
+
+        // start with random initial conditions
+        generate( x_host.begin() , x_host.end() , gen );
+        x = x_host;
+
+        // calculate some transients steps
+        integrate_const( stepper , boost::ref( ensemble ) , x , 0.0 , 10.0 , dt );
+
+        // integrate and compute the statistics
+        integrate_const( stepper , boost::ref( ensemble ) , x , 0.0 , 100.0 , dt , boost::ref( obs ) );
+        cout << epsilon << "\t" << obs.get_K_mean() << endl;
     }
-
-    /**ToDo: use integrate functions, maybe with algebra_dispatcher */
-
-    //perform integration using standard Runge-Kutta-Cash-Carp Stepper and error bounds ~ 1E-6
-    //integrate_const( phase_oscillators(omega) , x , 0.0 , 100.0 , 0.1 );
-
-    thrust::copy( x.begin() , x.end() ,
-            std::ostream_iterator< value_type >(std::cout, " ") );
-    std::cout << std::endl;
 }

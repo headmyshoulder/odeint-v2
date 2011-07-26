@@ -7,21 +7,32 @@ NVCC = $(CUDA_ROOT)/bin/nvcc
 
 INCLUDES += -I$(BOOST_ROOT) -I$(THRUST_ROOT) -I$(CUDA_ROOT)/include -I../../../../..
 
-NVCCFLAGS = -O3 $(INCLUDES) -arch $(ARCH) --compiler-bindir=/usr/bin/g++-4.3
+NVCCFLAGS = -O3 $(INCLUDES) -arch $(ARCH) --compiler-bindir=/usr/bin/g++-4.4 -Xcompiler -fopenmp -DTHRUST_DEVICE_BACKEND=THRUST_DEVICE_BACKEND_OMP 
 
-LDLIBS = -lcudart
+LDLIBS = -lcudart -lgomp
 LDFLAGS = -L$(CUDA_ROOT)/lib64
 
 %.co : %.cu
 	$(NVCC) $(NVCCFLAGS) -o $@ -c $<
 
 
-all : phase_osc_chain
+all : phase_oscillator_chain phase_oscillator_ensemble lorenz_bifurcations
 
 
-phase_osc_chain : phase_osc_chain.co
-	$(CC) -o phase_osc_chain $(LDFLAGS) $(LDLIBS) phase_osc_chain.co
-phase_osc_chain.co : phase_osc_chain.cu
+phase_oscillator_chain : phase_oscillator_chain.co
+	$(CC) -o phase_oscillator_chain $(LDFLAGS) $(LDLIBS) phase_oscillator_chain.co
+phase_oscillator_chain.co : phase_oscillator_chain.cu
+
+
+phase_oscillator_ensemble : phase_oscillator_ensemble.co
+	$(CC) -o phase_oscillator_ensemble $(LDFLAGS) $(LDLIBS) phase_oscillator_ensemble.co
+phase_oscillator_ensemble.co : phase_oscillator_ensemble.cu
+
+
+lorenz_bifurcations : lorenz_bifurcations.co
+	$(CC) -o lorenz_bifurcations $(LDFLAGS) $(LDLIBS) lorenz_bifurcations.co
+lorenz_bifurcations.co : lorenz_bifurcations.cu
+
 
 clean :
-	-rm *~ *.o *.co phase_osc_chain
+	-rm *~ *.o *.co phase_oscillator_chain phase_oscillator_ensemble lorenz_bifurcations

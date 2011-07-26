@@ -6,5 +6,5 @@
   [[[@../../examples/stuart_landau.cpp stuart_landau.cpp]] [The Stuart-Landau example shows how odeint can be used with complex state types.]]
   [[[@../../examples/fpu.cpp fpu.cpp]] [The Fermi-Pasta-Ulam (FPU) example shows how odeint can be used to integrate lattice systems.]]
   [[[@../../examples/phase_oscillator_ensemble.cpp phase_oscillator_ensemble.cpp]] [The phase oscillator ensemble example shows how globally coupled oscillators can be analyzed and how statistical measures can be computed during integration.]]
-  [[[@../../examples/thrust/phase_osc_chain.cu phase_osc_chain.cu]] [tba.]]
+  [[[@../../examples/thrust/phase_oscillator_chain.cu phase_oscillator_chain.cu]] [tba.]]
 ]
