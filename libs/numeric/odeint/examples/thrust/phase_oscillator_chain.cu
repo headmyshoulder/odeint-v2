@@ -21,8 +21,8 @@
 
 #include <iostream>
 #include <cmath>
-#include <cstdlib>
-#include <ctime>
+
+#include <boost/random.hpp>
 
 #include <thrust/device_vector.h>
 #include <thrust/iterator/permutation_iterator.h>
@@ -45,6 +45,7 @@ typedef thrust::device_vector< value_type > state_type;
 typedef thrust::device_vector< size_t > index_vector_type;
 //typedef thrust::host_vector< value_type > state_type;
 //typedef thrust::host_vector< size_t > index_vector_type;
+
 
 
 /*
@@ -73,8 +74,8 @@ public:
         }
     };
 
-    phase_oscillators( state_type &omega )
-        : m_omega( omega ) , m_N( omega.size() ) , m_prev( m_N ) , m_next( m_N )
+    phase_oscillators( const state_type &omega )
+        : m_omega( omega ) , m_N( omega.size() ) , m_prev( omega.size() ) , m_next( omega.size() )
     {
         // build indices pointing to left and right neighbours
         thrust::counting_iterator<size_t> c( 0 );
@@ -83,10 +84,6 @@ public:
 
         thrust::copy( c+1 , c+m_N , m_next.begin() );
         m_next[m_N-1] = m_N-1; // m_next = { 1 , 2 , 3 , ... , N-1 , N-1 }
-
-        /*thrust::copy( m_prev.begin() , m_prev.end() ,
-                    std::ostream_iterator< size_t >(std::cout, " ") );
-        std::cout << std::endl;*/
     }
 
 
@@ -114,6 +111,7 @@ public:
     }
 
 private:
+
     const state_type &m_omega;
     const size_t m_N;
     index_vector_type m_prev;
@@ -122,19 +120,23 @@ private:
 
 
 const size_t N = 16;
-const value_type epsilon = 6.0/(N*N); // should be < 8/N^2 to see phase locking
+const value_type pi = 3.1415926535897932384626433832795029;
+const value_type epsilon = 6.0 / ( N * N ); // should be < 8/N^2 to see phase locking
+const value_type dt = 0.1;
 
 int main( int arc , char* argv[] )
 {
-    srand( time(NULL) );
-    // create initial conditions on host:
+    boost::mt19937 rng;
+    boost::uniform_real< value_type > unif( 0.0 , 2.0 * pi );
+    boost::variate_generator< boost::mt19937&, boost::uniform_real< value_type > > gen( rng , unif );
+
+    // create initial conditions and omegas on host:
     vector< value_type > x_host( N );
-    //create omegas on host
     vector< value_type > omega_host( N );
     for( size_t i=0 ; i<N ; ++i )
     {
-        x_host[i] = 2.0*3.14159265*(double)(rand())/RAND_MAX;
-        omega_host[i] = (N-i)*epsilon; // decreasing frequencies
+        x_host[i] = gen();
+        omega_host[i] = ( N - i ) * epsilon; // decreasing frequencies
     }
 
     //copy to device
@@ -142,13 +144,11 @@ int main( int arc , char* argv[] )
     state_type omega = omega_host;
 
     //create error stepper
-    runge_kutta4< state_type , value_type , state_type , value_type ,
-                  thrust_algebra , thrust_operations > stepper;
+    runge_kutta4< state_type , value_type , state_type , value_type , thrust_algebra , thrust_operations > stepper;
 
     phase_oscillators sys( omega );
 
     value_type t = 0.0;
-    const value_type dt = 0.1;
     while( t < 10.0 )
     {
         stepper.do_step( sys , x , t , dt );
@@ -157,10 +157,9 @@ int main( int arc , char* argv[] )
 
     /**ToDo: use integrate functions, maybe with algebra_dispatcher */
 
-    //perform integration using standard Runge-Kutta-Cash-Carp Stepper and error bounds ~ 1E-6
-    //integrate_const( phase_oscillators(omega) , x , 0.0 , 100.0 , 0.1 );
+    // perform integration using standard Runge-Kutta-Cash-Carp Stepper and error bounds ~ 1E-6
+    // integrate_const( phase_oscillators(omega) , x , 0.0 , 100.0 , 0.1 );
 
-    thrust::copy( x.begin() , x.end() ,
-            std::ostream_iterator< value_type >(std::cout, " ") );
+    thrust::copy( x.begin() , x.end() , std::ostream_iterator< value_type >( std::cout , " " ) );
     std::cout << std::endl;
 }

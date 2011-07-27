@@ -5,6 +5,17 @@
   OK * check copyright note
   OK * describe every file in the preamble
   OK * check spacings, not tabs
+  
+* integrate functions:
+  * dense_output_stepper : call with reset
+  * dopri5 in integrate_const does not word
+  
+* THRUST
+  * test with controlled steppers (lorenz bifurcations test)
+  * test with dense output steppers (ensemble test)
+  * test with units
+  * introduce get_value in thrust::operations::rel_error und thrust::operations::max for boost::units
+  * check copy implementation in thrust::resize()
 
 * DOCUMENTATION
   * Tutorials
