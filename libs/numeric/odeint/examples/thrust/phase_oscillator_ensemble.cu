@@ -9,6 +9,7 @@
 
 
 #include <iostream>
+#include <fstream>
 #include <cmath>
 #include <utility>
 
@@ -22,7 +23,7 @@
 #include <boost/numeric/odeint/external/thrust/thrust_resize.hpp>
 
 #include <boost/random.hpp>
-
+#include <boost/timer.hpp>
 
 
 using namespace std;
@@ -167,6 +168,11 @@ struct statistics_observer
 const size_t N = 16384;
 const value_type pi = 3.1415926535897932384626433832795029;
 const value_type dt = 0.1;
+const value_type d_epsilon = 0.1;
+const value_type epsilon_min = 0.0;
+const value_type epsilon_max = 5.0;
+const value_type t_transients = 10.0;
+const value_type t_max = 100.0;
 
 int main( int arc , char* argv[] )
 {
@@ -174,30 +180,73 @@ int main( int arc , char* argv[] )
     boost::uniform_real< value_type > unif( 0.0 , 2.0 * pi );
     boost::variate_generator< boost::mt19937&, boost::uniform_real< value_type > > gen( rng , unif );
 
-    // vectors for host and device
+    // initial conditions on host
     vector< value_type > x_host( N );
-    state_type x( N );
+    generate( x_host.begin() , x_host.end() , gen );
 
-
-    //create error stepper
-    runge_kutta4< state_type , value_type , state_type , value_type , thrust_algebra , thrust_operations > stepper;
     phase_oscillator_ensemble ensemble( N , 1.0 );
-    statistics_observer obs;
 
-    for( value_type epsilon = 0.0 ; epsilon < 5.0 ; epsilon += 0.1 )
+
+
+
+    boost::timer timer;
+    boost::timer timer_local;
+    double dopri5_time = 0.0 , rk4_time = 0.0;
     {
-        ensemble.set_epsilon( epsilon );
-        obs.reset();
+        //create dense output stepper
+        typedef runge_kutta_dopri5< state_type , value_type , state_type , value_type , thrust_algebra , thrust_operations > error_stepper_type;
+        typedef controlled_error_stepper< error_stepper_type > controlled_stepper_type;
+        typedef dense_output_controlled_explicit_fsal< controlled_stepper_type > dense_output_type;
 
-        // start with random initial conditions
-        generate( x_host.begin() , x_host.end() , gen );
-        x = x_host;
+        ofstream fout( "phase_ensemble_dopri5.dat" );
+        timer.restart();
+        for( value_type epsilon = epsilon_min ; epsilon < epsilon_max ; epsilon += d_epsilon )
+        {
+            ensemble.set_epsilon( epsilon );
+            statistics_observer obs;
+            state_type x = x_host;
 
-        // calculate some transients steps
-        integrate_const( stepper , boost::ref( ensemble ) , x , 0.0 , 10.0 , dt );
+            timer_local.restart();
 
-        // integrate and compute the statistics
-        integrate_const( stepper , boost::ref( ensemble ) , x , 0.0 , 100.0 , dt , boost::ref( obs ) );
-        cout << epsilon << "\t" << obs.get_K_mean() << endl;
+            // calculate some transients steps
+            size_t steps1 = integrate_const( dense_output_type() , boost::ref( ensemble ) , x , 0.0 , t_transients , dt );
+
+            // integrate and compute the statistics
+            size_t steps2 = integrate_const( dense_output_type() , boost::ref( ensemble ) , x , 0.0 , t_max , dt , boost::ref( obs ) );
+
+            fout << epsilon << "\t" << obs.get_K_mean() << endl;
+            cout << "Dopri5 : " << epsilon << "\t" << obs.get_K_mean() << "\t" << timer_local.elapsed() << "\t" << steps1 << "\t" << steps2 << endl;
+        }
+        dopri5_time = timer.elapsed();
     }
+
+
+
+    {
+        typedef runge_kutta4< state_type , value_type , state_type , value_type , thrust_algebra , thrust_operations > stepper_type;
+
+        ofstream fout( "phase_ensemble_rk4.dat" );
+        timer.restart();
+        for( value_type epsilon = epsilon_min ; epsilon < epsilon_max ; epsilon += d_epsilon )
+        {
+            ensemble.set_epsilon( epsilon );
+            statistics_observer obs;
+            state_type x = x_host;
+
+            timer_local.restart();
+
+            // calculate some transients steps
+            size_t steps1 = integrate_const( stepper_type() , boost::ref( ensemble ) , x , 0.0 , t_transients , dt );
+
+            // integrate and compute the statistics
+            size_t steps2 = integrate_const( stepper_type() , boost::ref( ensemble ) , x , 0.0 , t_max , dt , boost::ref( obs ) );
+            fout << epsilon << "\t" << obs.get_K_mean() << endl;
+            cout << "RK4     : " << epsilon << "\t" << obs.get_K_mean() << "\t" << timer_local.elapsed() << "\t" << steps1 << "\t" << steps2 << endl;
+        }
+        rk4_time = timer.elapsed();
+    }
+
+    cout << "Dopri 5 : " << dopri5_time << " s\n";
+    cout << "RK4     : " << rk4_time << "\n";
+
 }

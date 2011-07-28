@@ -35,4 +35,4 @@ lorenz_bifurcations.co : lorenz_bifurcations.cu
 
 
 clean :
-	-rm *~ *.o *.co phase_oscillator_chain phase_oscillator_ensemble lorenz_bifurcations
+	-rm *~ *.o *.co phase_oscillator_chain phase_oscillator_ensemble lorenz_bifurcations 

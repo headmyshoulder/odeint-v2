@@ -110,7 +110,8 @@ size_t integrate_adaptive(
         stepper.do_step( system );
         ++count;
     }
-    obs( stepper.current_state() , stepper.current_time() );
+    stepper.calc_state( end_time , start_state );
+    obs( start_state , end_time );
     return count;
 }
 

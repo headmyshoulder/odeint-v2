@@ -1,21 +1,33 @@
 * REFACTORING AND CLEANUP
   * check if everywhere static_cast< value_type > is used
   * check if rational number are expressed as a / b with a and b integers!, neccessary fpr gmpxx
+  * bessere Namen für dense_output_controlled_explicit_fsal
   OK * check header guards
   OK * check copyright note
   OK * describe every file in the preamble
   OK * check spacings, not tabs
+
   
-* integrate functions:
+* INTEGRATE FUNCTIONS
   * dense_output_stepper : call with reset
-  * dopri5 in integrate_const does not word
-  
+  * dopri5 in integrate_const does not work
+  * define EXACTLY what integrate_const and integrate_adaptive for every stepper means, documentate
+    * integrate_adaptive() : start_time , end_time
+      * start_time , t1 , t2 , ... , t_n-1 , end_time ?
+      * OR start_time , t1 , t2 , ... , t_n-1 , t_n, where t_n-1 < end_time and t_n > end_time
+
+
 * THRUST
-  * test with controlled steppers (lorenz bifurcations test)
-  * test with dense output steppers (ensemble test)
-  * test with units
-  * introduce get_value in thrust::operations::rel_error und thrust::operations::max for boost::units
+  OK * test with controlled steppers (lorenz bifurcations test)
+    * it works, but it does not make sense  
+  OK * test with dense output steppers (ensemble test)
+    OK * it works, compare performance between rk4 and dopri5
+  OK * test with units
+    * thrust will not support units
+  OK * introduce get_value in thrust::operations::rel_error und thrust::operations::max for boost::units
+    * no, we will not do this
   * check copy implementation in thrust::resize()
+
 
 * DOCUMENTATION
   * Tutorials
@@ -23,6 +35,7 @@
   * HOWTO extend odeint
   * use gh-pages, remove html from the source control
   * doxygen generated reference
+
 
 * RECHERCHE
   * Hoisting
