@@ -30,6 +30,7 @@ using namespace std;
 
 using namespace boost::numeric::odeint;
 
+//[ thrust_phase_ensemble_state_type
 //change this to float if your device does not support double computation
 typedef double value_type;
 
@@ -38,9 +39,9 @@ typedef thrust::device_vector< value_type > state_type;
 typedef thrust::device_vector< size_t > index_vector_type;
 // typedef thrust::host_vector< value_type > state_type;
 // typedef thrust::host_vector< size_t > index_vector_type;
+//]
 
-
-struct calc_mean_field
+struct mean_field_calculator
 {
     struct sin_functor : public thrust::unary_function< value_type , value_type >
     {
@@ -60,7 +61,7 @@ struct calc_mean_field
         }
     };
 
-    std::pair< value_type , value_type > get_mean( const state_type &x ) const
+    static std::pair< value_type , value_type > get_mean( const state_type &x )
     {
         value_type sin_sum = thrust::reduce(
                 thrust::make_transform_iterator( x.begin() , sin_functor() ) ,
@@ -120,8 +121,7 @@ public:
 
     void operator() ( const state_type &x , state_type &dxdt , const value_type dt ) const
     {
-        calc_mean_field mean_field_calculator;
-        std::pair< value_type , value_type > mean_field = mean_field_calculator.get_mean( x );
+        std::pair< value_type , value_type > mean_field = mean_field_calculator::get_mean( x );
 
         thrust::for_each(
                 thrust::make_zip_iterator( thrust::make_tuple( x.begin() , m_omega.begin() , dxdt.begin() ) ),
@@ -138,7 +138,7 @@ private:
 };
 
 
-//[ phase_oscillator_ensemble_observer
+//[ thrust_phase_oscillator_ensemble_observer
 struct statistics_observer
 {
     value_type m_K_mean;
@@ -150,8 +150,7 @@ struct statistics_observer
     template< class State >
     void operator()( const State &x , value_type t )
     {
-        calc_mean_field mean_field_calculator;
-        std::pair< value_type , value_type > mean = mean_field_calculator.get_mean( x );
+        std::pair< value_type , value_type > mean = mean_field_calculator::get_mean( x );
         m_K_mean += mean.first;
         ++m_count;
     }
@@ -249,4 +248,5 @@ int main( int arc , char* argv[] )
     cout << "Dopri 5 : " << dopri5_time << " s\n";
     cout << "RK4     : " << rk4_time << "\n";
 
+    return 0;
 }

@@ -29,7 +29,8 @@
     [@http://www.boost.org/doc/libs/release/libs/units/index.html `Boost.Units`]]
 [def __boost_fusion
     [@http://www.boost.org/doc/libs/release/libs/fusion/index.html `Boost.Fusion`]]
-
+[def __thrust
+    [@http://code.google.com/p/thrust/ `Thrust`]]
 
 
 [def __alpha '''&#945;''']
@@ -62,6 +63,8 @@
 [include getting_started.qbk]
 
 [include tutorial.qbk]
+
+[include details.qbk]
 
 [include extend.qbk]
 

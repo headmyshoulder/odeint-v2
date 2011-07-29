@@ -275,19 +275,3 @@ int main( int arc , char* argv[] )
 
     return 0;
 }
-
-
-/*
- * Performance resultd
- *
- * RK4:
- * real 2m2.997s
- * user    7m34.190s
- * sys 0m1.860s
- *
- * controlled dopri5:
- * real 11m18.226s
- * user    42m35.870s
- * sys 0m14.340s
- *
- */

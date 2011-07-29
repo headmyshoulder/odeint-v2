@@ -16,7 +16,7 @@ LDFLAGS = -L$(CUDA_ROOT)/lib64
 	$(NVCC) $(NVCCFLAGS) -o $@ -c $<
 
 
-all : phase_oscillator_chain phase_oscillator_ensemble lorenz_bifurcations
+all : phase_oscillator_chain phase_oscillator_ensemble lorenz_parameters
 
 
 phase_oscillator_chain : phase_oscillator_chain.co
@@ -29,10 +29,10 @@ phase_oscillator_ensemble : phase_oscillator_ensemble.co
 phase_oscillator_ensemble.co : phase_oscillator_ensemble.cu
 
 
-lorenz_bifurcations : lorenz_bifurcations.co
-	$(CC) -o lorenz_bifurcations $(LDFLAGS) $(LDLIBS) lorenz_bifurcations.co
-lorenz_bifurcations.co : lorenz_bifurcations.cu
+lorenz_parameters : lorenz_parameters.co
+	$(CC) -o lorenz_parameters $(LDFLAGS) $(LDLIBS) lorenz_parameters.co
+lorenz_parameters.co : lorenz_parameters.cu
 
 
 clean :
-	-rm *~ *.o *.co phase_oscillator_chain phase_oscillator_ensemble lorenz_bifurcations 
+	-rm *~ *.o *.co phase_oscillator_chain phase_oscillator_ensemble lorenz_parameters 

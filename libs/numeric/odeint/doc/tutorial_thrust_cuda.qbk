@@ -1,16 +1,55 @@
 [section Using Cuda and Thrust]
 
-[section Solving large systems]
+Modern graphic cards (graphic processing units - GPUs) can be used to speed up the performance of time consuming algorithms by means of massive parallelization. They are designed to execute many operations at one step. odeint can utilize the power of GPUs by means of CUDA and __thrust, which is a STL-like interface for the native CUDA API.
 
-phase oscillator ensemble
+To use odeint with CUDA a few points have to be taken into account. First of all, the problem has to be well choosen. It makes absolutely no sense to try to speed up the performance of three dimensional system. It is simply to small. One single function call on the GPU is slow but you can do a lot of operations with only one call. We have experienced that the system under consideration should have a minimal length of ['10[super 6]] to experience a performance jump. Secondly you have to use __thrust's functions and functors in the definition of the ODE. This might by tricky since it involves some kind of functional programming knowledge.
+
+Typical applications for CUDA and odeint are large system, like lattices or discretizations of PDE, and parameter studies. We introduce now three examples which show how the power of GPUs can be used in combination with odeint.
+
+[section Phase oscillator ensemble]
+
+[import ../examples/thrust/phase_oscillator_ensemble.cu]
+
+The first example is the phase oscillator ensemble from the previous section. It has a phase transition at ['__epsilon = 2] if the number of oscillator ['N] goes to infinity. In the case of finite ['N] this transition is smeared out.
+
+__thrust and Cuda are perfectly suited for such kind of problems where one needs a large number of particles, or like in this case oscillators. We start by defining the state type which is a `thrust::device_vector` which lives on the GPU. If you are not familar we recommend to read the ['Getting started] section on the __thrust page.
+
+[thrust_phase_ensemble_state_type]
+
+Thrust follows a functional programming approach. If you want to perform a calculation on the GPU you usually have to call a global function like `thrust::for_each`, `thrust::reduce`, ... with an appropriate local functor which performs the basic operation. An example is
+``
+struct add_two
+{
+    template< class T >
+    __host__ __device__
+    void operator()( T &t ) const
+    {
+        t += T( 2 );
+    }
+};
+
+// ...
+
+thrust::for_each( x.begin() , x.end() , add_two() );
+``
+which generically adds two to every element of the container `x`.
+
+
+
+
+[endsect]
+
+[section Large oscillator chains]
+
+[import ../examples/thrust/phase_oscillator_chain.cu]
 
 phase oscillator lattice
-
-blah blah
 
 [endsect]
 
 [section Parameter studies and bifurcations]
+
+[import ../examples/thrust/lorenz_parameters.cu]
 
 Bifurcations in the lorenz system
 

@@ -12,28 +12,6 @@
 
 [include tutorial_thrust_cuda.qbk]
 
-[section Odeint in detail]
-
-Different steppers
-
-Explicit steppers
-
-Implicit steppers
-
-Step size controll
-
-dense output
-
-Algebras and operations
-
-boost::range and boost::ref
-
-Overview and table
-
-[endsect]
-
-
-
 
 [section All examples]
 
@@ -42,12 +20,6 @@ The following table gives an overview over all examples.
 [include examples_table.qbk]
 
 [endsect]
-
-
-
-
-
-
 
 
 
