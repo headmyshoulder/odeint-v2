@@ -98,7 +98,7 @@ public:
       m_table( m_k_max ) ,
       m_mp_states( m_k_max+1 ) ,
       m_derivs( m_k_max+1 ) ,
-      m_diffs( 2*m_k_max ) ,
+      m_diffs( 2*m_k_max+2 ) ,
       STEPFAC1( 0.65 ) , STEPFAC2( 0.94 ) , STEPFAC3( 0.02 ) , STEPFAC4( 4.0 ) , KFAC1( 0.8 ) , KFAC2( 0.9 )
     {
         for( unsigned short i = 0; i < m_k_max+1; i++ )

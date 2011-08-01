@@ -21,6 +21,8 @@
 #include <boost/test/unit_test.hpp>
 
 #include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
+#include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>
+
 #include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
 
 using namespace boost::unit_test;
@@ -61,6 +63,16 @@ BOOST_AUTO_TEST_CASE( test_bulirsch_stoer )
     size_t steps = integrate_adaptive( stepper , lorenz() , x , 0.0 , 10.0 , dt );
 
     std::cout << "required steps: " << steps << std::endl;
+
+    bulirsch_stoer_dense_out< state_type > bs_do( 1E-9 , 1E-9 , 1.0 , 0.0 );
+    x[0] = 10.0 ; x[1] = 10.0 ; x[2] = 5.0;
+    double t = 0.0;
+    dt = 1E-2;
+    while( bs_do.try_step( lorenz() , x , t , dt ) == step_size_decreased )
+    { }
+    std::cout << "one step successful " << std::endl;
+    bs_do.try_step( lorenz() , x , t , dt );
+    std::cout << "second step successful " << std::endl;
 }
 
 BOOST_AUTO_TEST_SUITE_END()
