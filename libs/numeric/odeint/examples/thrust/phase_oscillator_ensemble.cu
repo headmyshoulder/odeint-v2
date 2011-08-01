@@ -36,11 +36,11 @@ typedef double value_type;
 
 //change this to host_vector< ... > of you want to run on CPU
 typedef thrust::device_vector< value_type > state_type;
-typedef thrust::device_vector< size_t > index_vector_type;
 // typedef thrust::host_vector< value_type > state_type;
-// typedef thrust::host_vector< size_t > index_vector_type;
 //]
 
+
+//[ thrust_phase_ensemble_mean_field_calculator
 struct mean_field_calculator
 {
     struct sin_functor : public thrust::unary_function< value_type , value_type >
@@ -63,9 +63,11 @@ struct mean_field_calculator
 
     static std::pair< value_type , value_type > get_mean( const state_type &x )
     {
+        //[ thrust_phase_ensemble_sin_sum
         value_type sin_sum = thrust::reduce(
                 thrust::make_transform_iterator( x.begin() , sin_functor() ) ,
                 thrust::make_transform_iterator( x.end() , sin_functor() ) );
+        //]
         value_type cos_sum = thrust::reduce(
                 thrust::make_transform_iterator( x.begin() , cos_functor() ) ,
                 thrust::make_transform_iterator( x.end() , cos_functor() ) );
@@ -79,7 +81,11 @@ struct mean_field_calculator
         return std::make_pair( K , Theta );
     }
 };
+//]
 
+
+
+//[ thrust_phase_ensemble_sys_function
 class phase_oscillator_ensemble
 {
 
@@ -88,6 +94,7 @@ public:
     struct sys_functor
     {
         value_type m_K , m_Theta , m_epsilon;
+
         sys_functor( value_type K , value_type Theta , value_type epsilon )
         : m_K( K ) , m_Theta( Theta ) , m_epsilon( epsilon ) { }
 
@@ -99,6 +106,8 @@ public:
         }
     };
 
+    // ...
+    //<-
     phase_oscillator_ensemble( size_t N , value_type g = 1.0 , value_type epsilon = 1.0 )
         : m_omega() , m_N( N ) , m_epsilon( epsilon )
     {
@@ -118,6 +127,7 @@ public:
     void set_epsilon( value_type epsilon ) { m_epsilon = epsilon; }
 
     value_type get_epsilon( void ) const { return m_epsilon; }
+    //->
 
     void operator() ( const state_type &x , state_type &dxdt , const value_type dt ) const
     {
@@ -130,15 +140,19 @@ public:
                 );
     }
 
+    // ...
+    //<-
 private:
 
     state_type m_omega;
     const size_t m_N;
     value_type m_epsilon;
+    //->
 };
+//]
 
 
-//[ thrust_phase_oscillator_ensemble_observer
+//[ thrust_phase_ensemble_observer
 struct statistics_observer
 {
     value_type m_K_mean;
@@ -192,10 +206,11 @@ int main( int arc , char* argv[] )
     boost::timer timer_local;
     double dopri5_time = 0.0 , rk4_time = 0.0;
     {
-        //create dense output stepper
+        //[thrust_phase_ensemble_define_dopri5
         typedef runge_kutta_dopri5< state_type , value_type , state_type , value_type , thrust_algebra , thrust_operations > error_stepper_type;
         typedef controlled_error_stepper< error_stepper_type > controlled_stepper_type;
         typedef dense_output_controlled_explicit_fsal< controlled_stepper_type > dense_output_type;
+        //]
 
         ofstream fout( "phase_ensemble_dopri5.dat" );
         timer.restart();
@@ -208,7 +223,9 @@ int main( int arc , char* argv[] )
             timer_local.restart();
 
             // calculate some transients steps
+            //[ thrust_phase_ensemble_integration
             size_t steps1 = integrate_const( dense_output_type() , boost::ref( ensemble ) , x , 0.0 , t_transients , dt );
+            //]
 
             // integrate and compute the statistics
             size_t steps2 = integrate_const( dense_output_type() , boost::ref( ensemble ) , x , 0.0 , t_max , dt , boost::ref( obs ) );
@@ -222,7 +239,9 @@ int main( int arc , char* argv[] )
 
 
     {
+        //[ thrust_phase_ensemble_define_rk4
         typedef runge_kutta4< state_type , value_type , state_type , value_type , thrust_algebra , thrust_operations > stepper_type;
+        //]
 
         ofstream fout( "phase_ensemble_rk4.dat" );
         timer.restart();

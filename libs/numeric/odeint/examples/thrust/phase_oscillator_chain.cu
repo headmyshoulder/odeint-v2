@@ -40,20 +40,22 @@ using namespace boost::numeric::odeint;
 //change this to float if your device does not support double computation
 typedef double value_type;
 
+
+//[ thrust_phase_chain_system
 //change this to host_vector< ... > of you want to run on CPU
 typedef thrust::device_vector< value_type > state_type;
 typedef thrust::device_vector< size_t > index_vector_type;
 //typedef thrust::host_vector< value_type > state_type;
 //typedef thrust::host_vector< size_t > index_vector_type;
 
-
-
+//<-
 /*
  * This implements the rhs of the dynamical equation:
  * \phi'_0 = \omega_0 + sin( \phi_1 - \phi_0 )
  * \phi'_i  = \omega_i + sin( \phi_i+1 - \phi_i ) + sin( \phi_i - \phi_i-1 )
  * \phi'_N-1 = \omega_N-1 + sin( \phi_N-1 - \phi_N-2 )
  */
+//->
 class phase_oscillators
 {
 
@@ -86,8 +88,6 @@ public:
         m_next[m_N-1] = m_N-1; // m_next = { 1 , 2 , 3 , ... , N-1 , N-1 }
     }
 
-
-
     void operator() ( const state_type &x , state_type &dxdt , const value_type dt )
     {
         thrust::for_each(
@@ -117,15 +117,17 @@ private:
     index_vector_type m_prev;
     index_vector_type m_next;
 };
+//]
 
-
-const size_t N = 16;
+const size_t N = 32768;
 const value_type pi = 3.1415926535897932384626433832795029;
 const value_type epsilon = 6.0 / ( N * N ); // should be < 8/N^2 to see phase locking
 const value_type dt = 0.1;
 
 int main( int arc , char* argv[] )
 {
+    //[ thrust_phase_chain_integration
+    // create random number generators
     boost::mt19937 rng;
     boost::uniform_real< value_type > unif( 0.0 , 2.0 * pi );
     boost::variate_generator< boost::mt19937&, boost::uniform_real< value_type > > gen( rng , unif );
@@ -139,27 +141,20 @@ int main( int arc , char* argv[] )
         omega_host[i] = ( N - i ) * epsilon; // decreasing frequencies
     }
 
-    //copy to device
+    // copy to device
     state_type x = x_host;
     state_type omega = omega_host;
 
-    //create error stepper
+    // create stepper
     runge_kutta4< state_type , value_type , state_type , value_type , thrust_algebra , thrust_operations > stepper;
 
+    // create phase oscillator system function
     phase_oscillators sys( omega );
 
-    value_type t = 0.0;
-    while( t < 10.0 )
-    {
-        stepper.do_step( sys , x , t , dt );
-        t += dt;
-    }
+    // integrate
+    integrate_const( stepper , sys , x , 0.0 , 10.0 , dt );
 
-    /**ToDo: use integrate functions, maybe with algebra_dispatcher */
-
-    // perform integration using standard Runge-Kutta-Cash-Carp Stepper and error bounds ~ 1E-6
-    // integrate_const( phase_oscillators(omega) , x , 0.0 , 100.0 , 0.1 );
-
-    thrust::copy( x.begin() , x.end() , std::ostream_iterator< value_type >( std::cout , " " ) );
+    thrust::copy( x.begin() , x.end() , std::ostream_iterator< value_type >( std::cout , "\n" ) );
     std::cout << std::endl;
+    //]
 }
