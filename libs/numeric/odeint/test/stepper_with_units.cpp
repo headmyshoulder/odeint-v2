@@ -240,8 +240,8 @@ class stepper_types : public mpl::vector
 	runge_kutta4_classic< state_type , value_type , deriv_type , time_type , fusion_algebra > ,
 	runge_kutta_cash_karp54< state_type , value_type , deriv_type , time_type , fusion_algebra >,
 	runge_kutta_cash_karp54_classic< state_type , value_type , deriv_type , time_type , fusion_algebra >
-    // don't run rk78 test - gcc requires > 4GB RAM to compile this
-	//runge_kutta_fehlberg78< state_type , value_type , deriv_type , time_type , fusion_algebra >
+    // don't run rk78 test - gcc requires > 5GB RAM to compile this
+	//, runge_kutta_fehlberg78< state_type , value_type , deriv_type , time_type , fusion_algebra >
 > { };
 
 class fsal_stepper_types : public mpl::vector
@@ -252,6 +252,7 @@ class fsal_stepper_types : public mpl::vector
 class error_stepper_types : public mpl::vector
 <
     runge_kutta_cash_karp54_classic< state_type , value_type , deriv_type , time_type , fusion_algebra >
+    //, runge_kutta_fehlberg78< state_type , value_type , deriv_type , time_type , fusion_algebra >
 > { };
 
 class fsal_error_stepper_types : public mpl::vector
@@ -263,6 +264,7 @@ class controlled_stepper_types : public mpl::vector
 <
 	controlled_error_stepper< runge_kutta_cash_karp54_classic< state_type , value_type , deriv_type , time_type , fusion_algebra > > ,
 	controlled_error_stepper< runge_kutta_dopri5< state_type , value_type , deriv_type , time_type , fusion_algebra > >
+    //, controlled_error_stepper< runge_kutta_fehlberg78< state_type , value_type , deriv_type , time_type , fusion_algebra > >
 > { };
 
 class dense_output_stepper_types : public mpl::vector

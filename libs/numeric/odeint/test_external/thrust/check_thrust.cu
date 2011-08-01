@@ -23,7 +23,8 @@
 using namespace boost::numeric::odeint;
 
 typedef float base_type;
-typedef thrust::device_vector< base_type > state_type;
+// typedef thrust::device_vector< base_type > state_type;
+typedef thrust::host_vector< base_type > state_type;
 
 void constant_system( const state_type &x , state_type &dxdt , base_type t )
 {

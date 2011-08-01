@@ -41,6 +41,37 @@ struct is_resizeable< thrust::host_vector< T > >
     const static bool value = type::value;
 };
 
+
+template< class Container1, class Value >
+struct copy_impl< Container1 , thrust::device_vector< Value > >
+{
+    static void copy( const Container1 &from , thrust::device_vector< Value > &to )
+    {
+        thrust::copy( boost::begin( from ) , boost::end( from ) , boost::begin( to ) );
+    }
+};
+
+template< class Value , class Container2 >
+struct copy_impl< thrust::device_vector< Value > , Container2 >
+{
+    static void copy( const thrust::device_vector< Value > &from , Container2 &to )
+    {
+        thrust::copy( boost::begin( from ) , boost::end( from ) , boost::begin( to ) );
+    }
+};
+
+template< class Value >
+struct copy_impl< thrust::device_vector< Value > , thrust::device_vector< Value > >
+{
+    static void copy( const thrust::device_vector< Value > &from , thrust::device_vector< Value > &to )
+    {
+        thrust::copy( boost::begin( from ) , boost::end( from ) , boost::begin( to ) );
+    }
+};
+
+
+
+
 } // odeint
 } // numeric
 } // boost

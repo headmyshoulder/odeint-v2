@@ -37,7 +37,7 @@ template<
 class State ,
 class Value = double ,
 class Deriv = State ,
-class Time = double ,
+class Time = Value ,
 class Algebra = range_algebra ,
 class Operations = default_operations ,
 class Resizer = initially_resizer

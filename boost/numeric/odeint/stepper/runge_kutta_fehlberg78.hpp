@@ -214,7 +214,7 @@ struct rk78_coefficients_a12 : boost::array< Value , 12 >
 };
 
 template< class Value = double >
-struct rk78_coefficients_b : boost::array< Value , 12 >
+struct rk78_coefficients_b : boost::array< Value , 13 >
 {
     rk78_coefficients_b( void )
             {
@@ -228,29 +228,52 @@ struct rk78_coefficients_b : boost::array< Value , 12 >
         (*this)[7] = static_cast< Value >( 9 )/static_cast<Value>( 35 );
         (*this)[8] = static_cast< Value >( 9 )/static_cast<Value>( 280 );
         (*this)[9] = static_cast< Value >( 9 )/static_cast<Value>( 280 );
-        (*this)[10] = static_cast< Value >( 41 )/static_cast<Value>( 840 );
+        (*this)[10] = static_cast< Value >( 0 );
         (*this)[11] = static_cast< Value >( 41 )/static_cast<Value>( 840 );
+        (*this)[12] = static_cast< Value >( 41 )/static_cast<Value>( 840 );
+            }
+};
+
+template< class Value = double >
+struct rk78_coefficients_db : boost::array< Value , 13 >
+{
+    rk78_coefficients_db( void )
+            {
+        (*this)[0] = static_cast< Value >( 0 ) - static_cast< Value >( 41 )/static_cast<Value>( 840 );
+        (*this)[1] = static_cast< Value >( 0 );
+        (*this)[2] = static_cast< Value >( 0 );
+        (*this)[3] = static_cast< Value >( 0 );
+        (*this)[4] = static_cast< Value >( 0 );
+        (*this)[5] = static_cast< Value >( 0 );
+        (*this)[6] = static_cast< Value >( 0 );
+        (*this)[7] = static_cast< Value >( 0 );
+        (*this)[8] = static_cast< Value >( 0 );
+        (*this)[9] = static_cast< Value >( 0 );
+        (*this)[10] = static_cast< Value >( 0 ) - static_cast< Value >( 41 )/static_cast<Value>( 840 );
+        (*this)[11] = static_cast< Value >( 41 )/static_cast<Value>( 840 );
+        (*this)[12] = static_cast< Value >( 41 )/static_cast<Value>( 840 );
             }
 };
 
 
 template< class Value = double >
-struct rk78_coefficients_c : boost::array< Value , 12 >
+struct rk78_coefficients_c : boost::array< Value , 13 >
 {
     rk78_coefficients_c( void )
             {
-        (*this)[0] = static_cast< Value >( 2 )/static_cast< Value >( 27 );
-        (*this)[1] = static_cast< Value >( 1 )/static_cast< Value >( 9 );
-        (*this)[2] = static_cast< Value >( 1 )/static_cast<Value>( 6 );
-        (*this)[3] = static_cast< Value >( 5 )/static_cast<Value>( 12 );
-        (*this)[4] = static_cast< Value >( 1 )/static_cast<Value>( 2 );
-        (*this)[5] = static_cast< Value >( 5 )/static_cast<Value>( 6 );
-        (*this)[6] = static_cast< Value >( 1 )/static_cast<Value>( 6 );
-        (*this)[7] = static_cast< Value >( 2 )/static_cast<Value>( 3 );
-        (*this)[8] = static_cast< Value >( 1 )/static_cast<Value>( 3 );
-        (*this)[9] = static_cast< Value >( 1 );
-        (*this)[10] = static_cast< Value >( 0 );
-        (*this)[11] = static_cast< Value >( 1 );
+        (*this)[0] = static_cast< Value >( 0 );
+        (*this)[1] = static_cast< Value >( 2 )/static_cast< Value >( 27 );
+        (*this)[2] = static_cast< Value >( 1 )/static_cast< Value >( 9 );
+        (*this)[3] = static_cast< Value >( 1 )/static_cast<Value>( 6 );
+        (*this)[4] = static_cast< Value >( 5 )/static_cast<Value>( 12 );
+        (*this)[5] = static_cast< Value >( 1 )/static_cast<Value>( 2 );
+        (*this)[6] = static_cast< Value >( 5 )/static_cast<Value>( 6 );
+        (*this)[7] = static_cast< Value >( 1 )/static_cast<Value>( 6 );
+        (*this)[8] = static_cast< Value >( 2 )/static_cast<Value>( 3 );
+        (*this)[9] = static_cast< Value >( 1 )/static_cast<Value>( 3 );
+        (*this)[10] = static_cast< Value >( 1 );
+        (*this)[11] = static_cast< Value >( 0 );
+        (*this)[12] = static_cast< Value >( 1 );
             }
 };
 
@@ -264,13 +287,13 @@ class Algebra = range_algebra ,
 class Operations = default_operations ,
 class Resizer = initially_resizer
 >
-class runge_kutta_fehlberg78 : public explicit_generic_rk< 12 , 7 , State , Value , Deriv , Time ,
+class runge_kutta_fehlberg78 : public explicit_error_generic_rk< 13 , 8 , 8 , 7 , State , Value , Deriv , Time ,
 Algebra , Operations , Resizer >
 {
 
 public:
 
-    typedef explicit_generic_rk< 12 , 7 , State , Value , Deriv , Time ,
+    typedef explicit_error_generic_rk< 13 , 8 , 8 , 7 , State , Value , Deriv , Time ,
             Algebra , Operations , Resizer > stepper_base_type;
 
     typedef typename stepper_base_type::state_type state_type;
@@ -289,7 +312,7 @@ public:
                     rk78_coefficients_a4<Value>() , rk78_coefficients_a5<Value>() , rk78_coefficients_a6<Value>() ,
                     rk78_coefficients_a7<Value>() , rk78_coefficients_a8<Value>() , rk78_coefficients_a9<Value>() ,
                     rk78_coefficients_a10<Value>() , rk78_coefficients_a11<Value>() , rk78_coefficients_a12<Value>() ) ,
-            rk78_coefficients_b<Value>() , rk78_coefficients_c<Value>() , algebra )
+            rk78_coefficients_b<Value>() , rk78_coefficients_db<Value>() , rk78_coefficients_c<Value>() , algebra )
     { }
 };
 
