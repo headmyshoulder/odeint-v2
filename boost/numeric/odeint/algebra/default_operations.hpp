@@ -104,6 +104,22 @@ struct default_operations
 {
 
     template< class Fac1 = double >
+    struct scale
+    {
+        const Fac1 m_alpha1;
+
+        scale( const Fac1 &alpha1 ) : m_alpha1( alpha1 ) { }
+
+        template< class T1 >
+        void operator()( T1 &t1 ) const
+        {
+            t1 *= m_alpha1;
+        }
+
+        typedef void result_type;
+    };
+
+    template< class Fac1 = double >
     struct scale_sum1
     {
         const Fac1 m_alpha1;
