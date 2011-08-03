@@ -487,7 +487,7 @@ private:
         // extrapolate finite differences
         for( int kappa = 0 ; kappa<2*k ; kappa++ )
         {
-            extrapolate( k-kappa/2 , m_diffs[kappa] , m_coeff , m_diffs[kappa][0].m_v , kappa/2 );
+            extrapolate( k-kappa/2 , m_diffs[kappa] , m_coeff , m_diffs[kappa][0].m_v ); //, kappa/2 );
             // extrapolation results are now stored in m_diffs[kappa][0]
 
             // divide kappa-th derivative by kappa because we need these terms for dense output interpolation
