@@ -42,6 +42,7 @@ const value_type sigma = 10.0;
 const value_type b = 8.0 / 3.0;
 
 
+//[ thrust_lorenz_parameters_define_simple_system
 struct lorenz_system
 {
     struct lorenz_functor
@@ -90,6 +91,7 @@ struct lorenz_system
     size_t m_N;
     const state_type &m_beta;
 };
+//]
 
 struct lorenz_perturbation_system
 {
@@ -165,6 +167,7 @@ struct lorenz_perturbation_system
 
 struct lyap_observer
 {
+    //[thrust_lorenz_parameters_observer_functor
     struct lyap_functor
     {
         template< class T >
@@ -181,6 +184,7 @@ struct lyap_observer
             thrust::get< 3 >( t ) += log( norm );
         }
     };
+    //]
 
     lyap_observer( size_t N , size_t every = 100 )
     : m_N( N ) , m_lyap( N ) , m_every( every ) , m_count( 0 )
@@ -233,6 +237,7 @@ const value_type dt = 0.01;
 
 int main( int arc , char* argv[] )
 {
+    //[ thrust_lorenz_parameters_define_beta
     boost::mt19937 rng;
     boost::uniform_real< value_type > unif( 0.0 , 1.0 );
     boost::variate_generator< boost::mt19937&, boost::uniform_real< value_type > > gen( rng , unif );
@@ -243,12 +248,18 @@ int main( int arc , char* argv[] )
         beta_host[i] = beta_min + value_type( i ) * ( beta_max - beta_min ) / value_type( N - 1 );
 
     state_type beta = beta_host;
+    //]
 
-
+    //[ thrust_lorenz_parameters_integration
     state_type x( 6 * N );
 
+    // initialize x,y,z
     thrust::fill( x.begin() , x.begin() + 3 * N , 10.0 );
+
+    // initial dx
     thrust::fill( x.begin() + 3 * N , x.begin() + 4 * N , 1.0 );
+
+    // initialize dy,dz
     thrust::fill( x.begin() + 4 * N , x.end() , 0.0 );
 
 
@@ -272,6 +283,7 @@ int main( int arc , char* argv[] )
 
     for( size_t i=0 ; i<N ; ++i )
         cout << beta_host[i] << "\t" << lyap[i] << "\n";
+    //]
 
     return 0;
 }
