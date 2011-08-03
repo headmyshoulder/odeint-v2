@@ -97,13 +97,35 @@ The full example can be found at [@../../examples/thrust/phase_oscillator_chain.
 
 [endsect]
 
-[section Parameter studies and bifurcations]
+[section Parameter studies]
 
 [import ../examples/thrust/lorenz_parameters.cu]
 
-Bifurcations in the lorenz system
+Another important use case for __thrust and Cuda are parameter studies of relatively small systems. Consider for example the Lorenz system from the chaotic systems example in the previous section which has three parameters. If you interested in the behaviour of this system for different parameters you usually have to integrate the system for a range of parameters. Using thrust and odeint you can do this integration in parallel, hence you integrate a whole ensemble of Lorenz systems where each individual system has different parameters. The Lorenz system is dissipative, such that you can assume that different initial conditions will lead to the same attractor. For Hamiltonian systems this is not case. Here it might be interesting to study a range of initial conditions to quantify different regions in the phase space.
 
-alternativ lattice with many different disorder realizations
+In the following we will show how you can use __thrust to integrate the above mentioned ensemble of Lorenz systems. We will vary only the parameter ['__beta] but it is straightfoward to vary other parameters or even two or all three parameters. Furthermore, we will use the largest Lyapunov exponent to quantify each system.
+
+We start be defining the range of the parameters we want to study. Of course, the state_type is again a `thrust::device_vector< value_type >`. 
+
+[thrust_lorenz_parameters_define_beta]
+
+The next thing we have to implement is the Lorenz system without perturbations. Later, a system with perturbations is also implemented in order to calculate the Lyapunov exponent. We will use an ansatz where each device function calculates one particular realization of the Lorenz ensemble
+
+[thrust_lorenz_parameters_define_simple_system]
+
+As `state_type` a `thrust::device_vector` or a __boost_range of a `device_vector` is used. The length of the state is ['3N] where ['N] is the number of systems. The system is encoded into this vector such that all ['x] components come first, then every ['y] compoents and finally every ['z] components. Implementing the device function is then a simple task, you only have to decompose the tuple originating from the zip iterators.
+
+Besides the system without perturbations we furthermore need the calculate the system with bifurcations. Using the method from above this is straightforward, with a small difficulty that thrust's tuple have a maximal arity of 10. But this is only a small problem since we can create a zip iterator packed with zip iterators. So the top level zip iterator contains one zip iterator for the state, one normal iterator for the parameter, and one zip iterator for the derivative. Accessing the elements of this tuple in the system function is then straightforward, you unpack the tuple with `thrust::get<>()`. We will not show the code here, it is to large. It can be found [@../../examples/thrust/lorenz_parameters.cu here] and is easy to understand.
+
+Furthermore, we need an observer which determines the norm of the perturbations, normalizes them and averages the logarithm of the norm. The device functor which is used within this observer is defined
+
+[thrust_lorenz_parameters_observer_functor]
+
+Note, that this functor manipulates the state, i.e. the perturbations.
+
+Now, we complete the whole code to calculate the Lyapunov exponents. First, we have to define a state vector. This vector contains ['6N] entries, the state ['x,y,z] and its perturbations ['dx,dy,dz]. We initialize them such that ['x=y=z=10], ['dx=1], and ['dy=dz=0]. We define a stepper type, a controlled Runge-Kutta Cash-Karp stepper. Then we integrate some transients. This is done only on the state, hence only ['x,y,z] are integrated. Note, how we use __boost_range for partial integration the state vector.  Finally, the full system with perturbations is integrated and the Lyapunov exponents are calculated and written to `stdout`.
+
+[thrust_lorenz_parameters_integration]
 
 The full example can be found at [@../../examples/thrust/lorenz_parameters.cu].
 
