@@ -46,6 +46,17 @@ struct lorenz
     }
 };
 
+struct const_system
+{
+    template< class State , class Deriv >
+    void operator()( const State &x , Deriv &dxdt , double t ) const
+    {
+        dxdt[0] = 1.0;
+        dxdt[1] = 1.0;
+        dxdt[2] = 1.0;
+    }
+};
+
 BOOST_AUTO_TEST_SUITE( bulirsch_stoer_test )
 
 BOOST_AUTO_TEST_CASE( test_bulirsch_stoer )
@@ -68,11 +79,25 @@ BOOST_AUTO_TEST_CASE( test_bulirsch_stoer )
     x[0] = 10.0 ; x[1] = 10.0 ; x[2] = 5.0;
     double t = 0.0;
     dt = 1E-2;
-    while( bs_do.try_step( lorenz() , x , t , dt ) == step_size_decreased )
-    { }
-    std::cout << "one step successful " << std::endl;
-    bs_do.try_step( lorenz() , x , t , dt );
-    std::cout << "second step successful " << std::endl;
+    bs_do.initialize( x , t , dt );
+    bs_do.do_step( lorenz() );
+    std::cout << "one step successful, new time: " << bs_do.current_time() << " (" << t << ")" << std::endl;
+
+    x = bs_do.current_state();
+    std::cout << "x( " << bs_do.current_time() << " ) = [ " << x[0] << " , " << x[1] << " , " << x[2] << " ]" << std::endl;
+
+    bs_do.calc_state( bs_do.current_time()/3 , x );
+    std::cout << "x( " << bs_do.current_time()/3 << " ) = [ " << x[0] << " , " << x[1] << " , " << x[2] << " ]" << std::endl;
+
+    std::cout << std::endl << "=======================================================================" << std::endl << std::endl;
+
+    x[0] = 10.0 ; x[1] = 10.0 ; x[2] = 5.0;
+    t = 0.0; dt /= 3;
+    bs_do.initialize( x , t , dt );
+    bs_do.do_step( lorenz() );
+    x = bs_do.current_state();
+    std::cout << "x( " << bs_do.current_time() << " ) = [ " << x[0] << " , " << x[1] << " , " << x[2] << " ]" << std::endl;
+
 }
 
 BOOST_AUTO_TEST_SUITE_END()

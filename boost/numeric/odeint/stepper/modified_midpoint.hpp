@@ -213,7 +213,7 @@ public :
             //tmp = m_x1; m_x1 = m_x0 + h2*m_dxdt; m_x0 = tmp
             m_algebra.for_each3( m_x1.m_v , m_x0.m_v , derivs[i-1].m_v ,
                     typename operations_type::template scale_sum_swap2< value_type , time_type >( val1 , h2 ) );
-            if( i == m_steps/2 )
+            if( i == m_steps/2-1 )
                 // save approximation at the center of the interval
                 boost::numeric::odeint::copy( m_x1.m_v , x_mp );
 
