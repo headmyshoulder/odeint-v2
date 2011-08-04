@@ -1,10 +1,10 @@
 [section Using Cuda and Thrust]
 
-Modern graphic cards (graphic processing units - GPUs) can be used to speed up the performance of time consuming algorithms by means of massive parallelization. They are designed to execute many operations at one step. odeint can utilize the power of GPUs by means of CUDA and __thrust, which is a STL-like interface for the native CUDA API.
+Modern graphic cards (graphic processing units - GPUs) can be used to speed up the performance of time consuming algorithms by means of massive parallelization. They are designed to execute many operations in parallel. odeint can utilize the power of GPUs by means of CUDA and __thrust, which is a STL-like interface for the native CUDA API.
 
-To use odeint with CUDA a few points have to be taken into account. First of all, the problem has to be well choosen. It makes absolutely no sense to try to speed up the performance of three dimensional system. It is simply to small. One single function call on the GPU is slow but you can do a lot of operations with only one call. We have experienced that the system under consideration should have a minimal length of ['10[super 6]] to experience a performance jump. Secondly you have to use __thrust's functions and functors in the definition of the ODE. This might by tricky since it involves some kind of functional programming knowledge.
+To use odeint with CUDA a few points have to be taken into account. First of all, the problem has to be well choosen. It makes absolutely no sense to try to speed up the performance of three dimensional system, it is simply to small. One single function call on the GPU is slow but you can do a lot of operations with only one call. We have experienced that the system under consideration should have a minimal length of ['10[super 6]] to experience a performance jump. Secondly you have to use __thrust's functions and functors in the definition of the ODE. This might by tricky since it involves some kind of functional programming knowledge.
 
-Typical applications for CUDA and odeint are large system, like lattices or discretizations of PDE, and parameter studies. We introduce now three examples which show how the power of GPUs can be used in combination with odeint.
+Typical applications for CUDA and odeint are large systems, like lattices or discretizations of PDE, and parameter studies. We introduce now three examples which show how the power of GPUs can be used in combination with odeint.
 
 [important The full power of CUDA is only available if for really large systems where the number of coupled ordinary differential equations is of order ['N=10[super 6]] or larger. For smaller systems the CPU is usually much faster. You can also integrate an ensemble of different uncoupled ODEs in parallel.]
 
@@ -14,7 +14,7 @@ Typical applications for CUDA and odeint are large system, like lattices or disc
 
 The first example is the phase oscillator ensemble from the previous section. It has a phase transition at ['__epsilon = 2] if the number of oscillator ['N] goes to infinity. In the case of finite ['N] this transition is smeared out.
 
-__thrust and Cuda are perfectly suited for such kind of problems where one needs a large number of particles, or like in this case oscillators. We start by defining the state type which is a `thrust::device_vector` which lives on the GPU. If you are not familar we recommend to read the ['Getting started] section on the __thrust page.
+__thrust and Cuda are perfectly suited for such kind of problems where one needs a large number of particles. We start by defining the state type which is a `thrust::device_vector`. The content of this vector lives on the GPU. If you are not familar we recommend to read the ['Getting started] section on the __thrust page.
 
 [thrust_phase_ensemble_state_type]
 
@@ -34,7 +34,7 @@ struct add_two
 
 thrust::for_each( x.begin() , x.end() , add_two() );
 ``
-which generically adds two to every element of the container `x`.
+This code generically adds two to every element of the container `x`.
 
 For the purpose of integrating the phase oscillator ensemble we need
 
@@ -45,7 +45,7 @@ The mean field is calculated in a class `mean_field_calculator`
 
 [thrust_phase_ensemble_mean_field_calculator] 
 
-Inside this class two member structures `sin_functor` and `cos_functor` are defined which compute the sine and the cosine of a value. They are used within a transform iterator to calculate the sum of ['sin(__phi[subl k])] and ['cos(__phi[subl k])]. The classifiers `__host__` and `__device__` are CUDA specific and define a function or operator which can be executed on the GPU as well as on the CPU. The line 
+Inside this class two member structures `sin_functor` and `cos_functor` are defined. Theyh compute the sine and the cosine of a value and they are used within a transform iterator to calculate the sum of ['sin(__phi[subl k])] and ['cos(__phi[subl k])]. The classifiers `__host__` and `__device__` are CUDA specific and define a function or operator which can be executed on the GPU as well as on the CPU. The line 
 
 [thrust_phase_ensemble_sin_sum]
 
@@ -83,7 +83,7 @@ The next example is a large chain of nearest-neighbor coupled phase oscillators
 
 ['d __phi[subl k] / dt = __omega[subl k] + sin( __phi[subl k+1] - __phi[subl k] ) + sin( __phi[subl k] - __phi[subl k-1])]
 
-In principle we can use all the techniques from the previous phase oscillator ensemble example, but we have to take special care about the coupling of the oscillators. To efficiently implement the coupling you can use a very elegant way by using Thrusts permutation iterator. A permuation iterator does not point directly into a container but by some well defined permatation. We create a permutation operator for the oscillator to the right and one for the oscillator to the left. The full system class is
+In principle we can use all the techniques from the previous phase oscillator ensemble example, but we have to take special care about the coupling of the oscillators. To efficiently implement the coupling you can use a very elegant way by using Thrusts permutation iterator. A permuation iterator does not point directly into a container but by some well defined permutation. We create a permutation operator for the oscillator to the right and one for the oscillator to the left. The full system class is
 
 [thrust_phase_chain_system]
 
@@ -123,7 +123,7 @@ Furthermore, we need an observer which determines the norm of the perturbations,
 
 Note, that this functor manipulates the state, i.e. the perturbations.
 
-Now, we complete the whole code to calculate the Lyapunov exponents. First, we have to define a state vector. This vector contains ['6N] entries, the state ['x,y,z] and its perturbations ['dx,dy,dz]. We initialize them such that ['x=y=z=10], ['dx=1], and ['dy=dz=0]. We define a stepper type, a controlled Runge-Kutta Cash-Karp stepper. Then we integrate some transients. This is done only on the state, hence only ['x,y,z] are integrated. Note, how we use __boost_range for partial integration the state vector.  Finally, the full system with perturbations is integrated and the Lyapunov exponents are calculated and written to `stdout`.
+Now, we complete the whole code to calculate the Lyapunov exponents. First, we have to define a state vector. This vector contains ['6N] entries, the state ['x,y,z] and its perturbations ['dx,dy,dz]. We initialize them such that ['x=y=z=10], ['dx=1], and ['dy=dz=0]. We define a stepper type, a controlled Runge-Kutta Cash-Karp stepper. Then we integrate some transients. This is done only on the state, hence only ['x,y,z] are integrated. Note, how we use __boost_range for partial integration of the state vector.  Finally, the full system with perturbations is integrated and the Lyapunov exponents are calculated and written to `stdout`.
 
 [thrust_lorenz_parameters_integration]
 
