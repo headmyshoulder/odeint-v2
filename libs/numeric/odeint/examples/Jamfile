@@ -10,6 +10,10 @@ project
       <define>BOOST_ALL_NO_LIB=1
     : build-dir .
     ;
+    
+lib libgmp : : <name>gmp <link>shared ;
+lib libgmpxx : : <name>gmpxx <link>shared ;
+
 
 
 exe harmonic_oscillator : harmonic_oscillator.cpp ;
@@ -20,4 +24,5 @@ exe fpu : fpu.cpp ;
 exe phase_oscillator_ensemble : phase_oscillator_ensemble.cpp ;
 exe harmonic_oscillator_units : harmonic_oscillator_units.cpp ;
 exe stuart_landau : stuart_landau.cpp ;
-exe two_dimensional_phase_lattice : two_dimensional_phase_lattice.cpp ; 
+exe two_dimensional_phase_lattice : two_dimensional_phase_lattice.cpp ;
+exe lorenz_gmpxx : lorenz_gmpxx.cpp libgmp libgmpxx ; 

@@ -74,6 +74,7 @@ public:
     typedef std::vector< time_type > value_vector;
     typedef std::vector< value_vector > value_matrix;
     typedef std::vector< size_t > int_vector;
+    typedef std::vector< wrapped_state_type > state_table_type;
 
     bulirsch_stoer(
             time_type eps_abs = 1E-6 , time_type eps_rel = 1E-6 ,
@@ -200,7 +201,7 @@ public:
             else
             {
                 m_midpoint.do_step( sys , in , dxdt , t , m_table[k-1].m_v , dt );
-                extrapolate( k , out );
+                extrapolate( k , m_table , m_coeff , out );
                 // get error estimate
                 m_algebra.for_each3( m_err.m_v , out , m_table[0].m_v ,
                         typename operations_type::template scale_sum2< time_type , time_type >( val1 , -val1 ) );
@@ -306,7 +307,7 @@ private:
 
 
     template< class StateInOut >
-    void extrapolate( const size_t k , StateInOut &xest )
+    void extrapolate( const size_t k , state_table_type &table , const value_matrix &coeff , StateInOut &xest )
     //polynomial extrapolation, see http://www.nr.com/webnotes/nr3web21.pdf
     {
         //std::cout << "extrapolate k=" << k << ":" << std::endl;
@@ -314,12 +315,12 @@ private:
         for( int j=k-1 ; j>0 ; --j )
         {
             //std::cout << '\t' << m_coeff[k][j];
-            m_algebra.for_each3( m_table[j-1].m_v , m_table[j].m_v , m_table[j-1].m_v ,
-                    typename operations_type::template scale_sum2< time_type , time_type >( val1 + m_coeff[k][j] , -m_coeff[k][j] ) );
+            m_algebra.for_each3( table[j-1].m_v , table[j].m_v , table[j-1].m_v ,
+                    typename operations_type::template scale_sum2< time_type , time_type >( val1 + coeff[k][j] , -coeff[k][j] ) );
         }
         //std::cout << std::endl << m_coeff[k][0] << std::endl;
-        m_algebra.for_each3( xest , m_table[0].m_v , xest ,
-                typename operations_type::template scale_sum2< time_type , time_type >( val1 + m_coeff[k][0] , -m_coeff[k][0]) );
+        m_algebra.for_each3( xest , table[0].m_v , xest ,
+                typename operations_type::template scale_sum2< time_type , time_type >( val1 + coeff[k][0] , -coeff[k][0]) );
     }
 
     time_type calc_h_opt( const time_type h , const value_type error , const size_t k ) const
@@ -429,7 +430,7 @@ private:
     int_vector m_cost; // costs for interval count
 
     value_vector m_times;
-    std::vector< wrapped_state_type > m_table; // sequence of states for extrapolation
+    state_table_type m_table; // sequence of states for extrapolation
 
     const time_type STEPFAC1 , STEPFAC2 , STEPFAC3 , STEPFAC4 , KFAC1 , KFAC2;
 };

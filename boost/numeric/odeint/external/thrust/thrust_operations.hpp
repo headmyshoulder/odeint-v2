@@ -46,7 +46,7 @@ struct thrust_operations
         }
     };
 
-    template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac1 >
+    template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac2 >
     struct scale_sum3
     {
         const Fac1 m_alpha1;
@@ -67,7 +67,7 @@ struct thrust_operations
     };
 
 
-    template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac1 , class Fac4 = Fac1 >
+    template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac2 , class Fac4 = Fac3 >
     struct scale_sum4
     {
         const Fac1 m_alpha1;
@@ -90,8 +90,8 @@ struct thrust_operations
     };
 
 
-    template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac1 ,
-            class Fac4 = Fac1 , class Fac5 = Fac1>
+    template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac2 ,
+            class Fac4 = Fac3 , class Fac5 = Fac4 >
     struct scale_sum5
     {
         const Fac1 m_alpha1;
@@ -118,8 +118,8 @@ struct thrust_operations
     };
 
 
-    template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac1 ,
-            class Fac4 = Fac1 , class Fac5 = Fac1 , class Fac6 = Fac1>
+    template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac2 ,
+            class Fac4 = Fac3 , class Fac5 = Fac4 , class Fac6 = Fac5 >
     struct scale_sum6
     {
         const Fac1 m_alpha1;
@@ -146,6 +146,81 @@ struct thrust_operations
                     m_alpha6 * thrust::get<6>(t);
         }
     };
+
+
+    template< class Fac1 = double , class Fac2 = Fac1 , class Fac3 = Fac2 , class Fac4 = Fac3 ,
+            class Fac5 = Fac4 , class Fac6 = Fac5 , class Fac7 = Fac6 >
+    struct scale_sum7
+    {
+        const Fac1 m_alpha1;
+        const Fac2 m_alpha2;
+        const Fac3 m_alpha3;
+        const Fac4 m_alpha4;
+        const Fac5 m_alpha5;
+        const Fac6 m_alpha6;
+        const Fac7 m_alpha7;
+
+        scale_sum7( const Fac1 alpha1 , const Fac2 alpha2 , const Fac3 alpha3 ,
+                const Fac4 alpha4 , const Fac5 alpha5 , const Fac6 alpha6 , const Fac7 alpha7 )
+        : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) ,
+          m_alpha4( alpha4 ) , m_alpha5( alpha5 ) , m_alpha6( alpha6 ) , m_alpha7( alpha7 ) { }
+
+        template< class Tuple >
+        __host__ __device__
+        void operator()( Tuple t ) const
+        {
+            thrust::get<0>(t) = m_alpha1 * thrust::get<1>(t) +
+                    m_alpha2 * thrust::get<2>(t) +
+                    m_alpha3 * thrust::get<3>(t) +
+                    m_alpha4 * thrust::get<4>(t) +
+                    m_alpha5 * thrust::get<5>(t) +
+                    m_alpha6 * thrust::get<6>(t) +
+                    m_alpha7 * thrust::get<7>(t) ;
+        }
+    };
+
+
+
+
+    template< class Fac1 = double >
+    struct rel_error
+    {
+        const Fac1 m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt;
+
+        rel_error( const Fac1 &eps_abs , const Fac1 &eps_rel , const Fac1 &a_x , const Fac1 &a_dxdt )
+        : m_eps_abs( eps_abs ) , m_eps_rel( eps_rel ) , m_a_x( a_x ) , m_a_dxdt( a_dxdt ) { }
+
+
+        template< class Tuple >
+        __host__ __device__
+        void operator()( Tuple t ) const
+        {
+            using std::abs;
+            thrust::get< 0 >( t ) = abs( thrust::get< 0 >( t ) ) /
+                    ( m_eps_abs + m_eps_rel * ( m_a_x * abs( thrust::get< 1 >( t ) + m_a_dxdt * abs( thrust::get< 2 >( t ) ) ) ) );
+        }
+
+        typedef void result_type;
+    };
+
+
+    /*
+     * for usage in reduce
+     */
+
+    template< class Value >
+    struct maximum
+    {
+        template< class Fac1 , class Fac2 >
+        Value operator()( const Fac1 &t1 , const Fac2 &t2 ) const
+        {
+            using std::max;
+            return ( abs( t1 ) < abs( t2 ) ) ? t2 : t1 ;
+        }
+
+        typedef Value result_type;
+    };
+
 
 };
 

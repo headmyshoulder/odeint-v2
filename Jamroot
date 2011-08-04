@@ -25,9 +25,9 @@ build-project libs/numeric/odeint/regression_test ;
 
 
 # additional tests with external libraries :
-#build-project libs/numeric/odeint/test_external/gmp ;
-#build-project libs/numeric/odeint/test_external/mkl ;
-#build-project libs/numeric/odeint/test_external/gsl ;
+build-project libs/numeric/odeint/test_external/gmp ;
+build-project libs/numeric/odeint/test_external/mkl ;
+build-project libs/numeric/odeint/test_external/gsl ;
 
 
 # ideas
