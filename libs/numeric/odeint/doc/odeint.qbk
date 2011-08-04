@@ -22,15 +22,15 @@
 [def __boost_operators
     [@http://www.boost.org/doc/libs/release/doc/html/operators.html Boost.Operators]]
 [def __boost_ref
-    [@http://www.boost.org/doc/libs/release/doc/html/ref.html `boost::ref`]]
+    [@http://www.boost.org/doc/libs/release/doc/html/ref.html Boost.Ref]]
 [def __boost_range
-    [@http://www.boost.org/doc/libs/release/libs/range/index.html `Boost.Range`]]
+    [@http://www.boost.org/doc/libs/release/libs/range/index.html Boost.Range]]
 [def __boost_units
-    [@http://www.boost.org/doc/libs/release/libs/units/index.html `Boost.Units`]]
+    [@http://www.boost.org/doc/libs/release/libs/units/index.html Boost.Units]]
 [def __boost_fusion
-    [@http://www.boost.org/doc/libs/release/libs/fusion/index.html `Boost.Fusion`]]
+    [@http://www.boost.org/doc/libs/release/libs/fusion/index.html Boost.Fusion]]
 [def __thrust
-    [@http://code.google.com/p/thrust/ `Thrust`]]
+    [@http://code.google.com/p/thrust/ Thrust]]
 
 
 [def __alpha '''&#945;''']
@@ -51,6 +51,8 @@
 [def __Psi '''&#936;''']
 [def __epsilon '''&#949;''']
 [def __eta '''&#951;''']
+[def __theta '''&#952;''']
+[def __Theta '''&#920;''']
 
 [def __space '''&#8203;''']
 
