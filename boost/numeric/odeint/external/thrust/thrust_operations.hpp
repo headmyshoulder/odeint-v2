@@ -212,6 +212,7 @@ struct thrust_operations
     struct maximum
     {
         template< class Fac1 , class Fac2 >
+        __host__ __device__
         Value operator()( const Fac1 &t1 , const Fac2 &t2 ) const
         {
             using std::max;
