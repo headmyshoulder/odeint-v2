@@ -6,7 +6,7 @@ To use odeint with CUDA a few points have to be taken into account. First of all
 
 Typical applications for CUDA and odeint are large systems, like lattices or discretizations of PDE, and parameter studies. We introduce now three examples which show how the power of GPUs can be used in combination with odeint.
 
-[important The full power of CUDA is only available if for really large systems where the number of coupled ordinary differential equations is of order ['N=10[super 6]] or larger. For smaller systems the CPU is usually much faster. You can also integrate an ensemble of different uncoupled ODEs in parallel as shown in the last example.]
+[important The full power of CUDA is only available for really large systems where the number of coupled ordinary differential equations is of order ['N=10[super 6]] or larger. For smaller systems the CPU is usually much faster. You can also integrate an ensemble of different uncoupled ODEs in parallel as shown in the last example.]
 
 [section Phase oscillator ensemble]
 
