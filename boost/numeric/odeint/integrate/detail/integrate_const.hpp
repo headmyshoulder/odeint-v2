@@ -112,12 +112,20 @@ size_t integrate_const(
         }
 
         // we have not reached the end, do another real step
-        if( start_time < end_time )
+        if( start_time + stepper.current_time_step() < end_time )
         {
             stepper.do_step( system );
             ++count;
         }
+        else if( start_time < end_time )
+        { // do the last step ending exactly on the end point
+            stepper.initialize( stepper.current_state() , stepper.current_time() , end_time - stepper.current_time() );
+            stepper.do_step( system );
+            ++count;
+        }
     }
+    // do the last step
+
     return count;
 }
 
