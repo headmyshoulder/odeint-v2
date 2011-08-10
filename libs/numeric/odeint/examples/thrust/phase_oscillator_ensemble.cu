@@ -197,8 +197,9 @@ int main( int arc , char* argv[] )
     vector< value_type > x_host( N );
     generate( x_host.begin() , x_host.end() , gen );
 
+    //[ thrust_phase_ensemble_system_instance
     phase_oscillator_ensemble ensemble( N , 1.0 );
-
+    //]
 
 
 

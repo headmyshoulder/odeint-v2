@@ -65,11 +65,12 @@ public:
     {
         template< class Tuple >
         __host__ __device__
-        void operator()( Tuple t )
+        void operator()( Tuple t )  // this functor works on tuples of values
         {
+            // first, unpack the tuple into value, neighbors and omega
             const value_type phi = thrust::get<0>(t);
-            const value_type phi_left = thrust::get<1>(t);
-            const value_type phi_right = thrust::get<2>(t);
+            const value_type phi_left = thrust::get<1>(t);  // left neighbor
+            const value_type phi_right = thrust::get<2>(t); // right neighbor
             const value_type omega = thrust::get<3>(t);
             // the dynamical equation
             thrust::get<4>(t) = omega + sin( phi_right - phi ) + sin( phi - phi_left );
