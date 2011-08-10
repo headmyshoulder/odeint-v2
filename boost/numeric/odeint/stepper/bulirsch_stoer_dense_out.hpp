@@ -83,7 +83,7 @@ public:
     typedef Resizer resizer_type;
     typedef state_wrapper< state_type > wrapped_state_type;
     typedef state_wrapper< deriv_type > wrapped_deriv_type;
-    typedef controlled_stepper_tag stepper_category;
+    typedef dense_output_stepper_tag stepper_category;
 
     typedef bulirsch_stoer_dense_out< State , Value , Deriv , Time , Algebra , Operations , Resizer > controlled_error_bs_type;
 
@@ -143,7 +143,7 @@ public:
             //std::cout << m_cost[i] << std::endl;
         }
         int num = 1;
-        for( int i = 2*(m_k_max)-1 ; i >=0  ; i-- )
+        for( int i = 2*(m_k_max)+1 ; i >=0  ; i-- )
         {
             m_diffs[i].resize( num );
             std::cout << "m_diffs[" << i << "] size: " << num << std::endl;
@@ -182,8 +182,9 @@ public:
         value_vector work( m_k_max+1 );
 
         m_k_final = 0;
+        time_type new_h = dt;
 
-        std::cout << "t=" << t <<", dt=" << dt << ", k_opt=" << m_current_k_opt << std::endl;
+        std::cout << "t=" << t <<", dt=" << dt << ", k_opt=" << m_current_k_opt << ", first: " << m_first << std::endl;
 
         for( size_t k = 0 ; k <= m_current_k_opt+1 ; k++ )
         {
@@ -205,52 +206,100 @@ public:
                 work[k] = m_cost[k]/h_opt[k];
                 std::cout << '\t' << "h_opt=" << h_opt[k] << ", work=" << work[k] << std::endl;
                 std::cout << '\t' << "error: " << error << std::endl;
-                if( m_first && (error <= static_cast< time_type >( 1.0 )) )
-                { // this is the first step, convergence does not have to be in order window
-                    //std::cout << '\t' << "convergence in first step" << std::endl;
-                    reject = false;
-                    m_k_final = k;
-                    break; // leave k-loop
-                }
-                if( in_convergence_window( k ) )
-                {
-                    m_k_final = k;
-                    if( error <= 1.0 ) // convergence in convergence window
+
+                m_k_final = k;
+
+                if( (k == m_current_k_opt-1) || m_first )
+                { // convergence before k_opt ?
+                    if( error < 1.0 )
                     {
+                        //convergence
                         reject = false;
-                        break; // we are good, leave k-loop
-                    }
-                    else
-                    {
-                        if( should_reject( error , k ) )
+                        if( (work[k] < KFAC2*work[k-1]) || (m_current_k_opt <= 2) )
                         {
-                            reject = true;
-                            std::cout << "REJECT" << std::endl;
-                            break;
+                            // leave order as is (except we were in first round)
+                            m_current_k_opt = k+1;
+                            new_h = h_opt[k] * m_cost[k+1]/m_cost[k];
+                        } else {
+                            m_current_k_opt = k;
+                            new_h = h_opt[k];
                         }
+                        break;
                     }
+                    else if( should_reject( error , k ) && !m_first )
+                    {
+                        reject = true;
+                        new_h = h_opt[k];
+                        break;
+                    }
+                }
+                if( k == m_current_k_opt )
+                { // convergence at k_opt ?
+                    if( error < 1.0 )
+                    {
+                        //convergence
+                        reject = false;
+                        if( (work[k-1] < KFAC2*work[k]) )
+                        {
+                            m_current_k_opt = std::max( 2 , static_cast<int>(m_current_k_opt)-1 );
+                            new_h = h_opt[m_current_k_opt];
+                        }
+                        else if( (work[k] < KFAC2*work[k-1]) && !m_last_step_rejected )
+                        {
+                            m_current_k_opt = std::min( static_cast<int>(m_k_max-1) , static_cast<int>(m_current_k_opt)+1 );
+                            new_h = h_opt[k]*m_cost[m_current_k_opt]/m_cost[k];
+                        } else
+                            new_h = h_opt[m_current_k_opt];
+                        break;
+                    }
+                    else if( should_reject( error , k ) )
+                    {
+                        reject = true;
+                        new_h = h_opt[m_current_k_opt];
+                        break;
+                    }
+                }
+                if( k == m_current_k_opt+1 )
+                { // convergence at k_opt+1 ?
+                    if( error < 1.0 )
+                    {   //convergence
+                        reject = false;
+                        if( work[k-1] < KFAC2*work[k] )
+                            m_current_k_opt = std::max( 2 , static_cast<int>(k)-2 );
+                        if( (work[k] < KFAC2*work[m_current_k_opt]) && !m_last_step_rejected )
+                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , static_cast<int>(k) );
+                        new_h = h_opt[m_current_k_opt];
+                    } else
+                    {
+                        reject = true;
+                        new_h = h_opt[m_current_k_opt];
+                    }
+                    break;
                 }
             }
         }
 
         if( !reject )
         {
+            std::cout << "####### accepted ####### - new k: " << m_current_k_opt << ", new stepsize: " << new_h << std::endl;
+            // increase time
+            t += dt;
             //calculate dxdt for next step and dense output
             sys( out , dxdt_new , t );
             //prepare dense output
             prepare_dense_output( m_k_final , in , dxdt , out , dxdt_new , dt );
-            // increase time
-            t += dt;
-        }
+        } else
+            std::cout << "####### rejected #######!" << std::endl;
 
-        //calculate optimal order and stepsize
-        controlled_step_result result = set_k_opt( m_k_final , work , h_opt , dt );
+        //set next stepsize
+        if( !m_last_step_rejected || (new_h < dt) )
+            dt = new_h;
 
         m_last_step_rejected = reject;
         if( reject )
-            result = step_size_decreased;
-
-        return result;
+            return step_size_decreased;
+        else
+            return success_step_size_unchanged;
     }
 
     template< class StateType >
@@ -297,7 +346,9 @@ public:
     template< class StateOut >
     void calc_state( const time_type &t , StateOut &x )
     {
+        std::cout << "===========" << std::endl << "doing interpolation for t=" << t << std::endl;
         do_interpolation( t , x );
+        std::cout << "===========" << std::endl;
     }
 
 
@@ -378,24 +429,42 @@ private:
     void extrapolate( const size_t k , StateVector &table , const value_matrix &coeff , StateInOut &xest , const size_t order_start_index = 0 )
     //polynomial extrapolation, see http://www.nr.com/webnotes/nr3web21.pdf
     {
-        std::cout << "extrapolate k=" << k << ":" << std::endl;
         static const time_type val1 = static_cast< time_type >( 1.0 );
         for( int j=k-1 ; j>0 ; --j )
         {
-            std::cout << '\t' << m_coeff[k][j];
             m_algebra.for_each3( table[j-1].m_v , table[j].m_v , table[j-1].m_v ,
                     typename operations_type::template scale_sum2< time_type , time_type >( val1 + coeff[k + order_start_index][j + order_start_index] ,
                             -coeff[k + order_start_index][j + order_start_index] ) );
         }
-        std::cout << std::endl << m_coeff[k][0] << std::endl;
         m_algebra.for_each3( xest , table[0].m_v , xest ,
                 typename operations_type::template scale_sum2< time_type , time_type >( val1 + coeff[k + order_start_index][0 + order_start_index] ,
                         -coeff[k + order_start_index][0 + order_start_index]) );
     }
 
+
+    template< class StateVector >
+    void extrapolate_dense_out( const size_t k , StateVector &table , const value_matrix &coeff , const size_t order_start_index = 0 )
+    //polynomial extrapolation, see http://www.nr.com/webnotes/nr3web21.pdf
+    {
+        // result is written into table[0]
+        std::cout << "extrapolate k=" << k << ":" << std::endl;
+        static const time_type val1 = static_cast< time_type >( 1.0 );
+        for( int j=k ; j>1 ; --j )
+        {
+            std::cout << '\t' << coeff[k + order_start_index][j + order_start_index - 1];
+            m_algebra.for_each3( table[j-1].m_v , table[j].m_v , table[j-1].m_v ,
+                    typename operations_type::template scale_sum2< time_type , time_type >( val1 + coeff[k + order_start_index][j + order_start_index - 1] ,
+                            -coeff[k + order_start_index][j + order_start_index - 1] ) );
+        }
+        std::cout << std::endl << coeff[k + order_start_index][order_start_index] << std::endl;
+        m_algebra.for_each3( table[0].m_v , table[1].m_v , table[0].m_v ,
+                typename operations_type::template scale_sum2< time_type , time_type >( val1 + coeff[k + order_start_index][order_start_index] ,
+                        -coeff[k + order_start_index][order_start_index]) );
+    }
+
     time_type calc_h_opt( const time_type h , const value_type error , const size_t k ) const
     {
-        time_type expo=1.0/(2*k+1);
+        time_type expo=1.0/(m_interval_sequence[k-1]);
         time_type facmin = std::pow( STEPFAC3 , expo );
         time_type fac;
         if (error == 0.0)
@@ -405,42 +474,13 @@ private:
             fac = STEPFAC2 / std::pow( error / STEPFAC1 , expo );
             fac = std::max( facmin/STEPFAC4 , std::min( 1.0/facmin , fac ) );
         }
-        return std::abs(h*fac);
-    }
-
-    controlled_step_result set_k_opt( const size_t k , const value_vector &work , const value_vector &h_opt , time_type &dt )
-    {
-        //std::cout << "finding k_opt..." << std::endl;
-        if( k == 1 )
-        {
-            m_current_k_opt = 2;
-            //dt = h_opt[ m_current_k_opt-1 ] * m_cost[ m_current_k_opt ] / m_cost[ m_current_k_opt-1 ] ;
-            return success_step_size_increased;
-        }
-        if( (work[k-1] < KFAC1*work[k]) || (k == m_k_max) )
-        {   // order decrease
-            m_current_k_opt = k-1;
-            dt = h_opt[ m_current_k_opt ];
-            return success_step_size_increased;
-        }
-        else if( (work[k] < KFAC2*work[k-1]) || m_last_step_rejected || (k == m_k_max-1) )
-        {   // same order - also do this if last step got rejected
-            m_current_k_opt = k;
-            dt = h_opt[ m_current_k_opt ];
-            return success_step_size_unchanged;
-        }
-        else
-        {   // order increase - only if last step was not rejected
-            m_current_k_opt = k+1;
-            dt = h_opt[ m_current_k_opt-1 ] * m_cost[ m_current_k_opt ] / m_cost[ m_current_k_opt-1 ] ;
-            return success_step_size_increased;
-        }
+        return std::abs(h*fac); //std::min( 0.1 , std::abs(h*fac) );
     }
 
     bool in_convergence_window( const size_t k ) const
     {
         if( (k == m_current_k_opt-1) && !m_last_step_rejected )
-            return true; // decrease stepsize only if last step was not rejected
+            return true; // decrease order only if last step was not rejected
         return ( (k == m_current_k_opt) || (k == m_current_k_opt+1) );
     }
 
@@ -455,7 +495,7 @@ private:
         }
         else if( k == m_current_k_opt )
         {
-            const time_type d = m_interval_sequence[m_current_k_opt] / m_interval_sequence[0];
+            const time_type d = m_interval_sequence[m_current_k_opt+1] / m_interval_sequence[0];
             return ( error > d*d );
         } else
             return error > 1.0;
@@ -469,26 +509,27 @@ private:
         // calculate finite difference approximations to derivatives at the midpoint
         for( int j = 0 ; j<=k ; j++ )
         {
-            const time_type d = 2*m_interval_sequence[j];
-            time_type f = static_cast<time_type>(1)/static_cast<time_type>(2); //factor 1/2 here because our interpolation interval has length 2 !!!
+            const time_type d = m_interval_sequence[j] / static_cast<time_type>(4);
+            time_type f = dt/static_cast<time_type>(2); //factor 1/2 here because our interpolation interval has length 2 !!!
             for( int kappa = 0 ; kappa <= 2*j+1 ; ++kappa )
             {
-                calculate_finite_difference( j , kappa , dt*f , dxdt_start );
+                calculate_finite_difference( j , kappa , f , dxdt_start );
                 f *= d;
             }
             std::cout << "x_mp[" << j << "] = " << m_mp_states[j].m_v << std::endl;
         }
 
         // extrapolate x( t+dt/2 )
-        extrapolate( k , m_mp_states , m_coeff , m_mp_states[0].m_v );
+        extrapolate_dense_out( k , m_mp_states , m_coeff );
         // extrapolation result is now stored in m_mp_states[0]
         std::cout << "a_0 = " << m_mp_states[0].m_v << std::endl;
 
         // extrapolate finite differences
         for( int kappa = 0 ; kappa<2*k ; kappa++ )
         {
-            extrapolate( k-kappa/2 , m_diffs[kappa] , m_coeff , m_diffs[kappa][0].m_v ); //, kappa/2 );
+            extrapolate_dense_out( k-kappa/2 , m_diffs[kappa] , m_coeff , kappa/2 );
             // extrapolation results are now stored in m_diffs[kappa][0]
+            std::cout << "extrapolation result: " << m_diffs[kappa][0].m_v << std::endl;
 
             // divide kappa-th derivative by kappa because we need these terms for dense output interpolation
             m_algebra.for_each1( m_diffs[kappa][0].m_v , typename operations_type::template scale< value_type >( static_cast<value_type>(1) / (kappa+1) ) );
@@ -567,13 +608,16 @@ private:
         }
         else
         {
+            std::cout << m_derivs[j][1].m_v << " , " << dxdt << std::endl;
+
             // calculate the index of m_diffs for this kappa-j-combination
             const int j_diffs = j - kappa/2;
 
+            std::cout << "j=" << j << ", kappa=" << kappa << ", m=" << m << ": m_diffs[" << kappa << "][" << j_diffs << "] = " << fac << " ( 1*f[" << m+kappa << "]";
+
             m_algebra.for_each2( m_diffs[kappa][j_diffs].m_v , m_derivs[j][m+kappa].m_v ,
                     typename operations_type::template scale_sum1< time_type >( fac ) );
-            std::cout << "j=" << j << ", kappa=" << kappa << ", m=" << m << ": m_diffs[" << kappa << "][" << j_diffs << "] = " << fac << " ( 1*f[" << m+kappa << "]";
-            double sign = -1.0;
+            time_type sign = -1.0;
             int c = 1;
              //computes the j-th order finite difference for the kappa-th derivative of f at t+dt/2 using function evaluations stored in m_derivs
             for( int i = m+static_cast<int>(kappa)-2 ; i >= m-static_cast<int>(kappa) ; i -= 2 )
@@ -589,7 +633,7 @@ private:
                 else
                 {
                     m_algebra.for_each3( m_diffs[kappa][j_diffs].m_v , m_diffs[kappa][j_diffs].m_v , dxdt ,
-                            typename operations_type::template scale_sum2< time_type , time_type >( 1.0 , sign *fac ) );
+                            typename operations_type::template scale_sum2< time_type , time_type >( 1.0 , sign * fac ) );
                     std::cout << ( (sign > 0.0) ? " + " : " - " ) << "dxdt";
                 }
                 sign *= -1;
@@ -605,7 +649,9 @@ private:
         // interpolation polynomial is defined for theta = -1 ... 1
         // m_k_final is the number of order-iterations done for the last step - it governs the order of the interpolation polynomial
         const time_type theta = 2*(t - m_t_last)/(m_t - m_t_last) - 1;
+        std::cout << "theta=" << theta << std::endl;
         //start with x = a0 + a_{2k+1} theta^{2k+1} + a_{2k+2} theta^{2k+2} + a_{2k+3} theta^{2k+3} + a_{2k+4} theta^{2k+4}
+        //std::cout << "x = a_0 + ";
         m_algebra.for_each6( out , m_mp_states[0].m_v , m_a1.m_v , m_a2.m_v , m_a3.m_v , m_a4.m_v ,
                 typename operations_type::template scale_sum5< time_type >(
                         static_cast<time_type>( 1 ) ,
@@ -614,12 +660,18 @@ private:
                         std::pow( theta , 2*m_k_final+3 ) ,
                         std::pow( theta , 2*m_k_final+4 ) ) );
 
+        //boost::numeric::odeint::copy( m_mp_states[0].m_v , out );
         // add remaining terms: x += a_1 theta + a2 theta^2 + ... + a_{2k} theta^{2k}
         for( size_t i=1 ; i<=2*m_k_final ; ++i )
         {
+           // std::cout << "a_" << i << " theta^" << i << " = " << m_diffs[i-1][0].m_v[0] * std::pow( theta , i ) << std::endl;
             m_algebra.for_each3( out , out , m_diffs[i-1][0].m_v ,
                     typename operations_type::template scale_sum2< time_type >( static_cast<time_type>(1) , std::pow( theta , i ) ) );
         }
+        std::cout << "a_" << 2*m_k_final+1 << " theta^" << 2*m_k_final+1;
+        std::cout << " + a_"  << 2*m_k_final+2 << " theta^" << 2*m_k_final+2;
+        std::cout << " + a_"  << 2*m_k_final+3 << " theta^" << 2*m_k_final+3;
+        std::cout << " + a_"  << 2*m_k_final+4 << " theta^" << 2*m_k_final+4 << std::endl;
     }
 
     default_error_checker< value_type, algebra_type , operations_type > m_error_checker;

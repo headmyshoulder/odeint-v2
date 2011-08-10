@@ -104,17 +104,18 @@ size_t integrate_adaptive(
 
     size_t count = 0;
     stepper.initialize( start_state , start_time , dt );
-    while( stepper.current_time() + stepper.current_time_step() < end_time )
-    {   //make sure we don't go beyond the end_time
-        obs( stepper.current_state() , stepper.current_time() );
-        stepper.do_step( system );
-        ++count;
+
+    while( stepper.current_time() < end_time )
+    {
+        while( stepper.current_time() + stepper.current_time_step() <= end_time )
+        {   //make sure we don't go beyond the end_time
+            obs( stepper.current_state() , stepper.current_time() );
+            stepper.do_step( system );
+            ++count;
+        }
+        stepper.initialize( stepper.current_state() , stepper.current_time() , end_time - stepper.current_time() );
     }
     obs( stepper.current_state() , stepper.current_time() );
-    //do last step
-    stepper.initialize( stepper.current_state() , stepper.current_time() , end_time - stepper.current_time() );
-    stepper.do_step( system );
-    obs( stepper.current_state() , end_time );
     return count;
 }
 

@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE( test_bulirsch_stoer )
     bulirsch_stoer_dense_out< state_type > bs_do( 1E-9 , 1E-9 , 1.0 , 0.0 );
     x[0] = 10.0 ; x[1] = 10.0 ; x[2] = 5.0;
     double t = 0.0;
-    dt = 1E-2;
+    dt = 1E-1;
     bs_do.initialize( x , t , dt );
     bs_do.do_step( sin_system() );
     std::cout << "one step successful, new time: " << bs_do.current_time() << " (" << t << ")" << std::endl;
