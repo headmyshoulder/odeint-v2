@@ -89,6 +89,8 @@ public:
         return res;
     }
 
+    value_type check() { return m_eps_abs; }
+
 private:
 
     value_type m_eps_abs;

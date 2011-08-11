@@ -45,7 +45,7 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-
+/*
 
 template< class T , size_t N >
 std::ostream& operator<<( std::ostream& output , const boost::array< T , N >& a ) {
@@ -56,7 +56,7 @@ std::ostream& operator<<( std::ostream& output , const boost::array< T , N >& a 
     return output;  // for multiple << operators.
 }
 
-
+*/
 
 
 
@@ -96,28 +96,24 @@ public:
 
     bulirsch_stoer_dense_out(
             time_type eps_abs = 1E-6 , time_type eps_rel = 1E-6 ,
-            time_type factor_x = 1.0 , time_type factor_dxdt = 1.0 )
-    : m_error_checker( eps_abs , eps_rel , factor_x, factor_dxdt ),
+            time_type factor_x = 1.0 , time_type factor_dxdt = 1.0 ,
+            bool control_interpolation = false )
+    : m_error_checker( eps_abs , eps_rel , factor_x, factor_dxdt ) ,
+      m_control_interpolation( control_interpolation) ,
       m_k_max(8) ,
-      m_safety1(0.25) , m_safety2(0.7),
-      m_max_dt_factor( 0.1 ) , m_min_step_scale(5E-5) , m_max_step_scale(0.7),
       m_last_step_rejected( false ) , m_first( true ) ,
       m_dt_last( 1.0E30 ) ,
-      m_current_eps( -1.0 ) ,
       m_k_final(0) ,
       m_current_state( &m_x1.m_v ) , m_old_state( &m_x2.m_v ) ,
       m_current_deriv( &m_dxdt1.m_v ) , m_old_deriv( &m_dxdt2.m_v ) ,
       m_error( m_k_max ) ,
-      m_a( m_k_max+1 ) ,
-      m_alpha( m_k_max , value_vector( m_k_max ) ) ,
       m_interval_sequence( m_k_max+1 ) ,
       m_coeff( m_k_max+1 ) ,
       m_cost( m_k_max+1 ) ,
-      m_times( m_k_max ) ,
       m_table( m_k_max ) ,
       m_mp_states( m_k_max+1 ) ,
       m_derivs( m_k_max+1 ) ,
-      m_diffs( 2*m_k_max+2 ) ,
+      m_diffs( 2*m_k_max+1 ) ,
       STEPFAC1( 0.65 ) , STEPFAC2( 0.94 ) , STEPFAC3( 0.02 ) , STEPFAC4( 4.0 ) , KFAC1( 0.8 ) , KFAC2( 0.9 )
     {
         for( unsigned short i = 0; i < m_k_max+1; i++ )
@@ -143,10 +139,10 @@ public:
             //std::cout << m_cost[i] << std::endl;
         }
         int num = 1;
-        for( int i = 2*(m_k_max)+1 ; i >=0  ; i-- )
+        for( int i = 2*(m_k_max) ; i >=0  ; i-- )
         {
             m_diffs[i].resize( num );
-            std::cout << "m_diffs[" << i << "] size: " << num << std::endl;
+            //std::cout << "m_diffs[" << i << "] size: " << num << std::endl;
             num += (i+1)%2;
         }
     }
@@ -184,11 +180,11 @@ public:
         m_k_final = 0;
         time_type new_h = dt;
 
-        std::cout << "t=" << t <<", dt=" << dt << ", k_opt=" << m_current_k_opt << ", first: " << m_first << std::endl;
+        //std::cout << "t=" << t <<", dt=" << dt << ", k_opt=" << m_current_k_opt << ", first: " << m_first << std::endl;
 
         for( size_t k = 0 ; k <= m_current_k_opt+1 ; k++ )
         {
-            std::cout << "k=" << k <<" (steps=" << m_interval_sequence[k] << "): " << std::endl;
+            //std::cout << "k=" << k <<" (steps=" << m_interval_sequence[k] << "): " << std::endl;
             m_midpoint.set_steps( m_interval_sequence[k] );
             if( k == 0 )
             {
@@ -204,8 +200,8 @@ public:
                 const time_type error = m_error_checker.error( m_algebra , in , dxdt , m_err.m_v , dt );
                 h_opt[k] = calc_h_opt( dt , error , k );
                 work[k] = m_cost[k]/h_opt[k];
-                std::cout << '\t' << "h_opt=" << h_opt[k] << ", work=" << work[k] << std::endl;
-                std::cout << '\t' << "error: " << error << std::endl;
+                //std::cout << '\t' << "h_opt=" << h_opt[k] << ", work=" << work[k] << std::endl;
+                //std::cout << '\t' << "error: " << error << std::endl;
 
                 m_k_final = k;
 
@@ -281,15 +277,24 @@ public:
 
         if( !reject )
         {
-            std::cout << "####### accepted ####### - new k: " << m_current_k_opt << ", new stepsize: " << new_h << std::endl;
-            // increase time
-            t += dt;
+
             //calculate dxdt for next step and dense output
-            sys( out , dxdt_new , t );
+            sys( out , dxdt_new , t+dt );
+
             //prepare dense output
-            prepare_dense_output( m_k_final , in , dxdt , out , dxdt_new , dt );
-        } else
-            std::cout << "####### rejected #######!" << std::endl;
+            value_type error = prepare_dense_output( m_k_final , in , dxdt , out , dxdt_new , dt );
+
+            if( error > static_cast<value_type>(10) ) // we are not as accurate for interpolation as for the steps
+            {
+                reject = true;
+                new_h = dt * std::pow( error , static_cast<value_type>(-1)/(2*m_k_final+2) );
+                //std::cout << "####### rejected #######! (t=" << t << ") interpolation error: " << error << " , new dt: " << new_h << std::endl;
+            } else {
+                //std::cout << "####### accepted ####### - new k: " << m_current_k_opt << ", new stepsize: " << new_h << std::endl;
+                //increase time
+                t += dt;
+            }
+        }// else  std::cout << "####### rejected #######!" << std::endl;
 
         //set next stepsize
         if( !m_last_step_rejected || (new_h < dt) )
@@ -305,6 +310,8 @@ public:
     template< class StateType >
     void initialize( const StateType &x0 , const time_type &t0 , const time_type &dt0 )
     {
+        //std::cout << "abs error " << m_error_checker.check() << std::endl;
+
         m_resizer.adjust_size( x0 , boost::bind( &controlled_error_bs_type::template resize< StateType > , boost::ref( *this ) , _1 ) );
         boost::numeric::odeint::copy( x0 , *m_current_state );
         m_t = t0;
@@ -346,9 +353,9 @@ public:
     template< class StateOut >
     void calc_state( const time_type &t , StateOut &x )
     {
-        std::cout << "===========" << std::endl << "doing interpolation for t=" << t << std::endl;
+        //std::cout << "===========" << std::endl << "doing interpolation for t=" << t << std::endl;
         do_interpolation( t , x );
-        std::cout << "===========" << std::endl;
+        //std::cout << "===========" << std::endl;
     }
 
 
@@ -407,11 +414,10 @@ public:
             for( size_t j = 0 ; i < m_diffs[i].size() ; ++i )
                 resized |= adjust_size_by_resizeability( m_diffs[i][j] , x , typename wrapped_deriv_type::is_resizeable() );
 
-        resized |= adjust_size_by_resizeability( m_mp_extrap , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_a1 , x , typename wrapped_state_type::is_resizeable() );
+        /*resized |= adjust_size_by_resizeability( m_a1 , x , typename wrapped_state_type::is_resizeable() );
         resized |= adjust_size_by_resizeability( m_a2 , x , typename wrapped_state_type::is_resizeable() );
         resized |= adjust_size_by_resizeability( m_a3 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_a4 , x , typename wrapped_state_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_a4 , x , typename wrapped_state_type::is_resizeable() );*/
         return resized;
     }
 
@@ -447,16 +453,16 @@ private:
     //polynomial extrapolation, see http://www.nr.com/webnotes/nr3web21.pdf
     {
         // result is written into table[0]
-        std::cout << "extrapolate k=" << k << ":" << std::endl;
+        //std::cout << "extrapolate k=" << k << ":" << std::endl;
         static const time_type val1 = static_cast< time_type >( 1.0 );
         for( int j=k ; j>1 ; --j )
         {
-            std::cout << '\t' << coeff[k + order_start_index][j + order_start_index - 1];
+            //std::cout << '\t' << coeff[k + order_start_index][j + order_start_index - 1];
             m_algebra.for_each3( table[j-1].m_v , table[j].m_v , table[j-1].m_v ,
                     typename operations_type::template scale_sum2< time_type , time_type >( val1 + coeff[k + order_start_index][j + order_start_index - 1] ,
                             -coeff[k + order_start_index][j + order_start_index - 1] ) );
         }
-        std::cout << std::endl << coeff[k + order_start_index][order_start_index] << std::endl;
+        //std::cout << std::endl << coeff[k + order_start_index][order_start_index] << std::endl;
         m_algebra.for_each3( table[0].m_v , table[1].m_v , table[0].m_v ,
                 typename operations_type::template scale_sum2< time_type , time_type >( val1 + coeff[k + order_start_index][order_start_index] ,
                         -coeff[k + order_start_index][order_start_index]) );
@@ -502,9 +508,16 @@ private:
     }
 
     template< class StateIn1 , class DerivIn1 , class StateIn2 , class DerivIn2 >
-    void prepare_dense_output( const int k , const StateIn1 &x_start , const DerivIn1 &dxdt_start ,
+    value_type prepare_dense_output( const int k , const StateIn1 &x_start , const DerivIn1 &dxdt_start ,
             const StateIn2 &x_end , const DerivIn2 &dxdt_end , const time_type dt )  // k is the order to which the result was approximated
     {
+
+        // compute the coefficients of the interpolation polynomial
+        // we parametrize the interval t .. t+dt by theta = -1 .. 1
+        // we use 2k+3 values at the interval center theta=0 to obtain the interpolation coefficients
+        // the values are x(t+dt/2) and the derivatives dx/dt , ... d^(2k+2) x / dt^(2k+2) at the midpoints
+        // the derivatives are approximated via finite differences
+        // all values are obtained from interpolation of the results from the increasing orders of the midpoint calls
 
         // calculate finite difference approximations to derivatives at the midpoint
         for( int j = 0 ; j<=k ; j++ )
@@ -516,42 +529,56 @@ private:
                 calculate_finite_difference( j , kappa , f , dxdt_start );
                 f *= d;
             }
-            std::cout << "x_mp[" << j << "] = " << m_mp_states[j].m_v << std::endl;
+            //std::cout << "x_mp[" << j << "] = " << m_mp_states[j].m_v << std::endl;
 
             if( j > 0 )
                 extrapolate_dense_out( j , m_mp_states , m_coeff );
         }
 
-        // extrapolate x( t+dt/2 )
-
-        // extrapolation result is now stored in m_mp_states[0]
-        std::cout << "a_0 = " << m_mp_states[0].m_v << std::endl;
+        //std::cout << "a_0 = " << m_mp_states[0].m_v << std::endl;
 
         time_type d = dt/2;
 
         // extrapolate finite differences
-        for( int kappa = 0 ; kappa<2*k ; kappa++ )
+        for( int kappa = 0 ; kappa<=2*k+1 ; kappa++ )
         {
             for( int j=1 ; j<=(k-kappa/2) ; ++j )
                 extrapolate_dense_out( j , m_diffs[kappa] , m_coeff , kappa/2 );
 
             // extrapolation results are now stored in m_diffs[kappa][0]
-            std::cout << "extrapolation result: " << m_diffs[kappa][0].m_v << std::endl;
+            //std::cout << "extrapolation result: " << m_diffs[kappa][0].m_v << std::endl;
 
             // divide kappa-th derivative by kappa because we need these terms for dense output interpolation
             m_algebra.for_each1( m_diffs[kappa][0].m_v , typename operations_type::template scale< value_type >( static_cast<value_type>(d) ) );
 
             d *= dt/(2*(kappa+2));
 
-            std::cout << "a_" << kappa+1 << " = " << m_diffs[kappa][0].m_v << std::endl;
+            //std::cout << "a_" << kappa+1 << " = " << m_diffs[kappa][0].m_v << std::endl;
         }
 
         // dense output coefficients a_0 is stored in m_mp_states[0], a_i for i = 1...2k are stored in m_diffs[i-1][0]
+
+        // the error is just the highest order coefficient of the interpolation polynomial
+        // this is because we use only the midpoint theta=0 as support for the interpolation (remember that theta = -1 .. 1)
+
+        double error = 0.0;
+        if( m_control_interpolation )
+        {
+            boost::numeric::odeint::copy( m_diffs[2*k+1][0].m_v , m_err.m_v );
+            error = m_error_checker.error( m_algebra , x_start , dxdt_start , m_err.m_v , dt );
+        }
+
+        return error;
+
         // calculate coefficient a_{2k+1} = (2k+5)/4 * x_end - (2k+5)/4 * x_start - 1/4 * dxdt_end - 1/4 * dxdt_start + sum_i=0...k-1 (i-k-2)*a_{2i+1}
 
-        std::cout << std::endl << x_start << std::endl << x_end << std::endl;
-        std::cout << std::endl << dxdt_start << std::endl << dxdt_end << std::endl << std::endl;
 
+        //std::cout << std::endl << x_start << std::endl << x_end << std::endl;
+        //std::cout << std::endl << dxdt_start << std::endl << dxdt_end << std::endl << std::endl;
+
+        // we don't use additional terms in the polynomial, the following calculations are thus not required
+
+/*
         m_algebra.for_each5( m_a1.m_v , x_end , x_start , dxdt_end , dxdt_start ,
                 typename operations_type::template scale_sum4< value_type >( static_cast<value_type>(2*k+5)/static_cast<value_type>(4),
                                                                                static_cast<value_type>(-2*k-5)/static_cast<value_type>(4),
@@ -561,7 +588,7 @@ private:
             m_algebra.for_each3( m_a1.m_v , m_a1.m_v , m_diffs[2*i][0].m_v ,
                     typename operations_type::template scale_sum2< value_type >( 1 , i-k-2 ) );
 
-        std::cout << "a_" << 2*k+1 << " = " << m_a1.m_v << std::endl;
+        //std::cout << "a_" << 2*k+1 << " = " << m_a1.m_v << std::endl;
 
         // calculate coefficient a_{2k+2} = (k+2)/2 * x_end + (k+2)/2 * x_start - 1/4 * dxdt_end + 1/4 * dxdt_start + (k+2)/2 * x_mp + sum_i=1...k (i-k-2)*a_{2i}
         m_algebra.for_each6( m_a2.m_v , x_end , x_start , dxdt_end , dxdt_start , m_mp_states[0].m_v ,
@@ -574,7 +601,7 @@ private:
             m_algebra.for_each3( m_a2.m_v , m_a2.m_v , m_diffs[2*i-1][0].m_v ,
                     typename operations_type::template scale_sum2< value_type >( 1 , i-k-2 ) );
 
-        std::cout << "a_" << 2*k+2 << " = " << m_a2.m_v << std::endl;
+        //std::cout << "a_" << 2*k+2 << " = " << m_a2.m_v << std::endl;
 
         // calculate coefficient a_{2k+3} = -(2k+3)/4 * x_end + (2k+3)/4 * x_start + 1/4 * dxdt_end + 1/4 * dxdt_start + sum_i=0...k-1 (k+1-i)*a_{2i+1}
         m_algebra.for_each5( m_a3.m_v , x_end , x_start , dxdt_end , dxdt_start ,
@@ -586,7 +613,7 @@ private:
             m_algebra.for_each3( m_a3.m_v , m_a3.m_v , m_diffs[2*i][0].m_v ,
                     typename operations_type::template scale_sum2< value_type >( 1 , k+1-i ) );
 
-        std::cout << "a_" << 2*k+3 << " = " << m_a3.m_v << std::endl;
+        //std::cout << "a_" << 2*k+3 << " = " << m_a3.m_v << std::endl;
 
         // calculate coefficient a_{2k+4} = -(k+1)/2 * x_end - (k+1)/2 * x_start + 1/4 * dxdt_end - 1/4 * dxdt_start - (k+1)/2 * x_mp + sum_i=0...k-1 (k+1-i)*a_{2i}
         m_algebra.for_each6( m_a4.m_v , x_end , x_start , dxdt_end , dxdt_start , m_mp_states[0].m_v ,
@@ -598,8 +625,8 @@ private:
         for( int i = 1 ; i<=k ; ++i )
             m_algebra.for_each3( m_a4.m_v , m_a4.m_v , m_diffs[2*i-1][0].m_v ,
                     typename operations_type::template scale_sum2< value_type >( 1 , k+1-i ) );
-
-        std::cout << "a_" << 2*k+4 << " = " << m_a4.m_v << std::endl;
+*/
+        //std::cout << "a_" << 2*k+4 << " = " << m_a4.m_v << std::endl;
     }
 
     template< class DerivIn >
@@ -610,19 +637,19 @@ private:
         {
             m_algebra.for_each2( m_diffs[0][j].m_v , m_derivs[j][m].m_v ,
                     typename operations_type::template scale_sum1< time_type >( fac ) );
-            std::cout << "j=" << j << ", kappa=" << kappa << ", m=" << m;
-            std::cout << ": m_diffs[" << kappa << "][" << j << "] = " << fac << " * f[" << m << "]  ";
-            std::cout << "(size(f)=" << m_derivs[j].size() << ") = " << m_diffs[0][j].m_v << std::endl;
+            //std::cout << "j=" << j << ", kappa=" << kappa << ", m=" << m;
+            //std::cout << ": m_diffs[" << kappa << "][" << j << "] = " << fac << " * f[" << m << "]  ";
+            //std::cout << "(size(f)=" << m_derivs[j].size() << ") = " << m_diffs[0][j].m_v << std::endl;
 
         }
         else
         {
-            std::cout << m_derivs[j][1].m_v << " , " << dxdt << std::endl;
+            //std::cout << m_derivs[j][1].m_v << " , " << dxdt << std::endl;
 
             // calculate the index of m_diffs for this kappa-j-combination
             const int j_diffs = j - kappa/2;
 
-            std::cout << "j=" << j << ", kappa=" << kappa << ", m=" << m << ": m_diffs[" << kappa << "][" << j_diffs << "] = " << fac << " ( 1*f[" << m+kappa << "]";
+            //std::cout << "j=" << j << ", kappa=" << kappa << ", m=" << m << ": m_diffs[" << kappa << "][" << j_diffs << "] = " << fac << " ( 1*f[" << m+kappa << "]";
 
             m_algebra.for_each2( m_diffs[kappa][j_diffs].m_v , m_derivs[j][m+kappa].m_v ,
                     typename operations_type::template scale_sum1< time_type >( fac ) );
@@ -636,19 +663,19 @@ private:
                     m_algebra.for_each3( m_diffs[kappa][j_diffs].m_v , m_diffs[kappa][j_diffs].m_v , m_derivs[j][i].m_v ,
                             typename operations_type::template scale_sum2< time_type , time_type >( 1.0 ,
                                     sign * fac * boost::math::binomial_coefficient< double >( kappa , c ) ) );
-                    std::cout << ( (sign > 0.0) ? " + " : " - " ) <<
-                            boost::math::binomial_coefficient< double >( kappa , c ) << "*f[" << i << "]";
+                    //std::cout << ( (sign > 0.0) ? " + " : " - " ) <<
+                    //        boost::math::binomial_coefficient< double >( kappa , c ) << "*f[" << i << "]";
                 }
                 else
                 {
                     m_algebra.for_each3( m_diffs[kappa][j_diffs].m_v , m_diffs[kappa][j_diffs].m_v , dxdt ,
                             typename operations_type::template scale_sum2< time_type , time_type >( 1.0 , sign * fac ) );
-                    std::cout << ( (sign > 0.0) ? " + " : " - " ) << "dxdt";
+                    //std::cout << ( (sign > 0.0) ? " + " : " - " ) << "dxdt";
                 }
                 sign *= -1;
                 ++c;
             }
-            std::cout << " ) = " << m_diffs[kappa][j_diffs].m_v << std::endl;
+            //std::cout << " ) = " << m_diffs[kappa][j_diffs].m_v << std::endl;
         }
     }
 
@@ -658,42 +685,38 @@ private:
         // interpolation polynomial is defined for theta = -1 ... 1
         // m_k_final is the number of order-iterations done for the last step - it governs the order of the interpolation polynomial
         const time_type theta = 2*(t - m_t_last)/(m_t - m_t_last) - 1;
-        std::cout << "theta=" << theta << std::endl;
+        //std::cout << "theta=" << theta << std::endl;
         //start with x = a0 + a_{2k+1} theta^{2k+1} + a_{2k+2} theta^{2k+2} + a_{2k+3} theta^{2k+3} + a_{2k+4} theta^{2k+4}
         //std::cout << "x = a_0 + ";
 
-        m_algebra.for_each6( out , m_mp_states[0].m_v , m_a1.m_v , m_a2.m_v , m_a3.m_v , m_a4.m_v ,
+/*        m_algebra.for_each6( out , m_mp_states[0].m_v , m_a1.m_v , m_a2.m_v , m_a3.m_v , m_a4.m_v ,
                 typename operations_type::template scale_sum5< time_type >(
                         static_cast<time_type>( 1 ) ,
                         std::pow( theta , 2*m_k_final+1 ) ,
                         std::pow( theta , 2*m_k_final+2 ) ,
                         std::pow( theta , 2*m_k_final+3 ) ,
                         std::pow( theta , 2*m_k_final+4 ) ) );
+*/
 
-        //boost::numeric::odeint::copy( m_mp_states[0].m_v , out );
+        // we use only values at interval center, that is theta=0, for interpolation
+        // our interpolation polynomial is thus of order 2k+2, hence we have 2k+3 terms
+
+        boost::numeric::odeint::copy( m_mp_states[0].m_v , out );
         // add remaining terms: x += a_1 theta + a2 theta^2 + ... + a_{2k} theta^{2k}
-        for( size_t i=1 ; i<=2*m_k_final ; ++i )
+        for( size_t i=0 ; i<=2*m_k_final+1 ; ++i )
         {
-           // std::cout << "a_" << i << " theta^" << i << " = " << m_diffs[i-1][0].m_v[0] * std::pow( theta , i ) << std::endl;
-            m_algebra.for_each3( out , out , m_diffs[i-1][0].m_v ,
-                    typename operations_type::template scale_sum2< time_type >( static_cast<time_type>(1) , std::pow( theta , i ) ) );
+            //std::cout << "a_" << i+1 << " theta^" << i+1 << " = " << m_diffs[i][0].m_v[0] * std::pow( theta , i+1 ) << std::endl;
+            m_algebra.for_each3( out , out , m_diffs[i][0].m_v ,
+                    typename operations_type::template scale_sum2< time_type >( static_cast<time_type>(1) , std::pow( theta , i+1 ) ) );
         }
-        std::cout << "a_" << 2*m_k_final+1 << " theta^" << 2*m_k_final+1;
-        std::cout << " + a_"  << 2*m_k_final+2 << " theta^" << 2*m_k_final+2;
-        std::cout << " + a_"  << 2*m_k_final+3 << " theta^" << 2*m_k_final+3;
-        std::cout << " + a_"  << 2*m_k_final+4 << " theta^" << 2*m_k_final+4 << std::endl;
     }
 
     default_error_checker< value_type, algebra_type , operations_type > m_error_checker;
     modified_midpoint_dense_out< state_type , value_type , deriv_type , time_type , algebra_type , operations_type , resizer_type > m_midpoint;
 
-    const size_t m_k_max;
+    bool m_control_interpolation;
 
-    const time_type m_safety1;
-    const time_type m_safety2;
-    const time_type m_max_dt_factor;
-    const time_type m_min_step_scale;
-    const time_type m_max_step_scale;
+    const size_t m_k_max;
 
     bool m_last_step_rejected;
     bool m_first;
@@ -702,9 +725,7 @@ private:
     time_type m_dt;
     time_type m_dt_last;
     time_type m_t_last;
-    time_type m_current_eps;
 
-    size_t m_current_k_max;
     size_t m_current_k_opt;
     size_t m_k_final;
 
@@ -720,13 +741,10 @@ private:
     wrapped_state_type m_err;
 
     value_vector m_error; // errors of repeated midpoint steps and extrapolations
-    value_vector m_a; // stores the work (number of f calls) required for the orders
-    value_matrix m_alpha; // stores convergence factor for stepsize adjustment
     int_vector m_interval_sequence; // stores the successive interval counts
     value_matrix m_coeff;
     int_vector m_cost; // costs for interval count
 
-    value_vector m_times;
     state_vector_type m_table; // sequence of states for extrapolation
 
     //for dense output:
@@ -734,9 +752,7 @@ private:
     deriv_table_type m_derivs; // table of function values
     deriv_table_type m_diffs; // table of function values
 
-    wrapped_state_type m_mp_extrap; // extrapolated state at midpoint
-    deriv_vector_type m_diffs_extrap; // extrapolated finite differences at midpoint
-    wrapped_state_type m_a1 , m_a2 , m_a3 , m_a4;
+    //wrapped_state_type m_a1 , m_a2 , m_a3 , m_a4;
 
     const time_type STEPFAC1 , STEPFAC2 , STEPFAC3 , STEPFAC4 , KFAC1 , KFAC2;
 };
