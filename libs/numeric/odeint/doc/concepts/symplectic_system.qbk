@@ -1,0 +1,48 @@
+[section Concept Symplectic_System]
+
+[section Description]
+
+This concept describes how to define a symplectic system written with generalized coordinate `q` and generalized momentum `p`:
+[' q'(t) = f(p,t) ]
+
+[' p'(t) = g(q,t) ]
+It describes a pair of callable objects with a specific parameter signature.
+A System is typically implemented as a std::pair of functions or a functors.
+Symplectic systems are used in symplectic steppers like `symplectic_rkn_sb3a_mclachlan` [link].
+
+[endsect]
+
+[section Notation]
+
+[variablelist
+  [[System] [A type that is a model of System]]
+  [[CoorFunc] [A type that  models the coordinate function ['f]]]
+  [[MomentumFunc] [A type that models the momentum function ['g]]]
+  [[Coor] [The type of the coordinate `q`]]
+  [[Momentum] [The type of the momentum `p`]]
+  [[CoorDeriv] [The type of the derivative of coordinate `q'`]]
+  [[MomentumDeriv] [The type of the derivative of momentum `p'`]]
+  [[Time] [A type that is the `time_type` of Stepper]]
+  [[sys] [An object that models System]]
+  [[coor_func] [An object of type CoordFunc]]
+  [[momentum_func] [An object if type MomentumFunc]]
+  [[q] [Object of type Coor]]
+  [[p] [Object of type Momentum]]
+  [[dqdt] [Object of type CoorDeriv]]
+  [[dpdt] [Object of type MomentumDeriv]]
+  [[t] [Object of type Time]]
+]
+
+[endsect]
+
+[section Valid expressions]
+
+[table
+  [[Name] [Expression] [Type] [Semantics]]
+  [[Calculate ['dx/dt := f(x,t)]] [`sys( x , dxdt , t )`] [`void`] [Calculates f(x,t), the result is stored into dxdt] ]
+]
+
+[endsect]
+
+
+[endsect]
