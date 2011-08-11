@@ -509,30 +509,39 @@ private:
         // calculate finite difference approximations to derivatives at the midpoint
         for( int j = 0 ; j<=k ; j++ )
         {
-            const time_type d = m_interval_sequence[j] / static_cast<time_type>(4);
-            time_type f = dt/static_cast<time_type>(2); //factor 1/2 here because our interpolation interval has length 2 !!!
+            const time_type d = m_interval_sequence[j] / static_cast<time_type>(2*dt);
+            time_type f = 1.0; //factor 1/2 here because our interpolation interval has length 2 !!!
             for( int kappa = 0 ; kappa <= 2*j+1 ; ++kappa )
             {
                 calculate_finite_difference( j , kappa , f , dxdt_start );
                 f *= d;
             }
             std::cout << "x_mp[" << j << "] = " << m_mp_states[j].m_v << std::endl;
+
+            if( j > 0 )
+                extrapolate_dense_out( j , m_mp_states , m_coeff );
         }
 
         // extrapolate x( t+dt/2 )
-        extrapolate_dense_out( k , m_mp_states , m_coeff );
+
         // extrapolation result is now stored in m_mp_states[0]
         std::cout << "a_0 = " << m_mp_states[0].m_v << std::endl;
+
+        time_type d = dt/2;
 
         // extrapolate finite differences
         for( int kappa = 0 ; kappa<2*k ; kappa++ )
         {
-            extrapolate_dense_out( k-kappa/2 , m_diffs[kappa] , m_coeff , kappa/2 );
+            for( int j=1 ; j<=(k-kappa/2) ; ++j )
+                extrapolate_dense_out( j , m_diffs[kappa] , m_coeff , kappa/2 );
+
             // extrapolation results are now stored in m_diffs[kappa][0]
             std::cout << "extrapolation result: " << m_diffs[kappa][0].m_v << std::endl;
 
             // divide kappa-th derivative by kappa because we need these terms for dense output interpolation
-            m_algebra.for_each1( m_diffs[kappa][0].m_v , typename operations_type::template scale< value_type >( static_cast<value_type>(1) / (kappa+1) ) );
+            m_algebra.for_each1( m_diffs[kappa][0].m_v , typename operations_type::template scale< value_type >( static_cast<value_type>(d) ) );
+
+            d *= dt/(2*(kappa+2));
 
             std::cout << "a_" << kappa+1 << " = " << m_diffs[kappa][0].m_v << std::endl;
         }
@@ -652,6 +661,7 @@ private:
         std::cout << "theta=" << theta << std::endl;
         //start with x = a0 + a_{2k+1} theta^{2k+1} + a_{2k+2} theta^{2k+2} + a_{2k+3} theta^{2k+3} + a_{2k+4} theta^{2k+4}
         //std::cout << "x = a_0 + ";
+
         m_algebra.for_each6( out , m_mp_states[0].m_v , m_a1.m_v , m_a2.m_v , m_a3.m_v , m_a4.m_v ,
                 typename operations_type::template scale_sum5< time_type >(
                         static_cast<time_type>( 1 ) ,
