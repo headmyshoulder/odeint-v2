@@ -10,16 +10,16 @@ In odeint this is implemented with use of __ublas, therefore, the ['state_type] 
 [heading Notation]
 
 [variablelist
-  [[System] [A type that is a model of `Implicit_System`]]
-  [[Time] [A type that is the `time_type` of Stepper]]
-  [[sys] [An object of type `System`]]
-  [[x] [Object of type ublas::vector]]
-  [[dxdt] [Object of type ublas::vector]]
-  [[jacobi] [Object of type ublas::matrix]]
-  [[t] [Object of type `Time`]]
+  [[`System`] [A type that is a model of `Implicit_System`]]
+  [[`Time`] [A type representing the time of the ODE]]
+  [[`sys`] [An object of type `System`]]
+  [[`x`] [Object of type ublas::vector]]
+  [[`dxdt`] [Object of type ublas::vector]]
+  [[`jacobi`] [Object of type ublas::matrix]]
+  [[`t`] [Object of type `Time`]]
 ]
 
-[heading Valid expressions]
+[heading Valid Expressions]
 
 [table
   [[Name] [Expression] [Type] [Semantics]]

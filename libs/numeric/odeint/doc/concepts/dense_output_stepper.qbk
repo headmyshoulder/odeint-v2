@@ -1,5 +1,44 @@
-[section Dense output stepper]
+[section Dense Output Stepper]
 
-Dense output stepper concept
+This concept specifies the interface a dense ouput stepper has to fulfill to be used  within __integrate_functions.
+
+[heading Description]
+A dense ouput stepper following this Dense Output Stepper concept provides the possibility to perform a single step of the solution /x(t)/ of an ODE to obtain /x(t+dt)/.
+The step-size `dt` might be adjusted automatically due to error control.
+Dense output steppers also can interpolate the solution to calculate the state /x(t')/ at any point /t <= t' <= t+dt/.
+
+[heading Associated types]
+[variablelist 
+  [[`Stepper::state_type`] [A type representing the state /x/ of the system]]
+  [[`Stepper::time_type`] [A type representing the time /t/ of the system]]
+]
+
+[heading Notation]
+
+[variablelist 
+  [[`Stepper`] [A type that is a model of Dense Output Stepper]]
+  [[`State`] [A type representing the state /x/ of the ODE]]
+  [[`stepper`] [An object of type `Stepper`]]
+  [[`x0`, `x`] [Object of type `State`]]
+  [[`t0`, `dt0`, `t`] [Objects of type `Stepper::time_type`]]
+  [[`sys`] [An object defining the ODE, should be a model of __system, __symplectic_system, __simple_symplectic_system or __implicit_system.]]
+]
+
+[heading Valid Expressions]
+
+[table
+  [[Name] [Expression] [Type] [Semantics]]
+  [[Initialize integration] [`stepper.initialize( x0 , t0 , dt0 )`] [void] [Initializes the stepper with initial values `x0`, `t0` and `dt0`.]]
+  [[Do step] [`stepper.do_step( sys )`] [`std::pair< Stepper::time_type , Stepper::time_type >`] [Performs one step using the ODE defined by `sys`. The step-size might be changed internally due to error control. This function returns a pair containing `t` and `t+dt` representing the interval for which interpolation can be performed.] ]
+  [[Do step with reference] [`stepper.do_step( boost::ref( sys ) )`] [`std::pair< Stepper::time_type , Stepper::time_type >`] [Same as above with `System` as reference] ]
+  [[Do interpolation] [`stepper.calc_state( t_inter , x )`] [`void`] [Performs the interpolation to calculate /x(t[sub inter]/) where /t <= t[sub inter] <= t+dt/.]]
+  [[Get current time] [`stepper.current_time()`] [`Stepper::time_type&`] [Returns the current time /t+dt/ of the stepper, that is the end time of the last step and the starting time for the next call of `do_step`]]
+  [[Get current state] [`stepper.current_state()`] [`Stepper::state_type&`] [Returns the current state of the stepper, that is /x(t+dt)/, the state at the time returned by `stepper.current_time()`]] 
+]
+
+[heading Models]
+
+* `dense_output_controlled_explicit_fsal< controlled_error_stepper_fsal< runge_kutta_dopri5 >`
+* bulirsch_stoer_dense_out
 
 [endsect]

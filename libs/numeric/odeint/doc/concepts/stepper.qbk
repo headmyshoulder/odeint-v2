@@ -1,11 +1,14 @@
 [section Stepper]
 
-Concept Stepper
+This concepts specifies the interface a simple stepper has to fullfill to be used within the __integrate_functions.
 
 [heading Description]
 
 The basic stepper concept.
-A basic stepper following this Stepper concept is able to perform a single step of an ODE defined by a __system, __symplectic_system, or __implicit_system using a given step size 'dt'.
+A basic stepper following this Stepper concept is able to perform a single step of the solution /x(t)/ of an ODE to obtain /x(t+dt)/ using a given step size /dt/.
+Basic steppers can be Runge Kutta steppers, symplectic steppers as well as implicit steppers.
+Depending on the actual stepper, the ODE is defined as __system, __symplectic_system, __simple_symplectic_system or __implicit_system.
+Note that all error steppers are also basic steppers.
 
 [heading Refinement of]
 
@@ -39,16 +42,16 @@ A basic stepper following this Stepper concept is able to perform a single step 
 [heading Notation]
 
 [variablelist 
-  [[Stepper] [A type that is a model of Stepper]]
-  [[State] [A type that is the `state_type` of Stepper]]
-  [[Time] [A type that is the `time_type` of Stepper]]
-  [[stepper] [An object of type `Stepper`]]
-  [[x] [Objects of type `State`]]
-  [[t,dt] [Objects of type `Time`]]
-  [[sys] [An object defining the ODE. Depending on the type Stepper this might be a model of __system, __symplectic_system or __implicit_system ]]
+  [[`Stepper`] [A type that is a model of Stepper]]
+  [[`State`] [A type representing the state /x/ of the ODE]]
+  [[`Time`] [A type representing the time /t/ of the ODE]]
+  [[`stepper`] [An object of type `Stepper`]]
+  [[`x`] [Object of type `State`]]
+  [[`t`, `dt`] [Objects of type `Time`]]
+  [[`sys`] [An object defining the ODE. Depending on the Stepper this might be a model of __system, __symplectic_system, __simple_symplectic_system or __implicit_system ]]
 ]
 
-[heading Valid expressions]
+[heading Valid Expressions]
 
 [table
   [[Name] [Expression] [Type] [Semantics]]
@@ -64,5 +67,6 @@ A basic stepper following this Stepper concept is able to perform a single step 
 * euler
 * runge_kutta_cash_karp54
 * runge_kutta_dopri5
+* runge_kutta_fehlberg78
 
 [endsect]

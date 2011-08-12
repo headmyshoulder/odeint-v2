@@ -38,8 +38,14 @@
     [link boost_sandbox_numeric_odeint.concepts.system System]]
 [def __symplectic_system
     [link boost_sandbox_numeric_odeint.concepts.symplectic_system Symplectic_System]]
+[def __simple_symplectic_system
+    [link boost_sandbox_numeric_odeint.concepts.simple_symplectic_system Simple_Symplectic_System]]
 [def __implicit_system
     [link boost_sandbox_numeric_odeint.concepts.implicit_system Implicit_System]]
+[def __contolled_stepper
+    [link boost_sandbox_numeric_odeint.concepts.controlled_stepper Controlled Stepper]]
+[def __integrate_functions
+    [link boost_sandbox_numeric_odeint.integrate_functions integrate functions]]
 
 [def __alpha '''&#945;''']
 [def __beta '''&#946;''']

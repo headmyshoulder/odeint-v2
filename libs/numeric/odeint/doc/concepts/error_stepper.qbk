@@ -1,5 +1,39 @@
-[section Error stepper]
+[section Error Stepper]
 
-Error stepper concept
+This concepts specifies the interface an error stepper has to fulfill to be used within a __contolled_stepper.
+
+[heading Description]
+
+An error stepper following this Error Stepper concept is capable of doing one step of the solution /x(t)/ of an ODE with step-size /dt/ to obtain /x(t+dt)/ and also computing an error estimate /x[sub err]/ of the result.
+Error Steppers can be Runge Kutta steppers, symplectic steppers as well as implicit steppers.
+Based on the stepper type, the ODE is defined as __system, __symplectic_system, __simple_symplectic_system or __implicit_system.
+
+[heading Notation]
+
+[variablelist 
+  [[`ErrorStepper`] [A type that is a model of Error Stepper]]
+  [[`State`] [A type representing the state /x/ of the ODE]]
+  [[`Error`] [A type representing the error calculated by the stepper, usually same as `State`]]
+  [[`Time`] [A type representing the time /t/ of the ODE]]
+  [[`stepper`] [An object of type `ErrorStepper`]]
+  [[`x`] [Object of type `State`]]
+  [[`xerr`] [Object of type `Error`]]
+  [[`t`, `dt`] [Objects of type `Time`]]
+  [[`sys`] [An object defining the ODE, should be a model of either __system, __symplectic_system, __simple_symplectic_system or __implicit_system.]]
+]
+
+[heading Valid Expressions]
+
+[table
+  [[Name] [Expression] [Type] [Semantics]]
+  [[Do step] [`stepper.do_step( sys , x , t , dt , xerr )`] [`void`] [Performs one step of step size `dt` with error estimation.  The newly obtained state is written in-place to `x` and the estimated error to `xerr`.] ]
+  [[Do step with reference] [`stepper.do_step( boost::ref(sys) , x , t , dt , xerr )`] [`void`] [Performs one step of step size `dt`.  The newly obtained state is written in-place to `x` and the estimated error to `xerr`.] ]
+]
+
+[heading Models]
+
+* runge_kutta_cash_karp54
+* runge_kutta_dopri5
+* runge_kutta_fehlberg78
 
 [endsect]

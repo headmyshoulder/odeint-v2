@@ -11,14 +11,14 @@ However, symplectic and implicit steppers work with other system concepts, see _
 [heading Notation]
 
 [variablelist
-  [[System] [A type that is a model of System]] 
-  [[State] [A type that is the `state_type` of Stepper]]
-  [[Deriv] [A type that is the `deriv_type` of Stepper]]
-  [[Time] [A type that is the `time_type` of Stepper]]
-  [[sys] [An object that models System]]
-  [[x] [Object of type State]]
-  [[dxdt] [Object of type Deriv]]
-  [[t] [Object of type Time]]
+  [[`System`] [A type that is a model of System]] 
+  [[`State`] [A type representing the state /x/ of the ODE]]
+  [[`Deriv`] [A type representing the derivative /x'/ of the ODE]]
+  [[`Time`] [A type representing the time]]
+  [[`sys`] [An object of type `System`]]
+  [[`x`] [Object of type `State`]]
+  [[`dxdt`] [Object of type `Deriv`]]
+  [[`t`] [Object of type `Time`]]
 ]
 
 [heading Valid expressions]
