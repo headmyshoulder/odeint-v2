@@ -2,22 +2,18 @@
 
 Concept Stepper
 
-[section Description]
+[heading Description]
 
 The basic stepper concept.
+A basic stepper following this Stepper concept is able to perform a single step of an ODE defined by a __system, __symplectic_system, or __implicit_system using a given step size 'dt'.
 
-tba.
-
-[endsect]
-
-[section Refinement of]
+[heading Refinement of]
 
 * DefaultConstructable
 * CopyConstructable
 
-[endsect]
-
-[section Associated types]
+[/
+[heading Associated types]
 
 *  '''<para>'''[*state_type]'''</para>'''
 '''<para>'''`Stepper::state_type`'''</para>'''
@@ -38,45 +34,35 @@ tba.
 *  '''<para>'''[*order_type]'''</para>'''
 '''<para>'''`Stepper::order_type`'''</para>'''
 '''<para>'''The type characterizing the order of the ODE, typically `unsigned short`.'''</para>'''
+]
 
-[endsect]
-
-[section Notation]
+[heading Notation]
 
 [variablelist 
   [[Stepper] [A type that is a model of Stepper]]
   [[State] [A type that is the `state_type` of Stepper]]
   [[Time] [A type that is the `time_type` of Stepper]]
-  [[Order] [A type that is the `order_type` of Stepper]]
-  [[stepper] [An object of type Stepper]]
-  [[x,in,out] [Objects of type State]]
-  [[t,dt] [Objects of type Time]]
-  [[sys] [An object defining the ODE. Depends on the context of the stepper]]
+  [[stepper] [An object of type `Stepper`]]
+  [[x] [Objects of type `State`]]
+  [[t,dt] [Objects of type `Time`]]
+  [[sys] [An object defining the ODE. Depending on the type Stepper this might be a model of __system, __symplectic_system or __implicit_system ]]
 ]
 
-[endsect]
-
-[section Valid expressions]
+[heading Valid expressions]
 
 [table
   [[Name] [Expression] [Type] [Semantics]]
-  [[Get the order] [`stepper.order()`] [`Order`] [Returns the order of the stepper which is used for error calculation.] ]
-  [[Do step in-place] [`stepper.do_step( sys , x , t , dt )`] [`void`] [Performs one step of step size `dt`.  The newly obtained state is written in place in `x`.] ]
-  [[Do step out-of-place] [`stepper.do_step( sys , in , t , out , dt )`] [`void`] [Performs one step. The newly obtained state is written to `out`] ]
+  [/[Get the order] [`stepper.order()`] [`Order`] [Returns the order of the stepper which is used for error calculation.] ]
+  [[Do step] [`stepper.do_step( sys , x , t , dt )`] [`void`] [Performs one step of step size `dt`.  The newly obtained state is written in place in `x`.] ]
+  [[Do step with reference] [`stepper.do_step( boost::ref(sys) , x , t , dt )`] [`void`] [Performs one step of step size `dt`.  The newly obtained state is written in place in `x`.] ]
+  [/[Do step out-of-place] [`stepper.do_step( sys , in , t , out , dt )`] [`void`] [Performs one step. The newly obtained state is written to `out`] ]
 ]
 
-[endsect]
-
-[section Models]
+[heading Models]
 
 * runge_kutta4
 * euler
 * runge_kutta_cash_karp54
 * runge_kutta_dopri5
-
-[endsect]
-
-
-
 
 [endsect]

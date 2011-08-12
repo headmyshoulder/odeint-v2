@@ -1,7 +1,9 @@
-[section Concepts]
+[section:concepts Concepts]
+[# odeint.concepts]
 
 [include concepts/system.qbk]
 [include concepts/symplectic_system.qbk]
+[include concepts/implicit_system.qbk]
 [include concepts/stepper.qbk]
 [include concepts/error_stepper.qbk]
 [include concepts/controlled_stepper.qbk]
