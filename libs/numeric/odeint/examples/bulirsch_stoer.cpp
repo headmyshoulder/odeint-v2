@@ -52,6 +52,7 @@ void write_out( const state_type &x , const double t )
 int main()
 {
     bulirsch_stoer_dense_out< state_type > stepper( 1E-8 , 0.0 , 0.0 , 0.0 );
+    bulirsch_stoer< state_type > stepper2( 1E-8 , 0.0 , 0.0 , 0.0 );
 
     state_type x = {{ 2.0 / sqrt(3.0) }};
 
@@ -73,6 +74,14 @@ int main()
     integrate_adaptive( stepper , rhs , x , t , t_end , dt , write_out );
     out.close();
 
+    x[0] = 2.0 / sqrt(3.0);
+
+    out.open( "bs3.dat" );
+    out.precision(16);
+    integrate_adaptive( stepper2 , rhs , x , t , t_end , dt , write_out );
+    out.close();
+
+
     typedef runge_kutta_dopri5< state_type > dopri5_type;
     typedef controlled_error_stepper< dopri5_type > controlled_dopri5_type;
     typedef dense_output_controlled_explicit_fsal< controlled_dopri5_type > dense_output_dopri5_type;
@@ -81,7 +90,7 @@ int main()
 
     x[0] = 2.0 / sqrt(3.0);
 
-    out.open( "bs3.dat" );
+    out.open( "bs4.dat" );
     out.precision(16);
     integrate_adaptive( dopri5 , rhs , x , t , t_end , dt , write_out );
     out.close();
