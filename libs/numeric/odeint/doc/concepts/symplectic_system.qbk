@@ -21,7 +21,7 @@ which gives the equations of motion:
 
 The algorithmic implementation of this situation is described by a pair of callable objects for /f/ and /g/ with a specific parameter signature.
 Such a system should be implemented as a std::pair of functions or a functors.
-Symplectic systems are used in symplectic steppers like `symplectic_rkn_sb3a_mclachlan` [link odeint.concepts.symplectic_steppers].
+Symplectic systems are used in symplectic steppers like `symplectic_rkn_sb3a_mclachlan`.
 
 [heading Notation]
 
