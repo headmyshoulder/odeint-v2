@@ -166,23 +166,27 @@ public:
 
         typename boost::unwrap_reference< System >::type &sys = system;
         if( m_resizer.adjust_size( in , boost::bind( &controlled_error_bs_type::template resize< StateIn > , boost::ref( *this ) , _1 ) ) )
+        {
             reset(); // system resized -> reset
+        }
+
         if( dt != m_dt_last )
+        {
             reset(); // step size changed from outside -> reset
+        }
 
         bool reject( true );
-        m_dt_last = dt;
 
         value_vector h_opt( m_k_max+1 );
         value_vector work( m_k_max+1 );
 
-        //std::cout << "t=" << t <<", dt=" << dt << ", k_opt=" << m_current_k_opt << std::endl;
+        //std::cout << "t=" << t <<", dt=" << dt << "(" << m_dt_last << ")" << ", k_opt=" << m_current_k_opt << std::endl;
 
         time_type new_h = dt;
 
         for( size_t k = 0 ; k <= m_current_k_opt+1 ; k++ )
         {
-            //std::cout << "k=" << k <<": " << std::endl;
+            //std::cout << "k=" << k <<": " << ", first: " << m_first << std::endl;
             m_midpoint.set_steps( m_interval_sequence[k] );
             if( k == 0 )
             {
@@ -210,10 +214,10 @@ public:
                         if( (work[k] < KFAC2*work[k-1]) || (m_current_k_opt <= 2) )
                         {
                             // leave order as is (except we were in first round)
-                            m_current_k_opt = k+1;
+                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , static_cast<int>(k)+1 );
                             new_h = h_opt[k] * m_cost[k+1]/m_cost[k];
                         } else {
-                            m_current_k_opt = k;
+                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , static_cast<int>(k) );
                             new_h = h_opt[k];
                         }
                         break;
@@ -253,16 +257,18 @@ public:
                 }
                 if( k == m_current_k_opt+1 )
                 { // convergence at k_opt+1 ?
+                    //std::cout << "convergence at k_opt+1 ?" << std::endl;
                     if( error < 1.0 )
                     {   //convergence
                         reject = false;
-                        if( work[k-1] < KFAC2*work[k] )
-                            m_current_k_opt = std::max( 2 , static_cast<int>(k)-2 );
+                        if( work[k-2] < KFAC2*work[k-1] )
+                            m_current_k_opt = std::max( 2 , static_cast<int>(m_current_k_opt)-1 );
                         if( (work[k] < KFAC2*work[m_current_k_opt]) && !m_last_step_rejected )
                             m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , static_cast<int>(k) );
                         new_h = h_opt[m_current_k_opt];
                     } else
                     {
+                        //std::cout << "REJECT!" << std::endl;
                         reject = true;
                         new_h = h_opt[m_current_k_opt];
                     }
@@ -276,7 +282,7 @@ public:
 
         if( !m_last_step_rejected || (new_h < dt) )
         {
-            m_dt_last = dt;
+            m_dt_last = new_h;
             dt = new_h;
         }
 
@@ -291,6 +297,7 @@ public:
 
     void reset()
     {
+        //std::cout << "reset" << std::endl;
         m_first = true;
         m_last_step_rejected = false;
     }
@@ -372,35 +379,6 @@ private:
             fac = std::max( facmin/STEPFAC4 , std::min( 1.0/facmin , fac ) );
         }
         return std::abs(h*fac);
-    }
-
-    controlled_step_result set_k_opt( const size_t k , const value_vector &work , const value_vector &h_opt , time_type &dt )
-    {
-        //std::cout << "finding k_opt..." << std::endl;
-        if( k == 1 )
-        {
-            m_current_k_opt = 2;
-            //dt = h_opt[ m_current_k_opt-1 ] * m_cost[ m_current_k_opt ] / m_cost[ m_current_k_opt-1 ] ;
-            return success_step_size_increased;
-        }
-        if( (work[k-1] < KFAC1*work[k]) || (k == m_k_max) )
-        {   // order decrease
-            m_current_k_opt = k-1;
-            dt = h_opt[ m_current_k_opt ];
-            return success_step_size_increased;
-        }
-        else if( (work[k] < KFAC2*work[k-1]) || m_last_step_rejected || (k == m_k_max-1) )
-        {   // same order - also do this if last step got rejected
-            m_current_k_opt = k;
-            dt = h_opt[ m_current_k_opt ];
-            return success_step_size_unchanged;
-        }
-        else
-        {   // order increase - only if last step was not rejected
-            m_current_k_opt = k+1;
-            dt = h_opt[ m_current_k_opt-1 ] * m_cost[ m_current_k_opt ] / m_cost[ m_current_k_opt-1 ] ;
-            return success_step_size_increased;
-        }
     }
 
     bool in_convergence_window( const size_t k ) const
