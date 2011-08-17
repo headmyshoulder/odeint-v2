@@ -66,10 +66,8 @@ int main( int argc , char **argv )
 	typedef runge_kutta_cash_karp54_classic< state_type > rk54_type;
 	typedef runge_kutta_dopri5< state_type > dopri5_type;
 
-	rk54_type rk54;
-	dopri5_type dopri5;
-	controlled_error_stepper< rk54_type > rk54_controlled( rk54 );
-	controlled_error_stepper< dopri5_type > dopri5_controlled( dopri5 );
+	controlled_error_stepper< rk54_type > rk54_controlled;
+	controlled_error_stepper< dopri5_type > dopri5_controlled;
 
 	state_type x0 = {{ 1.25 , 0.43 }};
 	evolution( rk54_controlled , 100.0 , x0 , "rk54.dat" );

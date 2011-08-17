@@ -155,8 +155,8 @@ public:
 
 
     controlled_error_stepper(
-            const stepper_type &stepper = stepper_type( ) ,
-            const error_checker_type &error_checker = error_checker_type( )
+            const error_checker_type &error_checker = error_checker_type( ) ,
+            const stepper_type &stepper = stepper_type( )
     )
     : m_stepper( stepper ) , m_error_checker( error_checker )
     { }
@@ -367,8 +367,8 @@ public:
     typedef controlled_error_stepper< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag > controlled_stepper_type;
 
     controlled_error_stepper(
-            const stepper_type &stepper = stepper_type() ,
-            const error_checker_type &error_checker = error_checker_type()
+            const error_checker_type &error_checker = error_checker_type() ,
+            const stepper_type &stepper = stepper_type()
     )
     : m_stepper( stepper ) , m_error_checker( error_checker ) ,
       m_first_call( true )
