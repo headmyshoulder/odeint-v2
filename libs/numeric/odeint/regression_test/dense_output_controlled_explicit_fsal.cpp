@@ -76,7 +76,7 @@ int main( int argc , char **argv )
 		{
 			controlled_step_result res = controlled_stepper.try_step( lorenz() , x_start , t , dt );
 			size_t count = 0;
-			while( ( res == step_size_decreased ) && ( count < 1000 ) )
+			while( ( res == fail ) && ( count < 1000 ) )
 			{
 				res = controlled_stepper.try_step( lorenz() , x_start , t , dt );
 			}

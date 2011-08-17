@@ -302,9 +302,9 @@ public:
 
         m_last_step_rejected = reject;
         if( reject )
-            return step_size_decreased;
+            return fail;
         else
-            return success_step_size_unchanged;
+            return success;
     }
 
     template< class StateType >
@@ -334,10 +334,10 @@ public:
             sys( *m_current_state , *m_current_deriv , m_t );
         }
 
-        controlled_step_result res = step_size_decreased;
+        controlled_step_result res = fail;
         m_t_last = m_t;
         size_t count = 0;
-        while( res == step_size_decreased )
+        while( res == fail )
         {
             res = try_step( system , *m_current_state , *m_current_deriv , m_t , *m_old_state , *m_old_deriv , m_dt );
             m_first = false;

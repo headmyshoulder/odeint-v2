@@ -25,9 +25,8 @@ namespace odeint {
 
 typedef enum
 {
-    success_step_size_unchanged ,
-    step_size_decreased ,
-    success_step_size_increased
+    success ,
+    fail ,
 } controlled_step_result;
 
 } // namespace odeint

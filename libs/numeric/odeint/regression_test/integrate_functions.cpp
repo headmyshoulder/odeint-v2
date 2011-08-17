@@ -156,7 +156,7 @@ int main( int argc , char **argv )
 		// seem to work, check
 		typedef runge_kutta_dopri5< state_type > dopri5_type;
 		typedef controlled_error_stepper< dopri5_type > controlled_error_stepper_type;
-		typedef dense_output_controlled_explicit_fsal< controlled_error_stepper_type > steppe r_type;
+		typedef dense_output_controlled_explicit_fsal< controlled_error_stepper_type > stepper_type;
 
 		controlled_error_stepper_type controlled_stepper( default_error_checker< double >( 1.0e-1 , 0.1 ) );
 

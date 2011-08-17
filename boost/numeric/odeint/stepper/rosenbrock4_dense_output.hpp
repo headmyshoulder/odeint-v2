@@ -102,7 +102,7 @@ public:
     {
         const size_t max_count = 1000;
 
-        controlled_step_result res = step_size_decreased;
+        controlled_step_result res = fail;
         m_t_old = m_t;
         size_t count = 0;
         do
@@ -111,7 +111,7 @@ public:
             if( count++ == max_count )
                 throw std::overflow_error( "dense_output_controlled_explicit_fsal : too much iterations!");
         }
-        while( res == step_size_decreased );
+        while( res == fail );
         m_stepper.stepper().prepare_dense_output();
         std::swap( m_current_state , m_old_state );
         return std::make_pair( m_t_old , m_t );

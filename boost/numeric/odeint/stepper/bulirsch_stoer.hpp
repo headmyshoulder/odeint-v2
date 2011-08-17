@@ -137,7 +137,7 @@ public:
     {
         m_xnew_resizer.adjust_size( x , boost::bind( &controlled_error_bs_type::template resize_m_xnew< StateInOut > , boost::ref( *this ) , _1 ) );
         controlled_step_result res = try_step( system , x , dxdt , t , m_xnew.m_v , dt );
-        if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged ) )
+        if( res == success )
         {
             boost::numeric::odeint::copy( m_xnew.m_v , x );
         }
@@ -284,9 +284,9 @@ public:
         m_first = false;
 
         if( reject )
-            return step_size_decreased;
+            return fail;
         else
-            return success_step_size_unchanged;
+            return success;
     }
 
     void reset()
@@ -381,25 +381,25 @@ private:
         {
             m_current_k_opt = 2;
             //dt = h_opt[ m_current_k_opt-1 ] * m_cost[ m_current_k_opt ] / m_cost[ m_current_k_opt-1 ] ;
-            return success_step_size_increased;
+            return success;
         }
         if( (work[k-1] < KFAC1*work[k]) || (k == m_k_max) )
         {   // order decrease
             m_current_k_opt = k-1;
             dt = h_opt[ m_current_k_opt ];
-            return success_step_size_increased;
+            return success;
         }
         else if( (work[k] < KFAC2*work[k-1]) || m_last_step_rejected || (k == m_k_max-1) )
         {   // same order - also do this if last step got rejected
             m_current_k_opt = k;
             dt = h_opt[ m_current_k_opt ];
-            return success_step_size_unchanged;
+            return success;
         }
         else
         {   // order increase - only if last step was not rejected
             m_current_k_opt = k+1;
             dt = h_opt[ m_current_k_opt-1 ] * m_cost[ m_current_k_opt ] / m_cost[ m_current_k_opt-1 ] ;
-            return success_step_size_increased;
+            return success;
         }
     }
 

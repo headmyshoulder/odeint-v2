@@ -73,13 +73,13 @@ size_t integrate_adaptive(
         }
 
         size_t trials = 0;
-        controlled_step_result res = success_step_size_unchanged;
+        controlled_step_result res = success;
         do
         {
             res = stepper.try_step( system , start_state , start_time , dt );
             ++trials;
         }
-        while( ( res == step_size_decreased ) && ( trials < max_attempts ) );
+        while( ( res == fail ) && ( trials < max_attempts ) );
         if( trials == max_attempts ) throw std::overflow_error( error_string );
 
         ++count;
