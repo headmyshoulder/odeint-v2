@@ -82,6 +82,8 @@ BOOST_AUTO_TEST_CASE( test_bulirsch_stoer )
 
     //stepper.try_step( lorenz() , x , t , dt );
 
+    std::cout << "starting integration..." << std::endl;
+
     size_t steps = integrate_adaptive( stepper , lorenz() , x , 0.0 , 10.0 , dt );
 
     std::cout << "required steps: " << steps << std::endl;

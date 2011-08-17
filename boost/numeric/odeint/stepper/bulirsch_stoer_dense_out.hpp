@@ -214,10 +214,10 @@ public:
                         if( (work[k] < KFAC2*work[k-1]) || (m_current_k_opt <= 2) )
                         {
                             // leave order as is (except we were in first round)
-                            m_current_k_opt = k+1;
+                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , static_cast<int>(k)+1 );
                             new_h = h_opt[k] * m_cost[k+1]/m_cost[k];
                         } else {
-                            m_current_k_opt = k;
+                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , static_cast<int>(k) );
                             new_h = h_opt[k];
                         }
                         break;
@@ -260,8 +260,8 @@ public:
                     if( error < 1.0 )
                     {   //convergence
                         reject = false;
-                        if( work[k-1] < KFAC2*work[k] )
-                            m_current_k_opt = std::max( 2 , static_cast<int>(k)-2 );
+                        if( work[k-2] < KFAC2*work[k-1] )
+                            m_current_k_opt = std::max( 2 , static_cast<int>(m_current_k_opt)-1 );
                         if( (work[k] < KFAC2*work[m_current_k_opt]) && !m_last_step_rejected )
                             m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , static_cast<int>(k) );
                         new_h = h_opt[m_current_k_opt];
