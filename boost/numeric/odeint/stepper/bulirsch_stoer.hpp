@@ -381,7 +381,6 @@ private:
         return std::abs(h*fac);
     }
 
-<<<<<<< HEAD
     controlled_step_result set_k_opt( const size_t k , const value_vector &work , const value_vector &h_opt , time_type &dt )
     {
         //std::cout << "finding k_opt..." << std::endl;
@@ -411,8 +410,6 @@ private:
         }
     }
 
-=======
->>>>>>> 41a15f61022cf6e2a7be2db110e1c38d12f0a6f7
     bool in_convergence_window( const size_t k ) const
     {
         if( (k == m_current_k_opt-1) && !m_last_step_rejected )

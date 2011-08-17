@@ -145,11 +145,8 @@ void check_controlled_stepper_concept( Stepper &stepper , System system , typena
 
     time_type t = 0.0 , dt = 0.1;
     controlled_step_result step_result = stepper.try_step( system , x , t , dt );
-<<<<<<< HEAD
+
     BOOST_CHECK_MESSAGE( step_result == success , "step result: " << step_result ); // error = 0 for constant system -> step size is always too small
-=======
-    BOOST_CHECK_MESSAGE( step_result != step_size_decreased , "step result: " << step_result ); // stepsize should never increase (step_result struct should be changed, actually)
->>>>>>> 41a15f61022cf6e2a7be2db110e1c38d12f0a6f7
 }
 
 
