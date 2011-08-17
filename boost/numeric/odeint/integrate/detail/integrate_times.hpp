@@ -111,6 +111,7 @@ size_t integrate_times(
      Time last_time_point = *(end_time-1);
 
      stepper.initialize( start_state , *start_time , dt );
+     obs( start_state , *start_time++ );
 
      size_t count = 0;
      while( start_time != end_time )

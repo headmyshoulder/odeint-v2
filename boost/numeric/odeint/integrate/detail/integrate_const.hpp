@@ -43,7 +43,7 @@ size_t integrate_const(
     typename boost::unwrap_reference< Observer >::type &obs = observer;
 
     size_t count = 0;
-    while( start_time < end_time )
+    while( start_time+dt <= end_time )
     {
         obs( start_state , start_time );
         stepper.do_step( system , start_state , start_time , dt );
@@ -71,11 +71,10 @@ size_t integrate_const(
 
     size_t count = 0;
     Time time_step = dt;
-    while( start_time < end_time )
+    while( start_time+time_step <= end_time )
     {
         obs( start_state , start_time );
         Time next_time = start_time + time_step;
-        if( next_time > end_time ) next_time = end_time;
         count += detail::integrate_adaptive(
                 stepper , system , start_state , start_time , next_time , dt ,
                 do_nothing_observer() , controlled_stepper_tag() );
@@ -87,9 +86,7 @@ size_t integrate_const(
 
 
 /*
- * integrates with constant time step using a controlled stepper
- *
- * step size control is used if the stepper is a controlled stepper, otherwise not
+ * integrates with constant time step using a dense output stepper
  */
 template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate_const(
@@ -104,7 +101,7 @@ size_t integrate_const(
     size_t count = 0;
     while( start_time < end_time )
     {
-        while( ( start_time <= stepper.current_time() ) && ( start_time < end_time ) )
+        while( ( start_time < stepper.current_time() ) && ( start_time < end_time ) )
         {
             stepper.calc_state( start_time , start_state );
             obs( start_state , start_time );

@@ -26,11 +26,15 @@
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg78.hpp>
 
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 
 #include <boost/numeric/odeint/stepper/dense_output_explicit.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_controlled_explicit_fsal.hpp>
+
+#include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
+#include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>
 
 #include <boost/numeric/odeint/stepper/symplectic_euler.hpp>
 #include <boost/numeric/odeint/stepper/symplectic_rkn_sb3a_mclachlan.hpp>
@@ -49,6 +53,7 @@
 #include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
 #include <boost/numeric/odeint/integrate/integrate_const.hpp>
 #include <boost/numeric/odeint/integrate/integrate_n_steps.hpp>
+#include <boost/numeric/odeint/integrate/integrate_times.hpp>
 
 #include <boost/numeric/odeint/integrate/observer_collection.hpp>
 

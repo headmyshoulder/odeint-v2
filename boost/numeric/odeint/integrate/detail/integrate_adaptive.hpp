@@ -32,7 +32,7 @@ namespace detail {
 
 
 /*
- * integrate_adaptive for simple stepper is a integrate_const
+ * integrate_adaptive for simple stepper is basically an integrate_const + some last step
  */
 template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate_adaptive(
@@ -41,12 +41,17 @@ size_t integrate_adaptive(
         Observer observer , stepper_tag
 )
 {
-    return integrate_const( stepper , system , start_state ,
+    size_t steps = integrate_const( stepper , system , start_state ,
             start_time , end_time , dt , observer , stepper_tag() );
+    if( steps*dt < end_time )
+    {   //make a last step to end exactly at end_time
+        stepper.do_step( system , start_state , steps*dt , end_time-steps*dt );
+        steps++;
+        typename boost::unwrap_reference< Observer >::type &obs = observer;
+        obs( start_state , end_time );
+    }
+    return steps;
 }
-
-
-
 
 
 /*
