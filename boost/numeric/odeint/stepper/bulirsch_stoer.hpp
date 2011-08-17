@@ -110,6 +110,20 @@ public:
 
     }
 
+    bulirsch_stoer( const bulirsch_stoer &bs )
+    : m_error_checker( bs.m_error_checker ) ,
+      m_midpoint( bs.m_midpoint ) ,
+      m_k_max( bs.m_k_max ) ,
+      m_last_step_rejected( bs.m_last_step_rejected ) , m_first( bs.m_first ) ,
+      m_dt_last( bs.m_dt_last ) , m_t_last( bs.m_t_last ) ,
+      m_current_k_opt( bs.m_current_k_opt ) ,
+      m_interval_sequence( bs.m_interval_sequence ) ,
+      m_coeff( bs.m_coeff ) ,
+      m_cost( bs.m_cost ) ,
+      m_table( bs.m_table ) ,
+      STEPFAC1( bs.STEPFAC1 ) , STEPFAC2( bs.STEPFAC2 ) , STEPFAC3( bs.STEPFAC3 ) , STEPFAC4( bs.STEPFAC4 ) , KFAC1( bs.KFAC1 ) , KFAC2( bs.KFAC2 )
+    { }
+
     /*
      * Version 1 : try_step( sys , x , t , dt )
      *

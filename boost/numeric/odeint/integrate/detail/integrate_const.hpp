@@ -104,7 +104,7 @@ size_t integrate_const(
     size_t count = 0;
     while( start_time < end_time )
     {
-        while( ( start_time < stepper.current_time() ) && ( start_time < end_time ) )
+        while( ( start_time <= stepper.current_time() ) && ( start_time < end_time ) )
         {
             stepper.calc_state( start_time , start_state );
             obs( start_state , start_time );
@@ -112,7 +112,7 @@ size_t integrate_const(
         }
 
         // we have not reached the end, do another real step
-        if( start_time + stepper.current_time_step() <= end_time )
+        if( stepper.current_time() + stepper.current_time_step() <= end_time )
         {
             stepper.do_step( system );
             ++count;
@@ -124,7 +124,6 @@ size_t integrate_const(
             ++count;
         }
     }
-    // do the last step
 
     return count;
 }

@@ -72,6 +72,32 @@ class Resizer = initially_resizer
 >
 class bulirsch_stoer_dense_out {
 
+private:
+
+    void copy_pointers( const bulirsch_stoer_dense_out &bs )
+    {
+        if( bs.m_current_state == (&bs.m_x1.m_v ) )
+        {
+            m_current_state = &m_x1.m_v;
+            m_old_state = &m_x2.m_v;
+        }
+        else
+        {
+            m_current_state = &m_x2.m_v;
+            m_old_state = &m_x1.m_v;
+        }
+        if( bs.m_current_deriv == ( &bs.m_dxdt1.m_v ) )
+        {
+            m_current_deriv = &m_dxdt1.m_v;
+            m_old_deriv = &m_dxdt2.m_v;
+        }
+        else
+        {
+            m_current_deriv = &m_dxdt2.m_v;
+            m_old_deriv = &m_dxdt1.m_v;
+        }
+    }
+
 public:
 
     typedef State state_type;
@@ -145,6 +171,54 @@ public:
             //std::cout << "m_diffs[" << i << "] size: " << num << std::endl;
             num += (i+1)%2;
         }
+    }
+
+    bulirsch_stoer_dense_out( const bulirsch_stoer_dense_out &bs )
+    : m_error_checker( bs.m_error_checker ) ,
+      m_midpoint( bs.m_midpoint ) ,
+      m_control_interpolation( bs.m_control_interpolation) ,
+      m_k_max( bs.m_k_max ) ,
+      m_last_step_rejected( bs.m_last_step_rejected ) , m_first( bs.m_first ) ,
+      m_t( bs.m_t ) , m_dt( bs.m_dt ) , m_dt_last( bs.m_dt_last ) , m_t_last( bs.m_t_last ) ,
+      m_current_k_opt( bs.m_current_k_opt ) , m_k_final( bs.m_k_final ) ,
+      m_x1( bs.m_x1 ) , m_x2( bs.m_x2 ) , m_dxdt1( bs.m_dxdt1 ) , m_dxdt2( bs.m_dxdt2 ) ,
+      m_current_state( &m_x1.m_v ) , m_old_state( &m_x2.m_v ) ,
+      m_current_deriv( &m_dxdt1.m_v ) , m_old_deriv( &m_dxdt2.m_v ) ,
+      m_error( bs.m_error ) ,
+      m_interval_sequence( bs.m_interval_sequence ) ,
+      m_coeff( bs.m_coeff ) ,
+      m_cost( bs.m_cost ) ,
+      m_table( bs.m_table ) ,
+      m_mp_states( bs.m_mp_states ) ,
+      m_derivs( bs.m_derivs ) ,
+      m_diffs( bs.m_diffs ) ,
+      STEPFAC1( bs.STEPFAC1 ) , STEPFAC2( bs.STEPFAC2 ) , STEPFAC3( bs.STEPFAC3 ) , STEPFAC4( bs.STEPFAC4 ) , KFAC1( bs.KFAC1 ) , KFAC2( bs.KFAC2 )
+    {
+        copy_pointers( bs );
+    }
+
+    bulirsch_stoer_dense_out& operator = ( const bulirsch_stoer_dense_out &bs )
+    {
+        m_error_checker = bs.m_error_checker;
+        m_midpoint = bs.m_midpoint;
+        m_control_interpolation = bs.m_control_interpolation;
+        m_k_max = bs.m_k_max;
+        m_last_step_rejected = bs.m_last_step_rejected;
+        m_first = bs.m_first;
+        m_t = bs.m_t; m_dt = bs.m_dt; m_dt_last = bs.m_dt_last; m_t_last = bs.m_t_last;
+        m_current_k_opt = bs.m_current_k_opt; m_k_final = bs.m_k_final;
+        m_x1 = bs.m_x1; m_x2 = bs.m_x2; m_dxdt1 = bs.m_dxdt1; m_dxdt2 = bs.m_dxdt2;
+        m_current_state = &m_x1.m_v; m_old_state = &m_x2.m_v;
+        m_current_deriv = &m_dxdt1.m_v; m_old_deriv = &m_dxdt2.m_v;
+        m_error = bs.m_error;
+        m_interval_sequence = bs.m_interval_sequence;
+        m_coeff = bs.m_coeff;
+        m_cost = bs.m_cost;
+        m_table = bs.m_table;
+        m_mp_states = bs.m_mp_states;
+        m_derivs = bs.m_derivs;
+        m_diffs = bs.m_diffs;
+        STEPFAC1 = bs.STEPFAC1; STEPFAC2 = bs.STEPFAC2; STEPFAC3 = bs.STEPFAC3; STEPFAC4 = bs.STEPFAC4; KFAC1 = bs.KFAC1; KFAC2 = bs.KFAC2;
     }
 
 /*
@@ -242,7 +316,7 @@ public:
                         }
                         else if( (work[k] < KFAC2*work[k-1]) && !m_last_step_rejected )
                         {
-                            m_current_k_opt = std::min( static_cast<int>(m_k_max-1) , static_cast<int>(m_current_k_opt)+1 );
+                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , static_cast<int>(m_current_k_opt)+1 );
                             new_h = h_opt[k]*m_cost[m_current_k_opt]/m_cost[k];
                         } else
                             new_h = h_opt[m_current_k_opt];
@@ -310,8 +384,6 @@ public:
     template< class StateType >
     void initialize( const StateType &x0 , const time_type &t0 , const time_type &dt0 )
     {
-        //std::cout << "abs error " << m_error_checker.check() << std::endl;
-
         m_resizer.adjust_size( x0 , boost::bind( &controlled_error_bs_type::template resize< StateType > , boost::ref( *this ) , _1 ) );
         boost::numeric::odeint::copy( x0 , *m_current_state );
         m_t = t0;
@@ -407,17 +479,14 @@ public:
         for( size_t i = 0 ; i < m_k_max ; ++i )
             resized |= adjust_size_by_resizeability( m_table[i] , x , typename wrapped_state_type::is_resizeable() );
         for( size_t i = 0 ; i < m_k_max+1 ; ++i )
-            for( size_t j = 0 ; i < m_derivs[i].size() ; ++i )
+                    resized |= adjust_size_by_resizeability( m_mp_states[i] , x , typename wrapped_state_type::is_resizeable() );
+        for( size_t i = 0 ; i < m_k_max+1 ; ++i )
+            for( size_t j = 0 ; j < m_derivs[i].size() ; ++j )
                 resized |= adjust_size_by_resizeability( m_derivs[i][j] , x , typename wrapped_deriv_type::is_resizeable() );
-
-        for( size_t i = 0 ; i < 2*m_k_max+2 ; ++i )
-            for( size_t j = 0 ; i < m_diffs[i].size() ; ++i )
+        for( size_t i = 0 ; i < 2*m_k_max+1 ; ++i )
+            for( size_t j = 0 ; j < m_diffs[i].size() ; ++j )
                 resized |= adjust_size_by_resizeability( m_diffs[i][j] , x , typename wrapped_deriv_type::is_resizeable() );
 
-        /*resized |= adjust_size_by_resizeability( m_a1 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_a2 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_a3 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_a4 , x , typename wrapped_state_type::is_resizeable() );*/
         return resized;
     }
 
