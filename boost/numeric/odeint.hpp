@@ -31,7 +31,7 @@
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 
 #include <boost/numeric/odeint/stepper/dense_output_explicit.hpp>
-#include <boost/numeric/odeint/stepper/dense_output_controlled_explicit_fsal.hpp>
+#include <boost/numeric/odeint/stepper/dense_output_controlled_explicit.hpp>
 
 #include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
 #include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>

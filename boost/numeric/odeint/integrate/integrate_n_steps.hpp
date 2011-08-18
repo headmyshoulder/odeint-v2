@@ -35,29 +35,22 @@ namespace odeint {
  *
  * the two overloads are needed in order to solve the forwarding problem
  */
-template< class Stepper , class System , class State , class Time , class Observer >
+template< class Stepper , class System , class State , class Time , class Observer>
 Time integrate_n_steps(
         Stepper stepper , System system , State &start_state ,
         Time start_time , Time dt , size_t num_of_steps ,
         Observer observer )
 {
+
+    BOOST_STATIC_ASSERT( (boost::is_convertible< typename Stepper::stepper_category , stepper_tag >::value) );
+
     Time end_time = start_time + dt * num_of_steps;
 
-    // we want to get as fast as possible to the end
-    if( boost::is_same< do_nothing_observer , Observer >::type::value )
-    {
-        detail::integrate_adaptive(
-                stepper , system , start_state ,
-                start_time , end_time  , dt ,
-                observer , typename Stepper::stepper_category() );
-    }
-    else
-    {
-        detail::integrate_const(
+    detail::integrate_const(
                 stepper , system , start_state ,
                 start_time , end_time+dt/2  , dt ,
                 observer , typename Stepper::stepper_category() );
-    }
+
     return end_time;
 }
 
@@ -67,24 +60,16 @@ Time integrate_n_steps(
         Time start_time , Time dt , size_t num_of_steps ,
         Observer observer )
 {
+    BOOST_STATIC_ASSERT( (boost::is_convertible< typename Stepper::stepper_category , stepper_tag >::value) );
+
     Time end_time = start_time + dt * num_of_steps;
 
-    // we want to get as fast as possible to the end
-    if( boost::is_same< do_nothing_observer , Observer >::type::value )
-    {
-        detail::integrate_adaptive(
-                stepper , system , start_state ,
-                start_time , end_time  , dt ,
-                observer , typename Stepper::stepper_category() );
-    }
-    else
-    {
-        detail::integrate_const(
-                stepper , system , start_state ,
-                start_time , end_time+dt/2  , dt ,
-                observer , typename Stepper::stepper_category() );
-    }
-    return end_time;
+    detail::integrate_const(
+                 stepper , system , start_state ,
+                 start_time , end_time+dt/2  , dt ,
+                 observer , typename Stepper::stepper_category() );
+
+     return end_time;
 }
 
 

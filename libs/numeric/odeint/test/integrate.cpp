@@ -136,6 +136,31 @@ struct perform_integrate_times_test
     }
 };
 
+template< class Stepper >
+struct perform_integrate_n_steps_test
+{
+    void operator()( void )
+    {
+        state_type x( 3 );
+        x[0] = x[1] = x[2] = 10.0;
+
+        const value_type dt = 0.03;
+        const int n = 200;
+
+        std::vector< double > times;
+
+        // simple stepper
+        value_type end_time = integrate_n_steps( Stepper() , lorenz , x , 0.0 , dt , n , push_back_time( times ) );
+
+        BOOST_CHECK_SMALL( end_time - n*dt , 2E-16 );
+        BOOST_CHECK_EQUAL( static_cast<int>(times.size()) , n+1 );
+
+        for( size_t i=0 ; i<times.size() ; ++i )
+            // check if observer was called at times 0,1,2,...
+            BOOST_CHECK_SMALL( times[i] - static_cast< value_type >(i)*dt , (i+1) * 2E-16 );
+    }
+};
+
 
 
 class stepper_methods : public mpl::vector<
@@ -149,7 +174,7 @@ class stepper_methods : public mpl::vector<
     controlled_error_stepper< runge_kutta_dopri5< state_type > > ,
     controlled_error_stepper< runge_kutta_fehlberg78< state_type > > ,
     bulirsch_stoer< state_type > ,
-    dense_output_controlled_explicit_fsal< controlled_error_stepper< runge_kutta_dopri5< state_type > > > ,
+    dense_output_controlled_explicit< controlled_error_stepper< runge_kutta_dopri5< state_type > > > ,
     bulirsch_stoer_dense_out< state_type >
 > { };
 
@@ -174,6 +199,21 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_adaptive_test_case , Stepper, stepper_m
 BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_times_test_case , Stepper, stepper_methods )
 {
     perform_integrate_times_test< Stepper > tester;
+    tester();
+}
+
+class simple_stepper_methods : public mpl::vector<
+    euler< state_type > ,
+    modified_midpoint< state_type > ,
+    runge_kutta4< state_type > ,
+    runge_kutta_cash_karp54< state_type > ,
+    runge_kutta_dopri5< state_type > ,
+    runge_kutta_fehlberg78< state_type >
+> { };
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_n_steps_test_case , Stepper, simple_stepper_methods )
+{
+    perform_integrate_n_steps_test< Stepper > tester;
     tester();
 }
 

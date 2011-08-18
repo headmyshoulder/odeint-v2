@@ -1,18 +1,8 @@
 [section Odeint in detail]
 
-[section Stepper types]
+[section Steppers]
 
-Different steppers
-
-Explicit steppers
-
-Implicit steppers
-
-Step size controll
-
-dense output
-
-Overview and table
+[include stepper_table.qbk]
 
 [endsect]
 
@@ -36,7 +26,8 @@ Integrates the ODE given by `system` with subsequent steps from `stepper`.
 Integration start at `t0` and `x0` and ends at some ['t' = t[sub 0] + n dt] with /n/ such that ['t[sub 1] - dt < t' <= t[sub 1]].
 `x0` is changed to the approximative solution ['x(t')] at the end of integration.
 If provided, the `observer` is invoked at times ['t[sub 0]], ['t[sub 0] + dt], ['t[sub 0] + 2dt], ... ,['t'].
-Note that you should choose `t1` such that ['t' < t[sub 1]] because if ['t' = t[sub 1]] due to limited precision round off errors the last observation might not be executed.
+`integrate_const` returns the number of steps performed during the integration.
+Note that if you are using a simple __stepper or __error_stepper and want to make exactly `n` steps you should prefer the `integrate_n_steps` function below.
 
 * If `stepper` is a __stepper or __error_stepper then `dt` is also the step size used for integration and the observer is called just after every step.
 * If `stepper` is a __controlled_stepper then `dt` is the initial step size.
@@ -60,6 +51,7 @@ Integrates the ODE given by `system` with subsequent steps from `stepper`.
 Integration start at `t0` and `x0` and ends at ['t[sub 1]].
 `x0` is changed to the approximative solution ['x(t[sub 1])] at the end of integration.
 If provided, the `observer` is after each step of the provided stepper (and before the first step at `t0`).
+`integrate_adaptive` returns the number of steps performed during the integration.
 
 * If `stepper` is a __stepper or __error_stepper then `dt` is the step size used for integration and `integrate_adaptive` behaves like `integrate_const` except that for the last step the step size is reduced to ensure we end exactly at `t1`.
 If provided, the observer is called at each step.
@@ -84,6 +76,7 @@ Integration starts at `*times_start` and ends exactly `*(times_end-1)`.
 `x0` contains the approximate solution at the end point of integration.
 This function requires an observer which is invoked at the subsequent times `*times_start++` until `times_start == times_end`.
 If called with a __boost_range `time_range` the function behaves the same with `times_start = boost::begin( time_range )` and `times_end = boost::end( time_range )`.
+`integrate_times` returns the number of steps performed during the integration.
 
 * If `stepper` is a __stepper or __error_stepper `dt` is the step size used for integration.
 However, whenever a time point from the sequence is approached the step size `dt` will be reduced to obtain the state /x(t)/ exactly at the time point.
@@ -94,6 +87,23 @@ However, if a time point from the sequence is approached the step size is reduce
 The actual step size is adjusted during integration according to error control.
 Dense output is used to obtain the states /x(t)/ at the time points from the sequence.
 
+[heading Integrate a given number of steps]
+
+If exactly `n` steps with fixed step size `dt` should be executed the `integrate_n_steps` function should be used.
+
+[warning This function works only with steppers fullfilling the __stepper or __error_stepper concept! Providing a __controlled_stepper or __dense_out_stepper results in a compilationerror.]
+
+`integrate_n_steps( stepper , system , x0 , t0 , dt , n )`
+
+`integrate_n_steps( stepper , system , x0 , t0 , dt , n , observer )`
+
+Integrates the ODE given by `system` with subsequent steps from `stepper` starting at ['x[sub 0]] and ['t[sub 0]].
+If provided, `observer` is called after every step and at the beginning with `t0`.
+This function works only with steppers fullfilling the __stepper or __error_stepper concept!
+It performs exactly `n` steps with fixed step size `dt` ending at `t0 + n*dt`.
+The approximate result for ['x( t[sub 0] + n dt )] is stored in `x0`.
+This function returns the end time `t0 + n*dt`.
+
 [heading Convenience integrate function]
 
 Additionally to the sophisticated integrate function above odeint also provides a simple `integrate` routine which uses a dense ouput stepper based on `runge_kutta_dopri5` with standard error bounds ['10[super -6]] for the steps.
@@ -103,10 +113,7 @@ Additionally to the sophisticated integrate function above odeint also provides 
 `integrate( system , x0 , t0 , t1 , dt , observer )`
 
 This function behaves exactly like `integrate_adaptive` above but no stepper has to be provided.
-
-[heading Integrate a given number of steps]
-
-`integrate_n_steps`
+It also returns the number of steps performed during the integration.
 
 [endsect]
 

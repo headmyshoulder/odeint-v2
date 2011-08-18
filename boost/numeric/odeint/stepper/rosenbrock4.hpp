@@ -200,6 +200,23 @@ public:
         do_step( system , x , t , x , dt , xerr );
     }
 
+    /*
+     * do_step without error output - just calls above functions with and neglects the error estimate
+     */
+    template< class System >
+    void do_step( System system , const state_type &x , time_type t , state_type &xout , time_type dt )
+    {
+        m_x_err_resizer.adjust_size( x , boost::bind( &stepper_type::template resize_x_err<state_type> , boost::ref( *this ) , _1 ) );
+        do_step( system , x , t , xout , dt , m_x_err.m_v );
+    }
+
+    template< class System >
+    void do_step( System system , state_type &x , time_type t , time_type dt )
+    {
+        m_x_err_resizer.adjust_size( x , boost::bind( &stepper_type::template resize_x_err<state_type> , boost::ref( *this ) , _1 ) );
+        do_step( system , x , t , dt , m_x_err.m_v );
+    }
+
     void prepare_dense_output()
     {
         const size_t n = m_g1.m_v.size();
@@ -245,16 +262,24 @@ public:
         return resized;
     }
 
+    template< class StateIn >
+    bool resize_x_err( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_x_err , x , typename wrapped_state_type::is_resizeable() );
+    }
+
     template< class StateType >
     void adjust_size( const StateType &x )
     {
         resize( x );
+        resize_x_err( x );
     }
 
 
 private:
 
     resizer_type m_resizer;
+    resizer_type m_x_err_resizer;
 
     wrapped_matrix_type m_jac;
     wrapped_pmatrix_type m_pm;
@@ -262,6 +287,7 @@ private:
     wrapped_state_type m_g1 , m_g2 , m_g3 , m_g4 , m_g5;
     wrapped_state_type m_cont3 , m_cont4;
     wrapped_state_type m_xtmp;
+    wrapped_state_type m_x_err;
 
     rosenbrock_coefficients m_coef;
 };

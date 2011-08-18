@@ -29,7 +29,7 @@
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 #include <boost/numeric/odeint/stepper/symplectic_euler.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_explicit.hpp>
-#include <boost/numeric/odeint/stepper/dense_output_controlled_explicit_fsal.hpp>
+#include <boost/numeric/odeint/stepper/dense_output_controlled_explicit.hpp>
 
 typedef std::vector< double > state_type;
 typedef boost::array< double , 3 > state_type2;
@@ -261,7 +261,7 @@ BOOST_AUTO_TEST_CASE( dense_output_dopri5_with_ranges )
 {
 	using namespace boost::numeric::odeint;
 	vector_fixture f;
-	dense_output_controlled_explicit_fsal<
+	dense_output_controlled_explicit<
 		controlled_error_stepper<
             runge_kutta_dopri5< state_type >
 		> > stepper;

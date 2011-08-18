@@ -40,6 +40,8 @@ struct explicit_error_stepper_tag : error_stepper_tag {};
 struct explicit_error_stepper_fsal_tag : error_stepper_tag {};
 
 struct controlled_stepper_tag {};
+struct explicit_controlled_stepper_tag : controlled_stepper_tag {};
+struct explicit_controlled_stepper_fsal_tag : controlled_stepper_tag {};
 
 struct dense_output_stepper_tag {};
 

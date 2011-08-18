@@ -37,7 +37,7 @@
 #include <boost/numeric/odeint/stepper/runge_kutta_fehlberg78.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_explicit.hpp>
-#include <boost/numeric/odeint/stepper/dense_output_controlled_explicit_fsal.hpp>
+#include <boost/numeric/odeint/stepper/dense_output_controlled_explicit.hpp>
 #include <boost/numeric/odeint/algebra/fusion_algebra.hpp>
 
 
@@ -270,7 +270,7 @@ class controlled_stepper_types : public mpl::vector
 class dense_output_stepper_types : public mpl::vector
 <
 	dense_output_explicit< euler< state_type , value_type , deriv_type , time_type , fusion_algebra > > ,
-	dense_output_controlled_explicit_fsal<
+	dense_output_controlled_explicit<
 		controlled_error_stepper< runge_kutta_dopri5< state_type , value_type , deriv_type , time_type , fusion_algebra > > >
 > { };
 

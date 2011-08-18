@@ -414,7 +414,7 @@ public:
             res = try_step( system , *m_current_state , *m_current_deriv , m_t , *m_old_state , *m_old_deriv , m_dt );
             m_first = false;
             if( count++ == max_count )
-                throw std::overflow_error( "dense_output_controlled_explicit_fsal : too much iterations!");
+                throw std::overflow_error( "bulirsch_stoer : too much iterations!");
         }
         std::swap( m_current_state , m_old_state );
         std::swap( m_current_deriv , m_old_deriv );
