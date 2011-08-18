@@ -14,6 +14,7 @@ project
       <define>BOOST_ALL_NO_LIB=1
       <include>../../../..
 	  <link>static
+#	  <cxxflags>-D_SCL_SECURE_NO_WARNINGS
     ;
 
 test-suite "odeint"
@@ -38,5 +39,6 @@ test-suite "odeint"
 	 [ run bulirsch_stoer.cpp ]
 	 [ run integrate_times.cpp ]
 	 [ run integrate.cpp ]
+	 [ run integrate_implicit.cpp ]
 	: <testing.launcher>valgrind
 	;

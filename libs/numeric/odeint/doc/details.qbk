@@ -11,7 +11,7 @@
 Integrate functions perform the time evolution of a given ODE from some starting time ['t[sub 0]] to ['t[sub 1]] and a given start state ['x[sub 0]] by subsequent calls of a given stepper's `do_step` function.
 Additionally, the user can provide an __observer to analyze the state during time evolution.
 There are five different integrate functions which have different strategies on when to call the observer function during integration.
-All of the integrate functions can be called with any stepper following one of the stepper concepts: __stepper , __error_stepper , __controlled_stepper , __dense_out_stepper.
+All of the integrate functions except `integrate_n_steps` can be called with any stepper following one of the stepper concepts: __stepper , __error_stepper , __controlled_stepper , __dense_out_stepper.
 Depending on the abilities of the stepper, the integrate functions make use of step-size control or dense output.
 
 [heading Equidistant observer calls]
