@@ -39,6 +39,6 @@ Dense output steppers also can interpolate the solution to calculate the state /
 [heading Models]
 
 * `dense_output_controlled_explicit_fsal< controlled_error_stepper_fsal< runge_kutta_dopri5 >`
-* bulirsch_stoer_dense_out
+* `bulirsch_stoer_dense_out`
 
 [endsect]
