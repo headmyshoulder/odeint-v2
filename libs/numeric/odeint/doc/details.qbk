@@ -18,7 +18,23 @@ Overview and table
 
 [section Integrate functions]
 
-integrate_const
+Integrate functions perform the time evolution of a given ODE from some starting time ['t[sub 0]] to ['t[sub 1]] and a given start state ['x[sub 0]] by subsequent calls of a given stepper's `do_step` function.
+Additionally, the user can provide an __observer to analyze the state during time evolution.
+There are five different integrate functions which have different strategies on when to call the observer function during integration.
+All of the integrate functions can be called with any stepper following one of the stepper concepts: __stepper , __error_stepper , __controlled_stepper , __dense_out_stepper.
+Depending on the abilities of the stepper, the integrate functions make use of step-size control or dense output.
+
+[heading `integrate_const`]
+
+`integrate_const( stepper , system , x0 , t0 , t1 , dt )`
+
+`integrate_const( stepper , system , x0 , t0 , t1 , dt , observer )`
+
+Integrates the ODE given by `system` with subsequent steps from `stepper`.
+Integration start at `t0` and `x0` and ends at some ['t' = t[sub 0] + n dt] with /n/ such that ['t[sub 1] - dt < t' <= t[sub 1]].
+`x0` is changed to the approximative solution ['x(t')] at the end of integration.
+If provided, the `observer` is invoked at times ['t[sub 0]], ['t[sub 0] + dt], ['t[sub 0] + 2dt], ... ,['t'].
+Note that you should choose `t1` such that ['t' < t[sub 1]] because if ['t' = t[sub 1]] due to limited precision round off errors the last observation might not be executed.
 
 integrate_adaptive
 

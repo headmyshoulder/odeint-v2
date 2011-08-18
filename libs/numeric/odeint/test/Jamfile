@@ -36,5 +36,7 @@ test-suite "odeint"
 	 [ run generic_stepper.cpp ]
 	 [ run generic_error_stepper.cpp ]
 	 [ run bulirsch_stoer.cpp ]
+	 [ run integrate_times.cpp ]
+	 [ run integrate.cpp ]
 	: <testing.launcher>valgrind
 	;

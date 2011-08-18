@@ -1,40 +1,31 @@
-[section Concept system]
+[section System]
 
-Concept Sytem
+[heading Description]
 
-[section Description]
-
-Attention, this concepts is not valid for all steppers. For example the symplectic steppers, as well as the implicit steppers have a different system concept.
-
-The System concept models the algorithmic implementation of the rhs. of the ODE, that is ['f(x,t)].
+The System concept models the algorithmic implementation of the rhs. of the ODE ['x' = f(x,t], that is ['f(x,t)].
 The only requirement for this concept is that it should be callable with a specific parameter syntax (see below).
 A System is typically implemented as a function or a functor.
+Systems fullfilling this concept are required by all Runge-Kutta steppers as well as the Bulirsch-Stoer steppers.
+However, symplectic and implicit steppers work with other system concepts, see __symplectic_system and __implicit_system.
 
-[endsect]
-
-[section Notation]
+[heading Notation]
 
 [variablelist
-  [[System] [A type that is a model of System]] 
-  [[State] [A type that is the `state_type` of Stepper]]
-  [[Deriv] [A type that is the `deriv_type` of Stepper]]
-  [[Time] [A type that is the `time_type` of Stepper]]
-  [[sys] [An object that models System]]
-  [[x] [Object of type State]]
-  [[dxdt] [Object of type Deriv]]
-  [[t] [Object of type Time]]
+  [[`System`] [A type that is a model of System]] 
+  [[`State`] [A type representing the state /x/ of the ODE]]
+  [[`Deriv`] [A type representing the derivative /x'/ of the ODE]]
+  [[`Time`] [A type representing the time]]
+  [[`sys`] [An object of type `System`]]
+  [[`x`] [Object of type `State`]]
+  [[`dxdt`] [Object of type `Deriv`]]
+  [[`t`] [Object of type `Time`]]
 ]
 
-[endsect]
-
-[section Valid expressions]
+[heading Valid expressions]
 
 [table
   [[Name] [Expression] [Type] [Semantics]]
   [[Calculate ['dx/dt := f(x,t)]] [`sys( x , dxdt , t )`] [`void`] [Calculates f(x,t), the result is stored into dxdt] ]
 ]
-
-[endsect]
-
 
 [endsect]

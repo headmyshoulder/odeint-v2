@@ -147,7 +147,7 @@ public:
             m_is_deriv_initialized = true;
         }
 
-        controlled_step_result res = step_size_decreased;
+        controlled_step_result res = fail;
         m_t_old = m_t;
         size_t count = 0;
         do
@@ -156,7 +156,7 @@ public:
             if( count++ == max_count )
                 throw std::overflow_error( "dense_output_controlled_explicit_fsal : too much iterations!");
         }
-        while( res == step_size_decreased );
+        while( res == fail );
         std::swap( m_current_state , m_old_state );
         std::swap( m_current_deriv , m_old_deriv );
         return std::make_pair( m_t_old , m_t );

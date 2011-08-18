@@ -26,3 +26,6 @@ exe harmonic_oscillator_units : harmonic_oscillator_units.cpp ;
 exe stuart_landau : stuart_landau.cpp ;
 exe two_dimensional_phase_lattice : two_dimensional_phase_lattice.cpp ;
 exe lorenz_gmpxx : lorenz_gmpxx.cpp libgmp libgmpxx ; 
+exe bulirsch_stoer : bulirsch_stoer.cpp ;
+exe elliptic_functions : elliptic_functions.cpp ;
+exe resizing_lattice : resizing_lattice.cpp ;

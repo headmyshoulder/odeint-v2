@@ -82,6 +82,8 @@ BOOST_AUTO_TEST_CASE( test_bulirsch_stoer )
 
     //stepper.try_step( lorenz() , x , t , dt );
 
+    std::cout << "starting integration..." << std::endl;
+
     size_t steps = integrate_adaptive( stepper , lorenz() , x , 0.0 , 10.0 , dt );
 
     std::cout << "required steps: " << steps << std::endl;
@@ -89,7 +91,7 @@ BOOST_AUTO_TEST_CASE( test_bulirsch_stoer )
     bulirsch_stoer_dense_out< state_type > bs_do( 1E-9 , 1E-9 , 1.0 , 0.0 );
     x[0] = 10.0 ; x[1] = 10.0 ; x[2] = 5.0;
     double t = 0.0;
-    dt = 1E-2;
+    dt = 1E-1;
     bs_do.initialize( x , t , dt );
     bs_do.do_step( sin_system() );
     std::cout << "one step successful, new time: " << bs_do.current_time() << " (" << t << ")" << std::endl;

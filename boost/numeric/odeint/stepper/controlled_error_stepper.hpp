@@ -89,6 +89,8 @@ public:
         return res;
     }
 
+    value_type check() { return m_eps_abs; }
+
 private:
 
     value_type m_eps_abs;
@@ -153,8 +155,8 @@ public:
 
 
     controlled_error_stepper(
-            const stepper_type &stepper = stepper_type( ) ,
-            const error_checker_type &error_checker = error_checker_type( )
+            const error_checker_type &error_checker = error_checker_type( ) ,
+            const stepper_type &stepper = stepper_type( )
     )
     : m_stepper( stepper ) , m_error_checker( error_checker )
     { }
@@ -190,7 +192,7 @@ public:
     {
         m_xnew_resizer.adjust_size( x , boost::bind( &controlled_error_stepper::template resize_m_xnew< StateInOut > , boost::ref( *this ) , _1 ) );
         controlled_step_result res = try_step( system , x , dxdt , t , m_xnew.m_v , dt );
-        if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged ) )
+        if( res == success )
         {
             boost::numeric::odeint::copy( m_xnew.m_v , x );
         }
@@ -235,7 +237,7 @@ public:
         {
             // error too large - decrease dt ,limit scaling factor to 0.2 and reset state
             dt *= max( 0.9 * pow( m_max_rel_error , -1.0 / ( m_stepper.error_order() - 1.0 ) ) , 0.2 );
-            return step_size_decreased;
+            return fail;
         }
         else
         {
@@ -244,12 +246,12 @@ public:
                 //error too small - increase dt and keep the evolution and limit scaling factor to 5.0
                 t += dt;
                 dt *= min( 0.9 * pow( m_max_rel_error , -1.0 / m_stepper.stepper_order() ) , 5.0 );
-                return success_step_size_increased;
+                return success;
             }
             else
             {
                 t += dt;
-                return success_step_size_unchanged;
+                return success;
             }
         }
     }
@@ -365,8 +367,8 @@ public:
     typedef controlled_error_stepper< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag > controlled_stepper_type;
 
     controlled_error_stepper(
-            const stepper_type &stepper = stepper_type() ,
-            const error_checker_type &error_checker = error_checker_type()
+            const error_checker_type &error_checker = error_checker_type() ,
+            const stepper_type &stepper = stepper_type()
     )
     : m_stepper( stepper ) , m_error_checker( error_checker ) ,
       m_first_call( true )
@@ -420,7 +422,7 @@ public:
         m_xnew_resizer.adjust_size( x , boost::bind( &controlled_error_stepper::template resize_m_xnew< StateInOut > , boost::ref( *this ) , _1 ) );
         m_dxdt_new_resizer.adjust_size( x , boost::bind( &controlled_error_stepper::template resize_m_dxdt_new< StateInOut > , boost::ref( *this ) , _1 ) );
         controlled_step_result res = try_step( system , x , dxdt , t , m_xnew.m_v , m_dxdtnew.m_v , dt );
-        if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged) )
+        if( res == success )
         {
             boost::numeric::odeint::copy( m_xnew.m_v , x );
             boost::numeric::odeint::copy( m_dxdtnew.m_v , dxdt );
@@ -455,7 +457,7 @@ public:
         {
             // error too large - decrease dt ,limit scaling factor to 0.2 and reset state
             dt *= max( 0.9 * pow( max_rel_err , -1.0 / ( m_stepper.error_order() - 1.0 ) ) , 0.2 );
-            return step_size_decreased;
+            return fail;
         }
         else
         {
@@ -464,12 +466,12 @@ public:
                 //error too small - increase dt and keep the evolution and limit scaling factor to 5.0
                 t += dt;
                 dt *= min( 0.9 * pow( max_rel_err , -1.0 / m_stepper.stepper_order() ) , 5.0 );
-                return success_step_size_increased;
+                return success;
             }
             else
             {
                 t += dt;
-                return success_step_size_unchanged;
+                return success;
             }
         }
     }

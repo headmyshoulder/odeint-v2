@@ -172,7 +172,7 @@ void test_controlled_rosenbrock_with_stiff_system( void )
 		size_t trials = 0;
 		while( trials < 100 )
 		{
-			if( controlled_stepper.try_step( make_pair( stiff_system() , stiff_system_jacobi() ) , x , t , dt ) !=  step_size_decreased )
+			if( controlled_stepper.try_step( make_pair( stiff_system() , stiff_system_jacobi() ) , x , t , dt ) !=  fail )
 				break;
 			++trials;
 		}
@@ -247,7 +247,7 @@ void rk54_ck_controlled_with_stiff_system( void )
 		size_t trials = 0;
 		while( trials < 100 )
 		{
-			if( stepper.try_step( stiff_system() , x , t , dt ) !=  step_size_decreased )
+			if( stepper.try_step( stiff_system() , x , t , dt ) !=  fail )
 				break;
 			++trials;
 		}

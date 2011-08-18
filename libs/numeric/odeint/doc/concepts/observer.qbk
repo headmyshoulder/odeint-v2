@@ -1,0 +1,27 @@
+[section Observer]
+
+[heading Description]
+
+The Observer concept is used in `integrate` routines to allow the user to analyze the state during the subsequent steps.
+Observers are callable objects with a specific parameter pattern as shown below.
+Provided to an `integrate` function, observers are called at each time step, at equidistant time points or at user defined time points depending on which `integrate` function is used.
+
+[heading Notation]
+
+[variablelist
+  [[`Observer`] [A type that is a model of Observer]] 
+  [[`State`] [A type that is the `state_type`]]
+  [[`Time`] [A type that is the `time_type`]]
+  [[`obs`] [An object that models `System`]]
+  [[`x`] [Object of type `State`]]
+  [[`t`] [Object of type `Time`]]
+]
+
+[heading Valid Expressions]
+
+[table
+  [[Name] [Expression] [Type] [Semantics]]
+  [[Perform the observation] [`obs( x , t )`] [`void`] [Calls the observer which can do some analyzation of the state /x/ at time /t/.] ]
+]
+
+[endsect]

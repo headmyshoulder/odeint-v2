@@ -25,7 +25,7 @@ equations of motion
 
 ['dq[subl i] / dt = dH / dp[subl i]]
 
-['dp[subl i] = -dH / dq[subl i]]
+['dp[subl i] / dt = -dH / dq[subl i]]
 
 In time independent Hamiltonian system the energy and the phase space volume are conserved and special integration methods have to be applied in order to ensure these conservation laws. The odeint library provides classes for separable Hamiltonian systems, which can be written in the form ['H = __Sigma p[subl i][super 2] / (2m[subl i]) + H[subl q](q)], where ['H[subl q](q)] only depends on the coordinates. Alltough this functional form might look a bit arbitrary it covers nearly all classical mechanical systems with inertia and without dissipation, or where the equations of motion can be written in the form ['dq[subl i] / dt = p[subl i]] / m[subl i] , ['dp[subl i] / dt = f( q[subl i] )].
 

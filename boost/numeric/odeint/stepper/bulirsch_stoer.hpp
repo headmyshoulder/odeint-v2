@@ -81,18 +81,11 @@ public:
             time_type factor_x = 1.0 , time_type factor_dxdt = 1.0 )
     : m_error_checker( eps_abs , eps_rel , factor_x, factor_dxdt ),
       m_k_max(8) ,
-      m_safety1(0.25) , m_safety2(0.7),
-      m_max_dt_factor( 0.1 ) , m_min_step_scale(5E-5) , m_max_step_scale(0.7),
       m_last_step_rejected( false ) , m_first( true ) ,
       m_dt_last( 1.0E30 ) ,
-      m_current_eps( -1.0 ) ,
-      m_error( m_k_max ) ,
-      m_a( m_k_max+1 ) ,
-      m_alpha( m_k_max , value_vector( m_k_max ) ) ,
       m_interval_sequence( m_k_max+1 ) ,
       m_coeff( m_k_max+1 ) ,
       m_cost( m_k_max+1 ) ,
-      m_times( m_k_max ) ,
       m_table( m_k_max ) ,
       STEPFAC1( 0.65 ) , STEPFAC2( 0.94 ) , STEPFAC3( 0.02 ) , STEPFAC4( 4.0 ) , KFAC1( 0.8 ) , KFAC2( 0.9 )
     {
@@ -119,6 +112,20 @@ public:
         }
 
     }
+
+    bulirsch_stoer( const bulirsch_stoer &bs )
+    : m_error_checker( bs.m_error_checker ) ,
+      m_midpoint( bs.m_midpoint ) ,
+      m_k_max( bs.m_k_max ) ,
+      m_last_step_rejected( bs.m_last_step_rejected ) , m_first( bs.m_first ) ,
+      m_dt_last( bs.m_dt_last ) , m_t_last( bs.m_t_last ) ,
+      m_current_k_opt( bs.m_current_k_opt ) ,
+      m_interval_sequence( bs.m_interval_sequence ) ,
+      m_coeff( bs.m_coeff ) ,
+      m_cost( bs.m_cost ) ,
+      m_table( bs.m_table ) ,
+      STEPFAC1( bs.STEPFAC1 ) , STEPFAC2( bs.STEPFAC2 ) , STEPFAC3( bs.STEPFAC3 ) , STEPFAC4( bs.STEPFAC4 ) , KFAC1( bs.KFAC1 ) , KFAC2( bs.KFAC2 )
+    { }
 
     /*
      * Version 1 : try_step( sys , x , t , dt )
@@ -147,7 +154,7 @@ public:
     {
         m_xnew_resizer.adjust_size( x , boost::bind( &controlled_error_bs_type::template resize_m_xnew< StateInOut > , boost::ref( *this ) , _1 ) );
         controlled_step_result res = try_step( system , x , dxdt , t , m_xnew.m_v , dt );
-        if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged ) )
+        if( res == success )
         {
             boost::numeric::odeint::copy( m_xnew.m_v , x );
         }
@@ -176,23 +183,27 @@ public:
 
         typename boost::unwrap_reference< System >::type &sys = system;
         if( m_resizer.adjust_size( in , boost::bind( &controlled_error_bs_type::template resize< StateIn > , boost::ref( *this ) , _1 ) ) )
+        {
             reset(); // system resized -> reset
+        }
+
         if( dt != m_dt_last )
+        {
             reset(); // step size changed from outside -> reset
+        }
 
         bool reject( true );
-        m_dt_last = dt;
 
         value_vector h_opt( m_k_max+1 );
         value_vector work( m_k_max+1 );
 
-        size_t k_final = 0;
+        //std::cout << "t=" << t <<", dt=" << dt << "(" << m_dt_last << ")" << ", k_opt=" << m_current_k_opt << std::endl;
 
-        //std::cout << "t=" << t <<", dt=" << dt << ", k_opt=" << m_current_k_opt << std::endl;
+        time_type new_h = dt;
 
         for( size_t k = 0 ; k <= m_current_k_opt+1 ; k++ )
         {
-            //std::cout << "k=" << k <<": " << std::endl;
+            //std::cout << "k=" << k <<": " << ", first: " << m_first << std::endl;
             m_midpoint.set_steps( m_interval_sequence[k] );
             if( k == 0 )
             {
@@ -210,51 +221,100 @@ public:
                 work[k] = m_cost[k]/h_opt[k];
                 //std::cout << '\t' << "h_opt=" << h_opt[k] << ", work=" << work[k] << std::endl;
                 //std::cout << '\t' << "error: " << error << std::endl;
-                if( m_first && (error <= static_cast< time_type >( 1.0 )) )
-                { // this is the first step, convergence does not have to be in order window
-                    //std::cout << '\t' << "convergence in first step" << std::endl;
-                    reject = false;
-                    k_final = k;
-                    break; // leave k-loop
-                }
-                if( in_convergence_window( k ) )
-                {
-                    k_final = k;
-                    if( error <= 1.0 ) // convergence in convergence window
+
+                if( (k == m_current_k_opt-1) || m_first )
+                { // convergence before k_opt ?
+                    if( error < 1.0 )
                     {
+                        //convergence
                         reject = false;
-                        break; // we are good, leave k-loop
-                    }
-                    else
-                    {
-                        if( should_reject( error , k ) )
+                        if( (work[k] < KFAC2*work[k-1]) || (m_current_k_opt <= 2) )
                         {
-                            reject = true;
-                            break;
+                            // leave order as is (except we were in first round)
+                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , static_cast<int>(k)+1 );
+                            new_h = h_opt[k] * m_cost[k+1]/m_cost[k];
+                        } else {
+                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , static_cast<int>(k) );
+                            new_h = h_opt[k];
                         }
+                        break;
                     }
+                    else if( should_reject( error , k ) && !m_first )
+                    {
+                        reject = true;
+                        new_h = h_opt[k];
+                        break;
+                    }
+                }
+                if( k == m_current_k_opt )
+                { // convergence at k_opt ?
+                    if( error < 1.0 )
+                    {
+                        //convergence
+                        reject = false;
+                        if( (work[k-1] < KFAC2*work[k]) )
+                        {
+                            m_current_k_opt = std::max( 2 , static_cast<int>(m_current_k_opt)-1 );
+                            new_h = h_opt[m_current_k_opt];
+                        }
+                        else if( (work[k] < KFAC2*work[k-1]) && !m_last_step_rejected )
+                        {
+                            m_current_k_opt = std::min( static_cast<int>(m_k_max-1) , static_cast<int>(m_current_k_opt)+1 );
+                            new_h = h_opt[k]*m_cost[m_current_k_opt]/m_cost[k];
+                        } else
+                            new_h = h_opt[m_current_k_opt];
+                        break;
+                    }
+                    else if( should_reject( error , k ) )
+                    {
+                        reject = true;
+                        new_h = h_opt[m_current_k_opt];
+                        break;
+                    }
+                }
+                if( k == m_current_k_opt+1 )
+                { // convergence at k_opt+1 ?
+                    //std::cout << "convergence at k_opt+1 ?" << std::endl;
+                    if( error < 1.0 )
+                    {   //convergence
+                        reject = false;
+                        if( work[k-2] < KFAC2*work[k-1] )
+                            m_current_k_opt = std::max( 2 , static_cast<int>(m_current_k_opt)-1 );
+                        if( (work[k] < KFAC2*work[m_current_k_opt]) && !m_last_step_rejected )
+                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , static_cast<int>(k) );
+                        new_h = h_opt[m_current_k_opt];
+                    } else
+                    {
+                        //std::cout << "REJECT!" << std::endl;
+                        reject = true;
+                        new_h = h_opt[m_current_k_opt];
+                    }
+                    break;
                 }
             }
         }
 
-        //calculate optimal order and stepsize
-        controlled_step_result result = set_k_opt( k_final , work , h_opt , dt );
+        if( !reject )
+            t += dt;
+
+        if( !m_last_step_rejected || (new_h < dt) )
+        {
+            m_dt_last = new_h;
+            dt = new_h;
+        }
 
         m_last_step_rejected = reject;
-        if( reject )
-            result = step_size_decreased;
-        else
-            t += m_dt_last;
-
-        m_dt_last = dt;
-
         m_first = false;
 
-        return result;
+        if( reject )
+            return fail;
+        else
+            return success;
     }
 
     void reset()
     {
+        //std::cout << "reset" << std::endl;
         m_first = true;
         m_last_step_rejected = false;
     }
@@ -345,25 +405,25 @@ private:
         {
             m_current_k_opt = 2;
             //dt = h_opt[ m_current_k_opt-1 ] * m_cost[ m_current_k_opt ] / m_cost[ m_current_k_opt-1 ] ;
-            return success_step_size_increased;
+            return success;
         }
         if( (work[k-1] < KFAC1*work[k]) || (k == m_k_max) )
         {   // order decrease
             m_current_k_opt = k-1;
             dt = h_opt[ m_current_k_opt ];
-            return success_step_size_increased;
+            return success;
         }
         else if( (work[k] < KFAC2*work[k-1]) || m_last_step_rejected || (k == m_k_max-1) )
         {   // same order - also do this if last step got rejected
             m_current_k_opt = k;
             dt = h_opt[ m_current_k_opt ];
-            return success_step_size_unchanged;
+            return success;
         }
         else
         {   // order increase - only if last step was not rejected
             m_current_k_opt = k+1;
             dt = h_opt[ m_current_k_opt-1 ] * m_cost[ m_current_k_opt ] / m_cost[ m_current_k_opt-1 ] ;
-            return success_step_size_increased;
+            return success;
         }
     }
 
@@ -396,20 +456,12 @@ private:
 
     const size_t m_k_max;
 
-    const time_type m_safety1;
-    const time_type m_safety2;
-    const time_type m_max_dt_factor;
-    const time_type m_min_step_scale;
-    const time_type m_max_step_scale;
-
     bool m_last_step_rejected;
     bool m_first;
 
     time_type m_dt_last;
     time_type m_t_last;
-    time_type m_current_eps;
 
-    size_t m_current_k_max;
     size_t m_current_k_opt;
 
     algebra_type m_algebra;
@@ -422,14 +474,10 @@ private:
     wrapped_state_type m_err;
     wrapped_deriv_type m_dxdt;
 
-    value_vector m_error; // errors of repeated midpoint steps and extrapolations
-    value_vector m_a; // stores the work (number of f calls) required for the orders
-    value_matrix m_alpha; // stores convergence factor for stepsize adjustment
     int_vector m_interval_sequence; // stores the successive interval counts
     value_matrix m_coeff;
     int_vector m_cost; // costs for interval count
 
-    value_vector m_times;
     state_table_type m_table; // sequence of states for extrapolation
 
     const time_type STEPFAC1 , STEPFAC2 , STEPFAC3 , STEPFAC4 , KFAC1 , KFAC2;

@@ -1,10 +1,10 @@
 [library boost.sandbox.numeric.odeint
-     [quickbook 1.3]
+     [quickbook 1.5]
+     [id odeint]
+     [dirname odeint]
      [authors [Ahnert, Karsten], [Mulansky, Mario]]
      [copyright 2009-2011 Karsten Ahnert and Mario Mulansky]
      [category math]
-     [id odeint]
-     [dirname odeint]
      [purpose 
         Numerical integration of ordinary differential equations.
      ]
@@ -31,6 +31,29 @@
     [@http://www.boost.org/doc/libs/release/libs/fusion/index.html Boost.Fusion]]
 [def __thrust
     [@http://code.google.com/p/thrust/ Thrust]]
+[def __ublas
+    [@http://www.boost.org/doc/libs/release/libs/numeric/ublas/index.html Boost.UBlas]]
+    
+[def __system
+    [link boost_sandbox_numeric_odeint.concepts.system System]]
+[def __symplectic_system
+    [link boost_sandbox_numeric_odeint.concepts.symplectic_system Symplectic_System]]
+[def __simple_symplectic_system
+    [link boost_sandbox_numeric_odeint.concepts.simple_symplectic_system Simple_Symplectic_System]]
+[def __implicit_system
+    [link boost_sandbox_numeric_odeint.concepts.implicit_system Implicit_System]]
+[def __stepper
+	[link boost_sandbox_numeric_odeint.concepts.stepper Stepper]]
+[def __error_stepper
+	[link boost_sandbox_numeric_odeint.concepts.error_stepper Error Stepper]]
+[def __controlled_stepper
+    [link boost_sandbox_numeric_odeint.concepts.controlled_stepper Controlled Stepper]]
+[def __dense_out_stepper
+	[link boost_sandbox_numeric_odeint.concepts.dense_output_stepper Dense Output Stepper]]
+[def __integrate_functions
+    [link boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions integrate functions]]
+[def __observer
+	[link boost_sandbox_numeric_odeint.concepts.observer observer]]
 
 
 [def __alpha '''&#945;''']

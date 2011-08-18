@@ -80,9 +80,6 @@ size_t integrate_adaptive(
 }
 
 
-
-
-
 } // namespace odeint
 } // namespace numeric
 } // namespace boost

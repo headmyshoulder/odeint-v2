@@ -94,7 +94,7 @@ public:
     {
         m_xnew_resizer.adjust_size( x , boost::bind( &controller_type::template resize_m_xnew< state_type > , boost::ref( *this ) , _1 ) );
         boost::numeric::odeint::controlled_step_result res = try_step( sys , x , t , m_xnew.m_v , dt );
-        if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged ) )
+        if( res == success )
         {
             boost::numeric::odeint::copy( m_xnew.m_v , x );
         }
@@ -139,13 +139,13 @@ public:
             t += dt;
             dt = dt_new;
             m_last_rejected = false;
-            return success_step_size_increased;
+            return success;
         }
         else
         {
             dt = dt_new;
             m_last_rejected = true;
-            return step_size_decreased;
+            return fail;
         }
     }
 

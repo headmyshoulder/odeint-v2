@@ -32,7 +32,7 @@ namespace detail {
 
 
 /*
- * integrate_adaptive for simple stepper is a integrate_const
+ * integrate_adaptive for simple stepper is basically an integrate_const + some last step
  */
 template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate_adaptive(
@@ -41,12 +41,17 @@ size_t integrate_adaptive(
         Observer observer , stepper_tag
 )
 {
-    return integrate_const( stepper , system , start_state ,
+    size_t steps = integrate_const( stepper , system , start_state ,
             start_time , end_time , dt , observer , stepper_tag() );
+    if( steps*dt < end_time )
+    {   //make a last step to end exactly at end_time
+        stepper.do_step( system , start_state , steps*dt , end_time-steps*dt );
+        steps++;
+        typename boost::unwrap_reference< Observer >::type &obs = observer;
+        obs( start_state , end_time );
+    }
+    return steps;
 }
-
-
-
 
 
 /*
@@ -73,13 +78,13 @@ size_t integrate_adaptive(
         }
 
         size_t trials = 0;
-        controlled_step_result res = success_step_size_unchanged;
+        controlled_step_result res = success;
         do
         {
             res = stepper.try_step( system , start_state , start_time , dt );
             ++trials;
         }
-        while( ( res == step_size_decreased ) && ( trials < max_attempts ) );
+        while( ( res == fail ) && ( trials < max_attempts ) );
         if( trials == max_attempts ) throw std::overflow_error( error_string );
 
         ++count;
@@ -104,17 +109,18 @@ size_t integrate_adaptive(
 
     size_t count = 0;
     stepper.initialize( start_state , start_time , dt );
-    while( stepper.current_time() + stepper.current_time_step() < end_time )
-    {   //make sure we don't go beyond the end_time
-        obs( stepper.current_state() , stepper.current_time() );
-        stepper.do_step( system );
-        ++count;
+
+    while( stepper.current_time() < end_time )
+    {
+        while( stepper.current_time() + stepper.current_time_step() <= end_time )
+        {   //make sure we don't go beyond the end_time
+            obs( stepper.current_state() , stepper.current_time() );
+            stepper.do_step( system );
+            ++count;
+        }
+        stepper.initialize( stepper.current_state() , stepper.current_time() , end_time - stepper.current_time() );
     }
     obs( stepper.current_state() , stepper.current_time() );
-    //do last step
-    stepper.initialize( stepper.current_state() , stepper.current_time() , end_time - stepper.current_time() );
-    stepper.do_step( system );
-    obs( stepper.current_state() , end_time );
     return count;
 }
 

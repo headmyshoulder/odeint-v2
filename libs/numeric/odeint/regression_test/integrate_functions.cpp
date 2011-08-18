@@ -144,8 +144,7 @@ int main( int argc , char **argv )
 		typedef controlled_error_stepper< dopri5_type > controlled_error_stepper_type;
 		typedef dense_output_controlled_explicit_fsal< controlled_error_stepper_type > stepper_type;
 
-		controlled_error_stepper_type controlled_stepper(
-				dopri5_type() , default_error_checker< double >( 1.0e-1 , 0.1 ) );
+		controlled_error_stepper_type controlled_stepper( default_error_checker< double >( 1.0e-1 , 0.1 ) );
 
 		ofstream fout( "integrate_controlled_dopri5.dat" );
 		size_t num_of_steps = integrate_const(
@@ -159,8 +158,7 @@ int main( int argc , char **argv )
 		typedef controlled_error_stepper< dopri5_type > controlled_error_stepper_type;
 		typedef dense_output_controlled_explicit_fsal< controlled_error_stepper_type > stepper_type;
 
-		controlled_error_stepper_type controlled_stepper(
-				dopri5_type() , default_error_checker< double >( 1.0e-1 , 0.1 ) );
+		controlled_error_stepper_type controlled_stepper( default_error_checker< double >( 1.0e-1 , 0.1 ) );
 
 		ofstream fout( "integrate_adpative_controlled_dopri5.dat" );
 		size_t num_of_steps = integrate_adaptive(
