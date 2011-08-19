@@ -3,8 +3,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Stiff systems</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
-<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
 <link rel="up" href="../tutorial.html" title="Tutorial">
 <link rel="prev" href="chaotic_systems_and_lyapunov_exponents.html" title="Chaotic systems and Lyapunov exponents">
 <link rel="next" href="special_topics.html" title="Special topics">
@@ -15,7 +15,7 @@
 <div class="spirit-nav">
 <a accesskey="p" href="chaotic_systems_and_lyapunov_exponents.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="special_topics.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
-<div class="section">
+<div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.stiff_systems"></a><a class="link" href="stiff_systems.html" title="Stiff systems">Stiff
       systems</a>
@@ -141,7 +141,7 @@
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">vector_type</span> <span class="special">&gt;</span> <span class="identifier">dopri5_type</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">controlled_error_stepper</span><span class="special">&lt;</span> <span class="identifier">dopri5_type</span> <span class="special">&gt;</span> <span class="identifier">controlled_dopri5_type</span><span class="special">;</span>
-<span class="keyword">typedef</span> <span class="identifier">dense_output_controlled_explicit_fsal</span><span class="special">&lt;</span> <span class="identifier">controlled_dopri5_type</span> <span class="special">&gt;</span> <span class="identifier">dense_output_dopri5_type</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">dense_output_controlled_explicit</span><span class="special">&lt;</span> <span class="identifier">controlled_dopri5_type</span> <span class="special">&gt;</span> <span class="identifier">dense_output_dopri5_type</span><span class="special">;</span>
 
 <span class="identifier">vector_type</span> <span class="identifier">x2</span><span class="special">(</span> <span class="number">3</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">);</span>
 
