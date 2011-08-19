@@ -22,7 +22,7 @@
 #include <boost/type_traits/is_same.hpp>
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
-#include <boost/numeric/odeint/integrate/do_nothing_observer.hpp>
+#include <boost/numeric/odeint/integrate/null_observer.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_const.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_adaptive.hpp>
 
@@ -45,7 +45,7 @@ size_t integrate_const(
 )
 {
     // we want to get as fast as possible to the end
-    if( boost::is_same< do_nothing_observer , Observer >::value )
+    if( boost::is_same< null_observer , Observer >::value )
     {
         return detail::integrate_adaptive(
                 stepper , system , start_state ,
@@ -70,7 +70,7 @@ size_t integrate_const(
 )
 {
     // we want to get as fast as possible to the end
-    if( boost::is_same< do_nothing_observer , Observer >::value )
+    if( boost::is_same< null_observer , Observer >::value )
     {
         return detail::integrate_adaptive(
                 stepper , system , start_state ,
@@ -99,7 +99,7 @@ size_t integrate_const(
         Time start_time , Time end_time , Time dt
 )
 {
-    return integrate_const( stepper , system , start_state , start_time , end_time , dt , do_nothing_observer() );
+    return integrate_const( stepper , system , start_state , start_time , end_time , dt , null_observer() );
 }
 
 template< class Stepper , class System , class State , class Time >
@@ -108,7 +108,7 @@ size_t integrate_const(
         Time start_time , Time end_time , Time dt
 )
 {
-    return integrate_const( stepper , system , start_state , start_time , end_time , dt , do_nothing_observer() );
+    return integrate_const( stepper , system , start_state , start_time , end_time , dt , null_observer() );
 }
 
 

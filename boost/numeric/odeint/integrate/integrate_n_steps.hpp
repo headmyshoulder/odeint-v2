@@ -21,7 +21,7 @@
 #include <boost/type_traits/is_same.hpp>
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
-#include <boost/numeric/odeint/integrate/do_nothing_observer.hpp>
+#include <boost/numeric/odeint/integrate/null_observer.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_const.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_adaptive.hpp>
 
@@ -87,7 +87,7 @@ Time integrate_n_steps(
         Stepper stepper , System system , State &start_state ,
         Time start_time , Time dt , size_t num_of_steps )
 {
-    return integrate_n_steps( stepper , system , start_state , start_time , dt , num_of_steps , do_nothing_observer() );
+    return integrate_n_steps( stepper , system , start_state , start_time , dt , num_of_steps , null_observer() );
 }
 
 template< class Stepper , class System , class State , class Time >
@@ -95,7 +95,7 @@ Time integrate_n_steps(
         Stepper stepper , System system , const State &start_state ,
         Time start_time , Time dt , size_t num_of_steps )
 {
-    return integrate_n_steps( stepper , system , start_state , start_time , dt , num_of_steps , do_nothing_observer() );
+    return integrate_n_steps( stepper , system , start_state , start_time , dt , num_of_steps , null_observer() );
 }
 
 

@@ -21,7 +21,7 @@
 #include <boost/type_traits/is_same.hpp>
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
-#include <boost/numeric/odeint/integrate/do_nothing_observer.hpp>
+#include <boost/numeric/odeint/integrate/null_observer.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_times.hpp>
 
 namespace boost {

@@ -1,9 +1,9 @@
 /*
  [auto_generated]
- boost/numeric/odeint/integrate/do_nothing_observer.hpp
+ boost/numeric/odeint/integrate/null_observer.hpp
 
  [begin_description]
- null_observer or do_nothing_observer.
+ null_observer
  [end_description]
 
  Copyright 2009-2011 Karsten Ahnert
@@ -15,14 +15,14 @@
  */
 
 
-#ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_DO_NOTHING_OBSERVER_HPP_INCLUDED
-#define BOOST_NUMERIC_ODEINT_INTEGRATE_DO_NOTHING_OBSERVER_HPP_INCLUDED
+#ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_NULL_OBSERVER_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_INTEGRATE_NULL_OBSERVER_HPP_INCLUDED
 
 namespace boost {
 namespace numeric {
 namespace odeint {
 
-struct do_nothing_observer
+struct null_observer
 {
     template< class State , class Time >
     void operator()( const State& x , const Time &t ) const
@@ -35,4 +35,4 @@ struct do_nothing_observer
 } // namespace numeric
 } // namespace boost
 
-#endif // BOOST_NUMERIC_ODEINT_INTEGRATE_DO_NOTHING_OBSERVER_HPP_INCLUDED
+#endif // BOOST_NUMERIC_ODEINT_INTEGRATE_NULL_OBSERVER_HPP_INCLUDED

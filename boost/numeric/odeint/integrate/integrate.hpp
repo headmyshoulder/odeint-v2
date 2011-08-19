@@ -20,7 +20,7 @@
 
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
-#include <boost/numeric/odeint/integrate/do_nothing_observer.hpp>
+#include <boost/numeric/odeint/integrate/null_observer.hpp>
 #include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
 
 
@@ -61,13 +61,13 @@ size_t integrate( System system , const State &start_state , Time start_time , T
 template< class System , class State , class Time >
 size_t integrate( System system , State &start_state , Time start_time , Time end_time , Time dt )
 {
-    return integrate( system , start_state , start_time , end_time , dt , do_nothing_observer() );
+    return integrate( system , start_state , start_time , end_time , dt , null_observer() );
 }
 
 template< class System , class State , class Time >
 size_t integrate( System system , const State &start_state , Time start_time , Time end_time , Time dt )
 {
-    return integrate( system , start_state , start_time , end_time , dt , do_nothing_observer() );
+    return integrate( system , start_state , start_time , end_time , dt , null_observer() );
 }
 
 

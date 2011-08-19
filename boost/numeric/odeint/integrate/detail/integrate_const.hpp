@@ -77,7 +77,7 @@ size_t integrate_const(
         Time next_time = start_time + time_step;
         count += detail::integrate_adaptive(
                 stepper , system , start_state , start_time , next_time , dt ,
-                do_nothing_observer() , controlled_stepper_tag() );
+                null_observer() , controlled_stepper_tag() );
     }
     obs( start_state , start_time );
     return count;
