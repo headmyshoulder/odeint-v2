@@ -414,7 +414,7 @@ public:
             res = try_step( system , *m_current_state , *m_current_deriv , m_t , *m_old_state , *m_old_deriv , m_dt );
             m_first = false;
             if( count++ == max_count )
-                throw std::overflow_error( "dense_output_controlled_explicit_fsal : too much iterations!");
+                throw std::overflow_error( "bulirsch_stoer : too much iterations!");
         }
         std::swap( m_current_state , m_old_state );
         std::swap( m_current_deriv , m_old_deriv );
@@ -772,11 +772,13 @@ private:
 
         boost::numeric::odeint::copy( m_mp_states[0].m_v , out );
         // add remaining terms: x += a_1 theta + a2 theta^2 + ... + a_{2k} theta^{2k}
+        time_type theta_pow( theta );
         for( size_t i=0 ; i<=2*m_k_final+1 ; ++i )
         {
             //std::cout << "a_" << i+1 << " theta^" << i+1 << " = " << m_diffs[i][0].m_v[0] * std::pow( theta , i+1 ) << std::endl;
             m_algebra.for_each3( out , out , m_diffs[i][0].m_v ,
-                    typename operations_type::template scale_sum2< time_type >( static_cast<time_type>(1) , std::pow( theta , i+1 ) ) );
+                typename operations_type::template scale_sum2< time_type >( static_cast<time_type>(1) , theta_pow ) );
+            theta_pow *= theta;
         }
     }
 

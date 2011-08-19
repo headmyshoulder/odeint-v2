@@ -5,7 +5,7 @@
  *      Author: mario
  */
 
-#define BOOST_TEST_MODULE odeint_integrate_functions
+#define BOOST_TEST_MODULE odeint_integrate_functions_implicit
 
 #include <vector>
 #include <cmath>
@@ -16,6 +16,8 @@
 #include <boost/array.hpp>
 #include <boost/ref.hpp>
 #include <boost/iterator/counting_iterator.hpp>
+#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/matrix.hpp>
 
 #include <boost/test/unit_test.hpp>
 
@@ -26,21 +28,33 @@
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
 namespace mpl = boost::mpl;
-
+namespace ublas = boost::numeric::ublas;
 
 typedef double value_type;
-typedef std::vector< value_type > state_type;
+typedef ublas::vector< value_type > state_type;
+typedef boost::numeric::ublas::matrix< value_type > matrix_type;
 
-void lorenz( const state_type &x , state_type &dxdt , const value_type t )
+struct sys
 {
-    const value_type sigma( 10.0 );
-    const value_type R( 28.0 );
-    const value_type b( value_type( 8.0 ) / value_type( 3.0 ) );
+    void operator()( const state_type &x , state_type &dxdt , const value_type &t ) const
+    {
+        dxdt( 0 ) = x( 0 ) + 2 * x( 1 );
+        dxdt( 1 ) = x( 1 );
+    }
+};
 
-    dxdt[0] = sigma * ( x[1] - x[0] );
-    dxdt[1] = R * x[0] - x[1] - x[0] * x[2];
-    dxdt[2] = -b * x[2] + x[0] * x[1];
-}
+struct jacobi
+{
+    void operator()( const state_type &x , matrix_type &jacobi , const value_type &t , state_type &dfdt ) const
+    {
+        jacobi( 0 , 0 ) = 1;
+        jacobi( 0 , 1 ) = 2;
+        jacobi( 1 , 0 ) = 0;
+        jacobi( 1 , 1 ) = 1;
+        dfdt( 0 ) = 0.0;
+        dfdt( 1 ) = 0.0;
+    }
+};
 
 struct push_back_time
 {
@@ -60,13 +74,13 @@ struct perform_integrate_const_test
 {
     void operator()( void )
     {
-        state_type x( 3 , 10.0 );
+        state_type x( 2 , 1.0 );
         const value_type dt = 0.03;
         const value_type t_end = 10.0;
 
         std::vector< value_type > times;
 
-        integrate_const( Stepper() , lorenz , x , 0.0 , t_end ,
+        integrate_const( Stepper() , std::make_pair( sys() , jacobi() ) , x , 0.0 , t_end ,
                                         dt , push_back_time( times ) );
 
         BOOST_CHECK_EQUAL( static_cast<int>(times.size()) , static_cast<int>(floor(t_end/dt))+1 );
@@ -85,13 +99,13 @@ struct perform_integrate_adaptive_test
 {
     void operator()( void )
     {
-        state_type x( 3 , 10.0 );
+        state_type x( 2 , 1.0 );
         const value_type dt = 0.03;
         const value_type t_end = 10.0;
 
         std::vector< value_type > times;
 
-        size_t steps = integrate_adaptive( Stepper() , lorenz , x , 0.0 , t_end ,
+        size_t steps = integrate_adaptive( Stepper() , std::make_pair( sys() , jacobi() ) , x , 0.0 , t_end ,
                                         dt , push_back_time( times ) );
 
         BOOST_CHECK_EQUAL( times.size() , steps+1 );
@@ -107,15 +121,15 @@ struct perform_integrate_times_test
 {
     void operator()( void )
     {
-        state_type x( 3 );
-        x[0] = x[1] = x[2] = 10.0;
+        state_type x( 2 , 1.0 );
 
         const value_type dt = 0.03;
 
         std::vector< double > times;
 
         // simple stepper
-        integrate_times( Stepper() , lorenz , x , boost::counting_iterator<int>(0) , boost::counting_iterator<int>(10) ,
+        integrate_times( Stepper() , std::make_pair( sys() , jacobi() ) , x , 
+                    boost::counting_iterator<int>(0) , boost::counting_iterator<int>(10) ,
                     dt , push_back_time( times ) );
 
         BOOST_CHECK_EQUAL( static_cast<int>(times.size()) , 10 );
@@ -131,8 +145,7 @@ struct perform_integrate_n_steps_test
 {
     void operator()( void )
     {
-        state_type x( 3 );
-        x[0] = x[1] = x[2] = 10.0;
+        state_type x( 2 , 1.0 );
 
         const value_type dt = 0.03;
         const int n = 200;
@@ -140,7 +153,7 @@ struct perform_integrate_n_steps_test
         std::vector< double > times;
 
         // simple stepper
-        value_type end_time = integrate_n_steps( Stepper() , lorenz , x , 0.0 , dt , n , push_back_time( times ) );
+        value_type end_time = integrate_n_steps( Stepper() , std::make_pair( sys() , jacobi() ) , x , 0.0 , dt , n , push_back_time( times ) );
 
         BOOST_CHECK_SMALL( end_time - n*dt , 2E-16 );
         BOOST_CHECK_EQUAL( static_cast<int>(times.size()) , n+1 );
@@ -154,18 +167,9 @@ struct perform_integrate_n_steps_test
 
 
 class stepper_methods : public mpl::vector<
-    euler< state_type > ,
-    modified_midpoint< state_type > ,
-    runge_kutta4< state_type > ,
-    runge_kutta_cash_karp54< state_type > ,
-    runge_kutta_dopri5< state_type > ,
-    runge_kutta_fehlberg78< state_type > ,
-    controlled_error_stepper< runge_kutta_cash_karp54< state_type > > ,
-    controlled_error_stepper< runge_kutta_dopri5< state_type > > ,
-    controlled_error_stepper< runge_kutta_fehlberg78< state_type > > ,
-    bulirsch_stoer< state_type > ,
-    dense_output_controlled_explicit< controlled_error_stepper< runge_kutta_dopri5< state_type > > > ,
-    bulirsch_stoer_dense_out< state_type >
+    rosenbrock4< value_type > ,
+    rosenbrock4_controller< rosenbrock4< value_type > > ,
+    rosenbrock4_dense_output< rosenbrock4_controller< rosenbrock4< value_type > > >
 > { };
 
 
@@ -193,12 +197,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_times_test_case , Stepper, stepper_meth
 }
 
 class simple_stepper_methods : public mpl::vector<
-    euler< state_type > ,
-    modified_midpoint< state_type > ,
-    runge_kutta4< state_type > ,
-    runge_kutta_cash_karp54< state_type > ,
-    runge_kutta_dopri5< state_type > ,
-    runge_kutta_fehlberg78< state_type >
+    rosenbrock4< value_type >
 > { };
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_n_steps_test_case , Stepper, simple_stepper_methods )

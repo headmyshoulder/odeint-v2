@@ -1,6 +1,6 @@
 [section Error Stepper]
 
-This concepts specifies the interface an error stepper has to fulfill to be used within a __contolled_stepper.
+This concepts specifies the interface an error stepper has to fulfill to be used within a ControlledErrorStepper.
 
 [heading Description]
 

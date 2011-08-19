@@ -40,13 +40,13 @@ namespace odeint {
 template< class System , class State , class Time , class Observer >
 size_t integrate( System system , State &start_state , Time start_time , Time end_time , Time dt , Observer observer )
 {
-    return integrate_adaptive( controlled_error_stepper< runge_kutta_cash_karp54_classic< State > >() , system , start_state , start_time , end_time , dt , observer );
+    return integrate_adaptive( controlled_error_stepper< runge_kutta_dopri5< State > >() , system , start_state , start_time , end_time , dt , observer );
 }
 
 template< class System , class State , class Time , class Observer >
 size_t integrate( System system , const State &start_state , Time start_time , Time end_time , Time dt , Observer observer )
 {
-    return integrate_adaptive( controlled_error_stepper< runge_kutta_cash_karp54_classic< State > >() , system , start_state , start_time , end_time , dt , observer );
+    return integrate_adaptive( controlled_error_stepper< runge_kutta_dopri5< State > >() , system , start_state , start_time , end_time , dt , observer );
 }
 
 

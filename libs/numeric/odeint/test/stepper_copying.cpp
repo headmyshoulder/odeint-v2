@@ -31,7 +31,7 @@
 #include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_explicit.hpp>
-#include <boost/numeric/odeint/stepper/dense_output_controlled_explicit_fsal.hpp>
+#include <boost/numeric/odeint/stepper/dense_output_controlled_explicit.hpp>
 
 template< class T , size_t Dim >
 class test_array
@@ -268,7 +268,7 @@ typedef boost::numeric::odeint::controlled_error_stepper< rk54_type > controlled
 typedef boost::numeric::odeint::controlled_error_stepper< rk54_generic_type > controlled_rk54_generic_type;
 typedef boost::numeric::odeint::controlled_error_stepper< dopri5_type > controlled_dopri5_type;
 typedef boost::numeric::odeint::dense_output_explicit< euler_type > dense_output_euler_type;
-typedef boost::numeric::odeint::dense_output_controlled_explicit_fsal< controlled_dopri5_type > dense_output_dopri5_type;
+typedef boost::numeric::odeint::dense_output_controlled_explicit< controlled_dopri5_type > dense_output_dopri5_type;
 
 #define CHECK_COUNTERS( c1 , c2 , c3 , c4 , c5 , c6 ) \
 	BOOST_CHECK_EQUAL( construct_count , size_t( c1 ) ); \
@@ -810,7 +810,7 @@ BOOST_AUTO_TEST_CASE( dense_output_euler_assign )
  * 2 controlled_error_stepper (fsal):
  * 2 * 2 state_type
  * 2 * 2 deriv_type
- * 1 dense_output_controlled_explicit_fsal:
+ * 1 dense_output_controlled_explicit:
  * 2 state_type
  * 2 deriv_type
  *
@@ -841,7 +841,7 @@ BOOST_AUTO_TEST_CASE( dense_output_dopri5_construct )
  * 3 controlled_error_stepper (fsal):
  * 3 * 2 state_type
  * 3 * 2 deriv_type
- * 2 dense_output_controlled_explicit_fsal:
+ * 2 dense_output_controlled_explicit:
  * 2 * 2 state_type
  * 2 * 2 deriv_type
  *
@@ -853,7 +853,7 @@ BOOST_AUTO_TEST_CASE( dense_output_dopri5_construct )
  * 2 copy process of controlled_error_stepper (fsal):
  * 2 * 2 state_type
  * 2 * 2 deriv_type
- * 1 copy process of dense_output_controlled_explicit_fsal:
+ * 1 copy process of dense_output_controlled_explicit:
  * 2 state_type
  * 2 deriv_type
  */
@@ -876,7 +876,7 @@ BOOST_AUTO_TEST_CASE( dense_output_dopri5_copy_construct )
  * 4 controlled_error_stepper (fsal):
  * 4 * 2 state_type
  * 4 * 2 deriv_type
- * 2 dense_output_controlled_explicit_fsal:
+ * 2 dense_output_controlled_explicit:
  * 2 * 2 state_type
  * 2 * 2 deriv_type
  *
@@ -888,7 +888,7 @@ BOOST_AUTO_TEST_CASE( dense_output_dopri5_copy_construct )
  * 3 copy process of controlled_error_stepper (fsal):
  * 3 * 2 state_type
  * 3 * 2 deriv_type
- * 1 copy process of dense_output_controlled_explicit_fsal:
+ * 1 copy process of dense_output_controlled_explicit:
  * 2 state_type
  * 2 deriv_type
  */

@@ -77,6 +77,8 @@ BOOST_AUTO_TEST_CASE( test_rosenbrock4_stepper )
 
 	stepper.do_step( std::make_pair( sys() , jacobi() ) , x , 0.0 , 0.1 , xerr );
 
+	stepper.do_step( std::make_pair( sys() , jacobi() ) , x , 0.0 , 0.1 );
+
 //	using std::abs;
 //	value_type eps = 1E-12;
 //

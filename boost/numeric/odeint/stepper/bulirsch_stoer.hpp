@@ -3,7 +3,10 @@
  boost/numeric/odeint/stepper/bulirsch_stoer.hpp
 
  [begin_description]
- Implementaiton of the Burlish-Stoer method.
+ Implementaiton of the Burlish-Stoer method. As described in
+ Ernst Hairer, Syvert Paul Nørsett, Gerhard Wanner
+ Solving Ordinary Differential Equations I. Nonstiff Problems.
+ Springer Series in Comput. Mathematics, Vol. 8, Springer-Verlag 1987, Second revised edition 1993.
  [end_description]
 
  Copyright 2009-2011 Karsten Ahnert
@@ -479,6 +482,7 @@ private:
 
     const time_type STEPFAC1 , STEPFAC2 , STEPFAC3 , STEPFAC4 , KFAC1 , KFAC2;
 };
+
 
 }
 }

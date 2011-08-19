@@ -1,6 +1,6 @@
 /*
  [auto_generated]
- boost/numeric/odeint/stepper/dense_output_controlled_explicit_fsal.hpp
+ boost/numeric/odeint/stepper/dense_output_controlled_explicit.hpp
 
  [begin_description]
  Implementation of the Dense-output stepper for all controlled explicit FSAL error steppers. Note, that this class does
@@ -16,8 +16,8 @@
  */
 
 
-#ifndef BOOST_NUMERIC_ODEINT_STEPPER_DENSE_OUTPUT_CONTROLLED_EXPLICIT_FSAL_HPP_INCLUDED
-#define BOOST_NUMERIC_ODEINT_STEPPER_DENSE_OUTPUT_CONTROLLED_EXPLICIT_FSAL_HPP_INCLUDED
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_DENSE_OUTPUT_CONTROLLED_EXPLICIT_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STEPPER_DENSE_OUTPUT_CONTROLLED_EXPLICIT_HPP_INCLUDED
 
 
 #include <utility>
@@ -38,16 +38,23 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+template
+<
+class ControlledStepper ,
+class ControlledStepperCategory = typename ControlledStepper::stepper_category
+>
+class dense_output_controlled_explicit;
+
 
 template
 <
 class ControlledStepper
 >
-class dense_output_controlled_explicit_fsal
+class dense_output_controlled_explicit< ControlledStepper , explicit_controlled_stepper_fsal_tag >
 {
 private:
 
-    void copy_pointers( const dense_output_controlled_explicit_fsal &dense_output )
+    void copy_pointers( const dense_output_controlled_explicit &dense_output )
     {
         if( dense_output.m_current_state == (&dense_output.m_x1.m_v ) )
         {
@@ -89,16 +96,16 @@ public:
     typedef typename stepper_type::operations_type operations_type;
     typedef typename stepper_type::resizer_type resizer_type;
     typedef dense_output_stepper_tag stepper_category;
-    typedef dense_output_controlled_explicit_fsal< ControlledStepper > dense_output_stepper_type;
+    typedef dense_output_controlled_explicit< ControlledStepper > dense_output_stepper_type;
 
-    dense_output_controlled_explicit_fsal( const controlled_stepper_type &stepper = controlled_stepper_type() )
+    dense_output_controlled_explicit( const controlled_stepper_type &stepper = controlled_stepper_type() )
     : m_stepper( stepper ) ,
       m_current_state( &m_x1.m_v ) , m_old_state( &m_x2.m_v ) ,
       m_current_deriv( &m_dxdt1.m_v ) , m_old_deriv( &m_dxdt2.m_v ) ,
       m_is_deriv_initialized( false )
     { }
 
-    dense_output_controlled_explicit_fsal( const dense_output_controlled_explicit_fsal &dense_output )
+    dense_output_controlled_explicit( const dense_output_controlled_explicit &dense_output )
     : m_stepper( dense_output.m_stepper ) ,
       m_x1( dense_output.m_x1 ) , m_x2( dense_output.m_x2 ) ,
       m_dxdt1( dense_output.m_dxdt1 ) , m_dxdt2( dense_output.m_dxdt2 ) ,
@@ -110,7 +117,7 @@ public:
         copy_pointers( dense_output );
     }
 
-    dense_output_controlled_explicit_fsal& operator=( const dense_output_controlled_explicit_fsal &dense_output )
+    dense_output_controlled_explicit& operator=( const dense_output_controlled_explicit &dense_output )
     {
         m_stepper = dense_output.m_stepper;
         m_x1 = dense_output.m_x1;
@@ -154,7 +161,7 @@ public:
         {
             res = m_stepper.try_step( system , *m_current_state , *m_current_deriv , m_t , *m_old_state , *m_old_deriv , m_dt );
             if( count++ == max_count )
-                throw std::overflow_error( "dense_output_controlled_explicit_fsal : too much iterations!");
+                throw std::overflow_error( "dense_output_controlled_explicit : too much iterations!");
         }
         while( res == fail );
         std::swap( m_current_state , m_old_state );
@@ -243,4 +250,4 @@ private:
 
 
 
-#endif // BOOST_NUMERIC_ODEINT_STEPPER_DENSE_OUTPUT_CONTROLLED_EXPLICIT_FSAL_HPP_INCLUDED
+#endif // BOOST_NUMERIC_ODEINT_STEPPER_DENSE_OUTPUT_CONTROLLED_EXPLICIT_HPP_INCLUDED

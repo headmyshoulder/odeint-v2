@@ -80,7 +80,7 @@ struct streaming_observer
 int main( int argc , char**argv )
 {
     //[ units_define_stepper
-    typedef dense_output_controlled_explicit_fsal
+    typedef dense_output_controlled_explicit
     <
         controlled_error_stepper
         <

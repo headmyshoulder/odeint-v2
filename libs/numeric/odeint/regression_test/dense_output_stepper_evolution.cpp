@@ -15,7 +15,7 @@
 #include <boost/numeric/odeint/stepper/euler.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_explicit.hpp>
-#include <boost/numeric/odeint/stepper/dense_output_controlled_explicit_fsal.hpp>
+#include <boost/numeric/odeint/stepper/dense_output_controlled_explicit.hpp>
 #include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
 
 #define tab "\t"
@@ -91,7 +91,7 @@ int main( int argc , char **argv )
 	typedef controlled_error_stepper< dopri5_type > controlled_dopri5_type;
 
 	dense_output_explicit< euler< state_type > > dense_euler;
-	dense_output_controlled_explicit_fsal< controlled_dopri5_type > dense_dopri5;
+	dense_output_controlled_explicit< controlled_dopri5_type > dense_dopri5;
 
 	state_type x0 = {{ 1.25 , 0.43 }};
 

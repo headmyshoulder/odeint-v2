@@ -146,7 +146,7 @@ public:
     typedef typename stepper_type::operations_type operations_type;
     typedef Resizer resizer_type;
     typedef ErrorChecker error_checker_type;
-    typedef controlled_stepper_tag stepper_category;
+    typedef explicit_controlled_stepper_tag stepper_category;
     typedef typename stepper_type::wrapped_state_type wrapped_state_type;
     typedef typename stepper_type::wrapped_deriv_type wrapped_deriv_type;
 
@@ -360,7 +360,7 @@ public:
     typedef typename stepper_type::operations_type operations_type;
     typedef Resizer resizer_type;
     typedef ErrorChecker error_checker_type;
-    typedef controlled_stepper_tag stepper_category;
+    typedef explicit_controlled_stepper_fsal_tag stepper_category;
     typedef typename stepper_type::wrapped_state_type wrapped_state_type;
     typedef typename stepper_type::wrapped_deriv_type wrapped_deriv_type;
 

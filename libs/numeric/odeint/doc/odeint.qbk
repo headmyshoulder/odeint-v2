@@ -42,10 +42,19 @@
     [link boost_sandbox_numeric_odeint.concepts.simple_symplectic_system Simple_Symplectic_System]]
 [def __implicit_system
     [link boost_sandbox_numeric_odeint.concepts.implicit_system Implicit_System]]
-[def __contolled_stepper
+[def __stepper
+	[link boost_sandbox_numeric_odeint.concepts.stepper Stepper]]
+[def __error_stepper
+	[link boost_sandbox_numeric_odeint.concepts.error_stepper Error Stepper]]
+[def __controlled_stepper
     [link boost_sandbox_numeric_odeint.concepts.controlled_stepper Controlled Stepper]]
+[def __dense_out_stepper
+	[link boost_sandbox_numeric_odeint.concepts.dense_output_stepper Dense Output Stepper]]
 [def __integrate_functions
-    [link boost_sandbox_numeric_odeint.integrate_functions integrate functions]]
+    [link boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions integrate functions]]
+[def __observer
+	[link boost_sandbox_numeric_odeint.concepts.observer observer]]
+
 
 [def __alpha '''&#945;''']
 [def __beta '''&#946;''']

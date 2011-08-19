@@ -109,7 +109,7 @@ public:
         {
             res = m_stepper.try_step( system , *m_current_state , m_t , *m_old_state , m_dt );
             if( count++ == max_count )
-                throw std::overflow_error( "dense_output_controlled_explicit_fsal : too much iterations!");
+                throw std::overflow_error( "rosenbrock4 : too much iterations!");
         }
         while( res == fail );
         m_stepper.stepper().prepare_dense_output();
