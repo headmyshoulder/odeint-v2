@@ -1,0 +1,79 @@
+[section State Algebra Operations]
+
+[note The following does not apply to implicit steppers like implicit_euler or rosenbrock 4 as there the `state_type` can not be changed from `ublas::vector` and no algebra/operations are used.]
+
+[heading Description]
+
+The `State`, `Algebra` and `Operations` together define a concept describing how the mathematical vector operations required for the stepper algorithms are performed.
+The typical vector operation done within steppers is 
+
+['*y* = __Sigma __alpha[sub i] [*x[sub i]]].
+
+The `State` represents the state variable of an ODE, usually denoted with /x/.
+Algorithmically, the state is often realized as a `vector< double >` or `array< double , N >`, however, the genericity of odeint enables you to basically use anything as a state type.
+The algorithmic counterpart of such mathematical expressions is divided into two parts.
+First, the `Algebra` is used to back up the vector character of the equation.
+In the case of a `vector` as state type this means the `Algebra` is responsible for iteration over all vector elements.
+Second, the `Operations` are used to represent the actual operation applied to each of the vector elements.
+
+In the following we describe how `State`, `Algebra` and `Operations` are used together within the stepper implementations.
+
+[section Operations]
+
+[heading Notation]
+
+[variablelist
+  [[`Operations`] [The operations type]]
+  [/[`Time`] [A type representing the time type of steppers]]
+  [[`Value1`, ... , `ValueN`] [Types representing the value or time type of stepper]]
+  [[[^ScaleSum['N]]] [Type that represents a general scale_sum operation, [^/N/] should be replaced by a number from 1 to 14.]]
+  [[[^scale_sum/N/]] [Object of type [^ScaleSum['N], [^/N/] should be replaced by a number from 1 to 14.]]]
+  [[`a1, a2, ...`] [Objects of type `Value1`, `Value2`, ...]]
+]
+
+[heading Valid Expressions]
+
+[table
+  [[Name] [Expression] [Type] [Semantics]]
+  [[Get General `scale_sum` operation] [[^Operations::scale_sum/N/< Value1 , ... , ValueN >]] [[^ScaleSum/N/]] [Get the [^ScaleSum/N/] type from `Operations`, [^/N/] should be replaced by a number from 1 to 14.]]
+  [[`scale_sum` constructor] [[^ScaleSum/N/< Value1 , ... , ValueN >( a1 , ... , aN )]] [[^ScaleSum/N/]] [Constructs a `scale_sum` object given [^/N/] parameter values with [^/N/] between 1 and 14.]]
+  [[`scale_sum` operation] [[^scale_sum/N/( y , x1 , ... , xN )]] [`void`] [Calculates `y = a1*x1 + a2*x2 + ... + aN*xN`. Note that this is an [^/N/+1]-ary function call.]]
+]
+
+[endsect]
+
+[section Algebra]
+
+[heading Notation]
+
+[variablelist
+  [[`State`] [The state type]]
+  [[`Algebra`] [The algebra type]]
+  [[[^Operation/N/]] [An [^/N/]-ary operation type, [^/N/] should be a number from 1 to 14.]]
+  [[`algebra`] [Object of type `Algebra`]]
+  [[[^operation/N/]] [Object of type [^Operation/N]]]
+  [[`y, x1, x2, ...`] [Objects of type `State`]]
+]
+
+
+[heading Valid Expressions]
+
+[table
+  [[Name] [Expression] [Type] [Semantics]]
+  [[Vector Operation with arity 2] [`algebra.for_each2( y , x , operation2 )`] [void] [Calls `operation2( y_i , x_i )` for each element `y_i` of `y` and `x_i` of `x`.]]
+  [[Vector Operation with arity 3] [`algebra.for_each3( y , x1 , x2 , operation3 )`] [void] [Calls `operation3( y_i , x1_i , x2_i )` for each element `y_i` of `y` and `x1_i` of `x1` and `x2_i` of `x2`.]]
+  [[Vector Operation with arity [^/N/]] [[^algebra.for_each/N/( y , x1 , ... , xN , operation/N/ )]] [void] [Calls [^operation/N/( y_i , x1_i , ... , xN_i )] for each element `y_i` of `y` and `x1_i` of `x1` and so on. [^/N/] should be replaced by a number between 1 and 14.]]
+]
+
+[endsect]
+
+[section Example expressions]
+
+[table
+  [[Name] [Expression] [Type] [Semantics]]
+  [[Vector operation] [`algebra.for_each3( y , x1 , x2 , Operations::scale_sum2< Value >( a1 , a2 ) )`] [void] [Calculates ['*y* = a1 *x1* + a2 *x2*]]]
+]
+
+[endsect]
+
+[endsect]
