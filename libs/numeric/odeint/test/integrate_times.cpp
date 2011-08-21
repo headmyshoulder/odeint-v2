@@ -108,4 +108,59 @@ BOOST_AUTO_TEST_CASE( test_integrate_times )
 
 }
 
+
+BOOST_AUTO_TEST_CASE( test_integrate_times_ranges )
+{
+
+    state_type x( 3 );
+    x[0] = x[1] = x[2] = 10.0;
+
+    const value_type dt = 0.03;
+
+    std::vector< double > times;
+
+    // simple stepper
+    integrate_times( runge_kutta4< state_type >() , lorenz , x ,
+                std::make_pair( boost::counting_iterator<int>(0) , boost::counting_iterator<int>(10) ) ,
+                dt , push_back_time( times ) );
+
+    for( int i=0 ; i<10 ; ++i )
+        // check if observer was called at times 0,1,2,...
+        BOOST_CHECK_EQUAL( times[i] , static_cast<double>(i) );
+    times.clear();
+
+    // controlled stepper
+    integrate_times( controlled_error_stepper< runge_kutta_dopri5< state_type > >() , lorenz , x ,
+                std::make_pair( boost::counting_iterator<int>(0) , boost::counting_iterator<int>(10) ) ,
+                dt , push_back_time( times ) );
+
+    for( int i=0 ; i<10 ; ++i )
+        // check if observer was called at times 0,1,2,...
+        BOOST_CHECK_EQUAL( times[i] , static_cast<double>(i) );
+    times.clear();
+
+    //another controlled stepper
+    integrate_times( bulirsch_stoer< state_type >() , lorenz , x ,
+                std::make_pair( boost::counting_iterator<int>(0) , boost::counting_iterator<int>(10) ) ,
+                dt , push_back_time( times ) );
+
+    for( int i=0 ; i<10 ; ++i )
+        // check if observer was called at times 0,1,2,...
+        BOOST_CHECK_EQUAL( times[i] , static_cast<double>(i) );
+    times.clear();
+
+
+    // dense output stepper
+    integrate_times( bulirsch_stoer_dense_out< state_type >() , lorenz , x ,
+                std::make_pair( boost::counting_iterator<int>(0) , boost::counting_iterator<int>(10) ) ,
+                dt , push_back_time( times ) );
+
+    for( int i=0 ; i<10 ; ++i )
+        // check if observer was called at times 0,1,2,...
+        BOOST_CHECK_EQUAL( times[i] , static_cast<double>(i) );
+
+}
+
+
+
 BOOST_AUTO_TEST_SUITE_END()

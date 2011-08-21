@@ -20,6 +20,8 @@
 
 #include <boost/type_traits/is_same.hpp>
 
+#include <boost/range.hpp>
+
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/integrate/null_observer.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_times.hpp>
@@ -56,7 +58,31 @@ size_t integrate_times(
             observer , typename Stepper::stepper_category() );
 }
 
+/*
+ * Range Version:
+ * the two overloads are needed in order to solve the forwarding problem
+ */
+template< class Stepper , class System , class State , class TimeRange , class Time , class Observer >
+size_t integrate_times(
+        Stepper stepper , System system , State &start_state ,
+        const TimeRange &times , Time dt ,
+        Observer observer )
+{
+    return integrate_times(
+            stepper , system , start_state ,
+            boost::begin( times ) , boost::end( times ) , dt , observer );
+}
 
+template< class Stepper , class System , class State , class TimeRange , class Time , class Observer >
+size_t integrate_times(
+        Stepper stepper , System system , const State &start_state ,
+        const TimeRange &times , Time dt ,
+        Observer observer )
+{
+    return integrate_times(
+            stepper , system , start_state ,
+            boost::begin( times ) , boost::end( times ) , dt , observer );
+}
 
 } // namespace odeint
 } // namespace numeric
