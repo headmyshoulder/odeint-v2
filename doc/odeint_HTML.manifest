@@ -32,6 +32,7 @@ boost_sandbox_numeric_odeint/concepts/stepper.html
 boost_sandbox_numeric_odeint/concepts/error_stepper.html
 boost_sandbox_numeric_odeint/concepts/controlled_stepper.html
 boost_sandbox_numeric_odeint/concepts/dense_output_stepper.html
+boost_sandbox_numeric_odeint/concepts/state_algebra_operations.html
 odeint/reference.html
 boost_sandbox_numeric_odeint/old_concepts.html
 boost_sandbox_numeric_odeint/old_concepts/basic_stepper.html

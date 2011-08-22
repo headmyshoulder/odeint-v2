@@ -46,8 +46,50 @@
         in a similar way and so on. The Euler method is of order 1, that means the
         error at each step is <span class="emphasis"><em>~ dt<sup>2</sup></em></span>. This is, of course, not
         very satisfying, which is why the Euler method is merely used for real life
-        problems and serves just as illustrative example. In odeint, the following
-        algorithms are implemented:
+        problems and serves just as illustrative example.
+      </p>
+<p>
+        The main focus of odeint is to provide numerical methods implemented in a
+        way where the algorithm is completely independent on the data structure used
+        to represent the state <span class="emphasis"><em>x</em></span>. In doing so, odeint is applicable
+        for a broad variety of situations and it can be used with many other libraries.
+        Besides the usual case where the state is defined as a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span></code>
+        or a <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span></code>, we provide native support for the
+        following libraries:
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            <a href="http://www.boost.org/doc/libs/release/libs/numeric/ublas/index.html" target="_top">Boost.UBlas</a>
+          </li>
+<li>
+            <a href="http://code.google.com/p/thrust/" target="_top">Thrust</a>, making
+            odeint naturally running on CUDA devices
+          </li>
+<li>
+            gsl_vector for compatibility with the many numerical function in the
+            GSL
+          </li>
+<li>
+            <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
+          </li>
+<li>
+            <a href="http://www.boost.org/doc/libs/release/libs/fusion/index.html" target="_top">Boost.Fusion</a>
+            (the state type can be a fusion vector)
+          </li>
+<li>
+            <a href="http://www.boost.org/doc/libs/release/libs/units/index.html" target="_top">Boost.Units</a>
+          </li>
+<li>
+            <a href="http://software.intel.com/en-us/articles/intel-mkl/" target="_top">Intel
+            Math Kernel Library</a> for maximum performance
+          </li>
+<li>
+            <a href="http://www.boost.org/doc/libs/1_47_0/libs/graph/doc/table_of_contents.html" target="_top">Boost.Graph</a>
+            (still experimentally)
+          </li>
+</ul></div>
+<p>
+        In odeint, the following algorithms are implemented:
       </p>
 <div class="table">
 <a name="boost_sandbox_numeric_odeint.getting_started.overview.stepper_algorithms"></a><p class="title"><b>Table&#160;1.1.&#160;Stepper Algorithms</b></p>
