@@ -67,7 +67,7 @@ public:
 
 
 private:
-    size_t m_s;
+    const size_t m_s;
     vector< vector< double > > m_a;
     vector< double > m_b;
     vector< double > m_c;

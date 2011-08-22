@@ -196,6 +196,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_times_test_case , Stepper, stepper_meth
     tester();
 }
 
+
 class simple_stepper_methods : public mpl::vector<
     rosenbrock4< value_type >
 > { };

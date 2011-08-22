@@ -225,7 +225,7 @@ public:
     template< class System , class StateIn , class DerivIn , class Time , class StateOut , class StateTemp , class Deriv >
     void inline do_step( Algebra &algebra , System system , const StateIn &in , const DerivIn &dxdt ,
             const Time &t , StateOut &out , const Time &dt ,
-            StateTemp &x_tmp , Deriv F[StageCount-1] )
+            StateTemp &x_tmp , Deriv F[StageCount-1] ) const
     {
         fusion::for_each( m_stages , calculate_stage<
                 System , StateIn , StateTemp , DerivIn , Deriv , StateOut , Time >

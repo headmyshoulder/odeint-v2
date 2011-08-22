@@ -5,15 +5,15 @@ from numpy import *
 #from pylab import *
 
 #toolset = "gcc-4.5"
-toolset = "intel-11.1"
-#toolset = "msvc"
+#toolset = "intel-11.1"
+toolset = "msvc"
 #toolset = "msvc-10.0"
 
 #bin_path = "bin/gcc-4.5/release/"
-bin_path = "bin/intel-linux-11.1/release/"
-#bin_path = "bin\\msvc-10.0\\release\\" #threading-multi\\"
-#extension = ".exe"
-extension = ""
+#bin_path = "bin/intel-linux-11.1/release/"
+bin_path = "bin\\msvc-10.0\\release\\threading-multi\\"
+extension = ".exe"
+#extension = ""
 
 bins = [ "odeint_rk4_lorenz_array" , "odeint_rk4_lorenz_range" , "generic_odeint_rk4_lorenz" , "nr_rk4_lorenz" ,  "rt_generic_rk4_lorenz" , "gsl_rk4_lorenz" ]
 

@@ -26,16 +26,22 @@ In the following we describe how `State`, `Algebra` and `Operations` are used to
   [[`Operations`] [The operations type]]
   [/[`Time`] [A type representing the time type of steppers]]
   [[`Value1`, ... , `ValueN`] [Types representing the value or time type of stepper]]
+  [[`Scale`] [Type of the scale operation]]
+  [[`scale`] [Object of type `Scale`]]
   [[[^ScaleSum['N]]] [Type that represents a general scale_sum operation, [^/N/] should be replaced by a number from 1 to 14.]]
   [[[^scale_sum/N/]] [Object of type [^ScaleSum['N], [^/N/] should be replaced by a number from 1 to 14.]]]
   [[`a1, a2, ...`] [Objects of type `Value1`, `Value2`, ...]]
+  [[`y, x1, x2, ...`] [Objects of `State`'s value type]]
 ]
 
 [heading Valid Expressions]
 
 [table
   [[Name] [Expression] [Type] [Semantics]]
-  [[Get General `scale_sum` operation] [[^Operations::scale_sum/N/< Value1 , ... , ValueN >]] [[^ScaleSum/N/]] [Get the [^ScaleSum/N/] type from `Operations`, [^/N/] should be replaced by a number from 1 to 14.]]
+  [[Get scale operation] [`Operations::scale< Value >`] [`Scale`] [Get `Scale` from `Operations`]]
+  [[`Scale` constructor] [`Scale< Value >( a )`] [`Scale`] [Constrcuts a `Scale` object]]
+  [[`Scale` operation] [`scale( x )`] [`void`] [Calculates `x *= a`]]
+  [[Get general `scale_sum` operation] [[^Operations::scale_sum/N/< Value1 , ... , ValueN >]] [[^ScaleSum/N/]] [Get the [^ScaleSum/N/] type from `Operations`, [^/N/] should be replaced by a number from 1 to 14.]]
   [[`scale_sum` constructor] [[^ScaleSum/N/< Value1 , ... , ValueN >( a1 , ... , aN )]] [[^ScaleSum/N/]] [Constructs a `scale_sum` object given [^/N/] parameter values with [^/N/] between 1 and 14.]]
   [[`scale_sum` operation] [[^scale_sum/N/( y , x1 , ... , xN )]] [`void`] [Calculates `y = a1*x1 + a2*x2 + ... + aN*xN`. Note that this is an [^/N/+1]-ary function call.]]
 ]
@@ -71,7 +77,7 @@ In the following we describe how `State`, `Algebra` and `Operations` are used to
 
 [table
   [[Name] [Expression] [Type] [Semantics]]
-  [[Vector operation] [`algebra.for_each3( y , x1 , x2 , Operations::scale_sum2< Value >( a1 , a2 ) )`] [void] [Calculates ['*y* = a1 *x1* + a2 *x2*]]]
+  [[Vector operation] [`algebra.for_each3( y , x1 , x2 , Operations::scale_sum2< Value1 , Value2 >( a1 , a2 ) )`] [void] [Calculates ['*y* = a1 *x1* + a2 *x2*]]]
 ]
 
 [endsect]

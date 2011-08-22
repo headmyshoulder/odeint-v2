@@ -190,7 +190,7 @@ public:
 
 private:
 
-    rk_algorithm_type m_rk_algorithm;
+    const rk_algorithm_type m_rk_algorithm;
 
     resizer_type m_resizer;
 
