@@ -10,11 +10,12 @@
   
 * INTEGRATE FUNCTIONS
   * dense_output_stepper : call with reset
-  * dopri5 in integrate_const does not work
-  * define EXACTLY what integrate_const and integrate_adaptive for every stepper means, documentate
+  OK * dopri5 in integrate_const does not work - FIXED
+  OK * define EXACTLY what integrate_const and integrate_adaptive for every stepper means, documentate
     * integrate_adaptive() : start_time , end_time
       * start_time , t1 , t2 , ... , t_n-1 , end_time ?
       * OR start_time , t1 , t2 , ... , t_n-1 , t_n, where t_n-1 < end_time and t_n > end_time
+    DONE
 
 
 * THRUST
@@ -30,10 +31,10 @@
 
 
 * DOCUMENTATION
-  * Tutorials
+  OK * Tutorials
   * Concepts
   * HOWTO extend odeint
-  * use gh-pages, remove html from the source control
+  OK * use gh-pages, remove html from the source control
   * doxygen generated reference
 
 

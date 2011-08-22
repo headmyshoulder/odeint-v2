@@ -51,6 +51,7 @@ struct array_algebra
             op( s1[i] , s2[i] , s3[i] );
     }
 
+    /* different const signature - required for the scale_sum_swap2 operation */
     template< typename T , size_t dim , class Op >
     void for_each3( boost::array< T , dim > &s1 ,
             boost::array< T , dim > &s2 ,

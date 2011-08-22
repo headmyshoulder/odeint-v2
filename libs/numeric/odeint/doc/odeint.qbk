@@ -33,6 +33,9 @@
     [@http://code.google.com/p/thrust/ Thrust]]
 [def __ublas
     [@http://www.boost.org/doc/libs/release/libs/numeric/ublas/index.html Boost.UBlas]]
+
+[def __intel_mkl
+     [@http://software.intel.com/en-us/articles/intel-mkl/ Intel Math Kernel Library]]
     
 [def __system
     [link boost_sandbox_numeric_odeint.concepts.system System]]
@@ -54,6 +57,9 @@
     [link boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions integrate functions]]
 [def __observer
 	[link boost_sandbox_numeric_odeint.concepts.observer observer]]
+[def __tut_solar_system
+     [link boost_sandbox_numeric_odeint.tutorial.solar_system Solar System]]
+
 
 
 [def __alpha '''&#945;''']
