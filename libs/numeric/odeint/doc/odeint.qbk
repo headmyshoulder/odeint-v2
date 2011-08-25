@@ -29,6 +29,8 @@
     [@http://www.boost.org/doc/libs/release/libs/units/index.html Boost.Units]]
 [def __boost_fusion
     [@http://www.boost.org/doc/libs/release/libs/fusion/index.html Boost.Fusion]]
+[def __boost_graph
+    [@http://www.boost.org/doc/libs/1_47_0/libs/graph/doc/table_of_contents.html Boost.Graph]]
 [def __thrust
     [@http://code.google.com/p/thrust/ Thrust]]
 [def __ublas

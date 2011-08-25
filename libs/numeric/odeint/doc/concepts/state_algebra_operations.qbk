@@ -32,7 +32,7 @@ In the following we describe how `State`, `Algebra` and `Operations` are used to
   [[`Scale`] [Type of the scale operation]]
   [[`scale`] [Object of type `Scale`]]
   [[[^ScaleSum['N]]] [Type that represents a general scale_sum operation, [^/N/] should be replaced by a number from 1 to 14.]]
-  [[[^scale_sum/N/]] [Object of type [^ScaleSum['N], [^/N/] should be replaced by a number from 1 to 14.]]]
+  [[[^scale_sum/N/]] [Object of type [^ScaleSum['N]], [^/N/] should be replaced by a number from 1 to 14.]]
   [[`ScaleSumSwap2`] [Type of the scale sum swap operation]]
   [[`scale_sum_swap2`] [Object of type `ScaleSumSwap2`]]
   [[`a1, a2, ...`] [Objects of type `Value1`, `Value2`, ...]]
@@ -44,7 +44,7 @@ In the following we describe how `State`, `Algebra` and `Operations` are used to
 [table
   [[Name] [Expression] [Type] [Semantics]]
   [[Get scale operation] [`Operations::scale< Value >`] [`Scale`] [Get `Scale` from `Operations`]]
-  [[`Scale` constructor] [`Scale< Value >( a )`] [`Scale`] [Constrcuts a `Scale` object]]
+  [[`Scale` constructor] [`Scale< Value >( a )`] [`Scale`] [Constructs a `Scale` object]]
   [[`Scale` operation] [`scale( x )`] [`void`] [Calculates `x *= a`]]
   [[Get general `scale_sum` operation] [[^Operations::scale_sum/N/< Value1 , ... , ValueN >]] [[^ScaleSum/N/]] [Get the [^ScaleSum/N/] type from `Operations`, [^/N/] should be replaced by a number from 1 to 14.]]
   [[`scale_sum` constructor] [[^ScaleSum/N/< Value1 , ... , ValueN >( a1 , ... , aN )]] [[^ScaleSum/N/]] [Constructs a `scale_sum` object given [^/N/] parameter values with [^/N/] between 1 and 14.]]
