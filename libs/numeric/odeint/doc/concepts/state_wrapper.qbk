@@ -1,0 +1,29 @@
+[section State Wrapper]
+
+[heading Description]
+
+The `State Wrapper` concept describes the way odeint creates temporary state objects to store intermediate results within the stepper's `do_step` methods.
+
+[heading Notation]
+
+[variablelist
+  [[`State`] [A type that is the `state_type` of the ODE]]
+  [[`WrappedState`] [A type that is a model of State Wrapper for the state type `State`.]] 
+  [[`x`] [Object of type `State`]]
+  [[`w`] [Object of type `WrappedState`]]
+]
+
+[heading Valid Expressions]
+
+[table
+  [[Name] [Expression] [Type] [Semantics]]
+  [[Get resizeability] [`is_resizeable< State >`] [`boost::false_type` or `boost::true_type`] [Returns `boost::true_type` if the `State` is resizeable, `boost::false_type` otherwise.]]
+  [[Create `WrappedState` type] [`state_wrapper< State >`] [`WrappedState`] [Creates the type for a `WrappedState` for the state type `State`]]
+  [[Constructor] [`WrappedState()`] [`WrappedState`] [Constructs a state wrapper with an empty state]]
+  [[Copy Constructor] [`WrappedState( w )`] [`WrappedState`] [Constructs a state wrapper with a state of the same size as the state in `w`]]
+  [[Get state] [`w.m_v`] [`State`] [Returns the `State` object of this state wrapper.]]
+  [[Check size] [`w.same_size( x )`] [`bool`] [Returns `true` if `x` and `w.m_v` have the same size, `false` otherwise. [*Only required if `State` is resizeable.]]]
+  [[Resize] [`w.resize( x )`] [`bool`] [If `w.m_v` and `x` have different sizes, `w.m_v` is resized to the size of `x` and the method returns `true`. Otherwise the method returns `false`. [*Only required if `State` is resizeable.]]]
+]
+
+[endsect]
