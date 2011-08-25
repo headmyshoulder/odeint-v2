@@ -34,7 +34,13 @@
 #include <boost/numeric/odeint/stepper/dense_output_controlled_explicit.hpp>
 
 #include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
+
+#ifndef __CUDACC__
+/* Bulirsch Stoer with Dense Output does not compile with nvcc
+ * because of the binomial library used there which relies on unsupported SSE functions
+ */
 #include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>
+#endif
 
 #include <boost/numeric/odeint/stepper/symplectic_euler.hpp>
 #include <boost/numeric/odeint/stepper/symplectic_rkn_sb3a_mclachlan.hpp>
