@@ -17,9 +17,8 @@
 #include <boost/numeric/odeint/stepper/euler.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54.hpp>
-#include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
-#include <boost/numeric/odeint/stepper/dense_output_explicit.hpp>
-#include <boost/numeric/odeint/stepper/dense_output_controlled_explicit.hpp>
+#include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
+#include <boost/numeric/odeint/stepper/dense_output_runge_kutta.hpp>
 
 #include <boost/numeric/odeint/integrate/integrate.hpp>
 #include <boost/numeric/odeint/integrate/integrate_const.hpp>
@@ -131,7 +130,7 @@ int main( int argc , char **argv )
 		// works
 		ofstream fout( "integrate_controlled_rk54.dat" );
 		size_t num_of_steps = integrate_const(
-				controlled_error_stepper< runge_kutta_cash_karp54< state_type > >() ,
+				controlled_runge_kutta< runge_kutta_cash_karp54< state_type > >() ,
 				lorenz() , x1 , 0.0 , 50.0 , 0.1 , tmp_func( fout ) );
 		clog << "Integrate controlled error stepper rk54 " << num_of_steps << endl;
 	}
@@ -141,8 +140,8 @@ int main( int argc , char **argv )
 	{
 		// seem to work, check
 		typedef runge_kutta_dopri5< state_type > dopri5_type;
-		typedef controlled_error_stepper< dopri5_type > controlled_error_stepper_type;
-		typedef dense_output_controlled_explicit< controlled_error_stepper_type > stepper_type;
+		typedef controlled_runge_kutta< dopri5_type > controlled_error_stepper_type;
+		typedef dense_output_runge_kutta< controlled_error_stepper_type > stepper_type;
 
 		controlled_error_stepper_type controlled_stepper( default_error_checker< double >( 1.0e-1 , 0.1 ) );
 
@@ -155,8 +154,8 @@ int main( int argc , char **argv )
 	{
 		// seem to work, check
 		typedef runge_kutta_dopri5< state_type > dopri5_type;
-		typedef controlled_error_stepper< dopri5_type > controlled_error_stepper_type;
-		typedef dense_output_controlled_explicit< controlled_error_stepper_type > stepper_type;
+		typedef controlled_runge_kutta< dopri5_type > controlled_error_stepper_type;
+		typedef dense_output_runge_kutta< controlled_error_stepper_type > stepper_type;
 
 		controlled_error_stepper_type controlled_stepper( default_error_checker< double >( 1.0e-1 , 0.1 ) );
 

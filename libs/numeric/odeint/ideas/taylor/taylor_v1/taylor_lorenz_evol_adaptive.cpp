@@ -12,7 +12,7 @@
 #include "taylor_controller.hpp"
 
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
-#include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
+#include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
 #include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
 
 #include <boost/fusion/include/make_vector.hpp>
@@ -83,7 +83,7 @@ int main( int argc , char **argv )
 
 
 	rk54_type rk54_plain;
-	controlled_error_stepper< rk54_type > rk54( rk54_plain , default_error_checker< double >( eps_abs , eps_rel ) );
+	controlled_runge_kutta< rk54_type > rk54( rk54_plain , default_error_checker< double >( eps_abs , eps_rel ) );
 	taylor_controller< taylor_type > taylor_controller( eps_abs , eps_rel );
 
 	state_type x1 = {{ 10.0 , 10.0 , 10.0 }} , x2 = x1;

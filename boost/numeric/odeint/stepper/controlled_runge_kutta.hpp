@@ -1,6 +1,6 @@
 /*
  [auto_generated]
- boost/numeric/odeint/stepper/controlled_error_stepper.hpp
+ boost/numeric/odeint/stepper/controlled_runge_kutta.hpp
 
  [begin_description]
  The default controlled stepper which can be used with all explicit Runge-Kutta error steppers.
@@ -15,8 +15,8 @@
  */
 
 
-#ifndef BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLED_ERROR_STEPPER_HPP_INCLUDED
-#define BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLED_ERROR_STEPPER_HPP_INCLUDED
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLED_RUNGE_KUTTA_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLED_RUNGE_KUTTA_HPP_INCLUDED
 
 
 #include <cmath>
@@ -118,7 +118,7 @@ typename ErrorStepper::operations_type > ,
 class Resizer = typename ErrorStepper::resizer_type ,
 class ErrorStepperCategory = typename ErrorStepper::stepper_category
 >
-class controlled_error_stepper ;
+class controlled_runge_kutta ;
 
 
 
@@ -131,7 +131,7 @@ class ErrorStepper ,
 class ErrorChecker ,
 class Resizer
 >
-class controlled_error_stepper< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag >
+class controlled_runge_kutta< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag >
 {
 
 public:
@@ -150,11 +150,11 @@ public:
     typedef typename stepper_type::wrapped_state_type wrapped_state_type;
     typedef typename stepper_type::wrapped_deriv_type wrapped_deriv_type;
 
-    typedef controlled_error_stepper< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag > controlled_stepper_type;
+    typedef controlled_runge_kutta< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag > controlled_stepper_type;
 
 
 
-    controlled_error_stepper(
+    controlled_runge_kutta(
             const error_checker_type &error_checker = error_checker_type( ) ,
             const stepper_type &stepper = stepper_type( )
     )
@@ -190,7 +190,7 @@ public:
     template< class System , class StateInOut , class DerivIn >
     controlled_step_result try_step( System system , StateInOut &x , const DerivIn &dxdt , time_type &t , time_type &dt )
     {
-        m_xnew_resizer.adjust_size( x , boost::bind( &controlled_error_stepper::template resize_m_xnew< StateInOut > , boost::ref( *this ) , _1 ) );
+        m_xnew_resizer.adjust_size( x , boost::bind( &controlled_runge_kutta::template resize_m_xnew< StateInOut > , boost::ref( *this ) , _1 ) );
         controlled_step_result res = try_step( system , x , dxdt , t , m_xnew.m_v , dt );
         if( res == success )
         {
@@ -208,7 +208,7 @@ public:
     controlled_step_result try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
     {
         typename boost::unwrap_reference< System >::type &sys = system;
-        m_dxdt_resizer.adjust_size( in , boost::bind( &controlled_error_stepper::template resize_m_dxdt< StateIn > , boost::ref( *this ) , _1 ) );
+        m_dxdt_resizer.adjust_size( in , boost::bind( &controlled_runge_kutta::template resize_m_dxdt< StateIn > , boost::ref( *this ) , _1 ) );
         sys( in , m_dxdt.m_v , t );
         return try_step( system , in , m_dxdt.m_v , t , out , dt );
     }
@@ -226,7 +226,7 @@ public:
         using std::min;
         using std::pow;
 
-        m_xerr_resizer.adjust_size( in , boost::bind( &controlled_error_stepper::template resize_m_xerr< StateIn > , boost::ref( *this ) , _1 ) );
+        m_xerr_resizer.adjust_size( in , boost::bind( &controlled_runge_kutta::template resize_m_xerr< StateIn > , boost::ref( *this ) , _1 ) );
 
         // do one step with error calculation
         m_stepper.do_step( system , in , dxdt , t , out , dt , m_xerr.m_v );
@@ -307,7 +307,7 @@ private:
     controlled_step_result try_step_v1( System system , StateInOut &x , time_type &t , time_type &dt )
     {
         typename boost::unwrap_reference< System >::type &sys = system;
-        m_dxdt_resizer.adjust_size( x , boost::bind( &controlled_error_stepper::template resize_m_dxdt< StateInOut > , boost::ref( *this ) , _1 ) );
+        m_dxdt_resizer.adjust_size( x , boost::bind( &controlled_runge_kutta::template resize_m_dxdt< StateInOut > , boost::ref( *this ) , _1 ) );
         sys( x , m_dxdt.m_v ,t );
         return try_step( system , x , m_dxdt.m_v , t , dt );
     }
@@ -345,7 +345,7 @@ class ErrorStepper ,
 class ErrorChecker ,
 class Resizer
 >
-class controlled_error_stepper< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_fsal_tag >
+class controlled_runge_kutta< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_fsal_tag >
 {
 
 public:
@@ -364,9 +364,9 @@ public:
     typedef typename stepper_type::wrapped_state_type wrapped_state_type;
     typedef typename stepper_type::wrapped_deriv_type wrapped_deriv_type;
 
-    typedef controlled_error_stepper< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag > controlled_stepper_type;
+    typedef controlled_runge_kutta< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag > controlled_stepper_type;
 
-    controlled_error_stepper(
+    controlled_runge_kutta(
             const error_checker_type &error_checker = error_checker_type() ,
             const stepper_type &stepper = stepper_type()
     )
@@ -401,7 +401,7 @@ public:
     template< class System , class StateIn , class StateOut >
     controlled_step_result try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
     {
-        if( m_dxdt_resizer.adjust_size( in , boost::bind( &controlled_error_stepper::template resize_m_dxdt< StateIn > , boost::ref( *this ) , _1 ) ) || m_first_call )
+        if( m_dxdt_resizer.adjust_size( in , boost::bind( &controlled_runge_kutta::template resize_m_dxdt< StateIn > , boost::ref( *this ) , _1 ) ) || m_first_call )
         {
             typename boost::unwrap_reference< System >::type &sys = system;
             sys( in , m_dxdt.m_v ,t );
@@ -419,8 +419,8 @@ public:
     template< class System , class StateInOut , class DerivInOut >
     controlled_step_result try_step( System system , StateInOut &x , DerivInOut &dxdt , time_type &t , time_type &dt )
     {
-        m_xnew_resizer.adjust_size( x , boost::bind( &controlled_error_stepper::template resize_m_xnew< StateInOut > , boost::ref( *this ) , _1 ) );
-        m_dxdt_new_resizer.adjust_size( x , boost::bind( &controlled_error_stepper::template resize_m_dxdt_new< StateInOut > , boost::ref( *this ) , _1 ) );
+        m_xnew_resizer.adjust_size( x , boost::bind( &controlled_runge_kutta::template resize_m_xnew< StateInOut > , boost::ref( *this ) , _1 ) );
+        m_dxdt_new_resizer.adjust_size( x , boost::bind( &controlled_runge_kutta::template resize_m_dxdt_new< StateInOut > , boost::ref( *this ) , _1 ) );
         controlled_step_result res = try_step( system , x , dxdt , t , m_xnew.m_v , m_dxdtnew.m_v , dt );
         if( res == success )
         {
@@ -444,7 +444,7 @@ public:
         using std::min;
         using std::pow;
 
-        m_xerr_resizer.adjust_size( in , boost::bind( &controlled_error_stepper::template resize_m_xerr< StateIn > , boost::ref( *this ) , _1 ) );
+        m_xerr_resizer.adjust_size( in , boost::bind( &controlled_runge_kutta::template resize_m_xerr< StateIn > , boost::ref( *this ) , _1 ) );
 
         //fsal: m_stepper.get_dxdt( dxdt );
         //fsal: m_stepper.do_step( sys , x , dxdt , t , dt , m_x_err );
@@ -531,7 +531,7 @@ private:
     template< class System , class StateInOut >
     controlled_step_result try_step_v1( System system , StateInOut &x , time_type &t , time_type &dt )
     {
-        if( m_dxdt_resizer.adjust_size( x , boost::bind( &controlled_error_stepper::template resize_m_dxdt< StateInOut > , boost::ref( *this ) , _1 ) ) || m_first_call )
+        if( m_dxdt_resizer.adjust_size( x , boost::bind( &controlled_runge_kutta::template resize_m_dxdt< StateInOut > , boost::ref( *this ) , _1 ) ) || m_first_call )
         {
             typename boost::unwrap_reference< System >::type &sys = system;
             sys( x , m_dxdt.m_v , t );
@@ -564,4 +564,4 @@ private:
 } // boost
 
 
-#endif // BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLED_ERROR_STEPPER_HPP_INCLUDED
+#endif // BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLED_RUNGE_KUTTA_HPP_INCLUDED

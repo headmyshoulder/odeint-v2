@@ -160,11 +160,11 @@ class stepper_methods : public mpl::vector<
     runge_kutta_cash_karp54< state_type > ,
     runge_kutta_dopri5< state_type > ,
     runge_kutta_fehlberg78< state_type > ,
-    controlled_error_stepper< runge_kutta_cash_karp54< state_type > > ,
-    controlled_error_stepper< runge_kutta_dopri5< state_type > > ,
-    controlled_error_stepper< runge_kutta_fehlberg78< state_type > > ,
+    controlled_runge_kutta< runge_kutta_cash_karp54< state_type > > ,
+    controlled_runge_kutta< runge_kutta_dopri5< state_type > > ,
+    controlled_runge_kutta< runge_kutta_fehlberg78< state_type > > ,
     bulirsch_stoer< state_type > ,
-    dense_output_controlled_explicit< controlled_error_stepper< runge_kutta_dopri5< state_type > > > ,
+    dense_output_runge_kutta< controlled_runge_kutta< runge_kutta_dopri5< state_type > > > ,
     bulirsch_stoer_dense_out< state_type >
 > { };
 

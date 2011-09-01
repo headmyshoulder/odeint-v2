@@ -1,5 +1,5 @@
 /*
- boost header: NUMERIC_ODEINT_STEPPER/controlled_error_stepper.hpp
+ boost header: NUMERIC_ODEINT_STEPPER/controlled_runge_kutta.hpp
 
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky
@@ -18,7 +18,7 @@
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
-#include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
+#include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
 
 
 

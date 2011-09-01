@@ -11,7 +11,7 @@
 #include "taylor.hpp"
 
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
-#include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
+#include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
 #include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
 
 
@@ -150,7 +150,7 @@ int main( int argc , char **argv )
 			double eps_rel = eps_rel_values[j];
 
 			rk54_type rk54_plain;
-			controlled_error_stepper< rk54_type > rk54( rk54_plain , default_error_checker< double >( eps_abs , eps_rel ) );
+			controlled_runge_kutta< rk54_type > rk54( rk54_plain , default_error_checker< double >( eps_abs , eps_rel ) );
 
 			state_type x = {{ 10.0 , 10.0 , 10.0 }};
 

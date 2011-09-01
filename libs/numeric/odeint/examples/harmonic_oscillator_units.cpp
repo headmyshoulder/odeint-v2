@@ -80,9 +80,9 @@ struct streaming_observer
 int main( int argc , char**argv )
 {
     //[ units_define_stepper
-    typedef dense_output_controlled_explicit
+    typedef dense_output_runge_kutta
     <
-        controlled_error_stepper
+        controlled_runge_kutta
         <
             runge_kutta_dopri5< state_type , double , deriv_type , time_type , fusion_algebra >
         >

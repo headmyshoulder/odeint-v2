@@ -10,14 +10,14 @@
 #include <vector>
 
 #include <boost/numeric/odeint/stepper/euler.hpp>
-#include <boost/numeric/odeint/stepper/dense_output_explicit.hpp>
+#include <boost/numeric/odeint/stepper/dense_output_runge_kutta.hpp>
 
 using namespace std;
 using namespace boost::numeric::odeint;
 
 typedef std::vector< double > state_type;
 typedef euler< state_type > explicit_stepper_type;
-typedef dense_output_explicit< explicit_stepper_type > stepper_type;
+typedef dense_output_runge_kutta< explicit_stepper_type > stepper_type;
 
 struct lorenz
 {

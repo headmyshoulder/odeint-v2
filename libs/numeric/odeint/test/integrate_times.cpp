@@ -19,7 +19,7 @@
 
 #include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
-#include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
+#include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
 #include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
 #include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>
 #include <boost/numeric/odeint/integrate/integrate_times.hpp>
@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE( test_integrate_times )
     times.clear();
 
     // controlled stepper
-    integrate_times( controlled_error_stepper< runge_kutta_dopri5< state_type > >() , lorenz , x ,
+    integrate_times( controlled_runge_kutta< runge_kutta_dopri5< state_type > >() , lorenz , x ,
                 boost::counting_iterator<int>(0) , boost::counting_iterator<int>(10) ,
                 dt , push_back_time( times ) );
 
@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE( test_integrate_times_ranges )
     times.clear();
 
     // controlled stepper
-    integrate_times( controlled_error_stepper< runge_kutta_dopri5< state_type > >() , lorenz , x ,
+    integrate_times( controlled_runge_kutta< runge_kutta_dopri5< state_type > >() , lorenz , x ,
                 std::make_pair( boost::counting_iterator<int>(0) , boost::counting_iterator<int>(10) ) ,
                 dt , push_back_time( times ) );
 
