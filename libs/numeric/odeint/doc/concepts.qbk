@@ -10,5 +10,6 @@
 [include concepts/controlled_stepper.qbk]
 [include concepts/dense_output_stepper.qbk]
 [include concepts/state_algebra_operations.qbk]
+[include concepts/state_wrapper.qbk]
 
 [endsect]

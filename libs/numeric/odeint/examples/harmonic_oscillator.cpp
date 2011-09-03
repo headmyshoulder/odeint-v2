@@ -139,7 +139,7 @@ int main(int argc, char **argv)
 
 
     //[ integrate_adapt
-    typedef controlled_error_stepper< error_stepper_type > controlled_stepper_type;
+    typedef controlled_runge_kutta< error_stepper_type > controlled_stepper_type;
     controlled_stepper_type controlled_stepper;
     integrate_adaptive( controlled_stepper , harmonic_oscillator , x , 0.0 , 10.0 , 0.01 );
     //]

@@ -19,7 +19,7 @@
 #define BOOST_NUMERIC_ODEINT_INTEGRATE_INTEGRATE_HPP_INCLUDED
 
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
-#include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
+#include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
 #include <boost/numeric/odeint/integrate/null_observer.hpp>
 #include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
 
@@ -40,13 +40,13 @@ namespace odeint {
 template< class System , class State , class Time , class Observer >
 size_t integrate( System system , State &start_state , Time start_time , Time end_time , Time dt , Observer observer )
 {
-    return integrate_adaptive( controlled_error_stepper< runge_kutta_dopri5< State > >() , system , start_state , start_time , end_time , dt , observer );
+    return integrate_adaptive( controlled_runge_kutta< runge_kutta_dopri5< State > >() , system , start_state , start_time , end_time , dt , observer );
 }
 
 template< class System , class State , class Time , class Observer >
 size_t integrate( System system , const State &start_state , Time start_time , Time end_time , Time dt , Observer observer )
 {
-    return integrate_adaptive( controlled_error_stepper< runge_kutta_dopri5< State > >() , system , start_state , start_time , end_time , dt , observer );
+    return integrate_adaptive( controlled_runge_kutta< runge_kutta_dopri5< State > >() , system , start_state , start_time , end_time , dt , observer );
 }
 
 

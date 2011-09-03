@@ -93,8 +93,8 @@ int main( int argc , char **argv )
 
     //[ integrate_stiff_system_alternative
     typedef runge_kutta_dopri5< vector_type > dopri5_type;
-    typedef controlled_error_stepper< dopri5_type > controlled_dopri5_type;
-    typedef dense_output_controlled_explicit< controlled_dopri5_type > dense_output_dopri5_type;
+    typedef controlled_runge_kutta< dopri5_type > controlled_dopri5_type;
+    typedef dense_output_runge_kutta< controlled_dopri5_type > dense_output_dopri5_type;
 
     vector_type x2( 3 , 1.0 );
 

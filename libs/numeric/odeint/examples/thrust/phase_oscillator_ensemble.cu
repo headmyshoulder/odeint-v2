@@ -210,7 +210,7 @@ int main( int arc , char* argv[] )
         //[thrust_phase_ensemble_define_dopri5
         typedef runge_kutta_dopri5< state_type , value_type , state_type , value_type , thrust_algebra , thrust_operations > error_stepper_type;
         typedef controlled_error_stepper< error_stepper_type > controlled_stepper_type;
-        typedef dense_output_controlled_explicit_fsal< controlled_stepper_type > dense_output_type;
+        typedef dense_output_controlled_explicit< controlled_stepper_type > dense_output_type;
         //]
 
         ofstream fout( "phase_ensemble_dopri5.dat" );

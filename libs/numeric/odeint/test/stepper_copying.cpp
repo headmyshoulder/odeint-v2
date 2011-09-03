@@ -29,9 +29,8 @@
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
-#include <boost/numeric/odeint/stepper/controlled_error_stepper.hpp>
-#include <boost/numeric/odeint/stepper/dense_output_explicit.hpp>
-#include <boost/numeric/odeint/stepper/dense_output_controlled_explicit.hpp>
+#include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
+#include <boost/numeric/odeint/stepper/dense_output_runge_kutta.hpp>
 
 template< class T , size_t Dim >
 class test_array
@@ -264,11 +263,11 @@ typedef boost::numeric::odeint::runge_kutta4< state_type , double , deriv_type >
 typedef boost::numeric::odeint::runge_kutta_cash_karp54_classic< state_type , double , deriv_type > rk54_type;
 typedef boost::numeric::odeint::runge_kutta_cash_karp54< state_type , double , deriv_type > rk54_generic_type;
 typedef boost::numeric::odeint::runge_kutta_dopri5< state_type , double , deriv_type > dopri5_type;
-typedef boost::numeric::odeint::controlled_error_stepper< rk54_type > controlled_rk54_type;
-typedef boost::numeric::odeint::controlled_error_stepper< rk54_generic_type > controlled_rk54_generic_type;
-typedef boost::numeric::odeint::controlled_error_stepper< dopri5_type > controlled_dopri5_type;
-typedef boost::numeric::odeint::dense_output_explicit< euler_type > dense_output_euler_type;
-typedef boost::numeric::odeint::dense_output_controlled_explicit< controlled_dopri5_type > dense_output_dopri5_type;
+typedef boost::numeric::odeint::controlled_runge_kutta< rk54_type > controlled_rk54_type;
+typedef boost::numeric::odeint::controlled_runge_kutta< rk54_generic_type > controlled_rk54_generic_type;
+typedef boost::numeric::odeint::controlled_runge_kutta< dopri5_type > controlled_dopri5_type;
+typedef boost::numeric::odeint::dense_output_runge_kutta< euler_type > dense_output_euler_type;
+typedef boost::numeric::odeint::dense_output_runge_kutta< controlled_dopri5_type > dense_output_dopri5_type;
 
 #define CHECK_COUNTERS( c1 , c2 , c3 , c4 , c5 , c6 ) \
 	BOOST_CHECK_EQUAL( construct_count , size_t( c1 ) ); \
