@@ -21,6 +21,7 @@
 #include <stdexcept>
 
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
+#include <boost/numeric/odeint/integrate/detail/integrate_const.hpp>
 
 #include <boost/ref.hpp>
 
@@ -28,8 +29,6 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 namespace detail {
-
-
 
 /*
  * integrate_adaptive for simple stepper is basically an integrate_const + some last step
@@ -42,7 +41,7 @@ size_t integrate_adaptive(
 )
 {
     size_t steps = integrate_const( stepper , system , start_state ,
-            start_time , end_time , dt , observer , stepper_tag() );
+            start_time , end_time , dt , observer );
     if( steps*dt < end_time )
     {   //make a last step to end exactly at end_time
         stepper.do_step( system , start_state , steps*dt , end_time-steps*dt );
