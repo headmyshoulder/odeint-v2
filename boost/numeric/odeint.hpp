@@ -62,5 +62,7 @@
 
 #include <boost/numeric/odeint/integrate/observer_collection.hpp>
 
+#include <boost/numeric/odeint/stepper/generation.hpp>
+
 #endif // BOOST_NUMERIC_ODEINT_HPP_INCLUDED
 
