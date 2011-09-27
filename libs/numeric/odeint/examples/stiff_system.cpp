@@ -75,14 +75,13 @@ struct stiff_system_jacobi
 
 int main( int argc , char **argv )
 {
+//    typedef rosenbrock4< double > stepper_type;
+//    typedef rosenbrock4_controller< stepper_type > controlled_stepper_type;
+//    typedef rosenbrock4_dense_output< controlled_stepper_type > dense_output_type;
     //[ integrate_stiff_system
-    typedef rosenbrock4< double > stepper_type;
-    typedef rosenbrock4_controller< stepper_type > controlled_stepper_type;
-    typedef rosenbrock4_dense_output< controlled_stepper_type > dense_output_type;
-
     vector_type x( 3 , 1.0 );
 
-    size_t num_of_steps = integrate_const( dense_output_type() ,
+    size_t num_of_steps = integrate_const( make_dense_output< rosenbrock4< double > >( 1.0e-6 , 1.0e-6 ) ,
             make_pair( stiff_system() , stiff_system_jacobi() ) ,
             x , 0.0 , 50.0 , 0.01 ,
             cout << phoenix::arg_names::arg2 << " " << phoenix::arg_names::arg1[0] << "\n" );
@@ -91,14 +90,14 @@ int main( int argc , char **argv )
 
 
 
+//    typedef runge_kutta_dopri5< vector_type > dopri5_type;
+//    typedef controlled_runge_kutta< dopri5_type > controlled_dopri5_type;
+//    typedef dense_output_runge_kutta< controlled_dopri5_type > dense_output_dopri5_type;
     //[ integrate_stiff_system_alternative
-    typedef runge_kutta_dopri5< vector_type > dopri5_type;
-    typedef controlled_runge_kutta< dopri5_type > controlled_dopri5_type;
-    typedef dense_output_runge_kutta< controlled_dopri5_type > dense_output_dopri5_type;
 
     vector_type x2( 3 , 1.0 );
 
-    size_t num_of_steps2 = integrate_const( dense_output_dopri5_type() ,
+    size_t num_of_steps2 = integrate_const( make_dense_output< runge_kutta_dopri5< vector_type > >( 1.0e-6 , 1.0e-6 ) ,
             stiff_system() , x2 , 0.0 , 50.0 , 0.01 ,
             cout << phoenix::arg_names::arg2 << " " << phoenix::arg_names::arg1[0] << "\n" );
     //]

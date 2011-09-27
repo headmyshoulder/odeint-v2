@@ -46,19 +46,35 @@ To improve the numerical results and additionally minimize the computational eff
 
 [define_adapt_stepper]
 
-Given the error stepper, one still needs an instance that checks the error and adjusts the step size accordingly. In odeint, this is done by *ControlledSteppers*. The usual way to create a controlled stepper is via the `make_controlled_stepper_standard( ErrorStepper , eps_abs , eps_rel , a_x , a_dxdt )` function that takes an error stepper as parameter and four values defining the maximal absolute and relative error allowed for one integration step. The standard controlled stepper created by this method ensures that the error ['err] of the solution fulfills ['err < eps_abs + eps_rel * ( a[sub x] * |x| + a[sub dxdt] * dt * |dxdt| ) ] by decreasesing the step size. Note, that the stepsize is also increased if the error gets too small compared to the rhs of the above relation. Now we have everything needed to integrate the harmonic oscillator using an adaptive step size method. Similar to the case with constant step size above, there exists a `integrate_adaptive` function with a similar parameter structure, but it requires the controlled stepper  create by `make_controlled_stepper_standard`.
+Given the error stepper, one still needs an instance that checks the error and adjusts the step size accordingly. In odeint, this is done by *ControlledSteppers*. For the `runge_kutta_cash_karp54` stepper a `controlled_runge_kutta` stepper exists which can be used via
 
 [integrate_adapt]
 
-As above, this integrates the system defined by `harmonic_oscillator` using an adaptive step size method based on the rk5_ck scheme from ['t=0] to ['10] with an initial step size of ['dt=0.01] (will be adjusted) and the initial condition given in x. The result, [x(t=10)'], will also be stored in x (in-place).
+As above, this integrates the system defined by `harmonic_oscillator` using an adaptive step size method based on the Runge-Kutta Cash-Karp 54 scheme from ['t=0] to ['10] with an initial step size of ['dt=0.01] (will be adjusted) and the initial condition given in x. The result, [x(t=10)'], will also be stored in x (in-place).
+
+In the above example an error stepper is nested in a controlled stepper. This is a nice technique; however one drawback is that one always needs to define both steppers. Of course, one could also write the instantiation of the controlled stepper into the call of the integrate function but a complete knowledge of the underlying stepper types is still neccessary. Another point is, that the error tolerances for the step size control are not easily included into the controlled stepper. Both issues can be solved by using `make_controlled`:
+
+[integrate_adapt_make_controlled]
+
+`make_controlled` can be used with many of the steppers of odeint. The first parameter is the absolute error tolerance and the second is the relative error tolerance which is used during the integration. The template parameter determines from which error stepper a controlled stepper should be instantiated. An alternative syntax of `make_controlled` is
+
+[integrate_adapt_make_controlled_alternative]
+
+For the Runge Kutta controller the error made during one step is compared with ['eps_abs + eps_rel * ( a[sub x] * |x| + a[sub dxdt] * dt * |dxdt| )]. If the error is smaller than this value the current step is accept otherwise it is rejected and the step size is decreased. Note, that the step size is also increased if the error gets too small compared to the rhs of the above relation. The full instantiation of the `controlled_runge_kutta` with all parameters is therefore
+
+[integrate_adapt_full]
+
+When using `make_controlled` the parameter ['a[sub x]] and ['a[sub dxdt]] are used with their standard values of 1.
+
+In the tables below, one can find all steppers which are working with `make_controlled` and `make_dense_output` which is the analogon for the dense output steppers.
+
+[include make_controlled_table.qbk]
+
+[include make_dense_output_table.qbk]
+
+When using `make_controlled` or `make_dense_output` one should be aware which exact type is used and how the step size control works.
 
 [endsect]
-
-Some details
-
-Observers
-
-Default construction
 
 The full cpp file for this example can be found here: [@../../examples/harmonic_oscillator.cpp]
 
