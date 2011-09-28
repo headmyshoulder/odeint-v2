@@ -1,0 +1,224 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Stepper</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
+<link rel="up" href="../concepts.html" title="Concepts">
+<link rel="prev" href="observer.html" title="Observer">
+<link rel="next" href="error_stepper.html" title="Error Stepper">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="observer.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../concepts.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="error_stepper.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sandbox_numeric_odeint.concepts.stepper"></a><a class="link" href="stepper.html" title="Stepper">Stepper</a>
+</h3></div></div></div>
+<p>
+        This concepts specifies the interface a simple stepper has to fullfill to
+        be used within the <a class="link" href="../odeint_in_detail/integrate_functions.html" title="Integrate functions">integrate
+        functions</a>.
+      </p>
+<a name="boost_sandbox_numeric_odeint.concepts.stepper.description"></a><h5>
+<a name="id612380"></a>
+        <a class="link" href="stepper.html#boost_sandbox_numeric_odeint.concepts.stepper.description">Description</a>
+      </h5>
+<p>
+        The basic stepper concept. A basic stepper following this Stepper concept
+        is able to perform a single step of the solution <span class="emphasis"><em>x(t)</em></span>
+        of an ODE to obtain <span class="emphasis"><em>x(t+dt)</em></span> using a given step size
+        <span class="emphasis"><em>dt</em></span>. Basic steppers can be Runge Kutta steppers, symplectic
+        steppers as well as implicit steppers. Depending on the actual stepper, the
+        ODE is defined as <a class="link" href="system.html" title="System">System</a>,
+        <a class="link" href="symplectic_system.html" title="Symplectic_System">Symplectic_System</a>,
+        <a class="link" href="simple_symplectic_system.html" title="Simple_Symplectic_System">Simple_Symplectic_System</a>
+        or <a class="link" href="implicit_system.html" title="Implicit_System">Implicit_System</a>.
+        Note that all error steppers are also basic steppers.
+      </p>
+<a name="boost_sandbox_numeric_odeint.concepts.stepper.refinement_of"></a><h5>
+<a name="id612448"></a>
+        <a class="link" href="stepper.html#boost_sandbox_numeric_odeint.concepts.stepper.refinement_of">Refinement
+        of</a>
+      </h5>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            DefaultConstructable
+          </li>
+<li>
+            CopyConstructable
+          </li>
+</ul></div>
+<a name="boost_sandbox_numeric_odeint.concepts.stepper.notation"></a><h5>
+<a name="id612486"></a>
+        <a class="link" href="stepper.html#boost_sandbox_numeric_odeint.concepts.stepper.notation">Notation</a>
+      </h5>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">Stepper</span></code></span></dt>
+<dd><p>
+              A type that is a model of Stepper
+            </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">State</span></code></span></dt>
+<dd><p>
+              A type representing the state <span class="emphasis"><em>x</em></span> of the ODE
+            </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">Time</span></code></span></dt>
+<dd><p>
+              A type representing the time <span class="emphasis"><em>t</em></span> of the ODE
+            </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">stepper</span></code></span></dt>
+<dd><p>
+              An object of type <code class="computeroutput"><span class="identifier">Stepper</span></code>
+            </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">x</span></code></span></dt>
+<dd><p>
+              Object of type <code class="computeroutput"><span class="identifier">State</span></code>
+            </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">t</span></code>, <code class="computeroutput"><span class="identifier">dt</span></code></span></dt>
+<dd><p>
+              Objects of type <code class="computeroutput"><span class="identifier">Time</span></code>
+            </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">sys</span></code></span></dt>
+<dd><p>
+              An object defining the ODE. Depending on the Stepper this might be
+              a model of <a class="link" href="system.html" title="System">System</a>,
+              <a class="link" href="symplectic_system.html" title="Symplectic_System">Symplectic_System</a>,
+              <a class="link" href="simple_symplectic_system.html" title="Simple_Symplectic_System">Simple_Symplectic_System</a>
+              or <a class="link" href="implicit_system.html" title="Implicit_System">Implicit_System</a>
+            </p></dd>
+</dl>
+</div>
+<a name="boost_sandbox_numeric_odeint.concepts.stepper.valid_expressions"></a><h5>
+<a name="id612738"></a>
+        <a class="link" href="stepper.html#boost_sandbox_numeric_odeint.concepts.stepper.valid_expressions">Valid
+        Expressions</a>
+      </h5>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Name
+                </p>
+              </th>
+<th>
+                <p>
+                  Expression
+                </p>
+              </th>
+<th>
+                <p>
+                  Type
+                </p>
+              </th>
+<th>
+                <p>
+                  Semantics
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  Do step
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span>
+                  <span class="identifier">sys</span> <span class="special">,</span>
+                  <span class="identifier">x</span> <span class="special">,</span>
+                  <span class="identifier">t</span> <span class="special">,</span>
+                  <span class="identifier">dt</span> <span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Performs one step of step size <code class="computeroutput"><span class="identifier">dt</span></code>.
+                  The newly obtained state is written in place in <code class="computeroutput"><span class="identifier">x</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Do step with reference
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span>
+                  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span><span class="identifier">sys</span><span class="special">)</span>
+                  <span class="special">,</span> <span class="identifier">x</span>
+                  <span class="special">,</span> <span class="identifier">t</span>
+                  <span class="special">,</span> <span class="identifier">dt</span>
+                  <span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Performs one step of step size <code class="computeroutput"><span class="identifier">dt</span></code>.
+                  The newly obtained state is written in place in <code class="computeroutput"><span class="identifier">x</span></code>.
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<a name="boost_sandbox_numeric_odeint.concepts.stepper.models"></a><h5>
+<a name="id613085"></a>
+        <a class="link" href="stepper.html#boost_sandbox_numeric_odeint.concepts.stepper.models">Models</a>
+      </h5>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            runge_kutta4
+          </li>
+<li>
+            euler
+          </li>
+<li>
+            runge_kutta_cash_karp54
+          </li>
+<li>
+            runge_kutta_dopri5
+          </li>
+<li>
+            runge_kutta_fehlberg78
+          </li>
+</ul></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Karsten Ahnert and Mario Mulansky<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="observer.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../concepts.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="error_stepper.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

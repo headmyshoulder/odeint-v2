@@ -1,0 +1,155 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Concept system</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
+<link rel="up" href="../concepts.html" title="Concepts">
+<link rel="prev" href="../concepts.html" title="Concepts">
+<link rel="next" href="concept_symplectic_system.html" title="Concept Symplectic_System">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../concepts.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../concepts.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="concept_symplectic_system.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sandbox_numeric_odeint.concepts.concept_system"></a><a class="link" href="concept_system.html" title="Concept system">Concept
+      system</a>
+</h3></div></div></div>
+<a name="odeint.concepts.concept_system"></a><a name="boost_sandbox_numeric_odeint.concepts.concept_system.description"></a><h5>
+<a name="id597178"></a>
+        <a class="link" href="concept_system.html#boost_sandbox_numeric_odeint.concepts.concept_system.description">Description</a>
+      </h5>
+<p>
+        The System concept models the algorithmic implementation of the rhs. of the
+        ODE <span class="emphasis"><em>x' = f(x,t</em></span>, that is <span class="emphasis"><em>f(x,t)</em></span>.
+        The only requirement for this concept is that it should be callable with
+        a specific parameter syntax (see below). A System is typically implemented
+        as a function or a functor. Systems fullfilling this concept are required
+        by all Runge-Kutta steppers as well as the Bulirsch-Stoer steppers. However,
+        symplectic and implicit steppers work with other system concepts, see <a class="link" href="concept_symplectic_system.html#odeint.concepts.concept_symplectic_system">odeint.concepts.concept_symplectic_system</a>
+        and <a class="link" href="../../">odeint.concepts.concept_implicit_system</a>.
+      </p>
+<a name="boost_sandbox_numeric_odeint.concepts.concept_system.notation"></a><h5>
+<a name="id597229"></a>
+        <a class="link" href="concept_system.html#boost_sandbox_numeric_odeint.concepts.concept_system.notation">Notation</a>
+      </h5>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">System</span></dt>
+<dd><p>
+              A type that is a model of System
+            </p></dd>
+<dt><span class="term">State</span></dt>
+<dd><p>
+              A type that is the <code class="computeroutput"><span class="identifier">state_type</span></code>
+              of Stepper
+            </p></dd>
+<dt><span class="term">Deriv</span></dt>
+<dd><p>
+              A type that is the <code class="computeroutput"><span class="identifier">deriv_type</span></code>
+              of Stepper
+            </p></dd>
+<dt><span class="term">Time</span></dt>
+<dd><p>
+              A type that is the <code class="computeroutput"><span class="identifier">time_type</span></code>
+              of Stepper
+            </p></dd>
+<dt><span class="term">sys</span></dt>
+<dd><p>
+              An object that models System
+            </p></dd>
+<dt><span class="term">x</span></dt>
+<dd><p>
+              Object of type State
+            </p></dd>
+<dt><span class="term">dxdt</span></dt>
+<dd><p>
+              Object of type Deriv
+            </p></dd>
+<dt><span class="term">t</span></dt>
+<dd><p>
+              Object of type Time
+            </p></dd>
+</dl>
+</div>
+<a name="boost_sandbox_numeric_odeint.concepts.concept_system.valid_expressions"></a><h5>
+<a name="id597396"></a>
+        <a class="link" href="concept_system.html#boost_sandbox_numeric_odeint.concepts.concept_system.valid_expressions">Valid
+        expressions</a>
+      </h5>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Name
+                </p>
+              </th>
+<th>
+                <p>
+                  Expression
+                </p>
+              </th>
+<th>
+                <p>
+                  Type
+                </p>
+              </th>
+<th>
+                <p>
+                  Semantics
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  Calculate <span class="emphasis"><em>dx/dt := f(x,t)</em></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">sys</span><span class="special">(</span>
+                  <span class="identifier">x</span> <span class="special">,</span>
+                  <span class="identifier">dxdt</span> <span class="special">,</span>
+                  <span class="identifier">t</span> <span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Calculates f(x,t), the result is stored into dxdt
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Karsten Ahnert and Mario Mulansky<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../concepts.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../concepts.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="concept_symplectic_system.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,970 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Steppers</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
+<link rel="up" href="../odeint_in_detail.html" title="Odeint in detail">
+<link rel="prev" href="../odeint_in_detail.html" title="Odeint in detail">
+<link rel="next" href="integrate_functions.html" title="Integrate functions">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../odeint_in_detail.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../odeint_in_detail.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="integrate_functions.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers"></a><a class="link" href="steppers.html" title="Steppers">Steppers</a>
+</h3></div></div></div>
+<div class="table">
+<a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.stepper_algorithms"></a><p class="title"><b>Table&#160;1.4.&#160;Stepper Algorithms</b></p>
+<div class="table-contents"><table class="table" summary="Stepper Algorithms">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Algorithm
+                </p>
+              </th>
+<th>
+                <p>
+                  Class
+                </p>
+              </th>
+<th>
+                <p>
+                  Concept
+                </p>
+              </th>
+<th>
+                <p>
+                  System Concept
+                </p>
+              </th>
+<th>
+                <p>
+                  Order
+                </p>
+              </th>
+<th>
+                <p>
+                  Error Estimation
+                </p>
+              </th>
+<th>
+                <p>
+                  Dense Output
+                </p>
+              </th>
+<th>
+                <p>
+                  Remarks
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  Explicit Euler
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">euler</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/dense_output_stepper.html" title="Dense Output Stepper">Dense
+                  Output Stepper</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/system.html" title="System">System</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  1
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes
+                </p>
+              </td>
+<td>
+                <p>
+                  Very simple, only for demonstrating purpose
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Modified Midpoint
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">modified_midpoint</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/system.html" title="System">System</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  configurable (2)
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  Used in Bulirsch-Stoer implementation
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Runge-Kutta 4
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">runge_kutta4</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/system.html" title="System">System</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  4
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  The classical Runge Kutta scheme, good general scheme without error
+                  control
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Cash-Karp
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">runge_kutta_cash_karp54</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
+                  Stepper</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/system.html" title="System">System</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  5
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes (4)
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  Good general scheme with error estimation, to be used in controlled_error_stepper
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Dormand-Prince 5
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">runge_kutta_dopri5</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
+                  Stepper</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/system.html" title="System">System</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  5
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes (4)
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes
+                </p>
+              </td>
+<td>
+                <p>
+                  Standard method with error control and dense ouput, to be used
+                  in controlled_error_stepper and in dense_output_controlled_explicit_fsal.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Fehlberg 78
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">runge_kutta_fehlberg78</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
+                  Stepper</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/system.html" title="System">System</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  8
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes (7)
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  Good high order method with error estimation, to be used in controlled_error_stepper.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Adams Bashforth
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">adams_bashforth</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/system.html" title="System">System</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  configurable
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  Multistep method
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Adams Moulton
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">adams_moulton</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/system.html" title="System">System</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  configurable
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  Multistep method
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Adams Bashforth Moulton
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">adams_bashforth_moulton</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/system.html" title="System">System</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  configurable
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  Combined multistep method
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Controlled Error Stepper
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">controlled_error_stepper</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/controlled_stepper.html" title="Controlled Stepper">Controlled
+                  Stepper</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/system.html" title="System">System</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  depends
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  Error control for <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
+                  Stepper</a>. Requires an <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
+                  Stepper</a> from above. Order depends on the given ErrorStepper
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Dense Output Stepper
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">dense_output_explicit</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/dense_output_stepper.html" title="Dense Output Stepper">Dense
+                  Output Stepper</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/system.html" title="System">System</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  depends
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes
+                </p>
+              </td>
+<td>
+                <p>
+                  Dense ouput for <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
+                  and <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
+                  Stepper</a> from above if they provide dense ouput functionality
+                  (like <code class="computeroutput"><span class="identifier">euler</span></code> and
+                  <code class="computeroutput"><span class="identifier">runge_kutta_dopri5</span></code>).
+                  Order depends on the given stepper.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Dense Output Controlled Stepper
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">dense_output_controlled_explicit</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/dense_output_stepper.html" title="Dense Output Stepper">Dense
+                  Output Stepper</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/system.html" title="System">System</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  depends
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes
+                </p>
+              </td>
+<td>
+                <p>
+                  Dense ouput for <a class="link" href="../concepts/controlled_stepper.html" title="Controlled Stepper">Controlled
+                  Stepper</a> from above if they provide dense ouput functionality
+                  (like <code class="computeroutput"><span class="identifier">controlled_error_stepper</span><span class="special">&lt;</span> <span class="identifier">runge_kutta_dopri5</span>
+                  <span class="special">&gt;</span></code>). Order depends on
+                  the given stepper.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Bulirsch-Stoer
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">bulirsch_stoer</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/controlled_stepper.html" title="Controlled Stepper">Controlled
+                  Stepper</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/system.html" title="System">System</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  variable
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  Stepper with step size and order control. Very good if high precision
+                  is required.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Bulirsch-Stoer Dense Output
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">bulirsch_stoer_dense_out</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/dense_output_stepper.html" title="Dense Output Stepper">Dense
+                  Output Stepper</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/system.html" title="System">System</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  variable
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes
+                </p>
+              </td>
+<td>
+                <p>
+                  Stepper with step size and order control as well as dense ouput.
+                  Very good if high precision and dense ouput is required.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Implicit Euler
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">implicit_euler</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/implicit_system.html" title="Implicit_System">Implicit_System</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  1
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  Basic implicit routine. Requires the Jacobian. Works only with
+                  <a href="http://www.boost.org/doc/libs/release/libs/numeric/ublas/index.html" target="_top">Boost.UBlas</a>
+                  vectors as state types.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Rosenbrock 4
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">rosenbrock4</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
+                  Stepper</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/implicit_system.html" title="Implicit_System">Implicit_System</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  4
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes
+                </p>
+              </td>
+<td>
+                <p>
+                  Good for stiff systems. Works only with <a href="http://www.boost.org/doc/libs/release/libs/numeric/ublas/index.html" target="_top">Boost.UBlas</a>
+                  vectors as state types.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Controlled Rosenbrock 4
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">rosenbrock4_controller</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/controlled_stepper.html" title="Controlled Stepper">Controlled
+                  Stepper</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/implicit_system.html" title="Implicit_System">Implicit_System</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  4
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes
+                </p>
+              </td>
+<td>
+                <p>
+                  Rosenbrock 4 with error control. Works only with <a href="http://www.boost.org/doc/libs/release/libs/numeric/ublas/index.html" target="_top">Boost.UBlas</a>
+                  vectors as state types.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Dense Ouput Rosenbrock 4
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">rosenbrock4_dense_ouput</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/dense_output_stepper.html" title="Dense Output Stepper">Dense
+                  Output Stepper</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/implicit_system.html" title="Implicit_System">Implicit_System</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  4
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes
+                </p>
+              </td>
+<td>
+                <p>
+                  Controlled Rosenbrock 4 with dense output. Works only with <a href="http://www.boost.org/doc/libs/release/libs/numeric/ublas/index.html" target="_top">Boost.UBlas</a>
+                  vectors as state types.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Symplectic Euler
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">symplectic_euler</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/symplectic_system.html" title="Symplectic_System">Symplectic_System</a>
+                  <a class="link" href="../concepts/simple_symplectic_system.html" title="Simple_Symplectic_System">Simple_Symplectic_System</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  1
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  Basic symplectic solver for separable Hamiltonian system
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Symplectic RKN McLachlan
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">symplectic_rkn_sb3a_mclachlan</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="../concepts/symplectic_system.html" title="Symplectic_System">Symplectic_System</a>
+                  <a class="link" href="../concepts/simple_symplectic_system.html" title="Simple_Symplectic_System">Simple_Symplectic_System</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  6
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
+                  Symplectic solver for separable Hamiltonian system with order 6
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Karsten Ahnert and Mario Mulansky<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../odeint_in_detail.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../odeint_in_detail.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="integrate_functions.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
