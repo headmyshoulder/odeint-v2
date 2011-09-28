@@ -20,15 +20,15 @@
 const size_t N = 1024;
 
 typedef boost::array< double , N > state_type;
-typedef boost::numeric::odeint::runge_kutta4< state_type , double , state_type , double , boost::numeric::odeint::array_algebra> rk4_odeint_type;
+typedef boost::numeric::odeint::runge_kutta4_classic< state_type , double , state_type , double , boost::numeric::odeint::array_algebra> rk4_odeint_type;
 
 class odeint_wrapper
 {
 public:
     void reset_init_cond()
     {
-		for( size_t i = 0 ; i<N ; ++i )
-			m_x[i] = 2.0*3.1415927*rand() / RAND_MAX;
+        for( size_t i = 0 ; i<N ; ++i )
+            m_x[i] = 2.0*3.1415927*rand() / RAND_MAX;
         m_t = 0.0;
     }
 
@@ -40,7 +40,7 @@ public:
 
     double state( const size_t i ) const
     { return m_x[i]; }
-
+    
 private:
     state_type m_x;
     double m_t;

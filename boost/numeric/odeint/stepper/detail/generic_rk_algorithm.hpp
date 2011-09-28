@@ -232,8 +232,8 @@ public:
         ( algebra , system , in , dxdt , out , x_tmp , F , t , dt ) );
     }
 
-    private:
-    stage_vector m_stages;
+private:
+    const stage_vector m_stages;
 };
 
 

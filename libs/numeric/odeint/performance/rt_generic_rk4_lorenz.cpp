@@ -24,21 +24,12 @@ class rt_generic_wrapper
 {
 public:
 
-    rt_generic_wrapper() : m_stepper( stage_count )
-    {
-        rk_stepper_type::coeff_a_type a( stage_count-1 );
-        a[0].resize(1); a[0][0] = 0.5;
-        a[1].resize(2); a[1][0] = 0.0; a[1][1] = 0.5;
-        a[2].resize(3); a[2][0] = 0.0; a[2][1] = 0.0; a[2][2] = 1.0;
-
-        rk_stepper_type::coeff_b_type b( stage_count );
-        b[0] = 1.0/6; b[1] = 1.0/3; b[2] = 1.0/3; b[3] = 1.0/6;
-
-        rk_stepper_type::coeff_c_type c( stage_count );
-        c[0] = 0.0; c[1] = 0.5; c[2] = 0.5; c[3] = 1.0;
-
-        m_stepper.set_params( a , b , c );
-    }
+    rt_generic_wrapper( const double * const * a , 
+                        const rk_stepper_type::coeff_b_type &b ,
+                        const rk_stepper_type::coeff_c_type &c ) 
+        : m_stepper( stage_count , 
+                     (rk_stepper_type::coeff_a_type) a , b , c )
+    { }
 
     void reset_init_cond()
     {
@@ -67,7 +58,19 @@ private:
 
 int main()
 {
-    rt_generic_wrapper stepper;
+
+    const double a_tmp[3*4/2] = { 0.5 ,
+                                  0.0 , 1.0 ,
+                                  0.0 , 0.0 , 1.0 };
+    const double* const a[3] = { a_tmp , a_tmp+1 , a_tmp+3 };
+
+    rk_stepper_type::coeff_b_type b( stage_count );
+    b[0] = 1.0/6; b[1] = 1.0/3; b[2] = 1.0/3; b[3] = 1.0/6;
+    
+    rk_stepper_type::coeff_c_type c( stage_count );
+    c[0] = 0.0; c[1] = 0.5; c[2] = 0.5; c[3] = 1.0;
+
+    rt_generic_wrapper stepper( a , b , c );
 
     run( stepper );
 }

@@ -27,7 +27,7 @@ struct phase_lattice
 		for( size_t i=0 ; i<N-1 ; ++i )
 		{
 		    dxdt[i] = m_omega[i] + c;
-		    c = sin( x[i+1] - x[i] );
+		    c = ( x[i+1] - x[i] );
 		    dxdt[i] += c;
 		}
 

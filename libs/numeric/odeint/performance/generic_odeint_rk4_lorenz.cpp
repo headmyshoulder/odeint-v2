@@ -11,7 +11,9 @@
 using namespace boost::numeric::odeint;
 
 typedef boost::array< double , 3 > state_type;
-/*typedef explicit_generic_rk< 4 , 4 , state_type , double , state_type , double , array_algebra > rk4_type;
+
+/*
+typedef explicit_generic_rk< 4 , 4 , state_type , double , state_type , double , array_algebra > rk4_type;
 
 typedef rk4_type::coef_a_type coef_a_type;
 typedef rk4_type::coef_b_type coef_b_type;
@@ -35,7 +37,8 @@ class rk4_wrapper
 public:
 
     rk4_wrapper()
-    { }
+    //        : m_stepper( a , b , c ) 
+    {}
 
     void reset_init_cond()
     {
