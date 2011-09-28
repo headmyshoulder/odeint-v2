@@ -42,23 +42,23 @@
 [def __system
     [link boost_sandbox_numeric_odeint.concepts.system System]]
 [def __symplectic_system
-    [link boost_sandbox_numeric_odeint.concepts.symplectic_system Symplectic_System]]
+    [link boost_sandbox_numeric_odeint.concepts.symplectic_system Symplectic System]]
 [def __simple_symplectic_system
-    [link boost_sandbox_numeric_odeint.concepts.simple_symplectic_system Simple_Symplectic_System]]
+    [link boost_sandbox_numeric_odeint.concepts.simple_symplectic_system Simple Symplectic System]]
 [def __implicit_system
-    [link boost_sandbox_numeric_odeint.concepts.implicit_system Implicit_System]]
+    [link boost_sandbox_numeric_odeint.concepts.implicit_system Implicit System]]
 [def __stepper
-	[link boost_sandbox_numeric_odeint.concepts.stepper Stepper]]
+    [link boost_sandbox_numeric_odeint.concepts.stepper Stepper]]
 [def __error_stepper
-	[link boost_sandbox_numeric_odeint.concepts.error_stepper Error Stepper]]
+    [link boost_sandbox_numeric_odeint.concepts.error_stepper Error Stepper]]
 [def __controlled_stepper
     [link boost_sandbox_numeric_odeint.concepts.controlled_stepper Controlled Stepper]]
 [def __dense_out_stepper
-	[link boost_sandbox_numeric_odeint.concepts.dense_output_stepper Dense Output Stepper]]
+    [link boost_sandbox_numeric_odeint.concepts.dense_output_stepper Dense Output Stepper]]
+[def __observer
+    [link boost_sandbox_numeric_odeint.concepts.observer observer]]
 [def __integrate_functions
     [link boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions integrate functions]]
-[def __observer
-	[link boost_sandbox_numeric_odeint.concepts.observer observer]]
 [def __tut_solar_system
      [link boost_sandbox_numeric_odeint.tutorial.solar_system Solar System]]
 
