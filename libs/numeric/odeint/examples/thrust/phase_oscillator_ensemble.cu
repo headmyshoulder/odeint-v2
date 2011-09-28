@@ -208,9 +208,7 @@ int main( int arc , char* argv[] )
     double dopri5_time = 0.0 , rk4_time = 0.0;
     {
         //[thrust_phase_ensemble_define_dopri5
-        typedef runge_kutta_dopri5< state_type , value_type , state_type , value_type , thrust_algebra , thrust_operations > error_stepper_type;
-        typedef controlled_error_stepper< error_stepper_type > controlled_stepper_type;
-        typedef dense_output_controlled_explicit< controlled_stepper_type > dense_output_type;
+        typedef runge_kutta_dopri5< state_type , value_type , state_type , value_type , thrust_algebra , thrust_operations > stepper_type;
         //]
 
         ofstream fout( "phase_ensemble_dopri5.dat" );
@@ -225,11 +223,11 @@ int main( int arc , char* argv[] )
 
             // calculate some transients steps
             //[ thrust_phase_ensemble_integration
-            size_t steps1 = integrate_const( dense_output_type() , boost::ref( ensemble ) , x , 0.0 , t_transients , dt );
+            size_t steps1 = integrate_const( make_controlled( 1.0e-6 , 1.0e-6 , stepper_type() ) , boost::ref( ensemble ) , x , 0.0 , t_transients , dt );
             //]
 
             // integrate and compute the statistics
-            size_t steps2 = integrate_const( dense_output_type() , boost::ref( ensemble ) , x , 0.0 , t_max , dt , boost::ref( obs ) );
+            size_t steps2 = integrate_const( make_dense_output( 1.0e-6 , 1.0e-6 , stepper_type() ) , boost::ref( ensemble ) , x , 0.0 , t_max , dt , boost::ref( obs ) );
 
             fout << epsilon << "\t" << obs.get_K_mean() << endl;
             cout << "Dopri5 : " << epsilon << "\t" << obs.get_K_mean() << "\t" << timer_local.elapsed() << "\t" << steps1 << "\t" << steps2 << endl;

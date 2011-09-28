@@ -265,20 +265,25 @@ int main( int arc , char* argv[] )
     thrust::fill( x.begin() + 4 * N , x.end() , 0.0 );
 
 
-    //create error stepper
-    typedef runge_kutta4< state_type , value_type , state_type , value_type , thrust_algebra , thrust_operations > stepper_type;
-    typedef runge_kutta_dopri5< state_type , value_type , state_type , value_type , thrust_algebra , thrust_operations > error_stepper_type;
-    typedef controlled_error_stepper< error_stepper_type > controlled_stepper_type;
+    // create error stepper, can be used with make_controlled or make_dense_output
+    typedef runge_kutta_dopri5< state_type , value_type , state_type , value_type , thrust_algebra , thrust_operations > stepper_type;
+
 
     lorenz_system lorenz( N , beta );
     lorenz_perturbation_system lorenz_perturbation( N , beta );
     lyap_observer obs( N , 1 );
 
     // calculate transients
-    integrate_const( controlled_stepper_type() , lorenz , std::make_pair( x.begin() , x.begin() + 3 * N ) , 0.0 , 10.0 , dt );
+    integrate_adaptive( make_controlled( 1.0e-6 , 1.0e-6 , stepper_type() ) , lorenz , std::make_pair( x.begin() , x.begin() + 3 * N ) , 0.0 , 10.0 , dt );
 
     // calculate the Lyapunov exponents -- the main loop
-    integrate_const( controlled_stepper_type() , lorenz_perturbation , x , 0.0 , 10000.0 , 1.0 , boost::ref( obs ) );
+    double t = 0.0;
+    while( t < 10000.0 )
+    {
+        integrate_adaptive( make_controlled( 1.0e-6 , 1.0e-6 , stepper_type() ) , lorenz_perturbation , x , t , t + 1.0 , 0.1 );
+        t += 1.0;
+        obs( x , t );
+    }
 
     vector< value_type > lyap( N );
     obs.fill_lyap( lyap );

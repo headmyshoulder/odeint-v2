@@ -79,19 +79,20 @@ struct streaming_observer
 
 int main( int argc , char**argv )
 {
-    //[ units_define_stepper
-    typedef dense_output_runge_kutta
-    <
-        controlled_runge_kutta
-        <
-            runge_kutta_dopri5< state_type , double , deriv_type , time_type , fusion_algebra >
-        >
-    > stepper_type;
+//    typedef dense_output_runge_kutta
+//    <
+//        controlled_runge_kutta
+//        <
+//            runge_kutta_dopri5< state_type , double , deriv_type , time_type , fusion_algebra >
+//        >
+//    > stepper_type;
 
-    stepper_type stepper;
+    //[ units_define_stepper
+    typedef runge_kutta_dopri5< state_type , double , deriv_type , time_type , fusion_algebra > stepper_type;
+
     state_type x( 1.0 * si::meter , 0.0 * si::meter_per_second );
 
-    integrate_const( stepper , oscillator( 2.0 * si::hertz ) , x , 0.0 * si::second , 100.0 * si::second , 0.1 * si::second , streaming_observer( cout ) );
+    integrate_const( make_dense_output( 1.0e-6 , 1.0e-6 , stepper_type() ) , oscillator( 2.0 * si::hertz ) , x , 0.0 * si::second , 100.0 * si::second , 0.1 * si::second , streaming_observer( cout ) );
     //]
 
     return 0;
