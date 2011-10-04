@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+
+  <title>{{ page.title }}</title>
+
+  <style type="text/css">
+    body {
+      margin-top: 1.0em;
+      background-color: #2b3662;
+      font-family: Helvetica, Arial, FreeSans, san-serif;
+      color: #ffffff;
+    }
+    #container {
+      margin: 0 auto;
+      width: 700px;
+    }
+    h1 { font-size: 2.em; color: #d4c99d; margin-bottom: 3px; }
+    h1 .small { font-size: 0.4em; }
+    h1 a { text-decoration: none }
+    h2 { font-size: 1.5em; color: #d4c99d; }
+    h3 { text-align: center; color: #d4c99d; }
+    a { color: #d4c99d; }
+    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
+
+#menu ul{
+    margin: 0; padding: 0;
+    float: left;}
+ 
+#menu ul li{
+  text-align: center;  
+  display: inline;
+}
+ 
+#menu ul li a{
+    float: left; text-decoration: none;
+    color: white;
+    width: 100px;
+    text-align: center;  
+    padding: 10.5px 11px;
+    background-color: #333; }
+ 
+#menu ul li a:visited{
+    color: white;}
+ 
+#menu ul li a:hover, #menu ul li .current{
+    color: #fff;
+    background-color:#0b75b2;}
+    .download { float: right; }
+    pre { background: #000; color: #fff; padding: 15px;}
+    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
+    .footer { margin: 10px auto; width: 700px; text-align:center; padding-top:30px; font-style: italic; }
+
+ul.posts {
+  list-style-type: none;
+  margin-bottom: 2em;
+}
+
+  ul.posts li {
+    /*line-height: 1.75em;*/
+  }
+
+  ul.posts span {
+    color: #aaa;
+    font-family: Monaco, "Courier New", monospace;
+    font-size: 80%;
+  }
+  </style>
+</head>
+
+<body>
+  <a href="http://github.com/headmyshoulder/odeint-v2"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+
+  <div id="container">
+
+    <div id="menu">
+      <ul>
+<li><a href="/index.html" >Home</a></li>
+<li><a href="/blog.html" >Blog</a></li>
+<li><a href="/download.html" >Downloads</a></li>
+<li><a href="/doc/index.html" target="_blank">Doc</a></li>
+      </ul>
+    </div>
+
+    <div class="download">
+      <a href="http://github.com/headmyshoulder/odeint-v2/zipball/master">
+        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
+      <a href="http://github.com/headmyshoulder/odeint-v2/tarball/master">
+        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
+    </div>
+    <div style="clear:both; margin-bottom:25px;" />
+
+{{ content }}
+
+   </div>
+  
+<div class="footer">
+    <table width="100%">
+      <tr><td>
+        Karsten Ahnert<br />
+        karsten.ahnert@gmx.de
+      </td>
+      <td>
+        Mario Mulansky<br />
+        mario.mulansky@gmx.net
+      </td></tr>
+    </table>
+</div>
+</body>
+</html>
