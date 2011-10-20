@@ -233,7 +233,7 @@ public:
     }
 
 private:
-    const stage_vector m_stages;
+    stage_vector m_stages;
 };
 
 
