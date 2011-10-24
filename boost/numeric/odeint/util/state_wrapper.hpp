@@ -29,6 +29,23 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+// same_size function
+// standard implementation relies on boost.range
+template< class State1 , class State2 >
+bool same_size( const State1 &x1 , const State2 &x2 )
+{
+	return ( boost::size( x1 ) == boost::size( x2 ) );
+}
+
+// resize function
+// standard implementation relies on boost.range and resize member function
+template< class StateIn , class StateOut >
+void resize( StateOut &x1 , const StateIn &x2 )
+{
+	x1.resize( boost::size( x2 ) );
+}
+
+
 template< class V , bool resizeable = is_resizeable< V >::value >
 struct state_wrapper;
 
@@ -46,8 +63,7 @@ struct state_wrapper< V , true > // with resizing
     template< class StateIn >
     bool same_size( const StateIn &x ) const
     {
-        //standard implementation relies on boost.range
-        return ( boost::size( m_v ) == boost::size( x ) );
+        return boost::numeric::odeint::same_size( m_v , x );
     }
 
     template< class StateIn >
@@ -56,7 +72,7 @@ struct state_wrapper< V , true > // with resizing
         //standard resizing done like for std::vector
         if( !same_size( x ) )
         {
-            m_v.resize( boost::size( x ) );
+            boost::numeric::odeint::resize( m_v , x );
             return true;
         } else
             return false;

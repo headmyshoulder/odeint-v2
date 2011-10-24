@@ -20,6 +20,9 @@
 
 #include <boost/numeric/odeint/config.hpp>
 
+// start with ublas wrapper because we need its specializations before including state_wrapper.hpp
+#include <boost/numeric/odeint/util/ublas_wrapper.hpp>
+
 #include <boost/numeric/odeint/stepper/euler.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta4_classic.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
@@ -65,4 +68,3 @@
 #include <boost/numeric/odeint/stepper/generation.hpp>
 
 #endif // BOOST_NUMERIC_ODEINT_HPP_INCLUDED
-
