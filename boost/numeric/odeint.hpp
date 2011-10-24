@@ -47,6 +47,8 @@
 #include <boost/numeric/odeint/stepper/symplectic_euler.hpp>
 #include <boost/numeric/odeint/stepper/symplectic_rkn_sb3a_mclachlan.hpp>
 
+#include <boost/numeric/odeint/stepper/adams_bashforth_moulton.hpp>
+
 #include <boost/numeric/odeint/stepper/implicit_euler.hpp>
 #include <boost/numeric/odeint/stepper/rosenbrock4.hpp>
 #include <boost/numeric/odeint/stepper/rosenbrock4_controller.hpp>
