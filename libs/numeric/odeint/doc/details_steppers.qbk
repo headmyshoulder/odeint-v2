@@ -1,0 +1,49 @@
+[section Steppers]
+
+Two hierarchies: steppers by concept, steppers by type (explicit, symplectic and separable, implicit, multistep methods)
+
+[section Steppers by concept]
+
+bla, see cp2 article
+
+[endsect]
+
+[section Steppers by type]
+
+[* Explicit steppers]
+
+`do_step( sys , in , dxdtin , out , t , dt )`
+
+FSAL (Fehlberg trick?)
+
+`do_step( sys , in , dxdtin , out , dxdtout , t , dt )`
+
+examples and models
+
+[* Symplectic steppers]
+
+[* Implicit steppers]
+
+Need Jacobian
+
+For stiff systems
+
+Difficult to implement
+
+[* Multistep methods]
+
+Good performance
+
+[endsect]
+
+[section Using steppers]
+
+steppers are always copied, in integrate_functions or in nested steppers
+
+which steppers are good
+
+[endsect]
+
+[include stepper_table.qbk]
+
+[endsect]

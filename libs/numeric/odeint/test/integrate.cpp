@@ -58,11 +58,9 @@ struct push_back_time
 template< class Stepper >
 struct perform_integrate_const_test
 {
-    void operator()( void )
+    void operator()( const value_type t_end = 10.0 , const value_type dt = 0.03 )
     {
         state_type x( 3 , 10.0 );
-        const value_type dt = 0.03;
-        const value_type t_end = 10.0;
 
         std::vector< value_type > times;
 
@@ -73,7 +71,7 @@ struct perform_integrate_const_test
 
         for( size_t i=0 ; i<times.size() ; ++i )
         {
-            //std::cout << i << std::endl;
+            std::cout << i << std::endl;
             // check if observer was called at times 0,1,2,...
             BOOST_CHECK_SMALL( times[i] - static_cast< value_type >(i)*dt , (i+1) * 2E-16 );
         }
@@ -83,11 +81,9 @@ struct perform_integrate_const_test
 template< class Stepper >
 struct perform_integrate_adaptive_test
 {
-    void operator()( void )
+    void operator()( const value_type t_end = 10.0 , const value_type dt = 0.03 )
     {
         state_type x( 3 , 10.0 );
-        const value_type dt = 0.03;
-        const value_type t_end = 10.0;
 
         std::vector< value_type > times;
 
@@ -176,6 +172,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_const_test_case , Stepper, stepper_meth
 {
     perform_integrate_const_test< Stepper > tester;
     tester();
+    tester( 0.001 , 0.03 );
 }
 
 
@@ -183,6 +180,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_adaptive_test_case , Stepper, stepper_m
 {
     perform_integrate_adaptive_test< Stepper > tester;
     tester();
+    tester( 0.001 , 0.03 );
 }
 
 

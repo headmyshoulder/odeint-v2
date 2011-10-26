@@ -18,6 +18,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_HPP_INCLUDED
 
+#include <boost/numeric/odeint/version.hpp>
 #include <boost/numeric/odeint/config.hpp>
 
 // start with ublas wrapper because we need its specializations before including state_wrapper.hpp
