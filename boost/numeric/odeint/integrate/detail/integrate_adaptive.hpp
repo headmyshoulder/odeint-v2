@@ -25,10 +25,24 @@
 
 #include <boost/ref.hpp>
 
+#include <iostream>
+
 namespace boost {
 namespace numeric {
 namespace odeint {
 namespace detail {
+
+
+//forward declaration of detail::integrate const, 
+//required in integrate_const for normal stepper
+template< class Stepper , class System , class State , class Time , class Observer >
+size_t integrate_const(        
+        Stepper stepper , System system , State &start_state ,
+        Time start_time , Time end_time , Time dt ,
+        Observer observer , stepper_tag
+                             );
+
+
 
 /*
  * integrate_adaptive for simple stepper is basically an integrate_const + some last step
@@ -40,8 +54,9 @@ size_t integrate_adaptive(
         Observer observer , stepper_tag
 )
 {
-    size_t steps = integrate_const( stepper , system , start_state ,
-            start_time , end_time , dt , observer );
+    size_t steps = boost::numeric::odeint::detail::integrate_const( 
+                       stepper , system , start_state , start_time , 
+                       end_time , dt , observer , stepper_tag() );
     if( steps*dt < end_time )
     {   //make a last step to end exactly at end_time
         stepper.do_step( system , start_state , steps*dt , end_time-steps*dt );
