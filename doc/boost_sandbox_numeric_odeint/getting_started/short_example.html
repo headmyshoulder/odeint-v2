@@ -24,10 +24,10 @@
         Imaging, you want to numerically integrate a harmonic oscillator with friction.
         The equations of motion are given by <span class="emphasis"><em>x'' = -x + &#947; x'</em></span>.
         This can be transformed to a system of two coupled first-order differential
-        equations with new variables <span class="emphasis"><em>x</em></span> and <span class="emphasis"><em>p=x'</em></span>.
-        To apply numerical integration one first has to design the right hand side
-        of the equation <span class="emphasis"><em>w' = f(w)</em></span> where in this case <span class="emphasis"><em>w
-        = (x,p)</em></span>:
+        equations with new variables <span class="emphasis"><em>q=x</em></span> and <span class="emphasis"><em>p=x'</em></span>
+        such that <span class="emphasis"><em>w=(q,p)</em></span>. To apply numerical integration one
+        first has to design the right hand side of the equation <span class="emphasis"><em>w' = f(w)
+        = (p,-q+&#947; p)</em></span>:
       </p>
 <p>
         

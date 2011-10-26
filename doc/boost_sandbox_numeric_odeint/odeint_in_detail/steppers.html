@@ -19,6 +19,94 @@
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers"></a><a class="link" href="steppers.html" title="Steppers">Steppers</a>
 </h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.steppers_by_concept">Steppers
+        by concept</a></span></dt>
+<dt><span class="section"><a href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.steppers_by_type">Steppers
+        by type</a></span></dt>
+<dt><span class="section"><a href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.using_steppers">Using
+        steppers</a></span></dt>
+</dl></div>
+<p>
+        Two hierarchies: steppers by concept, steppers by type (explicit, symplectic
+        and separable, implicit, multistep methods)
+      </p>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.steppers_by_concept"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.steppers_by_concept" title="Steppers by concept">Steppers
+        by concept</a>
+</h4></div></div></div>
+<p>
+          bla, see cp2 article
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.steppers_by_type"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.steppers_by_type" title="Steppers by type">Steppers
+        by type</a>
+</h4></div></div></div>
+<p>
+          <span class="bold"><strong>Explicit steppers</strong></span>
+        </p>
+<p>
+          <code class="computeroutput"><span class="identifier">do_step</span><span class="special">(</span>
+          <span class="identifier">sys</span> <span class="special">,</span>
+          <span class="identifier">in</span> <span class="special">,</span>
+          <span class="identifier">dxdtin</span> <span class="special">,</span>
+          <span class="identifier">out</span> <span class="special">,</span>
+          <span class="identifier">t</span> <span class="special">,</span>
+          <span class="identifier">dt</span> <span class="special">)</span></code>
+        </p>
+<p>
+          FSAL (Fehlberg trick?)
+        </p>
+<p>
+          <code class="computeroutput"><span class="identifier">do_step</span><span class="special">(</span>
+          <span class="identifier">sys</span> <span class="special">,</span>
+          <span class="identifier">in</span> <span class="special">,</span>
+          <span class="identifier">dxdtin</span> <span class="special">,</span>
+          <span class="identifier">out</span> <span class="special">,</span>
+          <span class="identifier">dxdtout</span> <span class="special">,</span>
+          <span class="identifier">t</span> <span class="special">,</span>
+          <span class="identifier">dt</span> <span class="special">)</span></code>
+        </p>
+<p>
+          examples and models
+        </p>
+<p>
+          <span class="bold"><strong>Symplectic steppers</strong></span>
+        </p>
+<p>
+          <span class="bold"><strong>Implicit steppers</strong></span>
+        </p>
+<p>
+          Need Jacobian
+        </p>
+<p>
+          For stiff systems
+        </p>
+<p>
+          Difficult to implement
+        </p>
+<p>
+          <span class="bold"><strong>Multistep methods</strong></span>
+        </p>
+<p>
+          Good performance
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.using_steppers"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.using_steppers" title="Using steppers">Using
+        steppers</a>
+</h4></div></div></div>
+<p>
+          steppers are always copied, in integrate_functions or in nested steppers
+        </p>
+<p>
+          which steppers are good
+        </p>
+</div>
 <div class="table">
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.stepper_algorithms"></a><p class="title"><b>Table&#160;1.6.&#160;Stepper Algorithms</b></p>
 <div class="table-contents"><table class="table" summary="Stepper Algorithms">
