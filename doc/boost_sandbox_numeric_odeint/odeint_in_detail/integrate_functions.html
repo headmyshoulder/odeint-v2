@@ -3,19 +3,19 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Integrate functions</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
 <link rel="up" href="../odeint_in_detail.html" title="Odeint in detail">
-<link rel="prev" href="steppers.html" title="Steppers">
+<link rel="prev" href="generation_functions.html" title="Generation functions">
 <link rel="next" href="algebras_and_operations.html" title="Algebras and operations">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="steppers.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../odeint_in_detail.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="algebras_and_operations.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="generation_functions.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../odeint_in_detail.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="algebras_and_operations.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions"></a><a class="link" href="integrate_functions.html" title="Integrate functions">Integrate
       functions</a>
@@ -36,7 +36,7 @@
         functions make use of step-size control or dense output.
       </p>
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.equidistant_observer_calls"></a><h5>
-<a name="id607148"></a>
+<a name="boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.equidistant_observer_calls-heading"></a>
         <a class="link" href="integrate_functions.html#boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.equidistant_observer_calls">Equidistant
         observer calls</a>
       </h5>
@@ -81,15 +81,15 @@
         steps you should prefer the <code class="computeroutput"><span class="identifier">integrate_n_steps</span></code>
         function below.
       </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
             If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
             or <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
             Stepper</a> then <code class="computeroutput"><span class="identifier">dt</span></code>
             is also the step size used for integration and the observer is called
             just after every step.
           </li>
-<li>
+<li class="listitem">
             If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/controlled_stepper.html" title="Controlled Stepper">Controlled
             Stepper</a> then <code class="computeroutput"><span class="identifier">dt</span></code>
             is the initial step size. The actual step size will change due to error
@@ -100,7 +100,7 @@
             Stepper</a> is reasonable here only if <code class="computeroutput"><span class="identifier">dt</span></code>
             is considerably larger than typical step sizes used by the stepper.
           </li>
-<li>
+<li class="listitem">
             If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/dense_output_stepper.html" title="Dense Output Stepper">Dense
             Output Stepper</a> then <code class="computeroutput"><span class="identifier">dt</span></code>
             is the initial step size. The actual step size will be adjusted during
@@ -110,7 +110,7 @@
           </li>
 </ul></div>
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_each_step"></a><h5>
-<a name="id607691"></a>
+<a name="boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_each_step-heading"></a>
         <a class="link" href="integrate_functions.html#boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_each_step">Observer
         calls at each step</a>
       </h5>
@@ -151,8 +151,8 @@
         step of the provided stepper (and before the first step at <code class="computeroutput"><span class="identifier">t0</span></code>). <code class="computeroutput"><span class="identifier">integrate_adaptive</span></code>
         returns the number of steps performed during the integration.
       </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
             If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
             or <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
             Stepper</a> then <code class="computeroutput"><span class="identifier">dt</span></code>
@@ -162,7 +162,7 @@
             exactly at <code class="computeroutput"><span class="identifier">t1</span></code>. If provided,
             the observer is called at each step.
           </li>
-<li>
+<li class="listitem">
             If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/controlled_stepper.html" title="Controlled Stepper">Controlled
             Stepper</a> then <code class="computeroutput"><span class="identifier">dt</span></code>
             is the initial step size. The actual step size is changed according to
@@ -171,7 +171,7 @@
             If provided, the observer is called after each time step (and before
             the first step at <code class="computeroutput"><span class="identifier">t0</span></code>).
           </li>
-<li>
+<li class="listitem">
             If stepper is a <a class="link" href="../concepts/dense_output_stepper.html" title="Dense Output Stepper">Dense
             Output Stepper</a> then <code class="computeroutput"><span class="identifier">dt</span></code>
             is the initial step size and <code class="computeroutput"><span class="identifier">integrate_adaptive</span></code>
@@ -180,7 +180,7 @@
           </li>
 </ul></div>
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_given_time_points"></a><h5>
-<a name="id608204"></a>
+<a name="boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_given_time_points-heading"></a>
         <a class="link" href="integrate_functions.html#boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_given_time_points">Observer
         calls at given time points</a>
       </h5>
@@ -228,8 +228,8 @@
         <code class="computeroutput"><span class="identifier">integrate_times</span></code> returns the
         number of steps performed during the integration.
       </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
             If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
             or <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
             Stepper</a> <code class="computeroutput"><span class="identifier">dt</span></code> is
@@ -238,7 +238,7 @@
             will be reduced to obtain the state <span class="emphasis"><em>x(t)</em></span> exactly
             at the time point.
           </li>
-<li>
+<li class="listitem">
             If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/controlled_stepper.html" title="Controlled Stepper">Controlled
             Stepper</a> then <code class="computeroutput"><span class="identifier">dt</span></code>
             is the initial step size. The actual step size is adjusted during integration
@@ -246,7 +246,7 @@
             is approached the step size is reduced to obtain the state <span class="emphasis"><em>x(t)</em></span>
             exactly at the time point.
           </li>
-<li>
+<li class="listitem">
             If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/dense_output_stepper.html" title="Dense Output Stepper">Dense
             Output Stepper</a> then <code class="computeroutput"><span class="identifier">dt</span></code>
             is the initial step size. The actual step size is adjusted during integration
@@ -255,7 +255,7 @@
           </li>
 </ul></div>
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.integrate_a_given_number_of_steps"></a><h5>
-<a name="id608813"></a>
+<a name="boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.integrate_a_given_number_of_steps-heading"></a>
         <a class="link" href="integrate_functions.html#boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.integrate_a_given_number_of_steps">Integrate
         a given number of steps</a>
       </h5>
@@ -313,7 +313,7 @@
         <span class="special">+</span> <span class="identifier">n</span><span class="special">*</span><span class="identifier">dt</span></code>.
       </p>
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.convenience_integrate_function"></a><h5>
-<a name="id609256"></a>
+<a name="boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.convenience_integrate_function-heading"></a>
         <a class="link" href="integrate_functions.html#boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.convenience_integrate_function">Convenience
         integrate function</a>
       </h5>
@@ -348,7 +348,8 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Karsten Ahnert and Mario Mulansky<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009-2011 Karsten Ahnert
+      and Mario Mulansky<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -356,7 +357,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="steppers.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../odeint_in_detail.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="algebras_and_operations.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="generation_functions.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../odeint_in_detail.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="algebras_and_operations.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
