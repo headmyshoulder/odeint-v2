@@ -1,10 +1,7 @@
 [section Odeint in detail]
 
-[section Steppers]
+[include details_steppers.qbk]
 
-[include stepper_table.qbk]
-
-[endsect]
 
 [section Generation functions]
 

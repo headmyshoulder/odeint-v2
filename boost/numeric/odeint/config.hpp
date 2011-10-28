@@ -14,6 +14,9 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
+#ifndef BOOST_NUMERIC_ODEINT_CONFIG_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_CONFIG_HPP_INCLUDED
+
 #define FUSION_MAX_VECTOR_SIZE 16
 
 #define BOOST_FUSION_UNFUSED_MAX_ARITY 16
@@ -24,3 +27,5 @@
 #define BOOST_RESULT_OF_NUM_ARGS 16
 
 #include <boost/config.hpp>
+
+#endif // BOOST_NUMERIC_ODEINT_CONFIG_HPP_INCLUDED
