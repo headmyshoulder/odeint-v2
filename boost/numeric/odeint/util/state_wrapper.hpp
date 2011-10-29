@@ -20,34 +20,24 @@
 #define BOOST_NUMERIC_ODEINT_UTIL_STATE_WRAPPER_HPP_INCLUDED
 
 
-#include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
+#include <boost/numeric/odeint/util/resize.hpp>
+#include <boost/numeric/odeint/util/same_size.hpp>
+
 
 namespace boost {
 namespace numeric {
 namespace odeint {
 
-// same_size function
-// standard implementation relies on boost.range
-template< class State1 , class State2 >
-bool same_size( const State1 &x1 , const State2 &x2 )
-{
-	return ( boost::size( x1 ) == boost::size( x2 ) );
-}
 
-// resize function
-// standard implementation relies on boost.range and resize member function
-template< class StateIn , class StateOut >
-void resize( StateOut &x1 , const StateIn &x2 )
-{
-	x1.resize( boost::size( x2 ) );
-}
 
 
 template< class V , bool resizeable = is_resizeable< V >::value >
 struct state_wrapper;
+
+
 
 //two standard implementations, with and without resizing depending on is_resizeable< StateType >
 
@@ -69,13 +59,15 @@ struct state_wrapper< V , true > // with resizing
     template< class StateIn >
     bool resize( const StateIn &x )
     {
-        //standard resizing done like for std::vector
-        if( !same_size( x ) )
+        if( !this->same_size( x ) )
         {
             boost::numeric::odeint::resize( m_v , x );
             return true;
-        } else
+        }
+        else
+        {
             return false;
+        }
     }
 };
 

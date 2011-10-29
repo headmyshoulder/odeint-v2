@@ -39,6 +39,8 @@
 [def __intel_mkl
      [@http://software.intel.com/en-us/articles/intel-mkl/ Intel Math Kernel Library]]
     
+[def __concepts
+    [link boost_sandbox_numeric_odeint.concepts Concepts]]
 [def __system
     [link boost_sandbox_numeric_odeint.concepts.system System]]
 [def __symplectic_system
@@ -53,7 +55,7 @@
     [link boost_sandbox_numeric_odeint.concepts.error_stepper Error Stepper]]
 [def __controlled_stepper
     [link boost_sandbox_numeric_odeint.concepts.controlled_stepper Controlled Stepper]]
-[def __dense_out_stepper
+[def __dense_output_stepper
     [link boost_sandbox_numeric_odeint.concepts.dense_output_stepper Dense Output Stepper]]
 [def __observer
     [link boost_sandbox_numeric_odeint.concepts.observer observer]]

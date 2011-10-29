@@ -59,6 +59,7 @@
  * Including this algebra slows down the compilation time
  */
 // #include <boost/numeric/odeint/algebra/fusion_algebra.hpp>
+#include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 
 #include <boost/numeric/odeint/integrate/integrate.hpp>
 #include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>

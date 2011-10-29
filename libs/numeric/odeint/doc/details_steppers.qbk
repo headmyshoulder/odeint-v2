@@ -1,14 +1,20 @@
 [section Steppers]
 
-Two hierarchies: steppers by concept, steppers by type (explicit, symplectic and separable, implicit, multistep methods)
+The steppers can be sorted into two hierarchies, one desribes the mathematical properties of the stepper while the other one describes the steppers in terms of C++ concepts.
 
 [section Steppers by concept]
 
-bla, see cp2 article
+odeint introduces four concepts for the steppers. These concepts are describes in detail in __concepts. The most general concept is the *__stepper* concept which defines the basic requirements one expects on a solver of an ODE. Any stepper fulfilling this concept has to have a method `do_step(sys,x,t,dt)` which performs a single step. The *__error_stepper* concept is a simple enhancement where the `do_step` also computes an error estimate which is made during one step. Furthermore there exist a concept *__controlled_stepper* which tries to perform a step and which might accept or reject this step due to some accurrancy requirements. The fourth concept is the *__dense_output_stepper* which provides methods for the calculation of intermediate values during two steps.
 
 [endsect]
 
 [section Steppers by type]
+
+Solving ordinary differential equation numerically is ususally done iteratively, that is a given state of an ordinary differential equation [' x(t) -> x(t+dt) -> x(t+2dt)]
+
+`do_step( sys , inout , t , dt )`
+
+`do_step( sys , in , t , out , dt )`
 
 [* Explicit steppers]
 
@@ -21,6 +27,8 @@ FSAL (Fehlberg trick?)
 examples and models
 
 [* Symplectic steppers]
+
+
 
 [* Implicit steppers]
 
@@ -35,6 +43,10 @@ Difficult to implement
 Good performance
 
 [endsect]
+
+[* Controlled steppers]
+
+[* Dense output steppers]
 
 [section Using steppers]
 

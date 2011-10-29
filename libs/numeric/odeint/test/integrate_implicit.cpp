@@ -23,7 +23,14 @@
 
 #include <boost/mpl/vector.hpp>
 
-#include <boost/numeric/odeint.hpp>
+#include <boost/numeric/odeint/integrate/integrate_const.hpp>
+#include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
+#include <boost/numeric/odeint/integrate/integrate_times.hpp>
+#include <boost/numeric/odeint/integrate/integrate_n_steps.hpp>
+#include <boost/numeric/odeint/stepper/rosenbrock4.hpp>
+#include <boost/numeric/odeint/stepper/rosenbrock4_controller.hpp>
+#include <boost/numeric/odeint/stepper/rosenbrock4_dense_output.hpp>
+
 
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;

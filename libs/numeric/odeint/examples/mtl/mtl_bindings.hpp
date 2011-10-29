@@ -9,23 +9,46 @@
 #define MTL_BINDINGS_HPP_
 
 #include <boost/numeric/mtl/mtl.hpp>
+#include <boost/numeric/odeint/util/state_wrapper.hpp>
 
-namespace boost { namespace numeric { namespace odeint {
+namespace boost {
+namespace numeric {
+namespace odeint {
+
+
+template< class Value , class Parameters >
+struct is_resizeable< mtl::dense_vector< Value , Parameters > >
+{
+    typedef boost::true_type type;
+    const static bool value = type::value;
+};
+
 
 template< class Value1 , class Parameters1 , class Value2 , class Parameters2 >
-bool same_size( mtl::dense_vector< Value1 , Parameters1 > &v1 ,
-                const mtl::dense_vector< Value2 , Parameters2 > &v2 )
+struct same_size_impl< mtl::dense_vector< Value1 , Parameters1 > , mtl::dense_vector< Value2 , Parameters2 > >
 {
-    return mtl::size( v1 ) == mtl::size( v2 );
-}
+    static bool same_size( const mtl::dense_vector< Value1 , Parameters1 > &v1 ,
+                           const mtl::dense_vector< Value2 , Parameters2 > &v2 )
+    {
+        return mtl::size( v1 ) == mtl::size( v2 );
+    }
+};
+
 
 template< class Value1 , class Parameters1 , class Value2 , class Parameters2 >
-void resize( mtl::dense_vector< Value1 , Parameters1 > &v1 ,
-             const mtl::dense_vector< Value2 , Parameters2 > &v2 )
+struct resize_impl< mtl::dense_vector< Value1 , Parameters1 > , mtl::dense_vector< Value2 , Parameters2 > >
 {
-    v1.change_dim( mtl::size( v2 ) );
-}
+    static void resize( mtl::dense_vector< Value1 , Parameters1 > &v1 ,
+                        const mtl::dense_vector< Value2 , Parameters2 > &v2 )
+    {
+        v1.change_dim( mtl::size( v2 ) );
+    }
+};
 
-} } }
+
+
+}
+}
+}
 
 #endif /* MTL_BINDINGS_HPP_ */

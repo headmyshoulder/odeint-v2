@@ -13,4 +13,5 @@
   [[[@../../examples/thrust/phase_oscillator_ensemble.cu phase_oscillator_ensemble.cu]] [The Thrust phase oscillator ensemble example shows how globally coupled oscillators can be analyzed with Thrust and CUDA, employing the power of modern graphic devices.]]
   [[[@../../examples/thrust/phase_oscillator_chain.cu phase_oscillator_chain.cu]] [The Thrust phase oscillator chain example shows how chains of nearest neighbor coupled oscillators can be integrated with Thrust and odeint.]]
   [[[@../../examples/thrust/lorenz_parameters.cu lorenz_parameters.cu]] [The Lorenz paramaters examples show how ensembles of ordinary differential equations can be solved by means of Thrust to study the dependence of an ODE on some parameters.]]
+  [[[@../../examples/mtl/gauss_packet.cpp gauss_packet.cpp]] [The MTL-Gauss-packet example shows how the mtl can be easily used with odeint.]]
 ]

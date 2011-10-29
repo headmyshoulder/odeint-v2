@@ -15,12 +15,11 @@
 #include <iostream>
 #include <complex>
 
+#include <boost/numeric/odeint.hpp>
 #include "mtl_bindings.hpp"
 
-#include <boost/numeric/odeint.hpp>
-#include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 
-#include <boost/numeric/mtl/mtl.hpp>
+
 
 using namespace std;
 using namespace boost::numeric::odeint;
