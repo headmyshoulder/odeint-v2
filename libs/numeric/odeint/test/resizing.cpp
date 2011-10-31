@@ -37,7 +37,7 @@
 #include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 
-#include <boost/numeric/odeint/util/state_wrapper.hpp>
+//#include <boost/numeric/odeint/util/state_wrapper.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
 
@@ -60,63 +60,24 @@ namespace boost { namespace numeric { namespace odeint {
 		const static bool value = type::value;
 	};
 
-	template< >
-	struct state_wrapper< test_array_type > // with resizing
+	template<>
+	struct same_size_impl< test_array_type , test_array_type >
 	{
-	    typedef state_wrapper< test_array_type , true > state_wrapper_type;
-	    typedef test_array_type::value_type value_type;
-	    typedef boost::true_type is_resizeable;
-
-	    test_array_type m_v;
-
-	    state_wrapper() : m_v()
-	    { }
-
-	    state_wrapper( test_array_type v ) : m_v( v )
-	    { }
-
-	    state_wrapper( const state_wrapper_type &x ) : m_v( x.m_v )
-	    { }
-
-	    state_wrapper_type& operator=( state_wrapper_type &x )
+	    static bool same_size( const test_array_type &x1 , const test_array_type &x2 )
 	    {
-	        m_v = x.m_v;
-	        return *this;
-	    }
-
-	    template< class StateIn >
-	    bool same_size( const StateIn &x ) const
-	    {
-            return true;
-	    }
-
-	    template< class StateIn >
-	    bool resize( const StateIn &x )
-	    {
-	        adjust_size_count++;
 	        return false;
 	    }
 	};
 
-/*
-	template<>
-	struct same_size_impl< test_array_type , test_array_type >
-	{
-		static bool same_size( const test_array_type &x1 , const test_array_type &x2 )
-		{
-			adjust_size_count++;
-			return true;
-		}
-	};
+    template<>
+    struct resize_impl< test_array_type , test_array_type >
+    {
+        static void resize( test_array_type &x1 , const test_array_type &x2 )
+        {
+            adjust_size_count++;
+        }
+    };
 
-	template <>
-	struct resize_impl< test_array_type , test_array_type >
-	{
-		static void resize( const test_array_type &x1 , test_array_type &x2 )
-		{
-		}
-	};
-*/
 } } }
 
 
