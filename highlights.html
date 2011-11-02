@@ -14,7 +14,7 @@ title: odeint - Highlights
 
 <h2>CUDA</h2>
 <a href="http://code.google.com/p/thrust/"><img src="thrust_logo.png"/></a>
-<p><strong>odeint</strong> can solve ODEs on your CUDA-GPU by using
+<p><strong>odeint</strong> can solve ODEs on your <a href="http://developer.nvidia.com/category/zone/cuda-zone">CUDA-GPU</a> by using
   the <a href="http://code.google.com/p/thrust/">Thrust Library</a>. Just use
   <code>thrust::device_vector</code> as state type
   and <code>thrust_algebra</code>/<code>thrust_operations</code> when defining
@@ -31,9 +31,9 @@ runge_kutta4< state_type , double , state_type , double , thrust_algebra ,
 </p>
 
 <h2>MTL</h2>
-<a href="http://www.simunova.com/en/node/24" target="_blank"><img src="mtl4_banner.png" /></a>
+<a href="http://www.simunova.com/en/node/24"><img src="mtl4_banner.png" /></a>
 <p><strong>odeint</strong> also easily supports the vector and matrix types from
-  the <a href="http://www.simunova.com/en/node/24" target="_blank">Matrix Template Library
+  the <a href="http://www.simunova.com/en/node/24">Matrix Template Library
     4</a>. This gives you an easy way of defining linear systems of ODEs
   by matrix-vector products. See
   <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/mtl"
@@ -50,3 +50,12 @@ runge_kutta4< state_type , double , state_type , double , thrust_algebra ,
   included in odeint.
 </p>
 
+<h2>NetEvo</h2>
+<a href="http://www.netevo.org"><img src="NetEvo.png"/></a>
+<p><a href="http://www.netevo.org">NetEvo</a> is a
+  computing framework and collection of end-user tools designed to allow
+  researchers to investigate evolutionary aspects of dynamical complex
+  networks. NetEvo currently undergoes a redesign and the future version will
+  be based on modern C++ and will use <strong>odeint</strong> for simulating
+  the dynamics on networks. 
+</p>
