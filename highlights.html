@@ -13,6 +13,7 @@ title: odeint - Highlights
 </p>
 
 <h2>CUDA</h2>
+<a href="http://code.google.com/p/thrust/"><img src="thrust_logo.png"/></a>
 <p><strong>odeint</strong> can solve ODEs on your CUDA-GPU by using
   the <a href="http://code.google.com/p/thrust/">Thrust Library</a>. Just use
   <code>thrust::device_vector</code> as state type
@@ -30,8 +31,9 @@ runge_kutta4< state_type , double , state_type , double , thrust_algebra ,
 </p>
 
 <h2>MTL</h2>
+<a href="http://www.simunova.com/en/node/24" target="_blank"><img src="mtl4_banner.png" /></a>
 <p><strong>odeint</strong> also easily supports the vector and matrix types from
-  the <a href="http://www.simunova.com/en/node/24">Matrix Template Library
+  the <a href="http://www.simunova.com/en/node/24" target="_blank">Matrix Template Library
     4</a>. This gives you an easy way of defining linear systems of ODEs
   by matrix-vector products. See
   <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/mtl"
