@@ -24,7 +24,7 @@ Integration is also very easy:
 
 [stuart_landau_integration]
 
-The full cpp file for the Stuart Landau example can be found here [@../../examples/stuart_landau.cpp]
+The full cpp file for the Stuart Landau example can be found here [github_link libs/numeric/odeint/examples/stuart_landau.cpp stuart_landau.cpp]
 
 [endsect]
 
@@ -53,7 +53,7 @@ The observer is more or less trivial
 
 [fpu_observer]
 
-The full cpp file for this FPU example can be found here [@../../examples/fpu.cpp]
+The full cpp file for this FPU example can be found here [github_link libs/numeric/odeint/examples/fpu.cpp fpu.cpp]
 
 [endsect]
 
@@ -81,7 +81,7 @@ Now, we do several integrations for different values of ['__epsilon] and record 
 
 [phase_oscillator_ensemble_integration]
 
-The full cpp file for this example can be found here [@../../examples/phase_oscillator_ensemble.cpp]
+The full cpp file for this example can be found here [github_link libs/numeric/odeint/examples/phase_oscillator_ensemble.cpp phase_oscillator_ensemble.cpp]
 
 [endsect]
 
@@ -109,7 +109,7 @@ It is quite easy but the compilation time might take very long. Furthermore, the
 
 [caution Using __boost_units works nicely but compilation can be very time and memory consuming. For example the unit test for __boost_units take up to 4 GB of memory.]
 
-The full cpp file for this example can be found here [@../../examples/harmonic_oscillator_units.cpp].
+The full cpp file for this example can be found here [github_link libs/numeric/odeint/examples/harmonic_oscillator_units.cpp harmonic_oscillator_units.cpp].
 
 [endsect] 
 
@@ -129,7 +129,7 @@ This is in principle all. Please note, that the above code is far from being opt
 
 [$phase_lattice_2d_0000.jpg] [$phase_lattice_2d_0100.jpg] [$phase_lattice_2d_1000.jpg]
 
-The full cpp for this example can be found here [@../../examples/two_dimensional_phase_lattice.cpp].
+The full cpp for this example can be found here [github_link libs/numeric/odeint/examples/two_dimensional_phase_lattice.cpp two_dimensional_phase_lattice.cpp].
 
 
 
@@ -167,7 +167,7 @@ which can be used
 
 [caution The full support of arbitrary precision types depends on the functionality they provide. For example, the types from gmp are lacking of functions for calculating the power and arbitrary roots, hence they can not be used with the controlled steppers. In detail, for full support the `min( x , y )`, `max( x , y )`, `pow( y , y )` must be callable.]
 
-The full example can be found at [@../../examples/lorenz_gmpxx.cpp].
+The full example can be found at [github_link libs/numeric/odeint/examples/lorenz_gmpxx.cpp lorenz_gmpxx.cpp].
 
 
 [endsect]
@@ -201,7 +201,7 @@ The `do_resize` function simply calls `vector.resize` of `q` , `p` and `distr`.
 
 [resizing_lattice_resize_function]
 
-The full example can be found in [@../../examples/resizing_lattice.cpp]
+The full example can be found in [github_link libs/numeric/odeint/examples/resizing_lattice.cpp resizing_lattice.cpp]
 
 [endsect]
 

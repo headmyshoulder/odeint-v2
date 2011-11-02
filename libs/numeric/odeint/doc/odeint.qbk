@@ -95,6 +95,8 @@
 [template sub[x]'''<subscript>'''[x]'''</subscript>''']
 [template subl[x]'''<subscript>'''__space[x]'''</subscript>''']
 
+[template github_link[url text]'''<ulink url="https://github.com/headmyshoulder/odeint-v2/tree/master/'''[url]'''" target="_blank">'''[text]'''</ulink>''']
+
 [include getting_started.qbk]
 
 [include tutorial.qbk]

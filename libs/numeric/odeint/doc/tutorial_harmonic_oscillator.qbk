@@ -76,6 +76,6 @@ When using `make_controlled` or `make_dense_output` one should be aware which ex
 
 [endsect]
 
-The full cpp file for this example can be found here: [@../../examples/harmonic_oscillator.cpp]
+The full cpp file for this example can be found here: [github_link libs/numeric/odeint/examples/harmonic_oscillator.cpp harmonic_oscillator.cpp]
 
 [endsect]

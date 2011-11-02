@@ -63,7 +63,7 @@ These integration routine was used to produce the above sketch of the solar syst
 
 [streaming_observer]
 
-The full example can be found here: [@../../examples/solar_system.cpp]
+The full example can be found here: [github_link libs/numeric/odeint/examples/solar_system.cpp solar_system.cpp]
 
 [endsect]
 
