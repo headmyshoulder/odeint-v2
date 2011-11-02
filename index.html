@@ -16,8 +16,7 @@ The development was supported by the <a href="http://www.boost.org">boost commun
 
 <h2>Example: Lorenz system</h2>
 30 lines of C++ to generate a trajectory on the <a href="http://en.wikipedia.org/wiki/Lorenz_attractor">Lorenz attractor</a>.
-<pre>
-#include &lt;iostream>
+<pre><code>#include &lt;iostream>
 #include &lt;boost/array.hpp>
 #include &lt;boost/numeric/odeint.hpp>
 
@@ -47,7 +46,7 @@ int main(int argc, char **argv)
     state_type x = { 10.0 , 1.0 , 1.0 }; // initial conditions
     integrate( lorenz , x , 0.0 , 25.0 , 0.1 , write_lorenz );
 }
-</pre>
+</code></pre>
 <p><img src="lorenz.png" /></p>
 <h2>Use it</h2>
 <p>
