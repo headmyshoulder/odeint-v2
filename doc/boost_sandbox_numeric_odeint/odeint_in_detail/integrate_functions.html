@@ -101,12 +101,11 @@
             is considerably larger than typical step sizes used by the stepper.
           </li>
 <li class="listitem">
-            If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/dense_output_stepper.html" title="Dense Output Stepper">Dense
-            Output Stepper</a> then <code class="computeroutput"><span class="identifier">dt</span></code>
-            is the initial step size. The actual step size will be adjusted during
-            integration due to error control. If an observer is provided dense output
-            is used to calculate <span class="emphasis"><em>x(t)</em></span> at <span class="emphasis"><em>t = t<sub>0</sub> + n
-            dt</em></span>.
+            If <code class="computeroutput"><span class="identifier">stepper</span></code> is a __dense_out_stepper
+            then <code class="computeroutput"><span class="identifier">dt</span></code> is the initial
+            step size. The actual step size will be adjusted during integration due
+            to error control. If an observer is provided dense output is used to
+            calculate <span class="emphasis"><em>x(t)</em></span> at <span class="emphasis"><em>t = t<sub>0</sub> + n dt</em></span>.
           </li>
 </ul></div>
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_each_step"></a><h5>
@@ -117,9 +116,8 @@
 <p>
         If the observer should be called at each time step then the <code class="computeroutput"><span class="identifier">integrate_adaptive</span></code> function should be used.
         Note that in the case of <a class="link" href="../concepts/controlled_stepper.html" title="Controlled Stepper">Controlled
-        Stepper</a> or <a class="link" href="../concepts/dense_output_stepper.html" title="Dense Output Stepper">Dense
-        Output Stepper</a> this leads to non-equidistant observer calls as the
-        step size changes.
+        Stepper</a> or __dense_out_stepper this leads to non-equidistant observer
+        calls as the step size changes.
       </p>
 <p>
         <code class="computeroutput"><span class="identifier">integrate_adaptive</span><span class="special">(</span>
@@ -172,8 +170,7 @@
             the first step at <code class="computeroutput"><span class="identifier">t0</span></code>).
           </li>
 <li class="listitem">
-            If stepper is a <a class="link" href="../concepts/dense_output_stepper.html" title="Dense Output Stepper">Dense
-            Output Stepper</a> then <code class="computeroutput"><span class="identifier">dt</span></code>
+            If stepper is a __dense_out_stepper then <code class="computeroutput"><span class="identifier">dt</span></code>
             is the initial step size and <code class="computeroutput"><span class="identifier">integrate_adaptive</span></code>
             behaves just like for <a class="link" href="../concepts/controlled_stepper.html" title="Controlled Stepper">Controlled
             Stepper</a> above. No dense output is used.
@@ -247,11 +244,11 @@
             exactly at the time point.
           </li>
 <li class="listitem">
-            If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/dense_output_stepper.html" title="Dense Output Stepper">Dense
-            Output Stepper</a> then <code class="computeroutput"><span class="identifier">dt</span></code>
-            is the initial step size. The actual step size is adjusted during integration
-            according to error control. Dense output is used to obtain the states
-            <span class="emphasis"><em>x(t)</em></span> at the time points from the sequence.
+            If <code class="computeroutput"><span class="identifier">stepper</span></code> is a __dense_out_stepper
+            then <code class="computeroutput"><span class="identifier">dt</span></code> is the initial
+            step size. The actual step size is adjusted during integration according
+            to error control. Dense output is used to obtain the states <span class="emphasis"><em>x(t)</em></span>
+            at the time points from the sequence.
           </li>
 </ul></div>
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.integrate_a_given_number_of_steps"></a><h5>
@@ -274,8 +271,7 @@
           This function works only with steppers fullfilling the <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
           or <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
           Stepper</a> concept! Providing a <a class="link" href="../concepts/controlled_stepper.html" title="Controlled Stepper">Controlled
-          Stepper</a> or <a class="link" href="../concepts/dense_output_stepper.html" title="Dense Output Stepper">Dense
-          Output Stepper</a> results in a compilationerror.
+          Stepper</a> or __dense_out_stepper results in a compilationerror.
         </p></td></tr>
 </table></div>
 <p>

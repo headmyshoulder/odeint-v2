@@ -28,8 +28,9 @@
         steppers</a></span></dt>
 </dl></div>
 <p>
-        Two hierarchies: steppers by concept, steppers by type (explicit, symplectic
-        and separable, implicit, multistep methods)
+        The steppers can be sorted into two hierarchies, one desribes the mathematical
+        properties of the stepper while the other one describes the steppers in terms
+        of C++ concepts.
       </p>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
@@ -37,7 +38,19 @@
         by concept</a>
 </h4></div></div></div>
 <p>
-          bla, see cp2 article
+          odeint introduces four concepts for the steppers. These concepts are describes
+          in detail in <a class="link" href="../concepts.html" title="Concepts">Concepts</a>.
+          The most general concept is the <span class="bold"><strong> <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a></strong></span>
+          concept which defines the basic requirements one expects on a solver of
+          an ODE. Any stepper fulfilling this concept has to have a method <code class="computeroutput"><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">sys</span><span class="special">,</span><span class="identifier">x</span><span class="special">,</span><span class="identifier">t</span><span class="special">,</span><span class="identifier">dt</span><span class="special">)</span></code>
+          which performs a single step. The <span class="bold"><strong> <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
+          Stepper</a></strong></span> concept is a simple enhancement where the <code class="computeroutput"><span class="identifier">do_step</span></code> also computes an error estimate
+          which is made during one step. Furthermore there exist a concept <span class="bold"><strong> <a class="link" href="../concepts/controlled_stepper.html" title="Controlled Stepper">Controlled
+          Stepper</a></strong></span> which tries to perform a step and which might
+          accept or reject this step due to some accurrancy requirements. The fourth
+          concept is the <span class="bold"><strong> <a class="link" href="../concepts/dense_output_stepper.html" title="Dense Output Stepper">Dense
+          Output Stepper</a></strong></span> which provides methods for the calculation
+          of intermediate values during two steps.
         </p>
 </div>
 <div class="section">
@@ -45,6 +58,26 @@
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.steppers_by_type"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.steppers_by_type" title="Steppers by type">Steppers
         by type</a>
 </h4></div></div></div>
+<p>
+          Solving ordinary differential equation numerically is ususally done iteratively,
+          that is a given state of an ordinary differential equation <span class="emphasis"><em>x(t)
+          -&gt; x(t+dt) -&gt; x(t+2dt)</em></span>
+        </p>
+<p>
+          <code class="computeroutput"><span class="identifier">do_step</span><span class="special">(</span>
+          <span class="identifier">sys</span> <span class="special">,</span>
+          <span class="identifier">inout</span> <span class="special">,</span>
+          <span class="identifier">t</span> <span class="special">,</span>
+          <span class="identifier">dt</span> <span class="special">)</span></code>
+        </p>
+<p>
+          <code class="computeroutput"><span class="identifier">do_step</span><span class="special">(</span>
+          <span class="identifier">sys</span> <span class="special">,</span>
+          <span class="identifier">in</span> <span class="special">,</span>
+          <span class="identifier">t</span> <span class="special">,</span>
+          <span class="identifier">out</span> <span class="special">,</span>
+          <span class="identifier">dt</span> <span class="special">)</span></code>
+        </p>
 <p>
           <span class="bold"><strong>Explicit steppers</strong></span>
         </p>
@@ -95,6 +128,12 @@
           Good performance
         </p>
 </div>
+<p>
+        <span class="bold"><strong>Controlled steppers</strong></span>
+      </p>
+<p>
+        <span class="bold"><strong>Dense output steppers</strong></span>
+      </p>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.using_steppers"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.using_steppers" title="Using steppers">Using
