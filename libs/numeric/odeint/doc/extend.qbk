@@ -1,12 +1,33 @@
 [section Extend odeint]
 
-[section Write own steppers]
+[section Adapt your own state types]
+
+One of the main goals of odeint is to provide algorithms independent from the underlying state type.
+So in the following I will describe how your own state types can be used to run with odeint.
+As odeint also takes care for the memory management of where intermediate results are stored, 
+it first of all needs to know how to construct/destruct and possibly resize the state type.
+Additionally, it requires to be told how basic algebraic operations are to be performed on state 
+types. So when introducing new state types to odeint, the following points have to be considered:
+
+* construction/destruction
+* resizing (if possible/required)
+* algebraic operations
+
+Of course, odeint already provides basic interfaces for most of the usual state types.
+So if you use a `std::vector`, or a `boost::array` as state type no additional work is required,
+they just work out of the box.
+
+Requirements to work with odeint out-of-box are:
+[table
+  [[Name] [Expression] [Type] [Semantics]]
+  [[Construct State]] [`State x()`] [`void`] [Creates an instance of `State`] ]
+]
+
+gsl_vector, gsl_matrix, ublas::matrix, blitz::matrix, thrust
 
 [endsect]
 
-[section Adapt your own containers]
-
-gsl_vector, gsl_matrix, ublas::matrix, blitz::matrix, thrust
+[section Write own steppers]
 
 [endsect]
 
