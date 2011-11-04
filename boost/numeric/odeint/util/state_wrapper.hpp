@@ -50,25 +50,25 @@ struct state_wrapper< V , true > // with resizing
 
     V m_v;
 
-    template< class StateIn >
-    bool same_size( const StateIn &x ) const
-    {
-        return boost::numeric::odeint::same_size( m_v , x );
-    }
-
-    template< class StateIn >
-    bool resize( const StateIn &x )
-    {
-        if( !this->same_size( x ) )
-        {
-            boost::numeric::odeint::resize( m_v , x );
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
+//    template< class StateIn >
+//    bool same_size( const StateIn &x ) const
+//    {
+//        return boost::numeric::odeint::same_size( m_v , x );
+//    }
+//
+//    template< class StateIn >
+//    bool resize( const StateIn &x )
+//    {
+//        if( !this->same_size( x ) )
+//        {
+//            boost::numeric::odeint::resize( m_v , x );
+//            return true;
+//        }
+//        else
+//        {
+//            return false;
+//        }
+//    }
 };
 
 

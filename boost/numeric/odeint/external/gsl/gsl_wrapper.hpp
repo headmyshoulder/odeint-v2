@@ -173,6 +173,25 @@ struct is_resizeable< gsl_vector* >
     const static bool value = type::value;
 };
 
+template <>
+struct same_size_impl< gsl_vector* , gsl_vector* >
+{
+    static bool same_size( const gsl_vector* x , const gsl_vector* y )
+    {
+        return x->size == y->size;
+    }
+};
+
+template <>
+struct resize_impl< gsl_vector* , gsl_vector* >
+{
+    static void resize( gsl_vector* x , const gsl_vector* y )
+    {
+        gsl_vector_free( x );
+        x = gsl_vector_alloc( y->size );
+    }
+};
+
 template<>
 struct state_wrapper< gsl_vector* >
 {
@@ -190,7 +209,7 @@ struct state_wrapper< gsl_vector* >
 
     state_wrapper( const state_wrapper_type &x )
     {
-        resize( x.m_v );
+        resize( m_v , x.m_v );
         gsl_vector_memcpy( m_v , x.m_v );
     }
 
@@ -198,23 +217,6 @@ struct state_wrapper< gsl_vector* >
     ~state_wrapper()
     {
         gsl_vector_free( m_v );
-    }
-
-    bool same_size( const gsl_vector *x )
-    {
-        return ( m_v->size == x->size );
-    }
-
-    bool resize( const gsl_vector *x )
-    {
-        if( !same_size( x ) )
-        {
-            gsl_vector_free( m_v );
-            m_v = gsl_vector_alloc( x->size );
-            return true;
-        } else
-            return false;
-
     }
 
 };

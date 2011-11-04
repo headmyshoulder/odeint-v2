@@ -123,6 +123,6 @@ where ['<,>] is the classical scalar product and ['__delta [subl ij]] is the Kro
 
 [lyapunov_full_code]
 
-The full code can be found here:  [@../../examples/chaotic_system.cpp]
+The full code can be found here:  [github_link libs/numeric/odeint/examples/chaotic_system.cpp chaotic_system.cpp]
 
 [endsect]

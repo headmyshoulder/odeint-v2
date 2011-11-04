@@ -20,19 +20,27 @@
 
 
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
+#include <boost/numeric/odeint/util/same_size.hpp>
+#include <boost/numeric/odeint/util/resize.hpp>
 
 namespace boost {
 namespace numeric {
 namespace odeint {
 
-template< class ResizeState , class State >
-bool adjust_size_by_resizeability( ResizeState &x , const State &y , boost::true_type )
+template< class ResizeWrappedState , class State >
+bool adjust_size_by_resizeability( ResizeWrappedState &x , const State &y , boost::true_type )
 {
-    return x.resize( y );
+    if ( !same_size( x.m_v , y ) )
+    {
+        resize( x.m_v , y );
+        return true;
+    }
+    else
+        return false;
 }
 
-template< class ResizeState , class State >
-bool adjust_size_by_resizeability( ResizeState &x , const State &y , boost::false_type )
+template< class ResizeWrappedState , class State >
+bool adjust_size_by_resizeability( ResizeWrappedState &x , const State &y , boost::false_type )
 {
     return false;
 }
