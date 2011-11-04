@@ -20,6 +20,14 @@
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers"></a><a class="link" href="steppers.html" title="Steppers">Steppers</a>
 </h3></div></div></div>
 <div class="toc"><dl>
+<dt><span class="section"><a href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.system_functions">System
+        functions</a></span></dt>
+<dt><span class="section"><a href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.explicit_steppers">Explicit
+        steppers</a></span></dt>
+<dt><span class="section"><a href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.symplectic_solvers">Symplectic
+        solvers</a></span></dt>
+<dt><span class="section"><a href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.implicit_solvers">Implicit
+        solvers</a></span></dt>
 <dt><span class="section"><a href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.steppers_by_concept">Steppers
         by concept</a></span></dt>
 <dt><span class="section"><a href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.steppers_by_type">Steppers
@@ -28,9 +36,174 @@
         steppers</a></span></dt>
 </dl></div>
 <p>
-        The steppers can be sorted into two hierarchies, one desribes the mathematical
-        properties of the stepper while the other one describes the steppers in terms
-        of C++ concepts.
+        Solving ordinary differential equation numerically is ususally done iteratively,
+        that is a given state of an ordinary differential equation is iterated forward
+        <span class="emphasis"><em>x(t) -&gt; x(t+dt) -&gt; x(t+2dt)</em></span>. The steppers in odeint
+        perform one single step. The most general stepper type a described by the
+        <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
+        concept. The stepper concepts of odeint are described in detail in section
+        <a class="link" href="../concepts.html" title="Concepts">Concepts</a>, here
+        we briefly present the mathematical and numerical details of the steppers.
+        The <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
+        has two versions of the <code class="computeroutput"><span class="identifier">do_step</span></code>
+        method, one with an in-place transform of the currrent state and one with
+        an out-of-place transform:
+      </p>
+<p>
+        <code class="computeroutput"><span class="identifier">do_step</span><span class="special">(</span>
+        <span class="identifier">sys</span> <span class="special">,</span>
+        <span class="identifier">inout</span> <span class="special">,</span>
+        <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">)</span></code>
+      </p>
+<p>
+        <code class="computeroutput"><span class="identifier">do_step</span><span class="special">(</span>
+        <span class="identifier">sys</span> <span class="special">,</span>
+        <span class="identifier">in</span> <span class="special">,</span>
+        <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">)</span></code>
+      </p>
+<p>
+        The first parameter is always the system function - a function describing
+        the ODE. In the first version the second parameter is the step which is here
+        updated in-place and the third and the fourth parameters are the time and
+        step size (the time step). After a call of <code class="computeroutput"><span class="identifier">do_step</span></code>
+        the time of the ODE is <span class="emphasis"><em>t+dt</em></span>. In the second version the
+        second argument is the state of the ODE at time <span class="emphasis"><em>t</em></span>, the
+        third argument is t, the fourth argument is the state at time <span class="emphasis"><em>t+dt</em></span>
+        which is filled by <code class="computeroutput"><span class="identifier">do_step</span></code>
+        and the fifth argument is the time step.
+      </p>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.system_functions"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.system_functions" title="System functions">System
+        functions</a>
+</h4></div></div></div>
+<p>
+          Up to now, we have nothing said about the system function. This function
+          depends on the stepper. For the explicit Runge-Kutta steppers this function
+          can be a simple callable object hence a simple (global) C-function or a
+          functor. The parameter syntax is <code class="computeroutput"><span class="identifier">sys</span><span class="special">(</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">dxdt</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">)</span></code> and it is assumed that is calculates
+          <span class="emphasis"><em>dx/dt = f(x,t)</em></span>. For informations which stepper uses
+          which system function see the stepper table below.
+        </p>
+<p>
+          Another kind of system function represents Hamiltonian systems and is used
+          in the symplectic steppers. Here, it is assumed that the system is separable
+          and can be written as <span class="emphasis"><em>dq/dt = f1(p)</em></span> and <span class="emphasis"><em>dp/dt=f2(q)</em></span>.
+          The system is pair of functions of functors which calculate <span class="emphasis"><em>f1(p)</em></span>
+          and <span class="emphasis"><em>f2(q)</em></span>. The syntax is <code class="computeroutput"><span class="identifier">sys</span><span class="special">.</span><span class="identifier">first</span><span class="special">(</span><span class="identifier">p</span><span class="special">,</span><span class="identifier">dqdt</span><span class="special">)</span></code>
+          and <code class="computeroutput"><span class="identifier">sys</span><span class="special">.</span><span class="identifier">second</span><span class="special">(</span><span class="identifier">q</span><span class="special">,</span><span class="identifier">dpdt</span><span class="special">)</span></code>, where the first and second part can be
+          again simple C-functions of functors.
+        </p>
+<p>
+          Many Hamiltonian system can be written as <span class="emphasis"><em>dq/dt=p</em></span>,
+          <span class="emphasis"><em>dp/dt=f(q)</em></span> which is computationally much easier then
+          the full separable system. This kind of system can be used in the symplectic
+          solvers, by simply passing <span class="emphasis"><em>f(p)</em></span> to the <code class="computeroutput"><span class="identifier">do_step</span></code> method, again <span class="emphasis"><em>f(p)</em></span>
+          will be represented by a simple C-function or a functor.
+        </p>
+<p>
+          Another kind of solvers are implicit solvers which need the Jacobian <span class="emphasis"><em>J<sub>&#8203;ij</sub> =
+          df<sub>&#8203;i</sub> / dx<sub>&#8203;j</sub></em></span>. For these kind of solvers the system is again a pair,
+          where the first component computes <span class="emphasis"><em>f(x)</em></span> and the second
+          the Jacobian. The syntax is <code class="computeroutput"><span class="identifier">sys</span><span class="special">.</span><span class="identifier">first</span><span class="special">(</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">dxdt</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">)</span></code> and <code class="computeroutput"><span class="identifier">sys</span><span class="special">.</span><span class="identifier">second</span><span class="special">(</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">J</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">)</span></code>. For the implicit solver the <code class="computeroutput"><span class="identifier">state_type</span></code> is <code class="computeroutput"><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">vector</span></code>
+          and the Jacobian is represented by <code class="computeroutput"><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">matrix</span></code>.
+        </p>
+<p>
+          It might be possible, that odeint will introduce new system types in near
+          future. The system function is very closely related to the stepper type,
+          such an introduction of a new exotic stepper might result in a new system
+          function.
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.explicit_steppers"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.explicit_steppers" title="Explicit steppers">Explicit
+        steppers</a>
+</h4></div></div></div>
+<p>
+          A first specialization are the explicit steppers. Explicit means that the
+          new state of the ode can be computed explicitly from the current state
+          without solving implicit equations. These steppers have in common that
+          they evaluate the system at time <span class="emphasis"><em>t</em></span> such that the result
+          of <span class="emphasis"><em>f(x,t)</em></span> can be passed to the stepper. In odeint,
+          the explicit stepper have two additional methods
+        </p>
+<p>
+          <code class="computeroutput"><span class="identifier">do_step</span><span class="special">(</span>
+          <span class="identifier">sys</span> <span class="special">,</span>
+          <span class="identifier">inout</span> <span class="special">,</span>
+          <span class="identifier">dxdtin</span> <span class="special">,</span>
+          <span class="identifier">t</span> <span class="special">,</span>
+          <span class="identifier">dt</span> <span class="special">)</span></code>
+        </p>
+<p>
+          `do_step( sys , in , dxdtin , t , out , dt )'
+        </p>
+<p>
+          Here, the additional parameter is the value of the function <span class="emphasis"><em>f</em></span>
+          at state <span class="emphasis"><em>x</em></span> and time <span class="emphasis"><em>t</em></span>. An example
+          is the Runge Kutta stepper of fourth order:
+        </p>
+<p>
+          example
+        </p>
+<p>
+          Of course, you do not need to call these two method. You can always use
+          the simpler <code class="computeroutput"><span class="identifier">do_step</span><span class="special">(</span>
+          <span class="identifier">sys</span> <span class="special">,</span>
+          <span class="identifier">inout</span> <span class="special">,</span>
+          <span class="identifier">t</span> <span class="special">,</span>
+          <span class="identifier">dt</span> <span class="special">)</span></code>,
+          but sometimes the derivative of the state is needed to do some external
+          computations or to perform some statistical analysis.
+        </p>
+<p>
+          A special class of the explicit steppers are the FSAL (first-same-as-last)
+          steppers, where the last evaluation of the system function is also the
+          first evaluation of the following step. For such stepper a further <code class="computeroutput"><span class="identifier">do_step</span></code> method exist:
+        </p>
+<p>
+          <code class="computeroutput"><span class="identifier">do_step</span><span class="special">(</span>
+          <span class="identifier">sys</span> <span class="special">,</span>
+          <span class="identifier">in</span> <span class="special">,</span>
+          <span class="identifier">dxdtin</span> <span class="special">,</span>
+          <span class="identifier">out</span> <span class="special">,</span>
+          <span class="identifier">dxdtout</span> <span class="special">,</span>
+          <span class="identifier">t</span> <span class="special">,</span>
+          <span class="identifier">dt</span> <span class="special">)</span></code>
+        </p>
+<p>
+          This method also fills the derivative at time <span class="emphasis"><em>t+dt</em></span>
+          into <code class="computeroutput"><span class="identifier">dxdtout</span></code>. Of course,
+          the performance gain of such FSAL steppers only appears when combining
+          with intergrate error estimation, like in the Runge-Kutta-Dopri5 stepper.
+          The FSAL-trick is sometimes also referred as the Fehlberg-Trick. An example
+          is
+        </p>
+<p>
+          example
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.symplectic_solvers"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.symplectic_solvers" title="Symplectic solvers">Symplectic
+        solvers</a>
+</h4></div></div></div>
+<p>
+          example
+        </p>
+</div>
+<div class="section"><div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.implicit_solvers"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.implicit_solvers" title="Implicit solvers">Implicit
+        solvers</a>
+</h4></div></div></div></div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+            Old stuff, to be included in the above or to be deleted*
+          </li></ul></div>
+<p>
+        The steppers in odeint can be sorted into two hierarchies, one desribes the
+        mathematical properties of the stepper while the other one describes the
+        steppers in terms of C++ concepts.
       </p>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
@@ -38,8 +211,10 @@
         by concept</a>
 </h4></div></div></div>
 <p>
-          odeint introduces four concepts for the steppers. These concepts are describes
-          in detail in <a class="link" href="../concepts.html" title="Concepts">Concepts</a>.
+          Describing the stepper in terms of concept sorts the steppers into the
+          categories: stepper, error stepper, controlled stepper and dense-output
+          stepper. Each of these categories is described by a concept. These concepts
+          are describes in detail in <a class="link" href="../concepts.html" title="Concepts">Concepts</a>.
           The most general concept is the <span class="bold"><strong> <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a></strong></span>
           concept which defines the basic requirements one expects on a solver of
           an ODE. Any stepper fulfilling this concept has to have a method <code class="computeroutput"><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">sys</span><span class="special">,</span><span class="identifier">x</span><span class="special">,</span><span class="identifier">t</span><span class="special">,</span><span class="identifier">dt</span><span class="special">)</span></code>
@@ -60,8 +235,12 @@
 </h4></div></div></div>
 <p>
           Solving ordinary differential equation numerically is ususally done iteratively,
-          that is a given state of an ordinary differential equation <span class="emphasis"><em>x(t)
-          -&gt; x(t+dt) -&gt; x(t+2dt)</em></span>
+          that is a given state of an ordinary differential equation is iterated
+          forward <span class="emphasis"><em>x(t) -&gt; x(t+dt) -&gt; x(t+2dt)</em></span>. The steppers
+          in odeint perform one single step. The most general stepper type a simple
+          stepper method. It has two versions of the <code class="computeroutput"><span class="identifier">do_step</span></code>
+          method, one with an in-place transform of the currrent state and one with
+          an out-of-place transform:
         </p>
 <p>
           <code class="computeroutput"><span class="identifier">do_step</span><span class="special">(</span>
@@ -79,7 +258,16 @@
           <span class="identifier">dt</span> <span class="special">)</span></code>
         </p>
 <p>
+          The following steppers and methods are more or less some specializations
+          of this type of stepper which take into account the properties of the stepping
+          method or the properties of the ODE under consideration.
+        </p>
+<p>
           <span class="bold"><strong>Explicit steppers</strong></span>
+        </p>
+<p>
+          A first specialization are the explicit steppers. They solve the ODE by
+          solving only explicit equations.
         </p>
 <p>
           <code class="computeroutput"><span class="identifier">do_step</span><span class="special">(</span>
@@ -105,6 +293,9 @@
         </p>
 <p>
           examples and models
+        </p>
+<p>
+          runge
         </p>
 <p>
           <span class="bold"><strong>Symplectic steppers</strong></span>

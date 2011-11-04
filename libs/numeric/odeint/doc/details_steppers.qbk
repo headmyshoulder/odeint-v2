@@ -1,22 +1,90 @@
 [section Steppers]
 
-The steppers can be sorted into two hierarchies, one desribes the mathematical properties of the stepper while the other one describes the steppers in terms of C++ concepts.
-
-[section Steppers by concept]
-
-odeint introduces four concepts for the steppers. These concepts are describes in detail in __concepts. The most general concept is the *__stepper* concept which defines the basic requirements one expects on a solver of an ODE. Any stepper fulfilling this concept has to have a method `do_step(sys,x,t,dt)` which performs a single step. The *__error_stepper* concept is a simple enhancement where the `do_step` also computes an error estimate which is made during one step. Furthermore there exist a concept *__controlled_stepper* which tries to perform a step and which might accept or reject this step due to some accurrancy requirements. The fourth concept is the *__dense_output_stepper* which provides methods for the calculation of intermediate values during two steps.
-
-[endsect]
-
-[section Steppers by type]
-
-Solving ordinary differential equation numerically is ususally done iteratively, that is a given state of an ordinary differential equation [' x(t) -> x(t+dt) -> x(t+2dt)]
+Solving ordinary differential equation numerically is ususally done iteratively, that is a given state of an ordinary differential equation is iterated forward ['x(t) -> x(t+dt) -> x(t+2dt)]. The steppers in odeint perform one single step. The most general stepper type a described by the __stepper concept. The stepper concepts of odeint are described in detail in section __concepts, here we briefly present the mathematical and numerical details of the steppers. The __stepper has two versions of the `do_step` method, one with an in-place transform of the currrent state and one with an out-of-place transform:
 
 `do_step( sys , inout , t , dt )`
 
 `do_step( sys , in , t , out , dt )`
 
+The first parameter is always the system function - a function describing the ODE. In the first version the second parameter is the step which is here updated in-place and the third and the fourth parameters are the time and step size (the time step). After a call of `do_step` the time of the ODE is ['t+dt]. In the second version the second argument is the state of the ODE at time ['t], the third argument is t, the fourth argument is the state at time ['t+dt] which is filled by `do_step` and the fifth argument is the time step.
+
+[section System functions]
+
+Up to now, we have nothing said about the system function. This function depends on the stepper. For the explicit Runge-Kutta steppers this function can be a simple callable object hence a simple (global) C-function or a functor. The parameter syntax is `sys( x , dxdt , t )` and it is assumed that is calculates ['dx/dt = f(x,t)]. For informations which stepper uses which system function see the stepper table below.
+
+Another kind of system function represents Hamiltonian systems and is used in the symplectic steppers. Here, it is assumed that the system is separable and can be written as ['dq/dt = f1(p)] and ['dp/dt=f2(q)]. The system is pair of functions of functors which calculate ['f1(p)] and ['f2(q)]. The syntax is `sys.first(p,dqdt)` and `sys.second(q,dpdt)`, where the first and second part can be again simple C-functions of functors.
+
+Many Hamiltonian system can be written as ['dq/dt=p], ['dp/dt=f(q)] which is computationally much easier then the full separable system. This kind of system can be used in the symplectic solvers, by simply passing ['f(p)] to the `do_step` method, again ['f(p)] will be represented by a simple C-function or a functor.
+
+Another kind of solvers are implicit solvers which need the Jacobian ['J[subl ij] = df[subl i] / dx[subl j]]. For these kind of solvers the system is again a pair, where the first component computes ['f(x)] and the second the Jacobian. The syntax is `sys.first( x , dxdt , t )` and `sys.second( x , J , t )`. For the implicit solver the `state_type` is `ublas::vector` and the Jacobian is represented by `ublas::matrix`.
+
+It might be possible, that odeint will introduce new system types in near future. The system function is very closely related to the stepper type, such an introduction of a new exotic stepper might result in a new system function.
+
+[endsect]
+
+[section Explicit steppers]
+
+A first specialization are the explicit steppers. Explicit means that the new state of the ode can be computed explicitly from the current state without solving implicit equations. These steppers have in common that they evaluate the system at time ['t] such that the result of ['f(x,t)] can be passed to the stepper. In odeint, the explicit stepper have two additional  methods 
+
+`do_step( sys , inout , dxdtin , t , dt )`
+
+`do_step( sys , in , dxdtin , t , out , dt )'
+
+Here, the additional parameter is the value of the function ['f] at state ['x] and time ['t]. An example is the Runge Kutta stepper of fourth order:
+
+example
+
+Of course, you do not need to call these two method. You can always use the simpler `do_step( sys , inout , t , dt )`, but sometimes the derivative of the state is needed to do some external computations or to perform some statistical analysis.
+
+A special class of the explicit steppers are the FSAL (first-same-as-last) steppers, where the last evaluation of the system function is also the first evaluation of the following step. For such stepper a further `do_step` method exist:
+
+`do_step( sys , in , dxdtin , out , dxdtout , t , dt )`
+
+This method also fills the derivative at time ['t+dt] into `dxdtout`. Of course, the performance gain of such FSAL steppers only appears when combining with intergrate error estimation, like in the Runge-Kutta-Dopri5 stepper. The FSAL-trick is sometimes also referred as the Fehlberg-Trick. An example is
+
+example
+
+[endsect]
+
+[section Symplectic solvers]
+
+example
+
+[endsect]
+
+[section Implicit solvers]
+
+[endsect]
+
+
+
+*Old stuff, to be included in the above or to be deleted*
+
+The steppers in odeint can be sorted into two hierarchies, one desribes the mathematical properties of the stepper while the other one describes the steppers in terms of C++ concepts.
+
+
+
+[section Steppers by concept]
+
+Describing the stepper in terms of concept sorts the steppers into the categories: stepper, error stepper, controlled stepper and dense-output stepper. Each of these categories is described by a concept. These concepts are describes in detail in __concepts. The most general concept is the *__stepper* concept which defines the basic requirements one expects on a solver of an ODE. Any stepper fulfilling this concept has to have a method `do_step(sys,x,t,dt)` which performs a single step. The *__error_stepper* concept is a simple enhancement where the `do_step` also computes an error estimate which is made during one step. Furthermore there exist a concept *__controlled_stepper* which tries to perform a step and which might accept or reject this step due to some accurrancy requirements. The fourth concept is the *__dense_output_stepper* which provides methods for the calculation of intermediate values during two steps.
+
+[endsect]
+
+[section Steppers by type]
+
+Solving ordinary differential equation numerically is ususally done iteratively, that is a given state of an ordinary differential equation is iterated forward ['x(t) -> x(t+dt) -> x(t+2dt)]. The steppers in odeint perform one single step. The most general stepper type a simple stepper method. It has two versions of the `do_step` method, one with an in-place transform of the currrent state and one with an out-of-place transform:
+
+`do_step( sys , inout , t , dt )`
+
+`do_step( sys , in , t , out , dt )`
+
+The following steppers and methods are more or less some specializations of this type of stepper which take into account the properties of the stepping method or the properties of the ODE under consideration.
+
 [* Explicit steppers]
+
+A first specialization are the explicit steppers. They solve the ODE by solving only explicit equations. 
+
+
 
 `do_step( sys , in , dxdtin , out , t , dt )`
 
@@ -25,6 +93,8 @@ FSAL (Fehlberg trick?)
 `do_step( sys , in , dxdtin , out , dxdtout , t , dt )`
 
 examples and models
+
+runge
 
 [* Symplectic steppers]
 
