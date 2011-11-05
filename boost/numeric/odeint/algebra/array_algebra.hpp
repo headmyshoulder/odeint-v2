@@ -248,8 +248,8 @@ struct array_algebra
     }
 
 
-    template< typename T , size_t dim , class Red >
-    T reduce( const boost::array< T , dim > &s , Red red , T init)
+    template< class Value , class T , size_t dim , class Red >
+    Value reduce( const boost::array< T , dim > &s , Red red , Value init)
     {
         for( size_t i=0 ; i<dim ; ++i )
             init = red( init , s[i] );
