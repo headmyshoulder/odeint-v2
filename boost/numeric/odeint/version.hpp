@@ -31,7 +31,7 @@ const int minor = 1;
 
 }
 
-std::string get_version_string( void )
+inline std::string get_version_string( void )
 {
     std::ostringstream str;
     str << "v" << version::major << "." << version::minor;
