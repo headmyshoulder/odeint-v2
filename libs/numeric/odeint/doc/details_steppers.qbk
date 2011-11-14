@@ -1,52 +1,149 @@
 [section Steppers]
 
-The steppers can be sorted into two hierarchies, one desribes the mathematical properties of the stepper while the other one describes the steppers in terms of C++ concepts.
-
-[section Steppers by concept]
-
-odeint introduces four concepts for the steppers. These concepts are describes in detail in __concepts. The most general concept is the *__stepper* concept which defines the basic requirements one expects on a solver of an ODE. Any stepper fulfilling this concept has to have a method `do_step(sys,x,t,dt)` which performs a single step. The *__error_stepper* concept is a simple enhancement where the `do_step` also computes an error estimate which is made during one step. Furthermore there exist a concept *__controlled_stepper* which tries to perform a step and which might accept or reject this step due to some accurrancy requirements. The fourth concept is the *__dense_output_stepper* which provides methods for the calculation of intermediate values during two steps.
-
-[endsect]
-
-[section Steppers by type]
-
-Solving ordinary differential equation numerically is ususally done iteratively, that is a given state of an ordinary differential equation [' x(t) -> x(t+dt) -> x(t+2dt)]
+Solving ordinary differential equation numerically is ususally done iteratively, that is a given state of an ordinary differential equation is iterated forward ['x(t) -> x(t+dt) -> x(t+2dt)]. The steppers in odeint perform one single step. The most general stepper type a described by the __stepper concept. The stepper concepts of odeint are described in detail in section __concepts, here we briefly present the mathematical and numerical details of the steppers. The __stepper has two versions of the `do_step` method, one with an in-place transform of the currrent state and one with an out-of-place transform:
 
 `do_step( sys , inout , t , dt )`
 
 `do_step( sys , in , t , out , dt )`
 
-[* Explicit steppers]
+The first parameter is always the system function - a function describing the ODE. In the first version the second parameter is the step which is here updated in-place and the third and the fourth parameters are the time and step size (the time step). After a call of `do_step` the time of the ODE is ['t+dt]. In the second version the second argument is the state of the ODE at time ['t], the third argument is t, the fourth argument is the state at time ['t+dt] which is filled by `do_step` and the fifth argument is the time step.
 
-`do_step( sys , in , dxdtin , out , t , dt )`
+[* Show everywhere valid models and examples]
 
-FSAL (Fehlberg trick?)
+[* System functions]
+
+ToDo: integrate this section in later sections.
+
+Up to now, we have nothing said about the system function. This function depends on the stepper. For the explicit Runge-Kutta steppers this function can be a simple callable object hence a simple (global) C-function or a functor. The parameter syntax is `sys( x , dxdt , t )` and it is assumed that it calculates ['dx/dt = f(x,t)]. 
+
+Other types of system function represent Hamiltonian systems or system which also compute the Jacobian needed in implicit steppers. For informations which stepper uses which system function see the stepper table below. It might be possible, that odeint will introduce new system types in near future. Since the system function is strongly related to the stepper type, such an introduction of a new stepper might result in a new type of system function.
+
+[section Explicit steppers]
+
+A first specialization are the explicit steppers. Explicit means that the new state of the ode can be computed explicitly from the current state without solving implicit equations. These steppers have in common that they evaluate the system at time ['t] such that the result of ['f(x,t)] can be passed to the stepper. In odeint, the explicit stepper have two additional  methods 
+
+`do_step( sys , inout , dxdtin , t , dt )`
+
+`do_step( sys , in , dxdtin , t , out , dt )'
+
+Here, the additional parameter is the value of the function ['f] at state ['x] and time ['t]. An example is the Runge Kutta stepper of fourth order:
+
+example
+
+Of course, you do not need to call these two method. You can always use the simpler `do_step( sys , inout , t , dt )`, but sometimes the derivative of the state is needed to do some external computations or to perform some statistical analysis.
+
+A special class of the explicit steppers are the FSAL (first-same-as-last) steppers, where the last evaluation of the system function is also the first evaluation of the following step. For such stepper a further `do_step` method exist:
 
 `do_step( sys , in , dxdtin , out , dxdtout , t , dt )`
 
-examples and models
+This method also fills the derivative at time ['t+dt] into `dxdtout`. Of course, the performance gain of such FSAL steppers only appears when combining with intergrate error estimation, like in the Runge-Kutta-Dopri5 stepper. The FSAL-trick is sometimes also referred as the Fehlberg-Trick. An example is
 
-[* Symplectic steppers]
+example
 
-
-
-[* Implicit steppers]
-
-Need Jacobian
-
-For stiff systems
-
-Difficult to implement
-
-[* Multistep methods]
-
-Good performance
+[* they save a part of the solution internally]
 
 [endsect]
 
-[* Controlled steppers]
+[section Symplectic solvers]
 
-[* Dense output steppers]
+As mentioned above symplectic solvers are used for Hamiltonian systems. Symplectic solvers conserve the phase space volume exactly and if the Hamiltonian system is energy conservative they also conserve the energy approximately. A special class of symplectic systems are separable systems which can be written in the form ['dqdt/dt = f1(p)], ['dpdt/dt = f2(q)], where ['(q,p)] are the state of system. The space of ['(q,p)] is sometimes refered as the phase space and ['q] and ['p] are said the be the phase space variables. Symplectic systems in this special form occur widely in nature. For example the complete classical mechanics as written down by Newton, Lagrange and Hamilton can be forumulated in this framework. Of course, the separability of the system depends on the specific choice of coordinates.
+
+Integrable symplectic systems can be solved by odeint by means of the symplectic_euler stepper and a symplectic Runge-Kutta-Nystrom method of sixth-order. These steppers fullfil in principle the default Stepper concept, but they expect the system to be a pair of callable object. The first entry of this pair calculates ['f1(p)] while the second calculates ['f2(q)].  The syntax is `sys.first(p,dqdt)` and `sys.second(q,dpdt)`, where the first and second part can be again simple C-functions of functors. An example is the harmonic oscillator: 
+
+example
+
+If you like to represent the system with one class you you easily bind two public method:
+
+
+``
+class ham_sys
+{
+ public:
+
+    void f1( const vector_type &p , vector_type &dqdt )
+    {
+        // ...
+    }
+
+    void f2( const vector_type &p , vector_type &dqdt )
+    {
+        // ...
+    }
+};
+
+// ...
+
+ham_sys h;
+do_step( stepper , std::make_pair( boost::bind( &ham_sys::f1 , boost::ref( h ) , boost::bind( &ham_sys::f2 , boost::ref( h ) ) , std::make_pair( q , p ) , t_start , t_end , dt );
+``
+
+Many Hamiltonian system can be written as ['dq/dt=p], ['dp/dt=f(q)] which is computationally much easier then the full separable system. Very often, it is also possible to transform the original equations of motion to bring the system in this simplified form. This kind of system can be used in the symplectic solvers, by simply passing ['f(p)] to the `do_step` method, again ['f(p)] will be represented by a simple C-function or a functor. Here, the above example of the harmonic oscaillator can be written as
+
+example
+
+[endsect]
+
+[section Implicit solvers]
+
+[caution This section is not up-to-date.]
+
+For some kind of systems the stability properties of the classical Runge-Kutta are not sufficient, especially if the system is said to be stiff. A stiff system possesses two or more time scales of very different order. Solvers for stiff systems are usually implicit, meaning that they solve equations like ['x(t+dt) = x(t) + dt * f(x(t+1))]. This particular scheme is the implicit euler method. Implicit methods usually solve the system of equations by a root finding algorithm like the Newton method and therefore need to know the Jacobian of the system ['J[subl ij] = df[subl i] / dx[subl j]].
+
+For implicit solvers the system is again a pair, where the first component computes ['f(x,t)] and the second the Jacobian. The syntax is `sys.first( x , dxdt , t )` and `sys.second( x , J , t )`. For the implicit solver the `state_type` is `ublas::vector` and the Jacobian is represented by `ublas::matrix`.
+
+[endsect]
+
+[section Multistep methods]
+
+Another large class of solvers are multi-step method. They save a small part of the history of the solution and compute the next step with the help of this history. Since multistep methods know a part of their history they do not need to compute the system function very often, usually it is only computed once. This make multistep methods preferable if a call of the system function is expensive. Examples are ODEs defined on networks, where the computation of the interaction is usually where expensive.
+
+Multistep methods differ from the normal steppers. They safe a part of their history and this part has to be explicitly calculated and initialized. 
+
+example
+
+Many multistep methods are also explicit steppers, hence the parameter of  `do_step` method do not differ from the explicit steppers.
+
+[endsect]
+
+[section Controlled steppers]
+
+Many of the above introduced steppers possess the possibility to use adaptive stepsize control. Adaptive step size integration works in principle as follows:
+
+# The error of one step is calculated. This is usually done by performing two steps with different orders. The difference between these two steps is then used as a measure for the error. Stepper which can calculate the error are __error_steppers and they form a own class with an separate concept.
+# This error is compared against some predefined error tolerances. Are the tolerance verletzt the step is reject and the stepsize is decreases. Otherwise the step is accepted and possibly the stepsize is increased.
+
+The class of controlled steppers has its own concept in odeint - the __controlled_stepper concept. They are usually constructed from the underlying error steppers. An example is the controller for the explicit Runge-Kutta steppers. The Runge-Kutta steppers enter the controller as a template argument. Additionally one can pass the Runge-Kutta stepper to the contructor, but this step is not neccessary, otherwise it is default-constructed.
+
+Different step size controlling mechanism exist. They all have in common that they somehow compare predefined error tolerance against the error and that they might reject or accept a step. If a step is rejected the step size is usually decreased and the step is made again. Then the procedure of checking the error tolerances and accepting or rejecting a step is made again and repeated  until the step is accepted. The procedure is implemented in the integration functions.
+
+To calculate error tolerance one can use
+
+value = [err] / eps_abs + eps_rel 
+
+different formulas which are used
+
+The step is rejected if value is smaller then 1, (safety factors)
+
+The new step is 
+
+dt = dt^abc
+
+The controlled steppers in odeint implement the following error calculation schemes and step size adaption methods:
+
+
+To ease to generation of the controlled stepper generation functions exist which take the absolute and relative error tolerances and a predefined error stepper and contruct from this knowledge an appropirate controlled stepper. The generation functions are explained in detail in XYZ.
+
+[endsect]
+
+[section Dense output steppers]
+
+A fourth class of stepper exists which are the so called dense output steppers.
+
+construction, generate functions
+
+reset?
+
+[endsect]
 
 [section Using steppers]
 
