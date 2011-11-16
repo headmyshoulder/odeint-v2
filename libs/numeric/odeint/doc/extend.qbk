@@ -1,12 +1,118 @@
 [section Extend odeint]
 
-[section Write own steppers]
+[section Adapt your own state types]
+
+One of the main goals of odeint is to provide algorithms independent from the underlying state type.
+The state type is a type representing the state of the ODE, that is the
+variable x.
+As we usually deal with systems of ODEs, the state type is represented by some
+sort of container.
+Most often, the value type of the container is simply `double`, as usually
+ODEs are defined as systems of real variables.
+However, it is also possible to use complex types (`complex<double>`) as
+underlying value type.
+Moreover, you can even adopt odeint to work with _any_ value type as long as
+the required operations are defined.
+However, in the following I will describe how your own state types can be used
+to run with odeint.
+I will assume that the state type is some sort of container aggregating a
+number of values representing state of the ODE.
+As odeint also takes care for the memory management of where intermediate results are stored, 
+it first of all needs to know how to construct/destruct and possibly resize the state type.
+Additionally, it requires to be told how basic algebraic operations are to be performed on state 
+types. So when introducing new state types to odeint, the following points have to be considered:
+
+* construction/destruction
+* resizing (if possible/required)
+* algebraic operations
+
+Of course, odeint already provides basic interfaces for most of the usual state types.
+So if you use a `std::vector`, or a `boost::array` as state type no additional work is required,
+they just work out of the box.
+
+We distinguish between two basic state types: fixed sized and dynamically
+sized.
+For fixed size state types the default constructor `state_type()` already
+allocates the required memory, prominent example is `boost::array<T,N>`.
+Dynamically sized types have to be resized to make sure enough memory is
+allocated, the standard constructor does not take care of the resizing.
+Examples for this are the STL containers like `vector<double>`.
+
+The most easy way of getting your own state type to work with odeint is to use
+a fixed size state, base calculations on the range_algebra and provide the
+following functionality:
+[table
+  [[Name] [Expression] [Type] [Semantics]]
+  [[Construct State] [`State x()`] [`void`] [Creates an instance of `State`
+  and allocates memory.] ]
+  [[Begin of the sequence] [boost::begin(x)] [Iterator] [Returns an iterator
+  pointing to the begin of the sequence]]
+  [[End of the sequence] [boost::end(x)] [Iterator] [Returns an iterator
+  pointing to the end of the sequence]]
+]
+
+[caution If your state type does not allocate memory by default construction,
+you [*must define it as resizeable] and provide resize functionality. Otherwise
+segmentation faults will occur.]
+
+So fixed sized arrays supported by __boost_range immediately work with odeint.
+For dynamically sized arrays one has to additionally supply the resize
+functionality.
+First, the state has to be tagged as resizeable by specializing the struct
+`is_resizeable` which consists of one typedef and one bool value:
+[table
+  [[Name] [Expression] [Type] [Semantics]]
+  [[Resizability] [`is_resizeable<State>::type`]
+    [`boost::true_type` or `boost::false_type`] 
+    [Determines resizeability of the state type, returns `boost::true_type` if
+    the state is resizeable.]]
+  [[Resizability] [`is_resizeable<State>::value`]
+    [`bool`] 
+    [Same as above, but with `bool` value.]]
+]
+
+This tells odeint that your state is resizeable.
+By default, odeint now expects the support of `boost::size(x)` and a
+`x.resize( boost::size(y) )` member function for resizing:
+[table
+  [[Name] [Expression] [Type] [Semantics]]
+  [[Get size] [`boost::size( x )`]
+    [`size_type`] [Returns the current size of x.]]
+  [[Resize] [`x.resize( boost::size( y ) )`]
+    [`void`] [Resizes x to have the same size as y.]]
+]
+
+As an example of the above we will adopt `ublas::vector` from __ublas to work as a
+state type in odeint.
+This is particularily easy because `ublas::vector` supports __boost_range,
+including `boost::size`.
+It also has a resize member function so all that has to be done in this case
+is to declare resizability:
+
+[import ../examples/ublas/lorenz_ublas.cpp]
+
+[ublas_resizeable]
+
+This immediately makes `ublas::vector` working with odeint as all other
+requirements are fullfilled by default in this case.
+You can find the full example in [github_link libs/numeric/odeint/examples/ublas/lorenz_ublas.cpp lorenz_ublas.cpp].
+
+If your state type does work with __boost_range, but handles resizing
+differently you are required to specialize two implementations used by odeint
+to check a state's size and to resize:
+[table
+  [[Name] [Expression] [Type] [Semantics]]
+  [[Check size] [`same_size_impl<State,State>::same_size(x , y)`]
+    [`bool`] [Returns true if the size of x equals the size of y.]]
+  [[Resize] [`resize_impl<State,State>::resize(x , y)`]
+    [`void`] [Resizes x to have the same size as y.]]
+]
+
+gsl_vector, gsl_matrix, ublas::matrix, blitz::matrix, thrust
 
 [endsect]
 
-[section Adapt your own containers]
-
-gsl_vector, gsl_matrix, ublas::matrix, blitz::matrix, thrust
+[section Write own steppers]
 
 [endsect]
 
