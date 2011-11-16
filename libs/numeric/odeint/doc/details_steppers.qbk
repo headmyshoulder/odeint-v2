@@ -108,26 +108,28 @@ Many multistep methods are also explicit steppers, hence the parameter of  `do_s
 
 Many of the above introduced steppers possess the possibility to use adaptive stepsize control. Adaptive step size integration works in principle as follows:
 
-# The error of one step is calculated. This is usually done by performing two steps with different orders. The difference between these two steps is then used as a measure for the error. Stepper which can calculate the error are __error_steppers and they form a own class with an separate concept.
-# This error is compared against some predefined error tolerances. Are the tolerance verletzt the step is reject and the stepsize is decreases. Otherwise the step is accepted and possibly the stepsize is increased.
+# The error of one step is calculated. This is usually done by performing two steps with different orders. The difference between these two steps is then used as a measure for the error. Stepper which can calculate the error are __error_stepper and they form a own class with an separate concept.
+# This error is compared against some predefined error tolerances. Are the tolerance violated the step is reject and the stepsize is decreases. Otherwise the step is accepted and possibly the stepsize is increased.
 
 The class of controlled steppers has its own concept in odeint - the __controlled_stepper concept. They are usually constructed from the underlying error steppers. An example is the controller for the explicit Runge-Kutta steppers. The Runge-Kutta steppers enter the controller as a template argument. Additionally one can pass the Runge-Kutta stepper to the contructor, but this step is not neccessary; the stepper is default-constructed if possible.
 
 Different step size controlling mechanism exist. They all have in common that they somehow compare predefined error tolerance against the error and that they might reject or accept a step. If a step is rejected the step size is usually decreased and the step is made again. Then the procedure of checking the error tolerances and accepting or rejecting a step is made again and repeated  until the step is accepted. The procedure is implemented in the integration functions.
 
-To calculate error tolerance one can use
+A classical way to calculate the error tolerance is
 
-value = [err] / eps_abs + eps_rel 
+['val = || err[subl i] / ( __epsilon[subl abs] + __epsilon[subl rel] x[subl i] ) || ]
 
-different formulas which are used
+['__epsilon[subl abs]] and ['__epsilon[subl rel]] are the absolute and the relative error tolerances, and ['|| x ||] is a norm, typically ['||x||=(__Sigma[subl i] x[subl i][super 2])[super 1/2]] or the maximum norm. For details of the used norms and error tolerance see the table below. The step is rejected if ['val] is greater then 1, otherwise it is accepted.
 
-The step is rejected if value is smaller then 1, (safety factors)
+If the step size is rejected a new (smaller) time step is calculated via
 
-The new step is 
+['dt = dt pow( val , 1 / ( O[subl e] - 1 ) )]
 
-dt = dt^abc
+But also if the step is accepted the step size can be increased
 
-The controlled steppers in odeint implement the following error calculation schemes and step size adaption methods:
+['dt = dt pow( val , -1 / O[subl s] ) ]
+
+Here, ['O[subl S]] and ['O[subl E]] are the order of the stepper and the error stepper. Usually these formulas have some safety factory, see the table below for details.
 
 [include controlled_stepper_table.qbk]
 

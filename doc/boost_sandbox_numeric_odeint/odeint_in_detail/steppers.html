@@ -474,12 +474,12 @@
               The error of one step is calculated. This is usually done by performing
               two steps with different orders. The difference between these two steps
               is then used as a measure for the error. Stepper which can calculate
-              the error are __error_steppers and they form a own class with an separate
-              concept.
+              the error are <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
+              Stepper</a> and they form a own class with an separate concept.
             </li>
 <li class="listitem">
               This error is compared against some predefined error tolerances. Are
-              the tolerance verletzt the step is reject and the stepsize is decreases.
+              the tolerance violated the step is reject and the stepsize is decreases.
               Otherwise the step is accepted and possibly the stepsize is increased.
             </li>
 </ol></div>
@@ -501,22 +501,35 @@
           in the integration functions.
         </p>
 <p>
-          To calculate error tolerance one can use
+          A classical way to calculate the error tolerance is
         </p>
 <p>
-          value = [err] / eps_abs + eps_rel
+          <span class="emphasis"><em>val = || err<sub>&#8203;i</sub> / ( &#949;<sub>&#8203;abs</sub> + &#949;<sub>&#8203;rel</sub> x<sub>&#8203;i</sub> ) || </em></span>
         </p>
 <p>
-          different formulas which are used
+          <span class="emphasis"><em>&#949;<sub>&#8203;abs</sub></em></span> and <span class="emphasis"><em>&#949;<sub>&#8203;rel</sub></em></span> are the absolute
+          and the relative error tolerances, and <span class="emphasis"><em>|| x ||</em></span> is
+          a norm, typically <span class="emphasis"><em>||x||=(&#931;<sub>&#8203;i</sub> x<sub>&#8203;i</sub><sup>2</sup>)<sup>1/2</sup></em></span> or the maximum norm.
+          For details of the used norms and error tolerance see the table below.
+          The step is rejected if <span class="emphasis"><em>val</em></span> is greater then 1, otherwise
+          it is accepted.
         </p>
 <p>
-          The step is rejected if value is smaller then 1, (safety factors)
+          If the step size is rejected a new (smaller) time step is calculated via
         </p>
 <p>
-          The new step is
+          <span class="emphasis"><em>dt = dt pow( val , 1 / ( O<sub>&#8203;e</sub> - 1 ) )</em></span>
         </p>
 <p>
-          dt = dt^abc
+          But also if the step is accepted the step size can be increased
+        </p>
+<p>
+          <span class="emphasis"><em>dt = dt pow( val , -1 / O<sub>&#8203;s</sub> ) </em></span>
+        </p>
+<p>
+          Here, <span class="emphasis"><em>O<sub>&#8203;S</sub></em></span> and <span class="emphasis"><em>O<sub>&#8203;E</sub></em></span> are the order
+          of the stepper and the error stepper. Usually these formulas have some
+          safety factory, see the table below for details.
         </p>
 <p>
           The controlled steppers in odeint implement the following error calculation
@@ -526,6 +539,7 @@
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.controlled_steppers.adaptive_step_size_algorithms"></a><p class="title"><b>Table&#160;1.6.&#160;Adaptive step size algorithms</b></p>
 <div class="table-contents"><table class="table" summary="Adaptive step size algorithms">
 <colgroup>
+<col>
 <col>
 <col>
 <col>
@@ -539,6 +553,11 @@
 <th>
                   <p>
                     Tolerance formula
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Norm
                   </p>
                 </th>
 <th>
@@ -561,6 +580,11 @@
                 </td>
 <td>
                   <p>
+                    -
+                  </p>
+                </td>
+<td>
+                  <p>
                     <span class="emphasis"><em>dt<sub>&#8203;new</sub> = dt<sub>&#8203;old</sub><sup>1/a</sup></em></span>
                   </p>
                 </td>
@@ -578,6 +602,11 @@
                 </td>
 <td>
                   <p>
+                    -
+                  </p>
+                </td>
+<td>
+                  <p>
                     <span class="emphasis"><em>dt<sub>&#8203;new</sub> = dt<sub>&#8203;old</sub><sup>1/a</sup></em></span>
                   </p>
                 </td>
@@ -591,6 +620,11 @@
 <td>
                   <p>
                     <span class="emphasis"><em>tol=1/2</em></span>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    -
                   </p>
                 </td>
 <td>
