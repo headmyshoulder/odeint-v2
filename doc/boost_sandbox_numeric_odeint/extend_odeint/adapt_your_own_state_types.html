@@ -1,0 +1,482 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Adapt your own state types</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
+<link rel="up" href="../extend_odeint.html" title="Extend odeint">
+<link rel="prev" href="../extend_odeint.html" title="Extend odeint">
+<link rel="next" href="write_own_steppers.html" title="Write own steppers">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../extend_odeint.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../extend_odeint.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="write_own_steppers.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_sandbox_numeric_odeint.extend_odeint.adapt_your_own_state_types"></a><a class="link" href="adapt_your_own_state_types.html" title="Adapt your own state types">Adapt
+      your own state types</a>
+</h3></div></div></div>
+<p>
+        One of the main goals of odeint is to provide algorithms independent from
+        the underlying state type. The state type is a type representing the state
+        of the ODE, that is the variable x. As we usually deal with systems of ODEs,
+        the state type is represented by some sort of container. Most often, the
+        value type of the container is simply <code class="computeroutput"><span class="keyword">double</span></code>,
+        as usually ODEs are defined as systems of real variables. However, it is
+        also possible to use complex types (<code class="computeroutput"><span class="identifier">complex</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span></code>) as underlying value type. Moreover,
+        you can even adopt odeint to work with <span class="underline">any</span>
+        value type as long as the required operations are defined. However, in the
+        following I will describe how your own state types can be used to run with
+        odeint. I will assume that the state type is some sort of container aggregating
+        a number of values representing state of the ODE. As odeint also takes care
+        for the memory management of where intermediate results are stored, it first
+        of all needs to know how to construct/destruct and possibly resize the state
+        type. Additionally, it requires to be told how basic algebraic operations
+        are to be performed on state types. So when introducing new state types to
+        odeint, the following points have to be considered:
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+            construction/destruction
+          </li>
+<li class="listitem">
+            resizing (if possible/required)
+          </li>
+<li class="listitem">
+            algebraic operations
+          </li>
+</ul></div>
+<p>
+        Of course, odeint already provides basic interfaces for most of the usual
+        state types. So if you use a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span></code>,
+        or a <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span></code> as state type no additional work
+        is required, they just work out of the box.
+      </p>
+<p>
+        We distinguish between two basic state types: fixed sized and dynamically
+        sized. For fixed size state types the default constructor <code class="computeroutput"><span class="identifier">state_type</span><span class="special">()</span></code> already allocates the required memory,
+        prominent example is <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span><span class="identifier">N</span><span class="special">&gt;</span></code>.
+        Dynamically sized types have to be resized to make sure enough memory is
+        allocated, the standard constructor does not take care of the resizing. Examples
+        for this are the STL containers like <code class="computeroutput"><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span></code>.
+      </p>
+<p>
+        The most easy way of getting your own state type to work with odeint is to
+        use a fixed size state, base calculations on the range_algebra and provide
+        the following functionality:
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Name
+                </p>
+              </th>
+<th>
+                <p>
+                  Expression
+                </p>
+              </th>
+<th>
+                <p>
+                  Type
+                </p>
+              </th>
+<th>
+                <p>
+                  Semantics
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  Construct State
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">State</span> <span class="identifier">x</span><span class="special">()</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Creates an instance of <code class="computeroutput"><span class="identifier">State</span></code>
+                  and allocates memory.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Begin of the sequence
+                </p>
+              </td>
+<td>
+                <p>
+                  boost::begin(x)
+                </p>
+              </td>
+<td>
+                <p>
+                  Iterator
+                </p>
+              </td>
+<td>
+                <p>
+                  Returns an iterator pointing to the begin of the sequence
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  End of the sequence
+                </p>
+              </td>
+<td>
+                <p>
+                  boost::end(x)
+                </p>
+              </td>
+<td>
+                <p>
+                  Iterator
+                </p>
+              </td>
+<td>
+                <p>
+                  Returns an iterator pointing to the end of the sequence
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<div class="caution"><table border="0" summary="Caution">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Caution]" src="../../images/caution.png"></td>
+<th align="left">Caution</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          If your state type does not allocate memory by default construction, you
+          <span class="bold"><strong>must define it as resizeable</strong></span> and provide
+          resize functionality. Otherwise segmentation faults will occur.
+        </p></td></tr>
+</table></div>
+<p>
+        So fixed sized arrays supported by <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
+        immediately work with odeint. For dynamically sized arrays one has to additionally
+        supply the resize functionality. First, the state has to be tagged as resizeable
+        by specializing the struct <code class="computeroutput"><span class="identifier">is_resizeable</span></code>
+        which consists of one typedef and one bool value:
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Name
+                </p>
+              </th>
+<th>
+                <p>
+                  Expression
+                </p>
+              </th>
+<th>
+                <p>
+                  Type
+                </p>
+              </th>
+<th>
+                <p>
+                  Semantics
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  Resizability
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">is_resizeable</span><span class="special">&lt;</span><span class="identifier">State</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">true_type</span></code> or <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">false_type</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Determines resizeability of the state type, returns <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">true_type</span></code> if the state is resizeable.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Resizability
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">is_resizeable</span><span class="special">&lt;</span><span class="identifier">State</span><span class="special">&gt;::</span><span class="identifier">value</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">bool</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Same as above, but with <code class="computeroutput"><span class="keyword">bool</span></code>
+                  value.
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+        This tells odeint that your state is resizeable. By default, odeint now expects
+        the support of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">size</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span></code> and a <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">resize</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">size</span><span class="special">(</span><span class="identifier">y</span><span class="special">)</span>
+        <span class="special">)</span></code> member function for resizing:
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Name
+                </p>
+              </th>
+<th>
+                <p>
+                  Expression
+                </p>
+              </th>
+<th>
+                <p>
+                  Type
+                </p>
+              </th>
+<th>
+                <p>
+                  Semantics
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  Get size
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">size</span><span class="special">(</span>
+                  <span class="identifier">x</span> <span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">size_type</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Returns the current size of x.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Resize
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">resize</span><span class="special">(</span>
+                  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">size</span><span class="special">(</span>
+                  <span class="identifier">y</span> <span class="special">)</span>
+                  <span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Resizes x to have the same size as y.
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+        As an example of the above we will adopt <code class="computeroutput"><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">vector</span></code>
+        from <a href="http://www.boost.org/doc/libs/release/libs/numeric/ublas/index.html" target="_top">Boost.UBlas</a>
+        to work as a state type in odeint. This is particularily easy because <code class="computeroutput"><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">vector</span></code> supports <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>,
+        including <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">size</span></code>. It also has a resize member function
+        so all that has to be done in this case is to declare resizability:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">numeric</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">odeint</span> <span class="special">{</span>
+
+<span class="keyword">template</span><span class="special">&lt;&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">is_resizeable</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">true_type</span> <span class="identifier">type</span><span class="special">;</span>
+    <span class="keyword">const</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="identifier">type</span><span class="special">::</span><span class="identifier">value</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="special">}</span> <span class="special">}</span> <span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+        This immediately makes <code class="computeroutput"><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">vector</span></code>
+        working with odeint as all other requirements are fullfilled by default in
+        this case. You can find the full example in <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/ublas/lorenz_ublas.cpp" target="_top">lorenz_ublas.cpp</a>.
+      </p>
+<p>
+        If your state type does work with <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>,
+        but handles resizing differently you are required to specialize two implementations
+        used by odeint to check a state's size and to resize:
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Name
+                </p>
+              </th>
+<th>
+                <p>
+                  Expression
+                </p>
+              </th>
+<th>
+                <p>
+                  Type
+                </p>
+              </th>
+<th>
+                <p>
+                  Semantics
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  Check size
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">same_size_impl</span><span class="special">&lt;</span><span class="identifier">State</span><span class="special">,</span><span class="identifier">State</span><span class="special">&gt;::</span><span class="identifier">same_size</span><span class="special">(</span><span class="identifier">x</span>
+                  <span class="special">,</span> <span class="identifier">y</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">bool</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Returns true if the size of x equals the size of y.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Resize
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">resize_impl</span><span class="special">&lt;</span><span class="identifier">State</span><span class="special">,</span><span class="identifier">State</span><span class="special">&gt;::</span><span class="identifier">resize</span><span class="special">(</span><span class="identifier">x</span> <span class="special">,</span>
+                  <span class="identifier">y</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Resizes x to have the same size as y.
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+        gsl_vector, gsl_matrix, ublas::matrix, blitz::matrix, thrust
+      </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009-2011 Karsten Ahnert
+      and Mario Mulansky<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../extend_odeint.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../extend_odeint.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="write_own_steppers.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
