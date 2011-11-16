@@ -316,17 +316,67 @@
 </h4></div></div></div>
 <p>
           Many of the above introduced steppers possess the possibility to use adaptive
-          stepsize calculatation. Adaptive step size integration works in principle
-          as follows:
+          stepsize control. Adaptive step size integration works in principle as
+          follows:
         </p>
-<pre class="programlisting"><span class="preprocessor"># The</span> <span class="identifier">error</span> <span class="identifier">of</span> <span class="identifier">one</span> <span class="identifier">step</span> <span class="identifier">is</span> <span class="identifier">calculated</span><span class="special">,</span> <span class="keyword">this</span> <span class="identifier">is</span> <span class="identifier">usually</span> <span class="identifier">done</span> <span class="identifier">by</span> <span class="identifier">performing</span> <span class="identifier">two</span> <span class="identifier">steps</span> <span class="identifier">with</span> <span class="identifier">different</span> <span class="identifier">orders</span><span class="special">.</span> <span class="identifier">The</span> <span class="identifier">difference</span> <span class="identifier">between</span> <span class="identifier">these</span> <span class="identifier">two</span> <span class="identifier">steps</span> <span class="identifier">is</span> <span class="identifier">then</span> <span class="identifier">used</span> <span class="identifier">as</span> <span class="identifier">a</span> <span class="identifier">measure</span> <span class="keyword">for</span> <span class="identifier">the</span> <span class="identifier">error</span><span class="special">.</span>
-<span class="preprocessor"># bb</span>
-</pre>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+              The error of one step is calculated. This is usually done by performing
+              two steps with different orders. The difference between these two steps
+              is then used as a measure for the error. Stepper which can calculate
+              the error are __error_steppers and they form a own class with an separate
+              concept.
+            </li>
+<li class="listitem">
+              This error is compared against some predefined error tolerances. Are
+              the tolerance verletzt the step is reject and the stepsize is decreases.
+              Otherwise the step is accepted and possibly the stepsize is increased.
+            </li>
+</ol></div>
 <p>
-          schemes
+          The class of controlled steppers has its own concept in odeint - the <a class="link" href="../concepts/controlled_stepper.html" title="Controlled Stepper">Controlled
+          Stepper</a> concept. They are usually constructed from the underlying
+          error steppers. An example is the controller for the explicit Runge-Kutta
+          steppers. The Runge-Kutta steppers enter the controller as a template argument.
+          Additionally one can pass the Runge-Kutta stepper to the contructor, but
+          this step is not neccessary, otherwise it is default-constructed.
         </p>
 <p>
-          construction, generate functions
+          Different step size controlling mechanism exist. They all have in common
+          that they somehow compare predefined error tolerance against the error
+          and that they might reject or accept a step. If a step is rejected the
+          step size is usually decreased and the step is made again. Then the procedure
+          of checking the error tolerances and accepting or rejecting a step is made
+          again and repeated until the step is accepted. The procedure is implemented
+          in the integration functions.
+        </p>
+<p>
+          To calculate error tolerance one can use
+        </p>
+<p>
+          value = [err] / eps_abs + eps_rel
+        </p>
+<p>
+          different formulas which are used
+        </p>
+<p>
+          The step is rejected if value is smaller then 1, (safety factors)
+        </p>
+<p>
+          The new step is
+        </p>
+<p>
+          dt = dt^abc
+        </p>
+<p>
+          The controlled steppers in odeint implement the following error calculation
+          schemes and step size adaption methods:
+        </p>
+<p>
+          To ease to generation of the controlled stepper generation functions exist
+          which take the absolute and relative error tolerances and a predefined
+          error stepper and contruct from this knowledge an appropirate controlled
+          stepper. The generation functions are explained in detail in XYZ.
         </p>
 </div>
 <div class="section">
@@ -334,6 +384,9 @@
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.dense_output_steppers"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.dense_output_steppers" title="Dense output steppers">Dense
         output steppers</a>
 </h4></div></div></div>
+<p>
+          A fourth class of stepper exists which are the so called dense output steppers.
+        </p>
 <p>
           construction, generate functions
         </p>
