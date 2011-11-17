@@ -227,9 +227,11 @@ public:
             const Time &t , StateOut &out , const Time &dt ,
             StateTemp &x_tmp , Deriv F[StageCount-1] ) const
     {
+        typedef typename boost::unwrap_reference< System >::type unwrapped_system_type;
+        unwrapped_system_type &sys = system;
         fusion::for_each( m_stages , calculate_stage<
-                System , StateIn , StateTemp , DerivIn , Deriv , StateOut , Time >
-        ( algebra , system , in , dxdt , out , x_tmp , F , t , dt ) );
+                unwrapped_system_type , StateIn , StateTemp , DerivIn , Deriv , StateOut , Time >
+        ( algebra , sys , in , dxdt , out , x_tmp , F , t , dt ) );
     }
 
 private:
