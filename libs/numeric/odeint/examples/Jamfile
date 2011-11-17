@@ -29,5 +29,6 @@ exe lorenz_gmpxx : lorenz_gmpxx.cpp libgmp libgmpxx ;
 exe bulirsch_stoer : bulirsch_stoer.cpp ;
 exe elliptic_functions : elliptic_functions.cpp ;
 exe resizing_lattice : resizing_lattice.cpp ;
+exe list_lattice : list_lattice.cpp ;
 
 build-project mtl ;

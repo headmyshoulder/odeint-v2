@@ -52,8 +52,8 @@ following functionality:
 ]
 
 [caution If your state type does not allocate memory by default construction,
-you [*must define it as resizeable] and provide resize functionality. Otherwise
-segmentation faults will occur.]
+you [*must define it as resizeable] and provide resize functionality (see
+below). Otherwise segmentation faults will occur.]
 
 So fixed sized arrays supported by __boost_range immediately work with odeint.
 For dynamically sized arrays one has to additionally supply the resize
@@ -71,7 +71,8 @@ First, the state has to be tagged as resizeable by specializing the struct
     [Same as above, but with `bool` value.]]
 ]
 
-This tells odeint that your state is resizeable.
+Defining `type` to be `true_type` and `value` as `true` tells odeint that your
+state is resizeable.
 By default, odeint now expects the support of `boost::size(x)` and a
 `x.resize( boost::size(y) )` member function for resizing:
 [table
@@ -107,6 +108,19 @@ to check a state's size and to resize:
   [[Resize] [`resize_impl<State,State>::resize(x , y)`]
     [`void`] [Resizes x to have the same size as y.]]
 ]
+
+As an example we will use a `std::list` as state type in odeint.
+Because `std::list` is not supported by `boost::size` we have to replace the
+same_size and resize implementation to get list to work with odeint.
+The following code shows the required template specializations:
+
+[import ../examples/list_lattice.cpp]
+
+[list_bindings]
+
+With these definitions odeint knows how to resize `std::list`s and so they can
+be used as state types.
+A complete example can be found in [github_link libs/numeric/odeint/examples/list_lattice.cpp list_lattice.cpp].
 
 gsl_vector, gsl_matrix, ublas::matrix, blitz::matrix, thrust
 
