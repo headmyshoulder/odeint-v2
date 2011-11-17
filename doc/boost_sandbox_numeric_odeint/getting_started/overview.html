@@ -103,6 +103,7 @@
 <col>
 <col>
 <col>
+<col>
 </colgroup>
 <thead><tr>
 <th>
@@ -138,6 +139,11 @@
 <th>
                 <p>
                   Dense Output
+                </p>
+              </th>
+<th>
+                <p>
+                  Internal state
                 </p>
               </th>
 <th>
@@ -186,6 +192,11 @@
               </td>
 <td>
                 <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
                   Very simple, only for demonstrating purpose
                 </p>
               </td>
@@ -228,6 +239,11 @@
               </td>
 <td>
                 <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
                   Used in Bulirsch-Stoer implementation
                 </p>
               </td>
@@ -256,6 +272,11 @@
 <td>
                 <p>
                   4
+                </p>
+              </td>
+<td>
+                <p>
+                  No
                 </p>
               </td>
 <td>
@@ -314,6 +335,11 @@
               </td>
 <td>
                 <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
                   Good general scheme with error estimation, to be used in controlled_error_stepper
                 </p>
               </td>
@@ -348,6 +374,11 @@
 <td>
                 <p>
                   Yes (4)
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes
                 </p>
               </td>
 <td>
@@ -401,6 +432,11 @@
               </td>
 <td>
                 <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
                   Good high order method with error estimation, to be used in controlled_error_stepper.
                 </p>
               </td>
@@ -439,6 +475,11 @@
 <td>
                 <p>
                   No
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes
                 </p>
               </td>
 <td>
@@ -485,6 +526,11 @@
               </td>
 <td>
                 <p>
+                  Yes
+                </p>
+              </td>
+<td>
+                <p>
                   Multistep method
                 </p>
               </td>
@@ -527,6 +573,11 @@
               </td>
 <td>
                 <p>
+                  Yes
+                </p>
+              </td>
+<td>
+                <p>
                   Combined multistep method
                 </p>
               </td>
@@ -534,12 +585,12 @@
 <tr>
 <td>
                 <p>
-                  Controlled Error Stepper
+                  Controlled Runge Kutta
                 </p>
               </td>
 <td>
                 <p>
-                  <code class="computeroutput"><span class="identifier">controlled_error_stepper</span></code>
+                  <code class="computeroutput"><span class="identifier">controlled_runge_kutta</span></code>
                 </p>
               </td>
 <td>
@@ -570,6 +621,11 @@
               </td>
 <td>
                 <p>
+                  depends
+                </p>
+              </td>
+<td>
+                <p>
                   Error control for <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
                   Stepper</a>. Requires an <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
                   Stepper</a> from above. Order depends on the given ErrorStepper
@@ -579,12 +635,12 @@
 <tr>
 <td>
                 <p>
-                  Dense Output Stepper
+                  Dense Output Runge Kutta
                 </p>
               </td>
 <td>
                 <p>
-                  <code class="computeroutput"><span class="identifier">dense_output_explicit</span></code>
+                  <code class="computeroutput"><span class="identifier">dense_output_runge_kutta</span></code>
                 </p>
               </td>
 <td>
@@ -606,6 +662,11 @@
 <td>
                 <p>
                   No
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes
                 </p>
               </td>
 <td>
@@ -621,53 +682,6 @@
                   (like <code class="computeroutput"><span class="identifier">euler</span></code> and
                   <code class="computeroutput"><span class="identifier">runge_kutta_dopri5</span></code>).
                   Order depends on the given stepper.
-                </p>
-              </td>
-</tr>
-<tr>
-<td>
-                <p>
-                  Dense Output Controlled Stepper
-                </p>
-              </td>
-<td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">dense_output_controlled_explicit</span></code>
-                </p>
-              </td>
-<td>
-                <p>
-                  <a class="link" href="../concepts/dense_output_stepper.html" title="Dense Output Stepper">Dense
-                  Output Stepper</a>
-                </p>
-              </td>
-<td>
-                <p>
-                  <a class="link" href="../concepts/system.html" title="System">System</a>
-                </p>
-              </td>
-<td>
-                <p>
-                  depends
-                </p>
-              </td>
-<td>
-                <p>
-                  No
-                </p>
-              </td>
-<td>
-                <p>
-                  Yes
-                </p>
-              </td>
-<td>
-                <p>
-                  Dense ouput for <a class="link" href="../concepts/controlled_stepper.html" title="Controlled Stepper">Controlled
-                  Stepper</a> from above if they provide dense ouput functionality
-                  (like <code class="computeroutput"><span class="identifier">controlled_error_stepper</span><span class="special">&lt;</span> <span class="identifier">runge_kutta_dopri5</span>
-                  <span class="special">&gt;</span></code>). Order depends on
-                  the given stepper.
                 </p>
               </td>
 </tr>
@@ -701,6 +715,11 @@
 <td>
                 <p>
                   Yes
+                </p>
+              </td>
+<td>
+                <p>
+                  No
                 </p>
               </td>
 <td>
@@ -754,6 +773,11 @@
               </td>
 <td>
                 <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
                   Stepper with step size and order control as well as dense ouput.
                   Very good if high precision and dense ouput is required.
                 </p>
@@ -784,6 +808,11 @@
 <td>
                 <p>
                   1
+                </p>
+              </td>
+<td>
+                <p>
+                  No
                 </p>
               </td>
 <td>
@@ -844,6 +873,11 @@
               </td>
 <td>
                 <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
                   Good for stiff systems. Works only with <a href="http://www.boost.org/doc/libs/release/libs/numeric/ublas/index.html" target="_top">Boost.UBlas</a>
                   vectors as state types.
                 </p>
@@ -885,6 +919,11 @@
 <td>
                 <p>
                   Yes
+                </p>
+              </td>
+<td>
+                <p>
+                  No
                 </p>
               </td>
 <td>
@@ -934,6 +973,11 @@
               </td>
 <td>
                 <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
                   Controlled Rosenbrock 4 with dense output. Works only with <a href="http://www.boost.org/doc/libs/release/libs/numeric/ublas/index.html" target="_top">Boost.UBlas</a>
                   vectors as state types.
                 </p>
@@ -979,6 +1023,11 @@
               </td>
 <td>
                 <p>
+                  No
+                </p>
+              </td>
+<td>
+                <p>
                   Basic symplectic solver for separable Hamiltonian system
                 </p>
               </td>
@@ -1009,6 +1058,11 @@
 <td>
                 <p>
                   6
+                </p>
+              </td>
+<td>
+                <p>
+                  No
                 </p>
               </td>
 <td>

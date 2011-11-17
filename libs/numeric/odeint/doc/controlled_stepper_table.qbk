@@ -1,6 +1,6 @@
 [table Adaptive step size algorithms
-  [ [Stepper] [Tolerance formula] [Step size adaption] ]
-  [ [controlled_runge_kutta] [['tol=1/2]] [['dt[subl new] = dt[subl old][super 1/a]]] ]
-  [ [rosenbrock4_controller] [['tol=1/2]] [['dt[subl new] = dt[subl old][super 1/a]]] ]
-  [ [bulirsch_stoer] [['tol=1/2]] [['dt[subl new] = dt[subl old][super 1/a]]] ]
+  [ [Stepper] [Tolerance formula] [Norm] [Step size adaption] ]
+  [ [controlled_runge_kutta] [['tol=1/2]] [-] [['dt[subl new] = dt[subl old][super 1/a]]] ]
+  [ [rosenbrock4_controller] [['tol=1/2]] [-] [['dt[subl new] = dt[subl old][super 1/a]]] ]
+  [ [bulirsch_stoer] [['tol=1/2]] [-] [['dt[subl new] = dt[subl old][super 1/a]]] ]
 ]
