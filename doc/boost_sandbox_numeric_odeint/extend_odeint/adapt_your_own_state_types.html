@@ -357,7 +357,6 @@
         so all that has to be done in this case is to declare resizability:
       </p>
 <p>
-        
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
 
@@ -470,7 +469,6 @@
         work with odeint. The following code shows the required template specializations:
       </p>
 <p>
-        
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
 
@@ -483,7 +481,7 @@
     <span class="keyword">const</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="identifier">type</span><span class="special">::</span><span class="identifier">value</span><span class="special">;</span>
 <span class="special">};</span>
 
-<span class="keyword">template</span><span class="special">&lt;</span> <span class="special">&gt;</span> 
+<span class="keyword">template</span><span class="special">&lt;</span> <span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">same_size_impl</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&gt;</span>
 <span class="special">{</span> <span class="comment">// define how to check size</span>
     <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">same_size</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">v1</span> <span class="special">,</span>
@@ -503,7 +501,7 @@
     <span class="special">}</span>
 <span class="special">};</span>
 
-<span class="special">}</span> <span class="special">}</span> <span class="special">}</span> 
+<span class="special">}</span> <span class="special">}</span> <span class="special">}</span>
 </pre>
 <p>
       </p>

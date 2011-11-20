@@ -32,4 +32,4 @@ exe resizing_lattice : resizing_lattice.cpp ;
 exe list_lattice : list_lattice.cpp ;
 exe stepper_details : stepper_details.cpp ;
 
-build-project mtl ;
+# build-project mtl ;
