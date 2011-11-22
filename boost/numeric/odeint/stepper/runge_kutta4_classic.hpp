@@ -104,6 +104,15 @@ public :
                 typename operations_type::template scale_sum5< value_type , time_type , time_type , time_type , time_type >( 1.0 , dt6 , dt3 , dt3 , dt6 ) );
     }
 
+    template< class StateType >
+    void adjust_size( const StateType &x )
+    {
+        resize( x );
+        stepper_base_type::adjust_size( x );
+    }
+
+protected:
+
     template< class StateIn >
     bool resize( const StateIn &x )
     {
@@ -115,12 +124,6 @@ public :
         return resized;
     }
 
-    template< class StateType >
-    void adjust_size( const StateType &x )
-    {
-        resize( x );
-        stepper_base_type::adjust_size( x );
-    }
 
 
 private:

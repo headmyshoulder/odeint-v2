@@ -140,12 +140,6 @@ public:
         this->stepper().do_step_impl( system , in , dxdt , t , out , dt );
     }
 
-    template< class StateIn >
-    bool resize( const StateIn &x )
-    {
-        return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
-    }
-
     algebra_type& algebra()
     {   return m_algebra; }
 
@@ -162,6 +156,15 @@ public:
     {
         return *static_cast< const stepper_type* >( this );
     }
+
+protected:
+
+    template< class StateIn >
+    bool resize( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
+    }
+
 
 
 private:

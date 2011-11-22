@@ -729,18 +729,12 @@
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.using_steppers"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.using_steppers" title="Using steppers">Using
         steppers</a>
 </h4></div></div></div>
-<div class="caution"><table border="0" summary="Caution">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Caution]" src="../../images/caution.png"></td>
-<th align="left">Caution</th>
-</tr>
-<tr><td align="left" valign="top"><p>
-            This section is not complete
-          </p></td></tr>
-</table></div>
 <p>
           This section contains some general informations about the usage of the
           steppers in odeint.
+        </p>
+<p>
+          <span class="bold"><strong>Steppers are copied by value</strong></span>
         </p>
 <p>
           The stepper in odeint are always copied by values. They are copied for
@@ -748,17 +742,61 @@
           well as in the integrate functions.
         </p>
 <p>
+          <span class="bold"><strong>Steppers might have a internal state</strong></span>
+        </p>
+<p>
           Some steppers require to store some informations about the state of the
           ODE between two steps. Examples are the multistep method which store a
           part of the solution during the evolution of the ODE, or the FSAL steppers
-          store the last derivative at time <span class="emphasis"><em>t+dt</em></span> since this
-          derivative is used in the next step. In this case the stepper expects that
-          consecutive calls of do_step are from the same solution and the same ODE.
+          which store the last derivative at time <span class="emphasis"><em>t+dt</em></span>, to be
+          used in the next step. In both cases the steppers expect that consecutive
+          calls of <code class="computeroutput"><span class="identifier">do_step</span></code> are from
+          the same solution and the same ODE.
+        </p>
+<p>
+          Stepper with an internal state support two additional methods: <code class="computeroutput"><span class="identifier">reset</span></code> which resets the state and <code class="computeroutput"><span class="identifier">initialize</span></code> which initializes the internal
+          state. The parameters of <code class="computeroutput"><span class="identifier">initialize</span></code>
+          depend on the specific stepper. For example the Adams-Bashforth-Moulton
+          stepper provides two initialize methods: <code class="computeroutput"><span class="identifier">initialize</span><span class="special">(</span> <span class="identifier">system</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">)</span></code> which initializes the internal states
+          with the help of the Runge-Kutta 4 stepper, and <code class="computeroutput"><span class="identifier">initialize</span><span class="special">(</span> <span class="identifier">stepper</span> <span class="special">,</span> <span class="identifier">system</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">)</span></code> which initializes with the help of <code class="computeroutput"><span class="identifier">stepper</span></code>. For the case of the FSAL steppers,
+          <code class="computeroutput"><span class="identifier">initialize</span></code> is <code class="computeroutput"><span class="identifier">initialize</span><span class="special">(</span>
+          <span class="identifier">sys</span> <span class="special">,</span>
+          <span class="identifier">in</span> <span class="special">,</span>
+          <span class="identifier">t</span> <span class="special">)</span></code>
+          which simply calculates the r.h.s. of the ODE and assigns its value to
+          the internal derivative.
+        </p>
+<p>
+          All these stepper have in common, that they initially fill their internal
+          state by themself. Hence you are not required to call initialize. See how
+          this works for the Adams-Bashforth-Moulton stepper: in the example we instantiate
+          a fourth order Adams-Bashforth-Moulton stepper, meaning that it will store
+          4 internal derivatives of the solution at times <code class="computeroutput"><span class="special">(</span><span class="identifier">t</span><span class="special">-</span><span class="identifier">dt</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">2d</span><span class="identifier">t</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">3d</span><span class="identifier">t</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">4d</span><span class="identifier">t</span><span class="special">)</span></code>.
+        </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">adams_bashforth_moulton</span><span class="special">&lt;</span> <span class="number">4</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">stepper</span><span class="special">;</span>
+<span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-4dt</span>
+<span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-3dt</span>
+<span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-2dt</span>
+<span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-dt</span>
+<span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// make one step with Adam-Bashforth-Moulton, the internal array of states is now rotated</span>
+</pre>
+<p>
+        </p>
+<p>
+          <span class="bold"><strong>Stepper might be resizable</strong></span>
+        </p>
+<p>
+          some word on resizing
+        </p>
+<p>
+          <span class="bold"><strong>Which steppers should be used in which situation</strong></span>
         </p>
 <p>
           odeint provides a quite large number of different steppers such that the
           user is left with the question of which stepper fits his needs. In the
-          following we give our (personal recommendations)
+          following we give our (personal) recommendations
         </p>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
