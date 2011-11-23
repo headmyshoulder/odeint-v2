@@ -31,8 +31,6 @@
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 
-#include <iostream>
-
 namespace mpl = boost::mpl;
 namespace fusion = boost::fusion;
 
@@ -161,14 +159,25 @@ public:
         //typedef typename boost::unwrap_reference< System >::type unwrapped_system_type;
         //unwrapped_system_type &sys = system;
 
-        m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize< StateIn > , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize_impl< StateIn > , boost::ref( *this ) , _1 ) );
 
         // actual calculation done in generic_rk.hpp
         m_rk_algorithm.do_step( stepper_base_type::m_algebra , system , in , dxdt , t , out , dt , m_x_tmp.m_v , m_F );
     }
 
+    template< class StateType >
+    void adjust_size( const StateType &x )
+    {
+        resize_impl( x );
+        stepper_base_type::adjust_size( x );
+    }
+
+    //friend std::ostream& operator << <>( std::ostream &os , const explicit_generic_rk &rk );
+
+private:
+
     template< class StateIn >
-    bool resize( const StateIn &x )
+    bool resize_impl( const StateIn &x )
     {
         bool resized( false );
         resized |= adjust_size_by_resizeability( m_x_tmp , x , typename wrapped_state_type::is_resizeable() );
@@ -179,16 +188,6 @@ public:
         return resized;
     }
 
-    template< class StateType >
-    void adjust_size( const StateType &x )
-    {
-        resize( x );
-        stepper_base_type::adjust_size( x );
-    }
-
-    //friend std::ostream& operator << <>( std::ostream &os , const explicit_generic_rk &rk );
-
-private:
 
     rk_algorithm_type m_rk_algorithm;
 

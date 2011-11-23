@@ -62,7 +62,7 @@ public :
         static const value_type val1 = static_cast< value_type >( 1.0 );
         static const value_type val05 = static_cast< value_type >( 0.5 );
 
-        m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize< StateIn > , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize_impl< StateIn > , boost::ref( *this ) , _1 ) );
 
         const time_type h = dt / static_cast<time_type>( m_steps );
         const time_type h2 = static_cast<time_type>( 2.0 ) * h;
@@ -107,7 +107,16 @@ public :
 
 
     template< class StateIn >
-    bool resize( const StateIn &x )
+    void adjust_size( const StateIn &x )
+    {
+        resize_impl( x );
+        stepper_base_type::adjust_size( x );
+    }
+
+private:
+
+    template< class StateIn >
+    bool resize_impl( const StateIn &x )
     {
         bool resized( false );
         resized |= adjust_size_by_resizeability( m_x0 , x , typename wrapped_state_type::is_resizeable() );
@@ -116,14 +125,6 @@ public :
         return resized;
     }
 
-    template< class StateIn >
-    void adjust_size( const StateIn &x )
-    {
-        resize( x );
-        stepper_base_type::adjust_size( x );
-    }
-
-private:
 
     unsigned short m_steps;
 

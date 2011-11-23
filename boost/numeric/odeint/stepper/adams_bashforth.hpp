@@ -130,7 +130,7 @@ public :
     void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt )
     {
         typename boost::unwrap_reference< System >::type &sys = system;
-        m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize<StateIn> , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize_impl<StateIn> , boost::ref( *this ) , _1 ) );
         m_step_storage.rotate();
         sys( in , m_step_storage[0].m_v , t );
         detail::adams_bashforth_call_algebra< steps , algebra_type , operations_type >()( m_algebra , in , out , m_step_storage , m_coefficients , dt );
@@ -140,7 +140,7 @@ public :
     void do_step( System system , const StateIn &in , const time_type &t , const StateOut &out , const time_type &dt )
     {
         typename boost::unwrap_reference< System >::type &sys = system;
-        m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize<StateIn> , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize_impl<StateIn> , boost::ref( *this ) , _1 ) );
         m_step_storage.rotate();
         sys( in , m_step_storage[0].m_v , t );
         detail::adams_bashforth_call_algebra< steps , algebra_type , operations_type >()( m_algebra , in , out , m_step_storage , m_coefficients , dt );
@@ -202,22 +202,10 @@ public :
 
 
 
-    template< class StateIn >
-    bool resize( const StateIn &x )
-    {
-        bool resized( false );
-        for( size_t i=0 ; i<steps ; ++i )
-        {
-            resized |= adjust_size_by_resizeability( m_step_storage[i] , x , typename wrapped_deriv_type::is_resizeable() );
-        }
-        return resized;
-    }
-
-
     template< class StateType >
     void adjust_size( const StateType &x )
     {
-        resize( x );
+        resize_impl( x );
     }
 
     algebra_type& algebra()
@@ -242,7 +230,7 @@ public :
         typename boost::unwrap_reference< ExplicitStepper >::type &stepper = explicit_stepper;
         typename boost::unwrap_reference< System >::type &sys = system;
 
-        m_resizer.adjust_size( x , boost::bind( &stepper_type::template resize<StateIn> , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( x , boost::bind( &stepper_type::template resize_impl<StateIn> , boost::ref( *this ) , _1 ) );
 
         for( size_t i=0 ; i<steps-1 ; ++i )
         {
@@ -265,6 +253,18 @@ public :
 
 
 private:
+
+    template< class StateIn >
+    bool resize_impl( const StateIn &x )
+    {
+        bool resized( false );
+        for( size_t i=0 ; i<steps ; ++i )
+        {
+            resized |= adjust_size_by_resizeability( m_step_storage[i] , x , typename wrapped_deriv_type::is_resizeable() );
+        }
+        return resized;
+    }
+
 
     step_storage_type m_step_storage;
     resizer_type m_resizer;

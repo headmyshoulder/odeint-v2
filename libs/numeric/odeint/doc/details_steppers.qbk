@@ -180,6 +180,10 @@ stepper.do_step( sys , x , t , dt );   // make one step with the classical Runge
 stepper.do_step( sys , x , t , dt );   // make one step with Adam-Bashforth-Moulton, the internal array of states is now rotated
 ``
 
+In the stepper table at the bottom of this page one can see which stepper have an internal state and hence provide the `reset` and `initialize` methods.
+
+
+
 [* Stepper might be resizable]
 
 some word on resizing

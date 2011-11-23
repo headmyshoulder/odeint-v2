@@ -135,7 +135,7 @@ public:
 
         const size_t n = x.size();
 
-        m_resizer.adjust_size( x , boost::bind( &stepper_type::template resize<state_type> , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( x , boost::bind( &stepper_type::template resize_impl<state_type> , boost::ref( *this ) , _1 ) );
 
         for( size_t i=0 ; i<n ; ++i )
             m_pm.m_v( i ) = i;
@@ -242,8 +242,18 @@ public:
 
 
 
+    template< class StateType >
+    void adjust_size( const StateType &x )
+    {
+        resize_impl( x );
+        resize_x_err( x );
+    }
+
+
+protected:
+
     template< class StateIn >
-    bool resize( const StateIn &x )
+    bool resize_impl( const StateIn &x )
     {
         bool resized = false;
         resized |= adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
@@ -268,15 +278,8 @@ public:
         return adjust_size_by_resizeability( m_x_err , x , typename wrapped_state_type::is_resizeable() );
     }
 
-    template< class StateType >
-    void adjust_size( const StateType &x )
-    {
-        resize( x );
-        resize_x_err( x );
-    }
-
-
 private:
+
 
     resizer_type m_resizer;
     resizer_type m_x_err_resizer;

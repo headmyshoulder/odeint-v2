@@ -79,7 +79,7 @@ public:
         deriv_func_type &deriv_func = sys.first;
         jacobi_func_type &jacobi_func = sys.second;
 
-        m_resizer.adjust_size( x , boost::bind( &stepper_type::template resize<state_type> , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( x , boost::bind( &stepper_type::template resize_impl<state_type> , boost::ref( *this ) , _1 ) );
 
         for( size_t i=0 ; i<x.size() ; ++i )
             m_pm.m_v[i] = i;
@@ -118,9 +118,17 @@ public:
         x = m_x.m_v;
     }
 
+    template< class StateType >
+    void adjust_size( const StateType &x )
+    {
+        resize_impl( x );
+    }
+
+
+private:
 
     template< class StateIn >
-    bool resize( const StateIn &x )
+    bool resize_impl( const StateIn &x )
     {
         bool resized = false;
         resized |= adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
@@ -131,14 +139,6 @@ public:
         return resized;
     }
 
-    template< class StateType >
-    void adjust_size( const StateType &x )
-    {
-        resize( x );
-    }
-
-
-private:
 
     void solve( state_type &x , matrix_type &m )
     {
