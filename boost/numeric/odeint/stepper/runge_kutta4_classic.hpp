@@ -67,7 +67,7 @@ public :
 
         static const value_type val1 = static_cast< value_type >( 1.0 );
 
-        m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize< StateIn > , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize_impl< StateIn > , boost::ref( *this ) , _1 ) );
 
         typename boost::unwrap_reference< System >::type &sys = system;
 
@@ -104,8 +104,17 @@ public :
                 typename operations_type::template scale_sum5< value_type , time_type , time_type , time_type , time_type >( 1.0 , dt6 , dt3 , dt3 , dt6 ) );
     }
 
+    template< class StateType >
+    void adjust_size( const StateType &x )
+    {
+        resize_impl( x );
+        stepper_base_type::adjust_size( x );
+    }
+
+private:
+
     template< class StateIn >
-    bool resize( const StateIn &x )
+    bool resize_impl( const StateIn &x )
     {
         bool resized = false;
         resized |= adjust_size_by_resizeability( m_x_tmp , x , typename wrapped_state_type::is_resizeable() );
@@ -115,15 +124,6 @@ public :
         return resized;
     }
 
-    template< class StateType >
-    void adjust_size( const StateType &x )
-    {
-        resize( x );
-        stepper_base_type::adjust_size( x );
-    }
-
-
-private:
 
     resizer_type m_resizer;
 

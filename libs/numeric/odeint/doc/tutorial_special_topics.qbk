@@ -151,7 +151,7 @@ Ginzburg-Landau
 
 [section Using arbitrary precision floating point types]
 
-[import ../examples/lorenz_gmpxx.cpp]
+[import ../examples/gmpxx/lorenz_gmpxx.cpp]
 
 Besides the classical floating point number like `float`, `double`, `complex< double >` you can also use arbitrary precision types, like the types from [@http://gmplib.org/ gmp] and [@http://www.mpfr.org/ mpfr]. But you have to be carful about instantiating any numbers.
 

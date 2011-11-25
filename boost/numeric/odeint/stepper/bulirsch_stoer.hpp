@@ -182,7 +182,7 @@ public:
         static const time_type val1( static_cast< time_type >( 1.0 ) );
 
         typename boost::unwrap_reference< System >::type &sys = system;
-        if( m_resizer.adjust_size( in , boost::bind( &controlled_error_bs_type::template resize< StateIn > , boost::ref( *this ) , _1 ) ) )
+        if( m_resizer.adjust_size( in , boost::bind( &controlled_error_bs_type::template resize_impl< StateIn > , boost::ref( *this ) , _1 ) ) )
         {
             reset(); // system resized -> reset
         }
@@ -322,6 +322,19 @@ public:
 
     /* Resizer methods */
 
+
+    template< class StateIn >
+    void adjust_size( const StateIn &x )
+    {
+        resize_m_dxdt( x );
+        resize_m_xnew( x );
+        resize_impl( x );
+        m_midpoint.adjust_size();
+    }
+
+
+private:
+
     template< class StateIn >
     bool resize_m_dxdt( const StateIn &x )
     {
@@ -335,7 +348,7 @@ public:
     }
 
     template< class StateIn >
-    bool resize( const StateIn &x )
+    bool resize_impl( const StateIn &x )
     {
         bool resized( false );
         for( size_t i = 0 ; i < m_k_max ; ++i )
@@ -344,17 +357,6 @@ public:
         return resized;
     }
 
-    template< class StateIn >
-    void adjust_size( const StateIn &x )
-    {
-        resize_m_dxdt( x );
-        resize_m_xnew( x );
-        resize( x );
-        m_midpoint.adjust_size();
-    }
-
-
-private:
 
     template< class System , class StateInOut >
     controlled_step_result try_step_v1( System system , StateInOut &x , time_type &t , time_type &dt )

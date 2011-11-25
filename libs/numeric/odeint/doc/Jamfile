@@ -36,10 +36,10 @@ boostbook odeint
         
 	;
 
-#install doc
-#        : [ glob-tree *.html *.jpg *.css ]
-#        : <location>../../../../doc/ <install-source-root>html
-#        ;
+install doc
+        : [ glob-tree *.html *.jpg *.css ]
+        : <location>../../../../doc/ <install-source-root>html
+        ;
 
 	
 # doxygen reference.doxy

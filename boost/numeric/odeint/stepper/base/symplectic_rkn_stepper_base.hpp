@@ -154,18 +154,6 @@ public:
     }
 
 
-    template< class StateIn >
-    bool resize_dqdt( const StateIn &x )
-    {
-        return adjust_size_by_resizeability( m_dqdt , x , typename wrapped_coor_deriv_type::is_resizeable() );
-    }
-
-    template< class StateIn >
-    bool resize_dpdt( const StateIn &x )
-    {
-        return adjust_size_by_resizeability( m_dpdt , x , typename wrapped_momentum_deriv_type::is_resizeable() );
-    }
-
     template< class StateType >
     void adjust_size( const StateType &x )
     {
@@ -287,6 +275,19 @@ private:
             }
         }
     }
+
+    template< class StateIn >
+    bool resize_dqdt( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_dqdt , x , typename wrapped_coor_deriv_type::is_resizeable() );
+    }
+
+    template< class StateIn >
+    bool resize_dpdt( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_dpdt , x , typename wrapped_momentum_deriv_type::is_resizeable() );
+    }
+
 
     const coef_type m_coef_a;
     const coef_type m_coef_b;

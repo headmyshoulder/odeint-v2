@@ -241,7 +241,7 @@ public:
         static const time_type val1( static_cast< time_type >( 1.0 ) );
 
         typename boost::unwrap_reference< System >::type &sys = system;
-//        if( m_resizer.adjust_size( in , boost::bind( &controlled_error_bs_type::template resize< StateIn > , boost::ref( *this ) , _1 ) ) )
+//        if( m_resizer.adjust_size( in , boost::bind( &controlled_error_bs_type::template resize_impl< StateIn > , boost::ref( *this ) , _1 ) ) )
 //            reset(); // system resized -> reset
 //        if( dt != m_dt_last )
 //            reset(); // step size changed from outside -> reset
@@ -384,7 +384,7 @@ public:
     template< class StateType >
     void initialize( const StateType &x0 , const time_type &t0 , const time_type &dt0 )
     {
-        m_resizer.adjust_size( x0 , boost::bind( &controlled_error_bs_type::template resize< StateType > , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( x0 , boost::bind( &controlled_error_bs_type::template resize_impl< StateType > , boost::ref( *this ) , _1 ) );
         boost::numeric::odeint::copy( x0 , *m_current_state );
         m_t = t0;
         m_dt = dt0;
@@ -464,36 +464,10 @@ public:
     }
 
 
-    /* Resizer methods */
-    template< class StateIn >
-    bool resize( const StateIn &x )
-    {
-        bool resized( false );
-
-        resized |= adjust_size_by_resizeability( m_x1 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_x2 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_dxdt1 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_dxdt2 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_err , x , typename wrapped_state_type::is_resizeable() );
-
-        for( size_t i = 0 ; i < m_k_max ; ++i )
-            resized |= adjust_size_by_resizeability( m_table[i] , x , typename wrapped_state_type::is_resizeable() );
-        for( size_t i = 0 ; i < m_k_max+1 ; ++i )
-                    resized |= adjust_size_by_resizeability( m_mp_states[i] , x , typename wrapped_state_type::is_resizeable() );
-        for( size_t i = 0 ; i < m_k_max+1 ; ++i )
-            for( size_t j = 0 ; j < m_derivs[i].size() ; ++j )
-                resized |= adjust_size_by_resizeability( m_derivs[i][j] , x , typename wrapped_deriv_type::is_resizeable() );
-        for( size_t i = 0 ; i < 2*m_k_max+1 ; ++i )
-            for( size_t j = 0 ; j < m_diffs[i].size() ; ++j )
-                resized |= adjust_size_by_resizeability( m_diffs[i][j] , x , typename wrapped_deriv_type::is_resizeable() );
-
-        return resized;
-    }
-
     template< class StateIn >
     void adjust_size( const StateIn &x )
     {
-        resize( x );
+        resize_impl( x );
         m_midpoint.adjust_size();
     }
 
@@ -781,6 +755,33 @@ private:
             theta_pow *= theta;
         }
     }
+
+    /* Resizer methods */
+    template< class StateIn >
+    bool resize_impl( const StateIn &x )
+    {
+        bool resized( false );
+
+        resized |= adjust_size_by_resizeability( m_x1 , x , typename wrapped_state_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_x2 , x , typename wrapped_state_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_dxdt1 , x , typename wrapped_state_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_dxdt2 , x , typename wrapped_state_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_err , x , typename wrapped_state_type::is_resizeable() );
+
+        for( size_t i = 0 ; i < m_k_max ; ++i )
+            resized |= adjust_size_by_resizeability( m_table[i] , x , typename wrapped_state_type::is_resizeable() );
+        for( size_t i = 0 ; i < m_k_max+1 ; ++i )
+                    resized |= adjust_size_by_resizeability( m_mp_states[i] , x , typename wrapped_state_type::is_resizeable() );
+        for( size_t i = 0 ; i < m_k_max+1 ; ++i )
+            for( size_t j = 0 ; j < m_derivs[i].size() ; ++j )
+                resized |= adjust_size_by_resizeability( m_derivs[i][j] , x , typename wrapped_deriv_type::is_resizeable() );
+        for( size_t i = 0 ; i < 2*m_k_max+1 ; ++i )
+            for( size_t j = 0 ; j < m_diffs[i].size() ; ++j )
+                resized |= adjust_size_by_resizeability( m_diffs[i][j] , x , typename wrapped_deriv_type::is_resizeable() );
+
+        return resized;
+    }
+
 
     default_error_checker< value_type, algebra_type , operations_type > m_error_checker;
     modified_midpoint_dense_out< state_type , value_type , deriv_type , time_type , algebra_type , operations_type , resizer_type > m_midpoint;

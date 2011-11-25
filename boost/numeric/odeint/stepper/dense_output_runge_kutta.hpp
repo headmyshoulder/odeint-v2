@@ -118,7 +118,7 @@ public:
     template< class StateType >
     void initialize( const StateType &x0 , const time_type &t0 , const time_type &dt0 )
     {
-        m_resizer.adjust_size( x0 , boost::bind( &dense_output_stepper_type::template resize< StateType > , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( x0 , boost::bind( &dense_output_stepper_type::template resize_impl< StateType > , boost::ref( *this ) , _1 ) );
         boost::numeric::odeint::copy( x0 , *m_current_state );
         m_t = t0;
         m_dt = dt0;
@@ -149,19 +149,10 @@ public:
         m_stepper.calc_state( x , t , *m_old_state , m_t_old , *m_current_state , m_t );
     }
 
-    template< class StateIn >
-    bool resize( const StateIn &x )
-    {
-        bool resized = false;
-        resized |= adjust_size_by_resizeability( m_x1 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_x2 , x , typename wrapped_state_type::is_resizeable() );
-        return resized;
-    }
-
     template< class StateType >
     void adjust_size( const StateType &x )
     {
-        resize( x );
+        resize_impl( x );
         m_stepper.stepper().resize( x );
     }
 
@@ -187,6 +178,16 @@ public:
 
 
 private:
+
+    template< class StateIn >
+    bool resize_impl( const StateIn &x )
+    {
+        bool resized = false;
+        resized |= adjust_size_by_resizeability( m_x1 , x , typename wrapped_state_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_x2 , x , typename wrapped_state_type::is_resizeable() );
+        return resized;
+    }
+
 
     stepper_type m_stepper;
     resizer_type m_resizer;

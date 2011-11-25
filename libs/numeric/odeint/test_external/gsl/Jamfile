@@ -17,9 +17,9 @@ project
 lib libgsl : : <name>gsl <link>shared ;
 lib libgslcblas : : <name>gslcblas <link>shared ;
 
-test-suite "mkl"
+test-suite "gsl"
     : 
-      [ run check_gsl.cpp  libgsl libgslcblas
+      [ run check_gsl.cpp libgslcblas libgsl
       :
       :
       : <link>shared:<define>BOOST_TEST_DYN_LINK=1

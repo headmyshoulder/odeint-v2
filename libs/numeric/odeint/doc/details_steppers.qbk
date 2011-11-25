@@ -104,8 +104,6 @@ Many multistep methods are also explicit steppers, hence the parameter of  `do_s
 
 [section Controlled steppers]
 
-[caution This section is not complete.]
-
 Many of the above introduced steppers possess the possibility to use adaptive stepsize control. Adaptive step size integration works in principle as follows:
 
 # The error of one step is calculated. This is usually done by performing two steps with different orders. The difference between these two steps is then used as a measure for the error. Stepper which can calculate the error are __error_stepper and they form a own class with an separate concept.
@@ -115,21 +113,21 @@ The class of controlled steppers has its own concept in odeint - the __controlle
 
 Different step size controlling mechanism exist. They all have in common that they somehow compare predefined error tolerance against the error and that they might reject or accept a step. If a step is rejected the step size is usually decreased and the step is made again. Then the procedure of checking the error tolerances and accepting or rejecting a step is made again and repeated  until the step is accepted. The procedure is implemented in the integration functions.
 
-A classical way to calculate the error tolerance is
+A classical way to decide wether a step is rejected or accepted is
 
-['val = || err[subl i] / ( __epsilon[subl abs] + __epsilon[subl rel] x[subl i] ) || ]
+['val = || | err[subl i] | / ( __epsilon[subl abs] + __epsilon[subl rel] * ( a[subl x] | x[subl i] | + a[subl dxdt] | | dxdt[subl i] | )|| ]
 
-['__epsilon[subl abs]] and ['__epsilon[subl rel]] are the absolute and the relative error tolerances, and ['|| x ||] is a norm, typically ['||x||=(__Sigma[subl i] x[subl i][super 2])[super 1/2]] or the maximum norm. For details of the used norms and error tolerance see the table below. The step is rejected if ['val] is greater then 1, otherwise it is accepted.
+['__epsilon[subl abs]] and ['__epsilon[subl rel]] are the absolute and the relative error tolerances, and ['|| x ||] is a norm, typically ['||x||=(__Sigma[subl i] x[subl i][super 2])[super 1/2]] or the maximum norm. The step is rejected if ['val] is greater then 1, otherwise it is accepted. For details of the used norms and error tolerance see the table below. 
 
-If the step size is rejected a new (smaller) time step is calculated via
+For the 'controlled_runge_kutta' stepper the new step size is then calculated via
 
-['dt = dt pow( val , 1 / ( O[subl e] - 1 ) )]
+['val > 1   : dt[subl new] = dt[subl current] max( 0.9 pow( val , -1 / ( O[subl E] - 1 ) ) , 0.2 )]
 
-But also if the step is accepted the step size can be increased
+['val < 0.5 : dt[subl new] = dt[subl current] min( 0.9 pow( val , -1 / O[subl S] ) , 5 )]
 
-['dt = dt pow( val , -1 / O[subl s] ) ]
+['else : dt[subl new] = dt[subl current]]
 
-Here, ['O[subl S]] and ['O[subl E]] are the order of the stepper and the error stepper. Usually these formulas have some safety factory, see the table below for details.
+Here, ['O[subl S]] and ['O[subl E]] are the order of the stepper and the error stepper. These formulas also contain some safety factors, avoiding that the step size is reduced or increased to much. For details of the implementations of the controlled steppers in odeint see the table below.
 
 [include controlled_stepper_table.qbk]
 
@@ -157,22 +155,47 @@ Of course, this statement is also lengthly; it demonstrates how `make_dense_outp
 
 [section Using steppers]
 
-[caution This section is not complete]
-
 This section contains some general informations about the usage of the steppers in odeint.
 
-The stepper in odeint are always copied in odeint.
-* Stepper are always copied in odeint. 
-* def
+[* Steppers are copied by value]
+
+The stepper in odeint are always copied by values. They are copied for the creation of the controlled steppers or the dense output steppers as well as in the integrate functions.
+
+[* Steppers might have a internal state]
+
+[caution Some of the features described in this section are not yet implemented]
+
+Some steppers require to store some informations about the state of the ODE between two steps. Examples are the multistep method which store a part of the solution during the evolution of the ODE, or the FSAL steppers which store the last derivative at time ['t+dt], to be used in the next step. In both cases the steppers expect that consecutive calls of `do_step` are from the same solution and the same ODE.
+
+Stepper with an internal state support two additional methods: `reset` which resets the state and `initialize` which initializes the internal state. The parameters of `initialize` depend on the specific stepper. For example  the Adams-Bashforth-Moulton stepper provides two initialize methods: `initialize( system , inout , t , dt )` which initializes the internal states with the help of the Runge-Kutta 4 stepper, and `initialize( stepper , system , inout , t , dt )` which initializes with the help of `stepper`. For the case of the FSAL steppers, `initialize` is `initialize( sys , in , t )` which simply calculates the r.h.s. of the ODE and assigns its value to the internal derivative.
+
+All these stepper have in common, that they initially fill their internal state by themself. Hence you are not required to call initialize. See how this works for the Adams-Bashforth-Moulton stepper: in the example we instantiate a fourth order Adams-Bashforth-Moulton stepper, meaning that it will store 4 internal derivatives of the solution at times `(t-dt,t-2dt,t-3dt,t-4dt)`.
+
+``
+adams_bashforth_moulton< 4 , state_type > stepper;
+stepper.do_step( sys , x , t , dt );   // make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-4dt
+stepper.do_step( sys , x , t , dt );   // make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-3dt
+stepper.do_step( sys , x , t , dt );   // make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-2dt
+stepper.do_step( sys , x , t , dt );   // make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-dt
+stepper.do_step( sys , x , t , dt );   // make one step with Adam-Bashforth-Moulton, the internal array of states is now rotated
+``
+
+In the stepper table at the bottom of this page one can see which stepper have an internal state and hence provide the `reset` and `initialize` methods.
 
 
-steppers are always copied, in integrate_functions or in nested steppers
 
-which steppers are good
+[* Stepper might be resizable]
 
-[* Usage constraints]
+some word on resizing
 
-Some steppers require to store some informations about the state of the ODE between two steps. Examples are the multistep method which store a part of the solution during the evolution of the ODE; the FSAL steppers store the last derivative at time ['t+dt] since this derivative is used in the next step. In this case the stepper expects that consecutive calls of do_step are from the same solution and the same ODE.
+[* Which steppers should be used in which situation]
+
+odeint provides a quite large number of different steppers such that the user is left with the question of which stepper fits his needs. In the following we give our (personal) recommendations
+
+* `runge_kutta_dopri5` is maybe the best default stepper. It has step size control as well as dense-output functionality. Simple create a dense-output stepper by `make_dense_output( 1.0e-6 , 1.0e-5 , runge_kutta_dopri5< state_type >() )`.
+* `runge_kutta4` is a good stepper for constant step sizes. It is widely used and very well known. If you need to create artifical time series this stepper should be the first choice.
+* 'runge_kutta_fehlberg78' is similar to the 'runge_kutta4' with the advantage that it has higher precision. It can also be used with step size control.
+* `adams_bashforth_moulton` is very well suited for ODEs where the r.h.s. is expensive (in terms of computation time). It will calculate the system function only once during each step.
 
 [endsect]
 

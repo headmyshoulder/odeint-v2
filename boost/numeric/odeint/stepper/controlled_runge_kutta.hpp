@@ -272,24 +272,6 @@ public:
         m_stepper.adjust_size( x );
     }
 
-    template< class StateIn >
-    bool resize_m_xerr( const StateIn &x )
-    {
-        return adjust_size_by_resizeability( m_xerr , x , typename wrapped_state_type::is_resizeable() );
-    }
-
-    template< class StateIn >
-    bool resize_m_dxdt( const StateIn &x )
-    {
-        return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
-    }
-
-    template< class StateIn >
-    bool resize_m_xnew( const StateIn &x )
-    {
-        return adjust_size_by_resizeability( m_xnew , x , typename wrapped_state_type::is_resizeable() );
-    }
-
     stepper_type& stepper( void )
     {
         return m_stepper;
@@ -311,6 +293,25 @@ private:
         sys( x , m_dxdt.m_v ,t );
         return try_step( system , x , m_dxdt.m_v , t , dt );
     }
+
+    template< class StateIn >
+    bool resize_m_xerr( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_xerr , x , typename wrapped_state_type::is_resizeable() );
+    }
+
+    template< class StateIn >
+    bool resize_m_dxdt( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
+    }
+
+    template< class StateIn >
+    bool resize_m_xnew( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_xnew , x , typename wrapped_state_type::is_resizeable() );
+    }
+
 
 
     stepper_type m_stepper;

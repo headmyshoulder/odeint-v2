@@ -123,7 +123,7 @@ public :
 
         typename boost::unwrap_reference< System >::type &sys = system;
 
-        m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize<StateIn> , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize_impl<StateIn> , boost::ref( *this ) , _1 ) );
 
         //m_x1 = x + dt*b21*dxdt
         stepper_base_type::m_algebra.for_each3( m_x_tmp.m_v , in , dxdt ,
@@ -154,7 +154,16 @@ public :
     }
 
     template< class StateIn >
-    bool resize( const StateIn &x )
+    void adjust_size( const StateIn &x )
+    {
+        resize_impl( x );
+        stepper_base_type::adjust_size( x );
+    }
+
+private:
+
+    template< class StateIn >
+    bool resize_impl( const StateIn &x )
     {
         bool resized = false;
         resized |= adjust_size_by_resizeability( m_x_tmp , x , typename wrapped_state_type::is_resizeable() );
@@ -166,14 +175,6 @@ public :
         return resized;
     }
 
-    template< class StateIn >
-    void adjust_size( const StateIn &x )
-    {
-        resize( x );
-        stepper_base_type::adjust_size( x );
-    }
-
-private:
 
     wrapped_state_type m_x_tmp;
     wrapped_deriv_type m_k2, m_k3, m_k4, m_k5, m_k6;
