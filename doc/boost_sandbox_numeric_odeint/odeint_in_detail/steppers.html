@@ -130,7 +130,6 @@
           is the Runge Kutta stepper of fourth order:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">runge_kutta4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">rk</span><span class="special">;</span>
 <span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>               <span class="comment">// In-place transformation of inout</span>
@@ -175,7 +174,6 @@
           how the FSAL steppers can be used is
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">rk</span><span class="special">;</span>
 <span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
@@ -241,7 +239,6 @@
           again simple C-functions of functors. An example is the harmonic oscillator:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="number">1</span> <span class="special">&gt;</span> <span class="identifier">vector_type</span><span class="special">;</span>
 
@@ -263,7 +260,6 @@
           example for the harmonic oscillator is now:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">pair</span><span class="special">&lt;</span> <span class="identifier">vector_type</span> <span class="special">,</span> <span class="identifier">vector_type</span> <span class="special">&gt;</span> <span class="identifier">x</span><span class="special">;</span>
 <span class="identifier">x</span><span class="special">.</span><span class="identifier">first</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">second</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
@@ -277,7 +273,6 @@
           two public method:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">harm_osc</span>
 <span class="special">{</span>
@@ -295,7 +290,6 @@
 <p>
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">harm_osc</span> <span class="identifier">h</span><span class="special">;</span>
 <span class="identifier">rkn</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span> <span class="special">&amp;</span><span class="identifier">harm_osc</span><span class="special">::</span><span class="identifier">f1</span> <span class="special">,</span> <span class="identifier">h</span> <span class="special">,</span> <span class="identifier">_1</span> <span class="special">,</span> <span class="identifier">_2</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span> <span class="special">&amp;</span><span class="identifier">harm_osc</span><span class="special">::</span><span class="identifier">f2</span> <span class="special">,</span> <span class="identifier">h</span> <span class="special">,</span> <span class="identifier">_1</span> <span class="special">,</span> <span class="identifier">_2</span> <span class="special">)</span> <span class="special">)</span> <span class="special">,</span>
@@ -315,7 +309,6 @@
           can be written as
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">pair</span><span class="special">&lt;</span> <span class="identifier">vector_type</span> <span class="special">,</span> <span class="identifier">vector_type</span> <span class="special">&gt;</span> <span class="identifier">x</span><span class="special">;</span>
 <span class="identifier">x</span><span class="special">.</span><span class="identifier">first</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">second</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
@@ -339,7 +332,6 @@
           takes q and p without combining them into a pair:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">rkn</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">harm_osc_f1</span> <span class="special">,</span> <span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">q</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">p</span> <span class="special">)</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
 <span class="identifier">rkn</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">harm_osc_f1</span> <span class="special">,</span> <span class="identifier">q</span> <span class="special">,</span> <span class="identifier">p</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
@@ -405,7 +397,6 @@
           steps is instantiated and initialized;
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">adams_bashforth_moulton</span><span class="special">&lt;</span> <span class="number">5</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">abm</span><span class="special">;</span>
 <span class="identifier">abm</span><span class="special">.</span><span class="identifier">initialize</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
@@ -423,7 +414,6 @@
           state of the Adams-Bashforth-Stepper:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">abm</span><span class="special">.</span><span class="identifier">initialize</span><span class="special">(</span> <span class="identifier">runge_kutta_fehlberg78</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;()</span> <span class="special">,</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
 </pre>
@@ -455,15 +445,6 @@
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.controlled_steppers"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.controlled_steppers" title="Controlled steppers">Controlled
         steppers</a>
 </h4></div></div></div>
-<div class="caution"><table border="0" summary="Caution">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Caution]" src="../../images/caution.png"></td>
-<th align="left">Caution</th>
-</tr>
-<tr><td align="left" valign="top"><p>
-            This section is not complete.
-          </p></td></tr>
-</table></div>
 <p>
           Many of the above introduced steppers possess the possibility to use adaptive
           stepsize control. Adaptive step size integration works in principle as
@@ -501,35 +482,41 @@
           in the integration functions.
         </p>
 <p>
-          A classical way to calculate the error tolerance is
+          A classical way to decide wether a step is rejected or accepted is
         </p>
 <p>
-          <span class="emphasis"><em>val = || err<sub>&#8203;i</sub> / ( &#949;<sub>&#8203;abs</sub> + &#949;<sub>&#8203;rel</sub> x<sub>&#8203;i</sub> ) || </em></span>
+          <span class="emphasis"><em>val = || | err<sub>&#8203;i</sub> | / ( &#949;<sub>&#8203;abs</sub> + &#949;<sub>&#8203;rel</sub> * ( a<sub>&#8203;x</sub> | x<sub>&#8203;i</sub> | + a<sub>&#8203;dxdt</sub> | | dxdt<sub>&#8203;i</sub> | )||
+          </em></span>
         </p>
 <p>
           <span class="emphasis"><em>&#949;<sub>&#8203;abs</sub></em></span> and <span class="emphasis"><em>&#949;<sub>&#8203;rel</sub></em></span> are the absolute
           and the relative error tolerances, and <span class="emphasis"><em>|| x ||</em></span> is
           a norm, typically <span class="emphasis"><em>||x||=(&#931;<sub>&#8203;i</sub> x<sub>&#8203;i</sub><sup>2</sup>)<sup>1/2</sup></em></span> or the maximum norm.
-          For details of the used norms and error tolerance see the table below.
           The step is rejected if <span class="emphasis"><em>val</em></span> is greater then 1, otherwise
-          it is accepted.
+          it is accepted. For details of the used norms and error tolerance see the
+          table below.
         </p>
 <p>
-          If the step size is rejected a new (smaller) time step is calculated via
+          For the 'controlled_runge_kutta' stepper the new step size is then calculated
+          via
         </p>
 <p>
-          <span class="emphasis"><em>dt = dt pow( val , 1 / ( O<sub>&#8203;e</sub> - 1 ) )</em></span>
+          <span class="emphasis"><em>val &gt; 1 : dt<sub>&#8203;new</sub> = dt<sub>&#8203;current</sub> max( 0.9 pow( val , -1 / ( O<sub>&#8203;E</sub> - 1
+          ) ) , 0.2 )</em></span>
         </p>
 <p>
-          But also if the step is accepted the step size can be increased
+          <span class="emphasis"><em>val &lt; 0.5 : dt<sub>&#8203;new</sub> = dt<sub>&#8203;current</sub> min( 0.9 pow( val , -1 / O<sub>&#8203;S</sub> ) ,
+          5 )</em></span>
         </p>
 <p>
-          <span class="emphasis"><em>dt = dt pow( val , -1 / O<sub>&#8203;s</sub> ) </em></span>
+          <span class="emphasis"><em>else : dt<sub>&#8203;new</sub> = dt<sub>&#8203;current</sub></em></span>
         </p>
 <p>
           Here, <span class="emphasis"><em>O<sub>&#8203;S</sub></em></span> and <span class="emphasis"><em>O<sub>&#8203;E</sub></em></span> are the order
-          of the stepper and the error stepper. Usually these formulas have some
-          safety factory, see the table below for details.
+          of the stepper and the error stepper. These formulas also contain some
+          safety factors, avoiding that the step size is reduced or increased to
+          much. For details of the implementations of the controlled steppers in
+          odeint see the table below.
         </p>
 <div class="table">
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.controlled_steppers.adaptive_step_size_algorithms"></a><p class="title"><b>Table&#160;1.6.&#160;Adaptive step size algorithms</b></p>
@@ -566,44 +553,65 @@
 <tr>
 <td>
                   <p>
-                    controlled_runge_kutta
+                    <code class="computeroutput"><span class="identifier">controlled_runge_kutta</span></code>
                   </p>
                 </td>
 <td>
                   <p>
-                    <span class="emphasis"><em>tol=1/2</em></span>
+                    <span class="emphasis"><em>val = || | err<sub>&#8203;i</sub> | / ( &#949;<sub>&#8203;abs</sub> + &#949;<sub>&#8203;rel</sub> * ( a<sub>&#8203;x</sub> | x<sub>&#8203;i</sub> | + a<sub>&#8203;dxdt</sub> | |
+                    dxdt<sub>&#8203;i</sub> | )|| </em></span>
                   </p>
                 </td>
 <td>
                   <p>
-                    -
+                    <span class="emphasis"><em>||x|| = max( x<sub>&#8203;i</sub> )</em></span>
                   </p>
                 </td>
 <td>
                   <p>
-                    <span class="emphasis"><em>dt<sub>&#8203;new</sub> = dt<sub>&#8203;old</sub><sup>1/a</sup></em></span>
+                    <span class="emphasis"><em>val &gt; 1 : dt<sub>&#8203;new</sub> = dt<sub>&#8203;current</sub> max( 0.9 pow( val , -1
+                    / ( O<sub>&#8203;E</sub> - 1 ) ) , 0.2 )</em></span>
+                  </p>
+                  <p>
+                    <span class="emphasis"><em>val &lt; 0.5 : dt<sub>&#8203;new</sub> = dt<sub>&#8203;current</sub> min( 0.9 pow( val ,
+                    -1 / O<sub>&#8203;S</sub> ) , 5 )</em></span>
+                  </p>
+                  <p>
+                    <span class="emphasis"><em>else : dt<sub>&#8203;new</sub> = dt<sub>&#8203;current</sub></em></span>
                   </p>
                 </td>
 </tr>
 <tr>
 <td>
                   <p>
-                    rosenbrock4_controller
+                    <code class="computeroutput"><span class="identifier">rosenbrock4_controller</span></code>
                   </p>
                 </td>
 <td>
                   <p>
-                    <span class="emphasis"><em>tol=1/2</em></span>
+                    <span class="emphasis"><em>val = || err<sub>&#8203;i</sub> / ( &#949;<sub>&#8203;abs</sub> + &#949;<sub>&#8203;rel</sub> max( | x<sub>&#8203;i</sub> | , | xold<sub>&#8203;i</sub> | ) )
+                    || </em></span>
                   </p>
                 </td>
 <td>
                   <p>
-                    -
+                    <span class="emphasis"><em>||x||=(&#931;<sub>&#8203;i</sub> x<sub>&#8203;i</sub><sup>2</sup>)<sup>1/2</sup></em></span>
                   </p>
                 </td>
 <td>
                   <p>
-                    <span class="emphasis"><em>dt<sub>&#8203;new</sub> = dt<sub>&#8203;old</sub><sup>1/a</sup></em></span>
+                    <span class="emphasis"><em>fac = max( 1 / 6 , min( 5 , pow( val , 1 / 4 ) / 0.9
+                    ) </em></span>
+                  </p>
+                  <p>
+                    <span class="emphasis"><em>fac2 = max( 1 / 6 , min( 5 , dt<sub>&#8203;old</sub> / dt<sub>&#8203;current</sub> pow( val<sup>2</sup> /
+                    val<sub>&#8203;old</sub> , 1 / 4 ) / 0.9 ) </em></span>
+                  </p>
+                  <p>
+                    <span class="emphasis"><em>val &gt; 1 : dt<sub>&#8203;new</sub> = dt<sub>&#8203;current</sub> / fac </em></span>
+                  </p>
+                  <p>
+                    <span class="emphasis"><em>val &lt; 1 : dt<sub>&#8203;new</sub> = dt<sub>&#8203;current</sub> / max( fac , fac2 ) </em></span>
                   </p>
                 </td>
 </tr>
@@ -633,6 +641,17 @@
 </table></div>
 </div>
 <br class="table-break"><p>
+          safe = 0.9 , fac1 = 5.0 , fac2 = 1.0 / 6.0
+        </p>
+<p>
+          value_type fac_pred = ( m_dt_old / dt ) * pow( err * err / m_err_old ,
+          0.25 ) / safe; fac_pred = std::max( fac2 , std::min( fac1 , fac_pred )
+          ); fac = std::max( fac , fac_pred ); dt_new = dt / fac;
+        </p>
+<p>
+          fac = max( fac2 , min( fac1 , pow( err , 0.25 ) / safe ) )
+        </p>
+<p>
           To ease to generation of the controlled stepper generation functions exist
           which take the absolute and relative error tolerances and a predefined
           error stepper and contruct from this knowledge an appropirate controlled
@@ -657,7 +676,6 @@
           An example is
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">dense_output_runge_kutta</span><span class="special">&lt;</span> <span class="identifier">controlled_runge_kutta</span><span class="special">&lt;</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">dense</span><span class="special">;</span>
 <span class="identifier">dense</span><span class="special">.</span><span class="identifier">initialize</span><span class="special">(</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
@@ -683,7 +701,6 @@
           exist:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">result_of</span><span class="special">::</span><span class="identifier">make_dense_output</span><span class="special">&lt;</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">dense2</span> <span class="special">=</span> <span class="identifier">make_dense_output</span><span class="special">(</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;()</span> <span class="special">);</span>
 </pre>
@@ -701,7 +718,6 @@
           for easy use with the integrate functions:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">make_dense_output</span><span class="special">(</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;()</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t_start</span> <span class="special">,</span> <span class="identifier">t_end</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
 </pre>
@@ -713,40 +729,101 @@
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.using_steppers"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.using_steppers" title="Using steppers">Using
         steppers</a>
 </h4></div></div></div>
-<div class="caution"><table border="0" summary="Caution">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Caution]" src="../../images/caution.png"></td>
-<th align="left">Caution</th>
-</tr>
-<tr><td align="left" valign="top"><p>
-            This section is not complete
-          </p></td></tr>
-</table></div>
 <p>
           This section contains some general informations about the usage of the
           steppers in odeint.
         </p>
 <p>
-          The stepper in odeint are always copied in odeint. * Stepper are always
-          copied in odeint. * def
+          <span class="bold"><strong>Steppers are copied by value</strong></span>
         </p>
 <p>
-          steppers are always copied, in integrate_functions or in nested steppers
+          The stepper in odeint are always copied by values. They are copied for
+          the creation of the controlled steppers or the dense output steppers as
+          well as in the integrate functions.
         </p>
 <p>
-          which steppers are good
-        </p>
-<p>
-          <span class="bold"><strong>Usage constraints</strong></span>
+          <span class="bold"><strong>Steppers might have a internal state</strong></span>
         </p>
 <p>
           Some steppers require to store some informations about the state of the
           ODE between two steps. Examples are the multistep method which store a
-          part of the solution during the evolution of the ODE; the FSAL steppers
-          store the last derivative at time <span class="emphasis"><em>t+dt</em></span> since this
-          derivative is used in the next step. In this case the stepper expects that
-          consecutive calls of do_step are from the same solution and the same ODE.
+          part of the solution during the evolution of the ODE, or the FSAL steppers
+          which store the last derivative at time <span class="emphasis"><em>t+dt</em></span>, to be
+          used in the next step. In both cases the steppers expect that consecutive
+          calls of <code class="computeroutput"><span class="identifier">do_step</span></code> are from
+          the same solution and the same ODE.
         </p>
+<p>
+          Stepper with an internal state support two additional methods: <code class="computeroutput"><span class="identifier">reset</span></code> which resets the state and <code class="computeroutput"><span class="identifier">initialize</span></code> which initializes the internal
+          state. The parameters of <code class="computeroutput"><span class="identifier">initialize</span></code>
+          depend on the specific stepper. For example the Adams-Bashforth-Moulton
+          stepper provides two initialize methods: <code class="computeroutput"><span class="identifier">initialize</span><span class="special">(</span> <span class="identifier">system</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">)</span></code> which initializes the internal states
+          with the help of the Runge-Kutta 4 stepper, and <code class="computeroutput"><span class="identifier">initialize</span><span class="special">(</span> <span class="identifier">stepper</span> <span class="special">,</span> <span class="identifier">system</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">)</span></code> which initializes with the help of <code class="computeroutput"><span class="identifier">stepper</span></code>. For the case of the FSAL steppers,
+          <code class="computeroutput"><span class="identifier">initialize</span></code> is <code class="computeroutput"><span class="identifier">initialize</span><span class="special">(</span>
+          <span class="identifier">sys</span> <span class="special">,</span>
+          <span class="identifier">in</span> <span class="special">,</span>
+          <span class="identifier">t</span> <span class="special">)</span></code>
+          which simply calculates the r.h.s. of the ODE and assigns its value to
+          the internal derivative.
+        </p>
+<p>
+          All these stepper have in common, that they initially fill their internal
+          state by themself. Hence you are not required to call initialize. See how
+          this works for the Adams-Bashforth-Moulton stepper: in the example we instantiate
+          a fourth order Adams-Bashforth-Moulton stepper, meaning that it will store
+          4 internal derivatives of the solution at times <code class="computeroutput"><span class="special">(</span><span class="identifier">t</span><span class="special">-</span><span class="identifier">dt</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">2d</span><span class="identifier">t</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">3d</span><span class="identifier">t</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">4d</span><span class="identifier">t</span><span class="special">)</span></code>.
+        </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">adams_bashforth_moulton</span><span class="special">&lt;</span> <span class="number">4</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">stepper</span><span class="special">;</span>
+<span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-4dt</span>
+<span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-3dt</span>
+<span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-2dt</span>
+<span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-dt</span>
+<span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// make one step with Adam-Bashforth-Moulton, the internal array of states is now rotated</span>
+</pre>
+<p>
+        </p>
+<p>
+          <span class="bold"><strong>Stepper might be resizable</strong></span>
+        </p>
+<p>
+          some word on resizing
+        </p>
+<p>
+          <span class="bold"><strong>Which steppers should be used in which situation</strong></span>
+        </p>
+<p>
+          odeint provides a quite large number of different steppers such that the
+          user is left with the question of which stepper fits his needs. In the
+          following we give our (personal) recommendations
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+              <code class="computeroutput"><span class="identifier">runge_kutta_dopri5</span></code>
+              is maybe the best default stepper. It has step size control as well
+              as dense-output functionality. Simple create a dense-output stepper
+              by <code class="computeroutput"><span class="identifier">make_dense_output</span><span class="special">(</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="number">1.0e-5</span> <span class="special">,</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span>
+              <span class="special">&gt;()</span> <span class="special">)</span></code>.
+            </li>
+<li class="listitem">
+              <code class="computeroutput"><span class="identifier">runge_kutta4</span></code> is a good
+              stepper for constant step sizes. It is widely used and very well known.
+              If you need to create artifical time series this stepper should be
+              the first choice.
+            </li>
+<li class="listitem">
+              'runge_kutta_fehlberg78' is similar to the 'runge_kutta4' with the
+              advantage that it has higher precision. It can also be used with step
+              size control.
+            </li>
+<li class="listitem">
+              <code class="computeroutput"><span class="identifier">adams_bashforth_moulton</span></code>
+              is very well suited for ODEs where the r.h.s. is expensive (in terms
+              of computation time). It will calculate the system function only once
+              during each step.
+            </li>
+</ul></div>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
