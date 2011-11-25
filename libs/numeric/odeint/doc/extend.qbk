@@ -30,6 +30,8 @@ Of course, odeint already provides basic interfaces for most of the usual state 
 So if you use a `std::vector`, or a `boost::array` as state type no additional work is required,
 they just work out of the box.
 
+[section Construction/Resizing]
+
 We distinguish between two basic state types: fixed sized and dynamically
 sized.
 For fixed size state types the default constructor `state_type()` already
@@ -83,20 +85,28 @@ By default, odeint now expects the support of `boost::size(x)` and a
     [`void`] [Resizes x to have the same size as y.]]
 ]
 
-As an example of the above we will adopt `ublas::vector` from __ublas to work as a
-state type in odeint.
-This is particularily easy because `ublas::vector` supports __boost_range,
-including `boost::size`.
-It also has a resize member function so all that has to be done in this case
-is to declare resizability:
+[section Vectors derived from `std::vector`]
 
-[import ../examples/ublas/lorenz_ublas.cpp]
+As a first example we take the most simple case and implement our own vector
+`my_vector` which will be derived from `std::vector`.
+Using `std::vector` as base class ensures that resizing and iteration via
+__boost_range work out-of-box.
+The only thing that has to be done is declaring my_vector as resizeable as it
+is a dynamically sized array:
 
-[ublas_resizeable]
+[import ../examples/my_vector.cpp]
 
-This immediately makes `ublas::vector` working with odeint as all other
-requirements are fullfilled by default in this case.
-You can find the full example in [github_link libs/numeric/odeint/examples/ublas/lorenz_ublas.cpp lorenz_ublas.cpp].
+[my_vector]
+
+If we wouldn't specialize the `is_resizeable` template, the code would still
+compile but odeint would not adjust the size of temporary internal instances
+of my_vector and hence try to fill zero-sized vectors resulting in
+segmentation faults!
+The full example can be found in [github_link libs/numeric/odeint/examples/my_vector.cpp my_vector.cpp]
+
+[endsect]
+
+[section std::list]
 
 If your state type does work with __boost_range, but handles resizing
 differently you are required to specialize two implementations used by odeint
@@ -122,9 +132,199 @@ With these definitions odeint knows how to resize `std::list`s and so they can
 be used as state types.
 A complete example can be found in [github_link libs/numeric/odeint/examples/list_lattice.cpp list_lattice.cpp].
 
-gsl_vector, gsl_matrix, ublas::matrix, blitz::matrix, thrust
+[endsect]
 
 [endsect]
+
+[section Algebraic operations]
+
+If your state type is not supported by Boost.Range there are several
+possibilities to tell odeint how to do algebraic operations:
+
+* Implement `boost::begin` and `boost::end` for your state type so it works
+with Boost.Range.
+* Implement vector-vector addition operator `+` and scalar-vector
+multiplication operator `*` and use the non-standard `vector_space_algebra`.
+* Implement your own algebra that defines the required operations.
+
+[section Boost.Ublas]
+As an example for the employment of the `vector_space_algebra` we will adopt
+`ublas::vector` from __ublas to work as a state type in odeint.
+This is particularily easy because `ublas::vector` supports vector-vector
+addition and scalar-vector multiplication as well as `boost::size`.
+It also has a resize member function so all that has to be done in this case
+is to declare resizability:
+
+[import ../examples/ublas/lorenz_ublas.cpp]
+
+[ublas_resizeable]
+
+Now ublas::vector can be used as state type in odeint by specifying the 
+`vector_space_algebra` as algebra in the template parameter list of the
+stepper. 
+The following code shows the corresponding definitions:
+
+[ublas_main]
+
+You can find the full example in [github_link
+libs/numeric/odeint/examples/ublas/lorenz_ublas.cpp lorenz_ublas.cpp].
+
+[endsect]
+
+[section GSL Vector]
+
+All the above examples use __boost_range to iterate through the elements of the
+state type and perform the algebraic operation for each element.
+This is the most natural way when dealing with state types which are some kind
+of container.
+But what to do if your state type does not support iterators at all?
+In the following example we will try to use the `gsl_vector` type from __gsl (GNU
+Scientific Library) as state type in odeint.
+The GSL is a C library, so `gsl_vector` has neither constructor, nor
+destructor or any `begin` or `end` function, no iterators at all.
+So to make it work with odeint plenty of things have to be implemented.
+Note that all of the work shown here is already included in odeint, so using
+gls_vectors in odeint doesn't require any further adjustments.
+We start with defining appropriate constructors and destructors.
+This is done by specializing the `state_wrapper` for `gsl_vector`.
+State wrappers are used by the steppers internally to create and manage
+temporary instances of state types:
+
+``
+template<>
+struct state_wrapper< gsl_vector* >
+{
+    typedef double value_type;
+    typedef gsl_vector* state_type;
+    typedef state_wrapper< gsl_vector* > state_wrapper_type;
+    typedef boost::true_type is_resizeable;
+
+    state_type m_v;
+
+    state_wrapper( )
+    {
+        m_v = gsl_vector_alloc( 1 );
+    }
+
+    state_wrapper( const state_wrapper_type &x )
+    {
+        resize( m_v , x.m_v );
+        gsl_vector_memcpy( m_v , x.m_v );
+    }
+
+
+    ~state_wrapper()
+    {
+        gsl_vector_free( m_v );
+    }
+
+};
+``
+
+This `state_wrapper` specialization tells odeint how gsl_vectors are created,
+copied and destroyed.
+Next we need resizing, this is required because gsl_vectors are dynamically
+sized objects:
+``
+template<>
+struct is_resizeable< gsl_vector* >
+{
+    typedef boost::true_type type;
+    const static bool value = type::value;
+};
+
+template <>
+struct same_size_impl< gsl_vector* , gsl_vector* >
+{
+    static bool same_size( const gsl_vector* x , const gsl_vector* y )
+    {
+        return x->size == y->size;
+    }
+};
+
+template <>
+struct resize_impl< gsl_vector* , gsl_vector* >
+{
+    static void resize( gsl_vector* x , const gsl_vector* y )
+    {
+        gsl_vector_free( x );
+        x = gsl_vector_alloc( y->size );
+    }
+};
+``
+
+Up to now, we defined creation and resizing, but gsl_vectors also don't
+support iterators, so we first implement a gsl iterator:
+
+``
+/*
+ * defines an iterator for gsl_vector
+ */
+class gsl_vector_iterator 
+      : public boost::iterator_facade< gsl_vector_iterator , double , 
+                                       boost::random_access_traversal_tag >
+{
+public :
+
+    gsl_vector_iterator( void ): m_p(0) , m_stride( 0 ) { }
+    explicit gsl_vector_iterator( gsl_vector *p ) : m_p( p->data ) , m_stride( p->stride ) { }
+    friend gsl_vector_iterator end_iterator( gsl_vector * );
+
+private :
+
+    friend class boost::iterator_core_access;
+    friend class const_gsl_vector_iterator;
+
+    void increment( void ) { m_p += m_stride; }
+    void decrement( void ) { m_p -= m_stride; }
+    void advance( ptrdiff_t n ) { m_p += n*m_stride; }
+    bool equal( const gsl_vector_iterator &other ) const { return this->m_p == other.m_p; }
+    bool equal( const const_gsl_vector_iterator &other ) const;
+    double& dereference( void ) const { return *m_p; }
+
+    double *m_p;
+    size_t m_stride;
+};
+``
+A similar class exists for the `const` version of the iterator.
+Then we have a function returning the end iterator (similarily for `const` again):
+``
+gsl_vector_iterator end_iterator( gsl_vector *x )
+{
+    gsl_vector_iterator iter( x );
+    iter.m_p += iter.m_stride * x->size;
+    return iter;
+}
+``
+
+Finally, the bindings for __boost_range are added:
+``
+// template<>
+inline gsl_vector_iterator range_begin( gsl_vector *x )
+{
+    return gsl_vector_iterator( x );
+}
+
+// template<>
+inline gsl_vector_iterator range_end( gsl_vector *x )
+{
+    return end_iterator( x );
+}
+``
+Again with similar definitions for the `const` versions.
+This eventually makes odeint work with gsl vectors as state types.
+The full code for these bindings is found in [github_link
+boost/numeric/odeint/external/gsl/gsl_wrapper.hpp gsl_wrapper.hpp].
+It might look rather complicated but keep in mind that gsl is a pre compiled C
+library so it is quite an achievement that it's possible to get it working at
+all in the first place.
+[endsect]
+
+[endsect]
+
+[endsect]
+
+gsl_vector, gsl_matrix, ublas::matrix, blitz::matrix, thrust
 
 [section Write own steppers]
 

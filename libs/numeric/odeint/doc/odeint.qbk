@@ -38,6 +38,9 @@
 
 [def __intel_mkl
      [@http://software.intel.com/en-us/articles/intel-mkl/ Intel Math Kernel Library]]
+
+[def __gsl
+     [@http://www.gsl.org GSL]] 
     
 [def __concepts
     [link boost_sandbox_numeric_odeint.concepts Concepts]]
