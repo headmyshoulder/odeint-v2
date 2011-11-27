@@ -61,46 +61,46 @@ class point :
         T& operator[]( size_t i ) { return m_val[i]; }
 
         point_type& operator+=( const point_type& p )
-		        {
+        {
             for( size_t i=0 ; i<dim ; ++i )
                 m_val[i] += p[i];
             return *this;
-		        }
+        }
 
         point_type& operator-=( const point_type& p )
-		        {
+        {
             for( size_t i=0 ; i<dim ; ++i )
                 m_val[i] -= p[i];
             return *this;
-		        }
+        }
 
         point_type& operator+=( const value_type& val )
-		        {
+        {
             for( size_t i=0 ; i<dim ; ++i )
                 m_val[i] += val;
             return *this;
-		        }
+        }
 
         point_type& operator-=( const value_type& val )
-		        {
+        {
             for( size_t i=0 ; i<dim ; ++i )
                 m_val[i] -= val;
             return *this;
-		        }
+        }
 
         point_type& operator*=( const value_type &val )
-		        {
+        {
             for( size_t i=0 ; i<dim ; ++i )
                 m_val[i] *= val;
             return *this;
-		        }
+        }
 
         point_type& operator/=( const value_type &val )
-		        {
+        {
             for( size_t i=0 ; i<dim ; ++i )
                 m_val[i] /= val;
             return *this;
-		        }
+        }
 
         //->
 

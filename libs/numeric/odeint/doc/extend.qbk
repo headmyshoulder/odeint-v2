@@ -147,30 +147,6 @@ with Boost.Range.
 multiplication operator `*` and use the non-standard `vector_space_algebra`.
 * Implement your own algebra that defines the required operations.
 
-[section Boost.Ublas]
-As an example for the employment of the `vector_space_algebra` we will adopt
-`ublas::vector` from __ublas to work as a state type in odeint.
-This is particularily easy because `ublas::vector` supports vector-vector
-addition and scalar-vector multiplication as well as `boost::size`.
-It also has a resize member function so all that has to be done in this case
-is to declare resizability:
-
-[import ../examples/ublas/lorenz_ublas.cpp]
-
-[ublas_resizeable]
-
-Now ublas::vector can be used as state type in odeint by specifying the 
-`vector_space_algebra` as algebra in the template parameter list of the
-stepper. 
-The following code shows the corresponding definitions:
-
-[ublas_main]
-
-You can find the full example in [github_link
-libs/numeric/odeint/examples/ublas/lorenz_ublas.cpp lorenz_ublas.cpp].
-
-[endsect]
-
 [section GSL Vector]
 
 All the above examples use __boost_range to iterate through the elements of the
@@ -318,6 +294,49 @@ boost/numeric/odeint/external/gsl/gsl_wrapper.hpp gsl_wrapper.hpp].
 It might look rather complicated but keep in mind that gsl is a pre compiled C
 library so it is quite an achievement that it's possible to get it working at
 all in the first place.
+[endsect]
+
+
+[section Vector Space Algebra]
+
+As seen above, the standard way of performing algebraic operations on container-like state types in odeint is to iterate through the elements of the container and perform the operations element-wise on the underlying value type.
+This is realized by means of the `range_algebra` that uses __boost_range for obtaining iterators of the state types.
+However, there are other ways to implement the algebraic operations on containers, one of which is defining the addition/multiplication operators for the containers directly and then using the `vector_space_algebra`.
+If you use this algebra, the following operators have to be defined for the state_type:
+
+[table
+  [[Name] [Expression] [Type] [Semantics]]
+  [[Addition] [`x + y`] [`state_type`] [Calculates the vector sum 'x+y'.]]
+  [[Assign addition] [`x += y`] [`state_type`] [Performs x+y in place.]]
+  [[Scalar multiplication] [`a * x `] [`state_type`] [Performs multiplication of vector x with scalar a.]]
+  [[Assign scalar multiplication] [`x *= a`] [`state_type`] [Performs in-place multiplication of vector x with scalar a.]]
+]
+
+
+[endsect]
+
+[section Boost.Ublas]
+As an example for the employment of the `vector_space_algebra` we will adopt
+`ublas::vector` from __ublas to work as a state type in odeint.
+This is particularily easy because `ublas::vector` supports vector-vector
+addition and scalar-vector multiplication as well as `boost::size`.
+It also has a resize member function so all that has to be done in this case
+is to declare resizability:
+
+[import ../examples/ublas/lorenz_ublas.cpp]
+
+[ublas_resizeable]
+
+Now ublas::vector can be used as state type in odeint by specifying the 
+`vector_space_algebra` as algebra in the template parameter list of the
+stepper. 
+The following code shows the corresponding definitions:
+
+[ublas_main]
+
+You can find the full example in [github_link
+libs/numeric/odeint/examples/ublas/lorenz_ublas.cpp lorenz_ublas.cpp].
+
 [endsect]
 
 [endsect]
