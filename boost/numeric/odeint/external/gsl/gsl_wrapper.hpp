@@ -169,7 +169,8 @@ namespace odeint {
 template<>
 struct is_resizeable< gsl_vector* >
 {
-    struct type : public boost::true_type { };
+    //struct type : public boost::true_type { };
+    typedef boost::true_type type;
     const static bool value = type::value;
 };
 
