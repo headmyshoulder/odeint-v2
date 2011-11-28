@@ -67,7 +67,8 @@
     [link boost_sandbox_numeric_odeint.odeint_in_detail.steppers.using_steppers Using steppers]]
 [def __generation_functions
     [link boost_sandbox_numeric_odeint.odeint_in_detail.generation_functions Generation functions]]
-
+[def __adapt_state_types
+    [link boost_sandbox_numeric_odeint.extend_odeint Adapt you own state types]]
 
 
 [def __alpha '''&#945;''']

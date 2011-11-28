@@ -24,7 +24,7 @@
 
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
-
+#include <boost/numeric/odeint/util/copy.hpp>
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
@@ -137,9 +137,7 @@ public:
     {
         if( m_resizer.adjust_size( in , boost::bind( &internal_stepper_base_type::template resize_impl< StateIn > , boost::ref( *this ) , _1 ) ) || m_first_call )
         {
-            typename boost::unwrap_reference< System >::type &sys = system;
-            sys( in , m_dxdt.m_v ,t );
-            m_first_call = false;
+            initialize( system , in , t );
         }
         this->stepper().do_step_impl( system , in , m_dxdt.m_v , t , out , m_dxdt.m_v , dt );
     }
@@ -203,9 +201,7 @@ public:
     {
         if( m_resizer.adjust_size( in , boost::bind( &internal_stepper_base_type::template resize_impl< StateIn > , boost::ref( *this ) , _1 ) ) || m_first_call )
         {
-            typename boost::unwrap_reference< System >::type &sys = system;
-            sys( in , m_dxdt.m_v ,t );
-            m_first_call = false;
+            initialize( system , in , t );
         }
         this->stepper().do_step_impl( system , in , m_dxdt.m_v , t , out , m_dxdt.m_v , dt , xerr );
     }
@@ -232,6 +228,28 @@ public:
     }
 
 
+    void reset( void )
+    {
+        m_first_call = true;
+    }
+
+    template< class DerivIn >
+    void initialize( const DerivIn &deriv )
+    {
+        boost::numeric::odeint::copy( deriv , m_dxdt.m_v );
+        m_first_call = false;
+    }
+
+    template< class System , class StateIn >
+    void initialize( System system , const StateIn &x , const time_type &t )
+    {
+        typename boost::unwrap_reference< System >::type &sys = system;
+        sys( x , m_dxdt.m_v , t );
+        m_first_call = false;
+    }
+
+
+
     algebra_type& algebra()
     {   return m_algebra; }
 
@@ -245,9 +263,7 @@ private:
     {
         if( m_resizer.adjust_size( x , boost::bind( &internal_stepper_base_type::template resize_impl< StateInOut > , boost::ref( *this ) , _1 ) ) || m_first_call )
         {
-            typename boost::unwrap_reference< System >::type &sys = system;
-            sys( x , m_dxdt.m_v ,t );
-            m_first_call = false;
+            initialize( system , x , t );
         }
         this->stepper().do_step_impl( system , x , m_dxdt.m_v , t , x , m_dxdt.m_v , dt );
     }
@@ -257,9 +273,7 @@ private:
     {
         if( m_resizer.adjust_size( x , boost::bind( &internal_stepper_base_type::template resize_impl< StateInOut > , boost::ref( *this ) , _1 ) ) || m_first_call )
         {
-            typename boost::unwrap_reference< System >::type &sys = system;
-            sys( x , m_dxdt.m_v ,t );
-            m_first_call = false;
+            initialize( system , x , t );
         }
         this->stepper().do_step_impl( system , x , m_dxdt.m_v , t , x , m_dxdt.m_v , dt , xerr );
     }
@@ -286,6 +300,8 @@ private:
     bool m_first_call;
 
 protected:
+
+
     algebra_type m_algebra;
     wrapped_deriv_type m_dxdt;
 };

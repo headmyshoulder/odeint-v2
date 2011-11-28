@@ -165,7 +165,7 @@ The stepper in odeint are always copied by values. They are copied for the creat
 
 [caution Some of the features described in this section are not yet implemented]
 
-Some steppers require to store some informations about the state of the ODE between two steps. Examples are the multistep method which store a part of the solution during the evolution of the ODE, or the FSAL steppers which store the last derivative at time ['t+dt], to be used in the next step. In both cases the steppers expect that consecutive calls of `do_step` are from the same solution and the same ODE.
+Some steppers require to store some informations about the state of the ODE between two steps. Examples are the multistep method which store a part of the solution during the evolution of the ODE, or the FSAL steppers which store the last derivative at time ['t+dt], to be used in the next step. In both cases the steppers expect that consecutive calls of `do_step` are from the same solution and the same ODE. In this case it is absolutely neccessary that you call `do_step` with the same system function and the same state, see also the examples for the FSAL steppers above.
 
 Stepper with an internal state support two additional methods: `reset` which resets the state and `initialize` which initializes the internal state. The parameters of `initialize` depend on the specific stepper. For example  the Adams-Bashforth-Moulton stepper provides two initialize methods: `initialize( system , inout , t , dt )` which initializes the internal states with the help of the Runge-Kutta 4 stepper, and `initialize( stepper , system , inout , t , dt )` which initializes with the help of `stepper`. For the case of the FSAL steppers, `initialize` is `initialize( sys , in , t )` which simply calculates the r.h.s. of the ODE and assigns its value to the internal derivative.
 
@@ -183,14 +183,19 @@ stepper.do_step( sys , x , t , dt );   // make one step with Adam-Bashforth-Moul
 In the stepper table at the bottom of this page one can see which stepper have an internal state and hence provide the `reset` and `initialize` methods.
 
 
-
 [* Stepper might be resizable]
 
-some word on resizing
+Nearly all steppers in odeint need to store some intermediate results of the type `state_type` or `deriv_type`. To do this the size of these temporaries needs to be adjusted. So, most steppers in odeint provide an additional template parameter which controls the size adjustment of the internal variables - the resizer. In detail odeint provides three policy classes (resizers) `always_resizer`, `initially_resizer`, and `never_resizer`. Furthermore, all stepper have a method `adjust_size` which takes a parameter representing a state type and which manually adjusts the size of the internal variables. Before performing the actual resizing odeint always checks if the sizes of the state and the interal variable differ and only resizes if they are different.
+
+By default the resizing parameter is `initially_resizer`, meaning that the first call to `do_step` performs the resizing. Of course, if you have changed the size of your system and your state you have to call `adjust_size` by hand. The second resizer is the `always_resizer` which tries to resize the internal variables at every call of `do_step`. Typical use cases for this kind of resizer are self expanding lattics like shown in the tutorial or partial differential equations with an adaptive grid. The third class of resizer is the `never_resizer` which means that the internal variables are never adjusted automatically and always have the adjust by hand.
+
+There is a second mechanism which influences the resizing and which controls if a state type is at least resizeable - a metafunction `is_resizeable`. This metafunction returns a static boolean value if any type is resizable. For example it will return `true` for `std::vector< T >` but `false` for `tr1::array< T >`. By default and for unknown types `is_resizeable` returns `false`, so if you have your own type you need to specialize this metafunction. For more details on the resizing mechanism see the section __adapt_state_types.
+
+
 
 [* Which steppers should be used in which situation]
 
-odeint provides a quite large number of different steppers such that the user is left with the question of which stepper fits his needs. In the following we give our (personal) recommendations
+odeint provides a quite large number of different steppers such that the user is left with the question of which stepper fits his needs. Our personal recommendations are:
 
 * `runge_kutta_dopri5` is maybe the best default stepper. It has step size control as well as dense-output functionality. Simple create a dense-output stepper by `make_dense_output( 1.0e-6 , 1.0e-5 , runge_kutta_dopri5< state_type >() )`.
 * `runge_kutta4` is a good stepper for constant step sizes. It is widely used and very well known. If you need to create artifical time series this stepper should be the first choice.
