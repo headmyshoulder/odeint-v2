@@ -319,7 +319,7 @@ If you use this algebra, the following operators have to be defined for the stat
 As an example for the employment of the `vector_space_algebra` we will adopt
 `ublas::vector` from __ublas to work as a state type in odeint.
 This is particularily easy because `ublas::vector` supports vector-vector
-addition and scalar-vector multiplication as well as `boost::size`.
+addition and scalar-vector multiplication described above as well as `boost::size`.
 It also has a resize member function so all that has to be done in this case
 is to declare resizability:
 
@@ -336,6 +336,51 @@ The following code shows the corresponding definitions:
 
 You can find the full example in [github_link
 libs/numeric/odeint/examples/ublas/lorenz_ublas.cpp lorenz_ublas.cpp].
+
+[endsect]
+
+[section Point type]
+
+[import ../examples/lorenz_point.cpp]
+
+Here we show how to implement the required operators on a state type.
+As example we define a new class `point3D` representing a three-dimensional
+vector with components x,y,z and define addition and scalar multiplication
+operators for it.
+We use __boost_operators to reduce the amount of code to be written.
+The class for the point type looks as follows:
+
+[point3D]
+
+By deriving from __boost_operators classes we don't have to define outer class
+operators like `operator+( point3D , point3D )` because that is taken care of
+by the operators library.
+Note that for simple Runge-Kutta schemes (like `runge_kutta4`) only the `+`
+and `*` operators are required.
+If, however, a controlled stepper is used one also needs to specify the
+division operator `/` because calculation of the error term involves an
+element wise division of the state types.
+Additionally, controlled steppers require an `abs` function calculating the
+element-wise absolute value for the state type:
+
+[point3D_abs_div]
+
+Finally, we have to add a specialization for `reduce` implementing a reduction
+over the state type:
+
+[point3D_reduce]
+
+Again, note that the two last steps were only required if you want to use
+controlled steppers.
+For simple steppers definition of the simple `+=` and `*=` operators are
+sufficient.
+Having defined such a point type, we can easily perform the integration on a lorenz
+system by using the `vector_space_algebra` again:
+
+[point3D_main]
+
+The whole example can be found in [github_link
+libs/numeric/odeint/examples/lorenz_point.cpp lorenz_point.cpp]
 
 [endsect]
 
