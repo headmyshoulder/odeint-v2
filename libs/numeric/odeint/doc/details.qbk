@@ -5,6 +5,10 @@
 
 [section Generation functions]
 
+tba.
+
+explain the mechanis and how your own steppers can be used with the generation functions
+
 [include make_controlled_table.qbk]
 [include make_dense_output_table.qbk]
 

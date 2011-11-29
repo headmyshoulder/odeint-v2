@@ -773,7 +773,10 @@
           which store the last derivative at time <span class="emphasis"><em>t+dt</em></span>, to be
           used in the next step. In both cases the steppers expect that consecutive
           calls of <code class="computeroutput"><span class="identifier">do_step</span></code> are from
-          the same solution and the same ODE.
+          the same solution and the same ODE. In this case it is absolutely neccessary
+          that you call <code class="computeroutput"><span class="identifier">do_step</span></code> with
+          the same system function and the same state, see also the examples for
+          the FSAL steppers above.
         </p>
 <p>
           Stepper with an internal state support two additional methods: <code class="computeroutput"><span class="identifier">reset</span></code> which resets the state and <code class="computeroutput"><span class="identifier">initialize</span></code> which initializes the internal
@@ -813,10 +816,55 @@
           and <code class="computeroutput"><span class="identifier">initialize</span></code> methods.
         </p>
 <p>
+          In the stepper table at the bottom of this page one can see which stepper
+          have an internal state and hence provide the <code class="computeroutput"><span class="identifier">reset</span></code>
+          and <code class="computeroutput"><span class="identifier">initialize</span></code> methods.
+        </p>
+<p>
           <span class="bold"><strong>Stepper might be resizable</strong></span>
         </p>
 <p>
-          some word on resizing
+          Nearly all steppers in odeint need to store some intermediate results of
+          the type <code class="computeroutput"><span class="identifier">state_type</span></code> or
+          <code class="computeroutput"><span class="identifier">deriv_type</span></code>. To do this
+          the size of these temporaries needs to be adjusted. So, most steppers in
+          odeint provide an additional template parameter which controls the size
+          adjustment of the internal variables - the resizer. In detail odeint provides
+          three policy classes (resizers) <code class="computeroutput"><span class="identifier">always_resizer</span></code>,
+          <code class="computeroutput"><span class="identifier">initially_resizer</span></code>, and
+          <code class="computeroutput"><span class="identifier">never_resizer</span></code>. Furthermore,
+          all stepper have a method <code class="computeroutput"><span class="identifier">adjust_size</span></code>
+          which takes a parameter representing a state type and which manually adjusts
+          the size of the internal variables. Before performing the actual resizing
+          odeint always checks if the sizes of the state and the interal variable
+          differ and only resizes if they are different.
+        </p>
+<p>
+          By default the resizing parameter is <code class="computeroutput"><span class="identifier">initially_resizer</span></code>,
+          meaning that the first call to <code class="computeroutput"><span class="identifier">do_step</span></code>
+          performs the resizing. Of course, if you have changed the size of your
+          system and your state you have to call <code class="computeroutput"><span class="identifier">adjust_size</span></code>
+          by hand. The second resizer is the <code class="computeroutput"><span class="identifier">always_resizer</span></code>
+          which tries to resize the internal variables at every call of <code class="computeroutput"><span class="identifier">do_step</span></code>. Typical use cases for this kind
+          of resizer are self expanding lattics like shown in the tutorial or partial
+          differential equations with an adaptive grid. The third class of resizer
+          is the <code class="computeroutput"><span class="identifier">never_resizer</span></code> which
+          means that the internal variables are never adjusted automatically and
+          always have the adjust by hand.
+        </p>
+<p>
+          There is a second mechanism which influences the resizing and which controls
+          if a state type is at least resizeable - a metafunction <code class="computeroutput"><span class="identifier">is_resizeable</span></code>.
+          This metafunction returns a static boolean value if any type is resizable.
+          For example it will return <code class="computeroutput"><span class="keyword">true</span></code>
+          for <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span>
+          <span class="identifier">T</span> <span class="special">&gt;</span></code>
+          but <code class="computeroutput"><span class="keyword">false</span></code> for <code class="computeroutput"><span class="identifier">tr1</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span></code>.
+          By default and for unknown types <code class="computeroutput"><span class="identifier">is_resizeable</span></code>
+          returns <code class="computeroutput"><span class="keyword">false</span></code>, so if you have
+          your own type you need to specialize this metafunction. For more details
+          on the resizing mechanism see the section <a class="link" href="../extend_odeint.html" title="Extend odeint">Adapt
+          you own state types</a>.
         </p>
 <p>
           <span class="bold"><strong>Which steppers should be used in which situation</strong></span>

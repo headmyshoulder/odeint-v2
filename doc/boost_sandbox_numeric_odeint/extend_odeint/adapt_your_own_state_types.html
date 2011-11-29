@@ -967,8 +967,8 @@
             As example we define a new class <code class="computeroutput"><span class="identifier">point3D</span></code>
             representing a three-dimensional vector with components x,y,z and define
             addition and scalar multiplication operators for it. We use <a href="http://www.boost.org/doc/libs/release/doc/html/operators.html" target="_top">Boost.Operators</a>
-            to reduce the amount of code required. The class for the point type looks
-            as follows:
+            to reduce the amount of code to be written. The class for the point type
+            looks as follows:
           </p>
 <p>
             
@@ -991,7 +991,7 @@
     <span class="special">{</span> <span class="special">}</span>
 
     <span class="identifier">point3D</span><span class="special">(</span> <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">_x</span> <span class="special">,</span> <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">_y</span> <span class="special">,</span> <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">_z</span>  <span class="special">)</span>
-        <span class="special">:</span> <span class="identifier">x</span><span class="special">(</span> <span class="identifier">x</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">y</span><span class="special">(</span> <span class="identifier">y</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">z</span><span class="special">(</span> <span class="identifier">z</span> <span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">x</span><span class="special">(</span> <span class="identifier">_x</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">y</span><span class="special">(</span> <span class="identifier">_y</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">z</span><span class="special">(</span> <span class="identifier">_z</span> <span class="special">)</span>
     <span class="special">{</span> <span class="special">}</span>
 
     <span class="identifier">point3D</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">+=(</span> <span class="keyword">const</span> <span class="identifier">point3D</span> <span class="special">&amp;</span><span class="identifier">p</span> <span class="special">)</span>
@@ -1101,6 +1101,9 @@
 <span class="special">}</span>
 </pre>
 <p>
+          </p>
+<p>
+            The whole example can be found in <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/lorenz_point.cpp" target="_top">lorenz_point.cpp</a>
           </p>
 </div>
 </div>

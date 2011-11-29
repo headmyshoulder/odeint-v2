@@ -43,6 +43,13 @@ size_t integrate_adaptive(
             stepper , system , start_state ,
             start_time , end_time , dt ,
             observer , typename Stepper::stepper_category() );
+
+    /*
+     * Suggestion for a new extendable version:
+     *
+     * integrator_adaptive< Stepper , System, State , Time , Observer , typename Stepper::stepper_category > integrator;
+     * return integrator.run( stepper , system , start_state , start_time , end_time , dt , observer );
+     */
 }
 
 template< class Stepper , class System , class State , class Time , class Observer >
