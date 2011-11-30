@@ -3,8 +3,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Controlled stepper</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
 <link rel="up" href="../old_concepts.html" title="Old Concepts">
 <link rel="prev" href="error_stepper.html" title="Error stepper">
 <link rel="next" href="dense_ouput_stepper.html" title="Dense ouput stepper">
@@ -15,7 +15,7 @@
 <div class="spirit-nav">
 <a accesskey="p" href="error_stepper.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../old_concepts.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="dense_ouput_stepper.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_sandbox_numeric_odeint.old_concepts.controlled_stepper"></a><a class="link" href="controlled_stepper.html" title="Controlled stepper">Controlled
       stepper</a>
@@ -35,7 +35,7 @@
 <p>
         <span class="bold"><strong>Methods</strong></span>
       </p>
-<div class="itemizedlist"><ul type="disc"><li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
             <code class="computeroutput"><span class="identifier">Controlled_Stepper</span><span class="special">(</span>
             <span class="identifier">time_type</span> <span class="identifier">abs_err</span><span class="special">,</span> <span class="identifier">time_type</span>
             <span class="identifier">rel_err</span><span class="special">,</span>
@@ -60,8 +60,8 @@
         If the estimated error is less than half of the desired error, an increased
         stepsize will be suggested.
       </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
             <code class="computeroutput"><span class="identifier">Controlled_Stepper</span><span class="special">(</span>
             <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="identifier">abs_err</span><span class="special">,</span> <span class="identifier">time_type</span>
             <span class="identifier">rel_err</span><span class="special">,</span>
@@ -70,7 +70,7 @@
             Same as above, but with additional allocation of the internal memory
             to store intermediate results of the same size as <code class="computeroutput"><span class="identifier">x</span></code>.
           </li>
-<li>
+<li class="listitem">
             <code class="computeroutput"><span class="identifier">controlled_step_result</span> <span class="identifier">try_step</span><span class="special">(</span>
             <span class="identifier">DynamicalSystem</span> <span class="special">&amp;</span><span class="identifier">system</span><span class="special">,</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="identifier">dt</span> <span class="special">)</span></code>
           </li>
@@ -186,8 +186,8 @@
         <code class="computeroutput"><span class="identifier">dt</span></code> now containes the suggested
         reduced stepsize that should give an error below the desired level.
       </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
             <code class="computeroutput"><span class="identifier">controlled_step_result</span> <span class="identifier">try_step</span><span class="special">(</span>
             <span class="identifier">DynamicalSystem</span> <span class="special">&amp;</span><span class="identifier">system</span><span class="special">,</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">container_type</span>
             <span class="special">&amp;</span><span class="identifier">dxdt</span><span class="special">,</span> <span class="identifier">time_type</span>
@@ -198,32 +198,33 @@
             represents the derivative <span class="bold"><strong>x'(t) = f(x,t)</strong></span>
             at the time <span class="bold"><strong>t</strong></span>.
           </li>
-<li>
+<li class="listitem">
             <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">adjust_size</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">)</span></code>
             Adjusts the internal memory to store intermediate results of the same
             size as <code class="computeroutput"><span class="identifier">x</span></code>. This function
             <span class="emphasis"><em>must</em></span> be called whenever the system size changes
             during the integration.
           </li>
-<li>
+<li class="listitem">
             <code class="computeroutput"><span class="identifier">order_type</span> <span class="identifier">order_error_step</span><span class="special">()</span></code> Returns the order of the result <span class="bold"><strong>x(t+dt)</strong></span> of the algorithm.
           </li>
 </ul></div>
 <p>
         <span class="bold"><strong>Stepper that model this concept</strong></span>
       </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
             <code class="computeroutput"><span class="identifier">controlled_stepper_standard</span></code>
           </li>
-<li>
+<li class="listitem">
             <code class="computeroutput"><span class="identifier">controlled_stepper_bs</span></code>
           </li>
 </ul></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Karsten Ahnert and Mario Mulansky<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009-2011 Karsten Ahnert
+      and Mario Mulansky<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
