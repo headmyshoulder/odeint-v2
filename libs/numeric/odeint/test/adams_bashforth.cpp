@@ -30,6 +30,7 @@
 
 
 #include <boost/numeric/odeint/stepper/adams_bashforth.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
 
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
@@ -53,6 +54,36 @@ struct lorenz
         dxdt[2] = x[0]*x[1] - b * x[2];
 	}
 };
+
+template< class State >
+class rk4_decorator
+{
+public:
+
+    size_t do_count;
+
+    template< class System , class StateIn , class DerivIn , class StateOut >
+    void do_step( System system , const StateIn &in , const DerivIn &dxdt , value_type t , StateOut &out , value_type dt )
+    {
+        m_stepper.do_step( system , in , dxdt , t , out , dt );
+        ++do_count;
+    }
+
+    template< class System , class StateInOut , class DerivIn >
+    void do_step( System system , StateInOut &x , const DerivIn &dxdt , value_type t , value_type dt )
+    {
+        m_stepper.do_step( system , x , dxdt , t , dt );
+        ++do_count;
+    }
+
+
+    runge_kutta4< State > m_stepper;
+
+private:
+
+
+};
+
 
 BOOST_AUTO_TEST_SUITE( adams_bashforth_test )
 
@@ -150,5 +181,46 @@ BOOST_AUTO_TEST_CASE( test_instantiation )
 //	s8.do_step( lorenz() , x , t , dt );
 }
 
+BOOST_AUTO_TEST_CASE( test_auto_initialization )
+{
+    typedef boost::array< double , 3 > state_type;
+    state_type x = {{ 10.0 , 10.0 , 10.0 }};
+
+    adams_bashforth< 3 , state_type , value_type , state_type , value_type , range_algebra , default_operations ,
+        initially_resizer , rk4_decorator< state_type > > adams;
+
+    adams.initializing_stepper().do_count = 0;
+    adams.do_step( lorenz() , x , 0.0 , x , 0.1 );
+    BOOST_CHECK_EQUAL( adams.initializing_stepper().do_count , size_t( 1 ) );
+
+    adams.do_step( lorenz() , x , 0.0 , x , 0.1 );
+    BOOST_CHECK_EQUAL( adams.initializing_stepper().do_count , size_t( 2 ) );
+
+    adams.do_step( lorenz() , x , 0.0 , x , 0.1 );
+    BOOST_CHECK_EQUAL( adams.initializing_stepper().do_count , size_t( 2 ) );
+
+    adams.do_step( lorenz() , x , 0.0 , x , 0.1 );
+    BOOST_CHECK_EQUAL( adams.initializing_stepper().do_count , size_t( 2 ) );
+
+    adams.do_step( lorenz() , x , 0.0 , x , 0.1 );
+    BOOST_CHECK_EQUAL( adams.initializing_stepper().do_count , size_t( 2 ) );
+}
+
+BOOST_AUTO_TEST_CASE( test_manual_initialization )
+{
+    typedef boost::array< double , 3 > state_type;
+    state_type x = {{ 10.0 , 10.0 , 10.0 }};
+
+    adams_bashforth< 3 , state_type , value_type , state_type , value_type , range_algebra , default_operations ,
+        initially_resizer , rk4_decorator< state_type > > adams;
+
+    adams.initializing_stepper().do_count = 0;
+    double t = 0.0 , dt = 0.1;
+    adams.initialize( lorenz() , x , t , dt );
+    BOOST_CHECK_EQUAL( adams.initializing_stepper().do_count , size_t( 2 ) );
+
+    adams.do_step( lorenz() , x , 0.0 , x , 0.1 );
+    BOOST_CHECK_EQUAL( adams.initializing_stepper().do_count , size_t( 2 ) );
+}
 
 BOOST_AUTO_TEST_SUITE_END()

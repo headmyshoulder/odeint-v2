@@ -248,6 +248,11 @@ public:
         m_first_call = false;
     }
 
+    bool is_initialized( void ) const
+    {
+        return ! m_first_call;
+    }
+
 
 
     algebra_type& algebra()
