@@ -46,7 +46,8 @@ int main( int argc , char **argv )
 {
 	cout.precision( 14 );
 
-	taylor_type stepper;
+	taylor_type stepper( 1.0e-17 , 1.0e-35 );
+
 
 	state_type x = {{ 10.0 , 10.0 , 10.0 }} ;
 
@@ -65,9 +66,9 @@ int main( int argc , char **argv )
 //		cout << i << "\t" << t << "\t" << x << "\n";
 //	}
 
-	ofstream fout( "lorenz.dat" );
+//	ofstream fout( "lorenz.dat" );
 	size_t count = 0;
-	while( t < 5000.0 )
+	while( t < 100000.0 )
 	{
 		stepper.try_step(
 				fusion::make_vector
@@ -78,7 +79,7 @@ int main( int argc , char **argv )
 				) ,
 				x , t , dt );
 
-		fout << t << "\t" << x << endl;
+//		fout << t << "\t" << x << endl;
 		++count;
 	}
 	clog << count << endl;

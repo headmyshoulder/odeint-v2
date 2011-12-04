@@ -18,8 +18,8 @@ c  These data are written into the file 'lorsec.dat'
 
       COMMON /ST/ DX,DY,DZ,Q,NO
       INTEGER counter
-      open(9,file='lorenz.dat',status='unknown',access='sequential',
-     : form='formatted')
+C      open(9,file='lorenz.dat',status='unknown',access='sequential',
+C     : form='formatted')
 C  Introduce the parameters:
       P=10.d0
       B=8.d0/3.d0
@@ -29,11 +29,11 @@ C  Insert the initial point:
       y=10.d0
       z=10.d0
       t=0.d0
-      tend=5000.d0
+      tend=100000.d0
       counter=0
 10    call step (P,R,B,X,Y,Z,DT)
       T=T+DT
-      write(9,'(4f20.11)') t,x,y,z
+C      write(9,'(4f20.11)') t,x,y,z
       counter = counter + 1
       if(t.lt.tend) goto 10
       write(*,"(i8)")counter
