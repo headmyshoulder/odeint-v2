@@ -8,10 +8,12 @@
 #include <iostream>
 #include <fstream>
 
-#include "taylor.hpp"
-
-#include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
-#include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
+#include <boost/numeric/odeint/config.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg78.hpp>
+#include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
+#include <boost/numeric/odeint/stepper/generation.hpp>
 #include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
 
 
@@ -22,6 +24,8 @@
 
 #include <boost/mpl/range_c.hpp>
 #include <boost/mpl/for_each.hpp>
+
+#include "taylor.hpp"
 
 #define tab "\t"
 
@@ -35,7 +39,11 @@ std::ostream& operator<<( std::ostream& out , const boost::array< T , N > &x )
 
 typedef boost::array< double , 3 > state_type;
 
-typedef boost::numeric::odeint::explicit_error_rk54_ck< state_type > rk54_type;
+typedef boost::numeric::odeint::runge_kutta_cash_karp54< state_type > rk54_type;
+typedef boost::numeric::odeint::runge_kutta_dopri5< state_type > dopri5_type;
+typedef boost::numeric::odeint::runge_kutta_fehlberg78< state_type > fehlberg_type;
+typedef boost::numeric::odeint::bulirsch_stoer< state_type > bulirsch_stoer_type;
+
 
 const double sigma = 10.0;
 const double R = 28.0;
@@ -141,7 +149,11 @@ int main( int argc , char **argv )
 
 
 	boost::timer timer;
-	ofstream fout( "dat/lorenz_rk54.dat" );
+	ofstream fout1( "dat/lorenz_rk54.dat" );
+	ofstream fout2( "dat/lorenz_dopri5.dat" );
+	ofstream fout3( "dat/lorenz_fehlberg.dat" );
+	ofstream fout4( "dat/lorenz_bs.dat" );
+
 	for( size_t i=0 ; i<eps_abs_values.size() ; ++i )
 	{
 		for( size_t j=0 ; j<eps_rel_values.size() ; ++j )
@@ -149,20 +161,60 @@ int main( int argc , char **argv )
 			double eps_abs = eps_abs_values[i];
 			double eps_rel = eps_rel_values[j];
 
-			rk54_type rk54_plain;
-			controlled_runge_kutta< rk54_type > rk54( rk54_plain , default_error_checker< double >( eps_abs , eps_rel ) );
+			rk54_type rk54;
+			dopri5_type dopri5;
+			fehlberg_type fehlberg;
+			bulirsch_stoer_type bulirsch_stoer( eps_abs , eps_rel );
 
-			state_type x = {{ 10.0 , 10.0 , 10.0 }};
+
+			state_type x1 = {{ 10.0 , 10.0 , 10.0 }};
+			state_type x2 = {{ 10.0 , 10.0 , 10.0 }};
+			state_type x3 = {{ 10.0 , 10.0 , 10.0 }};
+	        state_type x4 = {{ 10.0 , 10.0 , 10.0 }};
 
 			timer.restart();
-			size_t steps_rk54 = integrate_adaptive( rk54 , lorenz , x , 0.0 , t_end , 0.1 );
+			size_t steps_rk54 = integrate_adaptive( make_controlled( eps_abs , eps_rel , rk54 ) , lorenz , x1 , 0.0 , t_end , 0.1 );
 			double time_rk54 = timer.elapsed();
 
-			fout << i << tab << j << tab << eps_abs << tab << eps_rel << tab;
-			fout << steps_rk54 << tab << time_rk54 << tab;
-			fout << endl;
+			fout1 << i << tab << j << tab << eps_abs << tab << eps_rel << tab;
+			fout1 << steps_rk54 << tab << time_rk54 << tab;
+			fout1 << endl;
+
+
+
+			timer.restart();
+			size_t steps_dopri5 = integrate_adaptive( make_controlled( eps_abs , eps_rel , dopri5 ) , lorenz , x2 , 0.0 , t_end , 0.1 );
+			double time_dopri5 = timer.elapsed();
+
+			fout2 << i << tab << j << tab << eps_abs << tab << eps_rel << tab;
+			fout2 << steps_dopri5 << tab << time_dopri5 << tab;
+			fout2 << endl;
+
+
+
+	        timer.restart();
+	        size_t steps_fehlberg = integrate_adaptive( make_controlled( eps_abs , eps_rel , fehlberg ) , lorenz , x3 , 0.0 , t_end , 0.1 );
+	        double time_fehlberg = timer.elapsed();
+
+	        fout3 << i << tab << j << tab << eps_abs << tab << eps_rel << tab;
+	        fout3 << steps_fehlberg << tab << time_fehlberg << tab;
+	        fout3 << endl;
+
+
+
+//	        timer.restart();
+//	        size_t steps_bs = integrate_adaptive( bulirsch_stoer , lorenz , x4 , 0.0 , t_end , 0.1 );
+//	        double time_bs = timer.elapsed();
+//
+//	        fout4 << i << tab << j << tab << eps_abs << tab << eps_rel << tab;
+//	        fout4 << steps_bs << tab << time_bs << tab;
+//	        fout4 << endl;
+
 		}
-		fout << endl;
+		fout1 << endl;
+		fout2 << endl;
+		fout3 << endl;
+//		fout4 << endl;
 	}
 
 
