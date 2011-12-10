@@ -1,8 +1,8 @@
 CUDA_ROOT = /usr/local/cuda
 ARCH = sm_13
 
-CC = g++
-CXX = g++
+CC = gcc-4.4
+CXX = gcc-4.4
 NVCC = $(CUDA_ROOT)/bin/nvcc
 # NVCC = g++
 
@@ -25,7 +25,7 @@ LDFLAGS = -L$(CUDA_ROOT)/lib64
 	$(NVCC) $(NVCCFLAGS) -c $< -o $@
 
 
-all : phase_oscillator_chain # phase_oscillator_ensemble lorenz_parameters
+all : phase_oscillator_chain phase_oscillator_ensemble lorenz_parameters
 
 
 phase_oscillator_chain.co : phase_oscillator_chain.cu
