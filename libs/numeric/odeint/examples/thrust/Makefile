@@ -25,7 +25,7 @@ LDFLAGS = -L$(CUDA_ROOT)/lib64
 	$(NVCC) $(NVCCFLAGS) -c $< -o $@
 
 
-all : phase_oscillator_chain phase_oscillator_ensemble lorenz_parameters
+all : phase_oscillator_chain phase_oscillator_ensemble lorenz_parameters relaxation
 
 
 phase_oscillator_chain.co : phase_oscillator_chain.cu
@@ -45,5 +45,11 @@ lorenz_parameters : lorenz_parameters.co
 lorenz_parameters.co : lorenz_parameters.cu
 
 
+relaxation : relaxation.co
+	$(CC) -o relaxation $(LDFLAGS) $(LDLIBS) relaxation.co
+relaxation.co : relaxation.cu
+
+
+
 clean :
-	-rm *~ *.o *.co phase_oscillator_chain phase_oscillator_ensemble lorenz_parameters 
+	-rm *~ *.o *.co phase_oscillator_chain phase_oscillator_ensemble lorenz_parameters relaxation 
