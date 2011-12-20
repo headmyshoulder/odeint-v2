@@ -197,13 +197,13 @@ public:
         value_vector h_opt( m_k_max+1 );
         value_vector work( m_k_max+1 );
 
-        //std::cout << "t=" << t <<", dt=" << dt << "(" << m_dt_last << ")" << ", k_opt=" << m_current_k_opt << std::endl;
+        std::cout << "t=" << t <<", dt=" << dt << "(" << m_dt_last << ")" << ", k_opt=" << m_current_k_opt << std::endl;
 
         time_type new_h = dt;
 
         for( size_t k = 0 ; k <= m_current_k_opt+1 ; k++ )
         {
-            //std::cout << "k=" << k <<": " << ", first: " << m_first << std::endl;
+            std::cout << "  k=" << k; //<<": " << ", first: " << m_first << std::endl;
             m_midpoint.set_steps( m_interval_sequence[k] );
             if( k == 0 )
             {
@@ -220,7 +220,7 @@ public:
                 h_opt[k] = calc_h_opt( dt , error , k );
                 work[k] = m_cost[k]/h_opt[k];
                 //std::cout << '\t' << "h_opt=" << h_opt[k] << ", work=" << work[k] << std::endl;
-                //std::cout << '\t' << "error: " << error << std::endl;
+                std::cout << '\t' << "error: " << error << std::endl;
 
                 if( (k == m_current_k_opt-1) || m_first )
                 { // convergence before k_opt ?
@@ -285,7 +285,6 @@ public:
                         new_h = h_opt[m_current_k_opt];
                     } else
                     {
-                        //std::cout << "REJECT!" << std::endl;
                         reject = true;
                         new_h = h_opt[m_current_k_opt];
                     }
@@ -295,7 +294,10 @@ public:
         }
 
         if( !reject )
+        {
             t += dt;
+        } else
+            std::cout << "REJECT!" << std::endl;
 
         if( !m_last_step_rejected || (new_h < dt) )
         {
