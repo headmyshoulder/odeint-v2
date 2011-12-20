@@ -44,8 +44,6 @@ namespace odeint {
 
 /*
  * Error checker for controlled_error_stepper
- *
- * ToDo: implement constructor with epsilons
  */
 template
 <
@@ -190,7 +188,7 @@ public:
     template< class System , class StateInOut , class DerivIn >
     controlled_step_result try_step( System system , StateInOut &x , const DerivIn &dxdt , time_type &t , time_type &dt )
     {
-        m_xnew_resizer.adjust_size( x , boost::bind( &controlled_runge_kutta::template resize_m_xnew< StateInOut > , boost::ref( *this ) , _1 ) );
+        m_xnew_resizer.adjust_size( x , boost::bind( &controlled_runge_kutta::template resize_m_xnew_impl< StateInOut > , boost::ref( *this ) , _1 ) );
         controlled_step_result res = try_step( system , x , dxdt , t , m_xnew.m_v , dt );
         if( res == success )
         {
@@ -208,7 +206,7 @@ public:
     controlled_step_result try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
     {
         typename boost::unwrap_reference< System >::type &sys = system;
-        m_dxdt_resizer.adjust_size( in , boost::bind( &controlled_runge_kutta::template resize_m_dxdt< StateIn > , boost::ref( *this ) , _1 ) );
+        m_dxdt_resizer.adjust_size( in , boost::bind( &controlled_runge_kutta::template resize_m_dxdt_impl< StateIn > , boost::ref( *this ) , _1 ) );
         sys( in , m_dxdt.m_v , t );
         return try_step( system , in , m_dxdt.m_v , t , out , dt );
     }
@@ -226,7 +224,7 @@ public:
         using std::min;
         using std::pow;
 
-        m_xerr_resizer.adjust_size( in , boost::bind( &controlled_runge_kutta::template resize_m_xerr< StateIn > , boost::ref( *this ) , _1 ) );
+        m_xerr_resizer.adjust_size( in , boost::bind( &controlled_runge_kutta::template resize_m_xerr_impl< StateIn > , boost::ref( *this ) , _1 ) );
 
         // do one step with error calculation
         m_stepper.do_step( system , in , dxdt , t , out , dt , m_xerr.m_v );
@@ -266,9 +264,9 @@ public:
     template< class StateType >
     void adjust_size( const StateType &x )
     {
-        resize_m_xerr( x );
-        resize_m_dxdt( x );
-        resize_m_xnew( x );
+        resize_m_xerr_impl( x );
+        resize_m_dxdt_impl( x );
+        resize_m_xnew_impl( x );
         m_stepper.adjust_size( x );
     }
 
@@ -289,25 +287,25 @@ private:
     controlled_step_result try_step_v1( System system , StateInOut &x , time_type &t , time_type &dt )
     {
         typename boost::unwrap_reference< System >::type &sys = system;
-        m_dxdt_resizer.adjust_size( x , boost::bind( &controlled_runge_kutta::template resize_m_dxdt< StateInOut > , boost::ref( *this ) , _1 ) );
+        m_dxdt_resizer.adjust_size( x , boost::bind( &controlled_runge_kutta::template resize_m_dxdt_impl< StateInOut > , boost::ref( *this ) , _1 ) );
         sys( x , m_dxdt.m_v ,t );
         return try_step( system , x , m_dxdt.m_v , t , dt );
     }
 
     template< class StateIn >
-    bool resize_m_xerr( const StateIn &x )
+    bool resize_m_xerr_impl( const StateIn &x )
     {
         return adjust_size_by_resizeability( m_xerr , x , typename wrapped_state_type::is_resizeable() );
     }
 
     template< class StateIn >
-    bool resize_m_dxdt( const StateIn &x )
+    bool resize_m_dxdt_impl( const StateIn &x )
     {
         return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
     }
 
     template< class StateIn >
-    bool resize_m_xnew( const StateIn &x )
+    bool resize_m_xnew_impl( const StateIn &x )
     {
         return adjust_size_by_resizeability( m_xnew , x , typename wrapped_state_type::is_resizeable() );
     }
@@ -402,7 +400,7 @@ public:
     template< class System , class StateIn , class StateOut >
     controlled_step_result try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
     {
-        if( m_dxdt_resizer.adjust_size( in , boost::bind( &controlled_runge_kutta::template resize_m_dxdt< StateIn > , boost::ref( *this ) , _1 ) ) || m_first_call )
+        if( m_dxdt_resizer.adjust_size( in , boost::bind( &controlled_runge_kutta::template resize_m_dxdt_impl< StateIn > , boost::ref( *this ) , _1 ) ) || m_first_call )
         {
             typename boost::unwrap_reference< System >::type &sys = system;
             sys( in , m_dxdt.m_v ,t );
@@ -420,8 +418,8 @@ public:
     template< class System , class StateInOut , class DerivInOut >
     controlled_step_result try_step( System system , StateInOut &x , DerivInOut &dxdt , time_type &t , time_type &dt )
     {
-        m_xnew_resizer.adjust_size( x , boost::bind( &controlled_runge_kutta::template resize_m_xnew< StateInOut > , boost::ref( *this ) , _1 ) );
-        m_dxdt_new_resizer.adjust_size( x , boost::bind( &controlled_runge_kutta::template resize_m_dxdt_new< StateInOut > , boost::ref( *this ) , _1 ) );
+        m_xnew_resizer.adjust_size( x , boost::bind( &controlled_runge_kutta::template resize_m_xnew_impl< StateInOut > , boost::ref( *this ) , _1 ) );
+        m_dxdt_new_resizer.adjust_size( x , boost::bind( &controlled_runge_kutta::template resize_m_dxdt_new_impl< StateInOut > , boost::ref( *this ) , _1 ) );
         controlled_step_result res = try_step( system , x , dxdt , t , m_xnew.m_v , m_dxdtnew.m_v , dt );
         if( res == success )
         {
@@ -445,7 +443,7 @@ public:
         using std::min;
         using std::pow;
 
-        m_xerr_resizer.adjust_size( in , boost::bind( &controlled_runge_kutta::template resize_m_xerr< StateIn > , boost::ref( *this ) , _1 ) );
+        m_xerr_resizer.adjust_size( in , boost::bind( &controlled_runge_kutta::template resize_m_xerr_impl< StateIn > , boost::ref( *this ) , _1 ) );
 
         //fsal: m_stepper.get_dxdt( dxdt );
         //fsal: m_stepper.do_step( sys , x , dxdt , t , dt , m_x_err );
@@ -483,36 +481,11 @@ public:
     template< class StateType >
     void adjust_size( const StateType &x )
     {
-        resize_m_xerr( x );
-        resize_m_dxdt( x );
-        resize_m_dxdt_new( x );
-        resize_m_xnew( x );
+        resize_m_xerr_impl( x );
+        resize_m_dxdt_impl( x );
+        resize_m_dxdt_new_impl( x );
+        resize_m_xnew_impl( x );
     }
-
-    template< class StateIn >
-    bool resize_m_xerr( const StateIn &x )
-    {
-        return adjust_size_by_resizeability( m_xerr , x , typename wrapped_state_type::is_resizeable() );
-    }
-
-    template< class StateIn >
-    bool resize_m_dxdt( const StateIn &x )
-    {
-        return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
-    }
-
-    template< class StateIn >
-    bool resize_m_dxdt_new( const StateIn &x )
-    {
-        return adjust_size_by_resizeability( m_dxdtnew , x , typename wrapped_deriv_type::is_resizeable() );
-    }
-
-    template< class StateIn >
-    bool resize_m_xnew( const StateIn &x )
-    {
-        return adjust_size_by_resizeability( m_xnew , x , typename wrapped_state_type::is_resizeable() );
-    }
-
 
 
     stepper_type& stepper( void )
@@ -529,10 +502,36 @@ public:
 
 private:
 
+
+    template< class StateIn >
+    bool resize_m_xerr_impl( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_xerr , x , typename wrapped_state_type::is_resizeable() );
+    }
+
+    template< class StateIn >
+    bool resize_m_dxdt_impl( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
+    }
+
+    template< class StateIn >
+    bool resize_m_dxdt_new_impl( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_dxdtnew , x , typename wrapped_deriv_type::is_resizeable() );
+    }
+
+    template< class StateIn >
+    bool resize_m_xnew_impl( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_xnew , x , typename wrapped_state_type::is_resizeable() );
+    }
+
+
     template< class System , class StateInOut >
     controlled_step_result try_step_v1( System system , StateInOut &x , time_type &t , time_type &dt )
     {
-        if( m_dxdt_resizer.adjust_size( x , boost::bind( &controlled_runge_kutta::template resize_m_dxdt< StateInOut > , boost::ref( *this ) , _1 ) ) || m_first_call )
+        if( m_dxdt_resizer.adjust_size( x , boost::bind( &controlled_runge_kutta::template resize_m_dxdt_impl< StateInOut > , boost::ref( *this ) , _1 ) ) || m_first_call )
         {
             typename boost::unwrap_reference< System >::type &sys = system;
             sys( x , m_dxdt.m_v , t );
