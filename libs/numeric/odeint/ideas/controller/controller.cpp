@@ -85,9 +85,44 @@ public:
 };
 
 
+
+template< class Stepper >
+class controlled_runge_kutta_explicit :
+    public generic_controlled_stepper<
+        Stepper ,
+        error_checker_explicit_new< typename Stepper::value_type , typename Stepper::algebra_type , typename Stepper::operations_type > ,
+        default_controller ,
+        typename Stepper::resizer_type ,
+        typename Stepper::stepper_category >
+{
+public:
+
+    typedef generic_controlled_stepper<
+        Stepper ,
+        error_checker_explicit_new< typename Stepper::value_type , typename Stepper::algebra_type , typename Stepper::operations_type > ,
+        default_controller ,
+        typename Stepper::resizer_type ,
+        typename Stepper::stepper_category > base_type;
+    typedef error_checker_explicit_new< typename Stepper::value_type , typename Stepper::algebra_type , typename Stepper::operations_type > error_checker_type;
+    typedef typename Stepper::value_type value_type;
+
+    controlled_runge_kutta_explicit( const Stepper &stepper = Stepper() ,
+            const value_type eps_abs = static_cast< value_type >( 1.0e-6 ) ,
+            const value_type eps_rel = static_cast< value_type >( 1.0e-6 ) ,
+            const value_type a_x = static_cast< value_type >( 1.0 ) ,
+            const value_type a_dxdt = static_cast< value_type >( 1.0 ) )
+    : base_type( stepper ,
+                 error_checker_type( base_type::stepper().algebra() , eps_abs , eps_rel , a_x , a_dxdt )
+               ) { }
+};
+
+
 }
 }
 }
+
+
+
 
 typedef boost::array< double , 3 > state_type;
 
@@ -116,22 +151,31 @@ int main( int argc , char **argv )
         explicit_error_stepper_tag > stepper1;
 
     controlled_runge_kutta< runge_kutta_cash_karp54< state_type > > stepper2;
+    controlled_runge_kutta_explicit< runge_kutta_cash_karp54< state_type > > stepper3;
 
     state_type x1 = {{ 10.0 , 10.0 , 10.0 }};
     state_type x2 = x1;
+    state_type x3 = x1;
 
     boost::timer timer;
+    const double t_max = 1000000.0;
 
     timer.restart();
-    size_t steps1 = integrate_adaptive( stepper1 , lorenz , x1 , 0.0 , 10000000.0 , 0.1 );
+    size_t steps1 = integrate_adaptive( stepper1 , lorenz , x1 , 0.0 , t_max , 0.1 );
     double t1 = timer.elapsed();
+    cout << steps1 << tab << t1 << tab << x1[0] << tab << x1[1] << tab << x1[2] << endl;
 
     timer.restart();
-    size_t steps2 = integrate_adaptive( stepper2 , lorenz , x2 , 0.0 , 10000000.0 , 0.1 );
+    size_t steps2 = integrate_adaptive( stepper2 , lorenz , x2 , 0.0 , t_max , 0.1 );
     double t2 = timer.elapsed();
-
-    cout << steps1 << tab << t1 << tab << x1[0] << tab << x1[1] << tab << x1[2] << endl;
     cout << steps2 << tab << t2 << tab << x2[0] << tab << x2[1] << tab << x2[2] << endl;
+
+    timer.restart();
+    size_t steps3 = integrate_adaptive( stepper3 , lorenz , x3 , 0.0 , t_max , 0.1 );
+    double t3 = timer.elapsed();
+    cout << steps3 << tab << t3 << tab << x3[0] << tab << x3[1] << tab << x3[2] << endl;
+
+
 
     return 0;
 }

@@ -145,6 +145,10 @@ public:
     }
 
 
+    stepper_type& stepper( void ) { return m_stepper; }
+    const stepper_type stepper( void ) const { return m_stepper; }
+
+
 private:
 
 
