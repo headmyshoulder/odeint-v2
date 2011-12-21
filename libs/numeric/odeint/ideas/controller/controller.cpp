@@ -4,7 +4,7 @@
  * * Put in appropriate header files
  *
  * * implement controllers
- *   * default
+ *   OK * default
  *   * pi control
  *
  * * implement error checkers
@@ -41,6 +41,9 @@
 #include "error_checker_explicit.hpp"
 #include "generic_controlled_stepper.hpp"
 #include "generic_controlled_stepper_explicit.hpp"
+#include "default_controller.hpp"
+#include "pi_controller.hpp"
+
 
 #define tab "\t"
 
@@ -48,41 +51,7 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-class default_controller
-{
-public:
 
-    template< class Value , class Time , class Order >
-    controlled_step_result operator()( Value error , Time &t , Time &dt , Order stepper_order , Order error_order )
-    {
-        using std::max;
-        using std::min;
-        using std::pow;
-
-        if( error > 1.0 )
-        {
-            // error too large - decrease dt ,limit scaling factor to 0.2 and reset state
-            dt *= max( 0.9 * pow( error , -1.0 / ( Value( error_order ) - 1.0 ) ) , 0.2 );
-            return fail;
-        }
-        else
-        {
-            if( error < 0.5 )
-            {
-                //error too small - increase dt and keep the evolution and limit scaling factor to 5.0
-                t += dt;
-                dt *= min( 0.9 * pow( error , -1.0 / Value( stepper_order ) ) , 5.0 );
-                return success;
-            }
-            else
-            {
-                t += dt;
-                return success;
-            }
-        }
-
-    }
-};
 
 
 
@@ -153,12 +122,21 @@ int main( int argc , char **argv )
     controlled_runge_kutta< runge_kutta_cash_karp54< state_type > > stepper2;
     controlled_runge_kutta_explicit< runge_kutta_cash_karp54< state_type > > stepper3;
 
+    generic_controlled_stepper<
+        runge_kutta_cash_karp54< state_type > ,
+        error_checker_explicit< double , range_algebra , default_operations > ,
+        pi_controller< double > ,
+        initially_resizer ,
+        explicit_error_stepper_tag > stepper4;
+
+
     state_type x1 = {{ 10.0 , 10.0 , 10.0 }};
     state_type x2 = x1;
     state_type x3 = x1;
+    state_type x4 = x1;
 
     boost::timer timer;
-    const double t_max = 1000000.0;
+    const double t_max = 100000.0;
 
     timer.restart();
     size_t steps1 = integrate_adaptive( stepper1 , lorenz , x1 , 0.0 , t_max , 0.1 );
@@ -174,6 +152,12 @@ int main( int argc , char **argv )
     size_t steps3 = integrate_adaptive( stepper3 , lorenz , x3 , 0.0 , t_max , 0.1 );
     double t3 = timer.elapsed();
     cout << steps3 << tab << t3 << tab << x3[0] << tab << x3[1] << tab << x3[2] << endl;
+
+    timer.restart();
+    size_t steps4 = integrate_adaptive( stepper4 , lorenz , x4 , 0.0 , t_max , 0.1 );
+    double t4 = timer.elapsed();
+    cout << steps4 << tab << t4 << tab << x4[0] << tab << x4[1] << tab << x4[2] << endl;
+
 
 
 
