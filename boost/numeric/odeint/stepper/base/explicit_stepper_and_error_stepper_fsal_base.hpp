@@ -28,6 +28,8 @@
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
+#include <boost/numeric/odeint/stepper/base/algebra_stepper_base.hpp>
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -51,16 +53,17 @@ class Algebra ,
 class Operations ,
 class Resizer
 >
-class explicit_stepper_and_error_stepper_fsal_base
+class explicit_stepper_and_error_stepper_fsal_base : public algebra_stepper_base< Algebra , Operations >
 {
 public:
+
+    typedef algebra_stepper_base< Algebra , Operations > algebra_stepper_base_type;
+    typedef typename algebra_stepper_base_type::algebra_type algebra_type;
 
     typedef State state_type;
     typedef Value value_type;
     typedef Deriv deriv_type;
     typedef Time time_type;
-    typedef Algebra algebra_type;
-    typedef Operations operations_type;
     typedef Resizer resizer_type;
     typedef Stepper stepper_type;
     typedef explicit_error_stepper_fsal_tag stepper_category;
@@ -77,7 +80,7 @@ public:
 
 
     explicit_stepper_and_error_stepper_fsal_base( const algebra_type &algebra = algebra_type() )
-    : m_first_call( true ) , m_algebra( algebra )
+    : algebra_stepper_base_type( algebra ) , m_first_call( true )
     { }
 
     order_type order( void ) const
@@ -255,12 +258,6 @@ public:
 
 
 
-    algebra_type& algebra()
-    {   return m_algebra; }
-
-    const algebra_type& algebra() const
-    {   return m_algebra; }
-
 private:
 
     template< class System , class StateInOut >
@@ -307,7 +304,6 @@ private:
 protected:
 
 
-    algebra_type m_algebra;
     wrapped_deriv_type m_dxdt;
 };
 

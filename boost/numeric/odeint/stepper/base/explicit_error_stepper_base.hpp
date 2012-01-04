@@ -27,6 +27,8 @@
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
+#include <boost/numeric/odeint/stepper/base/algebra_stepper_base.hpp>
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -34,7 +36,6 @@ namespace odeint {
 /*
  * base class for explicit error steppers
  * models the error stepper concept
- * ToDo : test
  */
 template<
 class ErrorStepper ,
@@ -48,9 +49,12 @@ class Algebra ,
 class Operations ,
 class Resizer
 >
-class explicit_error_stepper_base
+class explicit_error_stepper_base : public algebra_stepper_base< Algebra , Operations >
 {
 public:
+
+    typedef algebra_stepper_base< Algebra , Operations > algebra_stepper_base_type;
+    typedef typename algebra_stepper_base_type::algebra_type algebra_type;
 
     typedef State state_type;
     typedef state_wrapper< state_type > wrapped_state_type;
@@ -58,8 +62,6 @@ public:
     typedef Deriv deriv_type;
     typedef state_wrapper< deriv_type > wrapped_deriv_type;
     typedef Time time_type;
-    typedef Algebra algebra_type;
-    typedef Operations operations_type;
     typedef Resizer resizer_type;
     typedef ErrorStepper stepper_type;
     typedef explicit_error_stepper_tag stepper_category;
@@ -147,11 +149,6 @@ public:
         resize_impl( x );
     }
 
-    algebra_type& algebra()
-    {   return m_algebra; }
-
-    const algebra_type& algebra() const
-    {   return m_algebra; }
 
 private:
 
@@ -188,7 +185,7 @@ private:
     resizer_type m_resizer;
 
 protected:
-    algebra_type m_algebra;
+
     wrapped_deriv_type m_dxdt;
 };
 
