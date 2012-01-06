@@ -12,6 +12,7 @@
 #include <cmath>
 #include <utility>
 
+
 #include <thrust/device_vector.h>
 #include <thrust/reduce.h>
 #include <thrust/functional.h>
@@ -25,7 +26,6 @@
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_real.hpp>
 #include <boost/random/variate_generator.hpp>
-
 
 
 using namespace std;
@@ -91,7 +91,6 @@ struct lorenz_system
                         boost::begin( dxdt ) + 3 * m_N  ) ) ,
                 lorenz_functor() );
     }
-
     size_t m_N;
     const state_type &m_beta;
 };
@@ -242,10 +241,6 @@ const value_type dt = 0.01;
 int main( int arc , char* argv[] )
 {
     //[ thrust_lorenz_parameters_define_beta
-    boost::mt19937 rng;
-    boost::uniform_real< value_type > unif( 0.0 , 1.0 );
-    boost::variate_generator< boost::mt19937&, boost::uniform_real< value_type > > gen( rng , unif );
-
     vector< value_type > beta_host( N );
     const value_type beta_min = 0.0 , beta_max = 56.0;
     for( size_t i=0 ; i<N ; ++i )

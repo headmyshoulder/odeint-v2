@@ -22,6 +22,7 @@
 #include <thrust/device_vector.h>
 #include <thrust/host_vector.h>
 
+#include <boost/numeric/odeint/util/copy.hpp>
 
 namespace boost {
 namespace numeric {

@@ -20,7 +20,6 @@
 
 
 #include <utility>
-#include <iostream>
 
 #include <boost/ref.hpp>
 #include <boost/bind.hpp>
@@ -72,12 +71,12 @@ public:
 
     rosenbrock4_dense_output( const controlled_stepper_type &stepper = controlled_stepper_type() )
     : m_stepper( stepper ) ,
-      m_x1() , m_x2() , m_current_state( &m_x1.m_v ) , m_old_state( &m_x1.m_v ) ,
+      m_x1() , m_x2() , m_current_state( &m_x1.m_v ) , m_old_state( &m_x2.m_v ) ,
       m_t() , m_t_old() , m_dt()
     { }
 
     rosenbrock4_dense_output( const rosenbrock4_dense_output &rb )
-    : m_current_state( &m_x1.m_v ) , m_old_state( &m_x1.m_v )
+    : m_current_state( &m_x1.m_v ) , m_old_state( &m_x2.m_v )
     { }
 
     rosenbrock4_dense_output& operator=( const rosenbrock4_dense_output &rb )

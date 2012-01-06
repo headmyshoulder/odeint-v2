@@ -31,6 +31,7 @@
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
+#include <boost/numeric/odeint/stepper/base/algebra_stepper_base.hpp>
 
 namespace boost {
 namespace numeric {
@@ -51,31 +52,31 @@ class Algebra ,
 class Operations ,
 class Resizer
 >
-class explicit_stepper_base
+class explicit_stepper_base : public algebra_stepper_base< Algebra , Operations >
 {
 public:
 
+    typedef explicit_stepper_base< Stepper , Order , State , Value , Deriv , Time , Algebra , Operations , Resizer > internal_stepper_base_type;
+    typedef algebra_stepper_base< Algebra , Operations > algebra_stepper_base_type;
 
     typedef State state_type;
     typedef Value value_type;
     typedef Deriv deriv_type;
     typedef Time time_type;
-    typedef Algebra algebra_type;
-    typedef Operations operations_type;
     typedef Resizer resizer_type;
     typedef Stepper stepper_type;
     typedef stepper_tag stepper_category;
     typedef state_wrapper< state_type > wrapped_state_type;
     typedef state_wrapper< deriv_type > wrapped_deriv_type;
 
-    typedef explicit_stepper_base< Stepper , Order , State , Value , Deriv , Time , Algebra , Operations , Resizer > internal_stepper_base_type;
+    typedef typename algebra_stepper_base_type::algebra_type algebra_type;
 
     typedef unsigned short order_type;
     static const order_type order_value = Order;
 
 
     explicit_stepper_base( const algebra_type &algebra = algebra_type() )
-    : m_algebra( algebra )
+    : algebra_stepper_base_type( algebra )
     { }
 
     order_type order( void ) const
@@ -140,12 +141,9 @@ public:
         this->stepper().do_step_impl( system , in , dxdt , t , out , dt );
     }
 
-    algebra_type& algebra()
-    {   return m_algebra; }
 
-    const algebra_type& algebra() const
-    {   return m_algebra; }
 
+private:
 
     stepper_type& stepper( void )
     {
@@ -157,7 +155,6 @@ public:
         return *static_cast< const stepper_type* >( this );
     }
 
-private:
 
     template< class StateIn >
     bool resize_impl( const StateIn &x )
@@ -181,7 +178,6 @@ private:
 protected:
 
     wrapped_deriv_type m_dxdt;
-    algebra_type m_algebra;
 };
 
 

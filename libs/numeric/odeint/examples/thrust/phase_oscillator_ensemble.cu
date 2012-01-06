@@ -22,13 +22,26 @@
 #include <boost/numeric/odeint/external/thrust/thrust_operations.hpp>
 #include <boost/numeric/odeint/external/thrust/thrust_resize.hpp>
 
-#include <boost/random.hpp>
 #include <boost/timer.hpp>
-
+#include <boost/random/cauchy_distribution.hpp>
 
 using namespace std;
 
 using namespace boost::numeric::odeint;
+
+/*
+ * Sorry for that dirty hack, but nvcc has large problems with boost::random.
+ *
+ * Nevertheless we need the cauchy distribution from boost::random, and therefore
+ * we need a generator. Here it is:
+ */
+struct drand48_generator
+{
+    typedef double result_type;
+    result_type operator()( void ) const { return drand48(); }
+    result_type min( void ) const { return 0.0; }
+    result_type max( void ) const { return 1.0; }
+};
 
 //[ thrust_phase_ensemble_state_type
 //change this to float if your device does not support double computation
@@ -116,11 +129,13 @@ public:
 
     void create_frequencies( value_type g )
     {
-        boost::mt19937 rng;
         boost::cauchy_distribution< value_type > cauchy( 0.0 , g );
-        boost::variate_generator< boost::mt19937&, boost::cauchy_distribution< value_type > > gen( rng , cauchy );
+//        boost::variate_generator< boost::mt19937&, boost::cauchy_distribution< value_type > > gen( rng , cauchy );
+        drand48_generator d48;
         vector< value_type > omega( m_N );
-        generate( omega.begin() , omega.end() , gen );
+        for( size_t i=0 ; i<m_N ; ++i )
+            omega[i] = cauchy( d48 );
+//        generate( omega.begin() , omega.end() , gen );
         m_omega = omega;
     }
 
@@ -189,13 +204,9 @@ const value_type t_max = 100.0;
 
 int main( int arc , char* argv[] )
 {
-    boost::mt19937 rng;
-    boost::uniform_real< value_type > unif( 0.0 , 2.0 * pi );
-    boost::variate_generator< boost::mt19937&, boost::uniform_real< value_type > > gen( rng , unif );
-
     // initial conditions on host
     vector< value_type > x_host( N );
-    generate( x_host.begin() , x_host.end() , gen );
+    for( size_t i=0 ; i<N ; ++i ) x_host[i] = 2.0 * pi * drand48();
 
     //[ thrust_phase_ensemble_system_instance
     phase_oscillator_ensemble ensemble( N , 1.0 );

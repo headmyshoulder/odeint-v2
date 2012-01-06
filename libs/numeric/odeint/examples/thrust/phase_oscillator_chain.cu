@@ -22,13 +22,12 @@
 #include <iostream>
 #include <cmath>
 
-#include <boost/random.hpp>
-
 #include <thrust/device_vector.h>
 #include <thrust/iterator/permutation_iterator.h>
 #include <thrust/iterator/counting_iterator.h>
 
-#include <boost/numeric/odeint.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
+#include <boost/numeric/odeint/integrate/integrate_const.hpp>
 #include <boost/numeric/odeint/external/thrust/thrust_algebra.hpp>
 #include <boost/numeric/odeint/external/thrust/thrust_operations.hpp>
 #include <boost/numeric/odeint/external/thrust/thrust_resize.hpp>
@@ -36,6 +35,7 @@
 using namespace std;
 
 using namespace boost::numeric::odeint;
+
 
 //change this to float if your device does not support double computation
 typedef double value_type;
@@ -128,17 +128,12 @@ const value_type dt = 0.1;
 int main( int arc , char* argv[] )
 {
     //[ thrust_phase_chain_integration
-    // create random number generators
-    boost::mt19937 rng;
-    boost::uniform_real< value_type > unif( 0.0 , 2.0 * pi );
-    boost::variate_generator< boost::mt19937&, boost::uniform_real< value_type > > gen( rng , unif );
-
     // create initial conditions and omegas on host:
     vector< value_type > x_host( N );
     vector< value_type > omega_host( N );
     for( size_t i=0 ; i<N ; ++i )
     {
-        x_host[i] = gen();
+        x_host[i] = 2.0 * pi * drand48();
         omega_host[i] = ( N - i ) * epsilon; // decreasing frequencies
     }
 

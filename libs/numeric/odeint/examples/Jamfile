@@ -28,6 +28,7 @@ exe list_lattice : list_lattice.cpp ;
 exe stepper_details : stepper_details.cpp ;
 exe my_vector : my_vector.cpp ;
 exe lorenz_point : lorenz_point.cpp ;
+exe bs_bug : bs_bug.cpp ;
 
 # build-project mtl ;
 # build-project ublas ;
