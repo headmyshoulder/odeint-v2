@@ -88,10 +88,10 @@ public :
 
     typedef detail::rotating_buffer< wrapped_deriv_type , steps > step_storage_type;
 
-    adams_moulton( ) : m_algebra( m_algebra_instance )
+    adams_moulton( ) : m_algebra( m_algebra_instance ) , m_coefficients()
     { }
 
-    adams_moulton( algebra_type &algebra ) : m_algebra( algebra )
+    adams_moulton( algebra_type &algebra ) : m_algebra( algebra ) , m_coefficients()
     { }
 
     adams_moulton& operator=( const adams_moulton &stepper )

@@ -15,6 +15,7 @@
 #include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
 #include <boost/numeric/odeint/stepper/generation.hpp>
 #include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
+#include <boost/numeric/odeint/integrate/integrate_const.hpp>
 
 
 #include <boost/fusion/include/make_vector.hpp>
@@ -56,6 +57,17 @@ void lorenz( const state_type &x , state_type &dxdt , double t )
     dxdt[2] = x[0]*x[1] - b * x[2];
 }
 
+struct print {
+    ofstream &m_out;
+    print( ofstream &out )
+        : m_out( out )
+    { }
+
+    void operator()( const state_type &x , const double t )
+    {
+        m_out << x[0] << tab << x[1] << tab << x[2] << endl;
+    }
+};
 
 namespace fusion = boost::fusion;
 namespace phoenix = boost::phoenix;
@@ -154,6 +166,8 @@ int main( int argc , char **argv )
 	ofstream fout3( "dat/lorenz_fehlberg.dat" );
 	ofstream fout4( "dat/lorenz_bs.dat" );
 
+	ofstream wf_out( "dat/bs.dat" );
+
 	for( size_t i=0 ; i<eps_abs_values.size() ; ++i )
 	{
 		for( size_t j=0 ; j<eps_rel_values.size() ; ++j )
@@ -202,19 +216,20 @@ int main( int argc , char **argv )
 
 
 
-//	        timer.restart();
-//	        size_t steps_bs = integrate_adaptive( bulirsch_stoer , lorenz , x4 , 0.0 , t_end , 0.1 );
-//	        double time_bs = timer.elapsed();
-//
-//	        fout4 << i << tab << j << tab << eps_abs << tab << eps_rel << tab;
-//	        fout4 << steps_bs << tab << time_bs << tab;
-//	        fout4 << endl;
+	        timer.restart();
+	        size_t steps_bs = integrate_adaptive( bulirsch_stoer , lorenz , x4 , 0.0 , t_end , 0.1 ); //, print(wf_out) );
+	        double time_bs = timer.elapsed();
 
+	        fout4 << i << tab << j << tab << eps_abs << tab << eps_rel << tab;
+	        fout4 << steps_bs << tab << time_bs << tab;
+	        fout4 << endl;
+
+            clog << "done" << endl;
 		}
 		fout1 << endl;
 		fout2 << endl;
 		fout3 << endl;
-//		fout4 << endl;
+		fout4 << endl;
 	}
 
 
