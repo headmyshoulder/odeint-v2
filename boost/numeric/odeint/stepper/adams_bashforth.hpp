@@ -32,6 +32,8 @@
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
 
+#include <boost/numeric/odeint/stepper/base/algebra_stepper_base.hpp>
+
 #include <boost/numeric/odeint/stepper/detail/adams_bashforth_coefficients.hpp>
 #include <boost/numeric/odeint/stepper/detail/adams_bashforth_call_algebra.hpp>
 #include <boost/numeric/odeint/stepper/detail/rotating_buffer.hpp>
@@ -57,7 +59,7 @@ class Operations = default_operations ,
 class Resizer = initially_resizer ,
 class InitializingStepper = runge_kutta4< State , Value , Deriv , Time , Algebra , Operations, Resizer >
 >
-class adams_bashforth
+class adams_bashforth : public algebra_stepper_base< Algebra , Operations >
 {
 private:
 
@@ -69,11 +71,11 @@ public :
     typedef Deriv deriv_type;
     typedef state_wrapper< deriv_type > wrapped_deriv_type;
     typedef Time time_type;
-    typedef Algebra algebra_type;
-    typedef Operations operations_type;
     typedef Resizer resizer_type;
     typedef stepper_tag stepper_category;
 
+    typedef typename algebra_stepper_base< Algebra , Operations >::algebra_type algebra_type;
+    typedef typename algebra_stepper_base< Algebra , Operations >::operations_type operations_type;
     typedef adams_bashforth< Steps , State , Value , Deriv , Time , Algebra , Operations , Resizer , InitializingStepper > stepper_type;
     typedef InitializingStepper initializing_stepper_type;
 
@@ -205,16 +207,6 @@ public :
     void adjust_size( const StateType &x )
     {
         resize_impl( x );
-    }
-
-    algebra_type& algebra()
-    {
-        return m_algebra;
-    }
-
-    const algebra_type& algebra() const
-    {
-        return m_algebra;
     }
 
     const step_storage_type& step_storage( void ) const
