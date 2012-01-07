@@ -367,8 +367,8 @@ namespace taylor_adf
 			/* Mario: changed to make it compile with msvc 9.0
 			 * error: invalid type: reference to reference
 			 */
-			//const expr_type &expr = boost::fusion::at< Index >( m_sys );
-			expr_type expr = boost::fusion::at< Index >( m_sys );
+			const expr_type &expr = boost::fusion::at< Index >( m_sys );
+			// expr_type expr = boost::fusion::at< Index >( m_sys );
 			/* end changes */
 
 			double deriv = taylor_transform()( expr , 0.0 , m_data );

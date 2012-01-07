@@ -25,7 +25,6 @@
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
-//#include <boost/numeric/odeint/util/size_adjuster.hpp>
 
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
@@ -33,9 +32,6 @@
 #include <boost/numeric/odeint/stepper/adams_bashforth.hpp>
 #include <boost/numeric/odeint/stepper/adams_moulton.hpp>
 
-/*
- * # Introduce the number of states
- */
 
 namespace boost {
 namespace numeric {
@@ -44,11 +40,6 @@ namespace odeint {
 
 /*
  * Static Adams-Bashforth-Moulton multistep-solver without step size control and without dense output.
- *
- * # Define the number of steps
- * # Define the explicit method
- * # Define the implicit method
- * # Bring the explicit method and the implicit method together
  */
 template<
 size_t Steps ,
@@ -84,7 +75,8 @@ public :
     typedef unsigned short order_type;
     static const order_type order_value = steps + 1;
 
-    adams_bashforth_moulton( ) : m_adams_moulton( m_adams_bashforth.algebra() )
+    adams_bashforth_moulton( void )
+    : m_adams_bashforth() , m_adams_moulton( m_adams_bashforth.algebra() )
     { }
 
     adams_bashforth_moulton( const algebra_type &algebra )

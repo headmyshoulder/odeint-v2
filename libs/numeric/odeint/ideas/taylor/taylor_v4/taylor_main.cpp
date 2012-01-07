@@ -12,13 +12,14 @@
 
 #include <boost/fusion/include/make_vector.hpp>
 
-template< typename T , size_t N >
-std::ostream& operator<<( std::ostream& out , const boost::array< T , N > &x )
-{
-	if( !x.empty() ) out << x[0];
-	for( size_t i=1 ; i<x.size() ; ++i ) out << "\t" << x[i];
-	return out;
-}
+//template< typename T , size_t N >
+//std::ostream& operator<<( std::ostream& out , const boost::array< T , N > &x )
+//{
+//	if( !x.empty() ) out << x[0];
+//	for( size_t i=1 ; i<x.size() ; ++i ) out << "\t" << x[i];
+//	return out;
+//}
+
 
 typedef boost::numeric::odeint::taylor< 3 , 25 > taylor_type;
 typedef taylor_type::state_type state_type;
@@ -44,7 +45,7 @@ using boost::numeric::odeint::taylor_adf::arg3;
 
 int main( int argc , char **argv )
 {
-	cout.precision( 14 );
+//	cout.precision( 14 );
 
 	taylor_type stepper( 1.0e-17 , 1.0e-35 );
 

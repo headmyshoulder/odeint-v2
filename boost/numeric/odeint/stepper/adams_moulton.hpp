@@ -48,8 +48,6 @@ namespace odeint {
 
 /*
  * Static implicit Adams-Moulton multistep-solver without step size control and without dense output.
- *
- * # Define the number of steps
  */
 template<
 size_t Steps ,
@@ -88,10 +86,14 @@ public :
 
     typedef detail::rotating_buffer< wrapped_deriv_type , steps > step_storage_type;
 
-    adams_moulton( ) : m_algebra( m_algebra_instance ) , m_coefficients()
+    adams_moulton( )
+    : m_coefficients() , m_dxdt() , m_resizer() ,
+      m_algebra_instance() , m_algebra( m_algebra_instance )
     { }
 
-    adams_moulton( algebra_type &algebra ) : m_algebra( algebra ) , m_coefficients()
+    adams_moulton( algebra_type &algebra )
+    : m_coefficients() , m_dxdt() , m_resizer() ,
+      m_algebra_instance() , m_algebra( algebra )
     { }
 
     adams_moulton& operator=( const adams_moulton &stepper )
@@ -176,6 +178,7 @@ private:
     resizer_type m_resizer;
 
 protected:
+
     algebra_type m_algebra_instance;
     algebra_type &m_algebra;
 };
