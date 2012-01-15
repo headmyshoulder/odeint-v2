@@ -45,30 +45,9 @@ template< class V >
 struct state_wrapper< V , true > // with resizing
 {
     typedef state_wrapper< V , true > state_wrapper_type;
-    //typedef typename V::value_type value_type;
     typedef boost::true_type is_resizeable;
 
     V m_v;
-
-//    template< class StateIn >
-//    bool same_size( const StateIn &x ) const
-//    {
-//        return boost::numeric::odeint::same_size( m_v , x );
-//    }
-//
-//    template< class StateIn >
-//    bool resize( const StateIn &x )
-//    {
-//        if( !this->same_size( x ) )
-//        {
-//            boost::numeric::odeint::resize( m_v , x );
-//            return true;
-//        }
-//        else
-//        {
-//            return false;
-//        }
-//    }
 };
 
 
@@ -76,12 +55,9 @@ template< class V >
 struct state_wrapper< V , false > // without resizing
 {
     typedef state_wrapper< V , false > state_wrapper_type;
-    //typedef typename V::value_type value_type;
     typedef boost::false_type is_resizeable;
 
     V m_v;
-
-    //no resize method
 };
 
 }

@@ -53,9 +53,10 @@ namespace odeint {
 
 
 template< class Value >
-struct default_rosenbrock_coefficients : boost::noncopyable
+struct default_rosenbrock_coefficients
 {
     typedef Value value_type;
+    typedef unsigned short order_type;
 
     default_rosenbrock_coefficients( void )
     : gamma ( 0.25 ) ,
@@ -88,6 +89,9 @@ struct default_rosenbrock_coefficients : boost::noncopyable
     const value_type c61 , c62 , c63 , c64 , c65;
     const value_type d21 , d22 , d23 , d24 , d25;
     const value_type d31 , d32 , d33 , d34 , d35;
+
+    static const order_type stepper_order = 4;
+    static const order_type error_order = 3;
 };
 
 
@@ -101,26 +105,35 @@ public:
 
     typedef Value value_type;
     typedef boost::numeric::ublas::vector< value_type > state_type;
-    typedef state_wrapper< state_type > wrapped_state_type;
     typedef state_type deriv_type;
-    typedef state_wrapper< deriv_type > wrapped_deriv_type;
     typedef value_type time_type;
     typedef boost::numeric::ublas::matrix< value_type > matrix_type;
-    typedef state_wrapper< matrix_type > wrapped_matrix_type;
     typedef boost::numeric::ublas::permutation_matrix< size_t > pmatrix_type;
-    typedef state_wrapper< pmatrix_type > wrapped_pmatrix_type;
     typedef Resizer resizer_type;
     typedef Coefficients rosenbrock_coefficients;
     typedef stepper_tag stepper_category;
+    typedef unsigned short order_type;
+
+    typedef state_wrapper< state_type > wrapped_state_type;
+    typedef state_wrapper< deriv_type > wrapped_deriv_type;
+    typedef state_wrapper< matrix_type > wrapped_matrix_type;
+    typedef state_wrapper< pmatrix_type > wrapped_pmatrix_type;
 
     typedef rosenbrock4< Value , Coefficients , Resizer > stepper_type;
 
-    rosenbrock4( ) // = default; // c++09 feature, don't know if all compilers understand that
+    const static order_type stepper_order = rosenbrock_coefficients::stepper_order;
+    const static order_type error_order = rosenbrock_coefficients::error_order;
+
+    rosenbrock4( void )
+    : m_resizer() , m_x_err_resizer() ,
+      m_jac() , m_pm() ,
+      m_dfdt() , m_dxdt() , m_dxdtnew() ,
+      m_g1() , m_g2() , m_g3() , m_g4() , m_g5() ,
+      m_cont3() , m_cont4() , m_xtmp() , m_x_err() ,
+      m_coef()
     { }
 
-    rosenbrock4( const rosenbrock4 &rb )
-    : m_coef()
-    { }
+
 
     template< class System >
     void do_step( System system , const state_type &x , time_type t , state_type &xout , time_type dt , state_type &xerr )
@@ -292,7 +305,7 @@ private:
     wrapped_state_type m_xtmp;
     wrapped_state_type m_x_err;
 
-    rosenbrock_coefficients m_coef;
+    const rosenbrock_coefficients m_coef;
 };
 
 
