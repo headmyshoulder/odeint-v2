@@ -1,9 +1,9 @@
 /*
  [auto_generated]
- boost/numeric/odeint/stepper/generic_controlled_stepper_explicit.hpp
+ boost/numeric/odeint/stepper/controller/pi_controller.hpp
 
  [begin_description]
- tba
+ PI-controller for the use in the generic controller steppers.
  [end_description]
 
  Copyright 2009-2011 Karsten Ahnert
@@ -15,8 +15,8 @@
  */
 
 
-#ifndef BOOST_NUMERIC_ODEINT_STEPPER_PI_CONTROLLER_HPP_INCLUDED
-#define BOOST_NUMERIC_ODEINT_STEPPER_PI_CONTROLLER_HPP_INCLUDED
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLER_PI_CONTROLLER_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLER_PI_CONTROLLER_HPP_INCLUDED
 
 #include <cmath>
 
@@ -111,4 +111,4 @@ private:
 }
 }
 
-#endif // BOOST_NUMERIC_ODEINT_STEPPER_PI_CONTROLLER_HPP_INCLUDED
+#endif // BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLER_PI_CONTROLLER_HPP_INCLUDED

@@ -1,3 +1,14 @@
+GENERIC_CONTROLLERS
+* introduce the orders in pi_controller and stiff_controller
+OK * rename rb_controller to stiff_controller
+* check dense-output (dopri5, rosenbrock4)
+* operations: enhance rel_error
+  * contains now the error calculation for explicit_error_stepper AND
+    error_steppers
+OK * check the preamble
+
+
+
 * REFACTORING AND CLEANUP
   * check if everywhere static_cast< value_type > is used
   * check if rational number are expressed as a / b with a and b integers!, neccessary fpr gmpxx

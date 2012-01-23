@@ -513,6 +513,38 @@ struct default_operations
 
 
     /*
+     * for usage in for_each3
+     *
+     * used in the controller for the rosenbrock4 method
+     *
+     * Works with boost::units by eliminating the unit
+     */
+    template< class Fac1 = double >
+    struct default_rel_error
+    {
+        const Fac1 m_eps_abs , m_eps_rel ;
+
+        default_rel_error( const Fac1 &eps_abs , const Fac1 &eps_rel )
+        : m_eps_abs( eps_abs ) , m_eps_rel( eps_rel ) { }
+
+
+        template< class T1 , class T2 , class T3 >
+        void operator()( T3 &t3 , const T1 &t1 , const T2 &t2 ) const
+        {
+            using std::abs;
+            using std::max;
+            using detail::get_value;
+            using detail::set_value;
+            Fac1 x1 = abs( get_value( t1 ) ) , x2 = abs( get_value( t2 ) );
+            set_value( t3 , abs( get_value( t3 ) ) / ( m_eps_abs + m_eps_rel * max( x1 , x2 ) ) );
+        }
+
+        typedef void result_type;
+    };
+
+
+
+    /*
      * for usage in reduce
      */
 

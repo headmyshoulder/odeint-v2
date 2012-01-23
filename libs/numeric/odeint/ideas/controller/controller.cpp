@@ -1,28 +1,3 @@
-/*
- * TODO:
- *
- * * Put in appropriate header files
- *
- * * implement controllers
- *   OK * default
- *   * pi control
- *
- * * implement error checkers
- *   * different norms
- *
- * * implement overloads for
- *   * explicit fsal
- *   * implicit (stepper)
- *
- * * implement try_step overloads for
- *   * different variants of try_step
- *   * solving the forwarding problem
- *
- * * get_value / set_value (default_operations) nach util auslagern
- *
- * * testing
- */
-
 #include <iostream>
 #include <cmath>
 
@@ -38,11 +13,11 @@
 #include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 
-#include "error_checker_explicit.hpp"
-#include "generic_controlled_stepper.hpp"
-#include "generic_controlled_stepper_explicit.hpp"
-#include "default_controller.hpp"
-#include "pi_controller.hpp"
+#include <boost/numeric/odeint/stepper/error_checker_explicit.hpp>
+#include <boost/numeric/odeint/stepper/generic_controlled_stepper.hpp>
+#include <boost/numeric/odeint/stepper/generic_controlled_stepper_explicit.hpp>
+#include <boost/numeric/odeint/stepper/controller/default_controller.hpp>
+#include <boost/numeric/odeint/stepper/controller/pi_controller.hpp>
 
 
 #define tab "\t"
@@ -54,7 +29,9 @@ namespace odeint {
 
 
 
-
+/*
+ * move this class into controller_runge_kutta.hpp
+ */
 template< class Stepper >
 class controlled_runge_kutta_explicit :
     public generic_controlled_stepper<

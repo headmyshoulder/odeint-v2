@@ -18,11 +18,12 @@
 #include <boost/numeric/odeint/stepper/generation.hpp>
 #include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
 
-#include "error_checker_explicit.hpp"
-#include "generic_controlled_stepper.hpp"
-#include "generic_controlled_stepper_explicit.hpp"
-#include "default_controller.hpp"
-#include "pi_controller.hpp"
+#include <boost/numeric/odeint/stepper/error_checker_explicit.hpp>
+#include <boost/numeric/odeint/stepper/generic_controlled_stepper.hpp>
+#include <boost/numeric/odeint/stepper/generic_controlled_stepper_explicit.hpp>
+#include <boost/numeric/odeint/stepper/controller/default_controller.hpp>
+#include <boost/numeric/odeint/stepper/controller/pi_controller.hpp>
+#include <boost/numeric/odeint/stepper/controller/stiff_controller.hpp>
 
 
 #define tab "\t"
@@ -106,67 +107,23 @@ private:
 
 
 
+
+/*
+ * ToDo: move this class into rosenbrock4_controller.hpp
+ */
 template< class Value >
-class rosenbrock4_controller_tmp
+class rosenbrock4_controller_tmp : public generic_controlled_stepper<
+    rosenbrock4< double > ,
+    rosenbrock_error_checker< double > ,
+    stiff_controller< double > ,
+    initially_resizer ,
+    error_stepper_tag >
 {
-public:
-
-    typedef Value value_type;
-
-    rosenbrock4_controller_tmp( void )
-    : m_first_step( true ) , m_last_rejected( false ) ,
-      m_err_old( 0.0 ) , m_dt_old( 0.0 )
-    { }
-
-    template< class Order >
-    controlled_step_result operator()( value_type error , value_type &t , value_type &dt , Order stepper_order , Order error_order )
-    {
-        typedef Value value_type;
-
-        static const value_type safe = 0.9 , fac1 = 5.0 , fac2 = 1.0 / 6.0;
-
-        value_type fac = std::max( fac2 ,std::min( fac1 , std::pow( error , 0.25 ) / safe ) );
-        value_type dt_new = dt / fac;
-        if ( error <= 1.0 )
-        {
-            if( m_first_step )
-            {
-                m_first_step = false;
-            }
-            else
-            {
-                value_type fac_pred = ( m_dt_old / dt ) * pow( error * error / m_err_old , 0.25 ) / safe;
-                fac_pred = std::max( fac2 , std::min( fac1 , fac_pred ) );
-                fac = std::max( fac , fac_pred );
-                dt_new = dt / fac;
-            }
-
-            m_dt_old = dt;
-            m_err_old = std::max( 0.01 , error );
-            if( m_last_rejected )
-                dt_new = ( dt >= 0.0 ? std::min( dt_new , dt ) : std::max( dt_new , dt ) );
-            t += dt;
-            dt = dt_new;
-            m_last_rejected = false;
-            return success;
-        }
-        else
-        {
-            dt = dt_new;
-            m_last_rejected = true;
-            return fail;
-        }
-
-
-    }
-
-private:
-
-    bool m_first_step;
-    bool m_last_rejected;
-    value_type m_err_old;
-    value_type m_dt_old;
 };
+
+
+
+
 
 
 
@@ -231,14 +188,7 @@ int main( int argc , char **argv )
     using namespace boost::numeric::odeint;
 
     stepper_type stepper1;
-
-    typedef generic_controlled_stepper<
-        rosenbrock4< double > ,
-        rosenbrock_error_checker< double > ,
-        rosenbrock4_controller_tmp< double > ,
-        initially_resizer ,
-        error_stepper_tag > stepper2_type;
-
+    typedef rosenbrock4_controller_tmp< double > stepper2_type;
 
     state_type x1( 2 );
     x1[ 0 ] = 1.0 ; x1[ 1 ] = 1.0;

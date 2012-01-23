@@ -8,7 +8,7 @@ project
     : requirements 
       <include>../../../..
       <define>BOOST_ALL_NO_LIB=1
-    : build-dir .
+    : 
     ;
     
 
@@ -29,6 +29,7 @@ exe stepper_details : stepper_details.cpp ;
 exe my_vector : my_vector.cpp ;
 exe lorenz_point : lorenz_point.cpp ;
 exe bs_bug : bs_bug.cpp ;
+exe van_der_pol_stiff : van_der_pol_stiff.cpp ;
 
 # build-project mtl ;
 # build-project ublas ;

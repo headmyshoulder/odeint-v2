@@ -3,7 +3,7 @@
  boost/numeric/odeint/stepper/error_checker_explicit.hpp
 
  [begin_description]
- tba
+ Error checker for the use in the generic_controlled_steppers in combination with explicit_error_steppers.
  [end_description]
 
  Copyright 2009-2011 Karsten Ahnert

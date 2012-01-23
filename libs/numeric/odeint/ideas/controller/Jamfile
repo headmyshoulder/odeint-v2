@@ -10,6 +10,8 @@ project
     : requirements
       <define>BOOST_ALL_NO_LIB=1
       <include>../../../../..
+      <include>.
     ;
 
 exe controller : controller.cpp ;
+exe rb_controller : rb_controller.cpp ;

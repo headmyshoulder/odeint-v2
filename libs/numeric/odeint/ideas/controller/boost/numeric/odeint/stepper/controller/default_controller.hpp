@@ -1,9 +1,9 @@
 /*
  [auto_generated]
- boost/numeric/odeint/stepper/generic_controlled_stepper_explicit.hpp
+ boost/numeric/odeint/stepper/controller/default_controller.hpp
 
  [begin_description]
- tba
+ Default controller for the use in the generic steppers.
  [end_description]
 
  Copyright 2009-2011 Karsten Ahnert
@@ -15,8 +15,8 @@
  */
 
 
-#ifndef BOOST_NUMERIC_ODEINT_STEPPER_DEFAULT_CONTROLLER_HPP_INCLUDED
-#define BOOST_NUMERIC_ODEINT_STEPPER_DEFAULT_CONTROLLER_HPP_INCLUDED
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLER_DEFAULT_CONTROLLER_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLER_DEFAULT_CONTROLLER_HPP_INCLUDED
 
 #include <cmath>
 
@@ -67,4 +67,4 @@ public:
 }
 }
 
-#endif // BOOST_NUMERIC_ODEINT_STEPPER_DEFAULT_CONTROLLER_HPP_INCLUDED
+#endif // BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLER_DEFAULT_CONTROLLER_HPP_INCLUDED

@@ -3,7 +3,8 @@
  boost/numeric/odeint/stepper/generic_controlled_stepper_explicit.hpp
 
  [begin_description]
- tba
+ Specialization of the generic_controlled_stepper for the explicit_error_stepper_tag. This class is for for
+ runge_kutta54_cash_karp or runge_kutta78_ehlberg.
  [end_description]
 
  Copyright 2009-2011 Karsten Ahnert
@@ -18,25 +19,21 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_GENERIC_CONTROLLED_STEPPER_EXPLICIT_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_STEPPER_GENERIC_CONTROLLED_STEPPER_EXPLICIT_HPP_INCLUDED
 
-#include "generic_controlled_stepper.hpp"
-
 #include <boost/bind.hpp>
 
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 
+#include <boost/numeric/odeint/stepper/generic_controlled_stepper.hpp>
+
 
 namespace boost {
 namespace numeric {
 namespace odeint {
 
-/*
- * used for
- * * rk54_ck
- * * fehlberg
- *
- */
+
+
 template< class ErrorStepper , class ErrorChecker , class Controller , class Resizer >
 class generic_controlled_stepper< ErrorStepper , ErrorChecker , Controller , Resizer , explicit_error_stepper_tag >
 {
@@ -52,8 +49,8 @@ public:
     typedef typename stepper_type::time_type time_type;
     typedef typename stepper_type::order_type order_type;
     typedef explicit_controlled_stepper_tag stepper_category;
-    typedef typename stepper_type::wrapped_state_type wrapped_state_type;
-    typedef typename stepper_type::wrapped_deriv_type wrapped_deriv_type;
+    typedef state_wrapper< state_type > wrapped_state_type;
+    typedef state_wrapper< deriv_type > wrapped_deriv_type;
 
 
 

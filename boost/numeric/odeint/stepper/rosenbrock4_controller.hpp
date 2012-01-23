@@ -29,9 +29,6 @@
 
 #include <boost/numeric/odeint/stepper/rosenbrock4.hpp>
 
-#include <iostream>
-
-
 namespace boost {
 namespace numeric {
 namespace odeint {

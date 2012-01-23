@@ -240,6 +240,12 @@ const value_type dt = 0.01;
 
 int main( int arc , char* argv[] )
 {
+    int driver_version , runtime_version;
+    cudaDriverGetVersion( &driver_version );
+    cudaRuntimeGetVersion ( &runtime_version );
+    cout << driver_version << "\t" << runtime_version << endl;
+
+
     //[ thrust_lorenz_parameters_define_beta
     vector< value_type > beta_host( N );
     const value_type beta_min = 0.0 , beta_max = 56.0;

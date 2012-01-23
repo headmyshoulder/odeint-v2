@@ -59,7 +59,7 @@ struct default_rosenbrock_coefficients
     typedef unsigned short order_type;
 
     default_rosenbrock_coefficients( void )
-    : gamma ( 0.25 ) ,
+    : gamma ( static_cast< value_type >( 0.25 ) ) ,
       d1 ( 0.25 ) , d2 ( -0.1043 ) , d3 ( 0.1035 ) , d4 ( 0.3620000000000023e-01 ) ,
       c2 ( 0.386 ) , c3 ( 0.21 ) , c4 ( 0.63 ) ,
       c21 ( -0.5668800000000000e+01 ) ,
