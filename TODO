@@ -7,6 +7,62 @@ OK * rename rb_controller to stiff_controller
     error_steppers
 OK * check the preamble
 
+error_stepper:
+
+xerr = error( x , xold )
+
+explicit_error_stepper:
+
+xerr = error( x , xold , dxdtold )
+
+explicit_error_stepper_fsal:
+
+xerr = error( x , dxdt , xold , dxdtold )
+
+
+default_error:
+
+xerr[i] / ( m_abs + m_eps * xold[i] )
+
+default_error_explicit:
+
+xerr[i] / ( m_abs + m_eps * ( a_x * xold[i] + a_dtdt * dxdtold[i] ) )
+
+rb:
+
+xerr[i] / ( m_abs + m_eps * max( x[i] , xold[i] ) ) 
+
+norm:
+
+val = max_i( xerr[i] );
+
+val = 1 / n * sum_i * xerr[i] * xerr[i];
+
+
+VORSCHLAG:
+
+ein default_error_checker
+
+mit norm_policy, error_funktor;
+
+error_funktor: je nach stepper
+
+norm_policy
+{
+public:
+
+	typedef Value result_type; 
+
+	template< class T1 , class T2 >
+	result_type operator( T1 t1 , T2 t2  ) const 
+	{
+	}
+	
+	result_type result( result_type res ) const
+	{
+	}
+};
+
 
 
 * REFACTORING AND CLEANUP

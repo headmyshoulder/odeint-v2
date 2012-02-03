@@ -42,7 +42,7 @@ Note that if you are using a simple __stepper or __error_stepper and want to mak
 The actual step size will change due to error control during time evolution.
 However, if an observer is provided the step size will be adjusted such that the algorithm always calculates /x(t)/ at ['t = t[sub 0] + n dt] and calls the observer at that point.
 Note that the use of __controlled_stepper is reasonable here only if `dt` is considerably larger than typical step sizes used by the stepper.
-* If `stepper` is a __dense_out_stepper then `dt` is the initial step size.
+* If `stepper` is a __dense_outout_stepper then `dt` is the initial step size.
 The actual step size will be adjusted during integration due to error control.
 If an observer is provided dense output is used to calculate /x(t)/ at ['t = t[sub 0] + n dt].
 
@@ -67,7 +67,7 @@ If provided, the observer is called at each step.
 The actual step size is changed according to error control of the stepper.
 For the last step, the step size will be reduced to ensure we end exactly at `t1`.
 If provided, the observer is called after each time step (and before the first step at `t0`).
-* If stepper is a __dense_out_stepper then `dt` is the initial step size and `integrate_adaptive` behaves just like for __controlled_stepper above. No dense output is used.
+* If stepper is a __dense_output_stepper then `dt` is the initial step size and `integrate_adaptive` behaves just like for __controlled_stepper above. No dense output is used.
 
 [heading Observer calls at given time points]
 
