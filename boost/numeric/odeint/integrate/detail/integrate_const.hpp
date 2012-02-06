@@ -96,12 +96,14 @@ size_t integrate_const(
 {
     typename boost::unwrap_reference< Observer >::type &obs = observer;
 
+    end_time += dt/4.0;
+
     stepper.initialize( start_state , start_time , dt );
 
     size_t count = 0;
     while( start_time < end_time )
     {
-        while( ( start_time < stepper.current_time() ) && ( start_time < end_time ) )
+        while( ( start_time < stepper.current_time() ) )
         {
             stepper.calc_state( start_time , start_state );
             obs( start_state , start_time );

@@ -48,7 +48,7 @@ Time integrate_n_steps(
 
     detail::integrate_const(
                 stepper , system , start_state ,
-                start_time , end_time+dt/2  , dt ,
+                start_time , end_time+dt/2.0  , dt ,
                 observer , typename Stepper::stepper_category() );
 
     return end_time;
@@ -66,7 +66,7 @@ Time integrate_n_steps(
 
     detail::integrate_const(
                  stepper , system , start_state ,
-                 start_time , end_time+dt/2  , dt ,
+                 start_time , end_time+dt/2.0  , dt ,
                  observer , typename Stepper::stepper_category() );
 
      return end_time;

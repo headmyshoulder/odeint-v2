@@ -78,6 +78,8 @@ struct perform_integrate_const_test
 {
     void operator()( const value_type t_end = 10.0 , const value_type dt = 0.03 )
     {
+        std::cout << "Testing integrate_const with " << typeid( Stepper ).name() << std::endl;
+
         state_type x( 3 , 10.0 );
 
         std::vector< value_type > times;
@@ -190,7 +192,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_const_test_case , Stepper, stepper_meth
 {
     perform_integrate_const_test< Stepper > tester;
     tester();
-    tester( 0.001 , 0.03 );
+    tester( 10.0 , 0.5 );
 }
 
 
@@ -198,7 +200,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_adaptive_test_case , Stepper, stepper_m
 {
     perform_integrate_adaptive_test< Stepper > tester;
     tester();
-    tester( 0.001 , 0.03 );
+    tester( 1.0 , 0.03 );
 }
 
 
