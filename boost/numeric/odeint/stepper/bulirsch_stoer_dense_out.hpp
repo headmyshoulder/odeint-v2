@@ -288,10 +288,10 @@ public:
                         if( (work[k] < KFAC2*work[k-1]) || (m_current_k_opt <= 2) )
                         {
                             // leave order as is (except we were in first round)
-                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , static_cast<int>(k)+1 );
+                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , std::max( 2 , static_cast<int>(k)+1 ) );
                             new_h = h_opt[k] * m_cost[k+1]/m_cost[k];
                         } else {
-                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , static_cast<int>(k) );
+                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , std::max( 2 , static_cast<int>(k) ) );
                             new_h = h_opt[k];
                         }
                         break;

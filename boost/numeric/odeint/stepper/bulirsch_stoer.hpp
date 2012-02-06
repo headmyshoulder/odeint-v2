@@ -197,13 +197,13 @@ public:
         value_vector h_opt( m_k_max+1 );
         value_vector work( m_k_max+1 );
 
-        std::cout << "t=" << t <<", dt=" << dt << "(" << m_dt_last << ")" << ", k_opt=" << m_current_k_opt << std::endl;
+        //std::cout << "t=" << t <<", dt=" << dt << "(" << m_dt_last << ")" << ", k_opt=" << m_current_k_opt << std::endl;
 
         time_type new_h = dt;
 
         for( size_t k = 0 ; k <= m_current_k_opt+1 ; k++ )
         {
-            std::cout << "  k=" << k; //<<": " << ", first: " << m_first << std::endl;
+            //std::cout << "  k=" << k; //<<": " << ", first: " << m_first << std::endl;
             m_midpoint.set_steps( m_interval_sequence[k] );
             if( k == 0 )
             {
@@ -220,7 +220,7 @@ public:
                 h_opt[k] = calc_h_opt( dt , error , k );
                 work[k] = m_cost[k]/h_opt[k];
                 //std::cout << '\t' << "h_opt=" << h_opt[k] << ", work=" << work[k] << std::endl;
-                std::cout << '\t' << "error: " << error << std::endl;
+                //std::cout << '\t' << "error: " << error << std::endl;
 
                 if( (k == m_current_k_opt-1) || m_first )
                 { // convergence before k_opt ?
@@ -231,10 +231,10 @@ public:
                         if( (work[k] < KFAC2*work[k-1]) || (m_current_k_opt <= 2) )
                         {
                             // leave order as is (except we were in first round)
-                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , static_cast<int>(k)+1 );
+                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , std::max( 2 , static_cast<int>(k)+1 ) );
                             new_h = h_opt[k] * m_cost[k+1]/m_cost[k];
                         } else {
-                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , static_cast<int>(k) );
+                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , std::max( 2 , static_cast<int>(k) ) );
                             new_h = h_opt[k];
                         }
                         break;
@@ -261,6 +261,7 @@ public:
                         {
                             m_current_k_opt = std::min( static_cast<int>(m_k_max-1) , static_cast<int>(m_current_k_opt)+1 );
                             new_h = h_opt[k]*m_cost[m_current_k_opt]/m_cost[k];
+                            //std::cout << new_h << std::endl;
                         } else
                             new_h = h_opt[m_current_k_opt];
                         break;
@@ -296,8 +297,8 @@ public:
         if( !reject )
         {
             t += dt;
-        } else
-            std::cout << "REJECT!" << std::endl;
+        }// else
+         //   std::cout << "REJECT!" << std::endl;
 
         if( !m_last_step_rejected || (new_h < dt) )
         {
