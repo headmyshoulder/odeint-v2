@@ -42,14 +42,14 @@ Note that if you are using a simple __stepper or __error_stepper and want to mak
 The actual step size will change due to error control during time evolution.
 However, if an observer is provided the step size will be adjusted such that the algorithm always calculates /x(t)/ at ['t = t[sub 0] + n dt] and calls the observer at that point.
 Note that the use of __controlled_stepper is reasonable here only if `dt` is considerably larger than typical step sizes used by the stepper.
-* If `stepper` is a __dense_outout_stepper then `dt` is the initial step size.
+* If `stepper` is a __dense_output_stepper then `dt` is the initial step size.
 The actual step size will be adjusted during integration due to error control.
 If an observer is provided dense output is used to calculate /x(t)/ at ['t = t[sub 0] + n dt].
 
 [heading Observer calls at each step]
 
 If the observer should be called at each time step then the `integrate_adaptive` function should be used.
-Note that in the case of __controlled_stepper or __dense_out_stepper this leads to non-equidistant observer calls as the step size changes.
+Note that in the case of __controlled_stepper or __dense_output_stepper this leads to non-equidistant observer calls as the step size changes.
 
 `integrate_adaptive( stepper , system , x0 , t0 , t1 , dt )`
 
@@ -91,7 +91,7 @@ However, whenever a time point from the sequence is approached the step size `dt
 * If `stepper` is a __controlled_stepper then `dt` is the initial step size.
 The actual step size is adjusted during integration according to error control.
 However, if a time point from the sequence is approached the step size is reduced to obtain the state /x(t)/ exactly at the time point.
-* If `stepper` is a __dense_out_stepper then `dt` is the initial step size.
+* If `stepper` is a __dense_output_stepper then `dt` is the initial step size.
 The actual step size is adjusted during integration according to error control.
 Dense output is used to obtain the states /x(t)/ at the time points from the sequence.
 
