@@ -24,13 +24,12 @@
         Imaging, you want to numerically integrate a harmonic oscillator with friction.
         The equations of motion are given by <span class="emphasis"><em>x'' = -x + &#947; x'</em></span>.
         This can be transformed to a system of two coupled first-order differential
-        equations with new variables <span class="emphasis"><em>x</em></span> and <span class="emphasis"><em>p=x'</em></span>.
-        To apply numerical integration one first has to design the right hand side
-        of the equation <span class="emphasis"><em>w' = f(w)</em></span> where in this case <span class="emphasis"><em>w
-        = (x,p)</em></span>:
+        equations with new variables <span class="emphasis"><em>q=x</em></span> and <span class="emphasis"><em>p=x'</em></span>
+        such that <span class="emphasis"><em>w=(q,p)</em></span>. To apply numerical integration one
+        first has to design the right hand side of the equation <span class="emphasis"><em>w' = f(w)
+        = (p,-q+&#947; p)</em></span>:
       </p>
 <p>
-        
 </p>
 <pre class="programlisting"><span class="comment">/* The type of container used to hold the state vector */</span>
 <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
@@ -60,11 +59,10 @@
         start:
       </p>
 <p>
-        
 </p>
 <pre class="programlisting"><span class="identifier">state_type</span> <span class="identifier">x</span><span class="special">(</span><span class="number">2</span><span class="special">);</span>
-<span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span> <span class="comment">// start at x=1.0, p=0.0
-</span><span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
+<span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span> <span class="comment">// start at x=1.0, p=0.0</span>
+<span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
 </pre>
 <p>
       </p>
@@ -75,7 +73,6 @@
         stepper (5th order) and uses adaptive stepsize.
       </p>
 <p>
-        
 </p>
 <pre class="programlisting"><span class="identifier">size_t</span> <span class="identifier">steps</span> <span class="special">=</span> <span class="identifier">integrate</span><span class="special">(</span> <span class="identifier">harmonic_oscillator</span> <span class="special">,</span>
         <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.1</span> <span class="special">);</span>
@@ -96,7 +93,6 @@
         rhs must then be implemented as a functor having defined the ()-operator:
       </p>
 <p>
-        
 </p>
 <pre class="programlisting"><span class="comment">/* The rhs of x' = f(x) defined as a class */</span>
 <span class="keyword">class</span> <span class="identifier">harm_osc</span> <span class="special">{</span>
@@ -119,7 +115,6 @@
         which can be used via
       </p>
 <p>
-        
 </p>
 <pre class="programlisting"><span class="identifier">harm_osc</span> <span class="identifier">ho</span><span class="special">(</span><span class="number">0.15</span><span class="special">);</span>
 <span class="identifier">steps</span> <span class="special">=</span> <span class="identifier">integrate</span><span class="special">(</span> <span class="identifier">ho</span> <span class="special">,</span>
@@ -134,7 +129,6 @@
         to provide a reasonable observer. An example is
       </p>
 <p>
-        
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">push_back_state_and_time</span>
 <span class="special">{</span>
@@ -158,7 +152,6 @@
         pass this container to the integration function:
       </p>
 <p>
-        
 </p>
 <pre class="programlisting"><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">state_type</span><span class="special">&gt;</span> <span class="identifier">x_vec</span><span class="special">;</span>
 <span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">times</span><span class="special">;</span>
@@ -186,7 +179,8 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Karsten Ahnert and Mario Mulansky<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009-2011 Karsten Ahnert
+      and Mario Mulansky<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

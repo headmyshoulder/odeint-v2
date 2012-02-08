@@ -23,15 +23,17 @@
 <p>
         An important class of ordinary differential equations are so called stiff
         system which are characterized by two or more time scales of different order.
+        Examples of such systems are found in chemical systems where reaction rates
+        of individual subreaction might differ over large ranges.
       </p>
 <p>
-        what are stiff systems?
+        CHECK:
       </p>
 <p>
-        examples
+        <span class="emphasis"><em>d S<sub>&#8203;1</sub> / dt = - &#947;<sub>&#8203;1</sub> S<sub>&#8203;1</sub> S<sub>&#8203;2</sub></em></span>
       </p>
 <p>
-        applications
+        <span class="emphasis"><em>d S<sub>&#8203;2</sub> / dt = - &#947;<sub>&#8203;1</sub> S<sub>&#8203;1</sub> S<sub>&#8203;2</sub></em></span>
       </p>
 <p>
         To solve stiff systems numerically the Jacobian
@@ -43,7 +45,6 @@
         is needed. Here is the definition of the above example
       </p>
 <p>
-        
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">vector_type</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">matrix</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">matrix_type</span><span class="special">;</span>
@@ -80,7 +81,6 @@
         just templatize the <code class="computeroutput"><span class="keyword">operator</span><span class="special">()</span></code>:
       </p>
 <p>
-        
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">vector_type</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">matrix</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">matrix_type</span><span class="special">;</span>
@@ -116,15 +116,10 @@
         all the other stepper:
       </p>
 <p>
-        
 </p>
-<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">rosenbrock4</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">stepper_type</span><span class="special">;</span>
-<span class="keyword">typedef</span> <span class="identifier">rosenbrock4_controller</span><span class="special">&lt;</span> <span class="identifier">stepper_type</span> <span class="special">&gt;</span> <span class="identifier">controlled_stepper_type</span><span class="special">;</span>
-<span class="keyword">typedef</span> <span class="identifier">rosenbrock4_dense_output</span><span class="special">&lt;</span> <span class="identifier">controlled_stepper_type</span> <span class="special">&gt;</span> <span class="identifier">dense_output_type</span><span class="special">;</span>
+<pre class="programlisting"><span class="identifier">vector_type</span> <span class="identifier">x</span><span class="special">(</span> <span class="number">3</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">);</span>
 
-<span class="identifier">vector_type</span> <span class="identifier">x</span><span class="special">(</span> <span class="number">3</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">);</span>
-
-<span class="identifier">size_t</span> <span class="identifier">num_of_steps</span> <span class="special">=</span> <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">dense_output_type</span><span class="special">()</span> <span class="special">,</span>
+<span class="identifier">size_t</span> <span class="identifier">num_of_steps</span> <span class="special">=</span> <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">make_dense_output</span><span class="special">&lt;</span> <span class="identifier">rosenbrock4</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="special">&gt;(</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">)</span> <span class="special">,</span>
         <span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">stiff_system</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">stiff_system_jacobi</span><span class="special">()</span> <span class="special">)</span> <span class="special">,</span>
         <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">50.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">,</span>
         <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">phoenix</span><span class="special">::</span><span class="identifier">arg_names</span><span class="special">::</span><span class="identifier">arg2</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span> <span class="special">&lt;&lt;</span> <span class="identifier">phoenix</span><span class="special">::</span><span class="identifier">arg_names</span><span class="special">::</span><span class="identifier">arg1</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span> <span class="special">);</span>
@@ -137,15 +132,10 @@
         5 method with step size control and dense output yields 1531 steps.
       </p>
 <p>
-        
 </p>
-<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">vector_type</span> <span class="special">&gt;</span> <span class="identifier">dopri5_type</span><span class="special">;</span>
-<span class="keyword">typedef</span> <span class="identifier">controlled_error_stepper</span><span class="special">&lt;</span> <span class="identifier">dopri5_type</span> <span class="special">&gt;</span> <span class="identifier">controlled_dopri5_type</span><span class="special">;</span>
-<span class="keyword">typedef</span> <span class="identifier">dense_output_controlled_explicit</span><span class="special">&lt;</span> <span class="identifier">controlled_dopri5_type</span> <span class="special">&gt;</span> <span class="identifier">dense_output_dopri5_type</span><span class="special">;</span>
+<pre class="programlisting"><span class="identifier">vector_type</span> <span class="identifier">x2</span><span class="special">(</span> <span class="number">3</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">);</span>
 
-<span class="identifier">vector_type</span> <span class="identifier">x2</span><span class="special">(</span> <span class="number">3</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">);</span>
-
-<span class="identifier">size_t</span> <span class="identifier">num_of_steps2</span> <span class="special">=</span> <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">dense_output_dopri5_type</span><span class="special">()</span> <span class="special">,</span>
+<span class="identifier">size_t</span> <span class="identifier">num_of_steps2</span> <span class="special">=</span> <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">make_dense_output</span><span class="special">&lt;</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">vector_type</span> <span class="special">&gt;</span> <span class="special">&gt;(</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">)</span> <span class="special">,</span>
         <span class="identifier">stiff_system</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">x2</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">50.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">,</span>
         <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">phoenix</span><span class="special">::</span><span class="identifier">arg_names</span><span class="special">::</span><span class="identifier">arg2</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span> <span class="special">&lt;&lt;</span> <span class="identifier">phoenix</span><span class="special">::</span><span class="identifier">arg_names</span><span class="special">::</span><span class="identifier">arg1</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span> <span class="special">);</span>
 </pre>
@@ -156,12 +146,13 @@
         a great functional programming library to create and compose the observer.
       </p>
 <p>
-        The full example can be found here: <a href="../../../../examples/stiff_system.cpp" target="_top">../../examples/stiff_system.cpp</a>
+        The full example can be found here: <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/stiff_system.cpp" target="_top">stiff_system.cpp</a>
       </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Karsten Ahnert and Mario Mulansky<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009-2011 Karsten Ahnert
+      and Mario Mulansky<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
