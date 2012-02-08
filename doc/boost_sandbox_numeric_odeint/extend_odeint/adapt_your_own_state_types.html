@@ -3,8 +3,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Adapt your own state types</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
 <link rel="up" href="../extend_odeint.html" title="Extend odeint">
 <link rel="prev" href="../extend_odeint.html" title="Extend odeint">
 <link rel="next" href="write_own_steppers.html" title="Write own steppers">
@@ -15,7 +15,7 @@
 <div class="spirit-nav">
 <a accesskey="p" href="../extend_odeint.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../extend_odeint.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="write_own_steppers.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
-<div class="section">
+<div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_sandbox_numeric_odeint.extend_odeint.adapt_your_own_state_types"></a><a class="link" href="adapt_your_own_state_types.html" title="Adapt your own state types">Adapt
       your own state types</a>
@@ -44,14 +44,14 @@
         are to be performed on state types. So when introducing new state types to
         odeint, the following points have to be considered:
       </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
-<li class="listitem">
+<div class="itemizedlist"><ul type="disc">
+<li>
             construction/destruction
           </li>
-<li class="listitem">
+<li>
             resizing (if possible/required)
           </li>
-<li class="listitem">
+<li>
             algebraic operations
           </li>
 </ul></div>
@@ -61,7 +61,7 @@
         or a <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span></code> as state type no additional work
         is required, they just work out of the box.
       </p>
-<div class="section">
+<div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.extend_odeint.adapt_your_own_state_types.construction_resizing"></a><a class="link" href="adapt_your_own_state_types.html#boost_sandbox_numeric_odeint.extend_odeint.adapt_your_own_state_types.construction_resizing" title="Construction/Resizing">Construction/Resizing</a>
 </h4></div></div></div>
@@ -366,7 +366,7 @@
 </tr>
 </tbody>
 </table></div>
-<div class="section">
+<div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
 <a name="boost_sandbox_numeric_odeint.extend_odeint.adapt_your_own_state_types.construction_resizing.vectors_derived_from__std__vector_"></a><a class="link" href="adapt_your_own_state_types.html#boost_sandbox_numeric_odeint.extend_odeint.adapt_your_own_state_types.construction_resizing.vectors_derived_from__std__vector_" title="Vectors derived from std::vector">Vectors
           derived from <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span></code></a>
@@ -394,11 +394,11 @@
         <span class="special">:</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;()</span>
     <span class="special">{</span> <span class="special">}</span>
 
-<span class="comment">// ...</span>
-<span class="special">};</span>
+<span class="comment">// ...
+</span><span class="special">};</span>
 
-<span class="comment">// define my_vector as reizeable</span>
-
+<span class="comment">// define my_vector as reizeable
+</span>
 <span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">numeric</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">odeint</span> <span class="special">{</span>
 
 <span class="keyword">template</span><span class="special">&lt;&gt;</span>
@@ -420,7 +420,7 @@
             can be found in <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/my_vector.cpp" target="_top">my_vector.cpp</a>
           </p>
 </div>
-<div class="section">
+<div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
 <a name="boost_sandbox_numeric_odeint.extend_odeint.adapt_your_own_state_types.construction_resizing.std__list"></a><a class="link" href="adapt_your_own_state_types.html#boost_sandbox_numeric_odeint.extend_odeint.adapt_your_own_state_types.construction_resizing.std__list" title="std::list">std::list</a>
 </h5></div></div></div>
@@ -523,15 +523,15 @@
 
 <span class="keyword">template</span><span class="special">&lt;</span> <span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">is_resizeable</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span>
-<span class="special">{</span> <span class="comment">// declare resizeablility</span>
-    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">true_type</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">{</span> <span class="comment">// declare resizeablility
+</span>    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">true_type</span> <span class="identifier">type</span><span class="special">;</span>
     <span class="keyword">const</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="identifier">type</span><span class="special">::</span><span class="identifier">value</span><span class="special">;</span>
 <span class="special">};</span>
 
 <span class="keyword">template</span><span class="special">&lt;</span> <span class="special">&gt;</span> 
 <span class="keyword">struct</span> <span class="identifier">same_size_impl</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&gt;</span>
-<span class="special">{</span> <span class="comment">// define how to check size</span>
-    <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">same_size</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">v1</span> <span class="special">,</span>
+<span class="special">{</span> <span class="comment">// define how to check size
+</span>    <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">same_size</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">v1</span> <span class="special">,</span>
                            <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">v2</span> <span class="special">)</span>
     <span class="special">{</span>
         <span class="keyword">return</span> <span class="identifier">v1</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">v2</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span>
@@ -540,8 +540,8 @@
 
 <span class="keyword">template</span><span class="special">&lt;</span> <span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">resize_impl</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&gt;</span>
-<span class="special">{</span> <span class="comment">// define how to resize</span>
-    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">resize</span><span class="special">(</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">v1</span> <span class="special">,</span>
+<span class="special">{</span> <span class="comment">// define how to resize
+</span>    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">resize</span><span class="special">(</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">v1</span> <span class="special">,</span>
                         <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">v2</span> <span class="special">)</span>
     <span class="special">{</span>
         <span class="identifier">v1</span><span class="special">.</span><span class="identifier">resize</span><span class="special">(</span> <span class="identifier">v2</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span> <span class="special">);</span>
@@ -559,7 +559,7 @@
           </p>
 </div>
 </div>
-<div class="section">
+<div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.extend_odeint.adapt_your_own_state_types.algebraic_operations"></a><a class="link" href="adapt_your_own_state_types.html#boost_sandbox_numeric_odeint.extend_odeint.adapt_your_own_state_types.algebraic_operations" title="Algebraic operations">Algebraic
         operations</a>
@@ -577,21 +577,21 @@
           If your state type is not supported by Boost.Range there are several possibilities
           to tell odeint how to do algebraic operations:
         </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
-<li class="listitem">
+<div class="itemizedlist"><ul type="disc">
+<li>
               Implement <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">begin</span></code> and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">end</span></code>
               for your state type so it works with Boost.Range.
             </li>
-<li class="listitem">
+<li>
               Implement vector-vector addition operator <code class="computeroutput"><span class="special">+</span></code>
               and scalar-vector multiplication operator <code class="computeroutput"><span class="special">*</span></code>
               and use the non-standard <code class="computeroutput"><span class="identifier">vector_space_algebra</span></code>.
             </li>
-<li class="listitem">
+<li>
               Implement your own algebra that defines the required operations.
             </li>
 </ul></div>
-<div class="section">
+<div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
 <a name="boost_sandbox_numeric_odeint.extend_odeint.adapt_your_own_state_types.algebraic_operations.gsl_vector"></a><a class="link" href="adapt_your_own_state_types.html#boost_sandbox_numeric_odeint.extend_odeint.adapt_your_own_state_types.algebraic_operations.gsl_vector" title="GSL Vector">GSL
           Vector</a>
@@ -739,14 +739,14 @@
             Finally, the bindings for <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
             are added: 
 </p>
-<pre class="programlisting"><span class="comment">// template&lt;&gt;</span>
-<span class="keyword">inline</span> <span class="identifier">gsl_vector_iterator</span> <span class="identifier">range_begin</span><span class="special">(</span> <span class="identifier">gsl_vector</span> <span class="special">*</span><span class="identifier">x</span> <span class="special">)</span>
+<pre class="programlisting"><span class="comment">// template&lt;&gt;
+</span><span class="keyword">inline</span> <span class="identifier">gsl_vector_iterator</span> <span class="identifier">range_begin</span><span class="special">(</span> <span class="identifier">gsl_vector</span> <span class="special">*</span><span class="identifier">x</span> <span class="special">)</span>
 <span class="special">{</span>
     <span class="keyword">return</span> <span class="identifier">gsl_vector_iterator</span><span class="special">(</span> <span class="identifier">x</span> <span class="special">);</span>
 <span class="special">}</span>
 
-<span class="comment">// template&lt;&gt;</span>
-<span class="keyword">inline</span> <span class="identifier">gsl_vector_iterator</span> <span class="identifier">range_end</span><span class="special">(</span> <span class="identifier">gsl_vector</span> <span class="special">*</span><span class="identifier">x</span> <span class="special">)</span>
+<span class="comment">// template&lt;&gt;
+</span><span class="keyword">inline</span> <span class="identifier">gsl_vector_iterator</span> <span class="identifier">range_end</span><span class="special">(</span> <span class="identifier">gsl_vector</span> <span class="special">*</span><span class="identifier">x</span> <span class="special">)</span>
 <span class="special">{</span>
     <span class="keyword">return</span> <span class="identifier">end_iterator</span><span class="special">(</span> <span class="identifier">x</span> <span class="special">);</span>
 <span class="special">}</span>
@@ -760,7 +760,7 @@
             working at all in the first place.
           </p>
 </div>
-<div class="section">
+<div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
 <a name="boost_sandbox_numeric_odeint.extend_odeint.adapt_your_own_state_types.algebraic_operations.vector_space_algebra"></a><a class="link" href="adapt_your_own_state_types.html#boost_sandbox_numeric_odeint.extend_odeint.adapt_your_own_state_types.algebraic_operations.vector_space_algebra" title="Vector Space Algebra">Vector
           Space Algebra</a>
@@ -902,8 +902,132 @@
 </tr>
 </tbody>
 </table></div>
+<p>
+            Definign these operators makes your state type work with any basic Runge-Kutta
+            stepper. However, if you want to use step-size control, some more functionality
+            is required. Specifically, operations like <span class="emphasis"><em>max<sub>i</sub>( |err<sub>i</sub>| / (alpha
+            * |s<sub>i</sub>|) )</em></span> have to be performed. <span class="emphasis"><em>err</em></span> and
+            <span class="emphasis"><em>s</em></span> are state_types, alpha is a scalar. As you can
+            see, we need element wise absolute value and division as well as an reduce
+            operation to get the maximum value. So for controlled steppers the following
+            things have to be implemented:
+          </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Name
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Expression
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Type
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Semantics
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      Division
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">x</span> <span class="special">/</span>
+                      <span class="identifier">y</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">state_type</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Calculates the elementwise division 'x/y'
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      Absolute value
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">abs</span><span class="special">(</span>
+                      <span class="identifier">x</span> <span class="special">)</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">state_type</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Element wise absolute value
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      Reduce
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">vector_space_reduce_impl</span><span class="special">&lt;</span> <span class="identifier">state_type</span>
+                      <span class="special">&gt;::</span><span class="identifier">reduce</span><span class="special">(</span> <span class="identifier">state</span>
+                      <span class="special">,</span> <span class="keyword">operator</span>
+                      <span class="special">,</span> <span class="identifier">init</span>
+                      <span class="special">)</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">value_type</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Performs the operation <code class="computeroutput"><span class="keyword">operator</span></code>
+                      for subsequently each element of <code class="computeroutput"><span class="identifier">state</span></code>
+                      and returns the aggregate value. E.g. <br> <code class="computeroutput"><span class="identifier">init</span> <span class="special">=</span>
+                      <span class="keyword">operator</span><span class="special">(</span>
+                      <span class="identifier">init</span> <span class="special">,</span>
+                      <span class="identifier">state</span><span class="special">[</span><span class="number">0</span><span class="special">]</span>
+                      <span class="special">);</span></code> <br> <code class="computeroutput"><span class="identifier">init</span> <span class="special">=</span>
+                      <span class="keyword">operator</span><span class="special">(</span>
+                      <span class="identifier">init</span> <span class="special">,</span>
+                      <span class="identifier">state</span><span class="special">[</span><span class="number">1</span><span class="special">]</span>
+                      <span class="special">)</span></code> <br> <code class="computeroutput"><span class="special">...</span></code>
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
 </div>
-<div class="section">
+<div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
 <a name="boost_sandbox_numeric_odeint.extend_odeint.adapt_your_own_state_types.algebraic_operations.boost_ublas"></a><a class="link" href="adapt_your_own_state_types.html#boost_sandbox_numeric_odeint.extend_odeint.adapt_your_own_state_types.algebraic_operations.boost_ublas" title="Boost.Ublas">Boost.Ublas</a>
 </h5></div></div></div>
@@ -934,8 +1058,8 @@
 <p>
           </p>
 <p>
-            Now ublas::vector can be used as state type in odeint by specifying the
-            <code class="computeroutput"><span class="identifier">vector_space_algebra</span></code>
+            Now ublas::vector can be used as state type for simple Runge-Kutta steppers
+            in odeint by specifying the <code class="computeroutput"><span class="identifier">vector_space_algebra</span></code>
             as algebra in the template parameter list of the stepper. The following
             code shows the corresponding definitions:
           </p>
@@ -947,17 +1071,19 @@
     <span class="identifier">state_type</span> <span class="identifier">x</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>
     <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">10.0</span><span class="special">;</span> <span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">5.0</span> <span class="special">;</span> <span class="identifier">x</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">runge_kutta4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">vector_space_algebra</span> <span class="special">&gt;</span> <span class="identifier">stepper</span><span class="special">;</span>
-    <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">stepper</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">lorenz</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> 
+    <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">stepper</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">lorenz</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span>
                      <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.1</span> <span class="special">);</span>
 <span class="special">}</span>
 </pre>
 <p>
           </p>
 <p>
-            You can find the full example in <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/ublas/lorenz_ublas.cpp" target="_top">lorenz_ublas.cpp</a>.
+            Note again, that we haven't supported the requirements for controlled
+            steppers, but only for simple Runge-Kutta methods. You can find the full
+            example in <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/ublas/lorenz_ublas.cpp" target="_top">lorenz_ublas.cpp</a>.
           </p>
 </div>
-<div class="section">
+<div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
 <a name="boost_sandbox_numeric_odeint.extend_odeint.adapt_your_own_state_types.algebraic_operations.point_type"></a><a class="link" href="adapt_your_own_state_types.html#boost_sandbox_numeric_odeint.extend_odeint.adapt_your_own_state_types.algebraic_operations.point_type" title="Point type">Point
           type</a>
@@ -1026,8 +1152,8 @@
 <p>
             
 </p>
-<pre class="programlisting"><span class="comment">// only required for steppers with error control</span>
-<span class="identifier">point3D</span> <span class="keyword">operator</span><span class="special">/(</span> <span class="keyword">const</span> <span class="identifier">point3D</span> <span class="special">&amp;</span><span class="identifier">p1</span> <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">point3D</span> <span class="special">&amp;</span><span class="identifier">p2</span> <span class="special">)</span>
+<pre class="programlisting"><span class="comment">// only required for steppers with error control
+</span><span class="identifier">point3D</span> <span class="keyword">operator</span><span class="special">/(</span> <span class="keyword">const</span> <span class="identifier">point3D</span> <span class="special">&amp;</span><span class="identifier">p1</span> <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">point3D</span> <span class="special">&amp;</span><span class="identifier">p2</span> <span class="special">)</span>
 <span class="special">{</span>
     <span class="keyword">return</span> <span class="identifier">point3D</span><span class="special">(</span> <span class="identifier">p1</span><span class="special">.</span><span class="identifier">x</span><span class="special">/</span><span class="identifier">p2</span><span class="special">.</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">p1</span><span class="special">.</span><span class="identifier">y</span><span class="special">/</span><span class="identifier">p2</span><span class="special">.</span><span class="identifier">y</span> <span class="special">,</span> <span class="identifier">p1</span><span class="special">.</span><span class="identifier">z</span><span class="special">/</span><span class="identifier">p1</span><span class="special">.</span><span class="identifier">z</span> <span class="special">);</span>
 <span class="special">}</span>
@@ -1047,8 +1173,8 @@
             
 </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">numeric</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">odeint</span> <span class="special">{</span>
-<span class="comment">// specialization of vector_space_reduce, only required for steppers with error control</span>
-<span class="keyword">template</span><span class="special">&lt;&gt;</span>
+<span class="comment">// specialization of vector_space_reduce, only required for steppers with error control
+</span><span class="keyword">template</span><span class="special">&lt;&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">vector_space_reduce</span><span class="special">&lt;</span> <span class="identifier">point3D</span> <span class="special">&gt;</span>
 <span class="special">{</span>
     <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Value</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Op</span> <span class="special">&gt;</span>
@@ -1091,9 +1217,9 @@
 <span class="special">{</span>
 
     <span class="identifier">point3D</span> <span class="identifier">x</span><span class="special">(</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">5.0</span> <span class="special">,</span> <span class="number">5.0</span> <span class="special">);</span>
-    <span class="comment">//typedef runge_kutta4&lt; point3D , double , point3D , </span>
-    <span class="comment">//                      double , vector_space_algebra &gt; stepper;</span>
-    <span class="keyword">typedef</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">point3D</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">point3D</span> <span class="special">,</span> 
+    <span class="comment">//typedef runge_kutta4&lt; point3D , double , point3D , 
+</span>    <span class="comment">//                      double , vector_space_algebra &gt; stepper;
+</span>    <span class="keyword">typedef</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">point3D</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">point3D</span> <span class="special">,</span> 
                                 <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">vector_space_algebra</span> <span class="special">&gt;</span> <span class="identifier">stepper</span><span class="special">;</span>
     <span class="identifier">integrate_adaptive</span><span class="special">(</span> <span class="identifier">make_controlled</span><span class="special">&lt;</span><span class="identifier">stepper</span><span class="special">&gt;(</span> <span class="number">1E-8</span> <span class="special">,</span> <span class="number">1E-8</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">lorenz</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> 
                         <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.1</span> <span class="special">);</span>
@@ -1110,8 +1236,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2009-2011 Karsten Ahnert
-      and Mario Mulansky<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Karsten Ahnert and Mario Mulansky<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

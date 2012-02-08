@@ -46,11 +46,13 @@ size_t integrate_times(
 
     size_t steps = 0;
     Time current_dt = dt;
-    while( start_time != end_time )
+    while( true )
     {
         Time current_time = *start_time++;
         obs( start_state , current_time );
-        while( current_time < *start_time )
+        if( start_time == end_time )
+            break;
+        while( (current_time < *start_time) )
         {
             current_dt = std::min( dt , *start_time - current_time );
             stepper.do_step( system , start_state , current_time , current_dt );
@@ -76,11 +78,13 @@ size_t integrate_times(
     const size_t max_attempts = 1000;
     const char *error_string = "Integrate adaptive : Maximal number of iterations reached. A step size could not be found.";
     size_t steps = 0;
-    while( start_time != end_time )
+    while( true )
     {
         size_t fail_steps = 0;
         Time current_time = *start_time++;
         obs( start_state , current_time );
+        if( start_time == end_time )
+            break;
         while( current_time < *start_time )
         {
             dt = std::min( dt , *start_time - current_time );

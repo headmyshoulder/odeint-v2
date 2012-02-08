@@ -22,6 +22,7 @@
 
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_const.hpp>
+#include <boost/numeric/odeint/util/copy.hpp>
 
 #include <boost/ref.hpp>
 
@@ -135,6 +136,8 @@ size_t integrate_adaptive(
         stepper.initialize( stepper.current_state() , stepper.current_time() , end_time - stepper.current_time() );
     }
     obs( stepper.current_state() , stepper.current_time() );
+    // overwrite start_state with the final point
+    boost::numeric::odeint::copy( stepper.current_state() , start_state );
     return count;
 }
 

@@ -45,7 +45,7 @@ int main()
     state_type x(3);
     x[0] = 10.0; x[1] = 5.0 ; x[2] = 0.0;
     typedef runge_kutta4< state_type , double , state_type , double , vector_space_algebra > stepper;
-    integrate_const( stepper() , lorenz , x , 
+    integrate_const( stepper() , lorenz , x ,
                      0.0 , 10.0 , 0.1 );
 }
 //]

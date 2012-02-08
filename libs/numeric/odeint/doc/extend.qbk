@@ -299,10 +299,16 @@ all in the first place.
 
 [section Vector Space Algebra]
 
-As seen above, the standard way of performing algebraic operations on container-like state types in odeint is to iterate through the elements of the container and perform the operations element-wise on the underlying value type.
-This is realized by means of the `range_algebra` that uses __boost_range for obtaining iterators of the state types.
-However, there are other ways to implement the algebraic operations on containers, one of which is defining the addition/multiplication operators for the containers directly and then using the `vector_space_algebra`.
-If you use this algebra, the following operators have to be defined for the state_type:
+As seen above, the standard way of performing algebraic operations on 
+container-like state types in odeint is to iterate through the elements of the 
+container and perform the operations element-wise on the underlying value type.
+This is realized by means of the `range_algebra` that uses __boost_range for 
+obtaining iterators of the state types.
+However, there are other ways to implement the algebraic operations on 
+containers, one of which is defining the addition/multiplication operators for 
+the containers directly and then using the `vector_space_algebra`.
+If you use this algebra, the following operators have to be defined for the 
+state_type:
 
 [table
   [[Name] [Expression] [Type] [Semantics]]
@@ -312,6 +318,33 @@ If you use this algebra, the following operators have to be defined for the stat
   [[Assign scalar multiplication] [`x *= a`] [`state_type`] [Performs in-place multiplication of vector x with scalar a.]]
 ]
 
+Definign these operators makes your state type work with any basic Runge-Kutta 
+stepper.
+However, if you want to use step-size control, some more functionality is 
+required.
+Specifically, operations like 
+[' max[sub i]( |err[sub i]| / (alpha * |s[sub i]|) )]
+have to be performed.
+['err] and ['s] are state_types, alpha is a scalar.
+As you can see, we need element wise absolute value and division as well as an 
+reduce operation to get the maximum value.
+So for controlled steppers the following things have to be implemented:
+
+[table
+  [[Name] [Expression] [Type] [Semantics]]
+  [[Division] [`x / y`] [`state_type`] [Calculates the elementwise division 'x/y']]
+  [[Absolute value] [`abs( x )`] [`state_type`] [Element wise absolute value]]
+  [[Reduce] [`vector_space_reduce_impl< state_type >::reduce( state , operator , init )`] [`value_type`] 
+    [Performs the operation `operator` for subsequently each element of `state` and returns the aggregate value.
+    E.g.
+    
+`init = operator( init , state[0] );`
+
+`init = operator( init , state[1] )`
+
+`...`
+    ]]
+]
 
 [endsect]
 
@@ -327,13 +360,15 @@ is to declare resizability:
 
 [ublas_resizeable]
 
-Now ublas::vector can be used as state type in odeint by specifying the 
-`vector_space_algebra` as algebra in the template parameter list of the
-stepper. 
+Now ublas::vector can be used as state type for simple Runge-Kutta steppers 
+in odeint by specifying the `vector_space_algebra` as algebra in the template 
+parameter list of the stepper. 
 The following code shows the corresponding definitions:
 
 [ublas_main]
 
+Note again, that we haven't supported the requirements for controlled steppers,
+but only for simple Runge-Kutta methods.
 You can find the full example in [github_link
 libs/numeric/odeint/examples/ublas/lorenz_ublas.cpp lorenz_ublas.cpp].
 
