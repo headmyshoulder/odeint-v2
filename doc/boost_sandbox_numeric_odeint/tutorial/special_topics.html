@@ -63,7 +63,6 @@
           code is very simple
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="identifier">complex</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="special">,</span> <span class="number">1</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
 
@@ -89,7 +88,6 @@
           function. In this cast the Stuart-Landau oscillator looks like
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">double</span> <span class="identifier">eta</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span>
 <span class="keyword">double</span> <span class="identifier">alpha</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span>
@@ -111,7 +109,6 @@
           Integration is also very easy:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">state_type</span> <span class="identifier">x</span> <span class="special">=</span> <span class="special">{{</span> <span class="identifier">complex</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;(</span> <span class="number">1.0</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">)</span> <span class="special">}};</span>
 
@@ -156,7 +153,6 @@
           components. Here, is how this function looks like
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">container_type</span><span class="special">;</span>
 
@@ -166,8 +162,8 @@
 
     <span class="identifier">fpu</span><span class="special">(</span> <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">beta</span> <span class="special">=</span> <span class="number">1.0</span> <span class="special">)</span> <span class="special">:</span> <span class="identifier">m_beta</span><span class="special">(</span> <span class="identifier">beta</span> <span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
 
-    <span class="comment">// system function defining the ODE
-</span>    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">q</span> <span class="special">,</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">dpdt</span> <span class="special">)</span> <span class="keyword">const</span>
+    <span class="comment">// system function defining the ODE</span>
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">q</span> <span class="special">,</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">dpdt</span> <span class="special">)</span> <span class="keyword">const</span>
     <span class="special">{</span>
         <span class="identifier">size_t</span> <span class="identifier">n</span> <span class="special">=</span> <span class="identifier">q</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span>
         <span class="keyword">double</span> <span class="identifier">tmp</span> <span class="special">=</span> <span class="identifier">q</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">-</span> <span class="number">0.0</span><span class="special">;</span>
@@ -185,17 +181,17 @@
         <span class="identifier">dpdt</span><span class="special">[</span><span class="identifier">n</span><span class="special">-</span><span class="number">1</span><span class="special">]</span> <span class="special">+=</span> <span class="identifier">tmp2</span><span class="special">;</span>
     <span class="special">}</span>
 
-    <span class="comment">// calculates the energy of the system
-</span>    <span class="keyword">double</span> <span class="identifier">energy</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">q</span> <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">p</span> <span class="special">)</span> <span class="keyword">const</span>
+    <span class="comment">// calculates the energy of the system</span>
+    <span class="keyword">double</span> <span class="identifier">energy</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">q</span> <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">p</span> <span class="special">)</span> <span class="keyword">const</span>
     <span class="special">{</span>
-        <span class="comment">// ...
-</span>    <span class="special">}</span>
+        <span class="comment">// ...</span>
+    <span class="special">}</span>
 
-    <span class="comment">// calculates the local energy of the system
-</span>    <span class="keyword">void</span> <span class="identifier">local_energy</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">q</span> <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">p</span> <span class="special">,</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">e</span> <span class="special">)</span> <span class="keyword">const</span>
+    <span class="comment">// calculates the local energy of the system</span>
+    <span class="keyword">void</span> <span class="identifier">local_energy</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">q</span> <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">p</span> <span class="special">,</span> <span class="identifier">container_type</span> <span class="special">&amp;</span><span class="identifier">e</span> <span class="special">)</span> <span class="keyword">const</span>
     <span class="special">{</span>
-        <span class="comment">// ...
-</span>    <span class="special">}</span>
+        <span class="comment">// ...</span>
+    <span class="special">}</span>
 <span class="special">};</span>
 </pre>
 <p>
@@ -208,7 +204,6 @@
           All this can be easily done with the following piece of code:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">n</span> <span class="special">=</span> <span class="number">64</span><span class="special">;</span>
 <span class="identifier">container_type</span> <span class="identifier">q</span><span class="special">(</span> <span class="identifier">n</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">p</span><span class="special">(</span> <span class="identifier">n</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">);</span>
@@ -235,7 +230,6 @@
           The observer is more or less trivial
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">streaming_observer</span>
 <span class="special">{</span>
@@ -304,7 +298,6 @@
           also need to store the individual frequencies of each oscillator.
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">container_type</span><span class="special">;</span>
 
@@ -367,7 +360,6 @@
           and we record <span class="emphasis"><em>Z</em></span> for different values of <span class="emphasis"><em>&#949;</em></span>.
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">statistics_observer</span>
 <span class="special">{</span>
@@ -400,7 +392,6 @@
           2</em></span>.
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">n</span> <span class="special">=</span> <span class="number">16384</span><span class="special">;</span>
 <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">dt</span> <span class="special">=</span> <span class="number">0.1</span><span class="special">;</span>
@@ -411,8 +402,8 @@
 <span class="identifier">boost</span><span class="special">::</span><span class="identifier">uniform_real</span><span class="special">&lt;&gt;</span> <span class="identifier">unif</span><span class="special">(</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">2.0</span> <span class="special">*</span> <span class="identifier">M_PI</span> <span class="special">);</span>
 <span class="identifier">boost</span><span class="special">::</span><span class="identifier">variate_generator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mt19937</span><span class="special">&amp;,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">uniform_real</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span> <span class="identifier">gen</span><span class="special">(</span> <span class="identifier">rng</span> <span class="special">,</span> <span class="identifier">unif</span> <span class="special">);</span>
 
-<span class="comment">// gamma = 1, the phase transition occurs at epsilon = 2
-</span><span class="identifier">phase_ensemble</span> <span class="identifier">ensemble</span><span class="special">(</span> <span class="identifier">n</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">);</span>
+<span class="comment">// gamma = 1, the phase transition occurs at epsilon = 2</span>
+<span class="identifier">phase_ensemble</span> <span class="identifier">ensemble</span><span class="special">(</span> <span class="identifier">n</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">);</span>
 <span class="identifier">statistics_observer</span> <span class="identifier">obs</span><span class="special">;</span>
 
 <span class="keyword">for</span><span class="special">(</span> <span class="keyword">double</span> <span class="identifier">epsilon</span> <span class="special">=</span> <span class="number">0.0</span> <span class="special">;</span> <span class="identifier">epsilon</span> <span class="special">&lt;</span> <span class="number">5.0</span> <span class="special">;</span> <span class="identifier">epsilon</span> <span class="special">+=</span> <span class="number">0.1</span> <span class="special">)</span>
@@ -420,14 +411,14 @@
     <span class="identifier">ensemble</span><span class="special">.</span><span class="identifier">set_epsilon</span><span class="special">(</span> <span class="identifier">epsilon</span> <span class="special">);</span>
     <span class="identifier">obs</span><span class="special">.</span><span class="identifier">reset</span><span class="special">();</span>
 
-    <span class="comment">// start with random initial conditions
-</span>    <span class="identifier">generate</span><span class="special">(</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">end</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">gen</span> <span class="special">);</span>
+    <span class="comment">// start with random initial conditions</span>
+    <span class="identifier">generate</span><span class="special">(</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">end</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">gen</span> <span class="special">);</span>
 
-    <span class="comment">// calculate some transients steps
-</span>    <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">runge_kutta4</span><span class="special">&lt;</span> <span class="identifier">container_type</span> <span class="special">&gt;()</span> <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">ensemble</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
+    <span class="comment">// calculate some transients steps</span>
+    <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">runge_kutta4</span><span class="special">&lt;</span> <span class="identifier">container_type</span> <span class="special">&gt;()</span> <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">ensemble</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
 
-    <span class="comment">// integrate and compute the statistics
-</span>    <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">runge_kutta4</span><span class="special">&lt;</span> <span class="identifier">container_type</span> <span class="special">&gt;()</span> <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">ensemble</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">100.0</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">obs</span> <span class="special">)</span> <span class="special">);</span>
+    <span class="comment">// integrate and compute the statistics</span>
+    <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">runge_kutta4</span><span class="special">&lt;</span> <span class="identifier">container_type</span> <span class="special">&gt;()</span> <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">ensemble</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">100.0</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">obs</span> <span class="special">)</span> <span class="special">);</span>
     <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">epsilon</span> <span class="special">&lt;&lt;</span> <span class="string">"\t"</span> <span class="special">&lt;&lt;</span> <span class="identifier">obs</span><span class="special">.</span><span class="identifier">get_K_mean</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
 <span class="special">}</span>
 
@@ -458,7 +449,6 @@
           all quantities
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">numeric</span><span class="special">/</span><span class="identifier">odeint</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">numeric</span><span class="special">/</span><span class="identifier">odeint</span><span class="special">/</span><span class="identifier">algebra</span><span class="special">/</span><span class="identifier">fusion_algebra</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
@@ -496,7 +486,6 @@
           equivalent to the example in the first section of this tutorial
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">oscillator</span>
 <span class="special">{</span>
@@ -520,7 +509,6 @@
           Furthermore, the basic calculations are now performed by the <code class="computeroutput"><span class="identifier">fusion_algebra</span></code> which must also be given.
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">deriv_type</span> <span class="special">,</span> <span class="identifier">time_type</span> <span class="special">,</span> <span class="identifier">fusion_algebra</span> <span class="special">&gt;</span> <span class="identifier">stepper_type</span><span class="special">;</span>
 
@@ -535,7 +523,6 @@
           the observer is defined a bit different
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">streaming_observer</span>
 <span class="special">{</span>
@@ -607,7 +594,6 @@
           The definition of the system is
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">matrix</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
 
@@ -701,7 +687,6 @@
           Here is a simple example:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">mpf_class</span> <span class="identifier">value_type</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="identifier">value_type</span> <span class="special">,</span> <span class="number">3</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
@@ -726,7 +711,6 @@
           which can be used
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">precision</span> <span class="special">=</span> <span class="number">1024</span><span class="special">;</span>
 <span class="identifier">mpf_set_default_prec</span><span class="special">(</span> <span class="identifier">precision</span> <span class="special">);</span>
@@ -788,7 +772,6 @@
           is kept which should be changed whenever the states' size change.
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">coord_type</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">pair</span><span class="special">&lt;</span> <span class="identifier">coord_type</span> <span class="special">,</span> <span class="identifier">coord_type</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
@@ -804,8 +787,8 @@
         <span class="special">:</span> <span class="identifier">m_max_N</span><span class="special">(</span> <span class="identifier">max_N</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">m_beta</span><span class="special">(</span> <span class="identifier">beta</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">m_pot_start_index</span><span class="special">(</span> <span class="identifier">pot_start_index</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">m_pot</span><span class="special">(</span> <span class="identifier">max_N</span> <span class="special">)</span>
     <span class="special">{</span>
         <span class="identifier">srand</span><span class="special">(</span> <span class="identifier">time</span><span class="special">(</span> <span class="identifier">NULL</span> <span class="special">)</span> <span class="special">);</span>
-        <span class="comment">// fill random potential with iid values from [0,1]
-</span>        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mt19937</span> <span class="identifier">rng</span><span class="special">;</span>
+        <span class="comment">// fill random potential with iid values from [0,1]</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mt19937</span> <span class="identifier">rng</span><span class="special">;</span>
         <span class="identifier">boost</span><span class="special">::</span><span class="identifier">uniform_real</span><span class="special">&lt;&gt;</span> <span class="identifier">unif</span><span class="special">(</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">);</span>
         <span class="identifier">boost</span><span class="special">::</span><span class="identifier">variate_generator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mt19937</span><span class="special">&amp;,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">uniform_real</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span> <span class="identifier">gen</span><span class="special">(</span> <span class="identifier">rng</span> <span class="special">,</span> <span class="identifier">unif</span> <span class="special">);</span>
         <span class="identifier">generate</span><span class="special">(</span> <span class="identifier">m_pot</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">m_pot</span><span class="special">.</span><span class="identifier">end</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">gen</span> <span class="special">);</span>
@@ -813,9 +796,9 @@
 
     <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">coord_type</span> <span class="special">&amp;</span><span class="identifier">q</span> <span class="special">,</span> <span class="identifier">coord_type</span> <span class="special">&amp;</span><span class="identifier">dpdt</span> <span class="special">)</span>
     <span class="special">{</span>
-        <span class="comment">// calculate dpdt = -dH/dq of this hamiltonian system
-</span>        <span class="comment">// dp_i/dt = - V_i * q_i^3 - beta*(q_i - q_{i-1})^3 + beta*(q_{i+1} - q_i)^3
-</span>        <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">N</span> <span class="special">=</span> <span class="identifier">q</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span>
+        <span class="comment">// calculate dpdt = -dH/dq of this hamiltonian system</span>
+        <span class="comment">// dp_i/dt = - V_i * q_i^3 - beta*(q_i - q_{i-1})^3 + beta*(q_{i+1} - q_i)^3</span>
+        <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">N</span> <span class="special">=</span> <span class="identifier">q</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span>
         <span class="keyword">double</span> <span class="identifier">diff</span> <span class="special">=</span> <span class="identifier">q</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">-</span> <span class="identifier">q</span><span class="special">[</span><span class="identifier">N</span><span class="special">-</span><span class="number">1</span><span class="special">];</span>
         <span class="keyword">for</span><span class="special">(</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">=</span><span class="number">0</span> <span class="special">;</span> <span class="identifier">i</span><span class="special">&lt;</span><span class="identifier">N</span> <span class="special">;</span> <span class="special">++</span><span class="identifier">i</span> <span class="special">)</span>
         <span class="special">{</span>
@@ -828,8 +811,8 @@
 
     <span class="keyword">void</span> <span class="identifier">energy_distribution</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">coord_type</span> <span class="special">&amp;</span><span class="identifier">q</span> <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">coord_type</span> <span class="special">&amp;</span><span class="identifier">p</span> <span class="special">,</span> <span class="identifier">coord_type</span> <span class="special">&amp;</span><span class="identifier">energies</span> <span class="special">)</span>
     <span class="special">{</span>
-        <span class="comment">// computes the energy per lattice site normalized by total energy
-</span>        <span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">N</span> <span class="special">=</span> <span class="identifier">q</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span>
+        <span class="comment">// computes the energy per lattice site normalized by total energy</span>
+        <span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">N</span> <span class="special">=</span> <span class="identifier">q</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span>
         <span class="keyword">double</span> <span class="identifier">en</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
         <span class="keyword">for</span><span class="special">(</span> <span class="identifier">size_t</span> <span class="identifier">i</span><span class="special">=</span><span class="number">0</span> <span class="special">;</span> <span class="identifier">i</span><span class="special">&lt;</span><span class="identifier">N</span> <span class="special">;</span> <span class="identifier">i</span><span class="special">++</span> <span class="special">)</span>
         <span class="special">{</span>
@@ -848,8 +831,8 @@
 
     <span class="keyword">double</span> <span class="identifier">energy</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">coord_type</span> <span class="special">&amp;</span><span class="identifier">q</span> <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">coord_type</span> <span class="special">&amp;</span><span class="identifier">p</span> <span class="special">)</span>
     <span class="special">{</span>
-        <span class="comment">// calculates the total energy of the excitation
-</span>        <span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">N</span> <span class="special">=</span> <span class="identifier">q</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span>
+        <span class="comment">// calculates the total energy of the excitation</span>
+        <span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">N</span> <span class="special">=</span> <span class="identifier">q</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span>
         <span class="keyword">double</span> <span class="identifier">en</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
         <span class="keyword">for</span><span class="special">(</span> <span class="identifier">size_t</span> <span class="identifier">i</span><span class="special">=</span><span class="number">0</span> <span class="special">;</span> <span class="identifier">i</span><span class="special">&lt;</span><span class="identifier">N</span> <span class="special">;</span> <span class="identifier">i</span><span class="special">++</span> <span class="special">)</span>
         <span class="special">{</span>
@@ -874,25 +857,24 @@
           of 60.
         </p>
 <p>
-          
 </p>
-<pre class="programlisting"><span class="comment">//start with 60 sites
-</span><span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">N_start</span> <span class="special">=</span> <span class="number">60</span><span class="special">;</span>
+<pre class="programlisting"><span class="comment">//start with 60 sites</span>
+<span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">N_start</span> <span class="special">=</span> <span class="number">60</span><span class="special">;</span>
 <span class="identifier">coord_type</span> <span class="identifier">q</span><span class="special">(</span> <span class="identifier">N_start</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">);</span>
 <span class="identifier">q</span><span class="special">.</span><span class="identifier">reserve</span><span class="special">(</span> <span class="identifier">max_N</span> <span class="special">);</span>
 <span class="identifier">coord_type</span> <span class="identifier">p</span><span class="special">(</span> <span class="identifier">N_start</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">);</span>
 <span class="identifier">p</span><span class="special">.</span><span class="identifier">reserve</span><span class="special">(</span> <span class="identifier">max_N</span> <span class="special">);</span>
-<span class="comment">// start with uniform momentum distribution over 20 sites
-</span><span class="identifier">fill</span><span class="special">(</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()+</span><span class="number">20</span> <span class="special">,</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">end</span><span class="special">()-</span><span class="number">20</span> <span class="special">,</span> <span class="number">1.0</span><span class="special">/</span><span class="identifier">sqrt</span><span class="special">(</span><span class="number">20</span><span class="special">)</span> <span class="special">);</span>
+<span class="comment">// start with uniform momentum distribution over 20 sites</span>
+<span class="identifier">fill</span><span class="special">(</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()+</span><span class="number">20</span> <span class="special">,</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">end</span><span class="special">()-</span><span class="number">20</span> <span class="special">,</span> <span class="number">1.0</span><span class="special">/</span><span class="identifier">sqrt</span><span class="special">(</span><span class="number">20</span><span class="special">)</span> <span class="special">);</span>
 
 <span class="identifier">coord_type</span> <span class="identifier">distr</span><span class="special">(</span> <span class="identifier">N_start</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">);</span>
 <span class="identifier">distr</span><span class="special">.</span><span class="identifier">reserve</span><span class="special">(</span> <span class="identifier">max_N</span> <span class="special">);</span>
 
-<span class="comment">// create the system
-</span><span class="identifier">compacton_lattice</span> <span class="identifier">lattice</span><span class="special">(</span> <span class="identifier">max_N</span> <span class="special">,</span> <span class="identifier">beta</span> <span class="special">,</span> <span class="special">(</span><span class="identifier">max_N</span><span class="special">-</span><span class="identifier">N_start</span><span class="special">)/</span><span class="number">2</span> <span class="special">);</span>
+<span class="comment">// create the system</span>
+<span class="identifier">compacton_lattice</span> <span class="identifier">lattice</span><span class="special">(</span> <span class="identifier">max_N</span> <span class="special">,</span> <span class="identifier">beta</span> <span class="special">,</span> <span class="special">(</span><span class="identifier">max_N</span><span class="special">-</span><span class="identifier">N_start</span><span class="special">)/</span><span class="number">2</span> <span class="special">);</span>
 
-<span class="comment">//create the stepper, note that we use an always_resizer because state size might change during steps
-</span><span class="keyword">typedef</span> <span class="identifier">symplectic_rkn_sb3a_mclachlan</span><span class="special">&lt;</span> <span class="identifier">coord_type</span> <span class="special">,</span> <span class="identifier">coord_type</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">coord_type</span> <span class="special">,</span> <span class="identifier">coord_type</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">,</span>
+<span class="comment">//create the stepper, note that we use an always_resizer because state size might change during steps</span>
+<span class="keyword">typedef</span> <span class="identifier">symplectic_rkn_sb3a_mclachlan</span><span class="special">&lt;</span> <span class="identifier">coord_type</span> <span class="special">,</span> <span class="identifier">coord_type</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">coord_type</span> <span class="special">,</span> <span class="identifier">coord_type</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">,</span>
         <span class="identifier">range_algebra</span> <span class="special">,</span> <span class="identifier">default_operations</span> <span class="special">,</span> <span class="identifier">always_resizer</span> <span class="special">&gt;</span> <span class="identifier">hamiltonian_stepper</span><span class="special">;</span>
 <span class="identifier">hamiltonian_stepper</span> <span class="identifier">stepper</span><span class="special">;</span>
 <span class="identifier">hamiltonian_stepper</span><span class="special">::</span><span class="identifier">state_type</span> <span class="identifier">state</span> <span class="special">=</span> <span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">q</span> <span class="special">,</span> <span class="identifier">p</span> <span class="special">);</span>
@@ -910,7 +892,6 @@
           the start index of the potential changes in this case.
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">double</span> <span class="identifier">t</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
 <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">dt</span> <span class="special">=</span> <span class="number">0.1</span><span class="special">;</span>
@@ -943,7 +924,6 @@
           , <code class="computeroutput"><span class="identifier">p</span></code> and <code class="computeroutput"><span class="identifier">distr</span></code>.
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">void</span> <span class="identifier">do_resize</span><span class="special">(</span> <span class="identifier">coord_type</span> <span class="special">&amp;</span><span class="identifier">q</span> <span class="special">,</span> <span class="identifier">coord_type</span> <span class="special">&amp;</span><span class="identifier">p</span> <span class="special">,</span> <span class="identifier">coord_type</span> <span class="special">&amp;</span><span class="identifier">distr</span> <span class="special">,</span> <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">N</span> <span class="special">)</span>
 <span class="special">{</span>
@@ -961,7 +941,8 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Karsten Ahnert and Mario Mulansky<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009-2011 Karsten Ahnert
+      and Mario Mulansky<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

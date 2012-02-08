@@ -155,7 +155,7 @@ private:
     template< class StateIn >
     bool resize_impl( const StateIn &x )
     {
-        return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
+        return adjust_size_by_resizeability( m_dxdt , x , typename is_resizeable<deriv_type>::type() );
     }
 
 

@@ -25,6 +25,7 @@
 #include <boost/bind.hpp>
 
 #include <boost/numeric/odeint/stepper/rosenbrock4_controller.hpp>
+#include <boost/numeric/odeint/util/is_resizeable.hpp>
 
 namespace boost {
 namespace numeric {
@@ -177,8 +178,8 @@ private:
     bool resize_impl( const StateIn &x )
     {
         bool resized = false;
-        resized |= adjust_size_by_resizeability( m_x1 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_x2 , x , typename wrapped_state_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_x1 , x , typename is_resizeable<state_type>::type() );
+        resized |= adjust_size_by_resizeability( m_x2 , x , typename is_resizeable<state_type>::type() );
         return resized;
     }
 

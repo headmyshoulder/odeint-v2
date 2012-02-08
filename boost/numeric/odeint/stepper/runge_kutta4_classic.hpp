@@ -27,6 +27,7 @@
 #include <boost/numeric/odeint/stepper/detail/macros.hpp>
 
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
+#include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 
 namespace boost {
@@ -117,10 +118,10 @@ private:
     bool resize_impl( const StateIn &x )
     {
         bool resized = false;
-        resized |= adjust_size_by_resizeability( m_x_tmp , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_dxm , x , typename wrapped_deriv_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_dxt , x , typename wrapped_deriv_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_dxh , x , typename wrapped_deriv_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_x_tmp , x , typename is_resizeable<state_type>::type() );
+        resized |= adjust_size_by_resizeability( m_dxm , x , typename is_resizeable<deriv_type>::type() );
+        resized |= adjust_size_by_resizeability( m_dxt , x , typename is_resizeable<deriv_type>::type() );
+        resized |= adjust_size_by_resizeability( m_dxh , x , typename is_resizeable<deriv_type>::type() );
         return resized;
     }
 

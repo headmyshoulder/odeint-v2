@@ -130,15 +130,14 @@
           is the Runge Kutta stepper of fourth order:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">runge_kutta4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">rk</span><span class="special">;</span>
-<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>               <span class="comment">// In-place transformation of inout
-</span><span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys2</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>               <span class="comment">// Ok
-</span><span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>            <span class="comment">// Out-of-place transformation
-</span><span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">dxdtin</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>      <span class="comment">// In-place tranformation of inout
-</span><span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">dxdtin</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// Out-of-place transformation
-</span></pre>
+<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>               <span class="comment">// In-place transformation of inout</span>
+<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys2</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>               <span class="comment">// Ok</span>
+<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>            <span class="comment">// Out-of-place transformation</span>
+<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">dxdtin</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>      <span class="comment">// In-place tranformation of inout</span>
+<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">dxdtin</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// Out-of-place transformation</span>
+</pre>
 <p>
         </p>
 <p>
@@ -175,21 +174,20 @@
           how the FSAL steppers can be used is
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">rk</span><span class="special">;</span>
 <span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
-<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys2</span> <span class="special">,</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>         <span class="comment">// DONT do this, sys1 is assumed
-</span>
+<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys2</span> <span class="special">,</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>         <span class="comment">// DONT do this, sys1 is assumed</span>
+
 <span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys2</span> <span class="special">,</span> <span class="identifier">in2</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
-<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys2</span> <span class="special">,</span> <span class="identifier">in3</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>        <span class="comment">// DONT do this, in2 is assumed
-</span>
+<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys2</span> <span class="special">,</span> <span class="identifier">in3</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>        <span class="comment">// DONT do this, in2 is assumed</span>
+
 <span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">dxdtinout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
-<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys2</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">dxdtinout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>           <span class="comment">// Ok, internal derivative is not used, dxdtinout is updated
-</span>
+<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys2</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">dxdtinout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>           <span class="comment">// Ok, internal derivative is not used, dxdtinout is updated</span>
+
 <span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">dxdtin</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dxdtout</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
-<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys2</span> <span class="special">,</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">dxdtin</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dxdtout</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span> <span class="comment">// Ok, internal derivative is not used
-</span></pre>
+<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys2</span> <span class="special">,</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">dxdtin</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dxdtout</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span> <span class="comment">// Ok, internal derivative is not used</span>
+</pre>
 <p>
         </p>
 <div class="caution"><table border="0" summary="Caution">
@@ -241,7 +239,6 @@
           again simple C-functions of functors. An example is the harmonic oscillator:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="number">1</span> <span class="special">&gt;</span> <span class="identifier">vector_type</span><span class="special">;</span>
 
@@ -263,7 +260,6 @@
           example for the harmonic oscillator is now:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">pair</span><span class="special">&lt;</span> <span class="identifier">vector_type</span> <span class="special">,</span> <span class="identifier">vector_type</span> <span class="special">&gt;</span> <span class="identifier">x</span><span class="special">;</span>
 <span class="identifier">x</span><span class="special">.</span><span class="identifier">first</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">second</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
@@ -277,7 +273,6 @@
           two public method:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">harm_osc</span>
 <span class="special">{</span>
@@ -295,7 +290,6 @@
 <p>
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">harm_osc</span> <span class="identifier">h</span><span class="special">;</span>
 <span class="identifier">rkn</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span> <span class="special">&amp;</span><span class="identifier">harm_osc</span><span class="special">::</span><span class="identifier">f1</span> <span class="special">,</span> <span class="identifier">h</span> <span class="special">,</span> <span class="identifier">_1</span> <span class="special">,</span> <span class="identifier">_2</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span> <span class="special">&amp;</span><span class="identifier">harm_osc</span><span class="special">::</span><span class="identifier">f2</span> <span class="special">,</span> <span class="identifier">h</span> <span class="special">,</span> <span class="identifier">_1</span> <span class="special">,</span> <span class="identifier">_2</span> <span class="special">)</span> <span class="special">)</span> <span class="special">,</span>
@@ -315,7 +309,6 @@
           can be written as
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">pair</span><span class="special">&lt;</span> <span class="identifier">vector_type</span> <span class="special">,</span> <span class="identifier">vector_type</span> <span class="special">&gt;</span> <span class="identifier">x</span><span class="special">;</span>
 <span class="identifier">x</span><span class="special">.</span><span class="identifier">first</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">second</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
@@ -339,7 +332,6 @@
           takes q and p without combining them into a pair:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">rkn</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">harm_osc_f1</span> <span class="special">,</span> <span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">q</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">p</span> <span class="special">)</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
 <span class="identifier">rkn</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">harm_osc_f1</span> <span class="special">,</span> <span class="identifier">q</span> <span class="special">,</span> <span class="identifier">p</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
@@ -405,7 +397,6 @@
           steps is instantiated and initialized;
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">adams_bashforth_moulton</span><span class="special">&lt;</span> <span class="number">5</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">abm</span><span class="special">;</span>
 <span class="identifier">abm</span><span class="special">.</span><span class="identifier">initialize</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
@@ -423,7 +414,6 @@
           state of the Adams-Bashforth-Stepper:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">abm</span><span class="special">.</span><span class="identifier">initialize</span><span class="special">(</span> <span class="identifier">runge_kutta_fehlberg78</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;()</span> <span class="special">,</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
 </pre>
@@ -686,7 +676,6 @@
           An example is
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">dense_output_runge_kutta</span><span class="special">&lt;</span> <span class="identifier">controlled_runge_kutta</span><span class="special">&lt;</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">dense</span><span class="special">;</span>
 <span class="identifier">dense</span><span class="special">.</span><span class="identifier">initialize</span><span class="special">(</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
@@ -712,7 +701,6 @@
           exist:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">result_of</span><span class="special">::</span><span class="identifier">make_dense_output</span><span class="special">&lt;</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">dense2</span> <span class="special">=</span> <span class="identifier">make_dense_output</span><span class="special">(</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;()</span> <span class="special">);</span>
 </pre>
@@ -730,7 +718,6 @@
           for easy use with the integrate functions:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">make_dense_output</span><span class="special">(</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;()</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t_start</span> <span class="special">,</span> <span class="identifier">t_end</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
 </pre>
@@ -799,15 +786,14 @@
           4 internal derivatives of the solution at times <code class="computeroutput"><span class="special">(</span><span class="identifier">t</span><span class="special">-</span><span class="identifier">dt</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">2d</span><span class="identifier">t</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">3d</span><span class="identifier">t</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">4d</span><span class="identifier">t</span><span class="special">)</span></code>.
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">adams_bashforth_moulton</span><span class="special">&lt;</span> <span class="number">4</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">stepper</span><span class="special">;</span>
-<span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-4dt
-</span><span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-3dt
-</span><span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-2dt
-</span><span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-dt
-</span><span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// make one step with Adam-Bashforth-Moulton, the internal array of states is now rotated
-</span></pre>
+<span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-4dt</span>
+<span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-3dt</span>
+<span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-2dt</span>
+<span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-dt</span>
+<span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// make one step with Adam-Bashforth-Moulton, the internal array of states is now rotated</span>
+</pre>
 <p>
         </p>
 <p>
@@ -1900,7 +1886,8 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Karsten Ahnert and Mario Mulansky<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009-2011 Karsten Ahnert
+      and Mario Mulansky<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

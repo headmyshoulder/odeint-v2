@@ -30,7 +30,7 @@
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
 #include <boost/numeric/odeint/util/ublas_wrapper.hpp>
-//#include <boost/numeric/odeint/util/state_wrapper.hpp>
+#include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 
 #include <boost/numeric/ublas/vector.hpp>
@@ -269,26 +269,26 @@ protected:
     bool resize_impl( const StateIn &x )
     {
         bool resized = false;
-        resized |= adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_dfdt , x , typename wrapped_deriv_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_dxdtnew , x , typename wrapped_deriv_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_xtmp , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_g1 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_g2 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_g3 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_g4 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_g5 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_cont3 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_cont4 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_jac , x , typename wrapped_matrix_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_pm , x , typename wrapped_pmatrix_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_dxdt , x , typename is_resizeable<deriv_type>::type() );
+        resized |= adjust_size_by_resizeability( m_dfdt , x , typename is_resizeable<deriv_type>::type() );
+        resized |= adjust_size_by_resizeability( m_dxdtnew , x , typename is_resizeable<deriv_type>::type() );
+        resized |= adjust_size_by_resizeability( m_xtmp , x , typename is_resizeable<state_type>::type() );
+        resized |= adjust_size_by_resizeability( m_g1 , x , typename is_resizeable<state_type>::type() );
+        resized |= adjust_size_by_resizeability( m_g2 , x , typename is_resizeable<state_type>::type() );
+        resized |= adjust_size_by_resizeability( m_g3 , x , typename is_resizeable<state_type>::type() );
+        resized |= adjust_size_by_resizeability( m_g4 , x , typename is_resizeable<state_type>::type() );
+        resized |= adjust_size_by_resizeability( m_g5 , x , typename is_resizeable<state_type>::type() );
+        resized |= adjust_size_by_resizeability( m_cont3 , x , typename is_resizeable<state_type>::type() );
+        resized |= adjust_size_by_resizeability( m_cont4 , x , typename is_resizeable<state_type>::type() );
+        resized |= adjust_size_by_resizeability( m_jac , x , typename is_resizeable<matrix_type>::type() );
+        resized |= adjust_size_by_resizeability( m_pm , x , typename is_resizeable<pmatrix_type>::type() );
         return resized;
     }
 
     template< class StateIn >
     bool resize_x_err( const StateIn &x )
     {
-        return adjust_size_by_resizeability( m_x_err , x , typename wrapped_state_type::is_resizeable() );
+        return adjust_size_by_resizeability( m_x_err , x , typename is_resizeable<state_type>::type() );
     }
 
 private:

@@ -27,6 +27,8 @@
 
 #include <boost/array.hpp>
 
+#include <boost/numeric/odeint/util/state_wrapper.hpp>
+#include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 
 

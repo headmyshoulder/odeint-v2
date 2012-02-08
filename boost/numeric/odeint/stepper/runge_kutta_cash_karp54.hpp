@@ -24,6 +24,8 @@
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
 
+#include <boost/numeric/odeint/util/state_wrapper.hpp>
+#include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 
 #include <boost/array.hpp>

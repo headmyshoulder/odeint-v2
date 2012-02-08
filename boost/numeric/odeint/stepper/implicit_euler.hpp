@@ -27,6 +27,7 @@
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
 #include <boost/numeric/odeint/util/ublas_wrapper.hpp>
+#include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 
 #include <boost/numeric/ublas/vector.hpp>
@@ -131,11 +132,11 @@ private:
     bool resize_impl( const StateIn &x )
     {
         bool resized = false;
-        resized |= adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_x , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_b , x , typename wrapped_deriv_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_jacobi , x , typename wrapped_matrix_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_pm , x , typename wrapped_pmatrix_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_dxdt , x , typename is_resizeable<deriv_type>::type() );
+        resized |= adjust_size_by_resizeability( m_x , x , typename is_resizeable<state_type>::type() );
+        resized |= adjust_size_by_resizeability( m_b , x , typename is_resizeable<deriv_type>::type() );
+        resized |= adjust_size_by_resizeability( m_jacobi , x , typename is_resizeable<matrix_type>::type() );
+        resized |= adjust_size_by_resizeability( m_pm , x , typename is_resizeable<pmatrix_type>::type() );
         return resized;
     }
 

@@ -26,6 +26,7 @@
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
 #include <boost/numeric/odeint/util/copy.hpp>
+#include <boost/numeric/odeint/util/is_resizeable.hpp>
 
 #include <boost/numeric/odeint/stepper/rosenbrock4.hpp>
 
@@ -174,13 +175,13 @@ private:
     template< class StateIn >
     bool resize_m_xerr( const StateIn &x )
     {
-        return adjust_size_by_resizeability( m_xerr , x , typename wrapped_state_type::is_resizeable() );
+        return adjust_size_by_resizeability( m_xerr , x , typename is_resizeable<state_type>::type() );
     }
 
     template< class StateIn >
     bool resize_m_xnew( const StateIn &x )
     {
-        return adjust_size_by_resizeability( m_xnew , x , typename wrapped_state_type::is_resizeable() );
+        return adjust_size_by_resizeability( m_xnew , x , typename is_resizeable<state_type>::type() );
     }
 
 

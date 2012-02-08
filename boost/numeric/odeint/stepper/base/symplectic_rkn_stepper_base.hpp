@@ -277,13 +277,13 @@ private:
     template< class StateIn >
     bool resize_dqdt( const StateIn &x )
     {
-        return adjust_size_by_resizeability( m_dqdt , x , typename wrapped_coor_deriv_type::is_resizeable() );
+        return adjust_size_by_resizeability( m_dqdt , x , typename is_resizeable<coor_deriv_type>::type() );
     }
 
     template< class StateIn >
     bool resize_dpdt( const StateIn &x )
     {
-        return adjust_size_by_resizeability( m_dpdt , x , typename wrapped_momentum_deriv_type::is_resizeable() );
+        return adjust_size_by_resizeability( m_dpdt , x , typename is_resizeable<momentum_deriv_type>::type() );
     }
 
 

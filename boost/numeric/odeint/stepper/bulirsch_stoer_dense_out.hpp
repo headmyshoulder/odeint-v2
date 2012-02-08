@@ -36,6 +36,7 @@
 #include <boost/numeric/odeint/stepper/detail/macros.hpp>
 
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
+#include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 
 #include <boost/type_traits.hpp>
@@ -762,22 +763,22 @@ private:
     {
         bool resized( false );
 
-        resized |= adjust_size_by_resizeability( m_x1 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_x2 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_dxdt1 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_dxdt2 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_err , x , typename wrapped_state_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_x1 , x , typename is_resizeable<state_type>::type() );
+        resized |= adjust_size_by_resizeability( m_x2 , x , typename is_resizeable<state_type>::type() );
+        resized |= adjust_size_by_resizeability( m_dxdt1 , x , typename is_resizeable<state_type>::type() );
+        resized |= adjust_size_by_resizeability( m_dxdt2 , x , typename is_resizeable<state_type>::type() );
+        resized |= adjust_size_by_resizeability( m_err , x , typename is_resizeable<state_type>::type() );
 
         for( size_t i = 0 ; i < m_k_max ; ++i )
-            resized |= adjust_size_by_resizeability( m_table[i] , x , typename wrapped_state_type::is_resizeable() );
+            resized |= adjust_size_by_resizeability( m_table[i] , x , typename is_resizeable<state_type>::type() );
         for( size_t i = 0 ; i < m_k_max+1 ; ++i )
-                    resized |= adjust_size_by_resizeability( m_mp_states[i] , x , typename wrapped_state_type::is_resizeable() );
+                    resized |= adjust_size_by_resizeability( m_mp_states[i] , x , typename is_resizeable<state_type>::type() );
         for( size_t i = 0 ; i < m_k_max+1 ; ++i )
             for( size_t j = 0 ; j < m_derivs[i].size() ; ++j )
-                resized |= adjust_size_by_resizeability( m_derivs[i][j] , x , typename wrapped_deriv_type::is_resizeable() );
+                resized |= adjust_size_by_resizeability( m_derivs[i][j] , x , typename is_resizeable<deriv_type>::type() );
         for( size_t i = 0 ; i < 2*m_k_max+1 ; ++i )
             for( size_t j = 0 ; j < m_diffs[i].size() ; ++j )
-                resized |= adjust_size_by_resizeability( m_diffs[i][j] , x , typename wrapped_deriv_type::is_resizeable() );
+                resized |= adjust_size_by_resizeability( m_diffs[i][j] , x , typename is_resizeable<deriv_type>::type() );
 
         return resized;
     }

@@ -52,7 +52,6 @@
           to just define a function, e.g:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="comment">/* The type of container used to hold the state vector */</span>
 <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
@@ -79,7 +78,6 @@
           parameter structure as above:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="comment">/* The rhs of x' = f(x) defined as a class */</span>
 <span class="keyword">class</span> <span class="identifier">harm_osc</span> <span class="special">{</span>
@@ -1138,7 +1136,6 @@
           <span class="special">)</span></code> function from odeint:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">runge_kutta4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">stepper</span><span class="special">;</span>
 <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">stepper</span> <span class="special">,</span> <span class="identifier">harmonic_oscillator</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">);</span>
@@ -1155,7 +1152,6 @@
           method which can used directly. So, you write down the above example as
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">dt</span> <span class="special">=</span> <span class="number">0.01</span><span class="special">;</span>
 <span class="keyword">for</span><span class="special">(</span> <span class="keyword">double</span> <span class="identifier">t</span><span class="special">=</span><span class="number">0.0</span> <span class="special">;</span> <span class="identifier">t</span><span class="special">&lt;</span><span class="number">10.0</span> <span class="special">;</span> <span class="identifier">t</span><span class="special">+=</span> <span class="identifier">dt</span> <span class="special">)</span>
@@ -1179,7 +1175,6 @@
           with 4th order error estimation and coefficients introduced by Cash-Karp.
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">runge_kutta_cash_karp54</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">error_stepper_type</span><span class="special">;</span>
 </pre>
@@ -1192,7 +1187,6 @@
           stepper exists which can be used via
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">controlled_runge_kutta</span><span class="special">&lt;</span> <span class="identifier">error_stepper_type</span> <span class="special">&gt;</span> <span class="identifier">controlled_stepper_type</span><span class="special">;</span>
 <span class="identifier">controlled_stepper_type</span> <span class="identifier">controlled_stepper</span><span class="special">;</span>
@@ -1219,7 +1213,6 @@
           by using <code class="computeroutput"><span class="identifier">make_controlled</span></code>:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">integrate_adaptive</span><span class="special">(</span> <span class="identifier">make_controlled</span><span class="special">&lt;</span> <span class="identifier">error_stepper_type</span> <span class="special">&gt;(</span> <span class="number">1.0e-10</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">harmonic_oscillator</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">);</span>
 </pre>
@@ -1235,7 +1228,6 @@
           is
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">integrate_adaptive</span><span class="special">(</span> <span class="identifier">make_controlled</span><span class="special">(</span> <span class="number">1.0e-10</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="identifier">error_stepper_type</span><span class="special">()</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">harmonic_oscillator</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">);</span>
 </pre>
@@ -1251,7 +1243,6 @@
           with all parameters is therefore
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">double</span> <span class="identifier">abs_err</span> <span class="special">=</span> <span class="number">1.0e-10</span> <span class="special">,</span> <span class="identifier">rel_err</span> <span class="special">=</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="identifier">a_x</span> <span class="special">=</span> <span class="number">1.0</span> <span class="special">,</span> <span class="identifier">a_dxdt</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span>
 <span class="identifier">controlled_stepper_type</span> <span class="identifier">controlled_stepper</span><span class="special">(</span> <span class="identifier">default_error_checker</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;(</span> <span class="identifier">abs_err</span> <span class="special">,</span> <span class="identifier">rel_err</span> <span class="special">,</span> <span class="identifier">a_x</span> <span class="special">,</span> <span class="identifier">a_dxdt</span> <span class="special">)</span> <span class="special">);</span>
@@ -1453,7 +1444,8 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Karsten Ahnert and Mario Mulansky<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009-2011 Karsten Ahnert
+      and Mario Mulansky<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

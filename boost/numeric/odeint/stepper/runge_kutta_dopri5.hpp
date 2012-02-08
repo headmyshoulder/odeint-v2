@@ -28,6 +28,11 @@
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/stepper/detail/macros.hpp>
 
+#include <boost/numeric/odeint/util/state_wrapper.hpp>
+#include <boost/numeric/odeint/util/is_resizeable.hpp>
+#include <boost/numeric/odeint/util/resizer.hpp>
+
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -238,12 +243,12 @@ private:
     bool resize_impl( const StateIn &x )
     {
         bool resized = false;
-        resized |= adjust_size_by_resizeability( m_x_tmp , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_k2 , x , typename wrapped_deriv_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_k3 , x , typename wrapped_deriv_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_k4 , x , typename wrapped_deriv_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_k5 , x , typename wrapped_deriv_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_k6 , x , typename wrapped_deriv_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_x_tmp , x , typename is_resizeable<state_type>::type() );
+        resized |= adjust_size_by_resizeability( m_k2 , x , typename is_resizeable<deriv_type>::type() );
+        resized |= adjust_size_by_resizeability( m_k3 , x , typename is_resizeable<deriv_type>::type() );
+        resized |= adjust_size_by_resizeability( m_k4 , x , typename is_resizeable<deriv_type>::type() );
+        resized |= adjust_size_by_resizeability( m_k5 , x , typename is_resizeable<deriv_type>::type() );
+        resized |= adjust_size_by_resizeability( m_k6 , x , typename is_resizeable<deriv_type>::type() );
         return resized;
     }
 

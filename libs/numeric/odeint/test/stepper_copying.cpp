@@ -172,12 +172,11 @@ struct copy_impl< test_array2< T , Dim > , test_array2< T , Dim > >
 
 //provide the state_wrapper
 template< class T , size_t Dim >
-struct state_wrapper< test_array< T , Dim > , false >
+struct state_wrapper< test_array< T , Dim > >
 {
-    typedef state_wrapper< test_array< T , Dim > , false > state_wrapper_type;
+    typedef state_wrapper< test_array< T , Dim > > state_wrapper_type;
     typedef test_array< T , Dim > state_type;
     typedef T value_type;
-    typedef boost::false_type is_resizeable;
 
     state_type m_v;
 
@@ -212,12 +211,11 @@ struct state_wrapper< test_array< T , Dim > , false >
 
 //provide the state_wrapper
 template< class T , size_t Dim >
-struct state_wrapper< test_array2< T , Dim > , false >
+struct state_wrapper< test_array2< T , Dim > >
 {
-    typedef state_wrapper< test_array2< T , Dim > , false > state_wrapper_type;
+    typedef state_wrapper< test_array2< T , Dim > > state_wrapper_type;
     typedef test_array2< T , Dim > state_type;
     typedef T value_type;
-    typedef boost::false_type is_resizeable;
 
     state_type m_v;
 

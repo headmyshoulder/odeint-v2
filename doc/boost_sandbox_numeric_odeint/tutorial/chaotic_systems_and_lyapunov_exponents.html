@@ -61,7 +61,6 @@
         The implementation of the Lorenz system is
       </p>
 <p>
-        
 </p>
 <pre class="programlisting"><span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">sigma</span> <span class="special">=</span> <span class="number">10.0</span><span class="special">;</span>
 <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">R</span> <span class="special">=</span> <span class="number">28.0</span><span class="special">;</span>
@@ -84,7 +83,6 @@
         the perturbation could look like:
       </p>
 <p>
-        
 </p>
 <pre class="programlisting"><span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">n</span> <span class="special">=</span> <span class="number">3</span><span class="special">;</span>
 <span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">num_of_lyap</span> <span class="special">=</span> <span class="number">3</span><span class="special">;</span>
@@ -116,7 +114,6 @@
         inside a functor with templatized arguments:
       </p>
 <p>
-        
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">lorenz</span>
 <span class="special">{</span>
@@ -138,11 +135,11 @@
 </pre>
 <p>
         This works fine and <code class="computeroutput"><span class="identifier">lorenz_with_lyap</span></code>
-        can be used for example via 
+        can be used for example via
 </p>
 <pre class="programlisting"><span class="identifier">state_type</span> <span class="identifier">x</span><span class="special">;</span>
-<span class="comment">// initialize x
-</span><span class="identifier">explicit_rk4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">rk4</span><span class="special">;</span>
+<span class="comment">// initialize x</span>
+<span class="identifier">explicit_rk4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">rk4</span><span class="special">;</span>
 <span class="identifier">integrate_n_steps</span><span class="special">(</span> <span class="identifier">rk4</span> <span class="special">,</span> <span class="identifier">lorenz_with_lyap</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">,</span> <span class="number">1000</span> <span class="special">);</span>
 </pre>
 <p>
@@ -154,11 +151,10 @@
         current state lies on the attractor, hence it would look like
       </p>
 <p>
-        
 </p>
 <pre class="programlisting"><span class="identifier">state_type</span> <span class="identifier">x</span><span class="special">;</span>
-<span class="comment">// initialize x
-</span><span class="identifier">explicit_rk4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">rk4</span><span class="special">;</span>
+<span class="comment">// initialize x</span>
+<span class="identifier">explicit_rk4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">rk4</span><span class="special">;</span>
 <span class="identifier">integrate_n_steps</span><span class="special">(</span> <span class="identifier">rk4</span> <span class="special">,</span> <span class="identifier">lorenz</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">,</span> <span class="number">1000</span> <span class="special">);</span>
 </pre>
 <p>
@@ -170,7 +166,6 @@
         by pointer to the state and an appropriate length, something similar to
       </p>
 <p>
-        
 </p>
 <pre class="programlisting"><span class="keyword">void</span> <span class="identifier">lorenz</span><span class="special">(</span> <span class="keyword">double</span><span class="special">*</span> <span class="identifier">x</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">*</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span><span class="special">,</span> <span class="keyword">void</span><span class="special">*</span> <span class="identifier">params</span> <span class="special">)</span>
 <span class="special">{</span>
@@ -188,7 +183,6 @@
         the system has to by changed:
       </p>
 <p>
-        
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">lorenz</span>
 <span class="special">{</span>
@@ -211,10 +205,9 @@
         with an suited range:
       </p>
 <p>
-        
 </p>
-<pre class="programlisting"><span class="comment">// perform 10000 transient steps
-</span><span class="identifier">integrate_n_steps</span><span class="special">(</span> <span class="identifier">rk4</span> <span class="special">,</span> <span class="identifier">lorenz</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">n</span> <span class="special">)</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">,</span> <span class="number">10000</span> <span class="special">);</span>
+<pre class="programlisting"><span class="comment">// perform 10000 transient steps</span>
+<span class="identifier">integrate_n_steps</span><span class="special">(</span> <span class="identifier">rk4</span> <span class="special">,</span> <span class="identifier">lorenz</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">n</span> <span class="special">)</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">,</span> <span class="number">10000</span> <span class="special">);</span>
 </pre>
 <p>
       </p>
@@ -242,7 +235,6 @@
           </li>
 </ol></div>
 <p>
-        
 </p>
 <pre class="programlisting"><span class="identifier">fill</span><span class="special">(</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()+</span><span class="identifier">n</span> <span class="special">,</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">end</span><span class="special">()</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">);</span>
 <span class="keyword">for</span><span class="special">(</span> <span class="identifier">size_t</span> <span class="identifier">i</span><span class="special">=</span><span class="number">0</span> <span class="special">;</span> <span class="identifier">i</span><span class="special">&lt;</span><span class="identifier">num_of_lyap</span> <span class="special">;</span> <span class="special">++</span><span class="identifier">i</span> <span class="special">)</span> <span class="identifier">x</span><span class="special">[</span><span class="identifier">n</span><span class="special">+</span><span class="identifier">n</span><span class="special">*</span><span class="identifier">i</span><span class="special">+</span><span class="identifier">i</span><span class="special">]</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span>
@@ -273,7 +265,8 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Karsten Ahnert and Mario Mulansky<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009-2011 Karsten Ahnert
+      and Mario Mulansky<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

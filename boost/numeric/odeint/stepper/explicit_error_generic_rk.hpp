@@ -27,6 +27,7 @@
 #include <boost/numeric/odeint/stepper/detail/generic_rk_operations.hpp>
 
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
+#include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 
 
@@ -143,10 +144,10 @@ private:
     bool resize_impl( const StateIn &x )
     {
         bool resized( false );
-        resized |= adjust_size_by_resizeability( m_x_tmp , x , typename wrapped_state_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_x_tmp , x , typename is_resizeable<state_type>::type() );
         for( size_t i = 0 ; i < StageCount-1 ; ++i )
         {
-            resized |= adjust_size_by_resizeability( m_F[i] , x , typename wrapped_deriv_type::is_resizeable() );
+            resized |= adjust_size_by_resizeability( m_F[i] , x , typename is_resizeable<deriv_type>::type() );
         }
         return resized;
     }

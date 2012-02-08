@@ -22,6 +22,7 @@
 
 #include <boost/numeric/odeint/stepper/base/explicit_stepper_base.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
+#include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
 #include <boost/numeric/odeint/stepper/detail/macros.hpp>
@@ -119,9 +120,9 @@ private:
     bool resize_impl( const StateIn &x )
     {
         bool resized( false );
-        resized |= adjust_size_by_resizeability( m_x0 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_x1 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_dxdt , x , typename wrapped_state_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_x0 , x , typename is_resizeable<state_type>::type() );
+        resized |= adjust_size_by_resizeability( m_x1 , x , typename is_resizeable<state_type>::type() );
+        resized |= adjust_size_by_resizeability( m_dxdt , x , typename is_resizeable<deriv_type>::type() );
         return resized;
     }
 
@@ -242,8 +243,8 @@ public :
     bool resize( const StateIn &x )
     {
         bool resized( false );
-        resized |= adjust_size_by_resizeability( m_x0 , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_x1 , x , typename wrapped_state_type::is_resizeable() );
+        resized |= adjust_size_by_resizeability( m_x0 , x , typename is_resizeable<state_type>::type() );
+        resized |= adjust_size_by_resizeability( m_x1 , x , typename is_resizeable<state_type>::type() );
         return resized;
     }
 

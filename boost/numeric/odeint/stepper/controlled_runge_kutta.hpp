@@ -27,6 +27,7 @@
 #include <boost/numeric/odeint/util/copy.hpp>
 
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
+#include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
@@ -295,19 +296,19 @@ private:
     template< class StateIn >
     bool resize_m_xerr_impl( const StateIn &x )
     {
-        return adjust_size_by_resizeability( m_xerr , x , typename wrapped_state_type::is_resizeable() );
+        return adjust_size_by_resizeability( m_xerr , x , typename is_resizeable<state_type>::type() );
     }
 
     template< class StateIn >
     bool resize_m_dxdt_impl( const StateIn &x )
     {
-        return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
+        return adjust_size_by_resizeability( m_dxdt , x , typename is_resizeable<deriv_type>::type() );
     }
 
     template< class StateIn >
     bool resize_m_xnew_impl( const StateIn &x )
     {
-        return adjust_size_by_resizeability( m_xnew , x , typename wrapped_state_type::is_resizeable() );
+        return adjust_size_by_resizeability( m_xnew , x , typename is_resizeable<state_type>::type() );
     }
 
 
@@ -506,25 +507,25 @@ private:
     template< class StateIn >
     bool resize_m_xerr_impl( const StateIn &x )
     {
-        return adjust_size_by_resizeability( m_xerr , x , typename wrapped_state_type::is_resizeable() );
+        return adjust_size_by_resizeability( m_xerr , x , typename is_resizeable<state_type>::type() );
     }
 
     template< class StateIn >
     bool resize_m_dxdt_impl( const StateIn &x )
     {
-        return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
+        return adjust_size_by_resizeability( m_dxdt , x , typename is_resizeable<deriv_type>::type() );
     }
 
     template< class StateIn >
     bool resize_m_dxdt_new_impl( const StateIn &x )
     {
-        return adjust_size_by_resizeability( m_dxdtnew , x , typename wrapped_deriv_type::is_resizeable() );
+        return adjust_size_by_resizeability( m_dxdtnew , x , typename is_resizeable<deriv_type>::type() );
     }
 
     template< class StateIn >
     bool resize_m_xnew_impl( const StateIn &x )
     {
-        return adjust_size_by_resizeability( m_xnew , x , typename wrapped_state_type::is_resizeable() );
+        return adjust_size_by_resizeability( m_xnew , x , typename is_resizeable<state_type>::type() );
     }
 
 

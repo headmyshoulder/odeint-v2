@@ -37,6 +37,7 @@
 #include <boost/numeric/odeint/stepper/detail/macros.hpp>
 
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
+#include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 
 namespace boost {
@@ -341,13 +342,13 @@ private:
     template< class StateIn >
     bool resize_m_dxdt( const StateIn &x )
     {
-        return adjust_size_by_resizeability( m_dxdt , x , typename wrapped_deriv_type::is_resizeable() );
+        return adjust_size_by_resizeability( m_dxdt , x , typename is_resizeable<deriv_type>::type() );
     }
 
     template< class StateIn >
     bool resize_m_xnew( const StateIn &x )
     {
-        return adjust_size_by_resizeability( m_xnew , x , typename wrapped_state_type::is_resizeable() );
+        return adjust_size_by_resizeability( m_xnew , x , typename is_resizeable<state_type>::type() );
     }
 
     template< class StateIn >
@@ -355,8 +356,8 @@ private:
     {
         bool resized( false );
         for( size_t i = 0 ; i < m_k_max ; ++i )
-            resized |= adjust_size_by_resizeability( m_table[i] , x , typename wrapped_state_type::is_resizeable() );
-        resized |= adjust_size_by_resizeability( m_err , x , typename wrapped_state_type::is_resizeable() );
+            resized |= adjust_size_by_resizeability( m_table[i] , x , typename is_resizeable<state_type>::type() );
+        resized |= adjust_size_by_resizeability( m_err , x , typename is_resizeable<state_type>::type() );
         return resized;
     }
 
