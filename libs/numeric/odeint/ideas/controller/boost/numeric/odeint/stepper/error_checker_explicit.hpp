@@ -50,6 +50,12 @@ public:
     : m_eps_abs( eps_abs ) , m_eps_rel( eps_rel ) , m_a_x( a_x ) , m_a_dxdt( a_dxdt )
     { }
 
+//    template< class State1 , class State2 , class Err , class Time >
+//    value_type error( const State1 &x_old , const State2 &x , const Err &x_err , const Time &dt )
+//    {
+//        algebra.reduce3( x_err , x_old , x , typename operations_type::template rel_error< value_type >( m_eps_abs , m_eps_rel ) );
+//    }
+
 
     template< class State1 , class State2 , class Deriv , class Err , class Time >
     value_type error( const State1 &x_old , const State2 &x , const Deriv &dxdt_old , Err &x_err , const Time &dt )

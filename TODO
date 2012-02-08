@@ -1,11 +1,18 @@
 GENERIC_CONTROLLERS
 * introduce the orders in pi_controller and stiff_controller
-OK * rename rb_controller to stiff_controller
 * check dense-output (dopri5, rosenbrock4)
 * operations: enhance rel_error
   * contains now the error calculation for explicit_error_stepper AND
     error_steppers
-OK * check the preamble
+* implement generic_controlled_stepper_explicit_fsal
+* implement enhanced operations max_rel_err, max_rel_err_2
+* implement reduce2, reduce3 , reduce4 for all algebras
+* test the new reduce functions
+* documentate
+* solve the reference problem for the algebras 
+* check if default_operations can be inherited and the member structs can be overwritten
+
+
 
 error_stepper:
 
