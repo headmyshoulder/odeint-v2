@@ -3,7 +3,7 @@
  boost/numeric/odeint/integrate/detail/integrate_const.hpp
 
  [begin_description]
- Default integrate_const implementaiton
+ Default integrate_const implementation
  [end_description]
 
  Copyright 2009-2011 Karsten Ahnert
@@ -26,6 +26,15 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 namespace detail {
+
+
+// forward declaration of integrate_adative required in integrate_const for controlled stepper
+template< class Stepper , class System , class State , class Time , class Observer >
+size_t integrate_adaptive(
+        Stepper stepper , System system , State &start_state ,
+        Time &start_time , Time end_time , Time &dt ,
+        Observer observer , controlled_stepper_tag
+);
 
 
 /*
@@ -75,7 +84,7 @@ size_t integrate_const(
     {
         obs( start_state , start_time );
         Time next_time = start_time + time_step;
-        count += detail::integrate_adaptive(
+        count += boost::numeric::odeint::detail::integrate_adaptive(
                 stepper , system , start_state , start_time , next_time , dt ,
                 null_observer() , controlled_stepper_tag() );
     }

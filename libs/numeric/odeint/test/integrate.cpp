@@ -91,7 +91,7 @@ struct perform_integrate_const_test
 
         for( size_t i=0 ; i<times.size() ; ++i )
         {
-            std::cout << i << std::endl;
+            //std::cout << i << std::endl;
             // check if observer was called at times 0,1,2,...
             BOOST_CHECK_SMALL( times[i] - static_cast< value_type >(i)*dt , (i+1) * 2E-16 );
         }
@@ -163,7 +163,7 @@ struct perform_integrate_n_steps_test
 
         for( size_t i=0 ; i<times.size() ; ++i )
             // check if observer was called at times 0,1,2,...
-            BOOST_CHECK_SMALL( times[i] - static_cast< value_type >(i)*dt , (i+1) * 2E-16 );
+            BOOST_CHECK_SMALL( times[i] - static_cast< value_type >(i)*dt , 2E-16 );
     }
 };
 
@@ -219,7 +219,7 @@ class simple_stepper_methods : public mpl::vector<
     runge_kutta_fehlberg78< state_type >
 > { };
 
-BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_n_steps_test_case , Stepper, simple_stepper_methods )
+BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_n_steps_test_case , Stepper, stepper_methods )
 {
     perform_integrate_n_steps_test< Stepper > tester;
     tester();
