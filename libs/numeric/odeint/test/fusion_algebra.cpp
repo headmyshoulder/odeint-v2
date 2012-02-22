@@ -6,6 +6,11 @@
  */
 
 #define BOOST_TEST_MODULE odeint_fusion_algebra
+
+// using fusion vectors as state types requires increased macro variables
+#define BOOST_FUSION_INVOKE_MAX_ARITY 15
+#define BOOST_RESULT_OF_NUM_ARGS 15
+
 #include <cmath>
 #include <complex>
 #include <utility>
@@ -143,9 +148,19 @@ BOOST_AUTO_TEST_CASE( for_each8 )
 {
 	fusion_fixture f;
 	algebra.for_each8( f.res , f.x , f.k1 , f.k2 , f.k3 , f.k4 , f.k5 , f.k6 ,
-			default_operations::scale_sum7< value_type , time_type , time_type , time_type , time_type , time_type , time_type >( 1.0 , dt , dt , dt , dt , dt ,dt ) );
+			default_operations::scale_sum7< value_type , time_type , time_type , time_type , time_type , time_type , time_type >( 1.0 , dt , dt , dt , dt , dt , dt ) );
 	BOOST_CHECK_CLOSE( fusion::at_c< 0 >( f.res ).value() , 3.1 , 1.0e-10 );
 	BOOST_CHECK_CLOSE( fusion::at_c< 1 >( f.res ).value() , 3.1 , 1.0e-10 );
+}
+
+BOOST_AUTO_TEST_CASE( for_each15 )
+{
+    fusion_fixture f;
+    algebra.for_each15( f.res , f.x , f.k1 , f.k2 , f.k3 , f.k4 , f.k5 , f.k6 , f.k1 , f.k2 , f.k3 , f.k4 , f.k5 , f.k6 , f.k1 ,
+            default_operations::scale_sum14< value_type , time_type , time_type , time_type , time_type , time_type , time_type ,
+                                            time_type , time_type , time_type , time_type , time_type , time_type , time_type >( 1.0 , dt , dt , dt , dt , dt , dt , dt , dt , dt , dt , dt , dt , dt ) );
+    //BOOST_CHECK_CLOSE( fusion::at_c< 0 >( f.res ).value() , 3.1 , 1.0e-10 );
+    //BOOST_CHECK_CLOSE( fusion::at_c< 1 >( f.res ).value() , 3.1 , 1.0e-10 );
 }
 
 

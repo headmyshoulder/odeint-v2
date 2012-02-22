@@ -8,15 +8,12 @@ import modules ;
 import path ;
 
 path-constant BOOST_ROOT : [ os.environ BOOST_ROOT ] ; 
+#path-constant BOOST_ROOT : /neutrino/mario/boost_1_47_0/ ;
 
 project 
    : requirements 
      <include>$(BOOST_ROOT)
    ;
-
-#
-
-#use-project /boost : c:/users/mario/boost_1_46_1 ;
 
 # tests, regression tests and examples
 build-project libs/numeric/odeint/test ;
