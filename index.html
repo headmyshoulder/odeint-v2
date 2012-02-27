@@ -3,59 +3,23 @@ layout: default
 title: odeint
 ---
 
+<section>
 <h1>odeint</h1>
-
+<div id="logo"><img alt="logo odeint" src="img/logo.jpg"/></div>
+  
 <p>
-Odeint is a modern C++ library for numerically solving Ordinary Differential Equations.
-It is developed in a generic way using Template Metaprogramming which leads to extraordinary high flexibility at top performance.
-</p>
-<div style="float:right; margin:10px;"><a href="http://google-melange.appspot.com/gsoc/homepage/google/gsoc2011"><img src="gsoc.jpeg" /></a></div>
-<p>
-The development was supported by the <a href="http://www.boost.org">boost community</a> as a project of the <a href="http://google-melange.appspot.com/gsoc/project/google/gsoc2011/mulansky/14001">Google Summer of Code 2011</a>
+<strong>Odeint</strong> is a modern C++ library for numerically solving Ordinary Differential Equations. It is developed in a generic way using Template Metaprogramming which leads to extraordinary high flexibility at top performance. The numerical algorithms are implemented independently of the underlying arithmetics. This results in an incredible applicability of the library, especially in non-standard environments. For example, odeint supports matrix types, arbitrary precision arithmetics and even can be easily run on CUDA GPUs - check the <a href="highlights.html">Highlights</a> to learn more. <br/><br/>
+Moreover, <strong>odeint</strong> provides a comfortable easy-to-use interface allowing for a quick and efficient implementation of numerical simulations. Visit the impressively clear 30 lines <a href="examples.html#lorenzsystem">Lorenz example</a>.<br/><br/>
+<strong>Odeint</strong> is a header only C++ library and the full source code is available for <a href="downloads.html">download.</a> distributed under the highly liberal <a href="http://www.boost.org/users/license.html" target="_blank"> Boost Software License</a>. Hence, <strong>odeint</strong> is free, open source and can be used in both non-commercial and commercial applications.
 </p>
 
-<h2>Example: Lorenz system</h2>
-30 lines of C++ to generate a trajectory on the <a href="http://en.wikipedia.org/wiki/Lorenz_attractor">Lorenz attractor</a>.
-<pre><code>#include &lt;iostream>
-#include &lt;boost/array.hpp>
-#include &lt;boost/numeric/odeint.hpp>
+<h1>use it</h1>
 
-using namespace std;
-using namespace boost::numeric::odeint;
-
-const double sigma = 10.0;
-const double R = 28.0;
-const double b = 8.0 / 3.0;
-
-typedef boost::array< double , 3 > state_type;
-
-void lorenz( const state_type &x , state_type &dxdt , double t )
-{
-    dxdt[0] = sigma * ( x[1] - x[0] );
-    dxdt[1] = R * x[0] - x[1] - x[0] * x[2];
-    dxdt[2] = -b * x[2] + x[0] * x[1];
-}
-
-void write_lorenz( const state_type &x , const double t )
-{
-    cout << t << '\t' << x[0] << '\t' << x[1] << '\t' << x[2] << endl;
-}
-
-int main(int argc, char **argv)
-{
-    state_type x = { 10.0 , 1.0 , 1.0 }; // initial conditions
-    integrate( lorenz , x , 0.0 , 25.0 , 0.1 , write_lorenz );
-}
-</code></pre>
-<p><img src="lorenz.png" /></p>
-<h2>Use it</h2>
-<p>
-  Browse the full <a href="doc/index.html"><b>documentation</b></a>.
-</p>
-<p>
-  Get some introduction by looking at the <a href="odeint_talk.pdf"><b>slides of our odeint talk</b></a>
-</p>
-
-<p>
-  get the source code on GitHub : <a href="http://github.com/headmyshoulder/odeint-v2">headmyshoulder/odeint-v2</a>
-</p>
+  
+<p>Browse the full <a href="http://headmyshoulder.github.com/odeint-v2/doc/index.html" target="_blank"><b>documentation</b></a>.
+  <br/>
+  Get some introduction by looking at the <a href="odeint_talk.pdf">slides of our <strong>odeint</strong> talk</a>.
+  <br/>
+  Get the source code on GitHub : <a href="http://github.com/headmyshoulder/odeint-v2" target="_blank">headmyshoulder/odeint-v2</a>.<br/>
+</p><br/>
+</section>

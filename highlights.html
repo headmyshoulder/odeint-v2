@@ -2,60 +2,64 @@
 layout: default
 title: odeint - Highlights
 ---
+    
+<section>
+<h1 id="top">Highlights</h1>
+      
+<p><strong>Odeint</strong> is designed in a verfy flexible way such that the algorithms are completely independent from the underlying containers and even from the basic algebraic computations. That means odeint works not only with the standard containers like vector< double > or array< double , N > but also nicely coorperates with many other libraries. <br /><br />
 
-<h1>Highlights</h1>
+ 
+ <a href="#cuda">- Cuda </a>: With <strong>odeint</strong> you can solve ODEs on GPUs by using nVidias  <a href="http://developer.nvidia.com/category/zone/cuda-zone" target="_blank">CUDA technology</a>.<br />
+ <a href="#mtl">- MTL </a>: Solve ODEs defined on matrices by using the <a href="http://www.simunova.com/en/node/24" target="_blank">Matrix Template Library 4</a>. <br />
+  <a href="#mkl">- MKL </a>: To get top performance on your CPU <strong>odeint</strong> can use Intel's <a href="http://software.intel.com/en-us/articles/intel-mkl/" target="_blank"> Math
+    Kernel Library</a> for the calculations. <br />
+   <a href="#netevo">- NetEvo </a>: <strong>odeint</strong> is used as backend for simulating complex networks. <br />
+<a href="#gsoc">- Google Summer of Code </a>: The development was supported by the boost community as a project of the Google Summer of Code 2011. <br /><br /><br /></p>
 
-<p><strong>odeint</strong> is designed in a verfy flexible way such that the
-  algorithms are completely independent from the underlying containers and even
-  from the basic algebraic computations. That means odeint works not only with
-  the standard containers like <code>vector< double ></code> or 
-<code>array< double , N ></code> but also nicely coorperates with many other libraries.
-</p>
 
-<h2>CUDA</h2>
-<a href="http://code.google.com/p/thrust/"><img src="thrust_logo.png"/></a>
-<p><strong>odeint</strong> can solve ODEs on your <a href="http://developer.nvidia.com/category/zone/cuda-zone">CUDA-GPU</a> by using
-  the <a href="http://code.google.com/p/thrust/">Thrust Library</a>. Just use
-  <code>thrust::device_vector</code> as state type
-  and <code>thrust_algebra</code>/<code>thrust_operations</code> when defining
-  the stepper and odeint runs all computations on the GPU:
-</p>
-<pre>
-typedef thrust::device_vector<double> state_type;
-runge_kutta4< state_type , double , state_type , double , thrust_algebra ,
-              thrust_operations > rk4;
-</pre>
-<p>For more details se
-  the <a href="doc/boost_sandbox_numeric_odeint/tutorial/using_cuda_and_thrust.html"
-         target="_blank">chapter on CUDA and Thrust</a> in the documentation.
-</p>
 
-<h2>MTL</h2>
-<a href="http://www.simunova.com/en/node/24"><img src="mtl4_banner.png" /></a>
-<p><strong>odeint</strong> also easily supports the vector and matrix types from
-  the <a href="http://www.simunova.com/en/node/24">Matrix Template Library
-    4</a>. This gives you an easy way of defining linear systems of ODEs
-  by matrix-vector products. See
-  <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/mtl"
-     target="_blank">examples/mtl</a> for an example of how MTL can be used.
-</p>
+  <div id="cuda">
+  	<h2>Cuda</h2>
+	<p><strong>Odeint</strong> can solve ODEs on your <a href="http://developer.nvidia.com/category/zone/cuda-zone" target="_blank">CUDA-GPU</a> by using the <a href="http://code.google.com/p/thrust/" target="_blank">Thrust Library</a>. Just use thrust::device_vector as state type and thrust_algebra/thrust_operations when defining the stepper and odeint runs all computations on the GPU: </p>
+    <img alt="logo thrust" src="img/thrust.png" />
+    <p id="code"><b id="maroon">typedef</b> thrust::device_vector state_type;<br />
+runge_kutta4< state_type , <b id="orange">double</b> , state_type , <b id="orange">double</b> , thrust_algebra ,<br />
+              thrust_operations > rk4;<br /></p>
+<p>For more details se the <a href="http://headmyshoulder.github.com/odeint-v2/doc/boost_sandbox_numeric_odeint/tutorial/using_cuda_and_thrust.html"
+         target="_blank">chapter on CUDA and Thrust</a> in the documentation. </p>
+<p id="anchor"><a href="#top">go to top</a><br /><br /><br /></p>
+	</div>
 
-<h2>MKL</h2>
-<p>By using
-  Intel's <a href="http://software.intel.com/en-us/articles/intel-mkl/"> Math
-    Kernel Library</a> as backend for the computations in <strong>odeint</strong> you can get
-  top performance on modern CPUs. See
-  <a href="https://github.com/headmyshoulder/odeint-v2/blob/master/libs/numeric/odeint/performance/odeint_rk4_phase_lattice_mkl.cpp" target="_blank">
-  performance/odeint_rk4_phase_lattice_mkl.cpp</a> for an example of how the MKL is
-  included in odeint.
+  <div id="mtl"><h2>mtl</h2>
+  <img alt="mtl4" src="img/mtl4-banner.png" />
+<p>
+<strong>Odeint</strong> also easily supports the vector and matrix types from the <a href="http://www.simunova.com/en/node/24" target="_blank">Matrix Template Library
+    4</a>. This gives you an easy way of defining linear systems of ODEs by matrix-vector products. See <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/mtl" target="_blank">examples/mtl</a> for an example of how MTL can be used.  
 </p>
+<br />
+<p id="anchor"><a href="#top">go to top</a><br /><br /><br /></p>
+</div>
 
-<h2>NetEvo</h2>
-<a href="http://www.netevo.org"><img src="NetEvo.png"/></a>
-<p><a href="http://www.netevo.org">NetEvo</a> is a
-  computing framework and collection of end-user tools designed to allow
-  researchers to investigate evolutionary aspects of dynamical complex
-  networks. NetEvo currently undergoes a redesign and the future version will
-  be based on modern C++ and will use <strong>odeint</strong> for simulating
-  the dynamics on networks. 
+  <div id="mkl"><h2>mkl</h2>
+<p>By using Intel's <a href="http://software.intel.com/en-us/articles/intel-mkl/" target="_blank"> Math
+    Kernel Library</a> as backend for the computations in odeint you can get top performance on modern CPUs. See <a href="https://github.com/headmyshoulder/odeint-v2/blob/master/libs/numeric/odeint/performance/odeint_rk4_phase_lattice_mkl.cpp" target="_blank">
+  performance/odeint_rk4_phase_lattice_mkl.cpp</a> for an example of how the MKL is included in odeint. 
 </p>
+<p id="anchor"><a href="#top">go to top</a><br /><br /><br /></p>
+</div>
+
+  <div id="netevo"><h2>NetEvo</h2>
+  <img alt="netevo" src="img/netevo.png" />
+<p><a href="http://www.netevo.org" target="_blank">NetEvo</a> is a computing framework and collection of end-user tools designed to allow researchers to investigate evolutionary aspects of dynamical complex networks. NetEvo currently undergoes a redesign and the future version will be based on modern C++ and will use odeint for simulating the dynamics on networks. 
+</p>
+<p id="anchor"><a href="#top">go to top</a><br /><br /><br /></p>
+</div>
+
+  <div id="gsoc">
+  	<h2 id="big">Google Summer of Code</h2>
+	<p>The development of <strong>odeint</strong> was supported by the <a href="http://www.boost.org" target="_blank">boost community</a> as a project of the <a href="http://google-melange.appspot.com/gsoc/project/google/gsoc2011/mulansky/14001" target="_blank">Google Summer of Code 2011</a>. </p>
+    <img alt="logo gsoc" src="img/gsoc.jpeg" />
+<p id="anchor"><a href="#top">go to top</a><br /><br /><br /></p>
+	</div>
+
+</section>

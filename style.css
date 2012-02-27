@@ -1,0 +1,244 @@
+a {
+    color : #081e5f;
+    text-decoration : none;
+    font-weight : bolder;
+}
+
+a:hover {
+    text-decoration : underline;
+
+}
+
+#anchor {
+    text-align : right;
+}
+
+#beige {
+    color : #825b36;
+    font-weight : normal;
+}
+
+#big {
+    
+    width : 260px;
+    margin-left : 190px; 
+}
+
+#blue {
+    
+    color : blue;
+    font-weight : normal;
+    
+}
+
+body {
+        width: 800px ;
+     display : block;
+    position : relative;
+    margin-left: auto;
+    margin-right: auto;
+   text-align : center;
+}
+
+#code {
+    font-family : courier, serif;
+    font-size : 12px;
+    text-align : left ;
+    padding : 20px;
+    border : solid 1px black;
+}
+
+@font-face { /* Définition d'une nouvelle police nommée Blair */
+    font-family: 'Blair';
+    src: url('font/blair.eot');
+    src: url('font/blair.eot?#iefix') format('embedded-opentype'),
+         url('font/blair.woff') format('woff'),
+         url('font/blair.ttf') format('truetype'),
+         url('font/blair') format('svg');
+}
+
+@font-face { /* Définition d'une nouvelle police nommée Blair */
+    font-family: 'Blairf';
+    src: url('font/blairf.eot');
+    src: url('font/blairf.eot?#iefix') format('embedded-opentype'),
+         url('font/blairf.woff') format('woff'),
+         url('font/blairf.ttf') format('truetype'),
+         url('font/blairf') format('svg');
+}
+
+footer {
+    color : grey;
+    display : block;
+    position : relative;
+    text-align : center;
+    width : 650px;
+    margin : 0px 0px 0px 150px;
+    padding-top : 20px;
+    font-family: Cambria, Arial, sans-serif;
+    font-size: 10px;
+}
+
+footer a {
+    color : grey;
+    font-weight : normal;
+}
+
+footer a:hover {
+    
+       color : grey;
+    font-weight : normal;
+    text-decoration : underline;
+    
+}
+
+
+
+
+
+
+footer td {
+    width : 217px;
+     font-style : italic;
+    text-align : center;
+}
+
+#green {
+    color : green;
+    font-weight : normal;
+    
+}
+
+h1
+{
+    background :url("img/fade.jpg");
+    background-repeat: no-repeat;
+    background-position : center;
+    font-family : "Blairf", Cambria, Arial, sans-serif;
+    font-size : 24px;
+    font-variant : small-caps;
+    color : white;
+    text-decoration: underline;
+    height : 45px;
+    text-align : center ;
+    vertical-align : bottom ;
+    padding-top : 20px;
+    font-weight : lighter;
+    
+}
+
+h2 {
+    
+    color : white;
+    vertical-align : bottom ;    
+    text-decoration: none;
+    font-family : "Blairf", Arial, sans-serif;
+    font-size : 14px;
+    font-variant : small-caps;    
+    height : 30px;
+    width : 170px;
+    background-color : black;
+    padding-top : 10px;
+    text-align : center;
+    margin-left : 235px;
+
+}
+
+#list {
+
+     font-family : cambria, arial, sans-serif;
+     font-size : 12px;
+    list-style : circle;
+    text-align : left;
+    margin-bottom : 40px;
+}
+
+
+#logo {
+    display : block;
+    text-align : center;
+}
+
+#maroon {
+    color : maroon;
+    font-weight : normal;
+    
+}
+
+nav {
+    font-weight : normal;
+    display : block;
+    position : relative;
+    width: 150px;
+    text-align: left;
+    float: left;
+    margin-top : 0px;
+    margin-left : 0px;
+    padding : 0px;
+}
+
+nav ul li {
+    font-weight : normal;
+    font-family : "Blair", Cambria, Arial, sans-serif;
+    font-size : 12px;
+    font-variant : small-caps;
+    margin-left : 0px;
+    margin-bottom : 20px;
+}
+
+nav ul li a {
+    color : black;
+    font-weight : normal;
+}
+
+
+#olive {
+    color : olive;
+    font-weight : normal;
+    
+}
+
+#orange {
+    color : #ff7200;
+    font-weight : normal;
+    
+}
+
+p
+{
+    font-family: Cambria, Arial, sans-serif;
+    font-size: 12px;
+    text-align: justify;
+}
+
+section
+{
+    display : block;
+    position : relative;    
+    width: 650px;
+    margin-left: 130px;
+    padding-left : 20px;
+    padding-right : 20px;
+    padding-top : 0px;
+    padding- bottom : 0px;
+   /* border: 1px solid black;*/
+}
+
+
+strong {
+    font-variant : small-caps;
+}
+
+ul {
+    list-style : none;
+    text-decoration : none;
+    margin-left: 0px;
+    padding-left: 0px;
+}
+
+ul a {
+    text-decoration :none;
+}
+
+ul a:hover {
+    text-decoration : underline;
+}

@@ -1,0 +1,94 @@
+---
+layout: default
+title: odeint - Examples
+---
+
+<section>
+<h1 id="top">Examples</h1>
+      
+<p>Here you find some short examples showing how quick and easy odeint can be used to implement numerical simulations. For a more detailed description please vist the <a href="http://headmyshoulder.github.com/odeint-v2/doc/index.html" target="_blank" >docs</a>.<br /><br />
+
+ - <a href="#lorenzsystem">LORENZ SYSTEM </a>: 30 lines of C++ to generate a trajectory on the <a href="http://en.wikipedia.org/wiki/Lorenz_attractor" target="_blank">Lorenz attractor</a><br />
+ <!-- - <a href="#example2">EXAMPLE 2 </a>: 20 lines of C++ to generate a trajectory on the blabla<br /><br /><br />-->
+</p>
+
+
+  <div id="lorenzsystem">
+  	<h2>Lorenz System</h2>
+	<p>30 lines of C++ to generate a trajectory on the <a href="http://en.wikipedia.org/wiki/Lorenz_attractor" target="_blank">Lorenz attractor</a>. </p>
+    <p id="code"><b id="blue">#include <&nbsp;iostream ><br />
+#include <&nbsp;boost/array.hpp ><br />
+#include <&nbsp;boost/numeric/odeint.hpp ><br /></b>
+<br />
+<b id="maroon">using namespace </b>std;<br />
+<b id="maroon">using namespace</b> boost::numeric::odeint;<br />
+<br />
+<b id="maroon">const </b><b id="orange">double</b> sigma = <b id="beige">10.0</b>;<br />
+<b id="maroon">const</b> <b id="orange">double</b> R = <b id="beige">28.0</b>;<br />
+<b id="maroon">const </b><b id="orange">double</b> b = <b id="beige"><b id="beige">8.0</b></b> / <b id="beige">3.0</b>;<br />
+<br />
+<b id="maroon">typedef</b> boost::array< <b id="orange">double</b> , 3 > state_type;<br />
+<br />
+<b id="orange">void</b> lorenz( <b id="maroon">const</b> state_type &x , state_type &dxdt , <b id="orange">double</b> t )<br />
+{<br />
+    dxdt[<b id="olive">0</b>] = sigma * ( x[<b id="olive">1</b>] - x[<b id="olive">0</b>] );<br />
+    dxdt[<b id="olive">1</b>] = R * x[<b id="olive">0</b>] - x[<b id="olive">1</b>] - x[<b id="olive">0</b>] * x[<b id="olive">2</b>];<br />
+    dxdt[<b id="olive">2</b>] = -b * x[<b id="olive">2</b>] + x[<b id="olive">0</b>] * x[<b id="olive">1</b>];<br />
+}<br />
+<br />
+<b id="orange">void</b> write_lorenz( <b id="maroon">const</b> state_type &x , <b #maroon>const</b> <b id="orange">double</b> t )<br />
+{<br />
+    cout << t << <b id="green">'\t'</b> << x[0] << <b id="green">'\t'</b> << x[1] << <b id="green">'\t'</b> << x[2] << endl;<br />
+}<br />
+<br />
+<b id="orange">int</b> <b id="maroon">main</b>(<b id="orange">int</b> argc, <b id="orange">char</b> **argv)<br />
+{<br />
+    state_type x = { <b id="beige">10.0</b> , <b id="beige">1.0</b> , <b id="beige">1.0</b> }; // initial conditions<br />
+    integrate( lorenz , x , <b id="beige">0.0</b> , <b id="beige">25.0</b> , <b id="beige">0.1</b> , write_lorenz );<br />
+}</p><br />
+<img alt="lorenz" src="img/lorenz.jpg" />
+<br />
+
+<p id="anchor"><a href="#top">go to top</a><br /></p>
+	</div><br />
+
+<!--  <div id="example2"><h2>Example 2</h2>
+<p>
+  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+</p>
+    <p id="code"><b id="blue">#include <&nbsp;iostream ><br />
+#include <&nbsp;boost/array.hpp ><br />
+#include <&nbsp;boost/numeric/odeint.hpp ><br /></b>
+<br />
+<b id="maroon">using namespace </b>std;<br />
+<b id="maroon">using namespace</b> boost::numeric::odeint;<br />
+<br />
+<b id="maroon">const </b><b id="orange">double</b> sigma = <b id="beige">10.0</b>;<br />
+<b id="maroon">const</b> <b id="orange">double</b> R = <b id="beige">28.0</b>;<br />
+<b id="maroon">const </b><b id="orange">double</b> b = <b id="beige"><b id="beige">8.0</b></b> / <b id="beige">3.0</b>;<br />
+<br />
+<b id="maroon">typedef</b> boost::array< <b id="orange">double</b> , 3 > state_type;<br />
+<br />
+<b id="orange">void</b> lorenz( <b id="maroon">const</b> state_type &x , state_type &dxdt , <b id="orange">double</b> t )<br />
+{<br />
+    dxdt[<b id="olive">0</b>] = sigma * ( x[<b id="olive">1</b>] - x[<b id="olive">0</b>] );<br />
+    dxdt[<b id="olive">1</b>] = R * x[<b id="olive">0</b>] - x[<b id="olive">1</b>] - x[<b id="olive">0</b>] * x[<b id="olive">2</b>];<br />
+    dxdt[<b id="olive">2</b>] = -b * x[<b id="olive">2</b>] + x[<b id="olive">0</b>] * x[<b id="olive">1</b>];<br />
+}<br />
+<br />
+<b id="orange">void</b> write_lorenz( <b id="maroon">const</b> state_type &x , <b #maroon>const</b> <b id="orange">double</b> t )<br />
+{<br />
+    cout << t << <b id="green">'\t'</b> << x[0] << <b id="green">'\t'</b> << x[1] << <b id="green">'\t'</b> << x[2] << endl;<br />
+}<br />
+<br />
+<b id="orange">int</b> <b id="maroon">main</b>(<b id="orange">int</b> argc, <b id="orange">char</b> **argv)<br />
+{<br />
+    state_type x = { <b id="beige">10.0</b> , <b id="beige">1.0</b> , <b id="beige">1.0</b> }; // initial conditions<br />
+    integrate( lorenz , x , <b id="beige">0.0</b> , <b id="beige">25.0</b> , <b id="beige">0.1</b> , write_lorenz );<br />
+}</p>
+<br />
+<p id="anchor"><a href="#top">go to top</a><br /></p>
+</div>
+-->
+
+</section>
