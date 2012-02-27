@@ -20,8 +20,8 @@ a:hover {
 
 #big {
     
-    width : 260px;
-    margin-left : 190px; 
+    width : 280px;
+    margin-left : 180px; 
 }
 
 #blue {
@@ -145,10 +145,11 @@ h2 {
     font-family : 'Blairf';/*, Arial, sans-serif;*/
     font-size : 14px;
     /*font-variant : small-caps;*/
-    height : 30px;
-    width : 170px;
+    height : 25px;
+    width : 180px;
     background-color : black;
     padding-top : 10px;
+    padding-bottom : 5px;
     text-align : center;
     margin-left : 235px;
 
