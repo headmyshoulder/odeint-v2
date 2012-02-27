@@ -59,7 +59,7 @@ body {
 
 @font-face {
   font-family: Blair;
-  src: url('/font/blair.eot?') format('eot'), url('/font/blair.woff') format('woff'), url('/font/blair.ttf') format('truetype') , url('font/blair.svg') format("svg");
+  src: url('font/blair.eot') , url('font/blair.eot?#iefix') format('embedded-opentype'), url('font/blair.woff') format('woff'), url('font/blair.ttf') format('truetype') , url('font/blair.svg') format("svg");
 }
 
 /*
@@ -75,7 +75,7 @@ body {
 @font-face {
   font-family: Blairf;
   /*src: local('☺'),*/
-  src: url('font/blairf.eot?') format('eot'), url('font/blairf.woff') format('woff'), url('font/blairf.ttf') format('truetype') , url('font/blairf.svg') format("svg");
+  src: url('font/blairf.eot') , url('font/blairf.eot?#iefix') format('embedded-opentype') , url('font/blairf.woff') format('woff'), url('font/blairf.ttf') format('truetype') , url('font/blairf.svg') format("svg");
 }
 
 footer {
@@ -139,7 +139,6 @@ h1
 }
 
 h2 {
-    
     color : white;
     vertical-align : bottom ;    
     text-decoration: none;
@@ -193,7 +192,7 @@ nav {
 }
 
 nav ul li {
-    font-weight : normal;
+    /*font-weight : normal;*/
     font-family : 'Blair';/*, Cambria, Arial, sans-serif;*/
     font-size : 12px;
     /*font-variant : small-caps;*/
