@@ -6,7 +6,7 @@ title: odeint - Highlights
 <section>
 <h1 id="top">Highlights</h1>
       
-<p><strong>Odeint</strong> is designed in a verfy flexible way such that the algorithms are completely independent from the underlying containers and even from the basic algebraic computations. That means odeint works not only with the standard containers like vector< double > or array< double , N > but also nicely coorperates with many other libraries. <br /><br />
+<p><strong>Odeint</strong> is designed in a very flexible way such that the algorithms are completely independent from the underlying containers and even from the basic algebraic computations. That means odeint works not only with the standard containers like vector< double > or array< double , N > but also nicely coorperates with many other libraries. <br /><br />
 
  
  <a href="#cuda">- Cuda </a>: With <strong>odeint</strong> you can solve ODEs on GPUs by using nVidias  <a href="http://developer.nvidia.com/category/zone/cuda-zone" target="_blank">CUDA technology</a>.<br />
@@ -25,7 +25,7 @@ title: odeint - Highlights
     <p id="code"><b id="maroon">typedef</b> thrust::device_vector state_type;<br />
 runge_kutta4< state_type , <b id="orange">double</b> , state_type , <b id="orange">double</b> , thrust_algebra ,<br />
               thrust_operations > rk4;<br /></p>
-<p>For more details se the <a href="http://headmyshoulder.github.com/odeint-v2/doc/boost_sandbox_numeric_odeint/tutorial/using_cuda_and_thrust.html"
+<p>For more details see the <a href="http://headmyshoulder.github.com/odeint-v2/doc/boost_sandbox_numeric_odeint/tutorial/using_cuda_and_thrust.html"
          target="_blank">chapter on CUDA and Thrust</a> in the documentation. </p>
 <p id="anchor"><a href="#top">go to top</a><br /><br /><br /></p>
 	</div>
@@ -42,7 +42,8 @@ runge_kutta4< state_type , <b id="orange">double</b> , state_type , <b id="orang
 
   <div id="mkl"><h2>mkl</h2>
 <p>By using Intel's <a href="http://software.intel.com/en-us/articles/intel-mkl/" target="_blank"> Math
-    Kernel Library</a> as backend for the computations in odeint you can get top performance on modern CPUs. See <a href="https://github.com/headmyshoulder/odeint-v2/blob/master/libs/numeric/odeint/performance/odeint_rk4_phase_lattice_mkl.cpp" target="_blank">
+    Kernel Library</a> as backend for the computations in <strong>odeint</strong> you can get top performance on modern CPUs. See <a 
+href="https://github.com/headmyshoulder/odeint-v2/blob/master/libs/numeric/odeint/performance/odeint_rk4_phase_lattice_mkl.cpp" target="_blank">
   performance/odeint_rk4_phase_lattice_mkl.cpp</a> for an example of how the MKL is included in odeint. 
 </p>
 <p id="anchor"><a href="#top">go to top</a><br /><br /><br /></p>
@@ -50,7 +51,8 @@ runge_kutta4< state_type , <b id="orange">double</b> , state_type , <b id="orang
 
   <div id="netevo"><h2>NetEvo</h2>
   <img alt="netevo" src="img/netevo.png" />
-<p><a href="http://www.netevo.org" target="_blank">NetEvo</a> is a computing framework and collection of end-user tools designed to allow researchers to investigate evolutionary aspects of dynamical complex networks. NetEvo currently undergoes a redesign and the future version will be based on modern C++ and will use odeint for simulating the dynamics on networks. 
+<p><a href="http://www.netevo.org" target="_blank">NetEvo</a> is a computing framework and collection of end-user tools designed to allow researchers to investigate evolutionary aspects of dynamical complex networks. 
+NetEvo currently undergoes a redesign and the future version will be based on modern C++ and will use <strong>odeint</strong> for simulating the dynamics on networks. 
 </p>
 <p id="anchor"><a href="#top">go to top</a><br /><br /><br /></p>
 </div>
