@@ -48,22 +48,34 @@ body {
     border : solid 1px black;
 }
 
-@font-face { /* DŽfinition d'une nouvelle police nommŽe Blair */
+/* @font-face { Dï¿½finition d'une nouvelle police nommï¿½e Blair
     font-family: 'Blair';
     src: url('font/blair.eot');
     src: url('font/blair.eot?#iefix') format('embedded-opentype'),
          url('font/blair.woff') format('woff'),
          url('font/blair.ttf') format('truetype'),
          url('font/blair') format('svg');
+}*/
+
+@font-face {
+  font-family: Blair;
+  src: url('/font/blair.eot?') format('eot'), url('/font/blair.woff') format('woff'), url('/font/blair.ttf') format('truetype') , url('font/blair.svg') format("svg");
 }
 
-@font-face { /* DŽfinition d'une nouvelle police nommŽe Blair */
+/*
+@font-face {
     font-family: 'Blairf';
     src: url('font/blairf.eot');
     src: url('font/blairf.eot?#iefix') format('embedded-opentype'),
          url('font/blairf.woff') format('woff'),
          url('font/blairf.ttf') format('truetype'),
          url('font/blairf') format('svg');
+}
+*/
+@font-face {
+  font-family: Blairf;
+  /*src: local('â˜º'),*/
+  src: url('font/blairf.eot?') format('eot'), url('font/blairf.woff') format('woff'), url('font/blairf.ttf') format('truetype') , url('font/blairf.svg') format("svg");
 }
 
 footer {
@@ -113,9 +125,9 @@ h1
     background :url("img/fade.jpg");
     background-repeat: no-repeat;
     background-position : center;
-    font-family : "Blairf", Cambria, Arial, sans-serif;
+    font-family : 'Blairf';/*, Cambria, Arial, sans-serif;*/
     font-size : 24px;
-    font-variant : small-caps;
+    /*font-variant : small-caps;*/
     color : white;
     text-decoration: underline;
     height : 45px;
@@ -131,9 +143,9 @@ h2 {
     color : white;
     vertical-align : bottom ;    
     text-decoration: none;
-    font-family : "Blairf", Arial, sans-serif;
+    font-family : 'Blairf';/*, Arial, sans-serif;*/
     font-size : 14px;
-    font-variant : small-caps;    
+    /*font-variant : small-caps;*/
     height : 30px;
     width : 170px;
     background-color : black;
@@ -158,6 +170,10 @@ h2 {
     text-align : center;
 }
 
+#logomenu img {
+  border: 0;
+}
+
 #maroon {
     color : maroon;
     font-weight : normal;
@@ -178,9 +194,9 @@ nav {
 
 nav ul li {
     font-weight : normal;
-    font-family : "Blair", Cambria, Arial, sans-serif;
+    font-family : 'Blair';/*, Cambria, Arial, sans-serif;*/
     font-size : 12px;
-    font-variant : small-caps;
+    /*font-variant : small-caps;*/
     margin-left : 0px;
     margin-bottom : 20px;
 }
