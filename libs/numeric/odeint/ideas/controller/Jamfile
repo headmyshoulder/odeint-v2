@@ -15,3 +15,4 @@ project
 
 exe controller : controller.cpp ;
 exe rb_controller : rb_controller.cpp ;
+exe dopri5_controller : dopri5_controller.cpp ;

@@ -453,7 +453,7 @@ public:
         // this potentially overwrites m_x_err! (standard_error_checker does, at least)
         value_type max_rel_err = m_error_checker.error( m_stepper.algebra() , in , dxdt_in , m_xerr.m_v , dt );
 
-        if( max_rel_err > 1.1 )
+        if( max_rel_err > 1.0 )
         {
             // error too large - decrease dt ,limit scaling factor to 0.2 and reset state
             dt *= max( 0.9 * pow( max_rel_err , -1.0 / ( m_stepper.error_order() - 1.0 ) ) , 0.2 );

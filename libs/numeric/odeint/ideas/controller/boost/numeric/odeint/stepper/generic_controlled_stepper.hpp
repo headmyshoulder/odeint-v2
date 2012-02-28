@@ -3,8 +3,7 @@
  boost/numeric/odeint/stepper/generic_controlled_stepper.hpp
 
  [begin_description]
- Definition of the generic controlled stepper consisting of an error stepper, an error checker,
- and a controller. Implementation of the version for the error_stepper_tag. Specialized versions
+ Implementation of the generic_controlled_stepper for the error_stepper_tag. Specialized versions
  for explicit_error_stepper and explicit_error_stepper_tag also exist.
  [end_description]
 
@@ -20,9 +19,13 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_GENERIC_CONTROLLED_STEPPER_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_STEPPER_GENERIC_CONTROLLED_STEPPER_HPP_INCLUDED
 
+
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
+#include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
+
+#include <boost/numeric/odeint/stepper/generic_controlled_stepper_definition.hpp>
 
 #include <boost/bind.hpp>
 
@@ -31,15 +34,6 @@
 namespace boost {
 namespace numeric {
 namespace odeint {
-
-
-template<
-    class ErrorStepper ,
-    class ErrorChecker ,
-    class Controller ,
-    class Resizer ,
-    class ErrorStepperCategorie = typename ErrorStepper::stepper_type >
-class generic_controlled_stepper ;
 
 
 
@@ -72,8 +66,7 @@ public:
             const controller_type &controller = controller_type() )
     : m_stepper( stepper ) , m_error_checker( error_checker ) , m_controller( controller ) ,
       m_xerr_resizer() , m_xnew_resizer() ,
-      m_xerr() { }
-
+      m_xerr() , m_xnew() { }
 
     /*
     * Version 1 : try_step( sys , x , t , dt )
@@ -150,13 +143,13 @@ private:
     template< class StateIn >
     bool resize_m_xerr_impl( const StateIn &x )
     {
-        return adjust_size_by_resizeability( m_xerr , x , typename wrapped_state_type::is_resizeable() );
+        return adjust_size_by_resizeability( m_xerr , x , typename is_resizeable< wrapped_state_type >::type() );
     }
 
     template< class StateIn >
     bool resize_m_xnew_impl( const StateIn &x )
     {
-        return adjust_size_by_resizeability( m_xnew , x , typename wrapped_state_type::is_resizeable() );
+        return adjust_size_by_resizeability( m_xnew , x , typename is_resizeable< wrapped_state_type >::type() );
     }
 
 

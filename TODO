@@ -1,16 +1,30 @@
 GENERIC_CONTROLLERS
-* introduce the orders in pi_controller and stiff_controller
-* check dense-output (dopri5, rosenbrock4)
-* operations: enhance rel_error
-  * contains now the error calculation for explicit_error_stepper AND
-    error_steppers
+* solve the reference problem for the algebras
+  * finalize default_error_checker and only use them
+    * rename to default_error_checker_l2_norm
+    * use only with ref the algebra
+    * implement the appropriate operations, max_rel_err, max_rel_err_2
+  * remove error_checker_explicit
+  * implement default_error_checker_max_norm (trivial from default_error_checker_l2_norm)
+    * implement appropriate operations
 * implement generic_controlled_stepper_explicit_fsal
-* implement enhanced operations max_rel_err, max_rel_err_2
+  OK * rename generic_controlled_stepper to generic_controlled_stepper_definition.hpp
+  OK * implement generic_controlled_stepper_explicit_fsal in an own class
+  * testing
+* check dense-output (dopri5, rosenbrock4)
+  * implement a test case for dopri5 using dense_output_runge_kutta
+  * introduce operations in controller 
+* introduce the orders in pi_controller and stiff_controller
+
 * implement reduce2, reduce3 , reduce4 for all algebras
+  * rename reduce to reduce1
+  * introduce reduce2,reduce3 in array_algebra, fusion_algebra, vector_space_algebra
 * test the new reduce functions
-* documentate
-* solve the reference problem for the algebras 
+* documentation
 * check if default_operations can be inherited and the member structs can be overwritten
+* fork trunk
+  * controllers
+
 
 
 
