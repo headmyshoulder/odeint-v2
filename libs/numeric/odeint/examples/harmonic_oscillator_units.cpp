@@ -2,6 +2,10 @@
 #include <vector>
 
 //[ units_define_basic_quantities
+// first increase fusion macro variables
+#define BOOST_FUSION_INVOKE_MAX_ARITY 15
+#define BOOST_RESULT_OF_NUM_ARGS 15
+
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/algebra/fusion_algebra.hpp>
 

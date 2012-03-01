@@ -15,6 +15,12 @@
 
 #define BOOST_TEST_MODULE odeint_stepper_with_units
 
+// the runge-kutta 78 stepper invoked with boost units requires increased fusion macro variables!
+// note that by default the rk78 + units test case is disabled as it requires enormous memory when compiling (5 GB)
+#define BOOST_FUSION_INVOKE_MAX_ARITY 15
+#define BOOST_RESULT_OF_NUM_ARGS 15
+
+
 #include <boost/numeric/odeint/config.hpp>
 
 #include <boost/test/unit_test.hpp>
