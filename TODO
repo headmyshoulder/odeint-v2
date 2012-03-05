@@ -7,14 +7,17 @@ GENERIC_CONTROLLERS
   * remove error_checker_explicit
   * implement default_error_checker_max_norm (trivial from default_error_checker_l2_norm)
     * implement appropriate operations
-* implement generic_controlled_stepper_explicit_fsal
+OK * implement generic_controlled_stepper_explicit_fsal
   OK * rename generic_controlled_stepper to generic_controlled_stepper_definition.hpp
   OK * implement generic_controlled_stepper_explicit_fsal in an own class
-  * testing
+  OK * testing
+* rename dense_output_runge_kutta to generic_dense_output
 * check dense-output (dopri5, rosenbrock4)
-  * implement a test case for dopri5 using dense_output_runge_kutta
-  * introduce operations in controller 
+  OK * implement a test case for dopri5 using dense_output_runge_kutta
+  * implement rosenbrock4 in terms of generic_dense_output 
+* introduce operations in controller 
 * introduce the orders in pi_controller and stiff_controller
+* introduce controlled_runge_kutta and dense_output_runge_kutta for compatibility
 
 * implement reduce2, reduce3 , reduce4 for all algebras
   * rename reduce to reduce1

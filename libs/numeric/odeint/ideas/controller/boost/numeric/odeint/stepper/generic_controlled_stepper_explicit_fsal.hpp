@@ -49,7 +49,7 @@ public:
     typedef typename stepper_type::deriv_type deriv_type;
     typedef typename stepper_type::time_type time_type;
     typedef typename stepper_type::order_type order_type;
-    typedef explicit_controlled_stepper_tag stepper_category;
+    typedef explicit_controlled_stepper_fsal_tag stepper_category;
     typedef state_wrapper< state_type > wrapped_state_type;
     typedef state_wrapper< deriv_type > wrapped_deriv_type;
 
