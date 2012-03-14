@@ -51,7 +51,7 @@ struct relaxation
     const state_type &m_a;
 };
 
-const size_t N = 1024;
+const size_t N = 1024 * 1024;
 const value_type dt = 0.01;
 
 int main( int arc , char* argv[] )

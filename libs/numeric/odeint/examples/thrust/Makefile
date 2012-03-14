@@ -1,8 +1,9 @@
-CUDA_ROOT = /usr/local/cuda
+CUDA_ROOT = /home/karsten/boost/cuda4.1/cuda/
+# CUDA_ROOT = /usr/local/cuda
 ARCH = sm_13
 
-CC = gcc-4.4
-CXX = gcc-4.4
+CC = gcc-4.3
+CXX = gcc-4.3
 NVCC = $(CUDA_ROOT)/bin/nvcc
 # NVCC = g++
 
@@ -11,7 +12,7 @@ INCLUDES += -I$(BOOST_ROOT) -I$(THRUST_ROOT) -I$(CUDA_ROOT)/include -I../../../.
 # NVCCFLAGS = -O3 $(INCLUDES) -arch $(ARCH) --compiler-bindir=/usr/bin/g++-4.4 -Xcompiler -fopenmp -DTHRUST_DEVICE_BACKEND=THRUST_DEVICE_BACKEND_OMP 
 #NVCCFLAGS = -O3 $(INCLUDES) -arch $(ARCH) --compiler-bindir=/usr/bin/g++-4.3 -Xcompiler -fopenmp -DTHRUST_DEVICE_BACKEND=THRUST_DEVICE_BACKEND_OMP 
 
-NVCCFLAGS = -O3 $(INCLUDES) -arch $(ARCH) --compiler-bindir=/usr/bin/g++-4.4
+NVCCFLAGS = -O3 $(INCLUDES) -arch $(ARCH) --compiler-bindir=/usr/bin/g++-4.3
 #--compiler-bindir=/usr/bin/g++-4.4 
 #-Xcompiler -fopenmp -DTHRUST_DEVICE_BACKEND=THRUST_DEVICE_BACKEND_OMP 
 # NVCCFLAGS = -O3 $(INCLUDES) -arch $(ARCH) --compiler-bindir=/usr/bin/g++-4.3 
