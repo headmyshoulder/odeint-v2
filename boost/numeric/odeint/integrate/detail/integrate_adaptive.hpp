@@ -60,7 +60,7 @@ size_t integrate_adaptive(
                        end_time , dt , observer , stepper_tag() );
     if( steps*dt < end_time )
     {   //make a last step to end exactly at end_time
-        stepper.do_step( system , start_state , steps*dt , end_time-steps*dt );
+        stepper.do_step( system , start_state , start_time + steps*dt , end_time - start_time - steps*dt );
         steps++;
         typename boost::unwrap_reference< Observer >::type &obs = observer;
         obs( start_state , end_time );
