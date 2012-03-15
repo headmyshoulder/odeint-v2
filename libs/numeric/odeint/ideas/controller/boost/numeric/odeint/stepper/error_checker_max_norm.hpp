@@ -20,8 +20,7 @@
 #define BOOST_NUMERIC_ODEINT_STEPPER_ERROR_CHECKER_MAX_NORM_HPP_INCLUDED
 
 
-#include <boost/numeric/odeint/algebra/default_operations.hpp>
-
+#include <boost/numeric/odeint/util/ref_or_value_holder.hpp>
 
 namespace boost {
 namespace numeric {
@@ -36,7 +35,7 @@ namespace odeint {
  * for explicit steppers: err = max_i( | err[i] | ( eps_abs + eps_rel * ( a_x * | x[i] | + a_dxdt * | dxdt[i] * dt ] ) ) )
  * for explicit fsal steppers: err = max_i( | err[i] | ( eps_abs + eps_rel * ( a_x * | x[i] | + a_dxdt * | dxdt[i] * dt ] ) ) )
  */
-template< class Value ,  class Algebra  , class Operations >
+template< class Value ,  class Algebra  , class Operations , bool HoldsAlgebra = true >
 class error_checker_max_norm
 {
 public:
@@ -44,17 +43,27 @@ public:
     typedef Value value_type;
     typedef Algebra algebra_type;
     typedef Operations operations_type;
+    const static bool holds_algebra = HoldsAlgebra;
+    const static bool ref_algebra = !holds_algebra;
 
 
-    default_error_checker( void )
+    error_checker_max_norm(
+            algebra_type &algebra ,
+            const value_type eps_abs = static_cast< value_type >( 1.0e-6 ) ,
+            const value_type eps_rel = static_cast< value_type >( 1.0e-6 ) ,
+            const value_type a_x = static_cast< value_type >( 1.0 ) ,
+            const value_type a_dxdt = static_cast< value_type >( 1.0 ))
+    : m_algebra( algebra ) ,
+      m_eps_abs( eps_abs ) , m_eps_rel( eps_rel ) , m_a_x( a_x ) , m_a_dxdt( a_dxdt )
     { }
 
     // overload for steppers, x, x_old and x_err are available
     template< class State1 , class State2 , class Err , class Time >
     value_type error( const State1 &x_old , const State2 &x , const Err &x_err , const Time &dt )
     {
-        value_type result = reduce3( x_old , x , x_err ,
-                typename operations_type::template rel_error_max< value_type >( m_eps_abs , m_eps_rel ) );
+        value_type result = m_algebra.get().reduce3( x_old , x , x_err ,
+                typename operations_type::template rel_error_max< value_type >( m_eps_abs , m_eps_rel ) ,
+                static_cast< value_type >( 0.0 ) );
         return result;
     }
 
@@ -63,8 +72,9 @@ public:
     template< class State1 , class State2 , class Deriv , class Err , class Time >
     value_type error( const State1 &x_old , const State2 &x , const Deriv &dxdt_old , Err &x_err , const Time &dt )
     {
-        value_type result = reduce4( x_old , x , dxdt_old , x_err ,
-                typename operations_type::template rel_error_max2< value_type >( m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt ) );
+        value_type result = m_algebra.get().reduce4( x_old , x , dxdt_old , x_err ,
+                typename operations_type::template rel_error_max2< value_type >( m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt * detail::get_value( dt ) ) ,
+                static_cast< value_type >( 0.0 ) );
         return result;
     }
 
@@ -73,8 +83,9 @@ public:
     template< class StateOld , class State , class DerivOld , class Deriv , class Err , class Time >
     value_type error( const StateOld &x_old , const State &x , const DerivOld &dxdt_old , const Deriv &dxdt , const Err &x_err , const Time &dt )
     {
-        value_type result = reduce4( x_old , x , dxdt_old , x_err ,
-                typename operations_type::template rel_error_max2< value_type >( m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt ) );
+        value_type result = m_algebra.get().reduce4( x_old , x , dxdt_old , x_err ,
+                typename operations_type::template rel_error_max2< value_type >( m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt * detail::get_value( dt ) ) ,
+                static_cast< value_type >( 0.0) );
         return result;
     }
 
@@ -82,7 +93,11 @@ public:
 
 private:
 
-    algebra_type algebra;
+    ref_or_value_holder< algebra_type , ref_algebra > m_algebra;
+    value_type m_eps_abs;
+    value_type m_eps_rel;
+    value_type m_a_x;
+    value_type m_a_dxdt;
 };
 
 

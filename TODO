@@ -27,6 +27,7 @@ OK * implement generic_controlled_stepper_explicit_fsal
 * check if default_operations can be inherited and the member structs can be overwritten
 * fork trunk
   * controllers
+* move get_value from default_algebra into the utils layer
 
 
 
