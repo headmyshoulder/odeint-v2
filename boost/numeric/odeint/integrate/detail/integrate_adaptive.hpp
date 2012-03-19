@@ -20,8 +20,9 @@
 
 #include <stdexcept>
 
+#include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
-#include <boost/numeric/odeint/integrate/detail/integrate_const.hpp>
+#include <boost/numeric/odeint/integrate/detail/integrate_n_steps.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
 
 #include <boost/ref.hpp>
@@ -33,17 +34,12 @@ namespace numeric {
 namespace odeint {
 namespace detail {
 
-
-//forward declaration of detail::integrate const, 
-//required in integrate_const for normal stepper
-template< class Stepper , class System , class State , class Time , class Observer >
-size_t integrate_const(        
+// forward declaration
+template< class Stepper , class System , class State , class Time , class Observer>
+Time integrate_n_steps(
         Stepper stepper , System system , State &start_state ,
-        Time start_time , Time end_time , Time dt ,
-        Observer observer , stepper_tag
-                             );
-
-
+        Time start_time , Time dt , size_t num_of_steps ,
+        Observer observer , stepper_tag );
 
 /*
  * integrate_adaptive for simple stepper is basically an integrate_const + some last step
@@ -55,12 +51,12 @@ size_t integrate_adaptive(
         Observer observer , stepper_tag
 )
 {
-    size_t steps = boost::numeric::odeint::detail::integrate_const( 
-                       stepper , system , start_state , start_time , 
-                       end_time , dt , observer , stepper_tag() );
-    if( steps*dt < end_time )
+    size_t steps = static_cast< size_t >( (end_time-start_time)/dt );
+    Time end = detail::integrate_n_steps( stepper , system , start_state , start_time ,
+                                          dt , steps , observer , stepper_tag() );
+    if( end < end_time )
     {   //make a last step to end exactly at end_time
-        stepper.do_step( system , start_state , start_time + steps*dt , end_time - start_time - steps*dt );
+        stepper.do_step( system , start_state , end , end_time - end );
         steps++;
         typename boost::unwrap_reference< Observer >::type &obs = observer;
         obs( start_state , end_time );

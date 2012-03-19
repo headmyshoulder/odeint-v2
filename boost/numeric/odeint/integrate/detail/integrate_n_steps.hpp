@@ -19,12 +19,21 @@
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_adaptive.hpp>
+#include <boost/numeric/odeint/integrate/detail/units_helper.hpp>
 #include <boost/ref.hpp>
 
 namespace boost {
 namespace numeric {
 namespace odeint {
 namespace detail {
+
+// forward declaration
+template< class Stepper , class System , class State , class Time , class Observer >
+size_t integrate_adaptive(
+        Stepper stepper , System system , State &start_state ,
+        Time &start_time , Time end_time , Time &dt ,
+        Observer observer , controlled_stepper_tag
+);
 
 
 /* basic version */
@@ -43,7 +52,8 @@ Time integrate_n_steps(
         obs( start_state , time );
         stepper.do_step( system , start_state , time , dt );
         // direct computation of the time avoids error propagation happening when using time += dt
-        time = start_time + (step+1)*dt;
+        // we need clumsy type analysis to get boost units working here
+        time = start_time + static_cast< typename detail::unit_value_type<Time>::type >( step+1 ) * dt;
     }
     obs( start_state , time );
 
@@ -69,7 +79,8 @@ Time integrate_n_steps(
         detail::integrate_adaptive( stepper , system , start_state , time , time+time_step , dt ,
                 null_observer() , controlled_stepper_tag() );
         // direct computation of the time avoids error propagation happening when using time += dt
-        time = start_time + (step+1)*time_step;
+        // we need clumsy type analysis to get boost units working here
+        time = start_time + static_cast< typename detail::unit_value_type<Time>::type >(step+1) * time_step;
     }
     obs( start_state , time );
 
@@ -87,7 +98,7 @@ Time integrate_n_steps(
     typename boost::unwrap_reference< Observer >::type &obs = observer;
 
     Time time = start_time;
-    const Time end_time = start_time+dt*num_of_steps;
+    const Time end_time = start_time + static_cast< typename detail::unit_value_type<Time>::type >(num_of_steps) * dt;
 
     stepper.initialize( start_state , time , dt );
 
@@ -99,8 +110,9 @@ Time integrate_n_steps(
             stepper.calc_state( time , start_state );
             obs( start_state , time );
             ++step;
-            // direct computation of the time to avoid error propagation
-            time = start_time + step*dt;
+            // direct computation of the time avoids error propagation happening when using time += dt
+            // we need clumsy type analysis to get boost units working here
+            time = start_time + static_cast< typename detail::unit_value_type<Time>::type >(step) * dt;
         }
 
         // we have not reached the end, do another real step

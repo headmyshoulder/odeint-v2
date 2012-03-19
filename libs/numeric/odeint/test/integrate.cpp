@@ -81,7 +81,7 @@ struct perform_integrate_const_test
 {
     void operator()( const value_type t_end , const value_type dt )
     {
-        //std::cout << "Testing integrate_const with " << typeid( Stepper ).name() << std::endl;
+        std::cout << "Testing integrate_const with " << typeid( Stepper ).name() << std::endl;
 
         state_type x( 3 , 10.0 ) , x_end( 3 );
 
@@ -110,6 +110,8 @@ struct perform_integrate_adaptive_test
 {
     void operator()( const value_type t_end = 10.0 , const value_type dt = 0.03 )
     {
+        std::cout << "Testing integrate_adaptive with " << typeid( Stepper ).name() << std::endl;
+
         state_type x( 3 , 10.0 ) , x_end( 3 );
 
         std::vector< value_type > times;
@@ -134,6 +136,8 @@ struct perform_integrate_times_test
 {
     void operator()( void )
     {
+        std::cout << "Testing integrate_times with " << typeid( Stepper ).name() << std::endl;
+
         state_type x( 3 ) , x_end( 3 );
         x[0] = x[1] = x[2] = 10.0;
 
@@ -163,6 +167,8 @@ struct perform_integrate_n_steps_test
 {
     void operator()( void )
     {
+        std::cout << "Testing integrate_n_steps with " << typeid( Stepper ).name() << std::endl;
+
         state_type x( 3 ) , x_end( 3 );
         x[0] = x[1] = x[2] = 10.0;
 
