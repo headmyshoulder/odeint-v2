@@ -45,10 +45,10 @@ public:
     typedef Operations operations_type;
     const static bool holds_algebra = HoldsAlgebra;
     const static bool ref_algebra = !holds_algebra;
-
+    typedef ref_or_value_holder< algebra_type , ref_algebra > algebra_holder_type;
 
     error_checker_max_norm(
-            algebra_type &algebra ,
+            typename algebra_holder_type::constructor_type algebra ,
             const value_type eps_abs = static_cast< value_type >( 1.0e-6 ) ,
             const value_type eps_rel = static_cast< value_type >( 1.0e-6 ) ,
             const value_type a_x = static_cast< value_type >( 1.0 ) ,
@@ -56,6 +56,7 @@ public:
     : m_algebra( algebra ) ,
       m_eps_abs( eps_abs ) , m_eps_rel( eps_rel ) , m_a_x( a_x ) , m_a_dxdt( a_dxdt )
     { }
+
 
     // overload for steppers, x, x_old and x_err are available
     template< class State1 , class State2 , class Err , class Time >
@@ -93,7 +94,7 @@ public:
 
 private:
 
-    ref_or_value_holder< algebra_type , ref_algebra > m_algebra;
+    algebra_holder_type m_algebra;
     value_type m_eps_abs;
     value_type m_eps_rel;
     value_type m_a_x;

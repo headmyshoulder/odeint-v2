@@ -17,5 +17,6 @@ exe controller : controller.cpp ;
 exe rb_controller : rb_controller.cpp ;
 exe dopri5_controller : dopri5_controller.cpp ;
 exe dense_out_dopri5_controller : dense_out_dopri5_controller.cpp ;
+exe rb_dense_output : rb_dense_output.cpp ;
 
 build-project libs/numeric/odeint/test ;

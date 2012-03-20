@@ -30,7 +30,7 @@ template<
     class ErrorChecker ,
     class Controller ,
     class Resizer ,
-    class ErrorStepperCategory = typename ErrorStepper::stepper_type >
+    class ErrorStepperCategory = typename ErrorStepper::stepper_category >
 class generic_controlled_stepper ;
 
 

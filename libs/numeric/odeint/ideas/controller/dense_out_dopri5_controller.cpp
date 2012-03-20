@@ -16,6 +16,7 @@
 #include <boost/numeric/odeint/util/resizer.hpp>
 
 #include <boost/numeric/odeint/stepper/error_checker_explicit.hpp>
+#include <boost/numeric/odeint/stepper/error_checker_max_norm.hpp>
 #include <boost/numeric/odeint/stepper/generic_controlled_stepper_explicit_fsal.hpp>
 #include <boost/numeric/odeint/stepper/controller/default_controller.hpp>
 #include <boost/numeric/odeint/stepper/controller/pi_controller.hpp>
@@ -110,14 +111,28 @@ int main( int argc , char **argv )
             initially_resizer ,
             explicit_error_stepper_fsal_tag > > stepper4;
 
+    typedef generic_controlled_stepper<
+        runge_kutta_dopri5< state_type > ,
+        error_checker_max_norm< double , range_algebra , default_operations > ,
+        default_controller ,
+        initially_resizer ,
+        explicit_error_stepper_fsal_tag > controller5_type;
+    typedef dense_output_runge_kutta< controller5_type > stepper5_type;
+    range_algebra al;
+    stepper5_type stepper5 = stepper5_type(
+                    controller5_type( runge_kutta_dopri5< state_type >() ,
+                    error_checker_max_norm< double , range_algebra , default_operations >( al ) ) );
+
+
 
     state_type x1 = {{ 10.0 , 10.0 , 10.0 }};
     state_type x2 = x1;
     state_type x3 = x1;
     state_type x4 = x1;
+    state_type x5 = x1;
 
     boost::timer timer;
-    const double t_max = 100000.0;
+    const double t_max = 1000000.0;
 
     timer.restart();
     size_t steps1 = integrate_const( stepper1 , lorenz , x1 , 0.0 , t_max , 10.0 );
@@ -138,6 +153,12 @@ int main( int argc , char **argv )
     size_t steps4 = integrate_const( stepper4 , lorenz , x4 , 0.0 , t_max , 10.0 );
     double t4 = timer.elapsed();
     cout << steps4 << tab << t4 << tab << x4[0] << tab << x4[1] << tab << x4[2] << endl;
+
+    timer.restart();
+    size_t steps5 = integrate_const( stepper5 , lorenz , x5 , 0.0 , t_max , 10.0 );
+    double t5 = timer.elapsed();
+    cout << steps5 << tab << t5 << tab << x5[0] << tab << x5[1] << tab << x5[2] << endl;
+
 
 
 

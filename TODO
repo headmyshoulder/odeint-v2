@@ -1,17 +1,20 @@
 GENERIC_CONTROLLERS
-* solve the reference problem for the algebras
-  * finalize default_error_checker and only use them
+OK * solve the reference problem for the algebras
+  * finalize error_checker and only use them
     * rename to default_error_checker_l2_norm
     * use only with ref the algebra
-    * implement the appropriate operations, max_rel_err, max_rel_err_2
+    * implement the appropriate operations
+    * normalization in the operations or separately?
   * remove error_checker_explicit
-  * implement default_error_checker_max_norm (trivial from default_error_checker_l2_norm)
-    * implement appropriate operations
+  OK * implement default_error_checker_max_norm (trivial from default_error_checker_l2_norm)
+    OK * implement appropriate operations
 OK * implement generic_controlled_stepper_explicit_fsal
   OK * rename generic_controlled_stepper to generic_controlled_stepper_definition.hpp
   OK * implement generic_controlled_stepper_explicit_fsal in an own class
   OK * testing
-* rename dense_output_runge_kutta to generic_dense_output
+* create generic_dense_output from dense_output_runge_kutta
+  * generalize
+  * implement dense_output_runge_kutta from generic_dense_output for backward-compatability
 * check dense-output (dopri5, rosenbrock4)
   OK * implement a test case for dopri5 using dense_output_runge_kutta
   * implement rosenbrock4 in terms of generic_dense_output 
