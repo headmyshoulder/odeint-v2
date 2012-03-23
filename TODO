@@ -1,10 +1,10 @@
 GENERIC_CONTROLLERS
 OK * solve the reference problem for the algebras
-  * finalize error_checker and only use them
-    * rename to default_error_checker_l2_norm
-    * use only with ref the algebra
-    * implement the appropriate operations
-    * normalization in the operations or separately?
+  OK * finalize error_checker and only use them
+    OK * rename to default_error_checker_l2_norm
+    OK * use only with ref the algebra
+    OK * implement the appropriate operations
+    OK * normalization in the operations or separately?
   * remove error_checker_explicit
   OK * implement default_error_checker_max_norm (trivial from default_error_checker_l2_norm)
     OK * implement appropriate operations
@@ -12,12 +12,15 @@ OK * implement generic_controlled_stepper_explicit_fsal
   OK * rename generic_controlled_stepper to generic_controlled_stepper_definition.hpp
   OK * implement generic_controlled_stepper_explicit_fsal in an own class
   OK * testing
-* create generic_dense_output from dense_output_runge_kutta
-  * generalize
-  * implement dense_output_runge_kutta from generic_dense_output for backward-compatability
-* check dense-output (dopri5, rosenbrock4)
+NO: * create generic_dense_output from dense_output_runge_kutta
+  * later or never, simply rename dense_output_runge_kutta to generic_dense_output
+  NO * generalize
+  NO * implement dense_output_runge_kutta from generic_dense_output for backward-compatability
+  NOOOO: later or never, simply rename dense_output_runge_kutta to generic_dense_output
+OK * check dense-output (dopri5, rosenbrock4)
   OK * implement a test case for dopri5 using dense_output_runge_kutta
-  * implement rosenbrock4 in terms of generic_dense_output 
+  OK * implement rosenbrock4 in terms of generic_dense_output
+* check reduce and commutativity of the underlying binary operation 
 * introduce operations in controller 
 * introduce the orders in pi_controller and stiff_controller
 * introduce controlled_runge_kutta and dense_output_runge_kutta for compatibility

@@ -19,7 +19,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_ERROR_CHECKER_L2_NORM_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_STEPPER_ERROR_CHECKER_L2_NORM_HPP_INCLUDED
 
-
+#include <cmath>
 #include <boost/numeric/odeint/util/ref_or_value_holder.hpp>
 #include <boost/numeric/odeint/util/number_of_elements.hpp>
 
@@ -63,11 +63,13 @@ public:
     template< class State1 , class State2 , class Err , class Time >
     value_type error( const State1 &x_old , const State2 &x , const Err &x_err , const Time &dt )
     {
+        using std::sqrt;
         value_type result = m_algebra.get().reduce3( x_old , x , x_err ,
-                typename operations_type::template rel_error_l2_2< value_type >( m_eps_abs , m_eps_rel ) ,
+                typename operations_type::template rel_error_l2< value_type >( m_eps_abs , m_eps_rel ) ,
                 static_cast< value_type >( 0.0 ) );
-        result /= value_type( boost::numeric::odeint::size( x_old ) );
-        return result;
+        size_t num_elements = boost::numeric::odeint::number_of_elements( x_old );
+        if( num_elements != 0 ) return sqrt( result ) / static_cast< value_type >( num_elements );
+        return 0.0;
     }
 
 
@@ -75,11 +77,13 @@ public:
     template< class State1 , class State2 , class Deriv , class Err , class Time >
     value_type error( const State1 &x_old , const State2 &x , const Deriv &dxdt_old , Err &x_err , const Time &dt )
     {
+        using std::sqrt;
         value_type result = m_algebra.get().reduce4( x_old , x , dxdt_old , x_err ,
                 typename operations_type::template rel_error_l2_2< value_type >( m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt * detail::get_value( dt ) ) ,
                 static_cast< value_type >( 0.0 ) );
-        result /= value_type( boost::numeric::odeint::size( x_old ) );
-        return result;
+        size_t num_elements = boost::numeric::odeint::number_of_elements( x_old );
+        if( num_elements != 0 ) return sqrt( result ) / static_cast< value_type >( num_elements );
+        return 0.0;
     }
 
 
@@ -87,11 +91,13 @@ public:
     template< class StateOld , class State , class DerivOld , class Deriv , class Err , class Time >
     value_type error( const StateOld &x_old , const State &x , const DerivOld &dxdt_old , const Deriv &dxdt , const Err &x_err , const Time &dt )
     {
+        using std::sqrt;
         value_type result = m_algebra.get().reduce4( x_old , x , dxdt_old , x_err ,
                 typename operations_type::template rel_error_l2_2< value_type >( m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt * detail::get_value( dt ) ) ,
                 static_cast< value_type >( 0.0) );
-        result /= value_type( boost::numeric::odeint::size( x_old ) );
-        return result;
+        size_t num_elements = boost::numeric::odeint::number_of_elements( x_old );
+        if( num_elements != 0 ) return sqrt( result ) / static_cast< value_type >( num_elements );
+        return 0.0;
     }
 
 

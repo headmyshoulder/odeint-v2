@@ -19,7 +19,6 @@
 #define BOOST_NUMERIC_ODEINT_INTEGRATE_DETAIL_INTEGRATE_TIMES_HPP_INCLUDED
 
 #include <stdexcept>
-#include <iostream>
 
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 
@@ -90,10 +89,12 @@ size_t integrate_times(
             dt = std::min( dt , *start_time - current_time );
             if( stepper.try_step( system , start_state , current_time , dt ) == success )
             {
-                current_time += dt;
-                steps++;
-            } else
-                fail_steps++;
+                ++steps;
+            }
+            else
+            {
+                ++fail_steps;
+            }
             if( fail_steps == max_attempts ) throw std::overflow_error( error_string );
         }
     }

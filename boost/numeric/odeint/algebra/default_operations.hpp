@@ -608,13 +608,61 @@ struct default_operations
             using std::max;
             using detail::get_value;
 
-            // set_value( t3 , abs( get_value( t3 ) ) / ( m_eps_abs + m_eps_rel * ( m_a_x * abs( get_value( t1 ) ) + m_a_dxdt * abs( get_value( t2 ) ) ) ) );
-
             Res tmp = abs( get_value( x_err ) ) /
                     ( m_eps_abs + m_eps_rel * ( m_a_x * abs( get_value( x_old ) ) + m_a_dxdt * abs( get_value( dxdt_old ) ) ) );
             return max( r , tmp );
         }
     };
+
+
+
+
+    template< class Fac1 = double >
+    struct rel_error_l2
+    {
+        const Fac1 m_eps_abs , m_eps_rel;
+
+        rel_error_l2( const Fac1 &eps_abs , const Fac1 &eps_rel )
+        : m_eps_abs( eps_abs ) , m_eps_rel( eps_rel )
+        { }
+
+        template< class Res , class T1 , class T2 , class T3 >
+        Res operator()( Res r , const T1 &x_old , const T2 &x , const T3 &x_err )
+        {
+            using std::abs;
+            using std::max;
+            using detail::get_value;
+            Res tmp = abs( get_value( x_err ) ) / ( m_eps_abs + m_eps_rel * max( abs( x_old ) , abs( x ) ) );
+            return r + tmp * tmp;
+        }
+    };
+
+
+
+
+    template< class Fac1 = double >
+    struct rel_error_l2_2
+    {
+        const Fac1 m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt;
+
+        rel_error_l2_2( const Fac1 &eps_abs , const Fac1 &eps_rel , const Fac1 &a_x , const Fac1 &a_dxdt )
+        : m_eps_abs( eps_abs ) , m_eps_rel( eps_rel ) , m_a_x( a_x ) , m_a_dxdt( a_dxdt )
+        { }
+
+        template< class Res , class T1 , class T2 , class T3 , class T4 >
+        Res operator()( Res r , const T1 &x_old , const T2 &x , const T3 &dxdt_old , const T4 &x_err )
+        {
+            using std::abs;
+            using std::max;
+            using detail::get_value;
+
+            Res tmp = abs( get_value( x_err ) ) /
+                    ( m_eps_abs + m_eps_rel * ( m_a_x * abs( get_value( x_old ) ) + m_a_dxdt * abs( get_value( dxdt_old ) ) ) );
+            return r + tmp * tmp;
+        }
+    };
+
+
 
 
 

@@ -39,18 +39,13 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-template
-<
-class Stepper ,
-class StepperCategory = typename Stepper::stepper_category
->
+template< class Stepper , class StepperCategory = typename Stepper::stepper_category >
 class dense_output_runge_kutta;
 
 
-template
-<
-class Stepper
->
+
+
+template< class Stepper >
 class dense_output_runge_kutta< Stepper , stepper_tag >
 {
 
@@ -203,10 +198,7 @@ private:
 
 
 
-template
-<
-class Stepper
->
+template< class Stepper >
 class dense_output_runge_kutta< Stepper , explicit_controlled_stepper_fsal_tag >
 {
 private:

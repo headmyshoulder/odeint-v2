@@ -22,5 +22,6 @@ test-suite "odeint"
 	 [ run ref_or_value_holder.cpp ]
 	 [ run error_checker_max_norm.cpp ]
 	 [ run number_of_elements.cpp ]
+	 [ run error_checker_l2_norm.cpp ]
 	: <testing.launcher>valgrind
 	;
