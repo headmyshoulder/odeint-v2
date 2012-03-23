@@ -209,7 +209,7 @@ struct rk78_coefficients_a12 : boost::array< Value , 12 >
         (*this)[6] = static_cast< Value >( 2193 )/static_cast< Value >( 4100 );
         (*this)[7] = static_cast< Value >( 51 )/static_cast< Value >( 82 );
         (*this)[8] = static_cast< Value >( 33 )/static_cast< Value >( 164 );
-        (*this)[9] = static_cast< Value >( 19 )/static_cast< Value >( 41 );
+        (*this)[9] = static_cast< Value >( 12 )/static_cast< Value >( 41 );
         (*this)[10] = static_cast< Value >( 0 );
         (*this)[11] = static_cast< Value >( 1 );
             }
