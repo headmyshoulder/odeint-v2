@@ -20,8 +20,10 @@ NO: * create generic_dense_output from dense_output_runge_kutta
 OK * check dense-output (dopri5, rosenbrock4)
   OK * implement a test case for dopri5 using dense_output_runge_kutta
   OK * implement rosenbrock4 in terms of generic_dense_output
-* check reduce and commutativity of the underlying binary operation 
-* introduce operations in controller 
+* check reduce and commutativity of the underlying binary operation
+  * compare performance of reduce and inclusive_scan of thrust  
+NO * introduce operations in controller
+  * LATER, is not necessary now. One can implement easily another controller with appropriate operations 
 * introduce the orders in pi_controller and stiff_controller
 * introduce controlled_runge_kutta and dense_output_runge_kutta for compatibility
 

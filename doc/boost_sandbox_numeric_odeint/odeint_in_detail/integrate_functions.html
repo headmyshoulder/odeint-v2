@@ -3,19 +3,19 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Integrate functions</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
 <link rel="up" href="../odeint_in_detail.html" title="Odeint in detail">
 <link rel="prev" href="generation_functions.html" title="Generation functions">
-<link rel="next" href="algebras_and_operations.html" title="Algebras and operations">
+<link rel="next" href="state_types__algebras_and_operations.html" title="State types, algebras and operations">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="generation_functions.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../odeint_in_detail.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="algebras_and_operations.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="generation_functions.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../odeint_in_detail.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="state_types__algebras_and_operations.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions"></a><a class="link" href="integrate_functions.html" title="Integrate functions">Integrate
       functions</a>
@@ -81,15 +81,15 @@
         steps you should prefer the <code class="computeroutput"><span class="identifier">integrate_n_steps</span></code>
         function below.
       </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
             If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
             or <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
             Stepper</a> then <code class="computeroutput"><span class="identifier">dt</span></code>
             is also the step size used for integration and the observer is called
             just after every step.
           </li>
-<li>
+<li class="listitem">
             If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/controlled_stepper.html" title="Controlled Stepper">Controlled
             Stepper</a> then <code class="computeroutput"><span class="identifier">dt</span></code>
             is the initial step size. The actual step size will change due to error
@@ -100,12 +100,13 @@
             Stepper</a> is reasonable here only if <code class="computeroutput"><span class="identifier">dt</span></code>
             is considerably larger than typical step sizes used by the stepper.
           </li>
-<li>
-            If <code class="computeroutput"><span class="identifier">stepper</span></code> is a __dense_outout_stepper
-            then <code class="computeroutput"><span class="identifier">dt</span></code> is the initial
-            step size. The actual step size will be adjusted during integration due
-            to error control. If an observer is provided dense output is used to
-            calculate <span class="emphasis"><em>x(t)</em></span> at <span class="emphasis"><em>t = t<sub>0</sub> + n dt</em></span>.
+<li class="listitem">
+            If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/dense_output_stepper.html" title="Dense Output Stepper">Dense
+            Output Stepper</a> then <code class="computeroutput"><span class="identifier">dt</span></code>
+            is the initial step size. The actual step size will be adjusted during
+            integration due to error control. If an observer is provided dense output
+            is used to calculate <span class="emphasis"><em>x(t)</em></span> at <span class="emphasis"><em>t = t<sub>0</sub> + n
+            dt</em></span>.
           </li>
 </ul></div>
 <h5>
@@ -116,8 +117,9 @@
 <p>
         If the observer should be called at each time step then the <code class="computeroutput"><span class="identifier">integrate_adaptive</span></code> function should be used.
         Note that in the case of <a class="link" href="../concepts/controlled_stepper.html" title="Controlled Stepper">Controlled
-        Stepper</a> or __dense_out_stepper this leads to non-equidistant observer
-        calls as the step size changes.
+        Stepper</a> or <a class="link" href="../concepts/dense_output_stepper.html" title="Dense Output Stepper">Dense
+        Output Stepper</a> this leads to non-equidistant observer calls as the
+        step size changes.
       </p>
 <p>
         <code class="computeroutput"><span class="identifier">integrate_adaptive</span><span class="special">(</span>
@@ -149,8 +151,8 @@
         step of the provided stepper (and before the first step at <code class="computeroutput"><span class="identifier">t0</span></code>). <code class="computeroutput"><span class="identifier">integrate_adaptive</span></code>
         returns the number of steps performed during the integration.
       </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
             If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
             or <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
             Stepper</a> then <code class="computeroutput"><span class="identifier">dt</span></code>
@@ -160,7 +162,7 @@
             exactly at <code class="computeroutput"><span class="identifier">t1</span></code>. If provided,
             the observer is called at each step.
           </li>
-<li>
+<li class="listitem">
             If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/controlled_stepper.html" title="Controlled Stepper">Controlled
             Stepper</a> then <code class="computeroutput"><span class="identifier">dt</span></code>
             is the initial step size. The actual step size is changed according to
@@ -169,7 +171,7 @@
             If provided, the observer is called after each time step (and before
             the first step at <code class="computeroutput"><span class="identifier">t0</span></code>).
           </li>
-<li>
+<li class="listitem">
             If stepper is a <a class="link" href="../concepts/dense_output_stepper.html" title="Dense Output Stepper">Dense
             Output Stepper</a> then <code class="computeroutput"><span class="identifier">dt</span></code>
             is the initial step size and <code class="computeroutput"><span class="identifier">integrate_adaptive</span></code>
@@ -226,8 +228,8 @@
         <code class="computeroutput"><span class="identifier">integrate_times</span></code> returns the
         number of steps performed during the integration.
       </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
             If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
             or <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
             Stepper</a> <code class="computeroutput"><span class="identifier">dt</span></code> is
@@ -236,7 +238,7 @@
             will be reduced to obtain the state <span class="emphasis"><em>x(t)</em></span> exactly
             at the time point.
           </li>
-<li>
+<li class="listitem">
             If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/controlled_stepper.html" title="Controlled Stepper">Controlled
             Stepper</a> then <code class="computeroutput"><span class="identifier">dt</span></code>
             is the initial step size. The actual step size is adjusted during integration
@@ -244,12 +246,12 @@
             is approached the step size is reduced to obtain the state <span class="emphasis"><em>x(t)</em></span>
             exactly at the time point.
           </li>
-<li>
-            If <code class="computeroutput"><span class="identifier">stepper</span></code> is a __dense_out_stepper
-            then <code class="computeroutput"><span class="identifier">dt</span></code> is the initial
-            step size. The actual step size is adjusted during integration according
-            to error control. Dense output is used to obtain the states <span class="emphasis"><em>x(t)</em></span>
-            at the time points from the sequence.
+<li class="listitem">
+            If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/dense_output_stepper.html" title="Dense Output Stepper">Dense
+            Output Stepper</a> then <code class="computeroutput"><span class="identifier">dt</span></code>
+            is the initial step size. The actual step size is adjusted during integration
+            according to error control. Dense output is used to obtain the states
+            <span class="emphasis"><em>x(t)</em></span> at the time points from the sequence.
           </li>
 </ul></div>
 <h5>
@@ -354,7 +356,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="generation_functions.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../odeint_in_detail.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="algebras_and_operations.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="generation_functions.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../odeint_in_detail.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="state_types__algebras_and_operations.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

@@ -14,4 +14,5 @@
   [[[github_link libs/numeric/odeint/examples/thrust/phase_oscillator_chain.cu phase_oscillator_chain.cu]] [The Thrust phase oscillator chain example shows how chains of nearest neighbor coupled oscillators can be integrated with Thrust and odeint.]]
   [[[github_link libs/numeric/odeint/examples/thrust/lorenz_parameters.cu lorenz_parameters.cu]] [The Lorenz paramaters examples show how ensembles of ordinary differential equations can be solved by means of Thrust to study the dependence of an ODE on some parameters.]]
   [[[github_link libs/numeric/odeint/examples/mtl/gauss_packet.cpp gauss_packet.cpp]] [The MTL-Gauss-packet example shows how the mtl can be easily used with odeint.]]
+  [[[github_link libs/numeric/odeint/examples/stochastic_euler.cpp stochastic_euler.cpp]] [Implementation of a custom stepper - the stochastic euler -  for solving stochastic differential equations.]]
 ]

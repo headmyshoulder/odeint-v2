@@ -111,8 +111,6 @@
 
 [include details.qbk]
 
-[include extend.qbk]
-
 [include concepts.qbk]
 
 [xinclude reference.xml]
