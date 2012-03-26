@@ -1,4 +1,13 @@
-[section Extend odeint]
+[section State types, algebras and operations]
+
+
+
+[section Algebras and operations]
+
+which steppers support algebras
+
+[endsect]
+
 
 [section Adapt your own state types]
 
@@ -425,10 +434,6 @@ libs/numeric/odeint/examples/lorenz_point.cpp lorenz_point.cpp]
 
 gsl_vector, gsl_matrix, ublas::matrix, blitz::matrix, thrust
 
-[section Write own steppers]
-
-[endsect]
-
 [section Adapt your own operations]
 
 gsl_complex, complex, thrust
@@ -436,5 +441,7 @@ gsl_complex, complex, thrust
 min, max, pow
 
 [endsect]
+
+
 
 [endsect]
