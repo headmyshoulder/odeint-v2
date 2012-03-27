@@ -12,7 +12,7 @@ typedef std::vector< double > state_type;
 const double gam = 0.15;
 
 /* The rhs of x' = f(x) */
-void harmonic_oscillator( const state_type &x , state_type &dxdt , const double t )
+void harmonic_oscillator( const state_type &x , state_type &dxdt , const double /* t */ )
 {
     dxdt[0] = x[1];
     dxdt[1] = -x[0] - gam*x[1];
@@ -32,7 +32,7 @@ class harm_osc {
 public:
     harm_osc( double gam ) : m_gam(gam) { }
 
-    void operator() ( const state_type &x , state_type &dxdt , const double t )
+    void operator() ( const state_type &x , state_type &dxdt , const double /* t */ )
     {
         dxdt[0] = x[1];
         dxdt[1] = -x[0] - m_gam*x[1];
@@ -62,7 +62,7 @@ struct push_back_state_and_time
 //]
 
 
-int main(int argc, char **argv)
+int main(int /* argc */ , char** /* argv */ )
 {
     using namespace std;
     using namespace boost::numeric::odeint;

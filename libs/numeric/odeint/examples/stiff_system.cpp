@@ -25,7 +25,7 @@ typedef boost::numeric::ublas::matrix< double > matrix_type;
 
 struct stiff_system
 {
-    void operator()( const vector_type &x , vector_type &dxdt , double t )
+    void operator()( const vector_type &x , vector_type &dxdt , double /* t */ )
     {
         dxdt[ 0 ] = -101.0 * x[ 0 ] - 100.0 * x[ 1 ];
         dxdt[ 1 ] = x[ 0 ];
@@ -34,7 +34,7 @@ struct stiff_system
 
 struct stiff_system_jacobi
 {
-    void operator()( const vector_type &x , matrix_type &J , const double &t , vector_type &dfdt )
+    void operator()( const vector_type & /* x */ , matrix_type &J , const double & /* t */ , vector_type &dfdt )
     {
         J( 0 , 0 ) = -101.0;
         J( 0 , 1 ) = -100.0;

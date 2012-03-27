@@ -224,9 +224,9 @@ private:
     }
 
 
-    // stepper for systems with only function dp /dt = -f(q), dq/dt = p
+    // stepper for systems with only function dp /dt = -f(q), dq/dt = p, time not required but still expected for compatibility reasons
     template< class System , class StateIn , class StateOut >
-    void do_step_impl( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt , boost::mpl::false_ )
+    void do_step_impl( System system , const StateIn &in , const time_type & /* t */ , StateOut &out , const time_type &dt , boost::mpl::false_ )
     {
         typedef typename boost::unwrap_reference< System >::type momentum_deriv_func_type;
         momentum_deriv_func_type &momentum_func = system;

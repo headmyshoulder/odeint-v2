@@ -56,7 +56,7 @@ public:
 
 
     rosenbrock4_controller( value_type atol = 1.0e-6 , value_type rtol = 1.0e-6 , const stepper_type &stepper = stepper_type() )
-    : m_atol( atol ) , m_rtol( rtol ) ,
+    : m_stepper( stepper ) , m_atol( atol ) , m_rtol( rtol ) ,
       m_first_step( true ) , m_err_old( 0.0 ) , m_dt_old( 0.0 ) ,
       m_last_rejected( false )
     { }

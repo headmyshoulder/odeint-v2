@@ -73,7 +73,7 @@ struct phase_ensemble
 
     double get_epsilon( void ) const { return m_epsilon; }
 
-    void operator()( const container_type &x , container_type &dxdt , double t ) const
+    void operator()( const container_type &x , container_type &dxdt , double /* t */ ) const
     {
         pair< double , double > mean = calc_mean_field( x );
         for( size_t i=0 ; i<x.size() ; ++i )

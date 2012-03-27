@@ -22,11 +22,9 @@
 
 #include <boost/ref.hpp>
 #include <boost/random.hpp>
-#include <boost/lambda/lambda.hpp>
 
 using namespace std;
 using namespace boost::numeric::odeint;
-using namespace boost::lambda;
 
 //[ resizing_lattice_system_class
 typedef vector< double > coord_type;
@@ -129,7 +127,7 @@ int main()
     coord_type p( N_start , 0.0 );
     p.reserve( max_N );
     // start with uniform momentum distribution over 20 sites
-    fill( p.begin()+20 , p.end()-20 , 1.0/sqrt(20) );
+    fill( p.begin()+20 , p.end()-20 , 1.0/sqrt(20.0) );
 
     coord_type distr( N_start , 0.0 );
     distr.reserve( max_N );

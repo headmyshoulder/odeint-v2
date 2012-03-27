@@ -41,7 +41,7 @@ struct resize_impl< state_type , state_type >
 } } } 
 //]
 
-void lattice( const state_type &x , state_type &dxdt , const double t )
+void lattice( const state_type &x , state_type &dxdt , const double /* t */ )
 {
     state_type::const_iterator x_begin = x.begin();
     state_type::const_iterator x_end = x.end();

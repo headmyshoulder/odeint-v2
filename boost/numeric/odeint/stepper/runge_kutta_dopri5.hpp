@@ -184,7 +184,7 @@ public :
     template< class StateOut , class StateIn1 , class DerivIn1 , class StateIn2 , class DerivIn2 >
     void calc_state( const time_type &t , StateOut &x ,
             const StateIn1 &x_old , const DerivIn1 &deriv_old , const time_type &t_old ,
-            const StateIn2 &x_new , const DerivIn2 &deriv_new , const time_type &t_new )
+            const StateIn2 & /* x_new */ , const DerivIn2 &deriv_new , const time_type &t_new )
     {
         const value_type b1 = static_cast<value_type> ( 35.0 ) / static_cast<value_type>( 384.0 );
         const value_type b3 = static_cast<value_type> ( 500.0 ) / static_cast<value_type>( 1113.0 );

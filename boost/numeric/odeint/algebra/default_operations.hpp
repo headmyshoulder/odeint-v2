@@ -23,7 +23,7 @@
 #include <boost/array.hpp>
 
 #ifndef __CUDACC__
-#include <boost/utility/result_of.hpp>
+#include <boost/utility.hpp>
 #include <boost/units/quantity.hpp>
 #endif
 
@@ -151,6 +151,10 @@ struct default_operations
         }
 
         typedef void result_type;
+
+    private:
+        scale_sum2< Fac1 , Fac2 >& operator=( const scale_sum2< Fac1 , Fac2 > &sum2 )
+        { }
     };
 
 

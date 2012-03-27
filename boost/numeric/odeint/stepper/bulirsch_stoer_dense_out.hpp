@@ -553,7 +553,7 @@ private:
 
     template< class StateIn1 , class DerivIn1 , class StateIn2 , class DerivIn2 >
     value_type prepare_dense_output( const int k , const StateIn1 &x_start , const DerivIn1 &dxdt_start ,
-            const StateIn2 &x_end , const DerivIn2 &dxdt_end , const time_type dt )  // k is the order to which the result was approximated
+            const StateIn2 & /* x_end */ , const DerivIn2 & /*dxdt_end */ , const time_type dt )  // k is the order to which the result was approximated
     {
 
         // compute the coefficients of the interpolation polynomial
