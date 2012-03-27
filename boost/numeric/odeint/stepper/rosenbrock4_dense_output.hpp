@@ -77,9 +77,8 @@ public:
     { }
 
     rosenbrock4_dense_output( const rosenbrock4_dense_output &rb )
-    { 
-        copy_variables( rb );
-    }
+    : m_current_state( &m_x1.m_v ) , m_old_state( &m_x2.m_v )
+    { }
 
     rosenbrock4_dense_output& operator=( const rosenbrock4_dense_output &rb )
     {

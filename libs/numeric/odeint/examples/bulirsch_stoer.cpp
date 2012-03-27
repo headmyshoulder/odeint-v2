@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <fstream>
+#define _USE_MATH_DEFINES
 #include <cmath>
 
 #include <boost/array.hpp>
@@ -14,14 +15,11 @@
 
 #include <boost/numeric/odeint/config.hpp>
 
-#include <boost/lambda/lambda.hpp>
-
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
 #include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>
 
 using namespace std;
-using namespace boost::lambda;
 using namespace boost::numeric::odeint;
 
 typedef boost::array< double , 1 > state_type;
