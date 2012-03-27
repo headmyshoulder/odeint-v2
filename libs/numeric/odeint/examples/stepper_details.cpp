@@ -19,15 +19,15 @@ const size_t N = 3;
 
 typedef boost::array< double , N > state_type;
 
-void sys( const state_type &x , state_type &dxdt , double t )
+void sys( const state_type & /*x*/ , state_type &/*dxdt*/ , const double /*t*/ )
 {
 }
 
-void sys1( const state_type &x , state_type &dxdt , double t )
+void sys1( const state_type &/*x*/ , state_type &/*dxdt*/ , const double /*t*/ )
 {
 }
 
-void sys2( const state_type &x , state_type &dxdt , double t )
+void sys2( const state_type &/*x*/ , state_type &/*dxdt*/ , const double /*t*/ )
 {
 }
 
@@ -35,15 +35,22 @@ void sys2( const state_type &x , state_type &dxdt , double t )
 //[ symplectic_stepper_detail_system_function
 typedef boost::array< double , 1 > vector_type;
 
-void harm_osc_f1( const vector_type &p , vector_type &dqdt )
-{
-    dqdt[0] = p[0];
-}
 
-void harm_osc_f2( const vector_type &q , vector_type &dpdt )
+struct harm_osc_f1
 {
-    dpdt[0] = -q[0];
-}
+    void operator()( const vector_type &p , vector_type &dqdt )
+    {
+        dqdt[0] = p[0];
+    }
+};
+
+struct harm_osc_f2
+{
+    void operator()( const vector_type &q , vector_type &dpdt )
+    {
+        dpdt[0] = -q[0];
+    }
+};
 //]
 
 //[ symplectic_stepper_detail_system_class
@@ -109,7 +116,7 @@ int main( int argc , char **argv )
         pair< vector_type , vector_type > x;
         x.first[0] = 1.0; x.second[0] = 0.0;
         symplectic_rkn_sb3a_mclachlan< vector_type > rkn;
-        rkn.do_step( make_pair( harm_osc_f1 , harm_osc_f2 ) , x , t , dt );
+        rkn.do_step( make_pair( harm_osc_f1() , harm_osc_f2() ) , x , t , dt );
         //]
 
         //[ symplectic_stepper_detail_system_class_example
@@ -126,14 +133,14 @@ int main( int argc , char **argv )
         pair< vector_type , vector_type > x;
         x.first[0] = 1.0; x.second[0] = 0.0;
         symplectic_rkn_sb3a_mclachlan< vector_type > rkn;
-        rkn.do_step( harm_osc_f1 , x , t , dt );
+        rkn.do_step( harm_osc_f1() , x , t , dt );
         //]
 
         vector_type q = {{ 1.0 }} , p = {{ 0.0 }};
         //[ symplectic_stepper_detail_ref_usage
-        rkn.do_step( harm_osc_f1 , make_pair( boost::ref( q ) , boost::ref( p ) ) , t , dt );
-        rkn.do_step( harm_osc_f1 , q , p , t , dt );
-        rkn.do_step( make_pair( harm_osc_f1 , harm_osc_f2 ) , q , p , t , dt );
+        rkn.do_step( harm_osc_f1() , make_pair( boost::ref( q ) , boost::ref( p ) ) , t , dt );
+        rkn.do_step( harm_osc_f1() , q , p , t , dt );
+        rkn.do_step( make_pair( harm_osc_f1() , harm_osc_f2() ) , q , p , t , dt );
         //]
     }
     
@@ -167,7 +174,7 @@ int main( int argc , char **argv )
         state_type inout;
         double t_start = 0.0 , t_end = 1.0;
         //[ dense_output_detail_generation1
-        result_of::make_dense_output< runge_kutta_dopri5< state_type > >::type dense2 = make_dense_output( 1.0e-6 , 1.0e-6 , runge_kutta_dopri5< state_type >() );
+        boost::numeric::odeint::result_of::make_dense_output< runge_kutta_dopri5< state_type > >::type dense2 = make_dense_output( 1.0e-6 , 1.0e-6 , runge_kutta_dopri5< state_type >() );
         //]
 
         //[ dense_output_detail_generation2
