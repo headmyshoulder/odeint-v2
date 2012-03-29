@@ -98,6 +98,7 @@
           space as well as the velocity. Therefore, we use the operators from <a href="http://www.boost.org/doc/libs/release/doc/html/operators.html" target="_top">Boost.Operators</a>:
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="comment">/*the point type */</span>
 <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">T</span> <span class="special">,</span> <span class="identifier">size_t</span> <span class="identifier">Dim</span> <span class="special">&gt;</span>
@@ -135,6 +136,7 @@
           type we use <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">tr1</span><span class="special">::</span><span class="identifier">array</span></code>
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="comment">// we simulate 5 planets and the sun</span>
 <span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">n</span> <span class="special">=</span> <span class="number">6</span><span class="special">;</span>
@@ -157,6 +159,7 @@
           As system function we have to provide <span class="emphasis"><em>f(p)</em></span> and <span class="emphasis"><em>f(q)</em></span>:
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">gravitational_constant</span> <span class="special">=</span> <span class="number">2.95912208286e-4</span><span class="special">;</span>
 
@@ -176,6 +179,7 @@
 <p>
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">solar_system_momentum</span>
 <span class="special">{</span>
@@ -217,6 +221,7 @@
           apply here:
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">symplectic_rkn_sb3a_mclachlan</span><span class="special">&lt;</span> <span class="identifier">container_type</span> <span class="special">&gt;</span> <span class="identifier">stepper_type</span><span class="special">;</span>
 <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">dt</span> <span class="special">=</span> <span class="number">100.0</span><span class="special">;</span>
@@ -241,6 +246,7 @@
           The reference wrapper is also passed, but this is not a problem at all:
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">streaming_observer</span>
 <span class="special">{</span>

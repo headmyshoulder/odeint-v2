@@ -45,13 +45,14 @@
         is needed. Here is the definition of the above example
       </p>
 <p>
+        
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">vector_type</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">matrix</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">matrix_type</span><span class="special">;</span>
 
 <span class="keyword">struct</span> <span class="identifier">stiff_system</span>
 <span class="special">{</span>
-    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">vector_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">vector_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span>
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">vector_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">vector_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">double</span> <span class="comment">/* t */</span> <span class="special">)</span>
     <span class="special">{</span>
         <span class="identifier">dxdt</span><span class="special">[</span> <span class="number">0</span> <span class="special">]</span> <span class="special">=</span> <span class="special">-</span><span class="number">101.0</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">[</span> <span class="number">0</span> <span class="special">]</span> <span class="special">-</span> <span class="number">100.0</span> <span class="special">*</span> <span class="identifier">x</span><span class="special">[</span> <span class="number">1</span> <span class="special">];</span>
         <span class="identifier">dxdt</span><span class="special">[</span> <span class="number">1</span> <span class="special">]</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">[</span> <span class="number">0</span> <span class="special">];</span>
@@ -60,7 +61,7 @@
 
 <span class="keyword">struct</span> <span class="identifier">stiff_system_jacobi</span>
 <span class="special">{</span>
-    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">vector_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">matrix_type</span> <span class="special">&amp;</span><span class="identifier">J</span> <span class="special">,</span> <span class="keyword">const</span> <span class="keyword">double</span> <span class="special">&amp;</span><span class="identifier">t</span> <span class="special">,</span> <span class="identifier">vector_type</span> <span class="special">&amp;</span><span class="identifier">dfdt</span> <span class="special">)</span>
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">vector_type</span> <span class="special">&amp;</span> <span class="comment">/* x */</span> <span class="special">,</span> <span class="identifier">matrix_type</span> <span class="special">&amp;</span><span class="identifier">J</span> <span class="special">,</span> <span class="keyword">const</span> <span class="keyword">double</span> <span class="special">&amp;</span> <span class="comment">/* t */</span> <span class="special">,</span> <span class="identifier">vector_type</span> <span class="special">&amp;</span><span class="identifier">dfdt</span> <span class="special">)</span>
     <span class="special">{</span>
         <span class="identifier">J</span><span class="special">(</span> <span class="number">0</span> <span class="special">,</span> <span class="number">0</span> <span class="special">)</span> <span class="special">=</span> <span class="special">-</span><span class="number">101.0</span><span class="special">;</span>
         <span class="identifier">J</span><span class="special">(</span> <span class="number">0</span> <span class="special">,</span> <span class="number">1</span> <span class="special">)</span> <span class="special">=</span> <span class="special">-</span><span class="number">100.0</span><span class="special">;</span>
@@ -81,6 +82,7 @@
         just templatize the <code class="computeroutput"><span class="keyword">operator</span><span class="special">()</span></code>:
       </p>
 <p>
+        
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">vector_type</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">matrix</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">matrix_type</span><span class="special">;</span>
@@ -116,6 +118,7 @@
         all the other stepper:
       </p>
 <p>
+        
 </p>
 <pre class="programlisting"><span class="identifier">vector_type</span> <span class="identifier">x</span><span class="special">(</span> <span class="number">3</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">);</span>
 
@@ -132,6 +135,7 @@
         5 method with step size control and dense output yields 1531 steps.
       </p>
 <p>
+        
 </p>
 <pre class="programlisting"><span class="identifier">vector_type</span> <span class="identifier">x2</span><span class="special">(</span> <span class="number">3</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">);</span>
 

@@ -1,3 +1,4 @@
+#include <vector>
 #include <iostream>
 #include <random>
 #include <array>
@@ -14,13 +15,38 @@ struct sys
     }
 };
 
+//[ stochastic_euler_class_definition
 class stochastic_euler
 {
 public:
 
+    typedef std::vector< double > state_type;
+    typedef std::vector< double > deriv_type;
+    typedef double value_type;
+    typedef double time_type;
+    typedef unsigned short order_type;
     typedef boost::numeric::odeint::stepper_tag stepper_category;
 
+    // ...
+};
+//]
 
+
+
+//[ stochastic_euler_class
+class stochastic_euler
+{
+public:
+
+    typedef std::vector< double > state_type;
+    typedef std::vector< double > deriv_type;
+    typedef double value_type;
+    typedef double time_type;
+    typedef unsigned short order_type;
+
+    typedef boost::numeric::odeint::stepper_tag stepper_category;
+
+    static order_type order( void ) { return 1; }
 
     template< class System , class State , class Time >
     void do_step( System system , State &x , Time t , Time dt ) const
@@ -31,6 +57,7 @@ public:
             x[i] += dt * dxdt[i] + sqrt( dt ) * system.second();
     }
 };
+//]
 
 template< class Rng , class Dist >
 struct gen

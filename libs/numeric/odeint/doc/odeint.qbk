@@ -71,7 +71,7 @@
 [def __generation_functions
     [link boost_sandbox_numeric_odeint.odeint_in_detail.generation_functions Generation functions]]
 [def __adapt_state_types
-    [link boost_sandbox_numeric_odeint.extend_odeint Adapt you own state types]]
+    [link boost_sandbox_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations Adapt you own state types]]
 
 
 [def __alpha '''&#945;''']
@@ -94,6 +94,7 @@
 [def __eta '''&#951;''']
 [def __theta '''&#952;''']
 [def __Theta '''&#920;''']
+[def __xi '''&#958;''']
 
 [def __space '''&#8203;''']
 

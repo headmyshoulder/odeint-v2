@@ -213,6 +213,38 @@ odeint provides a quite large number of different steppers such that the user is
 
 [section Write own steppers]
 
+[import ../examples/stochastic_euler.cpp]
+
+Of course, one can write own steppers which are fully compatible with odeint. They only have to fullfil one or several of the stepper __concepts of odeint.
+
+We will illustrate how to write your own stepper with the example of the stochastic euler method. This method is suited to solve stochastic differential equations (SDEs). A SDE has the form
+
+['dx/dt = f(x) + g(x) __xi(t)]
+
+where ['__xi] is Gaussian white noise with zero mean and a standard deviation ['__sigma]. ['f(x)] is said to be the deterministic part while [' g(x) __xi] is the noisy part. In case ['g(x)] is independent of ['x] the SDE is said to have  additive noise. It is not possible to solve SDE with the classical solvers for ODEs since the noisy part of the SDE has to be scaled differently then the deterministic part with respect to the time step. BUt there exist many solvers for SDEs. A classical and easy method is the stochastic euler solver. It works by iterating
+
+['x(t+__Delta t) = x(t) + __Delta t f(x(t)) + __Delta t[super 1/2] g(x) __xi(t)]
+
+where __xi(t) is an independent normal distributed random variable.
+
+Now we will implement this method. We will call the stepper `stochastic_euler`. It models the __stepper_concept. The class definition looks like 
+
+[stochastic_euler_class_definition]
+
+The types are needed in order to fullfil the stepper concept. An internal state is not needed in the stochastic euler, there are no temporaries needed during each step. So, in principle `state_type` and `deriv_type` are not needed here. Nevertheless, they must be present in order to fullfil the __stepper_concept and `std::vector< double >` is a good general candidate for the state and deriv type.
+
+
+
+
+
+System function
+
+steppers body
+
+do_step method
+
+examples, with integrate function
+
 
 
 [endsect]
