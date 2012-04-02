@@ -248,11 +248,16 @@ Now, lets look how we use the new stepper. A nice example is the Ornstein-Uhlenb
 
 ['dx/dt = - x + __xi] 
 
-where __xi is Gaussian white noise with standard deviation ['__sigma].
+where __xi is Gaussian white noise with standard deviation ['__sigma]. Implementing the Ornstein-Uhlenbeck process is quite simple. We need two functions or funtors - one for the deterministic and one for the stochastic part:
 
-[stochastic_euler_ornstein_uhlenbeck_det]
+[stochastic_euler_ornstein_uhlenbeck_def]
 
-examples, with integrate function
+In the stochastic part we have used the Mersenne twister for the random number generation and a Gaussian white noise generator `normal_distribution` with standard deviation ['__sigma]. Now, we can use the stochastic Euler stepper with the integrate functions:
+
+[ornstein_uhlenbeck_main]
+
+Note, how we have used the `make_pair` function for the generation of the system function.
+
 
 
 

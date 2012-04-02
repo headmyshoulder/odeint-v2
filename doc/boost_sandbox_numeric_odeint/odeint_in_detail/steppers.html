@@ -1912,9 +1912,9 @@
         </p>
 <p>
           where <span class="emphasis"><em>&#958;</em></span> is Gaussian white noise with zero mean and
-          a standard deviation <span class="emphasis"><em>&#963;</em></span>. <span class="emphasis"><em>f(x)</em></span> is
-          said to be the deterministic part while <span class="emphasis"><em>g(x) &#958;</em></span> is the
-          noisy part. In case <span class="emphasis"><em>g(x)</em></span> is independent of <span class="emphasis"><em>x</em></span>
+          a standard deviation <span class="emphasis"><em>&#963;(t)</em></span>. <span class="emphasis"><em>f(x)</em></span>
+          is said to be the deterministic part while <span class="emphasis"><em>g(x) &#958;</em></span> is
+          the noisy part. In case <span class="emphasis"><em>g(x)</em></span> is independent of <span class="emphasis"><em>x</em></span>
           the SDE is said to have additive noise. It is not possible to solve SDE
           with the classical solvers for ODEs since the noisy part of the SDE has
           to be scaled differently then the deterministic part with respect to the
@@ -1964,8 +1964,7 @@
           deterministic and one for the stochastic part. The first element of the
           pair simply computes the deterministic part while the second the stochastic
           one. Then, the second part also needs to calculate the random numbers in
-          order to simulate the stochastic process. We can now implement the do_step
-          method
+          order to simulate the stochastic process. We can now implement the <code class="computeroutput"><span class="identifier">do_step</span></code> method
         </p>
 <p>
 </p>
@@ -2009,7 +2008,65 @@
             </li>
 </ul></div>
 <p>
-          examples, with integrate function
+          Now, lets look how we use the new stepper. A nice example is the Ornstein-Uhlenbeck
+          process. It consists of a simple Brownian motion overlapped with an relaxation
+          process. Its SDE reads
+        </p>
+<p>
+          <span class="emphasis"><em>dx/dt = - x + &#958;</em></span>
+        </p>
+<p>
+          where &#958; is Gaussian white noise with standard deviation <span class="emphasis"><em>&#963;</em></span>.
+          Implementing the Ornstein-Uhlenbeck process is quite simple. We need two
+          functions or funtors - one for the deterministic and one for the stochastic
+          part:
+        </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">const</span> <span class="keyword">static</span> <span class="identifier">size_t</span> <span class="identifier">N</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">N</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">ornstein_det</span>
+<span class="special">{</span>
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">)</span> <span class="keyword">const</span>
+    <span class="special">{</span>
+        <span class="identifier">dxdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="special">-</span><span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">];</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">ornstein_stoch</span>
+<span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">mt19937</span> <span class="identifier">m_rng</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">normal_distribution</span><span class="special">&lt;&gt;</span> <span class="identifier">m_dist</span><span class="special">;</span>
+
+    <span class="identifier">ornstein_stoch</span><span class="special">(</span> <span class="keyword">double</span> <span class="identifier">sigma</span> <span class="special">)</span> <span class="special">:</span> <span class="identifier">m_rng</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">m_dist</span><span class="special">(</span> <span class="number">0.0</span> <span class="special">,</span> <span class="identifier">sigma</span> <span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">dxdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">m_dist</span><span class="special">(</span> <span class="identifier">m_rng</span> <span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+        </p>
+<p>
+          In the stochastic part we have used the Mersenne twister for the random
+          number generation and a Gaussian white noise generator <code class="computeroutput"><span class="identifier">normal_distribution</span></code>
+          with standard deviation <span class="emphasis"><em>&#963;</em></span>. Now, we can use the stochastic
+          Euler stepper with the integrate functions:
+        </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">double</span> <span class="identifier">dt</span> <span class="special">=</span> <span class="number">0.1</span><span class="special">;</span>
+<span class="identifier">state_type</span> <span class="identifier">x</span> <span class="special">=</span> <span class="special">{{</span> <span class="number">1.0</span> <span class="special">}};</span>
+<span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">stochastic_euler</span><span class="special">&lt;</span> <span class="identifier">N</span> <span class="special">&gt;()</span> <span class="special">,</span> <span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">ornstein_det</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">ornstein_stoch</span><span class="special">(</span> <span class="number">1.0</span> <span class="special">)</span> <span class="special">)</span> <span class="special">,</span>
+        <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">,</span> <span class="identifier">streaming_observer</span><span class="special">()</span> <span class="special">);</span>
+</pre>
+<p>
+        </p>
+<p>
+          Note, how we have used the <code class="computeroutput"><span class="identifier">make_pair</span></code>
+          function for the generation of the system function.
         </p>
 </div>
 </div>

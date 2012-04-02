@@ -1,3 +1,11 @@
 [section Using boost::range]
 
+Most steppers in odeint also accept the state give as a range. A range is sequence of values modelled by a range concept, see __boost_range for an overview over existing concepts and examples of ranges.
+
+state type mus not necessary be used in the steppers
+
+example
+
+table which steppers support boost::range and with which algebra
+
 [endsect]
