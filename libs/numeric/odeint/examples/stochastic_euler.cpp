@@ -6,40 +6,59 @@
 #include <boost/numeric/odeint.hpp>
 
 
-struct sys
-{
-    template< class State >
-    void operator()( const State &x , State &dxdt )
-    {
-        dxdt[0] = -x[0];
-    }
-};
-
+/*
 //[ stochastic_euler_class_definition
-class stochastic_euler
+template< size_t N > class stochastic_euler
 {
 public:
 
-    typedef std::vector< double > state_type;
-    typedef std::vector< double > deriv_type;
+    typedef std::array< double , N > state_type;
+    typedef std::array< double , N > deriv_type;
     typedef double value_type;
     typedef double time_type;
     typedef unsigned short order_type;
     typedef boost::numeric::odeint::stepper_tag stepper_category;
 
+    static order_type order( void ) { return 1; }
+
     // ...
 };
 //]
+*/
+
+
+/*
+//[ stochastic_euler_do_step
+template< size_t N > class stochastic_euler
+{
+public:
+
+    // ...
+
+    template< class System >
+    void do_step( System system , state_type &x , time_type t , time_type dt ) const
+    {
+        deriv_type det , stoch ;
+        system.first( x , det );
+        system.second( x , stoch );
+        for( size_t i=0 ; i<x.size() ; ++i )
+            x[i] += dt * det[i] + sqrt( dt ) * stoch[i];
+    }
+};
+//]
+*/
+
 
 
 
 //[ stochastic_euler_class
+template< size_t N >
 class stochastic_euler
 {
 public:
 
-    typedef std::vector< double > state_type;
-    typedef std::vector< double > deriv_type;
+    typedef std::array< double , N > state_type;
+    typedef std::array< double , N > deriv_type;
     typedef double value_type;
     typedef double time_type;
     typedef unsigned short order_type;
@@ -48,32 +67,45 @@ public:
 
     static order_type order( void ) { return 1; }
 
-    template< class System , class State , class Time >
-    void do_step( System system , State &x , Time t , Time dt ) const
+    template< class System >
+    void do_step( System system , state_type &x , time_type t , time_type dt ) const
     {
-        State dxdt;
-        system.first( x , dxdt );
+        deriv_type det , stoch ;
+        system.first( x , det );
+        system.second( x , stoch );
         for( size_t i=0 ; i<x.size() ; ++i )
-            x[i] += dt * dxdt[i] + sqrt( dt ) * system.second();
+            x[i] += dt * det[i] + sqrt( dt ) * stoch[i];
     }
 };
 //]
 
-template< class Rng , class Dist >
-struct gen
+
+
+//[ stochastic_euler_ornstein_uhlenbeck_def
+const static size_t N = 1;
+typedef std::array< double , N > state_type;
+
+struct ornstein_det
 {
-    Rng &rng;
-    Dist &dist;
-    gen( Rng &rng_ , Dist &dist_ ) : rng( rng_ ) , dist( dist_ ) { }
-    double operator()( void ) { return dist( rng ); }
+    void operator()( const state_type &x , state_type &dxdt ) const
+    {
+        dxdt[0] = -x[0];
+    }
 };
 
-template< class Rng , class Dist >
-gen< Rng , Dist > make_gen( Rng &rng , Dist &dist )
+struct ornstein_stoch
 {
-    return gen< Rng , Dist >( rng , dist );
-}
+    std::mt19937 m_rng;
+    std::normal_distribution<> m_dist;
 
+    ornstein_stoch( double sigma ) : m_rng() , m_dist( 0.0 , sigma ) { }
+
+    void operator()( const state_type &x , state_type &dxdt )
+    {
+        dxdt[0] = m_dist( m_rng );
+    }
+};
+//]
 
 struct streaming_observer
 {
@@ -84,23 +116,14 @@ struct streaming_observer
     }
 };
 
-using namespace std;
-using namespace boost::numeric::odeint;
-
-typedef std::array< double , 1 > state_type;
-
 int main( int argc , char **argv )
 {
-
-    mt19937 rng;
-    normal_distribution<> dist( 0.0 , 1.0 );
-
+    using namespace std;
+    using namespace boost::numeric::odeint;
 
     double dt = 0.1;
     state_type x = {{ 1.0 }};
-    streaming_observer obs;
-    cout << boost::is_same< streaming_observer , boost::numeric::odeint::null_observer >::value << endl;
-    integrate_const( stochastic_euler() , make_pair( sys() , make_gen( rng , dist ) ) , x , 0.0 , 10.0 , dt , obs );
+    integrate_const( stochastic_euler< N >() , make_pair( ornstein_det() , ornstein_stoch( 1.0 ) ) , x , 0.0 , 10.0 , dt , streaming_observer() );
 
     return 0;
 }
