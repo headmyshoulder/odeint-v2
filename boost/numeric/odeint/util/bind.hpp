@@ -40,6 +40,7 @@ struct unwrap_reference;
 
 namespace numeric {
 namespace odeint {
+namespace detail {
 
 #if BOOST_NUMERIC_ODEINT_CXX11 
 using ::std::bind;
@@ -73,6 +74,7 @@ using ::_1;
 using ::_2;
 #endif
 
+}
 }
 }
 }

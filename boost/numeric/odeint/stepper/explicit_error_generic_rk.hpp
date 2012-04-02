@@ -141,10 +141,10 @@ public:
     void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt ,
             const time_type &t , StateOut &out , const time_type &dt )
     {
-        //typedef typename odeint::unwrap_reference< System >::type unwrapped_system_type;
+        //typedef typename detail::unwrap_reference< System >::type unwrapped_system_type;
         //unwrapped_system_type &sys = system;
 
-        m_resizer.adjust_size( in , odeint::bind( &stepper_type::template resize_impl< StateIn > , odeint::ref( *this ) , odeint::_1 ) );
+        m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
 
         // actual calculation done in generic_rk.hpp
         m_rk_algorithm.do_step( stepper_base_type::m_algebra , system , in , dxdt , t , out , dt , m_x_tmp.m_v , m_F );

@@ -83,12 +83,12 @@ public :
         static const value_type val1 = static_cast< value_type >( 1.0 );
         static const value_type val05 = static_cast< value_type >( 0.5 );
 
-        m_resizer.adjust_size( in , odeint::bind( &stepper_type::template resize_impl< StateIn > , odeint::ref( *this ) , odeint::_1 ) );
+        m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
 
         const time_type h = dt / static_cast<time_type>( m_steps );
         const time_type h2 = static_cast<time_type>( 2.0 ) * h;
 
-        typename odeint::unwrap_reference< System >::type &sys = system;
+        typename detail::unwrap_reference< System >::type &sys = system;
 
         time_type th = t + h;
 
@@ -207,12 +207,12 @@ public :
         static const value_type val1 = static_cast< value_type >( 1.0 );
         static const value_type val05 = static_cast< value_type >( 0.5 );
 
-        m_resizer.adjust_size( in , odeint::bind( &stepper_type::template resize< StateIn > , odeint::ref( *this ) , odeint::_1 ) );
+        m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize< StateIn > , detail::ref( *this ) , detail::_1 ) );
 
         const time_type h = dt / static_cast<time_type>( m_steps );
         const time_type h2 = static_cast<time_type>( 2.0 ) * h;
 
-        typename odeint::unwrap_reference< System >::type &sys = system;
+        typename detail::unwrap_reference< System >::type &sys = system;
 
         time_type th = t + h;
 

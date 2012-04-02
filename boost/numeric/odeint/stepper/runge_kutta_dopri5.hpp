@@ -116,9 +116,9 @@ public :
         const value_type c5 = static_cast<value_type> ( -2187.0 ) / static_cast<value_type>( 6784.0 );
         const value_type c6 = static_cast<value_type> ( 11.0 ) / static_cast<value_type>( 84.0 );
 
-        typename odeint::unwrap_reference< System >::type &sys = system;
+        typename detail::unwrap_reference< System >::type &sys = system;
 
-        m_resizer.adjust_size( in , odeint::bind( &stepper_type::template resize_impl<StateIn> , odeint::ref( *this ) , odeint::_1 ) );
+        m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
 
         //m_x_tmp = x + dt*b21*dxdt
         stepper_base_type::m_algebra.for_each3( m_x_tmp.m_v , in , dxdt_in ,

@@ -42,7 +42,7 @@ Time integrate_n_steps(
         Time start_time , Time dt , size_t num_of_steps ,
         Observer observer , stepper_tag )
 {
-    typename odeint::unwrap_reference< Observer >::type &obs = observer;
+    typename detail::unwrap_reference< Observer >::type &obs = observer;
 
     Time time = start_time;
 
@@ -67,7 +67,7 @@ Time integrate_n_steps(
         Time start_time , Time dt , size_t num_of_steps ,
         Observer observer , controlled_stepper_tag )
 {
-    typename odeint::unwrap_reference< Observer >::type &obs = observer;
+    typename detail::unwrap_reference< Observer >::type &obs = observer;
 
     Time time = start_time;
     Time time_step = dt;
@@ -94,7 +94,7 @@ Time integrate_n_steps(
         Time start_time , Time dt , size_t num_of_steps ,
         Observer observer , dense_output_stepper_tag )
 {
-    typename odeint::unwrap_reference< Observer >::type &obs = observer;
+    typename detail::unwrap_reference< Observer >::type &obs = observer;
 
     Time time = start_time;
     const Time end_time = start_time + static_cast< typename detail::unit_value_type<Time>::type >(num_of_steps) * dt;

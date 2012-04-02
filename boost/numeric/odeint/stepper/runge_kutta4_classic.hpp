@@ -87,9 +87,9 @@ public :
 
         static const value_type val1 = static_cast< value_type >( 1.0 );
 
-        m_resizer.adjust_size( in , odeint::bind( &stepper_type::template resize_impl< StateIn > , odeint::ref( *this ) , odeint::_1 ) );
+        m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
 
-        typename odeint::unwrap_reference< System >::type &sys = system;
+        typename detail::unwrap_reference< System >::type &sys = system;
 
         const time_type dh = static_cast< value_type >( 0.5 ) * dt;
         const time_type th = t + dh;

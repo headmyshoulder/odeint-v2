@@ -129,14 +129,14 @@ public:
     template< class System , class StateInOut >
     void do_step( System system , const StateInOut &state , const time_type &t , const time_type &dt )
     {
-        typedef typename odeint::unwrap_reference< System >::type system_type;
+        typedef typename detail::unwrap_reference< System >::type system_type;
         do_step_impl( system , state , t , state , dt , typename is_pair< system_type >::type() );
     }
 
     template< class System , class StateInOut >
     void do_step( System system , StateInOut &state , const time_type &t , const time_type &dt )
     {
-        typedef typename odeint::unwrap_reference< System >::type system_type;
+        typedef typename detail::unwrap_reference< System >::type system_type;
         do_step_impl( system , state , t , state , dt , typename is_pair< system_type >::type() );
     }
 
@@ -151,13 +151,13 @@ public:
     template< class System , class CoorInOut , class MomentumInOut >
     void do_step( System system , CoorInOut &q , MomentumInOut &p , const time_type &t , const time_type &dt )
     {
-        do_step( system , std::make_pair( odeint::ref( q ) , odeint::ref( p ) ) , t , dt );
+        do_step( system , std::make_pair( detail::ref( q ) , detail::ref( p ) ) , t , dt );
     }
 
     template< class System , class CoorInOut , class MomentumInOut >
     void do_step( System system , const CoorInOut &q , const MomentumInOut &p , const time_type &t , const time_type &dt )
     {
-        do_step( system , std::make_pair( odeint::ref( q ) , odeint::ref( p ) ) , t , dt );
+        do_step( system , std::make_pair( detail::ref( q ) , detail::ref( p ) ) , t , dt );
     }
 
 
@@ -172,7 +172,7 @@ public:
     template< class System , class StateIn , class StateOut >
     void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt )
     {
-        typedef typename odeint::unwrap_reference< System >::type system_type;
+        typedef typename detail::unwrap_reference< System >::type system_type;
         do_step_impl( system , in , t , out , dt , typename is_pair< system_type >::type() );
     }
 
@@ -193,29 +193,29 @@ private:
     template< class System , class StateIn , class StateOut >
     void do_step_impl( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt , boost::mpl::true_ )
     {
-        typedef typename odeint::unwrap_reference< System >::type system_type;
-        typedef typename odeint::unwrap_reference< typename system_type::first_type >::type coor_deriv_func_type;
-        typedef typename odeint::unwrap_reference< typename system_type::second_type >::type momentum_deriv_func_type;
+        typedef typename detail::unwrap_reference< System >::type system_type;
+        typedef typename detail::unwrap_reference< typename system_type::first_type >::type coor_deriv_func_type;
+        typedef typename detail::unwrap_reference< typename system_type::second_type >::type momentum_deriv_func_type;
         system_type &sys = system;
         coor_deriv_func_type &coor_func = sys.first;
         momentum_deriv_func_type &momentum_func = sys.second;
 
-        typedef typename odeint::unwrap_reference< StateIn >::type state_in_type;
-        typedef typename odeint::unwrap_reference< typename state_in_type::first_type >::type coor_in_type;
-        typedef typename odeint::unwrap_reference< typename state_in_type::second_type >::type momentum_in_type;
+        typedef typename detail::unwrap_reference< StateIn >::type state_in_type;
+        typedef typename detail::unwrap_reference< typename state_in_type::first_type >::type coor_in_type;
+        typedef typename detail::unwrap_reference< typename state_in_type::second_type >::type momentum_in_type;
         const state_in_type &state_in = in;
         const coor_in_type &coor_in = state_in.first;
         const momentum_in_type &momentum_in = state_in.second;
 
-        typedef typename odeint::unwrap_reference< StateOut >::type state_out_type;
-        typedef typename odeint::unwrap_reference< typename state_out_type::first_type >::type coor_out_type;
-        typedef typename odeint::unwrap_reference< typename state_out_type::second_type >::type momentum_out_type;
+        typedef typename detail::unwrap_reference< StateOut >::type state_out_type;
+        typedef typename detail::unwrap_reference< typename state_out_type::first_type >::type coor_out_type;
+        typedef typename detail::unwrap_reference< typename state_out_type::second_type >::type momentum_out_type;
         state_out_type &state_out = out;
         coor_out_type &coor_out = state_out.first;
         momentum_out_type &momentum_out = state_out.second;
 
-        m_dqdt_resizer.adjust_size( coor_in , odeint::bind( &internal_stepper_base_type::template resize_dqdt< coor_in_type > , odeint::ref( *this ) , odeint::_1 ) );
-        m_dpdt_resizer.adjust_size( momentum_in , odeint::bind( &internal_stepper_base_type::template resize_dpdt< momentum_in_type > , odeint::ref( *this ) , odeint::_1 ) );
+        m_dqdt_resizer.adjust_size( coor_in , detail::bind( &internal_stepper_base_type::template resize_dqdt< coor_in_type > , detail::ref( *this ) , detail::_1 ) );
+        m_dpdt_resizer.adjust_size( momentum_in , detail::bind( &internal_stepper_base_type::template resize_dpdt< momentum_in_type > , detail::ref( *this ) , detail::_1 ) );
 
         // ToDo: check sizes?
 
@@ -247,26 +247,26 @@ private:
     template< class System , class StateIn , class StateOut >
     void do_step_impl( System system , const StateIn &in , const time_type & /* t */ , StateOut &out , const time_type &dt , boost::mpl::false_ )
     {
-        typedef typename odeint::unwrap_reference< System >::type momentum_deriv_func_type;
+        typedef typename detail::unwrap_reference< System >::type momentum_deriv_func_type;
         momentum_deriv_func_type &momentum_func = system;
 
-        typedef typename odeint::unwrap_reference< StateIn >::type state_in_type;
-        typedef typename odeint::unwrap_reference< typename state_in_type::first_type >::type coor_in_type;
-        typedef typename odeint::unwrap_reference< typename state_in_type::second_type >::type momentum_in_type;
+        typedef typename detail::unwrap_reference< StateIn >::type state_in_type;
+        typedef typename detail::unwrap_reference< typename state_in_type::first_type >::type coor_in_type;
+        typedef typename detail::unwrap_reference< typename state_in_type::second_type >::type momentum_in_type;
         const state_in_type &state_in = in;
         const coor_in_type &coor_in = state_in.first;
         const momentum_in_type &momentum_in = state_in.second;
 
-        typedef typename odeint::unwrap_reference< StateOut >::type state_out_type;
-        typedef typename odeint::unwrap_reference< typename state_out_type::first_type >::type coor_out_type;
-        typedef typename odeint::unwrap_reference< typename state_out_type::second_type >::type momentum_out_type;
+        typedef typename detail::unwrap_reference< StateOut >::type state_out_type;
+        typedef typename detail::unwrap_reference< typename state_out_type::first_type >::type coor_out_type;
+        typedef typename detail::unwrap_reference< typename state_out_type::second_type >::type momentum_out_type;
         state_out_type &state_out = out;
         coor_out_type &coor_out = state_out.first;
         momentum_out_type &momentum_out = state_out.second;
 
 
-        m_dqdt_resizer.adjust_size( coor_in , odeint::bind( &internal_stepper_base_type::template resize_dqdt< coor_in_type > , odeint::ref( *this ) , odeint::_1 ) );
-        m_dpdt_resizer.adjust_size( momentum_in , odeint::bind( &internal_stepper_base_type::template resize_dpdt< momentum_in_type > , odeint::ref( *this ) , odeint::_1 ) );
+        m_dqdt_resizer.adjust_size( coor_in , detail::bind( &internal_stepper_base_type::template resize_dqdt< coor_in_type > , detail::ref( *this ) , detail::_1 ) );
+        m_dpdt_resizer.adjust_size( momentum_in , detail::bind( &internal_stepper_base_type::template resize_dpdt< momentum_in_type > , detail::ref( *this ) , detail::_1 ) );
 
 
         // ToDo: check sizes?

@@ -9,7 +9,7 @@
 
 #include <iostream>
 #include <boost/array.hpp>
-
+#include <boost/bind.hpp>
 #include <boost/numeric/odeint.hpp>
 
 using namespace std;

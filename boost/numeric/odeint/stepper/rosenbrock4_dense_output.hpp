@@ -110,7 +110,7 @@ public:
     template< class StateType >
     void initialize( const StateType &x0 , const time_type &t0 , const time_type &dt0 )
     {
-        m_resizer.adjust_size( x0 , odeint::bind( &dense_output_stepper_type::template resize_impl< StateType > , odeint::ref( *this ) , odeint::_1 ) );
+        m_resizer.adjust_size( x0 , detail::bind( &dense_output_stepper_type::template resize_impl< StateType > , detail::ref( *this ) , detail::_1 ) );
         *m_current_state = x0;
         m_t = t0;
         m_dt = dt0;

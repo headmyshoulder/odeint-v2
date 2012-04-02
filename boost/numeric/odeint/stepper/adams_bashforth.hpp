@@ -242,10 +242,10 @@ public :
     template< class ExplicitStepper , class System , class StateIn >
     void initialize( ExplicitStepper explicit_stepper , System system , StateIn &x , time_type &t , const time_type &dt )
     {
-        typename odeint::unwrap_reference< ExplicitStepper >::type &stepper = explicit_stepper;
-        typename odeint::unwrap_reference< System >::type &sys = system;
+        typename detail::unwrap_reference< ExplicitStepper >::type &stepper = explicit_stepper;
+        typename detail::unwrap_reference< System >::type &sys = system;
 
-        m_resizer.adjust_size( x , odeint::bind( &stepper_type::template resize_impl<StateIn> , odeint::ref( *this ) , odeint::_1 ) );
+        m_resizer.adjust_size( x , detail::bind( &stepper_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
 
         for( size_t i=0 ; i<steps-1 ; ++i )
         {
@@ -260,7 +260,7 @@ public :
     template< class System , class StateIn >
     void initialize( System system , StateIn &x , time_type &t , const time_type &dt )
     {
-        initialize( odeint::ref( m_initializing_stepper ) , system , x , t , dt );
+        initialize( detail::ref( m_initializing_stepper ) , system , x , t , dt );
     }
 
     void reset( void )
@@ -282,8 +282,8 @@ private:
     template< class System , class StateIn , class StateOut >
     void do_step_impl( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt )
     {
-        typename odeint::unwrap_reference< System >::type &sys = system;
-        if( m_resizer.adjust_size( in , odeint::bind( &stepper_type::template resize_impl<StateIn> , odeint::ref( *this ) , odeint::_1 ) ) )
+        typename detail::unwrap_reference< System >::type &sys = system;
+        if( m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) ) )
         {
             m_steps_initialized = 0;
         }
