@@ -31,11 +31,9 @@
 namespace boost {
 
 #if BOOST_NUMERIC_ODEINT_CXX11
-template<typename T>
-struct reference_wrapper;
+template<typename T> class reference_wrapper;
 
-template<typename T>
-struct unwrap_reference;
+template<typename T> class unwrap_reference;
 #endif
 
 namespace numeric {
