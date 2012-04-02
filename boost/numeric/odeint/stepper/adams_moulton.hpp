@@ -1,5 +1,25 @@
 /*
  [auto_generated]
+ ../../../../boost/numeric/odeint/stepper/adams_moulton.hpp
+ 
+ [begin_description]
+ 
+ [end_description]
+ 
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+ 
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+*/
+
+
+#ifndef ____________BOOST_NUMERIC_ODEINT_STEPPER_ADAMS_MOULTON_HPP_INCLUDED
+#define ____________BOOST_NUMERIC_ODEINT_STEPPER_ADAMS_MOULTON_HPP_INCLUDED
+
+/*
+ [auto_generated]
  boost/numeric/odeint/stepper/adams_moulton.hpp
 
  [begin_description]
@@ -20,8 +40,7 @@
 #define BOOST_NUMERIC_ODEINT_STEPPER_ADAMS_MOULTON_HPP_INCLUDED
 
 
-#include <boost/ref.hpp>
-#include <boost/bind.hpp>
+#include <boost/numeric/odeint/util/bind.hpp>
 
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
@@ -135,8 +154,8 @@ public :
     template< class System , class StateIn , class StateOut , class ABBuf >
     void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt , const ABBuf &buf )
     {
-        typename boost::unwrap_reference< System >::type &sys = system;
-        m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize_impl<StateIn> , boost::ref( *this ) , _1 ) );
+        typename odeint::unwrap_reference< System >::type &sys = system;
+        m_resizer.adjust_size( in , odeint::bind( &stepper_type::template resize_impl<StateIn> , odeint::ref( *this ) , odeint::_1 ) );
         sys( in , m_dxdt.m_v , t );
         detail::adams_moulton_call_algebra< steps , algebra_type , operations_type >()( m_algebra , in , out , m_dxdt.m_v , buf , m_coefficients , dt );
     }
@@ -144,8 +163,8 @@ public :
     template< class System , class StateIn , class StateOut , class ABBuf >
     void do_step( System system , const StateIn &in , const time_type &t , const StateOut &out , const time_type &dt , const ABBuf &buf )
     {
-        typename boost::unwrap_reference< System >::type &sys = system;
-        m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize_impl<StateIn> , boost::ref( *this ) , _1 ) );
+        typename odeint::unwrap_reference< System >::type &sys = system;
+        m_resizer.adjust_size( in , odeint::bind( &stepper_type::template resize_impl<StateIn> , odeint::ref( *this ) , odeint::_1 ) );
         sys( in , m_dxdt.m_v , t );
         detail::adams_moulton_call_algebra< steps , algebra_type , operations_type >()( m_algebra , in , out , m_dxdt.m_v , buf , m_coefficients , dt );
     }
@@ -194,3 +213,4 @@ protected:
 
 
 #endif // BOOST_NUMERIC_ODEINT_STEPPER_ADAMS_MOULTON_HPP_INCLUDED
+#endif // ____________BOOST_NUMERIC_ODEINT_STEPPER_ADAMS_MOULTON_HPP_INCLUDED

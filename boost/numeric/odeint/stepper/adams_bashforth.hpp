@@ -1,5 +1,25 @@
 /*
  [auto_generated]
+ ../../../../boost/numeric/odeint/stepper/adams_bashforth.hpp
+ 
+ [begin_description]
+ 
+ [end_description]
+ 
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+ 
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+*/
+
+
+#ifndef ____________BOOST_NUMERIC_ODEINT_STEPPER_ADAMS_BASHFORTH_HPP_INCLUDED
+#define ____________BOOST_NUMERIC_ODEINT_STEPPER_ADAMS_BASHFORTH_HPP_INCLUDED
+
+/*
+ [auto_generated]
  boost/numeric/odeint/stepper/adams_bashforth.hpp
 
  [begin_description]
@@ -20,8 +40,7 @@
 #define BOOST_NUMERIC_ODEINT_STEPPER_ADAMS_BASHFORTH_HPP_INCLUDED
 
 
-#include <boost/ref.hpp>
-#include <boost/bind.hpp>
+#include <boost/numeric/odeint/util/bind.hpp>
 
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
@@ -223,10 +242,10 @@ public :
     template< class ExplicitStepper , class System , class StateIn >
     void initialize( ExplicitStepper explicit_stepper , System system , StateIn &x , time_type &t , const time_type &dt )
     {
-        typename boost::unwrap_reference< ExplicitStepper >::type &stepper = explicit_stepper;
-        typename boost::unwrap_reference< System >::type &sys = system;
+        typename odeint::unwrap_reference< ExplicitStepper >::type &stepper = explicit_stepper;
+        typename odeint::unwrap_reference< System >::type &sys = system;
 
-        m_resizer.adjust_size( x , boost::bind( &stepper_type::template resize_impl<StateIn> , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( x , odeint::bind( &stepper_type::template resize_impl<StateIn> , odeint::ref( *this ) , odeint::_1 ) );
 
         for( size_t i=0 ; i<steps-1 ; ++i )
         {
@@ -241,7 +260,7 @@ public :
     template< class System , class StateIn >
     void initialize( System system , StateIn &x , time_type &t , const time_type &dt )
     {
-        initialize( boost::ref( m_initializing_stepper ) , system , x , t , dt );
+        initialize( odeint::ref( m_initializing_stepper ) , system , x , t , dt );
     }
 
     void reset( void )
@@ -263,8 +282,8 @@ private:
     template< class System , class StateIn , class StateOut >
     void do_step_impl( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt )
     {
-        typename boost::unwrap_reference< System >::type &sys = system;
-        if( m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize_impl<StateIn> , boost::ref( *this ) , _1 ) ) )
+        typename odeint::unwrap_reference< System >::type &sys = system;
+        if( m_resizer.adjust_size( in , odeint::bind( &stepper_type::template resize_impl<StateIn> , odeint::ref( *this ) , odeint::_1 ) ) )
         {
             m_steps_initialized = 0;
         }
@@ -323,3 +342,4 @@ protected:
 
 
 #endif // BOOST_NUMERIC_ODEINT_STEPPER_ADAMS_BASHFORTH_HPP_INCLUDED
+#endif // ____________BOOST_NUMERIC_ODEINT_STEPPER_ADAMS_BASHFORTH_HPP_INCLUDED
