@@ -22,18 +22,206 @@
 </h3></div></div></div>
 <p>
         Most steppers in odeint also accept the state give as a range. A range is
-        sequence of values modelled by a range concept, see <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
-        for an overview over existing concepts and examples of ranges.
+        sequence of values modelled by a range concept. See <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
+        for an overview over existing concepts and examples of ranges. This means
+        that the <code class="computeroutput"><span class="identifier">state_type</span></code> of the
+        stepper must not necessarily used to call the <code class="computeroutput"><span class="identifier">do_step</span></code>
+        method.
       </p>
 <p>
-        state type mus not necessary be used in the steppers
+        One use case for <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
+        in odeint has been shown in <a class="link" href="../tutorial/chaotic_systems_and_lyapunov_exponents.html" title="Chaotic systems and Lyapunov exponents">Chaotic
+        system</a> where the state consists of two parts: one for the original
+        state and one for the perturbations. The ranges are used to initialize (solve)
+        only the system part where the perturbation part is not touched. After that
+        the complete state including also the perturbations is solved. Another use
+        case is a system consisting of coupled units where you want to initialize
+        each unit separately with the ODE of the uncoupled unit. An example is a
+        chain of coupled van-der-Pol-oscillators which are initialized uniformily
+        from the uncoupled van-der-Pol-oscillator. Then you can use <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
+        to solve only one individual oscillator in the chain.
       </p>
 <p>
-        example
+        An example was given in <a class="link" href="../tutorial/chaotic_systems_and_lyapunov_exponents.html" title="Chaotic systems and Lyapunov exponents">Chaotic
+        system</a> tutorial. Using Boost.Range usually means that your system
+        function needs to adapt to the iterators of Boost.Range. That is, your function
+        is called with a range and you need to get the iterators from that range.
+        This can easily be done. You have to implement your system as a class or
+        a struct and you have to templatize the <code class="computeroutput"><span class="keyword">operator</span><span class="special">()</span></code>. Then you can use the <code class="computeroutput"><span class="identifier">range_iterator</span></code>-meta
+        function and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">begin</span></code> and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">end</span></code> to
+        obtain the iterators of your range:
       </p>
 <p>
-        table which steppers support boost::range and with which algebra
+</p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">sys</span>
+<span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">State</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Deriv</span> <span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">x_</span> <span class="special">,</span> <span class="identifier">Deriv</span> <span class="special">&amp;</span><span class="identifier">dxdt_</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span> <span class="keyword">const</span>
+    <span class="special">{</span>
+         <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">range_iterator</span><span class="special">&lt;</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">x</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">begin</span><span class="special">(</span> <span class="identifier">x_</span> <span class="special">);</span>
+         <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">range_iterator</span><span class="special">&lt;</span> <span class="identifier">Deriv</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">dxdt</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">begin</span><span class="special">(</span> <span class="identifier">dxdt_</span> <span class="special">);</span>
+
+         <span class="comment">// fill dxdt</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
       </p>
+<p>
+        If your range is a random access-range you can also apply the bracket operator
+        to the iterator to access the elements in the range:
+</p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">sys</span>
+<span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">State</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Deriv</span> <span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">x_</span> <span class="special">,</span> <span class="identifier">Deriv</span> <span class="special">&amp;</span><span class="identifier">dxdt_</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span> <span class="keyword">const</span>
+    <span class="special">{</span>
+         <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">range_iterator</span><span class="special">&lt;</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">x</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">begin</span><span class="special">(</span> <span class="identifier">x_</span> <span class="special">);</span>
+         <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">range_iterator</span><span class="special">&lt;</span> <span class="identifier">Deriv</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">dxdt</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">begin</span><span class="special">(</span> <span class="identifier">dxdt_</span> <span class="special">);</span>
+
+         <span class="identifier">dxdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">f1</span><span class="special">(</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">,</span> <span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">);</span>
+         <span class="identifier">dxdt</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">f2</span><span class="special">(</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">,</span> <span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+      </p>
+<p>
+        The following two tables show which steppers and which algebras are compatible
+        with <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>.
+      </p>
+<div class="table">
+<a name="boost_sandbox_numeric_odeint.odeint_in_detail.using_boost__range.steppers_supporting_boost_range"></a><p class="title"><b>Table&#160;1.10.&#160;Steppers supporting Boost.Range</b></p>
+<div class="table-contents"><table class="table" summary="Steppers supporting Boost.Range">
+<colgroup><col></colgroup>
+<thead><tr><th>
+                <p>
+                  Stepper
+                </p>
+              </th></tr></thead>
+<tbody>
+<tr><td>
+                <p>
+                  adams_bashforth_moulton
+                </p>
+              </td></tr>
+<tr><td>
+                <p>
+                  bulirsch_stoer_dense_out
+                </p>
+              </td></tr>
+<tr><td>
+                <p>
+                  bulirsch_stoer
+                </p>
+              </td></tr>
+<tr><td>
+                <p>
+                  controlled_runge_kutta
+                </p>
+              </td></tr>
+<tr><td>
+                <p>
+                  dense_output_runge_kutta
+                </p>
+              </td></tr>
+<tr><td>
+                <p>
+                  euler
+                </p>
+              </td></tr>
+<tr><td>
+                <p>
+                  explicit_error_generic_rk
+                </p>
+              </td></tr>
+<tr><td>
+                <p>
+                  explicit_generic_rk
+                </p>
+              </td></tr>
+<tr><td>
+                <p>
+                  rosenbrock4_controller
+                </p>
+              </td></tr>
+<tr><td>
+                <p>
+                  rosenbrock4_dense_output
+                </p>
+              </td></tr>
+<tr><td>
+                <p>
+                  rosenbrock4
+                </p>
+              </td></tr>
+<tr><td>
+                <p>
+                  runge_kutta4_classic
+                </p>
+              </td></tr>
+<tr><td>
+                <p>
+                  runge_kutta4
+                </p>
+              </td></tr>
+<tr><td>
+                <p>
+                  runge_kutta_cash_karp54_classic
+                </p>
+              </td></tr>
+<tr><td>
+                <p>
+                  runge_kutta_cash_karp54
+                </p>
+              </td></tr>
+<tr><td>
+                <p>
+                  runge_kutta_dopri5
+                </p>
+              </td></tr>
+<tr><td>
+                <p>
+                  runge_kutta_fehlberg78
+                </p>
+              </td></tr>
+<tr><td>
+                <p>
+                  symplectic_euler
+                </p>
+              </td></tr>
+<tr><td>
+                <p>
+                  symplectic_rkn_sb3a_mclachlan
+                </p>
+              </td></tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="table">
+<a name="boost_sandbox_numeric_odeint.odeint_in_detail.using_boost__range.algebra_supporting_boost_range"></a><p class="title"><b>Table&#160;1.11.&#160;Algebra supporting Boost.Range</b></p>
+<div class="table-contents"><table class="table" summary="Algebra supporting Boost.Range">
+<colgroup><col></colgroup>
+<thead><tr><th>
+                <p>
+                  algebra
+                </p>
+              </th></tr></thead>
+<tbody>
+<tr><td>
+                <p>
+                  range_algebra
+                </p>
+              </td></tr>
+<tr><td>
+                <p>
+                  thrust_algebra
+                </p>
+              </td></tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

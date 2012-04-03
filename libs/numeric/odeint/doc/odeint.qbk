@@ -66,6 +66,8 @@
     [link boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions integrate functions]]
 [def __tut_solar_system
     [link boost_sandbox_numeric_odeint.tutorial.solar_system Solar System]]
+[def __tut_chaotic_system
+    [link boost_sandbox_numeric_odeint.tutorial.chaotic_systems_and_lyapunov_exponents Chaotic system]]
 [def __using_steppers
     [link boost_sandbox_numeric_odeint.odeint_in_detail.steppers.using_steppers Using steppers]]
 [def __generation_functions
