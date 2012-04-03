@@ -87,7 +87,6 @@
           website.
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="comment">//change this to float if your device does not support double computation</span>
 <span class="keyword">typedef</span> <span class="keyword">double</span> <span class="identifier">value_type</span><span class="special">;</span>
@@ -103,7 +102,7 @@
           a calculation on the GPU you usually have to call a global function like
           <code class="computeroutput"><span class="identifier">thrust</span><span class="special">::</span><span class="identifier">for_each</span></code>, <code class="computeroutput"><span class="identifier">thrust</span><span class="special">::</span><span class="identifier">reduce</span></code>,
           ... with an appropriate local functor which performs the basic operation.
-          An example is 
+          An example is
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">add_two</span>
 <span class="special">{</span>
@@ -138,7 +137,6 @@
           The mean field is calculated in a class <code class="computeroutput"><span class="identifier">mean_field_calculator</span></code>
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">mean_field_calculator</span>
 <span class="special">{</span>
@@ -192,7 +190,6 @@
           GPU as well as on the CPU. The line
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">value_type</span> <span class="identifier">sin_sum</span> <span class="special">=</span> <span class="identifier">thrust</span><span class="special">::</span><span class="identifier">reduce</span><span class="special">(</span>
         <span class="identifier">thrust</span><span class="special">::</span><span class="identifier">make_transform_iterator</span><span class="special">(</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">sin_functor</span><span class="special">()</span> <span class="special">)</span> <span class="special">,</span>
@@ -208,7 +205,6 @@
           The system function is defined via
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">phase_oscillator_ensemble</span>
 <span class="special">{</span>
@@ -264,7 +260,6 @@
           thrust algebra:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">runge_kutta4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">value_type</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">value_type</span> <span class="special">,</span> <span class="identifier">thrust_algebra</span> <span class="special">,</span> <span class="identifier">thrust_operations</span> <span class="special">&gt;</span> <span class="identifier">stepper_type</span><span class="special">;</span>
 </pre>
@@ -274,7 +269,6 @@
           Of course, you can also use a controlled or dense output stepper, e.g.
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">value_type</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">value_type</span> <span class="special">,</span> <span class="identifier">thrust_algebra</span> <span class="special">,</span> <span class="identifier">thrust_operations</span> <span class="special">&gt;</span> <span class="identifier">stepper_type</span><span class="special">;</span>
 </pre>
@@ -285,14 +279,12 @@
           an instance of the rhs class and using an integration function:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">phase_oscillator_ensemble</span> <span class="identifier">ensemble</span><span class="special">(</span> <span class="identifier">N</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">);</span>
 </pre>
 <p>
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">size_t</span> <span class="identifier">steps1</span> <span class="special">=</span> <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">make_controlled</span><span class="special">(</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="identifier">stepper_type</span><span class="special">()</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">ensemble</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="identifier">t_transients</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
 </pre>
@@ -334,7 +326,6 @@
           in front. The full system class is:
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="comment">//change this to host_vector&lt; ... &gt; of you want to run on CPU</span>
 <span class="keyword">typedef</span> <span class="identifier">thrust</span><span class="special">::</span><span class="identifier">device_vector</span><span class="special">&lt;</span> <span class="identifier">value_type</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
@@ -423,7 +414,6 @@
           current state, hence the phase of each oscillator.
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="comment">// create initial conditions and omegas on host:</span>
 <span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">value_type</span> <span class="special">&gt;</span> <span class="identifier">x_host</span><span class="special">(</span> <span class="identifier">N</span> <span class="special">);</span>
@@ -486,7 +476,6 @@
           <span class="special">&gt;</span></code>.
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">value_type</span> <span class="special">&gt;</span> <span class="identifier">beta_host</span><span class="special">(</span> <span class="identifier">N</span> <span class="special">);</span>
 <span class="keyword">const</span> <span class="identifier">value_type</span> <span class="identifier">beta_min</span> <span class="special">=</span> <span class="number">0.0</span> <span class="special">,</span> <span class="identifier">beta_max</span> <span class="special">=</span> <span class="number">56.0</span><span class="special">;</span>
@@ -504,7 +493,6 @@
           calculates one particular realization of the Lorenz ensemble
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">lorenz_system</span>
 <span class="special">{</span>
@@ -586,7 +574,6 @@
           which is used within this observer is defined
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">lyap_functor</span>
 <span class="special">{</span>
@@ -626,7 +613,6 @@
           and written to <code class="computeroutput"><span class="identifier">stdout</span></code>.
         </p>
 <p>
-          
 </p>
 <pre class="programlisting"><span class="identifier">state_type</span> <span class="identifier">x</span><span class="special">(</span> <span class="number">6</span> <span class="special">*</span> <span class="identifier">N</span> <span class="special">);</span>
 

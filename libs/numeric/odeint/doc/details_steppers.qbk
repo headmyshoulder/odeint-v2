@@ -221,7 +221,7 @@ We will illustrate how to write your own stepper with the example of the stochas
 
 ['dx/dt = f(x) + g(x) __xi(t)]
 
-where ['__xi] is Gaussian white noise with zero mean and a standard deviation ['__sigma]. ['f(x)] is said to be the deterministic part while [' g(x) __xi] is the noisy part. In case ['g(x)] is independent of ['x] the SDE is said to have  additive noise. It is not possible to solve SDE with the classical solvers for ODEs since the noisy part of the SDE has to be scaled differently then the deterministic part with respect to the time step. BUt there exist many solvers for SDEs. A classical and easy method is the stochastic euler solver. It works by iterating
+where ['__xi] is Gaussian white noise with zero mean and a standard deviation ['__sigma(t)]. ['f(x)] is said to be the deterministic part while [' g(x) __xi] is the noisy part. In case ['g(x)] is independent of ['x] the SDE is said to have  additive noise. It is not possible to solve SDE with the classical solvers for ODEs since the noisy part of the SDE has to be scaled differently then the deterministic part with respect to the time step. BUt there exist many solvers for SDEs. A classical and easy method is the stochastic euler solver. It works by iterating
 
 ['x(t+__Delta t) = x(t) + __Delta t f(x(t)) + __Delta t[super 1/2] g(x) __xi(t)]
 
@@ -231,17 +231,26 @@ Now we will implement this method. We will call the stepper `stochastic_euler`. 
 
 [stochastic_euler_class_definition]
 
-The types are needed in order to fullfil the stepper concept. An internal state is not needed in the stochastic euler, there are no temporaries needed during each step. So, in principle `state_type` and `deriv_type` are not needed here. Nevertheless, they must be present in order to fullfil the __stepper_concept and `std::vector< double >` is a good general candidate for the state and deriv type.
+The types are needed in order to fulfill the stepper concept. As internal state and deriv type we use simple arrays in the stochastic euler, they are needed for the temporaries. The stepper has the order one which is returned from the `order()` function.
 
+The system functions needs to calculate the deterministic and the stochastic part of our stochastic differential equation. So it might be suitable that the system function itself is a pair of functions, one for computing the deterministic and one for the stochastic part. The first element of the pair simply computes the deterministic part while the second the stochastic one. Then, the second part also needs to calculate the random numbers in order to simulate the stochastic process. We can now implement the `do_step` method
 
+[stochastic_euler_do_step]
 
+This is all. It is quite simple and the stochastic euler stepper implement here is quite general. Of course it can be enhanced, for example
 
+* use of operations and algebras as well as the resizing mechanism for maximal flexibility and portability
+* use of `boost::ref` for the system functions
+* use of `boost::range` for the state type in the `do_step` method
+* ...
 
-System function
+Now, lets look how we use the new stepper. A nice example is the Ornstein-Uhlenbeck process. It consists of a simple Brownian motion overlapped with an relaxation process. Its SDE reads
 
-steppers body
+['dx/dt = - x + __xi] 
 
-do_step method
+where __xi is Gaussian white noise with standard deviation ['__sigma].
+
+[stochastic_euler_ornstein_uhlenbeck_det]
 
 examples, with integrate function
 
