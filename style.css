@@ -13,22 +13,10 @@ a:hover {
     text-align : right;
 }
 
-#beige {
-    color : #825b36;
-    font-weight : normal;
-}
-
 #big {
     
     width : 280px;
     margin-left : 180px; 
-}
-
-#blue {
-    
-    color : blue;
-    font-weight : normal;
-    
 }
 
 body {
@@ -40,7 +28,7 @@ body {
    text-align : center;
 }
 
-#code {
+pre.code {
     font-family : courier, serif;
     font-size : 12px;
     text-align : left ;
@@ -48,30 +36,11 @@ body {
     border : solid 1px black;
 }
 
-/* @font-face { D�finition d'une nouvelle police nomm�e Blair
-    font-family: 'Blair';
-    src: url('font/blair.eot');
-    src: url('font/blair.eot?#iefix') format('embedded-opentype'),
-         url('font/blair.woff') format('woff'),
-         url('font/blair.ttf') format('truetype'),
-         url('font/blair') format('svg');
-}*/
-
 @font-face {
   font-family: Blair;
   src: url('font/blair.eot') , url('font/blair.eot?#iefix') format('embedded-opentype'), url('font/blair.woff') format('woff'), url('font/blair.ttf') format('truetype') , url('font/blair.svg') format("svg");
 }
 
-/*
-@font-face {
-    font-family: 'Blairf';
-    src: url('font/blairf.eot');
-    src: url('font/blairf.eot?#iefix') format('embedded-opentype'),
-         url('font/blairf.woff') format('woff'),
-         url('font/blairf.ttf') format('truetype'),
-         url('font/blairf') format('svg');
-}
-*/
 @font-face {
   font-family: Blairf;
   /*src: local('☺'),*/
@@ -104,20 +73,10 @@ footer a:hover {
 }
 
 
-
-
-
-
 footer td {
     width : 217px;
      font-style : italic;
     text-align : center;
-}
-
-#green {
-    color : green;
-    font-weight : normal;
-    
 }
 
 h1
@@ -174,12 +133,6 @@ h2 {
   border: 0;
 }
 
-#maroon {
-    color : maroon;
-    font-weight : normal;
-    
-}
-
 nav {
     font-weight : normal;
     display : block;
@@ -204,19 +157,6 @@ nav ul li {
 nav ul li a {
     color : black;
     font-weight : normal;
-}
-
-
-#olive {
-    color : olive;
-    font-weight : normal;
-    
-}
-
-#orange {
-    color : #ff7200;
-    font-weight : normal;
-    
 }
 
 p
@@ -258,3 +198,18 @@ ul a {
 ul a:hover {
     text-decoration : underline;
 }
+
+
+/* source code formats */
+.comment { color: #999999; font-style: italic; }
+.pre { color: #000099; }
+.string { color: #009900; }
+.char { color: #009900; }
+.float { color: #996600; }
+.int { color: #999900; }
+.bool { color: #000000; font-weight: bold; }
+.type { color: #FF6633; }
+.flow { color: #FF0000; }
+.keyword { color: #990000; }
+.operator { color: #663300; font-weight: bold; }
+.operator { color: #663300; font-weight: bold; }

@@ -8,87 +8,95 @@ title: odeint - Examples
       
 <p>Here you find some short examples showing how quick and easy odeint can be used to implement numerical simulations. For a more detailed description please vist the <a href="http://headmyshoulder.github.com/odeint-v2/doc/index.html" target="_blank" >docs</a>.<br /><br />
 
- - <a href="#lorenzsystem">LORENZ SYSTEM </a>: 30 lines of C++ to generate a trajectory on the <a href="http://en.wikipedia.org/wiki/Lorenz_attractor" target="_blank">Lorenz attractor</a><br />
- <!-- - <a href="#example2">EXAMPLE 2 </a>: 20 lines of C++ to generate a trajectory on the blabla<br /><br /><br />-->
+ - <a href="#lorenzsystem">Lorenz System</a>: 30 lines of C++ to generate a trajectory on the <a href="http://en.wikipedia.org/wiki/Lorenz_attractor" target="_blank">Lorenz attractor</a><br />
+ - <a href="#simple1dexample">Simple 1D ODE </a>: A small example showing the integration of a simple 1D system.<br />
 </p>
 
 
   <div id="lorenzsystem">
   	<h2>Lorenz System</h2>
 	<p>30 lines of C++ to generate a trajectory on the <a href="http://en.wikipedia.org/wiki/Lorenz_attractor" target="_blank">Lorenz attractor</a>. </p>
-    <p id="code"><b id="blue">#include <&nbsp;iostream ><br />
-#include <&nbsp;boost/array.hpp ><br />
-#include <&nbsp;boost/numeric/odeint.hpp ><br /></b>
+    <pre class="code"><span class="pre">#include &lt;iostream&gt;
+#include &lt;boost/array.hpp&gt;
+
+#include &lt;boost/numeric/odeint.hpp&gt;
+</span><span class="keyword">
+using namespace</span> std<span class="operator">;</span><span class="keyword">
+using namespace</span> boost<span class="operator">::</span>numeric<span class="operator">::</span>odeint<span class="operator">;</span><span class="keyword">
+
+const</span><span class="type"> double</span> sigma<span class="operator"> =</span><span class="float"> 10.0</span><span class="operator">;</span><span class="keyword">
+const</span><span class="type"> double</span> R<span class="operator"> =</span><span class="float"> 28.0</span><span class="operator">;</span><span class="keyword">
+const</span><span class="type"> double</span> b<span class="operator"> =</span><span class="float"> 8.0</span><span class="operator"> /</span><span class="float"> 3.0</span><span class="operator">;</span><span class="keyword">
+
+typedef</span> boost<span class="operator">::</span>array<span class="operator">&lt;</span><span class="type"> double</span><span class="operator"> ,</span><span class="int"> 3</span><span class="operator"> &gt;</span> state_type<span class="operator">;</span><span class="type">
+
+void</span> lorenz<span class="operator">(</span><span class="keyword"> const</span> state_type<span class="operator"> &amp;</span>x<span class="operator"> ,</span> state_type<span class="operator"> &amp;</span>dxdt<span class="operator"> ,</span><span class="type"> double</span> t<span class="operator"> )
+{</span>
+    dxdt<span class="operator">[</span><span class="int">0</span><span class="operator">] =</span> sigma<span class="operator"> * (</span> x<span class="operator">[</span><span class="int">1</span><span class="operator">] -</span> x<span class="operator">[</span><span class="int">0</span><span class="operator">] );</span>
+    dxdt<span class="operator">[</span><span class="int">1</span><span class="operator">] =</span> R<span class="operator"> *</span> x<span class="operator">[</span><span class="int">0</span><span class="operator">] -</span> x<span class="operator">[</span><span class="int">1</span><span class="operator">] -</span> x<span class="operator">[</span><span class="int">0</span><span class="operator">] *</span> x<span class="operator">[</span><span class="int">2</span><span class="operator">];</span>
+    dxdt<span class="operator">[</span><span class="int">2</span><span class="operator">] = -</span>b<span class="operator"> *</span> x<span class="operator">[</span><span class="int">2</span><span class="operator">] +</span> x<span class="operator">[</span><span class="int">0</span><span class="operator">] *</span> x<span class="operator">[</span><span class="int">1</span><span class="operator">];
+}</span><span class="type">
+
+void</span> write_lorenz<span class="operator">(</span><span class="keyword"> const</span> state_type<span class="operator"> &amp;</span>x<span class="operator"> ,</span><span class="keyword"> const</span><span class="type"> double</span> t<span class="operator"> )
+{</span>
+    cout<span class="operator"> &lt;&lt;</span> t<span class="operator"> &lt;&lt;</span><span class="char"> '\t'</span><span class="operator"> &lt;&lt;</span> x<span class="operator">[</span><span class="int">0</span><span class="operator">] &lt;&lt;</span><span class="char"> '\t'</span><span class="operator"> &lt;&lt;</span> x<span class="operator">[</span><span class="int">1</span><span class="operator">] &lt;&lt;</span><span class="char"> '\t'</span><span class="operator"> &lt;&lt;</span> x<span class="operator">[</span><span class="int">2</span><span class="operator">] &lt;&lt;</span> endl<span class="operator">;
+}</span><span class="type">
+
+int</span><span class="keyword"> main</span><span class="operator">(</span><span class="type">int</span> argc<span class="operator">,</span><span class="type"> char</span><span class="operator"> **</span>argv<span class="operator">)
+{</span>
+    state_type x<span class="operator"> = {</span><span class="float"> 10.0</span><span class="operator"> ,</span><span class="float"> 1.0</span><span class="operator"> ,</span><span class="float"> 1.0</span><span class="operator"> };</span><span class="comment"> // initial conditions</span>
+    integrate<span class="operator">(</span> lorenz<span class="operator"> ,</span> x<span class="operator"> ,</span><span class="float"> 0.0</span><span class="operator"> ,</span><span class="float"> 25.0</span><span class="operator"> ,</span><span class="float"> 0.1</span><span class="operator"> ,</span> write_lorenz<span class="operator"> );
+}</span></pre>
 <br />
-<b id="maroon">using namespace </b>std;<br />
-<b id="maroon">using namespace</b> boost::numeric::odeint;<br />
-<br />
-<b id="maroon">const </b><b id="orange">double</b> sigma = <b id="beige">10.0</b>;<br />
-<b id="maroon">const</b> <b id="orange">double</b> R = <b id="beige">28.0</b>;<br />
-<b id="maroon">const </b><b id="orange">double</b> b = <b id="beige"><b id="beige">8.0</b></b> / <b id="beige">3.0</b>;<br />
-<br />
-<b id="maroon">typedef</b> boost::array< <b id="orange">double</b> , 3 > state_type;<br />
-<br />
-<b id="orange">void</b> lorenz( <b id="maroon">const</b> state_type &x , state_type &dxdt , <b id="orange">double</b> t )<br />
-{<br />
-    dxdt[<b id="olive">0</b>] = sigma * ( x[<b id="olive">1</b>] - x[<b id="olive">0</b>] );<br />
-    dxdt[<b id="olive">1</b>] = R * x[<b id="olive">0</b>] - x[<b id="olive">1</b>] - x[<b id="olive">0</b>] * x[<b id="olive">2</b>];<br />
-    dxdt[<b id="olive">2</b>] = -b * x[<b id="olive">2</b>] + x[<b id="olive">0</b>] * x[<b id="olive">1</b>];<br />
-}<br />
-<br />
-<b id="orange">void</b> write_lorenz( <b id="maroon">const</b> state_type &x , <b #maroon>const</b> <b id="orange">double</b> t )<br />
-{<br />
-    cout << t << <b id="green">'\t'</b> << x[0] << <b id="green">'\t'</b> << x[1] << <b id="green">'\t'</b> << x[2] << endl;<br />
-}<br />
-<br />
-<b id="orange">int</b> <b id="maroon">main</b>(<b id="orange">int</b> argc, <b id="orange">char</b> **argv)<br />
-{<br />
-    state_type x = { <b id="beige">10.0</b> , <b id="beige">1.0</b> , <b id="beige">1.0</b> }; // initial conditions<br />
-    integrate( lorenz , x , <b id="beige">0.0</b> , <b id="beige">25.0</b> , <b id="beige">0.1</b> , write_lorenz );<br />
-}</p><br />
 <img alt="lorenz" src="img/lorenz.jpg" />
 <br />
 
 <p id="anchor"><a href="#top">go to top</a><br /></p>
 	</div><br />
 
-<!--  <div id="example2"><h2>Example 2</h2>
-<p>
-  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+
+<div id="simple1dexample"><h2>Simple 1D ODE</h2>
+<p>The following code shows how to obtain the numerical solution of a simple one-dimensional ODE. Note the configuration of the stepper type showing the flexibility of the library.  
 </p>
-    <p id="code"><b id="blue">#include <&nbsp;iostream ><br />
-#include <&nbsp;boost/array.hpp ><br />
-#include <&nbsp;boost/numeric/odeint.hpp ><br /></b>
+    <pre class="code"><span class="pre">#include &lt;iostream&gt;
+#include &lt;boost/numeric/odeint.hpp&gt;
+
+</span><span class="keyword">
+using namespace</span> std<span class="operator">;</span><span class="keyword">
+using namespace</span> boost<span class="operator">::</span>numeric<span class="operator">::</span>odeint<span class="operator">;</span><span class="comment">
+
+
+/* we solve the simple ODE x' = 3/(2t^2) + x/(2t)
+ * with initial condition x(1) = 0.
+ * Analytic solution is x(t) = sqrt(t) - 1/t
+ */</span><span class="type">
+
+void</span> rhs<span class="operator">(</span><span class="keyword"> const</span><span class="type"> double</span> x<span class="operator"> ,</span><span class="type"> double</span><span class="operator"> &amp;</span>dxdt<span class="operator"> ,</span><span class="keyword"> const</span><span class="type"> double</span> t<span class="operator"> )
+{</span>
+    dxdt<span class="operator"> =</span><span class="float"> 3.0</span><span class="operator">/(</span><span class="float">2.0</span><span class="operator">*</span>t<span class="operator">*</span>t<span class="operator">) +</span> x<span class="operator">/(</span><span class="float">2.0</span><span class="operator">*</span>t<span class="operator">);
+}</span><span class="type">
+
+void</span> write_cout<span class="operator">(</span><span class="keyword"> const</span><span class="type"> double</span><span class="operator"> &amp;</span>x<span class="operator"> ,</span><span class="keyword"> const</span><span class="type"> double</span> t<span class="operator"> )
+{</span>
+    cout<span class="operator"> &lt;&lt;</span> t<span class="operator"> &lt;&lt;</span><span class="char"> '\t'</span><span class="operator"> &lt;&lt;</span> x<span class="operator"> &lt;&lt;</span> endl<span class="operator">;
+}</span><span class="comment">
+
+// state_type = value_type = deriv_type = time_type = double
+</span><span class="keyword">typedef</span> runge_kutta_dopri5<span class="operator">&lt;</span><span class="type"> double</span><span class="operator"> ,</span><span class="type"> double</span><span class="operator"> ,</span><span class="type"> double</span><span class="operator"> ,</span><span class="type"> double</span><span class="operator"> ,</span> 
+    vector_space_algebra<span class="operator"> ,</span> default_operations<span class="operator"> ,</span> never_resizer<span class="operator"> &gt;</span> stepper_type<span class="operator">;</span><span class="type">
+
+int</span><span class="keyword"> main</span><span class="operator">()
+{</span><span class="type">
+    double</span> x<span class="operator"> =</span><span class="float"> 0.0</span><span class="operator">;</span>    
+    integrate_adaptive<span class="operator">(</span> make_controlled<span class="operator">(</span><span class="float"> 1E-12</span><span class="operator"> ,</span><span class="float"> 1E-12</span><span class="operator"> ,</span> stepper_type<span class="operator">() ) ,</span>
+                        rhs<span class="operator"> ,</span> x<span class="operator"> ,</span><span class="float"> 1.0</span><span class="operator"> ,</span><span class="float"> 10.0</span><span class="operator"> ,</span><span class="float"> 0.1</span><span class="operator"> ,</span> write_cout<span class="operator"> );
+}</span></pre>
 <br />
-<b id="maroon">using namespace </b>std;<br />
-<b id="maroon">using namespace</b> boost::numeric::odeint;<br />
+<img alt="1dode" src="img/1dode.jpg" />
 <br />
-<b id="maroon">const </b><b id="orange">double</b> sigma = <b id="beige">10.0</b>;<br />
-<b id="maroon">const</b> <b id="orange">double</b> R = <b id="beige">28.0</b>;<br />
-<b id="maroon">const </b><b id="orange">double</b> b = <b id="beige"><b id="beige">8.0</b></b> / <b id="beige">3.0</b>;<br />
-<br />
-<b id="maroon">typedef</b> boost::array< <b id="orange">double</b> , 3 > state_type;<br />
-<br />
-<b id="orange">void</b> lorenz( <b id="maroon">const</b> state_type &x , state_type &dxdt , <b id="orange">double</b> t )<br />
-{<br />
-    dxdt[<b id="olive">0</b>] = sigma * ( x[<b id="olive">1</b>] - x[<b id="olive">0</b>] );<br />
-    dxdt[<b id="olive">1</b>] = R * x[<b id="olive">0</b>] - x[<b id="olive">1</b>] - x[<b id="olive">0</b>] * x[<b id="olive">2</b>];<br />
-    dxdt[<b id="olive">2</b>] = -b * x[<b id="olive">2</b>] + x[<b id="olive">0</b>] * x[<b id="olive">1</b>];<br />
-}<br />
-<br />
-<b id="orange">void</b> write_lorenz( <b id="maroon">const</b> state_type &x , <b #maroon>const</b> <b id="orange">double</b> t )<br />
-{<br />
-    cout << t << <b id="green">'\t'</b> << x[0] << <b id="green">'\t'</b> << x[1] << <b id="green">'\t'</b> << x[2] << endl;<br />
-}<br />
-<br />
-<b id="orange">int</b> <b id="maroon">main</b>(<b id="orange">int</b> argc, <b id="orange">char</b> **argv)<br />
-{<br />
-    state_type x = { <b id="beige">10.0</b> , <b id="beige">1.0</b> , <b id="beige">1.0</b> }; // initial conditions<br />
-    integrate( lorenz , x , <b id="beige">0.0</b> , <b id="beige">25.0</b> , <b id="beige">0.1</b> , write_lorenz );<br />
-}</p>
+
 <br />
 <p id="anchor"><a href="#top">go to top</a><br /></p>
 </div>
--->
 
 </section>
