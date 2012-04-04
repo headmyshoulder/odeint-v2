@@ -21,7 +21,31 @@
       functions</a>
 </h3></div></div></div>
 <p>
-        tba.
+        In the tutorial we have learned how we can use the generation functions
+        <code class="computeroutput"><span class="identifier">make_controlled</span></code> and <code class="computeroutput"><span class="identifier">make_dense_output</span></code> to create controlled
+        and dense output stepper from a simple stepper or an error stepper. The syntax
+        of these two functions is very simple:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">stepper1</span> <span class="special">=</span> <span class="identifier">make_controlled</span><span class="special">(</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="identifier">stepper_type</span><span class="special">()</span> <span class="special">);</span>
+<span class="keyword">auto</span> <span class="identifier">stepper2</span> <span class="special">=</span> <span class="identifier">make_dense_output</span><span class="special">(</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="identifier">stepper_type</span><span class="special">()</span> <span class="special">);</span>
+</pre>
+<p>
+      </p>
+<p>
+        The first two parameters are the absolute and the relative error tolerances
+        and the third parameter is the stepper. In C++03 you can infer the type from
+        the classical <code class="computeroutput"><span class="identifier">result_of</span></code> mechanism:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="identifier">result_of</span><span class="special">::</span><span class="identifier">make_controlled</span><span class="special">&lt;</span> <span class="identifier">stepper_type</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">stepper3</span> <span class="special">=</span> <span class="identifier">make_controlled</span><span class="special">(</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="identifier">stepper_type</span><span class="special">()</span> <span class="special">);</span>
+<span class="identifier">result_of</span><span class="special">::</span><span class="identifier">make_dense_output</span><span class="special">&lt;</span> <span class="identifier">stepper_type</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">stepper4</span> <span class="special">=</span> <span class="identifier">make_dense_output</span><span class="special">(</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="identifier">stepper_type</span><span class="special">()</span> <span class="special">);</span>
+</pre>
+<p>
       </p>
 <p>
         explain the mechanis and how your own steppers can be used with the generation

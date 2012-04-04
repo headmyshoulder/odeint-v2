@@ -42,10 +42,10 @@
         and odeint can be used as is without worrying about algebra/operations at
         all.
       </p>
-<div class="caution"><table border="0" summary="Caution">
+<div class="important"><table border="0" summary="Important">
 <tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Caution]" src="../../images/caution.png"></td>
-<th align="left">Caution</th>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../../images/important.png"></td>
+<th align="left">Important</th>
 </tr>
 <tr><td align="left" valign="top"><p>
           state_type, algebra and operations are not independent, a valid combination
@@ -196,10 +196,10 @@
 </tr>
 </tbody>
 </table></div>
-<div class="caution"><table border="0" summary="Caution">
+<div class="warning"><table border="0" summary="Warning">
 <tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Caution]" src="../../images/caution.png"></td>
-<th align="left">Caution</th>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../images/warning.png"></td>
+<th align="left">Warning</th>
 </tr>
 <tr><td align="left" valign="top"><p>
             If your state type does not allocate memory by default construction,
@@ -627,13 +627,18 @@
             is extended such that it works with <code class="computeroutput"><span class="identifier">gsl_vector</span></code>s
             as well which required also the implementation of a new <code class="computeroutput"><span class="identifier">gsl_iterator</span></code>.
           </p>
-<p>
-            [information? odeint already includes all the code presented here, see
-            <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/boost/numeric/odeint/external/gsl/gsl_wrapper.hpp" target="_top">gsl_wrapper.hpp</a>, so
-            <code class="computeroutput"><span class="identifier">gsl_vector</span></code>s can be used
-            straight out-of-box. The following description is just for educational
-            purpose.]
-          </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              odeint already includes all the code presented here, see <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/boost/numeric/odeint/external/gsl/gsl_wrapper.hpp" target="_top">gsl_wrapper.hpp</a>,
+              so <code class="computeroutput"><span class="identifier">gsl_vector</span></code>s can
+              be used straight out-of-box. The following description is just for
+              educational purpose.
+            </p></td></tr>
+</table></div>
 <p>
             The GSL is a C library, so <code class="computeroutput"><span class="identifier">gsl_vector</span></code>
             has neither constructor, nor destructor or any <code class="computeroutput"><span class="identifier">begin</span></code>
