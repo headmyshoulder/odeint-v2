@@ -32,17 +32,25 @@
         One use case for <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
         in odeint has been shown in <a class="link" href="../tutorial/chaotic_systems_and_lyapunov_exponents.html" title="Chaotic systems and Lyapunov exponents">Chaotic
         system</a> where the state consists of two parts: one for the original
-        state and one for the perturbations. The ranges are used to initialize (solve)
-        only the system part where the perturbation part is not touched. After that
-        the complete state including also the perturbations is solved. Another use
-        case is a system consisting of coupled units where you want to initialize
-        each unit separately with the ODE of the uncoupled unit. An example is a
-        chain of coupled van-der-Pol-oscillators which are initialized uniformily
+        system and one for the perturbations. The ranges are used to initialize (solve)
+        only the system part where the perturbation part is not touched, that is
+        a range consisting only of the system part is used. After that the complete
+        state including the perturbations is solved.
+      </p>
+<p>
+        Another use case is a system consisting of coupled units where you want to
+        initialize each unit separately with the ODE of the uncoupled unit. An example
+        is a chain of coupled van-der-Pol-oscillators which are initialized uniformily
         from the uncoupled van-der-Pol-oscillator. Then you can use <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
         to solve only one individual oscillator in the chain.
       </p>
 <p>
-        An example was given in <a class="link" href="../tutorial/chaotic_systems_and_lyapunov_exponents.html" title="Chaotic systems and Lyapunov exponents">Chaotic
+        In short, you can <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
+        to use one state within two system functions which expect states with different
+        sizes.
+      </p>
+<p>
+        An example was given in the <a class="link" href="../tutorial/chaotic_systems_and_lyapunov_exponents.html" title="Chaotic systems and Lyapunov exponents">Chaotic
         system</a> tutorial. Using Boost.Range usually means that your system
         function needs to adapt to the iterators of Boost.Range. That is, your function
         is called with a range and you need to get the iterators from that range.

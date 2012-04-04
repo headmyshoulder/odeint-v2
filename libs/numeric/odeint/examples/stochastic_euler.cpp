@@ -1,3 +1,17 @@
+/*
+ libs/numeric/odeint/examples/stochastic_euler.hpp
+
+ Copyright 2009 Karsten Ahnert
+ Copyright 2009 Mario Mulansky
+
+ Stochastic euler stepper example and Ornstein-Uhlenbeck process
+
+ Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
+
 #include <vector>
 #include <iostream>
 #include <random>
