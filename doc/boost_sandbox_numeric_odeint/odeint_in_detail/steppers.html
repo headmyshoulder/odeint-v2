@@ -3,8 +3,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Steppers</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
 <link rel="up" href="../odeint_in_detail.html" title="Odeint in detail">
 <link rel="prev" href="../odeint_in_detail.html" title="Odeint in detail">
 <link rel="next" href="generation_functions.html" title="Generation functions">
@@ -15,7 +15,7 @@
 <div class="spirit-nav">
 <a accesskey="p" href="../odeint_in_detail.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../odeint_in_detail.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="generation_functions.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers"></a><a class="link" href="steppers.html" title="Steppers">Steppers</a>
 </h3></div></div></div>
@@ -36,6 +36,8 @@
         steppers</a></span></dt>
 <dt><span class="section"><a href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.stepper_overview">Stepper
         overview</a></span></dt>
+<dt><span class="section"><a href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.write_own_steppers">Write
+        own steppers</a></span></dt>
 </dl></div>
 <p>
         Solving ordinary differential equation numerically is ususally done iteratively,
@@ -94,7 +96,7 @@
         Since the system function is strongly related to the stepper type, such an
         introduction of a new stepper might result in a new type of system function.
       </p>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.explicit_steppers"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.explicit_steppers" title="Explicit steppers">Explicit
         steppers</a>
@@ -130,6 +132,7 @@
           is the Runge Kutta stepper of fourth order:
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="identifier">runge_kutta4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">rk</span><span class="special">;</span>
 <span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>               <span class="comment">// In-place transformation of inout</span>
@@ -174,6 +177,7 @@
           how the FSAL steppers can be used is
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">rk</span><span class="special">;</span>
 <span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
@@ -207,7 +211,7 @@
           </p></td></tr>
 </table></div>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.symplectic_solvers"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.symplectic_solvers" title="Symplectic solvers">Symplectic
         solvers</a>
@@ -239,18 +243,26 @@
           again simple C-functions of functors. An example is the harmonic oscillator:
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="number">1</span> <span class="special">&gt;</span> <span class="identifier">vector_type</span><span class="special">;</span>
 
-<span class="keyword">void</span> <span class="identifier">harm_osc_f1</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">vector_type</span> <span class="special">&amp;</span><span class="identifier">p</span> <span class="special">,</span> <span class="identifier">vector_type</span> <span class="special">&amp;</span><span class="identifier">dqdt</span> <span class="special">)</span>
-<span class="special">{</span>
-    <span class="identifier">dqdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">p</span><span class="special">[</span><span class="number">0</span><span class="special">];</span>
-<span class="special">}</span>
 
-<span class="keyword">void</span> <span class="identifier">harm_osc_f2</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">vector_type</span> <span class="special">&amp;</span><span class="identifier">q</span> <span class="special">,</span> <span class="identifier">vector_type</span> <span class="special">&amp;</span><span class="identifier">dpdt</span> <span class="special">)</span>
+<span class="keyword">struct</span> <span class="identifier">harm_osc_f1</span>
 <span class="special">{</span>
-    <span class="identifier">dpdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="special">-</span><span class="identifier">q</span><span class="special">[</span><span class="number">0</span><span class="special">];</span>
-<span class="special">}</span>
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">vector_type</span> <span class="special">&amp;</span><span class="identifier">p</span> <span class="special">,</span> <span class="identifier">vector_type</span> <span class="special">&amp;</span><span class="identifier">dqdt</span> <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">dqdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">p</span><span class="special">[</span><span class="number">0</span><span class="special">];</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">harm_osc_f2</span>
+<span class="special">{</span>
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">vector_type</span> <span class="special">&amp;</span><span class="identifier">q</span> <span class="special">,</span> <span class="identifier">vector_type</span> <span class="special">&amp;</span><span class="identifier">dpdt</span> <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">dpdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="special">-</span><span class="identifier">q</span><span class="special">[</span><span class="number">0</span><span class="special">];</span>
+    <span class="special">}</span>
+<span class="special">};</span>
 </pre>
 <p>
         </p>
@@ -260,11 +272,12 @@
           example for the harmonic oscillator is now:
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="identifier">pair</span><span class="special">&lt;</span> <span class="identifier">vector_type</span> <span class="special">,</span> <span class="identifier">vector_type</span> <span class="special">&gt;</span> <span class="identifier">x</span><span class="special">;</span>
 <span class="identifier">x</span><span class="special">.</span><span class="identifier">first</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">second</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
 <span class="identifier">symplectic_rkn_sb3a_mclachlan</span><span class="special">&lt;</span> <span class="identifier">vector_type</span> <span class="special">&gt;</span> <span class="identifier">rkn</span><span class="special">;</span>
-<span class="identifier">rkn</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">harm_osc_f1</span> <span class="special">,</span> <span class="identifier">harm_osc_f2</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
+<span class="identifier">rkn</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">harm_osc_f1</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">harm_osc_f2</span><span class="special">()</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
 </pre>
 <p>
         </p>
@@ -273,6 +286,7 @@
           two public method:
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">harm_osc</span>
 <span class="special">{</span>
@@ -290,6 +304,7 @@
 <p>
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="identifier">harm_osc</span> <span class="identifier">h</span><span class="special">;</span>
 <span class="identifier">rkn</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span> <span class="special">&amp;</span><span class="identifier">harm_osc</span><span class="special">::</span><span class="identifier">f1</span> <span class="special">,</span> <span class="identifier">h</span> <span class="special">,</span> <span class="identifier">_1</span> <span class="special">,</span> <span class="identifier">_2</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span> <span class="special">&amp;</span><span class="identifier">harm_osc</span><span class="special">::</span><span class="identifier">f2</span> <span class="special">,</span> <span class="identifier">h</span> <span class="special">,</span> <span class="identifier">_1</span> <span class="special">,</span> <span class="identifier">_2</span> <span class="special">)</span> <span class="special">)</span> <span class="special">,</span>
@@ -309,11 +324,12 @@
           can be written as
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="identifier">pair</span><span class="special">&lt;</span> <span class="identifier">vector_type</span> <span class="special">,</span> <span class="identifier">vector_type</span> <span class="special">&gt;</span> <span class="identifier">x</span><span class="special">;</span>
 <span class="identifier">x</span><span class="special">.</span><span class="identifier">first</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">second</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
 <span class="identifier">symplectic_rkn_sb3a_mclachlan</span><span class="special">&lt;</span> <span class="identifier">vector_type</span> <span class="special">&gt;</span> <span class="identifier">rkn</span><span class="special">;</span>
-<span class="identifier">rkn</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">harm_osc_f1</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
+<span class="identifier">rkn</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">harm_osc_f1</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
 </pre>
 <p>
         </p>
@@ -332,15 +348,16 @@
           takes q and p without combining them into a pair:
         </p>
 <p>
+          
 </p>
-<pre class="programlisting"><span class="identifier">rkn</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">harm_osc_f1</span> <span class="special">,</span> <span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">q</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">p</span> <span class="special">)</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
-<span class="identifier">rkn</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">harm_osc_f1</span> <span class="special">,</span> <span class="identifier">q</span> <span class="special">,</span> <span class="identifier">p</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
-<span class="identifier">rkn</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">harm_osc_f1</span> <span class="special">,</span> <span class="identifier">harm_osc_f2</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">q</span> <span class="special">,</span> <span class="identifier">p</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
+<pre class="programlisting"><span class="identifier">rkn</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">harm_osc_f1</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">q</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">p</span> <span class="special">)</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
+<span class="identifier">rkn</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">harm_osc_f1</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">q</span> <span class="special">,</span> <span class="identifier">p</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
+<span class="identifier">rkn</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">harm_osc_f1</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">harm_osc_f2</span><span class="special">()</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">q</span> <span class="special">,</span> <span class="identifier">p</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
 </pre>
 <p>
         </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.implicit_solvers"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.implicit_solvers" title="Implicit solvers">Implicit
         solvers</a>
@@ -375,7 +392,7 @@
           by <code class="computeroutput"><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">matrix</span></code>.
         </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.multistep_methods"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.multistep_methods" title="Multistep methods">Multistep
         methods</a>
@@ -397,6 +414,7 @@
           steps is instantiated and initialized;
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="identifier">adams_bashforth_moulton</span><span class="special">&lt;</span> <span class="number">5</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">abm</span><span class="special">;</span>
 <span class="identifier">abm</span><span class="special">.</span><span class="identifier">initialize</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
@@ -414,6 +432,7 @@
           state of the Adams-Bashforth-Stepper:
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="identifier">abm</span><span class="special">.</span><span class="identifier">initialize</span><span class="special">(</span> <span class="identifier">runge_kutta_fehlberg78</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;()</span> <span class="special">,</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
 </pre>
@@ -440,7 +459,7 @@
           </p></td></tr>
 </table></div>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.controlled_steppers"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.controlled_steppers" title="Controlled steppers">Controlled
         steppers</a>
@@ -450,15 +469,15 @@
           stepsize control. Adaptive step size integration works in principle as
           follows:
         </p>
-<div class="orderedlist"><ol type="1">
-<li>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
               The error of one step is calculated. This is usually done by performing
               two steps with different orders. The difference between these two steps
               is then used as a measure for the error. Stepper which can calculate
               the error are <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
               Stepper</a> and they form a own class with an separate concept.
             </li>
-<li>
+<li class="listitem">
               This error is compared against some predefined error tolerances. Are
               the tolerance violated the step is reject and the stepsize is decreases.
               Otherwise the step is accepted and possibly the stepsize is increased.
@@ -658,7 +677,7 @@
           stepper. The generation functions are explained in detail in XYZ.
         </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.dense_output_steppers"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.dense_output_steppers" title="Dense output steppers">Dense
         output steppers</a>
@@ -676,6 +695,7 @@
           An example is
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="identifier">dense_output_runge_kutta</span><span class="special">&lt;</span> <span class="identifier">controlled_runge_kutta</span><span class="special">&lt;</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">dense</span><span class="special">;</span>
 <span class="identifier">dense</span><span class="special">.</span><span class="identifier">initialize</span><span class="special">(</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
@@ -701,8 +721,9 @@
           exist:
         </p>
 <p>
+          
 </p>
-<pre class="programlisting"><span class="identifier">result_of</span><span class="special">::</span><span class="identifier">make_dense_output</span><span class="special">&lt;</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">dense2</span> <span class="special">=</span> <span class="identifier">make_dense_output</span><span class="special">(</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;()</span> <span class="special">);</span>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">odeint</span><span class="special">::</span><span class="identifier">result_of</span><span class="special">::</span><span class="identifier">make_dense_output</span><span class="special">&lt;</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">dense2</span> <span class="special">=</span> <span class="identifier">make_dense_output</span><span class="special">(</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;()</span> <span class="special">);</span>
 </pre>
 <p>
         </p>
@@ -718,13 +739,14 @@
           for easy use with the integrate functions:
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">make_dense_output</span><span class="special">(</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;()</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t_start</span> <span class="special">,</span> <span class="identifier">t_end</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>
 </pre>
 <p>
         </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.using_steppers"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.using_steppers" title="Using steppers">Using
         steppers</a>
@@ -786,6 +808,7 @@
           4 internal derivatives of the solution at times <code class="computeroutput"><span class="special">(</span><span class="identifier">t</span><span class="special">-</span><span class="identifier">dt</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">2d</span><span class="identifier">t</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">3d</span><span class="identifier">t</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">4d</span><span class="identifier">t</span><span class="special">)</span></code>.
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="identifier">adams_bashforth_moulton</span><span class="special">&lt;</span> <span class="number">4</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">stepper</span><span class="special">;</span>
 <span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-4dt</span>
@@ -844,7 +867,7 @@
           By default and for unknown types <code class="computeroutput"><span class="identifier">is_resizeable</span></code>
           returns <code class="computeroutput"><span class="keyword">false</span></code>, so if you have
           your own type you need to specialize this metafunction. For more details
-          on the resizing mechanism see the section <a class="link" href="../extend_odeint.html" title="Extend odeint">Adapt
+          on the resizing mechanism see the section <a class="link" href="state_types__algebras_and_operations.html" title="State types, algebras and operations">Adapt
           you own state types</a>.
         </p>
 <p>
@@ -855,26 +878,26 @@
           user is left with the question of which stepper fits his needs. Our personal
           recommendations are:
         </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
               <code class="computeroutput"><span class="identifier">runge_kutta_dopri5</span></code>
               is maybe the best default stepper. It has step size control as well
               as dense-output functionality. Simple create a dense-output stepper
               by <code class="computeroutput"><span class="identifier">make_dense_output</span><span class="special">(</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="number">1.0e-5</span> <span class="special">,</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span>
               <span class="special">&gt;()</span> <span class="special">)</span></code>.
             </li>
-<li>
+<li class="listitem">
               <code class="computeroutput"><span class="identifier">runge_kutta4</span></code> is a good
               stepper for constant step sizes. It is widely used and very well known.
               If you need to create artifical time series this stepper should be
               the first choice.
             </li>
-<li>
+<li class="listitem">
               'runge_kutta_fehlberg78' is similar to the 'runge_kutta4' with the
               advantage that it has higher precision. It can also be used with step
               size control.
             </li>
-<li>
+<li class="listitem">
               <code class="computeroutput"><span class="identifier">adams_bashforth_moulton</span></code>
               is very well suited for ODEs where the r.h.s. is expensive (in terms
               of computation time). It will calculate the system function only once
@@ -882,7 +905,7 @@
             </li>
 </ul></div>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.stepper_overview"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.stepper_overview" title="Stepper overview">Stepper
         overview</a>
@@ -1882,6 +1905,187 @@
 </table></div>
 </div>
 <br class="table-break">
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.write_own_steppers"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.write_own_steppers" title="Write own steppers">Write
+        own steppers</a>
+</h4></div></div></div>
+<p>
+          Of course, one can write own steppers which are fully compatible with odeint.
+          They only have to fullfil one or several of the stepper <a class="link" href="../concepts.html" title="Concepts">Concepts</a>
+          of odeint.
+        </p>
+<p>
+          We will illustrate how to write your own stepper with the example of the
+          stochastic euler method. This method is suited to solve stochastic differential
+          equations (SDEs). A SDE has the form
+        </p>
+<p>
+          <span class="emphasis"><em>dx/dt = f(x) + g(x) &#958;(t)</em></span>
+        </p>
+<p>
+          where <span class="emphasis"><em>&#958;</em></span> is Gaussian white noise with zero mean and
+          a standard deviation <span class="emphasis"><em>&#963;(t)</em></span>. <span class="emphasis"><em>f(x)</em></span>
+          is said to be the deterministic part while <span class="emphasis"><em>g(x) &#958;</em></span> is
+          the noisy part. In case <span class="emphasis"><em>g(x)</em></span> is independent of <span class="emphasis"><em>x</em></span>
+          the SDE is said to have additive noise. It is not possible to solve SDE
+          with the classical solvers for ODEs since the noisy part of the SDE has
+          to be scaled differently then the deterministic part with respect to the
+          time step. BUt there exist many solvers for SDEs. A classical and easy
+          method is the stochastic euler solver. It works by iterating
+        </p>
+<p>
+          <span class="emphasis"><em>x(t+&#916; t) = x(t) + &#916; t f(x(t)) + &#916; t<sup>1/2</sup> g(x) &#958;(t)</em></span>
+        </p>
+<p>
+          where &#958;(t) is an independent normal distributed random variable.
+        </p>
+<p>
+          Now we will implement this method. We will call the stepper <code class="computeroutput"><span class="identifier">stochastic_euler</span></code>. It models the __stepper_concept.
+          The class definition looks like
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="identifier">size_t</span> <span class="identifier">N</span> <span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">stochastic_euler</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+
+    <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">N</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">N</span> <span class="special">&gt;</span> <span class="identifier">deriv_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">double</span> <span class="identifier">value_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">double</span> <span class="identifier">time_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">short</span> <span class="identifier">order_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">odeint</span><span class="special">::</span><span class="identifier">stepper_tag</span> <span class="identifier">stepper_category</span><span class="special">;</span>
+
+    <span class="keyword">static</span> <span class="identifier">order_type</span> <span class="identifier">order</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span> <span class="special">}</span>
+
+    <span class="comment">// ...</span>
+<span class="special">};</span>
+</pre>
+<p>
+        </p>
+<p>
+          The types are needed in order to fulfill the stepper concept. As internal
+          state and deriv type we use simple arrays in the stochastic euler, they
+          are needed for the temporaries. The stepper has the order one which is
+          returned from the <code class="computeroutput"><span class="identifier">order</span><span class="special">()</span></code> function.
+        </p>
+<p>
+          The system functions needs to calculate the deterministic and the stochastic
+          part of our stochastic differential equation. So it might be suitable that
+          the system function itself is a pair of functions, one for computing the
+          deterministic and one for the stochastic part. The first element of the
+          pair simply computes the deterministic part while the second the stochastic
+          one. Then, the second part also needs to calculate the random numbers in
+          order to simulate the stochastic process. We can now implement the <code class="computeroutput"><span class="identifier">do_step</span></code> method
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="identifier">size_t</span> <span class="identifier">N</span> <span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">stochastic_euler</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+
+    <span class="comment">// ...</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">System</span> <span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">System</span> <span class="identifier">system</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">time_type</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">time_type</span> <span class="identifier">dt</span> <span class="special">)</span> <span class="keyword">const</span>
+    <span class="special">{</span>
+        <span class="identifier">deriv_type</span> <span class="identifier">det</span> <span class="special">,</span> <span class="identifier">stoch</span> <span class="special">;</span>
+        <span class="identifier">system</span><span class="special">.</span><span class="identifier">first</span><span class="special">(</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">det</span> <span class="special">);</span>
+        <span class="identifier">system</span><span class="special">.</span><span class="identifier">second</span><span class="special">(</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">stoch</span> <span class="special">);</span>
+        <span class="keyword">for</span><span class="special">(</span> <span class="identifier">size_t</span> <span class="identifier">i</span><span class="special">=</span><span class="number">0</span> <span class="special">;</span> <span class="identifier">i</span><span class="special">&lt;</span><span class="identifier">x</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span> <span class="special">;</span> <span class="special">++</span><span class="identifier">i</span> <span class="special">)</span>
+            <span class="identifier">x</span><span class="special">[</span><span class="identifier">i</span><span class="special">]</span> <span class="special">+=</span> <span class="identifier">dt</span> <span class="special">*</span> <span class="identifier">det</span><span class="special">[</span><span class="identifier">i</span><span class="special">]</span> <span class="special">+</span> <span class="identifier">sqrt</span><span class="special">(</span> <span class="identifier">dt</span> <span class="special">)</span> <span class="special">*</span> <span class="identifier">stoch</span><span class="special">[</span><span class="identifier">i</span><span class="special">];</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+        </p>
+<p>
+          This is all. It is quite simple and the stochastic euler stepper implement
+          here is quite general. Of course it can be enhanced, for example
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+              use of operations and algebras as well as the resizing mechanism for
+              maximal flexibility and portability
+            </li>
+<li class="listitem">
+              use of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span></code> for the system functions
+            </li>
+<li class="listitem">
+              use of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">range</span></code> for the state type in the
+              <code class="computeroutput"><span class="identifier">do_step</span></code> method
+            </li>
+<li class="listitem">
+              ...
+            </li>
+</ul></div>
+<p>
+          Now, lets look how we use the new stepper. A nice example is the Ornstein-Uhlenbeck
+          process. It consists of a simple Brownian motion overlapped with an relaxation
+          process. Its SDE reads
+        </p>
+<p>
+          <span class="emphasis"><em>dx/dt = - x + &#958;</em></span>
+        </p>
+<p>
+          where &#958; is Gaussian white noise with standard deviation <span class="emphasis"><em>&#963;</em></span>.
+          Implementing the Ornstein-Uhlenbeck process is quite simple. We need two
+          functions or funtors - one for the deterministic and one for the stochastic
+          part:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">const</span> <span class="keyword">static</span> <span class="identifier">size_t</span> <span class="identifier">N</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">N</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">ornstein_det</span>
+<span class="special">{</span>
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">)</span> <span class="keyword">const</span>
+    <span class="special">{</span>
+        <span class="identifier">dxdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="special">-</span><span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">];</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">ornstein_stoch</span>
+<span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">mt19937</span> <span class="identifier">m_rng</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">normal_distribution</span><span class="special">&lt;&gt;</span> <span class="identifier">m_dist</span><span class="special">;</span>
+
+    <span class="identifier">ornstein_stoch</span><span class="special">(</span> <span class="keyword">double</span> <span class="identifier">sigma</span> <span class="special">)</span> <span class="special">:</span> <span class="identifier">m_rng</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">m_dist</span><span class="special">(</span> <span class="number">0.0</span> <span class="special">,</span> <span class="identifier">sigma</span> <span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">dxdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">m_dist</span><span class="special">(</span> <span class="identifier">m_rng</span> <span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+        </p>
+<p>
+          In the stochastic part we have used the Mersenne twister for the random
+          number generation and a Gaussian white noise generator <code class="computeroutput"><span class="identifier">normal_distribution</span></code>
+          with standard deviation <span class="emphasis"><em>&#963;</em></span>. Now, we can use the stochastic
+          Euler stepper with the integrate functions:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">double</span> <span class="identifier">dt</span> <span class="special">=</span> <span class="number">0.1</span><span class="special">;</span>
+<span class="identifier">state_type</span> <span class="identifier">x</span> <span class="special">=</span> <span class="special">{{</span> <span class="number">1.0</span> <span class="special">}};</span>
+<span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">stochastic_euler</span><span class="special">&lt;</span> <span class="identifier">N</span> <span class="special">&gt;()</span> <span class="special">,</span> <span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">ornstein_det</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">ornstein_stoch</span><span class="special">(</span> <span class="number">1.0</span> <span class="special">)</span> <span class="special">)</span> <span class="special">,</span>
+        <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">,</span> <span class="identifier">streaming_observer</span><span class="special">()</span> <span class="special">);</span>
+</pre>
+<p>
+        </p>
+<p>
+          Note, how we have used the <code class="computeroutput"><span class="identifier">make_pair</span></code>
+          function for the generation of the system function.
+        </p>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

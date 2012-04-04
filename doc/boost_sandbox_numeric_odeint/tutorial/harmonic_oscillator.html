@@ -3,8 +3,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Harmonic oscillator</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
 <link rel="up" href="../tutorial.html" title="Tutorial">
 <link rel="prev" href="../tutorial.html" title="Tutorial">
 <link rel="next" href="solar_system.html" title="Solar system">
@@ -15,7 +15,7 @@
 <div class="spirit-nav">
 <a accesskey="p" href="../tutorial.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="solar_system.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator"></a><a class="link" href="harmonic_oscillator.html" title="Harmonic oscillator">Harmonic
       oscillator</a>
@@ -30,7 +30,7 @@
 <dt><span class="section"><a href="harmonic_oscillator.html#boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.integration_with_adaptive_step_size">Integration
         with Adaptive Step Size</a></span></dt>
 </dl></div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.define_the_ode"></a><a class="link" href="harmonic_oscillator.html#boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.define_the_ode" title="Define the ODE">Define
         the ODE</a>
@@ -52,6 +52,7 @@
           to just define a function, e.g:
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="comment">/* The type of container used to hold the state vector */</span>
 <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
@@ -59,7 +60,7 @@
 <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">gam</span> <span class="special">=</span> <span class="number">0.15</span><span class="special">;</span>
 
 <span class="comment">/* The rhs of x' = f(x) */</span>
-<span class="keyword">void</span> <span class="identifier">harmonic_oscillator</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span>
+<span class="keyword">void</span> <span class="identifier">harmonic_oscillator</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">const</span> <span class="keyword">double</span> <span class="comment">/* t */</span> <span class="special">)</span>
 <span class="special">{</span>
     <span class="identifier">dxdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">];</span>
     <span class="identifier">dxdt</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="special">-</span><span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">-</span> <span class="identifier">gam</span><span class="special">*</span><span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">];</span>
@@ -78,6 +79,7 @@
           parameter structure as above:
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="comment">/* The rhs of x' = f(x) defined as a class */</span>
 <span class="keyword">class</span> <span class="identifier">harm_osc</span> <span class="special">{</span>
@@ -87,7 +89,7 @@
 <span class="keyword">public</span><span class="special">:</span>
     <span class="identifier">harm_osc</span><span class="special">(</span> <span class="keyword">double</span> <span class="identifier">gam</span> <span class="special">)</span> <span class="special">:</span> <span class="identifier">m_gam</span><span class="special">(</span><span class="identifier">gam</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
 
-    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()</span> <span class="special">(</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span>
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()</span> <span class="special">(</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">const</span> <span class="keyword">double</span> <span class="comment">/* t */</span> <span class="special">)</span>
     <span class="special">{</span>
         <span class="identifier">dxdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">];</span>
         <span class="identifier">dxdt</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="special">-</span><span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">-</span> <span class="identifier">m_gam</span><span class="special">*</span><span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">];</span>
@@ -101,7 +103,7 @@
           which allows for cleaner code.
         </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.stepper_types"></a><a class="link" href="harmonic_oscillator.html#boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.stepper_types" title="Stepper Types">Stepper
         Types</a>
@@ -1118,7 +1120,7 @@
           which kind of steppers should be applied.
         </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.integration_with_constant_step_size"></a><a class="link" href="harmonic_oscillator.html#boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.integration_with_constant_step_size" title="Integration with Constant Step Size">Integration
         with Constant Step Size</a>
@@ -1136,6 +1138,7 @@
           <span class="special">)</span></code> function from odeint:
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="identifier">runge_kutta4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">stepper</span><span class="special">;</span>
 <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">stepper</span> <span class="special">,</span> <span class="identifier">harmonic_oscillator</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">);</span>
@@ -1152,6 +1155,7 @@
           method which can used directly. So, you write down the above example as
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">dt</span> <span class="special">=</span> <span class="number">0.01</span><span class="special">;</span>
 <span class="keyword">for</span><span class="special">(</span> <span class="keyword">double</span> <span class="identifier">t</span><span class="special">=</span><span class="number">0.0</span> <span class="special">;</span> <span class="identifier">t</span><span class="special">&lt;</span><span class="number">10.0</span> <span class="special">;</span> <span class="identifier">t</span><span class="special">+=</span> <span class="identifier">dt</span> <span class="special">)</span>
@@ -1160,7 +1164,7 @@
 <p>
         </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.integration_with_adaptive_step_size"></a><a class="link" href="harmonic_oscillator.html#boost_sandbox_numeric_odeint.tutorial.harmonic_oscillator.integration_with_adaptive_step_size" title="Integration with Adaptive Step Size">Integration
         with Adaptive Step Size</a>
@@ -1175,6 +1179,7 @@
           with 4th order error estimation and coefficients introduced by Cash-Karp.
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">runge_kutta_cash_karp54</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">error_stepper_type</span><span class="special">;</span>
 </pre>
@@ -1187,6 +1192,7 @@
           stepper exists which can be used via
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">controlled_runge_kutta</span><span class="special">&lt;</span> <span class="identifier">error_stepper_type</span> <span class="special">&gt;</span> <span class="identifier">controlled_stepper_type</span><span class="special">;</span>
 <span class="identifier">controlled_stepper_type</span> <span class="identifier">controlled_stepper</span><span class="special">;</span>
@@ -1213,6 +1219,7 @@
           by using <code class="computeroutput"><span class="identifier">make_controlled</span></code>:
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="identifier">integrate_adaptive</span><span class="special">(</span> <span class="identifier">make_controlled</span><span class="special">&lt;</span> <span class="identifier">error_stepper_type</span> <span class="special">&gt;(</span> <span class="number">1.0e-10</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">harmonic_oscillator</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">);</span>
 </pre>
@@ -1228,6 +1235,7 @@
           is
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="identifier">integrate_adaptive</span><span class="special">(</span> <span class="identifier">make_controlled</span><span class="special">(</span> <span class="number">1.0e-10</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="identifier">error_stepper_type</span><span class="special">()</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">harmonic_oscillator</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">);</span>
 </pre>
@@ -1243,6 +1251,7 @@
           with all parameters is therefore
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">double</span> <span class="identifier">abs_err</span> <span class="special">=</span> <span class="number">1.0e-10</span> <span class="special">,</span> <span class="identifier">rel_err</span> <span class="special">=</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="identifier">a_x</span> <span class="special">=</span> <span class="number">1.0</span> <span class="special">,</span> <span class="identifier">a_dxdt</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span>
 <span class="identifier">controlled_stepper_type</span> <span class="identifier">controlled_stepper</span><span class="special">(</span> <span class="identifier">default_error_checker</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;(</span> <span class="identifier">abs_err</span> <span class="special">,</span> <span class="identifier">rel_err</span> <span class="special">,</span> <span class="identifier">a_x</span> <span class="special">,</span> <span class="identifier">a_dxdt</span> <span class="special">)</span> <span class="special">);</span>
