@@ -63,6 +63,7 @@
           code is very simple
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="identifier">complex</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="special">,</span> <span class="number">1</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
 
@@ -88,6 +89,7 @@
           function. In this cast the Stuart-Landau oscillator looks like
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">double</span> <span class="identifier">eta</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span>
 <span class="keyword">double</span> <span class="identifier">alpha</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span>
@@ -109,6 +111,7 @@
           Integration is also very easy:
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="identifier">state_type</span> <span class="identifier">x</span> <span class="special">=</span> <span class="special">{{</span> <span class="identifier">complex</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;(</span> <span class="number">1.0</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">)</span> <span class="special">}};</span>
 
@@ -153,6 +156,7 @@
           components. Here, is how this function looks like
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">container_type</span><span class="special">;</span>
 
@@ -204,6 +208,7 @@
           All this can be easily done with the following piece of code:
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">n</span> <span class="special">=</span> <span class="number">64</span><span class="special">;</span>
 <span class="identifier">container_type</span> <span class="identifier">q</span><span class="special">(</span> <span class="identifier">n</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">p</span><span class="special">(</span> <span class="identifier">n</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">);</span>
@@ -230,6 +235,7 @@
           The observer is more or less trivial
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">streaming_observer</span>
 <span class="special">{</span>
@@ -298,6 +304,7 @@
           also need to store the individual frequencies of each oscillator.
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">container_type</span><span class="special">;</span>
 
@@ -360,6 +367,7 @@
           and we record <span class="emphasis"><em>Z</em></span> for different values of <span class="emphasis"><em>&#949;</em></span>.
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">statistics_observer</span>
 <span class="special">{</span>
@@ -392,6 +400,7 @@
           2</em></span>.
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">n</span> <span class="special">=</span> <span class="number">16384</span><span class="special">;</span>
 <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">dt</span> <span class="special">=</span> <span class="number">0.1</span><span class="special">;</span>
@@ -449,6 +458,7 @@
           all quantities
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="comment">// first increase fusion macro variables</span>
 <span class="preprocessor">#define</span> <span class="identifier">BOOST_FUSION_INVOKE_MAX_ARITY</span> <span class="number">15</span>
@@ -490,6 +500,7 @@
           equivalent to the example in the first section of this tutorial
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">oscillator</span>
 <span class="special">{</span>
@@ -513,6 +524,7 @@
           Furthermore, the basic calculations are now performed by the <code class="computeroutput"><span class="identifier">fusion_algebra</span></code> which must also be given.
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">deriv_type</span> <span class="special">,</span> <span class="identifier">time_type</span> <span class="special">,</span> <span class="identifier">fusion_algebra</span> <span class="special">&gt;</span> <span class="identifier">stepper_type</span><span class="special">;</span>
 
@@ -527,6 +539,7 @@
           the observer is defined a bit different
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">streaming_observer</span>
 <span class="special">{</span>
@@ -566,7 +579,7 @@
             Using <a href="http://www.boost.org/doc/libs/release/libs/units/index.html" target="_top">Boost.Units</a>
             works nicely but compilation can be very time and memory consuming. For
             example the unit test for <a href="http://www.boost.org/doc/libs/release/libs/units/index.html" target="_top">Boost.Units</a>
-            take up to 4 GB of memory.
+            take up to 4 GB of memory at compilation.
           </p></td></tr>
 </table></div>
 <p>
@@ -598,6 +611,7 @@
           The definition of the system is
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">matrix</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
 
@@ -691,6 +705,7 @@
           Here is a simple example:
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">mpf_class</span> <span class="identifier">value_type</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="identifier">value_type</span> <span class="special">,</span> <span class="number">3</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
@@ -715,6 +730,7 @@
           which can be used
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">precision</span> <span class="special">=</span> <span class="number">1024</span><span class="special">;</span>
 <span class="identifier">mpf_set_default_prec</span><span class="special">(</span> <span class="identifier">precision</span> <span class="special">);</span>
@@ -776,6 +792,7 @@
           is kept which should be changed whenever the states' size change.
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">coord_type</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">pair</span><span class="special">&lt;</span> <span class="identifier">coord_type</span> <span class="special">,</span> <span class="identifier">coord_type</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
@@ -861,6 +878,7 @@
           of 60.
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="comment">//start with 60 sites</span>
 <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">N_start</span> <span class="special">=</span> <span class="number">60</span><span class="special">;</span>
@@ -896,6 +914,7 @@
           the start index of the potential changes in this case.
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">double</span> <span class="identifier">t</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
 <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">dt</span> <span class="special">=</span> <span class="number">0.1</span><span class="special">;</span>
@@ -928,6 +947,7 @@
           , <code class="computeroutput"><span class="identifier">p</span></code> and <code class="computeroutput"><span class="identifier">distr</span></code>.
         </p>
 <p>
+          
 </p>
 <pre class="programlisting"><span class="keyword">void</span> <span class="identifier">do_resize</span><span class="special">(</span> <span class="identifier">coord_type</span> <span class="special">&amp;</span><span class="identifier">q</span> <span class="special">,</span> <span class="identifier">coord_type</span> <span class="special">&amp;</span><span class="identifier">p</span> <span class="special">,</span> <span class="identifier">coord_type</span> <span class="special">&amp;</span><span class="identifier">distr</span> <span class="special">,</span> <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">N</span> <span class="special">)</span>
 <span class="special">{</span>

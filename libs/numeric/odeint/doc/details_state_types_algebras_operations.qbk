@@ -1,43 +1,38 @@
 [section State types, algebras and operations]
 
+In odeint the integration algorithms are implemented independently of the
+underlying fundamental mathematical operations.
+This is realized by giving the user full control over the state type and the
+mathematical operations for this state type.
+Technically, this is done by introducing three concepts: StateType, Algebra,
+Operations.
+Most of the steppers in odeint expect three classes types fullfilling these
+concepts as template parameters.
+Note that these concepts are not fully independent of each other but rather a
+valid combination must be provided in order to make the steppers work.
+In the following we will give some examples on reasonable
+state_type-algebra-operations combinations.
+For the most common state types, like `vector<double>` or `array<double,N>`
+the default values range_algebra and default_operations are perfectly fine and
+odeint can be used as is without worrying about algebra/operations at all.
 
+[important state_type, algebra and operations are not independent, a valid
+combination must be provided to make odeint work properly]
 
-[section Algebras and operations]
-
-which steppers support algebras
-
-[endsect]
-
-
-[section Adapt your own state types]
-
-One of the main goals of odeint is to provide algorithms independent from the underlying state type.
-The state type is a type representing the state of the ODE, that is the
-variable x.
-As we usually deal with systems of ODEs, the state type is represented by some
-sort of container.
-Most often, the value type of the container is simply `double`, as usually
-ODEs are defined as systems of real variables.
-However, it is also possible to use complex types (`complex<double>`) as
-underlying value type.
-Moreover, you can even adopt odeint to work with _any_ value type as long as
-the required operations are defined.
-However, in the following I will describe how your own state types can be used
-to run with odeint.
-I will assume that the state type is some sort of container aggregating a
-number of values representing state of the ODE.
-As odeint also takes care for the memory management of where intermediate results are stored, 
-it first of all needs to know how to construct/destruct and possibly resize the state type.
-Additionally, it requires to be told how basic algebraic operations are to be performed on state 
-types. So when introducing new state types to odeint, the following points have to be considered:
+Moreover, as odeint handles the memory required for intermediate temporary
+objects itself, it also needs knowledge about how to create state_type objects
+and maybe how to allocate memory (resizing).
+All in all, the following things have to be taken care of when odeint is used
+with non-standard state types:
 
 * construction/destruction
 * resizing (if possible/required)
 * algebraic operations
 
-Of course, odeint already provides basic interfaces for most of the usual state types.
-So if you use a `std::vector`, or a `boost::array` as state type no additional work is required,
-they just work out of the box.
+Again, odeint already provides basic interfaces for most of the usual state
+types.
+So if you use a `std::vector`, or a `boost::array` as state type no additional
+work is required, they just work out of the box.
 
 [section Construction/Resizing]
 
@@ -62,7 +57,7 @@ following functionality:
   pointing to the end of the sequence]]
 ]
 
-[caution If your state type does not allocate memory by default construction,
+[warning If your state type does not allocate memory by default construction,
 you [*must define it as resizeable] and provide resize functionality (see
 below). Otherwise segmentation faults will occur.]
 
@@ -145,31 +140,47 @@ A complete example can be found in [github_link libs/numeric/odeint/examples/lis
 
 [endsect]
 
-[section Algebraic operations]
+[section Algebras and Operations]
 
-If your state type is not supported by Boost.Range there are several
+To provide maximum flexibility odeint is implemented in a highly modularized
+way. This means it is possible to change the underlying mathematical
+operations without touching the integration algorithms.
+The fundamental mathematical operations are those of a vector space, that is
+addition of `state_types` and multiplication of `state_type`s with a scalar
+(`time_type`). In odeint this is realized in two concepts: _Algebra_ and
+_Operations_. 
+The standard way how this works is by the range algebra which provides
+functions that apply a specific operation to each of the individual elements
+of a container based on the __boost_range library.
+If your state type is not supported by __boost_range there are several
 possibilities to tell odeint how to do algebraic operations:
 
 * Implement `boost::begin` and `boost::end` for your state type so it works
-with Boost.Range.
+with __boost_range.
 * Implement vector-vector addition operator `+` and scalar-vector
 multiplication operator `*` and use the non-standard `vector_space_algebra`.
-* Implement your own algebra that defines the required operations.
+* Implement your own algebra that implements the required functions.
 
 [section GSL Vector]
 
-All the above examples use __boost_range to iterate through the elements of the
-state type and perform the algebraic operation for each element.
-This is the most natural way when dealing with state types which are some kind
-of container.
-But what to do if your state type does not support iterators at all?
 In the following example we will try to use the `gsl_vector` type from __gsl (GNU
 Scientific Library) as state type in odeint.
+We will realize this by implementing a wrapper around the gsl_vector that
+takes care of construction/destruction.
+Also, __boost_range is extended such that it works with `gsl_vector`s as well
+which required also the implementation of a new `gsl_iterator`.
+
+[note odeint already includes all the code presented here, see [github_link
+boost/numeric/odeint/external/gsl/gsl_wrapper.hpp gsl_wrapper.hpp], so `gsl_vector`s
+can be used straight out-of-box.
+The following description is just for educational purpose.] 
+
 The GSL is a C library, so `gsl_vector` has neither constructor, nor
 destructor or any `begin` or `end` function, no iterators at all.
 So to make it work with odeint plenty of things have to be implemented.
 Note that all of the work shown here is already included in odeint, so using
-gls_vectors in odeint doesn't require any further adjustments.
+`gsl_vector`s in odeint doesn't require any further adjustments.
+We present it here just as an educational example.
 We start with defining appropriate constructors and destructors.
 This is done by specializing the `state_wrapper` for `gsl_vector`.
 State wrappers are used by the steppers internally to create and manage
@@ -182,7 +193,6 @@ struct state_wrapper< gsl_vector* >
     typedef double value_type;
     typedef gsl_vector* state_type;
     typedef state_wrapper< gsl_vector* > state_wrapper_type;
-    typedef boost::true_type is_resizeable;
 
     state_type m_v;
 
@@ -238,8 +248,8 @@ struct resize_impl< gsl_vector* , gsl_vector* >
 };
 ``
 
-Up to now, we defined creation and resizing, but gsl_vectors also don't
-support iterators, so we first implement a gsl iterator:
+Up to now, we defined creation/destruction and resizing, but gsl_vectors also
+don't support iterators, so we first implement a gsl iterator:
 
 ``
 /*
@@ -425,8 +435,6 @@ system by using the `vector_space_algebra` again:
 
 The whole example can be found in [github_link
 libs/numeric/odeint/examples/lorenz_point.cpp lorenz_point.cpp]
-
-[endsect]
 
 [endsect]
 

@@ -107,7 +107,9 @@ It is quite easy but the compilation time might take very long. Furthermore, the
 
 [units_observer]
 
-[caution Using __boost_units works nicely but compilation can be very time and memory consuming. For example the unit test for __boost_units take up to 4 GB of memory.]
+[caution Using __boost_units works nicely but compilation can be very time and
+memory consuming. For example the unit test for __boost_units take up to 4 GB
+of memory at compilation.]
 
 The full cpp file for this example can be found here [github_link libs/numeric/odeint/examples/harmonic_oscillator_units.cpp harmonic_oscillator_units.cpp].
 

@@ -1,3 +1,17 @@
+/*
+ libs/numeric/odeint/examples/stochastic_euler.hpp
+
+ Copyright 2009 Karsten Ahnert
+ Copyright 2009 Mario Mulansky
+
+ Stochastic euler stepper example and Ornstein-Uhlenbeck process
+
+ Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
+
 #include <vector>
 #include <iostream>
 #include <random>
@@ -116,14 +130,17 @@ struct streaming_observer
     }
 };
 
+
 int main( int argc , char **argv )
 {
     using namespace std;
     using namespace boost::numeric::odeint;
 
+    //[ ornstein_uhlenbeck_main
     double dt = 0.1;
     state_type x = {{ 1.0 }};
-    integrate_const( stochastic_euler< N >() , make_pair( ornstein_det() , ornstein_stoch( 1.0 ) ) , x , 0.0 , 10.0 , dt , streaming_observer() );
-
+    integrate_const( stochastic_euler< N >() , make_pair( ornstein_det() , ornstein_stoch( 1.0 ) ) ,
+            x , 0.0 , 10.0 , dt , streaming_observer() );
+    //]
     return 0;
 }
