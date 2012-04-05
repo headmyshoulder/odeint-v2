@@ -27,6 +27,7 @@
         stepper will be passed by value:
       </p>
 <p>
+        
 </p>
 <pre class="programlisting"><span class="identifier">rk4</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// pass sys by value</span>
 </pre>
@@ -45,6 +46,7 @@
         all of you system will take place:
       </p>
 <p>
+        
 </p>
 <pre class="programlisting"><span class="identifier">rk4</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// pass sys as references</span>
 </pre>

@@ -27,6 +27,7 @@
         of these two functions is very simple:
       </p>
 <p>
+        
 </p>
 <pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">stepper1</span> <span class="special">=</span> <span class="identifier">make_controlled</span><span class="special">(</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="identifier">stepper_type</span><span class="special">()</span> <span class="special">);</span>
 <span class="keyword">auto</span> <span class="identifier">stepper2</span> <span class="special">=</span> <span class="identifier">make_dense_output</span><span class="special">(</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="identifier">stepper_type</span><span class="special">()</span> <span class="special">);</span>
@@ -36,9 +37,14 @@
 <p>
         The first two parameters are the absolute and the relative error tolerances
         and the third parameter is the stepper. In C++03 you can infer the type from
+<<<<<<< HEAD
         the <code class="computeroutput"><span class="identifier">result_of</span></code> mechanism:
+=======
+        the classical <code class="computeroutput"><span class="identifier">result_of</span></code> mechanism:
+>>>>>>> e8dce5cbc067e6baaac37bf55c8f6278f61559b4
       </p>
 <p>
+        
 </p>
 <pre class="programlisting"><span class="identifier">result_of</span><span class="special">::</span><span class="identifier">make_controlled</span><span class="special">&lt;</span> <span class="identifier">stepper_type</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">stepper3</span> <span class="special">=</span> <span class="identifier">make_controlled</span><span class="special">(</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="identifier">stepper_type</span><span class="special">()</span> <span class="special">);</span>
 <span class="identifier">result_of</span><span class="special">::</span><span class="identifier">make_dense_output</span><span class="special">&lt;</span> <span class="identifier">stepper_type</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">stepper4</span> <span class="special">=</span> <span class="identifier">make_dense_output</span><span class="special">(</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="identifier">stepper_type</span><span class="special">()</span> <span class="special">);</span>
