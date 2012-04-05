@@ -1,5 +1,25 @@
 /*
  [auto_generated]
+ ../../../../boost/numeric/odeint/version.hpp
+ 
+ [begin_description]
+ 
+ [end_description]
+ 
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+ 
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+*/
+
+
+#ifndef ____________BOOST_NUMERIC_ODEINT_VERSION_HPP_INCLUDED
+#define ____________BOOST_NUMERIC_ODEINT_VERSION_HPP_INCLUDED
+
+/*
+ [auto_generated]
  boost/numeric/odeint/version.hpp
 
  [begin_description]
@@ -53,3 +73,4 @@ inline std::string get_version_string( void )
 }
 
 #endif // BOOST_NUMERIC_ODEINT_VERSION_HPP_INCLUDED
+#endif // ____________BOOST_NUMERIC_ODEINT_VERSION_HPP_INCLUDED

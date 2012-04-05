@@ -1,5 +1,25 @@
 /*
  [auto_generated]
+ ../../../../boost/numeric/odeint/stepper/base/explicit_error_stepper_base.hpp
+ 
+ [begin_description]
+ 
+ [end_description]
+ 
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+ 
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+*/
+
+
+#ifndef ____________BOOST_NUMERIC_ODEINT_STEPPER_BASE_EXPLICIT_ERROR_STEPPER_BASE_HPP_INCLUDED
+#define ____________BOOST_NUMERIC_ODEINT_STEPPER_BASE_EXPLICIT_ERROR_STEPPER_BASE_HPP_INCLUDED
+
+/*
+ [auto_generated]
  boost/numeric/odeint/stepper/base/explicit_error_stepper_base.hpp
 
  [begin_description]
@@ -18,8 +38,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_BASE_EXPLICIT_ERROR_STEPPER_BASE_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_STEPPER_BASE_EXPLICIT_ERROR_STEPPER_BASE_HPP_INCLUDED
 
-#include <boost/ref.hpp>
-#include <boost/bind.hpp>
+#include <boost/numeric/odeint/util/bind.hpp>
 
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
@@ -124,8 +143,8 @@ public:
     template< class System , class StateIn , class StateOut , class Err >
     void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt , Err &xerr )
     {
-        typename boost::unwrap_reference< System >::type &sys = system;
-        m_resizer.adjust_size( in , boost::bind( &internal_stepper_base_type::template resize_impl<StateIn> , boost::ref( *this ) , _1 ) );
+        typename detail::unwrap_reference< System >::type &sys = system;
+        m_resizer.adjust_size( in , detail::bind( &internal_stepper_base_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
         sys( in , m_dxdt.m_v ,t );
         this->stepper().do_step_impl( system , in , m_dxdt.m_v , t , out , dt , xerr );
     }
@@ -163,8 +182,8 @@ private:
     template< class System , class StateInOut , class Err >
     void do_step_v1( System system , StateInOut &x , const time_type &t , const time_type &dt , Err &xerr )
     {
-        typename boost::unwrap_reference< System >::type &sys = system;
-        m_resizer.adjust_size( in , boost::bind( &internal_stepper_base_type::template resize_impl<StateIn> , boost::ref( *this ) , _1 ) );
+        typename detail::unwrap_reference< System >::type &sys = system;
+        m_resizer.adjust_size( in , detail::bind( &internal_stepper_base_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
         sys( x , m_dxdt.m_v ,t );
         this->stepper().do_step_impl( system , x , m_dxdt.m_v , t , x , dt , xerr );
     }
@@ -195,3 +214,4 @@ protected:
 } // boost
 
 #endif // BOOST_NUMERIC_ODEINT_STEPPER_BASE_EXPLICIT_ERROR_STEPPER_BASE_HPP_INCLUDED
+#endif // ____________BOOST_NUMERIC_ODEINT_STEPPER_BASE_EXPLICIT_ERROR_STEPPER_BASE_HPP_INCLUDED

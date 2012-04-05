@@ -1,5 +1,25 @@
 /*
  [auto_generated]
+ ../../../../boost/numeric/odeint/stepper/implicit_euler.hpp
+ 
+ [begin_description]
+ 
+ [end_description]
+ 
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+ 
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+*/
+
+
+#ifndef ____________BOOST_NUMERIC_ODEINT_STEPPER_IMPLICIT_EULER_HPP_INCLUDED
+#define ____________BOOST_NUMERIC_ODEINT_STEPPER_IMPLICIT_EULER_HPP_INCLUDED
+
+/*
+ [auto_generated]
  boost/numeric/odeint/stepper/implicit_euler.hpp
 
  [begin_description]
@@ -21,8 +41,7 @@
 
 #include <utility>
 
-#include <boost/ref.hpp>
-#include <boost/bind.hpp>
+#include <boost/numeric/odeint/util/bind.hpp>
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
@@ -73,14 +92,14 @@ public:
     template< class System >
     void do_step( System system , state_type &x , value_type t , value_type dt )
     {
-        typedef typename boost::unwrap_reference< System >::type system_type;
-        typedef typename boost::unwrap_reference< typename system_type::first_type >::type deriv_func_type;
-        typedef typename boost::unwrap_reference< typename system_type::second_type >::type jacobi_func_type;
+        typedef typename detail::unwrap_reference< System >::type system_type;
+        typedef typename detail::unwrap_reference< typename system_type::first_type >::type deriv_func_type;
+        typedef typename detail::unwrap_reference< typename system_type::second_type >::type jacobi_func_type;
         system_type &sys = system;
         deriv_func_type &deriv_func = sys.first;
         jacobi_func_type &jacobi_func = sys.second;
 
-        m_resizer.adjust_size( x , boost::bind( &stepper_type::template resize_impl<state_type> , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( x , detail::bind( &stepper_type::template resize_impl<state_type> , detail::ref( *this ) , detail::_1 ) );
 
         for( size_t i=0 ; i<x.size() ; ++i )
             m_pm.m_v[i] = i;
@@ -168,3 +187,4 @@ private:
 
 
 #endif // BOOST_NUMERIC_ODEINT_STEPPER_IMPLICIT_EULER_HPP_INCLUDED
+#endif // ____________BOOST_NUMERIC_ODEINT_STEPPER_IMPLICIT_EULER_HPP_INCLUDED

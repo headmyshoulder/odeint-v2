@@ -1,5 +1,25 @@
 /*
  [auto_generated]
+ ../../../../boost/numeric/odeint/stepper/runge_kutta4_classic.hpp
+ 
+ [begin_description]
+ 
+ [end_description]
+ 
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+ 
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+*/
+
+
+#ifndef ____________BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA4_CLASSIC_HPP_INCLUDED
+#define ____________BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA4_CLASSIC_HPP_INCLUDED
+
+/*
+ [auto_generated]
  boost/numeric/odeint/stepper/runge_kutta4_classic.hpp
 
  [begin_description]
@@ -19,7 +39,6 @@
 #define BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA4_CLASSIC_HPP_INCLUDED
 
 
-#include <boost/ref.hpp>
 
 #include <boost/numeric/odeint/stepper/base/explicit_stepper_base.hpp>
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
@@ -68,9 +87,9 @@ public :
 
         static const value_type val1 = static_cast< value_type >( 1.0 );
 
-        m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize_impl< StateIn > , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
 
-        typename boost::unwrap_reference< System >::type &sys = system;
+        typename detail::unwrap_reference< System >::type &sys = system;
 
         const time_type dh = static_cast< value_type >( 0.5 ) * dt;
         const time_type th = t + dh;
@@ -144,3 +163,4 @@ private:
 
 
 #endif // BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA4_CLASSIC_HPP_INCLUDED
+#endif // ____________BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA4_CLASSIC_HPP_INCLUDED

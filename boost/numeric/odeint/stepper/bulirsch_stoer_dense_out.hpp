@@ -1,5 +1,25 @@
 /*
  [auto_generated]
+ ../../../../boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp
+ 
+ [begin_description]
+ 
+ [end_description]
+ 
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+ 
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+*/
+
+
+#ifndef ____________BOOST_NUMERIC_ODEINT_STEPPER_BULIRSCH_STOER_DENSE_OUT_HPP_INCLUDED
+#define ____________BOOST_NUMERIC_ODEINT_STEPPER_BULIRSCH_STOER_DENSE_OUT_HPP_INCLUDED
+
+/*
+ [auto_generated]
  boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp
 
  [begin_description]
@@ -23,8 +43,7 @@
 
 #include <algorithm>
 
-#include <boost/ref.hpp>
-#include <boost/bind.hpp>
+#include <boost/numeric/odeint/util/bind.hpp>
 
 #include <boost/math/special_functions/binomial.hpp>
 
@@ -226,7 +245,7 @@ public:
     template< class System , class StateInOut >
     controlled_step_result try_step( System system , StateInOut &x , time_type &t , time_type &dt )
     {
-        m_xnew_resizer.adjust_size( x , boost::bind( &controlled_error_bs_type::template resize_m_xnew< StateInOut > , boost::ref( *this ) , _1 ) );
+        m_xnew_resizer.adjust_size( x , detail::bind( &controlled_error_bs_type::template resize_m_xnew< StateInOut > , detail::ref( *this ) , detail::_1 ) );
         controlled_step_result res = try_step( system , x , t , m_xnew.m_v , dt );
         if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged ) )
         {
@@ -241,8 +260,8 @@ public:
     {
         static const time_type val1( static_cast< time_type >( 1.0 ) );
 
-        typename boost::unwrap_reference< System >::type &sys = system;
-//        if( m_resizer.adjust_size( in , boost::bind( &controlled_error_bs_type::template resize_impl< StateIn > , boost::ref( *this ) , _1 ) ) )
+        typename detail::unwrap_reference< System >::type &sys = system;
+//        if( m_resizer.adjust_size( in , detail::bind( &controlled_error_bs_type::template resize_impl< StateIn > , detail::ref( *this ) , detail::_1 ) ) )
 //            reset(); // system resized -> reset
 //        if( dt != m_dt_last )
 //            reset(); // step size changed from outside -> reset
@@ -385,7 +404,7 @@ public:
     template< class StateType >
     void initialize( const StateType &x0 , const time_type &t0 , const time_type &dt0 )
     {
-        m_resizer.adjust_size( x0 , boost::bind( &controlled_error_bs_type::template resize_impl< StateType > , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( x0 , detail::bind( &controlled_error_bs_type::template resize_impl< StateType > , detail::ref( *this ) , detail::_1 ) );
         boost::numeric::odeint::copy( x0 , *m_current_state );
         m_t = t0;
         m_dt = dt0;
@@ -403,7 +422,7 @@ public:
 
         if( m_first )
         {
-            typename boost::unwrap_reference< System >::type &sys = system;
+            typename detail::unwrap_reference< System >::type &sys = system;
             sys( *m_current_state , *m_current_deriv , m_t );
         }
 
@@ -835,3 +854,4 @@ private:
 }
 
 #endif // BOOST_NUMERIC_ODEINT_STEPPER_BULIRSCH_STOER_HPP_INCLUDED
+#endif // ____________BOOST_NUMERIC_ODEINT_STEPPER_BULIRSCH_STOER_DENSE_OUT_HPP_INCLUDED

@@ -1,5 +1,25 @@
 /*
  [auto_generated]
+ ../../../../boost/numeric/odeint/stepper/explicit_generic_rk.hpp
+ 
+ [begin_description]
+ 
+ [end_description]
+ 
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+ 
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+*/
+
+
+#ifndef ____________BOOST_NUMERIC_ODEINT_STEPPER_EXPLICIT_GENERIC_RK_HPP_INCLUDED
+#define ____________BOOST_NUMERIC_ODEINT_STEPPER_EXPLICIT_GENERIC_RK_HPP_INCLUDED
+
+/*
+ [auto_generated]
  boost/numeric/odeint/stepper/explicit_generic_rk.hpp
 
  [begin_description]
@@ -21,7 +41,6 @@
 
 #include <boost/array.hpp>
 
-#include <boost/ref.hpp>
 
 #include <boost/numeric/odeint/stepper/base/explicit_stepper_base.hpp>
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
@@ -157,10 +176,10 @@ public:
     void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt ,
             const time_type &t , StateOut &out , const time_type &dt )
     {
-        //typedef typename boost::unwrap_reference< System >::type unwrapped_system_type;
+        //typedef typename detail::unwrap_reference< System >::type unwrapped_system_type;
         //unwrapped_system_type &sys = system;
 
-        m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize_impl< StateIn > , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
 
         // actual calculation done in generic_rk.hpp
         m_rk_algorithm.do_step( stepper_base_type::m_algebra , system , in , dxdt , t , out , dt , m_x_tmp.m_v , m_F );
@@ -203,3 +222,4 @@ private:
 }
 }
 #endif // BOOST_NUMERIC_ODEINT_STEPPER_EXPLICIT_GENERIC_RK_HPP_INCLUDED
+#endif // ____________BOOST_NUMERIC_ODEINT_STEPPER_EXPLICIT_GENERIC_RK_HPP_INCLUDED

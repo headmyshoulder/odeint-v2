@@ -1,5 +1,25 @@
 /*
  [auto_generated]
+ ../../../../boost/numeric/odeint/stepper/detail/generic_rk_algorithm.hpp
+ 
+ [begin_description]
+ 
+ [end_description]
+ 
+ Copyright 2009-2011 Karsten Ahnert
+ Copyright 2009-2011 Mario Mulansky
+ 
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+*/
+
+
+#ifndef ____________BOOST_NUMERIC_ODEINT_STEPPER_DETAIL_GENERIC_RK_ALGORITHM_HPP_INCLUDED
+#define ____________BOOST_NUMERIC_ODEINT_STEPPER_DETAIL_GENERIC_RK_ALGORITHM_HPP_INCLUDED
+
+/*
+ [auto_generated]
  boost/numeric/odeint/stepper/detail/generic_rk_algorithm.hpp
 
  [begin_description]
@@ -39,6 +59,7 @@
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
 #include <boost/numeric/odeint/stepper/detail/generic_rk_call_algebra.hpp>
 #include <boost/numeric/odeint/stepper/detail/generic_rk_operations.hpp>
+#include <boost/numeric/odeint/util/bind.hpp>
 
 namespace mpl = boost::mpl;
 namespace fusion = boost::fusion;
@@ -229,7 +250,7 @@ public:
             const Time &t , StateOut &out , const Time &dt ,
             StateTemp &x_tmp , Deriv F[StageCount-1] ) const
     {
-        typedef typename boost::unwrap_reference< System >::type unwrapped_system_type;
+        typedef typename detail::unwrap_reference< System >::type unwrapped_system_type;
         unwrapped_system_type &sys = system;
         fusion::for_each( m_stages , calculate_stage<
                 unwrapped_system_type , StateIn , StateTemp , DerivIn , Deriv , StateOut , Time >
@@ -247,3 +268,4 @@ private:
 }
 
 #endif // BOOST_NUMERIC_ODEINT_STEPPER_DETAIL_GENERIC_RK_ALGORITHM_HPP_INCLUDED
+#endif // ____________BOOST_NUMERIC_ODEINT_STEPPER_DETAIL_GENERIC_RK_ALGORITHM_HPP_INCLUDED
