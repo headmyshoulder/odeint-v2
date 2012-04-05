@@ -35,9 +35,8 @@
       </p>
 <p>
         The first two parameters are the absolute and the relative error tolerances
-        and the third parameter is the stepper. Of course you can also infer the
-        type from the classical <code class="computeroutput"><span class="identifier">result_of</span></code>
-        mechanism:
+        and the third parameter is the stepper. In C++03 you can infer the type from
+        the <code class="computeroutput"><span class="identifier">result_of</span></code> mechanism:
       </p>
 <p>
 </p>
@@ -47,8 +46,71 @@
 <p>
       </p>
 <p>
-        explain the mechanis and how your own steppers can be used with the generation
-        functions
+        To use your own steppers with the <code class="computeroutput"><span class="identifier">make_controlled</span></code>
+        or <code class="computeroutput"><span class="identifier">make_dense_output</span></code> you
+        need to specialize two class templates. Suppose your steppers are called
+        <code class="computeroutput"><span class="identifier">custom_stepper</span></code>, <code class="computeroutput"><span class="identifier">custom_controller</span></code> and <code class="computeroutput"><span class="identifier">custom_dense_output</span></code>.
+        Then, the first class you need to specialize is <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">get_controller</span></code>,
+        a meta function returning the type of the controller:
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">numeric</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">odeint</span> <span class="special">{</span>
+
+<span class="keyword">template</span><span class="special">&lt;&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">get_controller</span><span class="special">&lt;</span> <span class="identifier">custom_stepper</span> <span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">custom_controller</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="special">}</span> <span class="special">}</span> <span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+        The second one is a factory class <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">odeint</span><span class="special">::</span><span class="identifier">controller_factory</span></code>
+        which the constructs the controller from the tolerances and the stepper.
+        In our dummy implementation this class is
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">numeric</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">odeint</span> <span class="special">{</span>
+
+<span class="keyword">template</span><span class="special">&lt;&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">controller_factory</span><span class="special">&lt;</span> <span class="identifier">custom_stepper</span> <span class="special">,</span> <span class="identifier">custom_controller</span> <span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="identifier">custom_controller</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">double</span> <span class="identifier">abs_tol</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">rel_tol</span> <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">custom_stepper</span> <span class="special">&amp;</span> <span class="special">)</span> <span class="keyword">const</span>
+    <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">custom_controller</span><span class="special">();</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="special">}</span> <span class="special">}</span> <span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+        This is all to use the <code class="computeroutput"><span class="identifier">make_controlled</span></code>
+        mechanism. Now you can use your controller via
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">stepper5</span> <span class="special">=</span> <span class="identifier">make_controlled</span><span class="special">(</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="number">1.0e-6</span> <span class="special">,</span> <span class="identifier">custom_stepper</span><span class="special">()</span> <span class="special">);</span>
+</pre>
+<p>
+      </p>
+<p>
+        For the dense_output_stepper everything works similar. Here you have to specialize
+        <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">odeint</span><span class="special">::</span><span class="identifier">get_dense_output</span></code> and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">odeint</span><span class="special">::</span><span class="identifier">dense_output_factory</span></code>.
+        These two classes have the same syntax as their relatives <code class="computeroutput"><span class="identifier">get_controller</span></code>
+        and <code class="computeroutput"><span class="identifier">controller_factory</span></code>.
+      </p>
+<p>
+        Of course, all controllers and dense-output steppers in odeint can be used
+        with these mechanisms. In the table below you will find, which steppers is
+        contructed from <code class="computeroutput"><span class="identifier">make_controlled</span></code>
+        or <code class="computeroutput"><span class="identifier">make_dense_output</span></code> if applied
+        on a stepper from odeint:
       </p>
 <div class="table">
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.generation_functions.generation_functions_make_controlled__abs_error___rel_error___stepper__"></a><p class="title"><b>Table&#160;1.8.&#160;Generation functions make_controlled( abs_error , rel_error , stepper
