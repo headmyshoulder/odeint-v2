@@ -19,8 +19,7 @@
 #define BOOST_NUMERIC_ODEINT_STEPPER_ROSENBROCK4_CONTROLLER_HPP_INCLUDED
 
 
-#include <boost/ref.hpp>
-#include <boost/bind.hpp>
+#include <boost/numeric/odeint/util/bind.hpp>
 
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
@@ -90,7 +89,7 @@ public:
     boost::numeric::odeint::controlled_step_result
     try_step( System sys , state_type &x , value_type &t , value_type &dt )
     {
-        m_xnew_resizer.adjust_size( x , boost::bind( &controller_type::template resize_m_xnew< state_type > , boost::ref( *this ) , _1 ) );
+        m_xnew_resizer.adjust_size( x , detail::bind( &controller_type::template resize_m_xnew< state_type > , detail::ref( *this ) , detail::_1 ) );
         boost::numeric::odeint::controlled_step_result res = try_step( sys , x , t , m_xnew.m_v , dt );
         if( res == success )
         {
@@ -109,7 +108,7 @@ public:
     {
         static const value_type safe = 0.9 , fac1 = 5.0 , fac2 = 1.0 / 6.0;
 
-        m_xerr_resizer.adjust_size( x , boost::bind( &controller_type::template resize_m_xerr< state_type > , boost::ref( *this ) , _1 ) );
+        m_xerr_resizer.adjust_size( x , detail::bind( &controller_type::template resize_m_xerr< state_type > , detail::ref( *this ) , detail::_1 ) );
 
         m_stepper.do_step( sys , x , t , xout , dt , m_xerr.m_v );
         value_type err = error( xout , x , m_xerr.m_v );

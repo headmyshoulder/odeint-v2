@@ -21,8 +21,7 @@
 
 #include <utility>
 
-#include <boost/ref.hpp>
-#include <boost/bind.hpp>
+#include <boost/numeric/odeint/util/bind.hpp>
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
@@ -73,14 +72,14 @@ public:
     template< class System >
     void do_step( System system , state_type &x , value_type t , value_type dt )
     {
-        typedef typename boost::unwrap_reference< System >::type system_type;
-        typedef typename boost::unwrap_reference< typename system_type::first_type >::type deriv_func_type;
-        typedef typename boost::unwrap_reference< typename system_type::second_type >::type jacobi_func_type;
+        typedef typename detail::unwrap_reference< System >::type system_type;
+        typedef typename detail::unwrap_reference< typename system_type::first_type >::type deriv_func_type;
+        typedef typename detail::unwrap_reference< typename system_type::second_type >::type jacobi_func_type;
         system_type &sys = system;
         deriv_func_type &deriv_func = sys.first;
         jacobi_func_type &jacobi_func = sys.second;
 
-        m_resizer.adjust_size( x , boost::bind( &stepper_type::template resize_impl<state_type> , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( x , detail::bind( &stepper_type::template resize_impl<state_type> , detail::ref( *this ) , detail::_1 ) );
 
         for( size_t i=0 ; i<x.size() ; ++i )
             m_pm.m_v[i] = i;

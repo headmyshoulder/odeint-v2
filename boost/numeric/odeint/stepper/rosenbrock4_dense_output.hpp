@@ -21,8 +21,7 @@
 
 #include <utility>
 
-#include <boost/ref.hpp>
-#include <boost/bind.hpp>
+#include <boost/numeric/odeint/util/bind.hpp>
 
 #include <boost/numeric/odeint/stepper/rosenbrock4_controller.hpp>
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
@@ -91,7 +90,7 @@ public:
     template< class StateType >
     void initialize( const StateType &x0 , const time_type &t0 , const time_type &dt0 )
     {
-        m_resizer.adjust_size( x0 , boost::bind( &dense_output_stepper_type::template resize_impl< StateType > , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( x0 , detail::bind( &dense_output_stepper_type::template resize_impl< StateType > , detail::ref( *this ) , detail::_1 ) );
         *m_current_state = x0;
         m_t = t0;
         m_dt = dt0;
