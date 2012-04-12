@@ -19,8 +19,7 @@
 #define BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA_CASH_KARP54_CLASSIC_HPP_INCLUDED
 
 
-#include <boost/ref.hpp>
-#include <boost/bind.hpp>
+#include <boost/numeric/odeint/util/bind.hpp>
 
 #include <boost/numeric/odeint/stepper/base/explicit_stepper_and_error_stepper_base.hpp>
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
@@ -122,9 +121,9 @@ public :
         const value_type c4 = static_cast<value_type> ( 125.0 ) / static_cast<value_type>( 594.0 );
         const value_type c6 = static_cast<value_type> ( 512.0 ) / static_cast<value_type>( 1771.0 );
 
-        typename boost::unwrap_reference< System >::type &sys = system;
+        typename detail::unwrap_reference< System >::type &sys = system;
 
-        m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize_impl<StateIn> , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
 
         //m_x1 = x + dt*b21*dxdt
         stepper_base_type::m_algebra.for_each3( m_x_tmp.m_v , in , dxdt ,
