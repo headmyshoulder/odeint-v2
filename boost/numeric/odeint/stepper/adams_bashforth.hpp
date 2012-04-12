@@ -20,8 +20,7 @@
 #define BOOST_NUMERIC_ODEINT_STEPPER_ADAMS_BASHFORTH_HPP_INCLUDED
 
 
-#include <boost/ref.hpp>
-#include <boost/bind.hpp>
+#include <boost/numeric/odeint/util/bind.hpp>
 
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
@@ -223,10 +222,10 @@ public :
     template< class ExplicitStepper , class System , class StateIn >
     void initialize( ExplicitStepper explicit_stepper , System system , StateIn &x , time_type &t , const time_type &dt )
     {
-        typename boost::unwrap_reference< ExplicitStepper >::type &stepper = explicit_stepper;
-        typename boost::unwrap_reference< System >::type &sys = system;
+        typename detail::unwrap_reference< ExplicitStepper >::type &stepper = explicit_stepper;
+        typename detail::unwrap_reference< System >::type &sys = system;
 
-        m_resizer.adjust_size( x , boost::bind( &stepper_type::template resize_impl<StateIn> , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( x , detail::bind( &stepper_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
 
         for( size_t i=0 ; i<steps-1 ; ++i )
         {
@@ -241,7 +240,7 @@ public :
     template< class System , class StateIn >
     void initialize( System system , StateIn &x , time_type &t , const time_type &dt )
     {
-        initialize( boost::ref( m_initializing_stepper ) , system , x , t , dt );
+        initialize( detail::ref( m_initializing_stepper ) , system , x , t , dt );
     }
 
     void reset( void )
@@ -263,8 +262,8 @@ private:
     template< class System , class StateIn , class StateOut >
     void do_step_impl( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt )
     {
-        typename boost::unwrap_reference< System >::type &sys = system;
-        if( m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize_impl<StateIn> , boost::ref( *this ) , _1 ) ) )
+        typename detail::unwrap_reference< System >::type &sys = system;
+        if( m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) ) )
         {
             m_steps_initialized = 0;
         }

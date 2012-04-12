@@ -39,6 +39,7 @@
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
 #include <boost/numeric/odeint/stepper/detail/generic_rk_call_algebra.hpp>
 #include <boost/numeric/odeint/stepper/detail/generic_rk_operations.hpp>
+#include <boost/numeric/odeint/util/bind.hpp>
 
 namespace mpl = boost::mpl;
 namespace fusion = boost::fusion;
@@ -229,7 +230,7 @@ public:
             const Time &t , StateOut &out , const Time &dt ,
             StateTemp &x_tmp , Deriv F[StageCount-1] ) const
     {
-        typedef typename boost::unwrap_reference< System >::type unwrapped_system_type;
+        typedef typename detail::unwrap_reference< System >::type unwrapped_system_type;
         unwrapped_system_type &sys = system;
         fusion::for_each( m_stages , calculate_stage<
                 unwrapped_system_type , StateIn , StateTemp , DerivIn , Deriv , StateOut , Time >

@@ -23,8 +23,7 @@
 
 #include <algorithm>
 
-#include <boost/ref.hpp>
-#include <boost/bind.hpp>
+#include <boost/numeric/odeint/util/bind.hpp>
 
 #include <boost/math/special_functions/binomial.hpp>
 
@@ -226,7 +225,7 @@ public:
     template< class System , class StateInOut >
     controlled_step_result try_step( System system , StateInOut &x , time_type &t , time_type &dt )
     {
-        m_xnew_resizer.adjust_size( x , boost::bind( &controlled_error_bs_type::template resize_m_xnew< StateInOut > , boost::ref( *this ) , _1 ) );
+        m_xnew_resizer.adjust_size( x , detail::bind( &controlled_error_bs_type::template resize_m_xnew< StateInOut > , detail::ref( *this ) , detail::_1 ) );
         controlled_step_result res = try_step( system , x , t , m_xnew.m_v , dt );
         if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged ) )
         {
@@ -241,8 +240,8 @@ public:
     {
         static const time_type val1( static_cast< time_type >( 1.0 ) );
 
-        typename boost::unwrap_reference< System >::type &sys = system;
-//        if( m_resizer.adjust_size( in , boost::bind( &controlled_error_bs_type::template resize_impl< StateIn > , boost::ref( *this ) , _1 ) ) )
+        typename detail::unwrap_reference< System >::type &sys = system;
+//        if( m_resizer.adjust_size( in , detail::bind( &controlled_error_bs_type::template resize_impl< StateIn > , detail::ref( *this ) , detail::_1 ) ) )
 //            reset(); // system resized -> reset
 //        if( dt != m_dt_last )
 //            reset(); // step size changed from outside -> reset
@@ -385,7 +384,7 @@ public:
     template< class StateType >
     void initialize( const StateType &x0 , const time_type &t0 , const time_type &dt0 )
     {
-        m_resizer.adjust_size( x0 , boost::bind( &controlled_error_bs_type::template resize_impl< StateType > , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( x0 , detail::bind( &controlled_error_bs_type::template resize_impl< StateType > , detail::ref( *this ) , detail::_1 ) );
         boost::numeric::odeint::copy( x0 , *m_current_state );
         m_t = t0;
         m_dt = dt0;
@@ -403,7 +402,7 @@ public:
 
         if( m_first )
         {
-            typename boost::unwrap_reference< System >::type &sys = system;
+            typename detail::unwrap_reference< System >::type &sys = system;
             sys( *m_current_state , *m_current_deriv , m_t );
         }
 

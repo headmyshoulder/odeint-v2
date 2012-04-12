@@ -19,7 +19,6 @@
 #define BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA4_CLASSIC_HPP_INCLUDED
 
 
-#include <boost/ref.hpp>
 
 #include <boost/numeric/odeint/stepper/base/explicit_stepper_base.hpp>
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
@@ -68,9 +67,9 @@ public :
 
         static const value_type val1 = static_cast< value_type >( 1.0 );
 
-        m_resizer.adjust_size( in , boost::bind( &stepper_type::template resize_impl< StateIn > , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
 
-        typename boost::unwrap_reference< System >::type &sys = system;
+        typename detail::unwrap_reference< System >::type &sys = system;
 
         const time_type dh = static_cast< value_type >( 0.5 ) * dt;
         const time_type th = t + dh;

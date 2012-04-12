@@ -23,8 +23,7 @@
 #include <utility>
 #include <stdexcept>
 
-#include <boost/ref.hpp>
-#include <boost/bind.hpp>
+#include <boost/numeric/odeint/util/bind.hpp>
 
 #include <boost/numeric/odeint/util/copy.hpp>
 
@@ -114,7 +113,7 @@ public:
     template< class StateType >
     void initialize( const StateType &x0 , const time_type &t0 , const time_type &dt0 )
     {
-        m_resizer.adjust_size( x0 , boost::bind( &dense_output_stepper_type::template resize_impl< StateType > , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( x0 , detail::bind( &dense_output_stepper_type::template resize_impl< StateType > , detail::ref( *this ) , detail::_1 ) );
         boost::numeric::odeint::copy( x0 , *m_current_state );
         m_t = t0;
         m_dt = dt0;
@@ -284,7 +283,7 @@ public:
     template< class StateType >
     void initialize( const StateType &x0 , const time_type &t0 , const time_type &dt0 )
     {
-        m_resizer.adjust_size( x0 , boost::bind( &dense_output_stepper_type::template resize< StateType > , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( x0 , detail::bind( &dense_output_stepper_type::template resize< StateType > , detail::ref( *this ) , detail::_1 ) );
         boost::numeric::odeint::copy( x0 , *m_current_state );
         m_t = t0;
         m_dt = dt0;
@@ -298,7 +297,7 @@ public:
 
         if( !m_is_deriv_initialized )
         {
-            typename boost::unwrap_reference< System >::type &sys = system;
+            typename detail::unwrap_reference< System >::type &sys = system;
             sys( *m_current_state , *m_current_deriv , m_t );
             m_is_deriv_initialized = true;
         }
