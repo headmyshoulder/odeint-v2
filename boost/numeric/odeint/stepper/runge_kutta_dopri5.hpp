@@ -66,36 +66,36 @@ public :
     void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt_in , const time_type &t ,
             StateOut &out , DerivOut &dxdt_out , const time_type &dt )
     {
-        const value_type a2 = static_cast<value_type> ( 0.2 );
-        const value_type a3 = static_cast<value_type> ( 0.3 );
-        const value_type a4 = static_cast<value_type> ( 0.8 );
-        const value_type a5 = static_cast<value_type> ( 8.0 )/static_cast<value_type> ( 9.0 );
+        const value_type a2 = static_cast<value_type> ( 1 ) / static_cast<value_type>( 5 );
+        const value_type a3 = static_cast<value_type> ( 3 ) / static_cast<value_type> ( 10 );
+        const value_type a4 = static_cast<value_type> ( 4 ) / static_cast<value_type> ( 5 );
+        const value_type a5 = static_cast<value_type> ( 8 )/static_cast<value_type> ( 9 );
 
-        const value_type b21 = static_cast<value_type> ( 0.2 );
+        const value_type b21 = static_cast<value_type> ( 1 ) / static_cast<value_type> ( 5 );
 
-        const value_type b31 = static_cast<value_type> ( 3.0 ) / static_cast<value_type>( 40.0 );
-        const value_type b32 = static_cast<value_type> ( 9.0 ) / static_cast<value_type>( 40.0 );
+        const value_type b31 = static_cast<value_type> ( 3 ) / static_cast<value_type>( 40 );
+        const value_type b32 = static_cast<value_type> ( 9 ) / static_cast<value_type>( 40 );
 
-        const value_type b41 = static_cast<value_type> ( 44.0 ) / static_cast<value_type> ( 45.0 );
-        const value_type b42 = static_cast<value_type> ( -56.0 ) / static_cast<value_type> ( 15.0 );
-        const value_type b43 = static_cast<value_type> ( 32.0 ) / static_cast<value_type> ( 9.0 );
+        const value_type b41 = static_cast<value_type> ( 44 ) / static_cast<value_type> ( 45 );
+        const value_type b42 = static_cast<value_type> ( -56 ) / static_cast<value_type> ( 15 );
+        const value_type b43 = static_cast<value_type> ( 32 ) / static_cast<value_type> ( 9 );
 
-        const value_type b51 = static_cast<value_type> ( 19372.0 ) / static_cast<value_type>( 6561.0 );
-        const value_type b52 = static_cast<value_type> ( -25360.0 ) / static_cast<value_type> ( 2187.0 );
-        const value_type b53 = static_cast<value_type> ( 64448.0 ) / static_cast<value_type>( 6561.0 );
-        const value_type b54 = static_cast<value_type> ( -212.0 ) / static_cast<value_type>( 729.0 );
+        const value_type b51 = static_cast<value_type> ( 19372 ) / static_cast<value_type>( 6561 );
+        const value_type b52 = static_cast<value_type> ( -25360 ) / static_cast<value_type> ( 2187 );
+        const value_type b53 = static_cast<value_type> ( 64448 ) / static_cast<value_type>( 6561 );
+        const value_type b54 = static_cast<value_type> ( -212 ) / static_cast<value_type>( 729 );
 
-        const value_type b61 = static_cast<value_type> ( 9017.0 ) / static_cast<value_type>( 3168.0 );
-        const value_type b62 = static_cast<value_type> ( -355.0 ) / static_cast<value_type>( 33.0 );
-        const value_type b63 = static_cast<value_type> ( 46732.0 ) / static_cast<value_type>( 5247.0 );
-        const value_type b64 = static_cast<value_type> ( 49.0 ) / static_cast<value_type>( 176.0 );
-        const value_type b65 = static_cast<value_type> ( -5103.0 ) / static_cast<value_type>( 18656.0 );
+        const value_type b61 = static_cast<value_type> ( 9017 ) / static_cast<value_type>( 3168 );
+        const value_type b62 = static_cast<value_type> ( -355 ) / static_cast<value_type>( 33 );
+        const value_type b63 = static_cast<value_type> ( 46732 ) / static_cast<value_type>( 5247 );
+        const value_type b64 = static_cast<value_type> ( 49 ) / static_cast<value_type>( 176 );
+        const value_type b65 = static_cast<value_type> ( -5103 ) / static_cast<value_type>( 18656 );
 
-        const value_type c1 = static_cast<value_type> ( 35.0 ) / static_cast<value_type>( 384.0 );
-        const value_type c3 = static_cast<value_type> ( 500.0 ) / static_cast<value_type>( 1113.0 );
-        const value_type c4 = static_cast<value_type> ( 125.0 ) / static_cast<value_type>( 192.0 );
-        const value_type c5 = static_cast<value_type> ( -2187.0 ) / static_cast<value_type>( 6784.0 );
-        const value_type c6 = static_cast<value_type> ( 11.0 ) / static_cast<value_type>( 84.0 );
+        const value_type c1 = static_cast<value_type> ( 35 ) / static_cast<value_type>( 384 );
+        const value_type c3 = static_cast<value_type> ( 500 ) / static_cast<value_type>( 1113 );
+        const value_type c4 = static_cast<value_type> ( 125 ) / static_cast<value_type>( 192 );
+        const value_type c5 = static_cast<value_type> ( -2187 ) / static_cast<value_type>( 6784 );
+        const value_type c6 = static_cast<value_type> ( 11 ) / static_cast<value_type>( 84 );
 
         typename boost::unwrap_reference< System >::type &sys = system;
 
@@ -136,18 +136,18 @@ public :
     void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt_in , const time_type &t ,
             StateOut &out , DerivOut &dxdt_out , const time_type &dt , Err &xerr )
     {
-        const value_type c1 = static_cast<value_type> ( 35.0 ) / static_cast<value_type>( 384.0 );
-        const value_type c3 = static_cast<value_type> ( 500.0 ) / static_cast<value_type>( 1113.0 );
-        const value_type c4 = static_cast<value_type> ( 125.0 ) / static_cast<value_type>( 192.0 );
-        const value_type c5 = static_cast<value_type> ( -2187.0 ) / static_cast<value_type>( 6784.0 );
-        const value_type c6 = static_cast<value_type> ( 11.0 ) / static_cast<value_type>( 84.0 );
+        const value_type c1 = static_cast<value_type> ( 35 ) / static_cast<value_type>( 384 );
+        const value_type c3 = static_cast<value_type> ( 500 ) / static_cast<value_type>( 1113 );
+        const value_type c4 = static_cast<value_type> ( 125 ) / static_cast<value_type>( 192 );
+        const value_type c5 = static_cast<value_type> ( -2187 ) / static_cast<value_type>( 6784 );
+        const value_type c6 = static_cast<value_type> ( 11 ) / static_cast<value_type>( 84 );
 
-        const value_type dc1 = c1 - static_cast<value_type> ( 5179.0 ) / static_cast<value_type>( 57600.0 );
-        const value_type dc3 = c3 - static_cast<value_type> ( 7571.0 ) / static_cast<value_type>( 16695.0 );
-        const value_type dc4 = c4 - static_cast<value_type> ( 393.0 ) / static_cast<value_type>( 640.0 );
-        const value_type dc5 = c5 - static_cast<value_type> ( -92097.0 ) / static_cast<value_type>( 339200.0 );
-        const value_type dc6 = c6 - static_cast<value_type> ( 187.0 ) / static_cast<value_type>( 2100.0 );
-        const value_type dc7 = static_cast<value_type>( -0.025 );
+        const value_type dc1 = c1 - static_cast<value_type> ( 5179 ) / static_cast<value_type>( 57600 );
+        const value_type dc3 = c3 - static_cast<value_type> ( 7571 ) / static_cast<value_type>( 16695 );
+        const value_type dc4 = c4 - static_cast<value_type> ( 393 ) / static_cast<value_type>( 640 );
+        const value_type dc5 = c5 - static_cast<value_type> ( -92097 ) / static_cast<value_type>( 339200 );
+        const value_type dc6 = c6 - static_cast<value_type> ( 187 ) / static_cast<value_type>( 2100 );
+        const value_type dc7 = static_cast<value_type>( -1 ) / static_cast<value_type> ( 40 );
 
         do_step_impl( system , in , dxdt_in , t , out , dxdt_out , dt );
 
@@ -186,24 +186,24 @@ public :
             const StateIn1 &x_old , const DerivIn1 &deriv_old , const time_type &t_old ,
             const StateIn2 & /* x_new */ , const DerivIn2 &deriv_new , const time_type &t_new )
     {
-        const value_type b1 = static_cast<value_type> ( 35.0 ) / static_cast<value_type>( 384.0 );
-        const value_type b3 = static_cast<value_type> ( 500.0 ) / static_cast<value_type>( 1113.0 );
-        const value_type b4 = static_cast<value_type> ( 125.0 ) / static_cast<value_type>( 192.0 );
-        const value_type b5 = static_cast<value_type> ( -2187.0 ) / static_cast<value_type>( 6784.0 );
-        const value_type b6 = static_cast<value_type> ( 11.0 ) / static_cast<value_type>( 84.0 );
+        const value_type b1 = static_cast<value_type> ( 35 ) / static_cast<value_type>( 384 );
+        const value_type b3 = static_cast<value_type> ( 500 ) / static_cast<value_type>( 1113 );
+        const value_type b4 = static_cast<value_type> ( 125 ) / static_cast<value_type>( 192 );
+        const value_type b5 = static_cast<value_type> ( -2187 ) / static_cast<value_type>( 6784 );
+        const value_type b6 = static_cast<value_type> ( 11 ) / static_cast<value_type>( 84 );
 
         time_type dt = ( t_new - t_old );
         value_type theta = ( t - t_old ) / dt;
-        value_type X1 = static_cast< value_type >( 5.0 ) * ( static_cast< value_type >( 2558722523.0 ) - static_cast< value_type >( 31403016.0 ) * theta ) / static_cast< value_type >( 11282082432.0 );
-        value_type X3 = static_cast< value_type >( 100.0 ) * ( static_cast< value_type >( 882725551.0 ) - static_cast< value_type >( 15701508.0 ) * theta ) / static_cast< value_type >( 32700410799.0 );
-        value_type X4 = static_cast< value_type >( 25.0 ) * ( static_cast< value_type >( 443332067.0 ) - static_cast< value_type >( 31403016.0 ) * theta ) / static_cast< value_type >( 1880347072.0 ) ;
-        value_type X5 = static_cast< value_type >( 32805.0 ) * ( static_cast< value_type >( 23143187.0 ) - static_cast< value_type >( 3489224.0 ) * theta ) / static_cast< value_type >( 199316789632.0 );
-        value_type X6 = static_cast< value_type >( 55.0 ) * ( static_cast< value_type >( 29972135.0 ) - static_cast< value_type >( 7076736.0 ) * theta ) / static_cast< value_type >( 822651844.0 );
-        value_type X7 = static_cast< value_type >( 10.0 ) * ( static_cast< value_type >( 7414447.0 ) - static_cast< value_type >( 829305.0 ) * theta ) / static_cast< value_type >( 29380423.0 );
+        value_type X1 = static_cast< value_type >( 5 ) * ( static_cast< value_type >( 2558722523 ) - static_cast< value_type >( 31403016 ) * theta ) / static_cast< value_type >( 11282082432 );
+        value_type X3 = static_cast< value_type >( 100 ) * ( static_cast< value_type >( 882725551 ) - static_cast< value_type >( 15701508 ) * theta ) / static_cast< value_type >( 32700410799 );
+        value_type X4 = static_cast< value_type >( 25 ) * ( static_cast< value_type >( 443332067 ) - static_cast< value_type >( 31403016 ) * theta ) / static_cast< value_type >( 1880347072 ) ;
+        value_type X5 = static_cast< value_type >( 32805 ) * ( static_cast< value_type >( 23143187 ) - static_cast< value_type >( 3489224 ) * theta ) / static_cast< value_type >( 199316789632 );
+        value_type X6 = static_cast< value_type >( 55 ) * ( static_cast< value_type >( 29972135 ) - static_cast< value_type >( 7076736 ) * theta ) / static_cast< value_type >( 822651844 );
+        value_type X7 = static_cast< value_type >( 10 ) * ( static_cast< value_type >( 7414447 ) - static_cast< value_type >( 829305 ) * theta ) / static_cast< value_type >( 29380423 );
 
-        value_type theta_m_1 = theta - static_cast< value_type >( 1.0 );
+        value_type theta_m_1 = theta - static_cast< value_type >( 1 );
         value_type theta_sq = theta * theta;
-        value_type A = theta_sq * ( static_cast< value_type >( 3.0 ) - static_cast< value_type >( 2.0 ) * theta );
+        value_type A = theta_sq * ( static_cast< value_type >( 3 ) - static_cast< value_type >( 2 ) * theta );
         value_type B = theta_sq * theta_m_1;
         value_type C = theta_sq * theta_m_1 * theta_m_1;
         value_type D = theta * theta_m_1 * theta_m_1;

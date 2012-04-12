@@ -132,9 +132,8 @@ struct rk54_ck_coefficients_c : boost::array< Value , 6 >
         (*this)[1] = static_cast<Value>( 1 )/static_cast<Value>( 5 );
         (*this)[2] = static_cast<Value>( 3 )/static_cast<Value>( 10 );
         (*this)[3] = static_cast<Value>( 3 )/static_cast<Value>( 5 );
-        (*this)[4] = static_cast<Value>( 3 )/static_cast<Value>( 5 );
         (*this)[4] = static_cast<Value>( 1 );
-        (*this)[4] = static_cast<Value>( 7 )/static_cast<Value>( 8 );
+        (*this)[5] = static_cast<Value>( 7 )/static_cast<Value>( 8 );
     }
 };
 

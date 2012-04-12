@@ -71,16 +71,16 @@ public :
     template< class System , class StateIn , class DerivIn , class StateOut , class Err >
     void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt , Err &xerr )
     {
-        const value_type c1 = static_cast<value_type> ( 37.0 ) / static_cast<value_type>( 378.0 );
-        const value_type c3 = static_cast<value_type> ( 250.0 ) / static_cast<value_type>( 621.0 );
-        const value_type c4 = static_cast<value_type> ( 125.0 ) / static_cast<value_type>( 594.0 );
-        const value_type c6 = static_cast<value_type> ( 512.0 ) / static_cast<value_type>( 1771.0 );
+        const value_type c1 = static_cast<value_type> ( 37 ) / static_cast<value_type>( 378 );
+        const value_type c3 = static_cast<value_type> ( 250 ) / static_cast<value_type>( 621 );
+        const value_type c4 = static_cast<value_type> ( 125 ) / static_cast<value_type>( 594 );
+        const value_type c6 = static_cast<value_type> ( 512 ) / static_cast<value_type>( 1771 );
 
-        const value_type dc1 = c1 - static_cast<value_type> ( 2825.0 ) / static_cast<value_type>( 27648 );
-        const value_type dc3 = c3 - static_cast<value_type> ( 18575.0 ) / static_cast<value_type>( 48384.0 );
-        const value_type dc4 = c4 - static_cast<value_type> ( 13525.0 ) / static_cast<value_type>( 55296.0 );
-        const value_type dc5 = static_cast<value_type> ( -277.0 ) / static_cast<value_type>( 14336.0 );
-        const value_type dc6 = c6 - static_cast<value_type> ( 0.25 );
+        const value_type dc1 = c1 - static_cast<value_type> ( 2825 ) / static_cast<value_type>( 27648 );
+        const value_type dc3 = c3 - static_cast<value_type> ( 18575 ) / static_cast<value_type>( 48384 );
+        const value_type dc4 = c4 - static_cast<value_type> ( 13525 ) / static_cast<value_type>( 55296 );
+        const value_type dc5 = static_cast<value_type> ( -277 ) / static_cast<value_type>( 14336 );
+        const value_type dc6 = c6 - static_cast<value_type> ( 1 ) / static_cast<value_type> ( 4 );
 
         do_step_impl( system , in , dxdt , t , out , dt );
 
@@ -95,32 +95,32 @@ public :
     template< class System , class StateIn , class DerivIn , class StateOut >
     void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt )
     {
-        const value_type a2 = static_cast<value_type> ( 0.2 );
-        const value_type a3 = static_cast<value_type> ( 0.3 );
-        const value_type a4 = static_cast<value_type> ( 0.6 );
-        const value_type a5 = static_cast<value_type> ( 1.0 );
-        const value_type a6 = static_cast<value_type> ( 0.875 );
+        const value_type a2 = static_cast<value_type> ( 1 ) / static_cast<value_type> ( 5 );
+        const value_type a3 = static_cast<value_type> ( 3 ) / static_cast<value_type> ( 10 );
+        const value_type a4 = static_cast<value_type> ( 3 ) / static_cast<value_type> ( 5 );
+        const value_type a5 = static_cast<value_type> ( 1 );
+        const value_type a6 = static_cast<value_type> ( 7 ) / static_cast<value_type> ( 8 );
 
-        const value_type b21 = static_cast<value_type> ( 0.2 );
-        const value_type b31 = static_cast<value_type> ( 3.0 ) / static_cast<value_type>( 40.0 );
-        const value_type b32 = static_cast<value_type> ( 9.0 ) / static_cast<value_type>( 40.0 );
-        const value_type b41 = static_cast<value_type> ( 0.3 );
-        const value_type b42 = static_cast<value_type> ( -0.9 );
-        const value_type b43 = static_cast<value_type> ( 1.2 );
-        const value_type b51 = static_cast<value_type> ( -11.0 ) / static_cast<value_type>( 54.0 );
-        const value_type b52 = static_cast<value_type> ( 2.5 );
-        const value_type b53 = static_cast<value_type> ( -70.0 ) / static_cast<value_type>( 27.0 );
-        const value_type b54 = static_cast<value_type> ( 35.0 ) / static_cast<value_type>( 27.0 );
-        const value_type b61 = static_cast<value_type> ( 1631.0 ) / static_cast<value_type>( 55296.0 );
-        const value_type b62 = static_cast<value_type> ( 175.0 ) / static_cast<value_type>( 512.0 );
-        const value_type b63 = static_cast<value_type> ( 575.0 ) / static_cast<value_type>( 13824.0 );
-        const value_type b64 = static_cast<value_type> ( 44275.0 ) / static_cast<value_type>( 110592.0 );
-        const value_type b65 = static_cast<value_type> ( 253.0 ) / static_cast<value_type>( 4096.0 );
+        const value_type b21 = static_cast<value_type> ( 1 ) / static_cast<value_type> ( 5 );
+        const value_type b31 = static_cast<value_type> ( 3 ) / static_cast<value_type>( 40 );
+        const value_type b32 = static_cast<value_type> ( 9 ) / static_cast<value_type>( 40 );
+        const value_type b41 = static_cast<value_type> ( 3 ) / static_cast<value_type> ( 10 );
+        const value_type b42 = static_cast<value_type> ( -9 ) / static_cast<value_type> ( 10 );
+        const value_type b43 = static_cast<value_type> ( 6 ) / static_cast<value_type> ( 5 );
+        const value_type b51 = static_cast<value_type> ( -11 ) / static_cast<value_type>( 54 );
+        const value_type b52 = static_cast<value_type> ( 5 ) / static_cast<value_type> ( 2 );
+        const value_type b53 = static_cast<value_type> ( -70 ) / static_cast<value_type>( 27 );
+        const value_type b54 = static_cast<value_type> ( 35 ) / static_cast<value_type>( 27 );
+        const value_type b61 = static_cast<value_type> ( 1631 ) / static_cast<value_type>( 55296 );
+        const value_type b62 = static_cast<value_type> ( 175 ) / static_cast<value_type>( 512 );
+        const value_type b63 = static_cast<value_type> ( 575 ) / static_cast<value_type>( 13824 );
+        const value_type b64 = static_cast<value_type> ( 44275 ) / static_cast<value_type>( 110592 );
+        const value_type b65 = static_cast<value_type> ( 253 ) / static_cast<value_type>( 4096 );
 
-        const value_type c1 = static_cast<value_type> ( 37.0 ) / static_cast<value_type>( 378.0 );
-        const value_type c3 = static_cast<value_type> ( 250.0 ) / static_cast<value_type>( 621.0 );
-        const value_type c4 = static_cast<value_type> ( 125.0 ) / static_cast<value_type>( 594.0 );
-        const value_type c6 = static_cast<value_type> ( 512.0 ) / static_cast<value_type>( 1771.0 );
+        const value_type c1 = static_cast<value_type> ( 37 ) / static_cast<value_type>( 378 );
+        const value_type c3 = static_cast<value_type> ( 250 ) / static_cast<value_type>( 621 );
+        const value_type c4 = static_cast<value_type> ( 125 ) / static_cast<value_type>( 594 );
+        const value_type c6 = static_cast<value_type> ( 512 ) / static_cast<value_type>( 1771 );
 
         typename boost::unwrap_reference< System >::type &sys = system;
 

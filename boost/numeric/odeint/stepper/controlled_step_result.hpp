@@ -26,7 +26,7 @@ namespace odeint {
 typedef enum
 {
     success ,
-    fail ,
+    fail
 } controlled_step_result;
 
 } // namespace odeint
