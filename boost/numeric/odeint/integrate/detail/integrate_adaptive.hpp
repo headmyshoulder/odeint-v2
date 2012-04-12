@@ -24,6 +24,7 @@
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_n_steps.hpp>
 #include <boost/numeric/odeint/util/bind.hpp>
+#include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
 
 

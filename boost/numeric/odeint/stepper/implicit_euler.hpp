@@ -22,7 +22,7 @@
 #include <utility>
 
 #include <boost/numeric/odeint/util/bind.hpp>
-
+#include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
 #include <boost/numeric/odeint/util/ublas_wrapper.hpp>

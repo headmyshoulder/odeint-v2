@@ -27,6 +27,7 @@
 #include <algorithm>
 
 #include <boost/numeric/odeint/util/bind.hpp>
+#include <boost/numeric/odeint/util/unwrap_reference.hpp>
 
 #include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
 #include <boost/numeric/odeint/stepper/modified_midpoint.hpp>

@@ -17,6 +17,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_DETAIL_INTEGRATE_N_STEPS_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_INTEGRATE_DETAIL_INTEGRATE_N_STEPS_HPP_INCLUDED
 
+#include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_adaptive.hpp>
 #include <boost/numeric/odeint/integrate/detail/units_helper.hpp>

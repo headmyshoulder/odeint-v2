@@ -18,8 +18,10 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_BASE_SYMPLECTIC_RKN_STEPPER_BASE_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_STEPPER_BASE_SYMPLECTIC_RKN_STEPPER_BASE_HPP_INCLUDED
 
-#include <boost/numeric/odeint/util/bind.hpp>
 #include <boost/array.hpp>
+
+#include <boost/numeric/odeint/util/bind.hpp>
+#include <boost/numeric/odeint/util/unwrap_reference.hpp>
 
 #include <boost/numeric/odeint/util/copy.hpp>
 #include <boost/numeric/odeint/util/is_pair.hpp>

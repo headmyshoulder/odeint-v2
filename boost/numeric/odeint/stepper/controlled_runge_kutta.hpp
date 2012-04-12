@@ -22,7 +22,7 @@
 #include <cmath>
 
 #include <boost/numeric/odeint/util/bind.hpp>
-
+#include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
 
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
