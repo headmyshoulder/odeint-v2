@@ -1,4 +1,4 @@
-/* Boost stepper_euler.cpp test file
+/* Boost resizing.cpp test file
 
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky
