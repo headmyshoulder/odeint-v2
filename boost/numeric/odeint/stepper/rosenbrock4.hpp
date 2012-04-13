@@ -19,10 +19,9 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_ROSENBROCK4_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_STEPPER_ROSENBROCK4_HPP_INCLUDED
 
-#include <boost/ref.hpp>
-#include <boost/noncopyable.hpp>
-#include <boost/bind.hpp>
 
+#include <boost/numeric/odeint/util/bind.hpp>
+#include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/lu.hpp>
@@ -139,16 +138,16 @@ public:
     void do_step( System system , const state_type &x , time_type t , state_type &xout , time_type dt , state_type &xerr )
     {
         // get the systen and jacobi function
-        typedef typename boost::unwrap_reference< System >::type system_type;
-        typedef typename boost::unwrap_reference< typename system_type::first_type >::type deriv_func_type;
-        typedef typename boost::unwrap_reference< typename system_type::second_type >::type jacobi_func_type;
+        typedef typename detail::unwrap_reference< System >::type system_type;
+        typedef typename detail::unwrap_reference< typename system_type::first_type >::type deriv_func_type;
+        typedef typename detail::unwrap_reference< typename system_type::second_type >::type jacobi_func_type;
         system_type &sys = system;
         deriv_func_type &deriv_func = sys.first;
         jacobi_func_type &jacobi_func = sys.second;
 
         const size_t n = x.size();
 
-        m_resizer.adjust_size( x , boost::bind( &stepper_type::template resize_impl<state_type> , boost::ref( *this ) , _1 ) );
+        m_resizer.adjust_size( x , detail::bind( &stepper_type::template resize_impl<state_type> , detail::ref( *this ) , detail::_1 ) );
 
         for( size_t i=0 ; i<n ; ++i )
             m_pm.m_v( i ) = i;
@@ -219,14 +218,14 @@ public:
     template< class System >
     void do_step( System system , const state_type &x , time_type t , state_type &xout , time_type dt )
     {
-        m_x_err_resizer.adjust_size( x , boost::bind( &stepper_type::template resize_x_err<state_type> , boost::ref( *this ) , _1 ) );
+        m_x_err_resizer.adjust_size( x , detail::bind( &stepper_type::template resize_x_err<state_type> , detail::ref( *this ) , detail::_1 ) );
         do_step( system , x , t , xout , dt , m_x_err.m_v );
     }
 
     template< class System >
     void do_step( System system , state_type &x , time_type t , time_type dt )
     {
-        m_x_err_resizer.adjust_size( x , boost::bind( &stepper_type::template resize_x_err<state_type> , boost::ref( *this ) , _1 ) );
+        m_x_err_resizer.adjust_size( x , detail::bind( &stepper_type::template resize_x_err<state_type> , detail::ref( *this ) , detail::_1 ) );
         do_step( system , x , t , dt , m_x_err.m_v );
     }
 

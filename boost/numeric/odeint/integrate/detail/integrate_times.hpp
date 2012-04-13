@@ -20,9 +20,9 @@
 
 #include <stdexcept>
 
+#include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 
-#include <boost/ref.hpp>
 
 namespace boost {
 namespace numeric {
@@ -41,7 +41,7 @@ size_t integrate_times(
         Observer observer , stepper_tag
 )
 {
-    typename boost::unwrap_reference< Observer >::type &obs = observer;
+    typename detail::unwrap_reference< Observer >::type &obs = observer;
 
     size_t steps = 0;
     Time current_dt = dt;
@@ -72,7 +72,7 @@ size_t integrate_times(
         Observer observer , controlled_stepper_tag
 )
 {
-    typename boost::unwrap_reference< Observer >::type &obs = observer;
+    typename detail::unwrap_reference< Observer >::type &obs = observer;
 
     const size_t max_attempts = 1000;
     const char *error_string = "Integrate adaptive : Maximal number of iterations reached. A step size could not be found.";
@@ -111,7 +111,7 @@ size_t integrate_times(
         Observer observer , dense_output_stepper_tag
 )
 {
-     typename boost::unwrap_reference< Observer >::type &obs = observer;
+     typename detail::unwrap_reference< Observer >::type &obs = observer;
 
      Time last_time_point = *(end_time-1);
 

@@ -17,10 +17,10 @@
 #ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_DETAIL_INTEGRATE_N_STEPS_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_INTEGRATE_DETAIL_INTEGRATE_N_STEPS_HPP_INCLUDED
 
+#include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_adaptive.hpp>
 #include <boost/numeric/odeint/integrate/detail/units_helper.hpp>
-#include <boost/ref.hpp>
 
 namespace boost {
 namespace numeric {
@@ -43,7 +43,7 @@ Time integrate_n_steps(
         Time start_time , Time dt , size_t num_of_steps ,
         Observer observer , stepper_tag )
 {
-    typename boost::unwrap_reference< Observer >::type &obs = observer;
+    typename detail::unwrap_reference< Observer >::type &obs = observer;
 
     Time time = start_time;
 
@@ -68,7 +68,7 @@ Time integrate_n_steps(
         Time start_time , Time dt , size_t num_of_steps ,
         Observer observer , controlled_stepper_tag )
 {
-    typename boost::unwrap_reference< Observer >::type &obs = observer;
+    typename detail::unwrap_reference< Observer >::type &obs = observer;
 
     Time time = start_time;
     Time time_step = dt;
@@ -95,7 +95,7 @@ Time integrate_n_steps(
         Time start_time , Time dt , size_t num_of_steps ,
         Observer observer , dense_output_stepper_tag )
 {
-    typename boost::unwrap_reference< Observer >::type &obs = observer;
+    typename detail::unwrap_reference< Observer >::type &obs = observer;
 
     Time time = start_time;
     const Time end_time = start_time + static_cast< typename detail::unit_value_type<Time>::type >(num_of_steps) * dt;

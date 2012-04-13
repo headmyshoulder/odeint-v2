@@ -23,9 +23,10 @@
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_n_steps.hpp>
+#include <boost/numeric/odeint/util/bind.hpp>
+#include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
 
-#include <boost/ref.hpp>
 
 #include <iostream>
 
@@ -58,7 +59,7 @@ size_t integrate_adaptive(
     {   //make a last step to end exactly at end_time
         stepper.do_step( system , start_state , end , end_time - end );
         steps++;
-        typename boost::unwrap_reference< Observer >::type &obs = observer;
+        typename detail::unwrap_reference< Observer >::type &obs = observer;
         obs( start_state , end_time );
     }
     return steps;
@@ -75,7 +76,7 @@ size_t integrate_adaptive(
         Observer observer , controlled_stepper_tag
 )
 {
-    typename boost::unwrap_reference< Observer >::type &obs = observer;
+    typename detail::unwrap_reference< Observer >::type &obs = observer;
 
     const size_t max_attempts = 1000;
     const char *error_string = "Integrate adaptive : Maximal number of iterations reached. A step size could not be found.";
@@ -116,7 +117,7 @@ size_t integrate_adaptive(
         Time start_time , Time end_time , Time dt ,
         Observer observer , dense_output_stepper_tag )
 {
-    typename boost::unwrap_reference< Observer >::type &obs = observer;
+    typename detail::unwrap_reference< Observer >::type &obs = observer;
 
     size_t count = 0;
     stepper.initialize( start_state , start_time , dt );
