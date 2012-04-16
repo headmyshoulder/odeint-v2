@@ -17,4 +17,6 @@ rk4.do_step( boost::ref( sys ) , x , t , dt );   // pass sys as references
 
 The same mechanism can for the observers in the integrate functions.
 
+[tip If you are using C++11 you can also use `std::ref` and `std::cref`]
+
 [endsect]
