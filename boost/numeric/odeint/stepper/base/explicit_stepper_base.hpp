@@ -122,7 +122,7 @@ public:
     template< class System , class StateIn , class StateOut >
     void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt )
     {
-        typename detail::unwrap_reference< System >::type &sys = system;
+        typename odeint::unwrap_reference< System >::type &sys = system;
         m_resizer.adjust_size( in , detail::bind( &internal_stepper_base_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
         sys( in , m_dxdt.m_v ,t );
         this->stepper().do_step_impl( system , in , m_dxdt.m_v , t , out , dt );
@@ -165,7 +165,7 @@ private:
     template< class System , class StateInOut >
     void do_step_v1( System system , StateInOut &x , const time_type &t , const time_type &dt )
     {
-        typename detail::unwrap_reference< System >::type &sys = system;
+        typename odeint::unwrap_reference< System >::type &sys = system;
         m_resizer.adjust_size( x , detail::bind( &internal_stepper_base_type::template resize_impl< StateInOut > , detail::ref( *this ) , detail::_1 ) );
         sys( x , m_dxdt.m_v ,t );
         this->stepper().do_step_impl( system , x , m_dxdt.m_v , t , x , dt );

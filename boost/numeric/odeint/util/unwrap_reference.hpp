@@ -38,10 +38,9 @@ template<typename T> class unwrap_reference;
 
 namespace numeric {
 namespace odeint {
-namespace detail {
+
 
 #if BOOST_NUMERIC_ODEINT_CXX11
-using ::std::ref;
 
 template<typename T>
 struct unwrap_reference
@@ -63,12 +62,24 @@ struct unwrap_reference< boost::reference_wrapper<T> >
 
 #else
 
-using ::boost::ref;
 using ::boost::unwrap_reference;
 
 #endif
 
+namespace detail
+{
+
+#if BOOST_NUMERIC_ODEINT_CXX11
+
+using ::std::ref;
+
+#else
+
+using ::boost::ref;
+
+#endif
 }
+
 }
 }
 }

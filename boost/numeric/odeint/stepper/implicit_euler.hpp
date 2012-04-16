@@ -72,9 +72,9 @@ public:
     template< class System >
     void do_step( System system , state_type &x , value_type t , value_type dt )
     {
-        typedef typename detail::unwrap_reference< System >::type system_type;
-        typedef typename detail::unwrap_reference< typename system_type::first_type >::type deriv_func_type;
-        typedef typename detail::unwrap_reference< typename system_type::second_type >::type jacobi_func_type;
+        typedef typename odeint::unwrap_reference< System >::type system_type;
+        typedef typename odeint::unwrap_reference< typename system_type::first_type >::type deriv_func_type;
+        typedef typename odeint::unwrap_reference< typename system_type::second_type >::type jacobi_func_type;
         system_type &sys = system;
         deriv_func_type &deriv_func = sys.first;
         jacobi_func_type &jacobi_func = sys.second;

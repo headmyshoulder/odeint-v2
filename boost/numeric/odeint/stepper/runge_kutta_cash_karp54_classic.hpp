@@ -121,7 +121,7 @@ public :
         const value_type c4 = static_cast<value_type> ( 125 ) / static_cast<value_type>( 594 );
         const value_type c6 = static_cast<value_type> ( 512 ) / static_cast<value_type>( 1771 );
 
-        typename detail::unwrap_reference< System >::type &sys = system;
+        typename odeint::unwrap_reference< System >::type &sys = system;
 
         m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
 

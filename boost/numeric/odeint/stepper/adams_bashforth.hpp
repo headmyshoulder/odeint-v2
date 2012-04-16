@@ -21,6 +21,7 @@
 
 
 #include <boost/numeric/odeint/util/bind.hpp>
+#include <boost/numeric/odeint/util/unwrap_reference.hpp>
 
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
@@ -222,8 +223,8 @@ public :
     template< class ExplicitStepper , class System , class StateIn >
     void initialize( ExplicitStepper explicit_stepper , System system , StateIn &x , time_type &t , const time_type &dt )
     {
-        typename detail::unwrap_reference< ExplicitStepper >::type &stepper = explicit_stepper;
-        typename detail::unwrap_reference< System >::type &sys = system;
+        typename odeint::unwrap_reference< ExplicitStepper >::type &stepper = explicit_stepper;
+        typename odeint::unwrap_reference< System >::type &sys = system;
 
         m_resizer.adjust_size( x , detail::bind( &stepper_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
 
@@ -262,7 +263,7 @@ private:
     template< class System , class StateIn , class StateOut >
     void do_step_impl( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt )
     {
-        typename detail::unwrap_reference< System >::type &sys = system;
+        typename odeint::unwrap_reference< System >::type &sys = system;
         if( m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) ) )
         {
             m_steps_initialized = 0;

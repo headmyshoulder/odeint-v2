@@ -297,7 +297,7 @@ public:
 
         if( !m_is_deriv_initialized )
         {
-            typename detail::unwrap_reference< System >::type &sys = system;
+            typename odeint::unwrap_reference< System >::type &sys = system;
             sys( *m_current_state , *m_current_deriv , m_t );
             m_is_deriv_initialized = true;
         }

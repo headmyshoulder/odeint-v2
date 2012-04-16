@@ -230,7 +230,7 @@ public:
             const Time &t , StateOut &out , const Time &dt ,
             StateTemp &x_tmp , Deriv F[StageCount-1] ) const
     {
-        typedef typename detail::unwrap_reference< System >::type unwrapped_system_type;
+        typedef typename odeint::unwrap_reference< System >::type unwrapped_system_type;
         unwrapped_system_type &sys = system;
         fusion::for_each( m_stages , calculate_stage<
                 unwrapped_system_type , StateIn , StateTemp , DerivIn , Deriv , StateOut , Time >

@@ -68,7 +68,7 @@ public :
         const time_type h = dt / static_cast<time_type>( m_steps );
         const time_type h2 = static_cast<time_type>( 2.0 ) * h;
 
-        typename detail::unwrap_reference< System >::type &sys = system;
+        typename odeint::unwrap_reference< System >::type &sys = system;
 
         time_type th = t + h;
 
@@ -192,7 +192,7 @@ public :
         const time_type h = dt / static_cast<time_type>( m_steps );
         const time_type h2 = static_cast<time_type>( 2.0 ) * h;
 
-        typename detail::unwrap_reference< System >::type &sys = system;
+        typename odeint::unwrap_reference< System >::type &sys = system;
 
         time_type th = t + h;
 

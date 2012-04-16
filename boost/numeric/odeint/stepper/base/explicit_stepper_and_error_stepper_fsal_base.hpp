@@ -246,7 +246,7 @@ public:
     template< class System , class StateIn >
     void initialize( System system , const StateIn &x , const time_type &t )
     {
-        typename detail::unwrap_reference< System >::type &sys = system;
+        typename odeint::unwrap_reference< System >::type &sys = system;
         sys( x , m_dxdt.m_v , t );
         m_first_call = false;
     }

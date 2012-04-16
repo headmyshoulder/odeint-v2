@@ -240,7 +240,7 @@ public:
     {
         static const time_type val1( static_cast< time_type >( 1.0 ) );
 
-        typename detail::unwrap_reference< System >::type &sys = system;
+        typename odeint::unwrap_reference< System >::type &sys = system;
 //        if( m_resizer.adjust_size( in , detail::bind( &controlled_error_bs_type::template resize_impl< StateIn > , detail::ref( *this ) , detail::_1 ) ) )
 //            reset(); // system resized -> reset
 //        if( dt != m_dt_last )
@@ -402,7 +402,7 @@ public:
 
         if( m_first )
         {
-            typename detail::unwrap_reference< System >::type &sys = system;
+            typename odeint::unwrap_reference< System >::type &sys = system;
             sys( *m_current_state , *m_current_deriv , m_t );
         }
 

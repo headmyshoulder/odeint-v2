@@ -205,7 +205,7 @@ public:
     template< class System , class StateIn , class StateOut >
     controlled_step_result try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
     {
-        typename detail::unwrap_reference< System >::type &sys = system;
+        typename odeint::unwrap_reference< System >::type &sys = system;
         m_dxdt_resizer.adjust_size( in , detail::bind( &controlled_runge_kutta::template resize_m_dxdt_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
         sys( in , m_dxdt.m_v , t );
         return try_step( system , in , m_dxdt.m_v , t , out , dt );
@@ -290,7 +290,7 @@ private:
     template< class System , class StateInOut >
     controlled_step_result try_step_v1( System system , StateInOut &x , time_type &t , time_type &dt )
     {
-        typename detail::unwrap_reference< System >::type &sys = system;
+        typename odeint::unwrap_reference< System >::type &sys = system;
         m_dxdt_resizer.adjust_size( x , detail::bind( &controlled_runge_kutta::template resize_m_dxdt_impl< StateInOut > , detail::ref( *this ) , detail::_1 ) );
         sys( x , m_dxdt.m_v ,t );
         return try_step( system , x , m_dxdt.m_v , t , dt );
@@ -406,7 +406,7 @@ public:
     {
         if( m_dxdt_resizer.adjust_size( in , detail::bind( &controlled_runge_kutta::template resize_m_dxdt_impl< StateIn > , detail::ref( *this ) , detail::_1 ) ) || m_first_call )
         {
-            typename detail::unwrap_reference< System >::type &sys = system;
+            typename odeint::unwrap_reference< System >::type &sys = system;
             sys( in , m_dxdt.m_v ,t );
             m_first_call = false;
         }
@@ -536,7 +536,7 @@ private:
     {
         if( m_dxdt_resizer.adjust_size( x , detail::bind( &controlled_runge_kutta::template resize_m_dxdt_impl< StateInOut > , detail::ref( *this ) , detail::_1 ) ) || m_first_call )
         {
-            typename detail::unwrap_reference< System >::type &sys = system;
+            typename odeint::unwrap_reference< System >::type &sys = system;
             sys( x , m_dxdt.m_v , t );
             m_first_call = false;
         }
