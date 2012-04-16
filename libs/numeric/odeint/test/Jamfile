@@ -41,5 +41,6 @@ test-suite "odeint"
 	 [ run integrate.cpp ]
 	 [ run integrate_implicit.cpp ]
 	 [ run generation.cpp ]
+	 [ run trivial_state.cpp ]
 	: <testing.launcher>valgrind
 	;
