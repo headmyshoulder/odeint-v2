@@ -193,10 +193,10 @@ public :
 
         time_type dt = ( t_new - t_old );
         value_type theta = ( t - t_old ) / dt;
-        value_type X1 = static_cast< value_type >( 5 ) * ( static_cast< value_type >( 2558722523 ) - static_cast< value_type >( 31403016 ) * theta ) / static_cast< value_type >( 11282082432 );
-        value_type X3 = static_cast< value_type >( 100 ) * ( static_cast< value_type >( 882725551 ) - static_cast< value_type >( 15701508 ) * theta ) / static_cast< value_type >( 32700410799 );
-        value_type X4 = static_cast< value_type >( 25 ) * ( static_cast< value_type >( 443332067 ) - static_cast< value_type >( 31403016 ) * theta ) / static_cast< value_type >( 1880347072 ) ;
-        value_type X5 = static_cast< value_type >( 32805 ) * ( static_cast< value_type >( 23143187 ) - static_cast< value_type >( 3489224 ) * theta ) / static_cast< value_type >( 199316789632 );
+        value_type X1 = static_cast< value_type >( 5 ) * ( static_cast< value_type >( 2558722523LL ) - static_cast< value_type >( 31403016 ) * theta ) / static_cast< value_type >( 11282082432LL );
+        value_type X3 = static_cast< value_type >( 100 ) * ( static_cast< value_type >( 882725551 ) - static_cast< value_type >( 15701508 ) * theta ) / static_cast< value_type >( 32700410799LL );
+        value_type X4 = static_cast< value_type >( 25 ) * ( static_cast< value_type >( 443332067 ) - static_cast< value_type >( 31403016 ) * theta ) / static_cast< value_type >( 1880347072LL ) ;
+        value_type X5 = static_cast< value_type >( 32805 ) * ( static_cast< value_type >( 23143187 ) - static_cast< value_type >( 3489224 ) * theta ) / static_cast< value_type >( 199316789632LL );
         value_type X6 = static_cast< value_type >( 55 ) * ( static_cast< value_type >( 29972135 ) - static_cast< value_type >( 7076736 ) * theta ) / static_cast< value_type >( 822651844 );
         value_type X7 = static_cast< value_type >( 10 ) * ( static_cast< value_type >( 7414447 ) - static_cast< value_type >( 829305 ) * theta ) / static_cast< value_type >( 29380423 );
 

@@ -65,13 +65,13 @@ public :
     {
         // ToDo : check if size of in,dxdt,out are equal?
 
-        static const value_type val1 = static_cast< value_type >( 1.0 );
+        static const value_type val1 = static_cast< value_type >( 1 );
 
         m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
 
         typename odeint::unwrap_reference< System >::type &sys = system;
 
-        const time_type dh = static_cast< value_type >( 0.5 ) * dt;
+        const time_type dh = dt / static_cast< value_type >( 2 );
         const time_type th = t + dh;
 
         // dt * dxdt = k1
@@ -98,8 +98,8 @@ public :
         // dt * m_dxh = k4
         sys( m_x_tmp.m_v , m_dxh.m_v , t + dt );
         //x += dt/6 * ( m_dxdt + m_dxt + val2*m_dxm )
-        time_type dt6 = dt / static_cast< value_type >( 6.0 );
-        time_type dt3 = dt / static_cast< value_type >( 3.0 );
+        time_type dt6 = dt / static_cast< value_type >( 6 );
+        time_type dt3 = dt / static_cast< value_type >( 3 );
         stepper_base_type::m_algebra.for_each6( out , in , dxdt , m_dxt.m_v , m_dxm.m_v , m_dxh.m_v ,
                 typename operations_type::template scale_sum5< value_type , time_type , time_type , time_type , time_type >( 1.0 , dt6 , dt3 , dt3 , dt6 ) );
     }

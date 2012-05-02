@@ -60,13 +60,13 @@ public :
     template< class System , class StateIn , class DerivIn , class StateOut >
     void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt )
     {
-        static const value_type val1 = static_cast< value_type >( 1.0 );
-        static const value_type val05 = static_cast< value_type >( 0.5 );
+        static const value_type val1 = static_cast< value_type >( 1 );
+        static const value_type val05 = static_cast< value_type >( 1 ) / static_cast< value_type >( 2 );
 
         m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
 
         const time_type h = dt / static_cast<time_type>( m_steps );
-        const time_type h2 = static_cast<time_type>( 2.0 ) * h;
+        const time_type h2 = static_cast<time_type>( 2 ) * h;
 
         typename odeint::unwrap_reference< System >::type &sys = system;
 
@@ -184,13 +184,13 @@ public :
             state_type &x_mp , deriv_table_type &derivs )
     {
 
-        static const value_type val1 = static_cast< value_type >( 1.0 );
-        static const value_type val05 = static_cast< value_type >( 0.5 );
+        static const value_type val1 = static_cast< value_type >( 1 );
+        static const value_type val05 = static_cast< value_type >( 1 ) / static_cast< value_type >( 2 );
 
         m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize< StateIn > , detail::ref( *this ) , detail::_1 ) );
 
         const time_type h = dt / static_cast<time_type>( m_steps );
-        const time_type h2 = static_cast<time_type>( 2.0 ) * h;
+        const time_type h2 = static_cast<time_type>( 2 ) * h;
 
         typename odeint::unwrap_reference< System >::type &sys = system;
 
