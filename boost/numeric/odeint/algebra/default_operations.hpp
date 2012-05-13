@@ -22,76 +22,12 @@
 #include <cmath>      // for std::max
 #include <boost/array.hpp>
 
-#ifndef __CUDACC__
-#include <boost/utility.hpp>
-#include <boost/units/quantity.hpp>
-#endif
+#include <boost/numeric/odeint/util/unit_helper.hpp>
+
 
 namespace boost {
 namespace numeric {
 namespace odeint {
-
-/*
- * Conversion of boost::units for use in standard_operations::rel_error and standard_operations::maximum
- */
-namespace detail {
-
-template<class T>
-struct get_value_impl
-{
-    static T value(const T &t)
-    {
-        return t;
-    }
-    typedef T result_type;
-};
-
-#ifndef __CUDACC__
-template<class Unit , class T>
-struct get_value_impl<boost::units::quantity<Unit , T> >
-{
-    static T value(const boost::units::quantity<Unit , T> &t)
-    {
-        return t.value();
-    }
-    typedef T result_type;
-};
-#endif
-
-template<class T>
-typename get_value_impl<T>::result_type get_value(const T &t)
-{
-    return get_value_impl<T>::value(t);
-}
-
-template<class T , class V>
-struct set_value_impl
-{
-    static void set_value(T &t , const V &v)
-    {
-        t = v;
-    }
-};
-
-#ifndef __CUDACC__
-template<class Unit , class T , class V>
-struct set_value_impl<boost::units::quantity<Unit , T> , V>
-{
-    static void set_value(boost::units::quantity<Unit , T> &t , const V &v)
-    {
-        t = boost::units::quantity<Unit , T>::from_value(v);
-    }
-};
-#endif
-
-template<class T , class V>
-
-void set_value(T &t , const V &v)
-{
-    return set_value_impl<T , V>::set_value(t , v);
-}
-
-}
 
 
 
@@ -507,9 +443,7 @@ struct default_operations
         void operator()( T3 &t3 , const T1 &t1 , const T2 &t2 ) const
         {
             using std::abs;
-            using detail::get_value;
-            using detail::set_value;
-            set_value( t3 , abs( get_value( t3 ) ) / ( m_eps_abs + m_eps_rel * ( m_a_x * abs( get_value( t1 ) ) + m_a_dxdt * abs( get_value( t2 ) ) ) ) );
+            set_unit_value( t3 , abs( get_unit_value( t3 ) ) / ( m_eps_abs + m_eps_rel * ( m_a_x * abs( get_unit_value( t1 ) ) + m_a_dxdt * abs( get_unit_value( t2 ) ) ) ) );
         }
 
         typedef void result_type;
@@ -540,10 +474,8 @@ struct default_operations
         {
             using std::abs;
             using std::max;
-            using detail::get_value;
-            using detail::set_value;
-            Fac1 x1 = abs( get_value( t1 ) ) , x2 = abs( get_value( t2 ) );
-            set_value( t3 , abs( get_value( t3 ) ) / ( m_eps_abs + m_eps_rel * max( x1 , x2 ) ) );
+            Fac1 x1 = abs( get_unit_value( t1 ) ) , x2 = abs( get_unit_value( t2 ) );
+            set_unit_value( t3 , abs( get_unit_value( t3 ) ) / ( m_eps_abs + m_eps_rel * max( x1 , x2 ) ) );
         }
 
         typedef void result_type;
@@ -563,8 +495,7 @@ struct default_operations
         {
             using std::max;
             using std::abs;
-            using detail::get_value;
-            Value a1 = abs( get_value( t1 ) ) , a2 = abs( get_value( t2 ) );
+            Value a1 = abs( get_unit_value( t1 ) ) , a2 = abs( get_unit_value( t2 ) );
             return ( a1 < a2 ) ? a2 : a1 ;
         }
 
@@ -589,8 +520,7 @@ struct default_operations
         {
             using std::abs;
             using std::max;
-            using detail::get_value;
-            Res tmp = abs( get_value( x_err ) ) / ( m_eps_abs + m_eps_rel * max( abs( x_old ) , abs( x ) ) );
+            Res tmp = abs( get_unit_value( x_err ) ) / ( m_eps_abs + m_eps_rel * max( abs( x_old ) , abs( x ) ) );
             return max( r , tmp );
         }
     };
@@ -610,10 +540,9 @@ struct default_operations
         {
             using std::abs;
             using std::max;
-            using detail::get_value;
 
-            Res tmp = abs( get_value( x_err ) ) /
-                    ( m_eps_abs + m_eps_rel * ( m_a_x * abs( get_value( x_old ) ) + m_a_dxdt * abs( get_value( dxdt_old ) ) ) );
+            Res tmp = abs( get_unit_value( x_err ) ) /
+                    ( m_eps_abs + m_eps_rel * ( m_a_x * abs( get_unit_value( x_old ) ) + m_a_dxdt * abs( get_unit_value( dxdt_old ) ) ) );
             return max( r , tmp );
         }
     };
@@ -635,8 +564,7 @@ struct default_operations
         {
             using std::abs;
             using std::max;
-            using detail::get_value;
-            Res tmp = abs( get_value( x_err ) ) / ( m_eps_abs + m_eps_rel * max( abs( x_old ) , abs( x ) ) );
+            Res tmp = abs( get_unit_value( x_err ) ) / ( m_eps_abs + m_eps_rel * max( abs( x_old ) , abs( x ) ) );
             return r + tmp * tmp;
         }
     };
@@ -658,10 +586,9 @@ struct default_operations
         {
             using std::abs;
             using std::max;
-            using detail::get_value;
 
-            Res tmp = abs( get_value( x_err ) ) /
-                    ( m_eps_abs + m_eps_rel * ( m_a_x * abs( get_value( x_old ) ) + m_a_dxdt * abs( get_value( dxdt_old ) ) ) );
+            Res tmp = abs( get_unit_value( x_err ) ) /
+                    ( m_eps_abs + m_eps_rel * ( m_a_x * abs( get_unit_value( x_old ) ) + m_a_dxdt * abs( get_unit_value( dxdt_old ) ) ) );
             return r + tmp * tmp;
         }
     };

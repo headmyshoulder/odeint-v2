@@ -234,7 +234,7 @@ struct lyap_observer
     value_type m_t_overall;
 };
 
-const size_t N = 1024*128;
+const size_t N = 1024*2;
 const value_type dt = 0.01;
 
 

@@ -80,7 +80,7 @@ public:
     {
         // this overwrites x_err !
         algebra.for_each3( x_err , x_old , dxdt_old ,
-                typename operations_type::template rel_error< value_type >( m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt * detail::get_value( dt ) ) );
+                typename operations_type::template rel_error< value_type >( m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt * get_unit_value( dt ) ) );
 
         value_type res = algebra.reduce( x_err ,
                 typename operations_type::template maximum< value_type >() , static_cast< value_type >( 0 ) );

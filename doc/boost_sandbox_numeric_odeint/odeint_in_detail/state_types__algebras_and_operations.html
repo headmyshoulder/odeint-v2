@@ -395,7 +395,6 @@
             as resizeable as it is a dynamically sized array:
           </p>
 <p>
-            
 </p>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">my_vector</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span>
 <span class="special">{</span>
@@ -529,7 +528,6 @@
             to work with odeint. The following code shows the required template specializations:
           </p>
 <p>
-            
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
 
@@ -542,7 +540,7 @@
     <span class="keyword">const</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="identifier">type</span><span class="special">::</span><span class="identifier">value</span><span class="special">;</span>
 <span class="special">};</span>
 
-<span class="keyword">template</span><span class="special">&lt;</span> <span class="special">&gt;</span> 
+<span class="keyword">template</span><span class="special">&lt;</span> <span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">same_size_impl</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&gt;</span>
 <span class="special">{</span> <span class="comment">// define how to check size</span>
     <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">same_size</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">v1</span> <span class="special">,</span>
@@ -562,7 +560,7 @@
     <span class="special">}</span>
 <span class="special">};</span>
 
-<span class="special">}</span> <span class="special">}</span> <span class="special">}</span> 
+<span class="special">}</span> <span class="special">}</span> <span class="special">}</span>
 </pre>
 <p>
           </p>
@@ -654,7 +652,6 @@
             instances of state types:
           </p>
 <p>
-            
 </p>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">state_wrapper</span><span class="special">&lt;</span> <span class="identifier">gsl_vector</span><span class="special">*</span> <span class="special">&gt;</span>
@@ -690,7 +687,7 @@
             This <code class="computeroutput"><span class="identifier">state_wrapper</span></code> specialization
             tells odeint how gsl_vectors are created, copied and destroyed. Next
             we need resizing, this is required because gsl_vectors are dynamically
-            sized objects: 
+            sized objects:
 </p>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">is_resizeable</span><span class="special">&lt;</span> <span class="identifier">gsl_vector</span><span class="special">*</span> <span class="special">&gt;</span>
@@ -725,13 +722,12 @@
             also don't support iterators, so we first implement a gsl iterator:
           </p>
 <p>
-            
 </p>
 <pre class="programlisting"><span class="comment">/*
  * defines an iterator for gsl_vector
  */</span>
-<span class="keyword">class</span> <span class="identifier">gsl_vector_iterator</span> 
-      <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">iterator_facade</span><span class="special">&lt;</span> <span class="identifier">gsl_vector_iterator</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">,</span> 
+<span class="keyword">class</span> <span class="identifier">gsl_vector_iterator</span>
+      <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">iterator_facade</span><span class="special">&lt;</span> <span class="identifier">gsl_vector_iterator</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">,</span>
                                        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">random_access_traversal_tag</span> <span class="special">&gt;</span>
 <span class="special">{</span>
 <span class="keyword">public</span> <span class="special">:</span>
@@ -760,7 +756,6 @@
             A similar class exists for the <code class="computeroutput"><span class="keyword">const</span></code>
             version of the iterator. Then we have a function returning the end iterator
             (similarily for <code class="computeroutput"><span class="keyword">const</span></code> again):
-            
 </p>
 <pre class="programlisting"><span class="identifier">gsl_vector_iterator</span> <span class="identifier">end_iterator</span><span class="special">(</span> <span class="identifier">gsl_vector</span> <span class="special">*</span><span class="identifier">x</span> <span class="special">)</span>
 <span class="special">{</span>
@@ -773,7 +768,7 @@
           </p>
 <p>
             Finally, the bindings for <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
-            are added: 
+            are added:
 </p>
 <pre class="programlisting"><span class="comment">// template&lt;&gt;</span>
 <span class="keyword">inline</span> <span class="identifier">gsl_vector_iterator</span> <span class="identifier">range_begin</span><span class="special">(</span> <span class="identifier">gsl_vector</span> <span class="special">*</span><span class="identifier">x</span> <span class="special">)</span>
@@ -1085,7 +1080,6 @@
             so all that has to be done in this case is to declare resizability:
           </p>
 <p>
-            
 </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
 
@@ -1109,7 +1103,6 @@
             code shows the corresponding definitions:
           </p>
 <p>
-            
 </p>
 <pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
 <span class="special">{</span>
@@ -1142,9 +1135,8 @@
             looks as follows:
           </p>
 <p>
-            
 </p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">point3D</span> <span class="special">:</span>     
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">point3D</span> <span class="special">:</span>
     <span class="identifier">boost</span><span class="special">::</span><span class="identifier">additive1</span><span class="special">&lt;</span> <span class="identifier">point3D</span> <span class="special">,</span>
     <span class="identifier">boost</span><span class="special">::</span><span class="identifier">additive2</span><span class="special">&lt;</span> <span class="identifier">point3D</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">,</span>
     <span class="identifier">boost</span><span class="special">::</span><span class="identifier">multiplicative2</span><span class="special">&lt;</span> <span class="identifier">point3D</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;</span>
@@ -1156,7 +1148,7 @@
     <span class="identifier">point3D</span><span class="special">()</span>
         <span class="special">:</span> <span class="identifier">x</span><span class="special">(</span> <span class="number">0.0</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">y</span><span class="special">(</span> <span class="number">0.0</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">z</span><span class="special">(</span> <span class="number">0.0</span> <span class="special">)</span>
     <span class="special">{</span> <span class="special">}</span>
-    
+
     <span class="identifier">point3D</span><span class="special">(</span> <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">val</span> <span class="special">)</span>
         <span class="special">:</span> <span class="identifier">x</span><span class="special">(</span> <span class="identifier">val</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">y</span><span class="special">(</span> <span class="identifier">val</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">z</span><span class="special">(</span> <span class="identifier">val</span> <span class="special">)</span>
     <span class="special">{</span> <span class="special">}</span>
@@ -1195,7 +1187,6 @@
             function calculating the element-wise absolute value for the state type:
           </p>
 <p>
-            
 </p>
 <pre class="programlisting"><span class="comment">// only required for steppers with error control</span>
 <span class="identifier">point3D</span> <span class="keyword">operator</span><span class="special">/(</span> <span class="keyword">const</span> <span class="identifier">point3D</span> <span class="special">&amp;</span><span class="identifier">p1</span> <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">point3D</span> <span class="special">&amp;</span><span class="identifier">p2</span> <span class="special">)</span>
@@ -1215,7 +1206,6 @@
             implementing a reduction over the state type:
           </p>
 <p>
-            
 </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">numeric</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">odeint</span> <span class="special">{</span>
 <span class="comment">// specialization of vector_space_reduce, only required for steppers with error control</span>
@@ -1231,7 +1221,7 @@
         <span class="keyword">return</span> <span class="identifier">init</span><span class="special">;</span>
     <span class="special">}</span>
 <span class="special">};</span>
-<span class="special">}</span> <span class="special">}</span> <span class="special">}</span> 
+<span class="special">}</span> <span class="special">}</span> <span class="special">}</span>
 </pre>
 <p>
           </p>
@@ -1243,7 +1233,6 @@
             perform the integration on a lorenz system by using the <code class="computeroutput"><span class="identifier">vector_space_algebra</span></code> again:
           </p>
 <p>
-            
 </p>
 <pre class="programlisting"><span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">sigma</span> <span class="special">=</span> <span class="number">10.0</span><span class="special">;</span>
 <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">R</span> <span class="special">=</span> <span class="number">28.0</span><span class="special">;</span>
@@ -1264,9 +1253,9 @@
     <span class="identifier">point3D</span> <span class="identifier">x</span><span class="special">(</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">5.0</span> <span class="special">,</span> <span class="number">5.0</span> <span class="special">);</span>
     <span class="comment">//typedef runge_kutta4&lt; point3D , double , point3D , </span>
     <span class="comment">//                      double , vector_space_algebra &gt; stepper;</span>
-    <span class="keyword">typedef</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">point3D</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">point3D</span> <span class="special">,</span> 
+    <span class="keyword">typedef</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">point3D</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">point3D</span> <span class="special">,</span>
                                 <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">vector_space_algebra</span> <span class="special">&gt;</span> <span class="identifier">stepper</span><span class="special">;</span>
-    <span class="identifier">integrate_adaptive</span><span class="special">(</span> <span class="identifier">make_controlled</span><span class="special">&lt;</span><span class="identifier">stepper</span><span class="special">&gt;(</span> <span class="number">1E-8</span> <span class="special">,</span> <span class="number">1E-8</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">lorenz</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> 
+    <span class="identifier">integrate_adaptive</span><span class="special">(</span> <span class="identifier">make_controlled</span><span class="special">&lt;</span><span class="identifier">stepper</span><span class="special">&gt;(</span> <span class="number">1E-8</span> <span class="special">,</span> <span class="number">1E-8</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">lorenz</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span>
                         <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.1</span> <span class="special">);</span>
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">x</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 <span class="special">}</span>

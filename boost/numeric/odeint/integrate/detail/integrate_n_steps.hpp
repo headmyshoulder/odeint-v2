@@ -20,7 +20,7 @@
 #include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_adaptive.hpp>
-#include <boost/numeric/odeint/integrate/detail/units_helper.hpp>
+#include <boost/numeric/odeint/util/unit_helper.hpp>
 
 namespace boost {
 namespace numeric {
@@ -53,7 +53,7 @@ Time integrate_n_steps(
         stepper.do_step( system , start_state , time , dt );
         // direct computation of the time avoids error propagation happening when using time += dt
         // we need clumsy type analysis to get boost units working here
-        time = start_time + static_cast< typename detail::unit_value_type<Time>::type >( step+1 ) * dt;
+        time = start_time + static_cast< typename unit_value_type<Time>::type >( step+1 ) * dt;
     }
     obs( start_state , time );
 
@@ -80,7 +80,7 @@ Time integrate_n_steps(
                 null_observer() , controlled_stepper_tag() );
         // direct computation of the time avoids error propagation happening when using time += dt
         // we need clumsy type analysis to get boost units working here
-        time = start_time + static_cast< typename detail::unit_value_type<Time>::type >(step+1) * time_step;
+        time = start_time + static_cast< typename unit_value_type<Time>::type >(step+1) * time_step;
     }
     obs( start_state , time );
 
@@ -98,7 +98,7 @@ Time integrate_n_steps(
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
 
     Time time = start_time;
-    const Time end_time = start_time + static_cast< typename detail::unit_value_type<Time>::type >(num_of_steps) * dt;
+    const Time end_time = start_time + static_cast< typename unit_value_type<Time>::type >(num_of_steps) * dt;
 
     stepper.initialize( start_state , time , dt );
 
@@ -112,7 +112,7 @@ Time integrate_n_steps(
             ++step;
             // direct computation of the time avoids error propagation happening when using time += dt
             // we need clumsy type analysis to get boost units working here
-            time = start_time + static_cast< typename detail::unit_value_type<Time>::type >(step) * dt;
+            time = start_time + static_cast< typename unit_value_type<Time>::type >(step) * dt;
         }
 
         // we have not reached the end, do another real step
