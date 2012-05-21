@@ -82,7 +82,7 @@
           perfectly suited for such kinds of problems where one needs a large number
           of particles (oscillators). We start by defining the state type which is
           a <code class="computeroutput"><span class="identifier">thrust</span><span class="special">::</span><span class="identifier">device_vector</span></code>. The content of this vector
-          lives on the GPU. If you are not familar with this we recommend reading
+          lives on the GPU. If you are not familiar with this we recommend reading
           the <span class="emphasis"><em>Getting started</em></span> section on the <a href="http://code.google.com/p/thrust/" target="_top">Thrust</a>
           website.
         </p>
@@ -317,7 +317,7 @@
           In principle we can use all the techniques from the previous phase oscillator
           ensemble example, but we have to take special care about the coupling of
           the oscillators. To efficiently implement the coupling you can use a very
-          elegant way employing Thrust's permutation iterator. A permuation iterator
+          elegant way employing Thrust's permutation iterator. A permutation iterator
           behaves like a normal iterator on a vector but it does not iterate along
           the usual order of the elements. It rather iterates along some permutation
           of the elements defined by some index map. To realize the nearest neighbor
@@ -402,9 +402,9 @@
           Note, how easy you can obtain the value for the left and right neighboring
           oscillator in the system functor using the permutation iterators. But,
           the call of the <code class="computeroutput"><span class="identifier">thrust</span><span class="special">::</span><span class="identifier">for_each</span></code>
-          function looks relativ complicated. Every term of the r.h.s. of the ODE
-          is resembled by one iterator packed in exactly the same way as it is unpacked
-          in the functor above.
+          function looks relatively complicated. Every term of the r.h.s. of the
+          ODE is resembled by one iterator packed in exactly the same way as it is
+          unpacked in the functor above.
         </p>
 <p>
           Now we put everything together. We create random initial conditions and
@@ -456,8 +456,8 @@
           and Cuda are parameter studies of relatively small systems. Consider for
           example the three-dimensional Lorenz system from the chaotic systems example
           in the previous section which has three parameters. If you want to study
-          the behaviour of this system for different parameters you usually have
-          to integrate the system for many parameter values. Using thrust and odeint
+          the behavior of this system for different parameters you usually have to
+          integrate the system for many parameter values. Using thrust and odeint
           you can do this integration in parallel, hence you integrate a whole ensemble
           of Lorenz systems where each individual realization has a different parameter
           value.
@@ -465,7 +465,7 @@
 <p>
           In the following we will show how you can use <a href="http://code.google.com/p/thrust/" target="_top">Thrust</a>
           to integrate the above mentioned ensemble of Lorenz systems. We will vary
-          only the parameter <span class="emphasis"><em>&#946;</em></span> but it is straightfoward to vary
+          only the parameter <span class="emphasis"><em>&#946;</em></span> but it is straightforward to vary
           other parameters or even two or all three parameters. Furthermore, we will
           use the largest Lyapunov exponent to quantify the behavior of the system
           (chaoticity).
@@ -551,7 +551,7 @@
           The length of the state is <span class="emphasis"><em>3N</em></span> where <span class="emphasis"><em>N</em></span>
           is the number of systems. The system is encoded into this vector such that
           all <span class="emphasis"><em>x</em></span> components come first, then every <span class="emphasis"><em>y</em></span>
-          compoents and finally every <span class="emphasis"><em>z</em></span> components. Implementing
+          components and finally every <span class="emphasis"><em>z</em></span> components. Implementing
           the device function is then a simple task, you only have to decompose the
           tuple originating from the zip iterators.
         </p>
@@ -559,7 +559,7 @@
           Besides the system without perturbations we furthermore need to calculate
           the system including linearized equations governing the time evolution
           of small perturbations. Using the method from above this is straightforward,
-          with a small difficulty that thrust's tuples have a maximal arity of 10.
+          with a small difficulty that Thrust's tuples have a maximal arity of 10.
           But this is only a small problem since we can create a zip iterator packed
           with zip iterators. So the top level zip iterator contains one zip iterator
           for the state, one normal iterator for the parameter, and one zip iterator
@@ -604,10 +604,10 @@
           We initialize them such that <span class="emphasis"><em>x=y=z=10</em></span>, <span class="emphasis"><em>dx=1</em></span>,
           and <span class="emphasis"><em>dy=dz=0</em></span>. We define a stepper type, a controlled
           Runge-Kutta Dormand-Prince 5 stepper. We start with some integration to
-          overcome the transient behavior. For this, we do not involve the pertubation
+          overcome the transient behavior. For this, we do not involve the perturbation
           and run the algorithm only on the state <span class="emphasis"><em>x,y,z</em></span> without
           any observer. Note, how <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
-          is used for partial integration of the state vector without pertubations
+          is used for partial integration of the state vector without perturbations
           (the first half of the whole state). After the transient, the full system
           with perturbations is integrated and the Lyapunov exponents are calculated
           and written to <code class="computeroutput"><span class="identifier">stdout</span></code>.

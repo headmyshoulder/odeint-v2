@@ -33,7 +33,7 @@
         the user full control over the state type and the mathematical operations
         for this state type. Technically, this is done by introducing three concepts:
         StateType, Algebra, Operations. Most of the steppers in odeint expect three
-        classes types fullfilling these concepts as template parameters. Note that
+        classes types fulfilling these concepts as template parameters. Note that
         these concepts are not fully independent of each other but rather a valid
         combination must be provided in order to make the steppers work. In the following
         we will give some examples on reasonable state_type-algebra-operations combinations.
@@ -755,7 +755,7 @@
 <p>
             A similar class exists for the <code class="computeroutput"><span class="keyword">const</span></code>
             version of the iterator. Then we have a function returning the end iterator
-            (similarily for <code class="computeroutput"><span class="keyword">const</span></code> again):
+            (similarly for <code class="computeroutput"><span class="keyword">const</span></code> again):
 </p>
 <pre class="programlisting"><span class="identifier">gsl_vector_iterator</span> <span class="identifier">end_iterator</span><span class="special">(</span> <span class="identifier">gsl_vector</span> <span class="special">*</span><span class="identifier">x</span> <span class="special">)</span>
 <span class="special">{</span>
@@ -786,7 +786,7 @@
             Again with similar definitions for the <code class="computeroutput"><span class="keyword">const</span></code>
             versions. This eventually makes odeint work with gsl vectors as state
             types. The full code for these bindings is found in <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/boost/numeric/odeint/external/gsl/gsl_wrapper.hpp" target="_top">gsl_wrapper.hpp</a>.
-            It might look rather complicated but keep in mind that gsl is a pre compiled
+            It might look rather complicated but keep in mind that gsl is a pre-compiled
             C library so it is quite an achievement that it's possible to get it
             working at all in the first place.
           </p>
@@ -934,7 +934,7 @@
 </tbody>
 </table></div>
 <p>
-            Definign these operators makes your state type work with any basic Runge-Kutta
+            Defining these operators makes your state type work with any basic Runge-Kutta
             stepper. However, if you want to use step-size control, some more functionality
             is required. Specifically, operations like <span class="emphasis"><em>max<sub>i</sub>( |err<sub>i</sub>| / (alpha
             * |s<sub>i</sub>|) )</em></span> have to be performed. <span class="emphasis"><em>err</em></span> and
@@ -992,7 +992,7 @@
                   </td>
 <td>
                     <p>
-                      Calculates the elementwise division 'x/y'
+                      Calculates the element-wise division 'x/y'
                     </p>
                   </td>
 </tr>
@@ -1074,7 +1074,7 @@
 <p>
             As an example for the employment of the <code class="computeroutput"><span class="identifier">vector_space_algebra</span></code>
             we will adopt <code class="computeroutput"><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">vector</span></code> from <a href="http://www.boost.org/doc/libs/release/libs/numeric/ublas/index.html" target="_top">Boost.UBlas</a>
-            to work as a state type in odeint. This is particularily easy because
+            to work as a state type in odeint. This is particularly easy because
             <code class="computeroutput"><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">vector</span></code> supports vector-vector addition
             and scalar-vector multiplication described above as well as <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">size</span></code>. It also has a resize member function
             so all that has to be done in this case is to declare resizability:
@@ -1230,7 +1230,7 @@
             use controlled steppers. For simple steppers definition of the simple
             <code class="computeroutput"><span class="special">+=</span></code> and <code class="computeroutput"><span class="special">*=</span></code>
             operators are sufficient. Having defined such a point type, we can easily
-            perform the integration on a lorenz system by using the <code class="computeroutput"><span class="identifier">vector_space_algebra</span></code> again:
+            perform the integration on a Lorenz system by using the <code class="computeroutput"><span class="identifier">vector_space_algebra</span></code> again:
           </p>
 <p>
 </p>

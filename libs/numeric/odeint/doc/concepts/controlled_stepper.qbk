@@ -4,7 +4,7 @@ This concept specifies the interface a controlled stepper has to fulfill to be u
 
 [heading Description]
 
-A controlled stepper following this Controlled Stepper concept provides the possibilty to perform one step of the solution /x(t)/ of an ODE with step-size /dt/ to obtain /x(t+dt)/ with a given step-size /dt/.
+A controlled stepper following this Controlled Stepper concept provides the possibility to perform one step of the solution /x(t)/ of an ODE with step-size /dt/ to obtain /x(t+dt)/ with a given step-size /dt/.
 Depending on an error estimate of the solution the step might be rejected and a smaller step-size is suggested.
 
 [heading Notation]
@@ -23,7 +23,7 @@ Depending on an error estimate of the solution the step might be rejected and a 
 
 [table
   [[Name] [Expression] [Type] [Semantics]]
-  [[Do step] [`stepper.try_step( sys , x , t , dt )`] [`controlled_step_result`] [Tries one step of step size `dt`. If the step was succesfull, `success` is returned, the resulting state is written to `x`, the new time is stored in `t` and `dt` now contains a new (possibly larger) step-size for the next step. If the error was too big, `rejected` is returned and the results are neglected - `x` and `t` are unchanged and `dt` now contains a reduced step-size to be used for the next try.] ]
+  [[Do step] [`stepper.try_step( sys , x , t , dt )`] [`controlled_step_result`] [Tries one step of step size `dt`. If the step was successful, `success` is returned, the resulting state is written to `x`, the new time is stored in `t` and `dt` now contains a new (possibly larger) step-size for the next step. If the error was too big, `rejected` is returned and the results are neglected - `x` and `t` are unchanged and `dt` now contains a reduced step-size to be used for the next try.] ]
   [[Do step with reference] [`stepper.try_step( boost::ref(sys) , x , t , dt )`] [`void`] [Same as above with `System` as reference] ]
 ]
 

@@ -1,6 +1,6 @@
 [section Stepper]
 
-This concepts specifies the interface a simple stepper has to fullfill to be used within the __integrate_functions.
+This concepts specifies the interface a simple stepper has to fulfill to be used within the __integrate_functions.
 
 [heading Description]
 

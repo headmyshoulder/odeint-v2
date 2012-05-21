@@ -24,7 +24,7 @@ This is all to use the `make_controlled` mechanism. Now you can use your control
 
 For the dense_output_stepper everything works similar. Here you have to specialize `boost::numeric::odeint::get_dense_output` and `boost::numeric::odeint::dense_output_factory`. These two classes have the same syntax as their relatives `get_controller` and `controller_factory`.
 
-Of course, all controllers and dense-output steppers in odeint can be used with these mechanisms. In the table below you will find, which steppers is contructed from `make_controlled` or `make_dense_output` if applied on a stepper from odeint:
+Of course, all controllers and dense-output steppers in odeint can be used with these mechanisms. In the table below you will find, which steppers is constructed from `make_controlled` or `make_dense_output` if applied on a stepper from odeint:
 
 [include make_controlled_table.qbk]
 [include make_dense_output_table.qbk]

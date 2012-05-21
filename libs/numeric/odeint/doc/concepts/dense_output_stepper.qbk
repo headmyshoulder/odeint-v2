@@ -1,9 +1,9 @@
 [section Dense Output Stepper]
 
-This concept specifies the interface a dense ouput stepper has to fulfill to be used  within __integrate_functions.
+This concept specifies the interface a dense output stepper has to fulfill to be used  within __integrate_functions.
 
 [heading Description]
-A dense ouput stepper following this Dense Output Stepper concept provides the possibility to perform a single step of the solution /x(t)/ of an ODE to obtain /x(t+dt)/.
+A dense output stepper following this Dense Output Stepper concept provides the possibility to perform a single step of the solution /x(t)/ of an ODE to obtain /x(t+dt)/.
 The step-size `dt` might be adjusted automatically due to error control.
 Dense output steppers also can interpolate the solution to calculate the state /x(t')/ at any point /t <= t' <= t+dt/.
 

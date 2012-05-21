@@ -33,7 +33,7 @@
 <p>
       </p>
 <p>
-        This behaviour is suitable for most systems, especially if your system only
+        This behavior is suitable for most systems, especially if your system only
         does not contain any data or only a few parameters. However, in some cases
         you might pass some large amount of data with you system function and passing
         them by value is not desired since the data will be copied.
@@ -41,8 +41,8 @@
 <p>
         In such cases you can easily use <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span></code> (and
         its relative <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">cref</span></code>) which passes its argument by reference
-        (or const reference). odeint will unpack the arguments and no copying at
-        all of you system will take place:
+        (or constant reference). odeint will unpack the arguments and no copying
+        at all of you system will take place:
       </p>
 <p>
 </p>

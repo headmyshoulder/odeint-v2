@@ -2,13 +2,11 @@
 
 [import ../examples/stiff_system.cpp]
 
-An important class of ordinary differential equations are so called stiff system which are characterized by two or more time scales of different order. Examples of such systems are found in chemical systems where reaction rates of individual subreaction might differ over large ranges.
+An important class of ordinary differential equations are so called stiff system which are characterized by two or more time scales of different order. Examples of such systems are found in chemical systems where reaction rates of individual sub-reaction might differ over large ranges.
 
-CHECK:
+['d S[subl 1] / dt = - 101 S[subl 2] - 100 S[subl 1]]
 
-['d S[subl 1] / dt = - __gamma[subl 1] S[subl 1] S[subl 2]]
-
-['d S[subl 2] / dt = - __gamma[subl 1] S[subl 1] S[subl 2]]
+['d S[subl 2] / dt = S[subl 1]]
 
 
 To solve stiff systems numerically the Jacobian

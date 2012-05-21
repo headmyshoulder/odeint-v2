@@ -14,7 +14,7 @@ Typical applications for CUDA and odeint are large systems, like lattices or dis
 
 The first example is the phase oscillator ensemble from the previous section. It has a phase transition at ['__epsilon = 2] in the limit of infinite numbers of oscillators ['N]. In the case of finite ['N] this transition is smeared out but still clearly visible.
 
-__thrust and Cuda are perfectly suited for such kinds of problems where one needs a large number of particles (oscillators). We start by defining the state type which is a `thrust::device_vector`. The content of this vector lives on the GPU. If you are not familar with this we recommend reading the ['Getting started] section on the __thrust website.
+__thrust and Cuda are perfectly suited for such kinds of problems where one needs a large number of particles (oscillators). We start by defining the state type which is a `thrust::device_vector`. The content of this vector lives on the GPU. If you are not familiar with this we recommend reading the ['Getting started] section on the __thrust website.
 
 [thrust_phase_ensemble_state_type]
 
@@ -84,12 +84,12 @@ The next example is a large, one-dimensional chain of nearest-neighbor coupled p
 
 ['d __phi[subl k] / dt = __omega[subl k] + sin( __phi[subl k+1] - __phi[subl k] ) + sin( __phi[subl k] - __phi[subl k-1])]
 
-In principle we can use all the techniques from the previous phase oscillator ensemble example, but we have to take special care about the coupling of the oscillators. To efficiently implement the coupling you can use a very elegant way employing Thrust's permutation iterator. A permuation iterator behaves like a normal iterator on a vector but it does not iterate along the usual order of the elements.
+In principle we can use all the techniques from the previous phase oscillator ensemble example, but we have to take special care about the coupling of the oscillators. To efficiently implement the coupling you can use a very elegant way employing Thrust's permutation iterator. A permutation iterator behaves like a normal iterator on a vector but it does not iterate along the usual order of the elements.
 It rather iterates along some permutation of the elements defined by some index map. To realize the nearest neighbor coupling we create one permutation iterator which travels one step behind a usual iterator and another permutation iterator which travels one step in front. The full system class is:
 
 [thrust_phase_chain_system]
 
-Note, how easy you can obtain the value for the left and right neighboring oscillator in the system functor using the permutation iterators. But, the call of the `thrust::for_each` function looks relativ complicated. Every term of the r.h.s. of the ODE is resembled by one iterator packed in exactly the same way as it is unpacked in the functor above.
+Note, how easy you can obtain the value for the left and right neighboring oscillator in the system functor using the permutation iterators. But, the call of the `thrust::for_each` function looks relatively complicated. Every term of the r.h.s. of the ODE is resembled by one iterator packed in exactly the same way as it is unpacked in the functor above.
 
 Now we put everything together. We create random initial conditions and decreasing frequencies such that we should get synchronization. We copy the frequencies and the initial conditions onto the device and finally initialize and perform the integration. As result we simply write out the current state, hence the phase of each oscillator.
 
@@ -103,10 +103,10 @@ The full example can be found at [github_link libs/numeric/odeint/examples/thrus
 
 [import ../examples/thrust/lorenz_parameters.cu]
 
-Another important use case for __thrust and Cuda are parameter studies of relatively small systems. Consider for example the three-dimensional Lorenz system from the chaotic systems example in the previous section which has three parameters. If you want to study the behaviour of this system for different parameters you usually have to integrate the system for many parameter values. Using thrust and odeint you can do this integration in parallel, hence you integrate a whole ensemble of Lorenz systems where each individual realization has a different parameter value. 
+Another important use case for __thrust and Cuda are parameter studies of relatively small systems. Consider for example the three-dimensional Lorenz system from the chaotic systems example in the previous section which has three parameters. If you want to study the behavior of this system for different parameters you usually have to integrate the system for many parameter values. Using thrust and odeint you can do this integration in parallel, hence you integrate a whole ensemble of Lorenz systems where each individual realization has a different parameter value. 
 [/ The Lorenz system is dissipative, such that you can assume that different initial conditions will lead to the same attractor so . For Hamiltonian systems this is not the case. Here it might be interesting to study a range of initial conditions to quantify different regions in the phase space.]
 
-In the following we will show how you can use __thrust to integrate the above mentioned ensemble of Lorenz systems. We will vary only the parameter ['__beta] but it is straightfoward to vary other parameters or even two or all three parameters. Furthermore, we will use the largest Lyapunov exponent to quantify the behavior of the system (chaoticity).
+In the following we will show how you can use __thrust to integrate the above mentioned ensemble of Lorenz systems. We will vary only the parameter ['__beta] but it is straightforward to vary other parameters or even two or all three parameters. Furthermore, we will use the largest Lyapunov exponent to quantify the behavior of the system (chaoticity).
 
 We start be defining the range of the parameters we want to study. Of course, the state_type is again a `thrust::device_vector< value_type >`. 
 
@@ -116,9 +116,9 @@ The next thing we have to implement is the Lorenz system without perturbations. 
 
 [thrust_lorenz_parameters_define_simple_system]
 
-As `state_type` a `thrust::device_vector` or a __boost_range of a `device_vector` is used. The length of the state is ['3N] where ['N] is the number of systems. The system is encoded into this vector such that all ['x] components come first, then every ['y] compoents and finally every ['z] components. Implementing the device function is then a simple task, you only have to decompose the tuple originating from the zip iterators.
+As `state_type` a `thrust::device_vector` or a __boost_range of a `device_vector` is used. The length of the state is ['3N] where ['N] is the number of systems. The system is encoded into this vector such that all ['x] components come first, then every ['y] components and finally every ['z] components. Implementing the device function is then a simple task, you only have to decompose the tuple originating from the zip iterators.
 
-Besides the system without perturbations we furthermore need to calculate the system including linearized equations governing the time evolution of small perturbations. Using the method from above this is straightforward, with a small difficulty that thrust's tuples have a maximal arity of 10. But this is only a small problem since we can create a zip iterator packed with zip iterators. So the top level zip iterator contains one zip iterator for the state, one normal iterator for the parameter, and one zip iterator for the derivative. Accessing the elements of this tuple in the system function is then straightforward, you unpack the tuple with `thrust::get<>()`. We will not show the code here, it is to large. It can be found [github_link libs/numeric/odeint/examples/thrust/lorenz_parameters.cu here] and is easy to understand.
+Besides the system without perturbations we furthermore need to calculate the system including linearized equations governing the time evolution of small perturbations. Using the method from above this is straightforward, with a small difficulty that Thrust's tuples have a maximal arity of 10. But this is only a small problem since we can create a zip iterator packed with zip iterators. So the top level zip iterator contains one zip iterator for the state, one normal iterator for the parameter, and one zip iterator for the derivative. Accessing the elements of this tuple in the system function is then straightforward, you unpack the tuple with `thrust::get<>()`. We will not show the code here, it is to large. It can be found [github_link libs/numeric/odeint/examples/thrust/lorenz_parameters.cu here] and is easy to understand.
 
 Furthermore, we need an observer which determines the norm of the perturbations, normalizes them and averages the logarithm of the norm. The device functor which is used within this observer is defined
 
@@ -126,7 +126,7 @@ Furthermore, we need an observer which determines the norm of the perturbations,
 
 Note, that this functor manipulates the state, i.e. the perturbations.
 
-Now we complete the whole code to calculate the Lyapunov exponents. First, we have to define a state vector. This vector contains ['6N] entries, the state ['x,y,z] and its perturbations ['dx,dy,dz]. We initialize them such that ['x=y=z=10], ['dx=1], and ['dy=dz=0]. We define a stepper type, a controlled Runge-Kutta Dormand-Prince 5 stepper. We start with some integration to overcome the transient behavior. For this, we do not involve the pertubation and run the algorithm only on the state ['x,y,z] without any observer. Note, how __boost_range is used for partial integration of the state vector without pertubations (the first half of the whole state).  After the transient, the full system with perturbations is integrated and the Lyapunov exponents are calculated and written to `stdout`.
+Now we complete the whole code to calculate the Lyapunov exponents. First, we have to define a state vector. This vector contains ['6N] entries, the state ['x,y,z] and its perturbations ['dx,dy,dz]. We initialize them such that ['x=y=z=10], ['dx=1], and ['dy=dz=0]. We define a stepper type, a controlled Runge-Kutta Dormand-Prince 5 stepper. We start with some integration to overcome the transient behavior. For this, we do not involve the perturbation and run the algorithm only on the state ['x,y,z] without any observer. Note, how __boost_range is used for partial integration of the state vector without perturbations (the first half of the whole state).  After the transient, the full system with perturbations is integrated and the Lyapunov exponents are calculated and written to `stdout`.
 
 [thrust_lorenz_parameters_integration]
 

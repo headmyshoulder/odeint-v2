@@ -36,12 +36,12 @@
         the ODE</a>
 </h4></div></div></div>
 <p>
-          First of all, you have to specify the datatype that represents a state
+          First of all, you have to specify the data type that represents a state
           of your system <span class="emphasis"><em>x</em></span>. Mathematically, this usually is
           an n-dimensional vector with real numbers or complex numbers as scalar
           objects. For odeint the most natural way is to use <code class="computeroutput"><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span></code> or <code class="computeroutput"><span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">complex</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="special">&gt;</span></code>
           to represent the system state. However, odeint can deal with other container
-          types as well, e.g. <code class="computeroutput"><span class="identifier">tr1</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">N</span> <span class="special">&gt;</span></code> as long as it is fullfils some requirements
+          types as well, e.g. <code class="computeroutput"><span class="identifier">tr1</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">N</span> <span class="special">&gt;</span></code> as long as it is fulfills some requirements
           defined below.
         </p>
 <p>
@@ -108,10 +108,10 @@
 </h4></div></div></div>
 <p>
           Numerical integration works iteratively, that means you start at a state
-          <span class="emphasis"><em>x(t)</em></span> and perform a timestep of length <span class="emphasis"><em>dt</em></span>
+          <span class="emphasis"><em>x(t)</em></span> and perform a time-step of length <span class="emphasis"><em>dt</em></span>
           to obtain the approximate state <span class="emphasis"><em>x(t+dt)</em></span>. There exist
-          many different methods to perform such a timestep each of which has a certain
-          order <span class="emphasis"><em>q</em></span>. If the order of a method is <span class="emphasis"><em>q</em></span>
+          many different methods to perform such a time-step each of which has a
+          certain order <span class="emphasis"><em>q</em></span>. If the order of a method is <span class="emphasis"><em>q</em></span>
           than it is accurate up to term <span class="emphasis"><em>~dt<sup>q</sup></em></span> that means the
           error in <span class="emphasis"><em>x</em></span> made by such a step is <span class="emphasis"><em>~dt<sup>q+1</sup></em></span>.
           odeint provides several steppers of different orders from which you can
@@ -414,7 +414,7 @@
                 </td>
 <td>
                   <p>
-                    Standard method with error control and dense ouput, to be used
+                    Standard method with error control and dense output, to be used
                     in controlled_error_stepper and in dense_output_controlled_explicit_fsal.
                   </p>
                 </td>
@@ -702,9 +702,9 @@
                 </td>
 <td>
                   <p>
-                    Dense ouput for <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
+                    Dense output for <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
                     and <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
-                    Stepper</a> from above if they provide dense ouput functionality
+                    Stepper</a> from above if they provide dense output functionality
                     (like <code class="computeroutput"><span class="identifier">euler</span></code> and
                     <code class="computeroutput"><span class="identifier">runge_kutta_dopri5</span></code>).
                     Order depends on the given stepper.
@@ -804,8 +804,8 @@
                 </td>
 <td>
                   <p>
-                    Stepper with step size and order control as well as dense ouput.
-                    Very good if high precision and dense ouput is required.
+                    Stepper with step size and order control as well as dense output.
+                    Very good if high precision and dense output is required.
                   </p>
                 </td>
 </tr>
@@ -962,12 +962,12 @@
 <tr>
 <td>
                   <p>
-                    Dense Ouput Rosenbrock 4
+                    Dense Output Rosenbrock 4
                   </p>
                 </td>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">rosenbrock4_dense_ouput</span></code>
+                    <code class="computeroutput"><span class="identifier">rosenbrock4_dense_output</span></code>
                   </p>
                 </td>
 <td>
@@ -1124,15 +1124,16 @@
         with Constant Step Size</a>
 </h4></div></div></div>
 <p>
-          The basic stepper just performs one timestep and doesn't give you any information
-          about the error that was made (except that you know it is of order <span class="emphasis"><em>q+1</em></span>).
-          Such steppers are used with constant step size that should be chosen small
-          enough to have reasonable small errors. However, you should apply some
-          sort of validity check of your results (such as observing conserved quantities)
-          becasue you have no other control of the error. The following example defines
-          a basic stepper based on the classical Runge-Kutta scheme of 4th order.
-          The declaration of the stepper requires the state type as template parameter.
-          The integration can now be done by using the <code class="computeroutput"><span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">Stepper</span><span class="special">,</span> <span class="identifier">System</span><span class="special">,</span> <span class="identifier">state</span><span class="special">,</span> <span class="identifier">start_time</span><span class="special">,</span> <span class="identifier">end_time</span><span class="special">,</span> <span class="identifier">step_size</span>
+          The basic stepper just performs one time-step and doesn't give you any
+          information about the error that was made (except that you know it is of
+          order <span class="emphasis"><em>q+1</em></span>). Such steppers are used with constant step
+          size that should be chosen small enough to have reasonable small errors.
+          However, you should apply some sort of validity check of your results (such
+          as observing conserved quantities) because you have no other control of
+          the error. The following example defines a basic stepper based on the classical
+          Runge-Kutta scheme of 4th order. The declaration of the stepper requires
+          the state type as template parameter. The integration can now be done by
+          using the <code class="computeroutput"><span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">Stepper</span><span class="special">,</span> <span class="identifier">System</span><span class="special">,</span> <span class="identifier">state</span><span class="special">,</span> <span class="identifier">start_time</span><span class="special">,</span> <span class="identifier">end_time</span><span class="special">,</span> <span class="identifier">step_size</span>
           <span class="special">)</span></code> function from odeint:
         </p>
 <p>
@@ -1145,7 +1146,7 @@
 <p>
           This call integrates the system defined by <code class="computeroutput"><span class="identifier">harmonic_oscillator</span></code>
           using the RK4 method from <span class="emphasis"><em>t=0</em></span> to <span class="emphasis"><em>10</em></span>
-          with a stepsize <span class="emphasis"><em>dt=0.01</em></span> and the initial condition
+          with a step-size <span class="emphasis"><em>dt=0.01</em></span> and the initial condition
           given in <code class="computeroutput"><span class="identifier">x</span></code>. The result,
           <span class="emphasis"><em>x(t=10)</em></span> is stored in <code class="computeroutput"><span class="identifier">x</span></code>
           (in-place). Each stepper defines a <code class="computeroutput"><span class="identifier">do_step</span></code>
@@ -1207,7 +1208,7 @@
           This is a nice technique; however one drawback is that one always needs
           to define both steppers. Of course, one could also write the instantiation
           of the controlled stepper into the call of the integrate function but a
-          complete knowledge of the underlying stepper types is still neccessary.
+          complete knowledge of the underlying stepper types is still necessary.
           Another point is, that the error tolerances for the step size control are
           not easily included into the controlled stepper. Both issues can be solved
           by using <code class="computeroutput"><span class="identifier">make_controlled</span></code>:
@@ -1257,7 +1258,7 @@
         </p>
 <p>
           In the tables below, one can find all steppers which are working with
-          <code class="computeroutput"><span class="identifier">make_controlled</span></code> and <code class="computeroutput"><span class="identifier">make_dense_output</span></code> which is the analogon
+          <code class="computeroutput"><span class="identifier">make_controlled</span></code> and <code class="computeroutput"><span class="identifier">make_dense_output</span></code> which is the analog
           for the dense output steppers.
         </p>
 <div class="table">

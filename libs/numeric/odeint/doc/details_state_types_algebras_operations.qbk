@@ -6,7 +6,7 @@ This is realized by giving the user full control over the state type and the
 mathematical operations for this state type.
 Technically, this is done by introducing three concepts: StateType, Algebra,
 Operations.
-Most of the steppers in odeint expect three classes types fullfilling these
+Most of the steppers in odeint expect three classes types fulfilling these
 concepts as template parameters.
 Note that these concepts are not fully independent of each other but rather a
 valid combination must be provided in order to make the steppers work.
@@ -282,7 +282,7 @@ private :
 };
 ``
 A similar class exists for the `const` version of the iterator.
-Then we have a function returning the end iterator (similarily for `const` again):
+Then we have a function returning the end iterator (similarly for `const` again):
 ``
 gsl_vector_iterator end_iterator( gsl_vector *x )
 {
@@ -310,7 +310,7 @@ Again with similar definitions for the `const` versions.
 This eventually makes odeint work with gsl vectors as state types.
 The full code for these bindings is found in [github_link
 boost/numeric/odeint/external/gsl/gsl_wrapper.hpp gsl_wrapper.hpp].
-It might look rather complicated but keep in mind that gsl is a pre compiled C
+It might look rather complicated but keep in mind that gsl is a pre-compiled C
 library so it is quite an achievement that it's possible to get it working at
 all in the first place.
 [endsect]
@@ -337,7 +337,7 @@ state_type:
   [[Assign scalar multiplication] [`x *= a`] [`state_type`] [Performs in-place multiplication of vector x with scalar a.]]
 ]
 
-Definign these operators makes your state type work with any basic Runge-Kutta 
+Defining these operators makes your state type work with any basic Runge-Kutta 
 stepper.
 However, if you want to use step-size control, some more functionality is 
 required.
@@ -351,7 +351,7 @@ So for controlled steppers the following things have to be implemented:
 
 [table
   [[Name] [Expression] [Type] [Semantics]]
-  [[Division] [`x / y`] [`state_type`] [Calculates the elementwise division 'x/y']]
+  [[Division] [`x / y`] [`state_type`] [Calculates the element-wise division 'x/y']]
   [[Absolute value] [`abs( x )`] [`state_type`] [Element wise absolute value]]
   [[Reduce] [`vector_space_reduce_impl< state_type >::reduce( state , operator , init )`] [`value_type`] 
     [Performs the operation `operator` for subsequently each element of `state` and returns the aggregate value.
@@ -370,7 +370,7 @@ So for controlled steppers the following things have to be implemented:
 [section Boost.Ublas]
 As an example for the employment of the `vector_space_algebra` we will adopt
 `ublas::vector` from __ublas to work as a state type in odeint.
-This is particularily easy because `ublas::vector` supports vector-vector
+This is particularly easy because `ublas::vector` supports vector-vector
 addition and scalar-vector multiplication described above as well as `boost::size`.
 It also has a resize member function so all that has to be done in this case
 is to declare resizability:
@@ -428,7 +428,7 @@ Again, note that the two last steps were only required if you want to use
 controlled steppers.
 For simple steppers definition of the simple `+=` and `*=` operators are
 sufficient.
-Having defined such a point type, we can easily perform the integration on a lorenz
+Having defined such a point type, we can easily perform the integration on a Lorenz
 system by using the `vector_space_algebra` again:
 
 [point3D_main]

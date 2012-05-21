@@ -45,7 +45,7 @@ exe rt_generic_rk4_lorenz
     ;
     
 exe gsl_rk4_lorenz
-    : gsl_rk4_lorenz.cpp libgsl libgslcblas
+    : gsl_rk4_lorenz.cpp libgslcblas libgsl
     ;
     
 exe odeint_rk4_phase_lattice

@@ -1,4 +1,4 @@
-[library boost.sandbox.numeric.odeint
+[library Boost.Numeric.Odeint
      [quickbook 1.5]
      [id odeint]
      [dirname odeint]
@@ -69,7 +69,7 @@
 [def __tut_chaotic_system
     [link boost_sandbox_numeric_odeint.tutorial.chaotic_systems_and_lyapunov_exponents Chaotic system]]
 [def __using_steppers
-    [link boost_sandbox_numeric_odeint.odeint_in_detail.steppers.using_steppers Using steppers]]
+    [link boost_sandbox_numeric_odeint.odeint_in_detail.steppers.using_steppers Using steppers]]	
 [def __generation_functions
     [link boost_sandbox_numeric_odeint.odeint_in_detail.generation_functions Generation functions]]
 [def __adapt_state_types
@@ -107,7 +107,7 @@
 [template subl[x]'''<subscript>'''__space[x]'''</subscript>''']
 
 [template github_link[url text]'''<ulink url="https://github.com/headmyshoulder/odeint-v2/tree/master/'''[url]'''" target="_blank">'''[text]'''</ulink>''']
-# [template github_link[url text]'''<ulink url="'''[url]'''" target="_blank">'''[text]'''</ulink>''']
+[/ [template github_link[url text]'''<ulink url="'''[url]'''" target="_blank">'''[text]'''</ulink>''']]
 
 [include getting_started.qbk]
 
@@ -117,11 +117,7 @@
 
 [include concepts.qbk]
 
-[xinclude reference.xml]
-
-[include concepts_old.qbk]
-
-[include reference_old.qbk]
+[/ [xinclude reference.xml] ]
 
 
 [/

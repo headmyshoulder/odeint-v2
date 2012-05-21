@@ -7,9 +7,9 @@ In odeint all system functions and observers are passed by value. For example, i
 rk4.do_step( sys , x , t , dt );   // pass sys by value
 ``
 
-This behaviour is suitable for most systems, especially if your system only does not contain any data or only a few parameters. However, in some cases you might pass some large amount of data with you system function and passing them by value is not desired since the data will be copied.
+This behavior is suitable for most systems, especially if your system only does not contain any data or only a few parameters. However, in some cases you might pass some large amount of data with you system function and passing them by value is not desired since the data will be copied.
 
-In such cases you can easily use `boost::ref` (and its relative `boost::cref`) which passes its argument by reference (or const reference). odeint will unpack the arguments and no copying at all of you system will take place:
+In such cases you can easily use `boost::ref` (and its relative `boost::cref`) which passes its argument by reference (or constant reference). odeint will unpack the arguments and no copying at all of you system will take place:
 
 ``
 rk4.do_step( boost::ref( sys ) , x , t , dt );   // pass sys as references

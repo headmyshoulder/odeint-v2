@@ -21,7 +21,7 @@ Provided to an `integrate` function, observers are called at each time step, at 
 
 [table
   [[Name] [Expression] [Type] [Semantics]]
-  [[Perform the observation] [`obs( x , t )`] [`void`] [Calls the observer which can do some analyzation of the state /x/ at time /t/.] ]
+  [[Perform the observation] [`obs( x , t )`] [`void`] [Calls the observer which can do some analysis or output of the state /x/ at time /t/.] ]
 ]
 
 [endsect]

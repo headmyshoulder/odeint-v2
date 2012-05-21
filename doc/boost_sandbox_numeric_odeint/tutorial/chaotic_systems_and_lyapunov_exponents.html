@@ -37,16 +37,16 @@
         system. In principle <span class="emphasis"><em>n</em></span> of these perturbations exit,
         they form a hypercube and evolve in the time. The Lyapunov exponents are
         then defined as logarithmic growth rates of the perturbations. If one Lyapunov
-        exponent is larger then zero nearby trajectories divergy exponentially hence
+        exponent is larger then zero nearby trajectories diverge exponentially hence
         they are chaotic. If the largest Lyapunov exponent is zero one is usually
         faced with periodic motion. In the case of a largest Lyapunov exponent smaller
-        then zero the converges the a fixed point. More informations about Lyapunov
+        then zero the converges the a fixed point. More information's about Lyapunov
         exponents and nonlinear dynamical systems can be found in many textbooks,
         see for example .
       </p>
 <p>
         To calculate the Lyapunov exponents numerically one usually solves the equations
-        of motion for <span class="emphasis"><em>n</em></span> perturbations und orthonormalized them
+        of motion for <span class="emphasis"><em>n</em></span> perturbations and orthonormalizes them
         every <span class="emphasis"><em>k</em></span> steps. The Lyapunov exponent is the average
         the logarithm of the stretching factor of each perturbation.
       </p>
@@ -78,7 +78,7 @@
 <p>
         We need also need to integrate the set of the perturbations. This is done
         in parallel to the original system, hence within one system function. Of
-        course, we want to use the above defintion of the Lorenz system, hence the
+        course, we want to use the above definition of the Lorenz system, hence the
         definition of the system function including the Lorenz system itself and
         the perturbation could look like:
       </p>
@@ -161,7 +161,7 @@
         The problem is now, that <code class="computeroutput"><span class="identifier">x</span></code>
         is the full state containing also the perturbations and <code class="computeroutput"><span class="identifier">integrate_n_steps</span></code>
         does not know that it should only use 3 element. In detail, odeint and its
-        steppers determine the length of the system under consideration be determing
+        steppers determine the length of the system under consideration be determining
         the length of the state. In the classical solvers from the problem was solved
         by pointer to the state and an appropriate length, something similar to
       </p>
@@ -219,7 +219,7 @@
 <li class="listitem">
             We initialize the perturbations. They are stored linearly behind the
             state of the Lorenz system. The perturbation are initialized such that
-            they fullfill <span class="emphasis"><em>&lt; p <sub>&#8203;i</sub> , p<sub>&#8203;j</sub> &gt; = &#948; <sub>&#8203;ij</sub> </em></span> where <span class="emphasis"><em>&lt;,&gt;</em></span>
+            they fulfill <span class="emphasis"><em>&lt; p <sub>&#8203;i</sub> , p<sub>&#8203;j</sub> &gt; = &#948; <sub>&#8203;ij</sub> </em></span> where <span class="emphasis"><em>&lt;,&gt;</em></span>
             is the classical scalar product and <span class="emphasis"><em>&#948; <sub>&#8203;ij</sub></em></span> is the Kronecker
             symbol.
           </li>

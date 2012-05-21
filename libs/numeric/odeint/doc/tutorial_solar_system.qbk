@@ -27,7 +27,7 @@ equations of motion
 
 ['dp[subl i] / dt = -dH / dq[subl i]]
 
-In time independent Hamiltonian system the energy and the phase space volume are conserved and special integration methods have to be applied in order to ensure these conservation laws. The odeint library provides classes for separable Hamiltonian systems, which can be written in the form ['H = __Sigma p[subl i][super 2] / (2m[subl i]) + H[subl q](q)], where ['H[subl q](q)] only depends on the coordinates. Alltough this functional form might look a bit arbitrary it covers nearly all classical mechanical systems with inertia and without dissipation, or where the equations of motion can be written in the form ['dq[subl i] / dt = p[subl i]] / m[subl i] , ['dp[subl i] / dt = f( q[subl i] )].
+In time independent Hamiltonian system the energy and the phase space volume are conserved and special integration methods have to be applied in order to ensure these conservation laws. The odeint library provides classes for separable Hamiltonian systems, which can be written in the form ['H = __Sigma p[subl i][super 2] / (2m[subl i]) + H[subl q](q)], where ['H[subl q](q)] only depends on the coordinates. Although this functional form might look a bit arbitrary it covers nearly all classical mechanical systems with inertia and without dissipation, or where the equations of motion can be written in the form ['dq[subl i] / dt = p[subl i]] / m[subl i] , ['dp[subl i] / dt = f( q[subl i] )].
 
 [endsect]
 
@@ -45,7 +45,7 @@ The next step is to define a container type storing the values of ['q] and ['p] 
 [import ../examples/solar_system.cpp]
 [container_type_definition]
 
-The `container_type` is different from the state type of the ODE. The state type of the ode is simply a `pair< container_type , container_type >` since it needs the informations about the coordinates and the momenta.
+The `container_type` is different from the state type of the ODE. The state type of the ode is simply a `pair< container_type , container_type >` since it needs the information about the coordinates and the momenta.
 
 As system function we have to provide ['f(p)] and ['f(q)]:
 
@@ -53,7 +53,7 @@ As system function we have to provide ['f(p)] and ['f(q)]:
 
 [momentum_function]
 
-In general a three body-system is chaotic, hence we can not expect that arbitray initial conditions of the system will lead to a dynamic which is comparable with the solar system. That is we have to define proper initial conditions, which are taken from the book of Hairer, Wannier, Lubich.
+In general a three body-system is chaotic, hence we can not expect that arbitrary initial conditions of the system will lead to a dynamic which is comparable with the solar system. That is we have to define proper initial conditions, which are taken from the book of Hairer, Wannier, Lubich.
 
 As mentioned above, we need to use some special integrators in order to conserve phase space volume and energy. There is a well known family of such integrators, the so-called Runge-Kutta-Nystroem solvers, which we apply here:
 

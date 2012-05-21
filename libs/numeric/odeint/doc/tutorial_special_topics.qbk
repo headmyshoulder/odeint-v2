@@ -1,7 +1,5 @@
 [section Special topics]
 
-explain boost::ref 
-
 [section Complex state types]
 
 [import ../examples/stuart_landau.cpp]
@@ -14,7 +12,7 @@ where ['__Psi] and ['i] is a complex variable. Such systems can easily be repres
 
 [stuart_landau_system_function]
 
-Of courst, one can also use classical functions to implement the state function. In this cast the Stuart-Landau oscillator looks like
+Of course, one can also use classical functions to implement the state function. In this cast the Stuart-Landau oscillator looks like
 
 [stuart_landau_system_function_alternative]
 
@@ -39,7 +37,7 @@ odeint can also be used to solved ordinary differential equations defined on lat
 
 Remarkably, the Fermi-Pasta-Ulam system was the first numerical experiment which has been implemented on a computer in 1953. It was studied at Los Alamos on one of the first computer (a MANIAC I) and it triggered a whole new tree of mathematical and physical science.
  
-The FPU is solved again by a symplectic solver, but in our case we can speed up the computation because the ['q] components trivially reduce to ['dq[subl i] / dt = p[subl i]]. odeint is capable of doing this peformance improvement. All you have to do is to call the symplectic solver with an state function for the ['p] components. Here, is how this function looks like
+The FPU is solved again by a symplectic solver, but in our case we can speed up the computation because the ['q] components trivially reduce to ['dq[subl i] / dt = p[subl i]]. odeint is capable of doing this performance improvement. All you have to do is to call the symplectic solver with an state function for the ['p] components. Here, is how this function looks like
 
 [fpu_system_function]
 
@@ -65,7 +63,7 @@ Another import high dimensional system of coupled ordinary differential equation
 
 [' d__phi[subl k] / dt = __omega[subl k] + __epsilon / N __Sigma[subl j] sin( __phi[subl j] - __phi[subl k] )]
 
-The natural frequencies ['__omega[subl i]] of each oscialltor follow some distribution and ['__epsilon] is the coupling strength. We choose here a Lorentzian distribution for ['__omega[subl i]]. Interestingly a phase transition can be observed if the coupling strenght exceeds a critical value. Above this value synchronization sets in and some of the oscillators oscillate with the same frequency despite their different natural frequencies. The transition is also called Kuramoto transition. Its behavior can be analyzed by employing the mean field of the phase
+The natural frequencies ['__omega[subl i]] of each oscillator follow some distribution and ['__epsilon] is the coupling strength. We choose here a Lorentzian distribution for ['__omega[subl i]]. Interestingly a phase transition can be observed if the coupling strength exceeds a critical value. Above this value synchronization sets in and some of the oscillators oscillate with the same frequency despite their different natural frequencies. The transition is also called Kuramoto transition. Its behavior can be analyzed by employing the mean field of the phase
 
 ['Z = K e[super i __Theta] = 1 / N __Sigma[subl k]e[super i __phi[subl k]]]
 
@@ -95,7 +93,7 @@ To illustrate how odeint works with __boost_units we use the harmonic oscillator
 
 [units_define_basic_quantities]
 
-Note, that the `state_type` and the `deriv_type` are now a compile-time fusion sequences. They have to be explicitly defined. Next, we define the ordinary differential equation which is completety equivalent to the example in the first section of this tutorial
+Note, that the `state_type` and the `deriv_type` are now a compile-time fusion sequences. They have to be explicitly defined. Next, we define the ordinary differential equation which is completely equivalent to the example in the first section of this tutorial
 
 [units_define_ode]
 
@@ -121,7 +119,7 @@ The full cpp file for this example can be found here [github_link libs/numeric/o
 
 odeint works well with a variety of different state types. It is not restricted to pure vector-wise types, like `vector< double >`, `array< double , N >`, `fusion::vector< double , double >`, etc. but also works with types having a different topology then simple vectors. Here, we show how odeint can be used with matrices as states type, in the next section we will show how can be used to solve ODEs defined on complex networks.
 
-By default, odeint can be used with `ublas::matrix< T >` as state type for matrices. A simple example is a two-dimensional lattice of coupled phase oscillators. We like phas oscillators, they are extremly easy and might serve for different demonstration purposes. Other matrix types like `mtl::dense_matrix` or blitz arrays and matrices can used as well but need some kind of activation in order to work with odeint. This activation is described in following sections,
+By default, odeint can be used with `ublas::matrix< T >` as state type for matrices. A simple example is a two-dimensional lattice of coupled phase oscillators. We like phase oscillators, they are extremely easy and might serve for different demonstration purposes. Other matrix types like `mtl::dense_matrix` or blitz arrays and matrices can used as well but need some kind of activation in order to work with odeint. This activation is described in following sections,
 
 The definition of the system is
 
@@ -155,7 +153,7 @@ Ginzburg-Landau
 
 [import ../examples/gmpxx/lorenz_gmpxx.cpp]
 
-Besides the classical floating point number like `float`, `double`, `complex< double >` you can also use arbitrary precision types, like the types from [@http://gmplib.org/ gmp] and [@http://www.mpfr.org/ mpfr]. But you have to be carful about instantiating any numbers.
+Besides the classical floating point number like `float`, `double`, `complex< double >` you can also use arbitrary precision types, like the types from [@http://gmplib.org/ gmp] and [@http://www.mpfr.org/ mpfr]. But you have to be careful about instantiating any numbers.
 
 For gmp types you have to set the default precision before any number is instantiated. This can be easily done by calling `mpf_set_default_prec( precision )` as the first function in your main program. Secondly, you can not use any global constant variables since they will not be set with the default precision you have already set.
 
@@ -178,11 +176,11 @@ The full example can be found at [github_link libs/numeric/odeint/examples/loren
 
 [import ../examples/resizing_lattice.cpp]
 
-Odeint supports changes of the state size during integration if a state_type is used which can be resized, like `std::vector`.
+odeint supports changes of the state size during integration if a state_type is used which can be resized, like `std::vector`.
 The adjustment of the state type's size has to be done from outside and the stepper has to be instantiated with `always_resizer` as the template argument for the `resizer_type`.
 In this configuration, the stepper checks for changes in the state size and adjust it's internal storage accordingly.
 
-We exemplarily show this for a Hamiltonian system of nonlinear, disordered oscillators with nonlinear nearest neighbour coupling.
+We exemplary show this for a Hamiltonian system of nonlinear, disordered oscillators with nonlinear nearest neighbor coupling.
 
 The system function is implemented in terms of a class that also provides functions for calculating the energy.
 Note, that this class stores the random potential internally which is not resized, but rather a start index is kept which should be changed whenever the states' size change.

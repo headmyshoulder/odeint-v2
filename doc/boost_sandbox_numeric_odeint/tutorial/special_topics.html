@@ -84,7 +84,7 @@
 <p>
         </p>
 <p>
-          Of courst, one can also use classical functions to implement the state
+          Of course, one can also use classical functions to implement the state
           function. In this cast the Stuart-Landau oscillator looks like
         </p>
 <p>
@@ -148,7 +148,7 @@
           The FPU is solved again by a symplectic solver, but in our case we can
           speed up the computation because the <span class="emphasis"><em>q</em></span> components
           trivially reduce to <span class="emphasis"><em>dq<sub>&#8203;i</sub> / dt = p<sub>&#8203;i</sub></em></span>. odeint is capable
-          of doing this peformance improvement. All you have to do is to call the
+          of doing this performance improvement. All you have to do is to call the
           symplectic solver with an state function for the <span class="emphasis"><em>p</em></span>
           components. Here, is how this function looks like
         </p>
@@ -281,10 +281,10 @@
           <span class="emphasis"><em>d&#966;<sub>&#8203;k</sub> / dt = &#969;<sub>&#8203;k</sub> + &#949; / N &#931;<sub>&#8203;j</sub> sin( &#966;<sub>&#8203;j</sub> - &#966;<sub>&#8203;k</sub> )</em></span>
         </p>
 <p>
-          The natural frequencies <span class="emphasis"><em>&#969;<sub>&#8203;i</sub></em></span> of each oscialltor follow
+          The natural frequencies <span class="emphasis"><em>&#969;<sub>&#8203;i</sub></em></span> of each oscillator follow
           some distribution and <span class="emphasis"><em>&#949;</em></span> is the coupling strength. We
           choose here a Lorentzian distribution for <span class="emphasis"><em>&#969;<sub>&#8203;i</sub></em></span>. Interestingly
-          a phase transition can be observed if the coupling strenght exceeds a critical
+          a phase transition can be observed if the coupling strength exceeds a critical
           value. Above this value synchronization sets in and some of the oscillators
           oscillate with the same frequency despite their different natural frequencies.
           The transition is also called Kuramoto transition. Its behavior can be
@@ -486,7 +486,7 @@
           Note, that the <code class="computeroutput"><span class="identifier">state_type</span></code>
           and the <code class="computeroutput"><span class="identifier">deriv_type</span></code> are
           now a compile-time fusion sequences. They have to be explicitly defined.
-          Next, we define the ordinary differential equation which is completety
+          Next, we define the ordinary differential equation which is completely
           equivalent to the example in the first section of this tutorial
         </p>
 <p>
@@ -588,7 +588,7 @@
 <p>
           By default, odeint can be used with <code class="computeroutput"><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">matrix</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span></code> as state type for matrices. A simple
           example is a two-dimensional lattice of coupled phase oscillators. We like
-          phas oscillators, they are extremly easy and might serve for different
+          phase oscillators, they are extremely easy and might serve for different
           demonstration purposes. Other matrix types like <code class="computeroutput"><span class="identifier">mtl</span><span class="special">::</span><span class="identifier">dense_matrix</span></code>
           or blitz arrays and matrices can used as well but need some kind of activation
           in order to work with odeint. This activation is described in following
@@ -678,7 +678,7 @@
           <code class="computeroutput"><span class="keyword">double</span></code>, <code class="computeroutput"><span class="identifier">complex</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span></code> you can also use arbitrary precision
           types, like the types from <a href="http://gmplib.org/" target="_top">gmp</a>
           and <a href="http://www.mpfr.org/" target="_top">mpfr</a>. But you have to be
-          carful about instantiating any numbers.
+          careful about instantiating any numbers.
         </p>
 <p>
           For gmp types you have to set the default precision before any number is
@@ -766,8 +766,8 @@
           and adjust it's internal storage accordingly.
         </p>
 <p>
-          We exemplarily show this for a Hamiltonian system of nonlinear, disordered
-          oscillators with nonlinear nearest neighbour coupling.
+          We exemplary show this for a Hamiltonian system of nonlinear, disordered
+          oscillators with nonlinear nearest neighbor coupling.
         </p>
 <p>
           The system function is implemented in terms of a class that also provides

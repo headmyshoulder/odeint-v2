@@ -40,7 +40,7 @@
         own steppers</a></span></dt>
 </dl></div>
 <p>
-        Solving ordinary differential equation numerically is ususally done iteratively,
+        Solving ordinary differential equation numerically is usually done iteratively,
         that is a given state of an ordinary differential equation is iterated forward
         <span class="emphasis"><em>x(t) -&gt; x(t+dt) -&gt; x(t+2dt)</em></span>. The steppers in odeint
         perform one single step. The most general stepper type is described by the
@@ -50,7 +50,7 @@
         we briefly present the mathematical and numerical details of the steppers.
         The <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
         has two versions of the <code class="computeroutput"><span class="identifier">do_step</span></code>
-        method, one with an in-place transform of the currrent state and one with
+        method, one with an in-place transform of the current state and one with
         an out-of-place transform:
       </p>
 <p>
@@ -90,7 +90,7 @@
       </p>
 <p>
         Other types of system function represent Hamiltonian systems or system which
-        also compute the Jacobian needed in implicit steppers. For informations which
+        also compute the Jacobian needed in implicit steppers. For information which
         stepper uses which system function see the stepper table below. It might
         be possible, that odeint will introduce new system types in near future.
         Since the system function is strongly related to the stepper type, such an
@@ -171,7 +171,7 @@
           This method also fills the derivative at time <span class="emphasis"><em>t+dt</em></span>
           into <code class="computeroutput"><span class="identifier">dxdtout</span></code>. Of course,
           the performance gain of such FSAL steppers only appears when combining
-          with intergrate error estimation, like in the Runge-Kutta-Dopri5 stepper.
+          with integrate error estimation, like in the Runge-Kutta-Dopri5 stepper.
           The FSAL-trick is sometimes also referred as the Fehlberg-Trick. An example
           how the FSAL steppers can be used is
         </p>
@@ -221,11 +221,11 @@
           A special class of symplectic systems are separable systems which can be
           written in the form <span class="emphasis"><em>dqdt/dt = f1(p)</em></span>, <span class="emphasis"><em>dpdt/dt
           = f2(q)</em></span>, where <span class="emphasis"><em>(q,p)</em></span> are the state of system.
-          The space of <span class="emphasis"><em>(q,p)</em></span> is sometimes refered as the phase
+          The space of <span class="emphasis"><em>(q,p)</em></span> is sometimes referred as the phase
           space and <span class="emphasis"><em>q</em></span> and <span class="emphasis"><em>p</em></span> are said the
           be the phase space variables. Symplectic systems in this special form occur
           widely in nature. For example the complete classical mechanics as written
-          down by Newton, Lagrange and Hamilton can be forumulated in this framework.
+          down by Newton, Lagrange and Hamilton can be formulated in this framework.
           Of course, the separability of the system depends on the specific choice
           of coordinates.
         </p>
@@ -233,7 +233,7 @@
           Integrable symplectic systems can be solved by odeint by means of the symplectic_euler
           stepper and a symplectic Runge-Kutta-Nystrom method of sixth-order. These
           stepper assume that the system is autonomous, hence the time will not explicitly
-          occur. Furhter they fullfil in principle the default Stepper concept, but
+          occur. Further they fulfill in principle the default Stepper concept, but
           they expect the system to be a pair of callable objects. The first entry
           of this pair calculates <span class="emphasis"><em>f1(p)</em></span> while the second calculates
           <span class="emphasis"><em>f2(q)</em></span>. The syntax is <code class="computeroutput"><span class="identifier">sys</span><span class="special">.</span><span class="identifier">first</span><span class="special">(</span><span class="identifier">p</span><span class="special">,</span><span class="identifier">dqdt</span><span class="special">)</span></code>
@@ -314,7 +314,7 @@
           form. This kind of system can be used in the symplectic solvers, by simply
           passing <span class="emphasis"><em>f(p)</em></span> to the <code class="computeroutput"><span class="identifier">do_step</span></code>
           method, again <span class="emphasis"><em>f(p)</em></span> will be represented by a simple
-          C-function or a functor. Here, the above example of the harmonic oscaillator
+          C-function or a functor. Here, the above example of the harmonic oscillator
           can be written as
         </p>
 <p>
@@ -331,7 +331,7 @@
           is exactly the same function as in the above examples.
         </p>
 <p>
-          Note, that the state of the ODE must not be contructed explicitly via
+          Note, that the state of the ODE must not be constructed explicitly via
           <code class="computeroutput"><span class="identifier">pair</span><span class="special">&lt;</span>
           <span class="identifier">vector_type</span> <span class="special">,</span>
           <span class="identifier">vector_type</span> <span class="special">&gt;</span>
@@ -369,7 +369,7 @@
           system possesses two or more time scales of very different order. Solvers
           for stiff systems are usually implicit, meaning that they solve equations
           like <span class="emphasis"><em>x(t+dt) = x(t) + dt * f(x(t+1))</em></span>. This particular
-          scheme is the implicit euler method. Implicit methods usually solve the
+          scheme is the implicit Euler method. Implicit methods usually solve the
           system of equations by a root finding algorithm like the Newton method
           and therefore need to know the Jacobian of the system <span class="emphasis"><em>J<sub>&#8203;ij</sub> = df<sub>&#8203;i</sub> /
           dx<sub>&#8203;j</sub></em></span>.
@@ -392,15 +392,15 @@
 <p>
           Another large class of solvers are multi-step method. They save a small
           part of the history of the solution and compute the next step with the
-          help of this history. Since multistep methods know a part of their history
+          help of this history. Since multi-step methods know a part of their history
           they do not need to compute the system function very often, usually it
-          is only computed once. This makes multistep methods preferable if a call
+          is only computed once. This makes multi-step methods preferable if a call
           of the system function is expensive. Examples are ODEs defined on networks,
           where the computation of the interaction is usually where expensive (and
           might be of order O(N^2)).
         </p>
 <p>
-          Multistep methods differ from the normal steppers. They safe a part of
+          Multi-step methods differ from the normal steppers. They safe a part of
           their history and this part has to be explicitly calculated and initialized.
           In the following example an Adams-Bashforth-stepper with a history of 5
           steps is instantiated and initialized;
@@ -429,7 +429,7 @@
 <p>
         </p>
 <p>
-          Many multistep methods are also explicit steppers, hence the parameter
+          Many multi-step methods are also explicit steppers, hence the parameter
           of <code class="computeroutput"><span class="identifier">do_step</span></code> method do not
           differ from the explicit steppers.
         </p>
@@ -439,7 +439,7 @@
 <th align="left">Caution</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-            The multistep methods have some internal variables which depend on the
+            The multi-step methods have some internal variables which depend on the
             explicit solution. Hence you can not exchange the system of the state
             between two consecutive calls of <code class="computeroutput"><span class="identifier">do_step</span></code>
             since then the internal variable do not correspond with the ODE and the
@@ -456,7 +456,7 @@
 </h4></div></div></div>
 <p>
           Many of the above introduced steppers possess the possibility to use adaptive
-          stepsize control. Adaptive step size integration works in principle as
+          step-size control. Adaptive step size integration works in principle as
           follows:
         </p>
 <div class="orderedlist"><ol class="orderedlist" type="1">
@@ -469,8 +469,8 @@
             </li>
 <li class="listitem">
               This error is compared against some predefined error tolerances. Are
-              the tolerance violated the step is reject and the stepsize is decreases.
-              Otherwise the step is accepted and possibly the stepsize is increased.
+              the tolerance violated the step is reject and the step-size is decreases.
+              Otherwise the step is accepted and possibly the step-size is increased.
             </li>
 </ol></div>
 <p>
@@ -478,8 +478,8 @@
           Stepper</a> concept. They are usually constructed from the underlying
           error steppers. An example is the controller for the explicit Runge-Kutta
           steppers. The Runge-Kutta steppers enter the controller as a template argument.
-          Additionally one can pass the Runge-Kutta stepper to the contructor, but
-          this step is not neccessary; the stepper is default-constructed if possible.
+          Additionally one can pass the Runge-Kutta stepper to the constructor, but
+          this step is not necessary; the stepper is default-constructed if possible.
         </p>
 <p>
           Different step size controlling mechanism exist. They all have in common
@@ -491,7 +491,7 @@
           in the integration functions.
         </p>
 <p>
-          A classical way to decide wether a step is rejected or accepted is
+          A classical way to decide whether a step is rejected or accepted is
         </p>
 <p>
           <span class="emphasis"><em>val = || | err<sub>&#8203;i</sub> | / ( &#949;<sub>&#8203;abs</sub> + &#949;<sub>&#8203;rel</sub> * ( a<sub>&#8203;x</sub> | x<sub>&#8203;i</sub> | + a<sub>&#8203;dxdt</sub> | | dxdt<sub>&#8203;i</sub> | )||
@@ -663,8 +663,9 @@
 <p>
           To ease to generation of the controlled stepper generation functions exist
           which take the absolute and relative error tolerances and a predefined
-          error stepper and contruct from this knowledge an appropirate controlled
-          stepper. The generation functions are explained in detail in XYZ.
+          error stepper and construct from this knowledge an appropriate controlled
+          stepper. The generation functions are explained in detail in <a class="link" href="generation_functions.html" title="Generation functions">Generation
+          functions</a>.
         </p>
 </div>
 <div class="section">
@@ -695,11 +696,11 @@
 <p>
           Dense output stepper have their own concept. The main difference is that
           they control the state by them-self. If you call <code class="computeroutput"><span class="identifier">do_step</span></code>,
-          only the ODE is passed as argument. Furhtermore <code class="computeroutput"><span class="identifier">do_step</span></code>
+          only the ODE is passed as argument. Furthermore <code class="computeroutput"><span class="identifier">do_step</span></code>
           return the last time interval, hence you interpolate the solution between
           these two times points. Another difference is that they must be initialized
           with <code class="computeroutput"><span class="identifier">initialize</span></code>, otherwise
-          the internal state of the stepper is default contructed which might produce
+          the internal state of the stepper is default constructed which might produce
           funny errors or bugs.
         </p>
 <p>
@@ -716,8 +717,8 @@
 <p>
         </p>
 <p>
-          Of course, this statement is also lengthly; it demonstrates how <code class="computeroutput"><span class="identifier">make_dense_output</span></code> can be used with the
-          <code class="computeroutput"><span class="identifier">result_of</span></code> protocoll. The
+          Of course, this statement is also lengthy; it demonstrates how <code class="computeroutput"><span class="identifier">make_dense_output</span></code> can be used with the
+          <code class="computeroutput"><span class="identifier">result_of</span></code> protocol. The
           parameters to <code class="computeroutput"><span class="identifier">make_dense_output</span></code>
           are the absolute error tolerance, the relative error tolerance and the
           stepper. This explicitly assumes that the underlying stepper is a controlled
@@ -739,8 +740,8 @@
         steppers</a>
 </h4></div></div></div>
 <p>
-          This section contains some general informations about the usage of the
-          steppers in odeint.
+          This section contains some general information about the usage of the steppers
+          in odeint.
         </p>
 <p>
           <span class="bold"><strong>Steppers are copied by value</strong></span>
@@ -763,13 +764,13 @@
           </p></td></tr>
 </table></div>
 <p>
-          Some steppers require to store some informations about the state of the
-          ODE between two steps. Examples are the multistep method which store a
+          Some steppers require to store some information about the state of the
+          ODE between two steps. Examples are the multi-step method which store a
           part of the solution during the evolution of the ODE, or the FSAL steppers
           which store the last derivative at time <span class="emphasis"><em>t+dt</em></span>, to be
           used in the next step. In both cases the steppers expect that consecutive
           calls of <code class="computeroutput"><span class="identifier">do_step</span></code> are from
-          the same solution and the same ODE. In this case it is absolutely neccessary
+          the same solution and the same ODE. In this case it is absolutely necessary
           that you call <code class="computeroutput"><span class="identifier">do_step</span></code> with
           the same system function and the same state, see also the examples for
           the FSAL steppers above.
@@ -789,10 +790,10 @@
         </p>
 <p>
           All these stepper have in common, that they initially fill their internal
-          state by themself. Hence you are not required to call initialize. See how
-          this works for the Adams-Bashforth-Moulton stepper: in the example we instantiate
-          a fourth order Adams-Bashforth-Moulton stepper, meaning that it will store
-          4 internal derivatives of the solution at times <code class="computeroutput"><span class="special">(</span><span class="identifier">t</span><span class="special">-</span><span class="identifier">dt</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">2d</span><span class="identifier">t</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">3d</span><span class="identifier">t</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">4d</span><span class="identifier">t</span><span class="special">)</span></code>.
+          state by themselves. Hence you are not required to call initialize. See
+          how this works for the Adams-Bashforth-Moulton stepper: in the example
+          we instantiate a fourth order Adams-Bashforth-Moulton stepper, meaning
+          that it will store 4 internal derivatives of the solution at times <code class="computeroutput"><span class="special">(</span><span class="identifier">t</span><span class="special">-</span><span class="identifier">dt</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">2d</span><span class="identifier">t</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">3d</span><span class="identifier">t</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">4d</span><span class="identifier">t</span><span class="special">)</span></code>.
         </p>
 <p>
 </p>
@@ -826,7 +827,7 @@
           all stepper have a method <code class="computeroutput"><span class="identifier">adjust_size</span></code>
           which takes a parameter representing a state type and which manually adjusts
           the size of the internal variables. Before performing the actual resizing
-          odeint always checks if the sizes of the state and the interal variable
+          odeint always checks if the sizes of the state and the internal variable
           differ and only resizes if they are different.
         </p>
 <p>
@@ -836,7 +837,7 @@
           system and your state you have to call <code class="computeroutput"><span class="identifier">adjust_size</span></code>
           by hand. The second resizer is the <code class="computeroutput"><span class="identifier">always_resizer</span></code>
           which tries to resize the internal variables at every call of <code class="computeroutput"><span class="identifier">do_step</span></code>. Typical use cases for this kind
-          of resizer are self expanding lattics like shown in the tutorial or partial
+          of resizer are self expanding lattices like shown in the tutorial or partial
           differential equations with an adaptive grid. The third class of resizer
           is the <code class="computeroutput"><span class="identifier">never_resizer</span></code> which
           means that the internal variables are never adjusted automatically and
@@ -844,15 +845,13 @@
         </p>
 <p>
           There is a second mechanism which influences the resizing and which controls
-          if a state type is at least resizeable - a metafunction <code class="computeroutput"><span class="identifier">is_resizeable</span></code>.
-          This metafunction returns a static boolean value if any type is resizable.
-          For example it will return <code class="computeroutput"><span class="keyword">true</span></code>
-          for <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span>
-          <span class="identifier">T</span> <span class="special">&gt;</span></code>
-          but <code class="computeroutput"><span class="keyword">false</span></code> for <code class="computeroutput"><span class="identifier">tr1</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span></code>.
+          if a state type is at least resizeable - a meta-function <code class="computeroutput"><span class="identifier">is_resizeable</span></code>. This meta-function returns
+          a static boolean value if any type is resizable. For example it will return
+          <code class="computeroutput"><span class="keyword">true</span></code> for <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span></code> but <code class="computeroutput"><span class="keyword">false</span></code>
+          for <code class="computeroutput"><span class="identifier">tr1</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span></code>.
           By default and for unknown types <code class="computeroutput"><span class="identifier">is_resizeable</span></code>
           returns <code class="computeroutput"><span class="keyword">false</span></code>, so if you have
-          your own type you need to specialize this metafunction. For more details
+          your own type you need to specialize this meta-function. For more details
           on the resizing mechanism see the section <a class="link" href="state_types__algebras_and_operations.html" title="State types, algebras and operations">Adapt
           you own state types</a>.
         </p>
@@ -875,7 +874,7 @@
 <li class="listitem">
               <code class="computeroutput"><span class="identifier">runge_kutta4</span></code> is a good
               stepper for constant step sizes. It is widely used and very well known.
-              If you need to create artifical time series this stepper should be
+              If you need to create artificial time series this stepper should be
               the first choice.
             </li>
 <li class="listitem">
@@ -1193,7 +1192,7 @@
                 </td>
 <td>
                   <p>
-                    Standard method with error control and dense ouput, to be used
+                    Standard method with error control and dense output, to be used
                     in controlled_error_stepper and in dense_output_controlled_explicit_fsal.
                   </p>
                 </td>
@@ -1481,9 +1480,9 @@
                 </td>
 <td>
                   <p>
-                    Dense ouput for <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
+                    Dense output for <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
                     and <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
-                    Stepper</a> from above if they provide dense ouput functionality
+                    Stepper</a> from above if they provide dense output functionality
                     (like <code class="computeroutput"><span class="identifier">euler</span></code> and
                     <code class="computeroutput"><span class="identifier">runge_kutta_dopri5</span></code>).
                     Order depends on the given stepper.
@@ -1583,8 +1582,8 @@
                 </td>
 <td>
                   <p>
-                    Stepper with step size and order control as well as dense ouput.
-                    Very good if high precision and dense ouput is required.
+                    Stepper with step size and order control as well as dense output.
+                    Very good if high precision and dense output is required.
                   </p>
                 </td>
 </tr>
@@ -1741,12 +1740,12 @@
 <tr>
 <td>
                   <p>
-                    Dense Ouput Rosenbrock 4
+                    Dense Output Rosenbrock 4
                   </p>
                 </td>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">rosenbrock4_dense_ouput</span></code>
+                    <code class="computeroutput"><span class="identifier">rosenbrock4_dense_output</span></code>
                   </p>
                 </td>
 <td>
@@ -1899,12 +1898,12 @@
 </h4></div></div></div>
 <p>
           Of course, one can write own steppers which are fully compatible with odeint.
-          They only have to fullfil one or several of the stepper <a class="link" href="../concepts.html" title="Concepts">Concepts</a>
+          They only have to fulfill one or several of the stepper <a class="link" href="../concepts.html" title="Concepts">Concepts</a>
           of odeint.
         </p>
 <p>
           We will illustrate how to write your own stepper with the example of the
-          stochastic euler method. This method is suited to solve stochastic differential
+          stochastic Euler method. This method is suited to solve stochastic differential
           equations (SDEs). A SDE has the form
         </p>
 <p>
@@ -1918,8 +1917,8 @@
           the SDE is said to have additive noise. It is not possible to solve SDE
           with the classical solvers for ODEs since the noisy part of the SDE has
           to be scaled differently then the deterministic part with respect to the
-          time step. BUt there exist many solvers for SDEs. A classical and easy
-          method is the stochastic euler solver. It works by iterating
+          time step. But there exist many solvers for SDEs. A classical and easy
+          method is the stochastic Euler solver. It works by iterating
         </p>
 <p>
           <span class="emphasis"><em>x(t+&#916; t) = x(t) + &#916; t f(x(t)) + &#916; t<sup>1/2</sup> g(x) &#958;(t)</em></span>
@@ -1953,7 +1952,7 @@
         </p>
 <p>
           The types are needed in order to fulfill the stepper concept. As internal
-          state and deriv type we use simple arrays in the stochastic euler, they
+          state and deriv type we use simple arrays in the stochastic Euler, they
           are needed for the temporaries. The stepper has the order one which is
           returned from the <code class="computeroutput"><span class="identifier">order</span><span class="special">()</span></code> function.
         </p>
@@ -1988,7 +1987,7 @@
 <p>
         </p>
 <p>
-          This is all. It is quite simple and the stochastic euler stepper implement
+          This is all. It is quite simple and the stochastic Euler stepper implement
           here is quite general. Of course it can be enhanced, for example
         </p>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
@@ -2018,7 +2017,7 @@
 <p>
           where &#958; is Gaussian white noise with standard deviation <span class="emphasis"><em>&#963;</em></span>.
           Implementing the Ornstein-Uhlenbeck process is quite simple. We need two
-          functions or funtors - one for the deterministic and one for the stochastic
+          functions or functors - one for the deterministic and one for the stochastic
           part:
         </p>
 <p>

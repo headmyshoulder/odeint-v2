@@ -41,7 +41,7 @@
         observer calls</a>
       </h5>
 <p>
-        If observer calls at equdistant time intervals <span class="emphasis"><em>dt</em></span> are
+        If observer calls at equidistant time intervals <span class="emphasis"><em>dt</em></span> are
         needed, the <code class="computeroutput"><span class="identifier">integrate_const</span></code>
         function should be used.
       </p>
@@ -271,10 +271,10 @@
 <th align="left">Warning</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-          This function works only with steppers fullfilling the <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
+          This function works only with steppers fulfilling the <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
           or <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
           Stepper</a> concept! Providing a <a class="link" href="../concepts/controlled_stepper.html" title="Controlled Stepper">Controlled
-          Stepper</a> or __dense_out_stepper results in a compilationerror.
+          Stepper</a> or __dense_out_stepper results in a compilation error.
         </p></td></tr>
 </table></div>
 <p>
@@ -301,7 +301,7 @@
         starting at <span class="emphasis"><em>x<sub>0</sub></em></span> and <span class="emphasis"><em>t<sub>0</sub></em></span>. If provided,
         <code class="computeroutput"><span class="identifier">observer</span></code> is called after
         every step and at the beginning with <code class="computeroutput"><span class="identifier">t0</span></code>.
-        This function works only with steppers fullfilling the <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
+        This function works only with steppers fulfilling the <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
         or <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
         Stepper</a> concept! It performs exactly <code class="computeroutput"><span class="identifier">n</span></code>
         steps with fixed step size <code class="computeroutput"><span class="identifier">dt</span></code>
@@ -319,7 +319,7 @@
 <p>
         Additionally to the sophisticated integrate function above odeint also provides
         a simple <code class="computeroutput"><span class="identifier">integrate</span></code> routine
-        which uses a dense ouput stepper based on <code class="computeroutput"><span class="identifier">runge_kutta_dopri5</span></code>
+        which uses a dense output stepper based on <code class="computeroutput"><span class="identifier">runge_kutta_dopri5</span></code>
         with standard error bounds <span class="emphasis"><em>10<sup>-6</sup></em></span> for the steps.
       </p>
 <p>

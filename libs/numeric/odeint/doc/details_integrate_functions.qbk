@@ -8,7 +8,7 @@ Depending on the abilities of the stepper, the integrate functions make use of s
 
 [heading Equidistant observer calls]
 
-If observer calls at equdistant time intervals /dt/ are needed, the `integrate_const` function should be used.
+If observer calls at equidistant time intervals /dt/ are needed, the `integrate_const` function should be used.
 
 `integrate_const( stepper , system , x0 , t0 , t1 , dt )`
 
@@ -83,7 +83,7 @@ Dense output is used to obtain the states /x(t)/ at the time points from the seq
 
 If exactly `n` steps with fixed step size `dt` should be executed the `integrate_n_steps` function should be used.
 
-[warning This function works only with steppers fullfilling the __stepper or __error_stepper concept! Providing a __controlled_stepper or __dense_out_stepper results in a compilationerror.]
+[warning This function works only with steppers fulfilling the __stepper or __error_stepper concept! Providing a __controlled_stepper or __dense_out_stepper results in a compilation error.]
 
 `integrate_n_steps( stepper , system , x0 , t0 , dt , n )`
 
@@ -91,14 +91,14 @@ If exactly `n` steps with fixed step size `dt` should be executed the `integrate
 
 Integrates the ODE given by `system` with subsequent steps from `stepper` starting at ['x[sub 0]] and ['t[sub 0]].
 If provided, `observer` is called after every step and at the beginning with `t0`.
-This function works only with steppers fullfilling the __stepper or __error_stepper concept!
+This function works only with steppers fulfilling the __stepper or __error_stepper concept!
 It performs exactly `n` steps with fixed step size `dt` ending at `t0 + n*dt`.
 The approximate result for ['x( t[sub 0] + n dt )] is stored in `x0`.
 This function returns the end time `t0 + n*dt`.
 
 [heading Convenience integrate function]
 
-Additionally to the sophisticated integrate function above odeint also provides a simple `integrate` routine which uses a dense ouput stepper based on `runge_kutta_dopri5` with standard error bounds ['10[super -6]] for the steps.
+Additionally to the sophisticated integrate function above odeint also provides a simple `integrate` routine which uses a dense output stepper based on `runge_kutta_dopri5` with standard error bounds ['10[super -6]] for the steps.
 
 `integrate( system , x0 , t0 , t1 , dt )`
 

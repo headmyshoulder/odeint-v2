@@ -50,7 +50,7 @@ Algebras supporting __boost_range
   [[symplectic_rkn_sb3a_mclachlan]]
 ]
 
-[table Algebra supporting Boost.Range
+[table Algebras supporting Boost.Range
   [[algebra]]
   [[range_algebra]]
   [[thrust_algebra]]
