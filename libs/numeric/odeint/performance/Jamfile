@@ -31,6 +31,10 @@ exe odeint_rk4_lorenz_range
     : odeint_rk4_lorenz_range.cpp
     ;
 
+exe odeint_rk4_lorenz_fusion
+    : odeint_rk4_lorenz_fusion.cpp
+    ;
+
 exe generic_odeint_rk4_lorenz 
     : generic_odeint_rk4_lorenz.cpp
     : <toolset>intel:<cxxflags>-inline-forceinline

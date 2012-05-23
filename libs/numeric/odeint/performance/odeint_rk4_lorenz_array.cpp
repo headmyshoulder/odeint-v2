@@ -8,6 +8,7 @@
 #include <boost/array.hpp>
 
 #include <boost/numeric/odeint/stepper/runge_kutta4_classic.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
 #include <boost/numeric/odeint/algebra/array_algebra.hpp>
 
 #include "rk_performance_test_case.hpp"
@@ -15,7 +16,7 @@
 #include "lorenz.hpp"
 
 typedef boost::array< double , 3 > state_type;
-typedef boost::numeric::odeint::runge_kutta4_classic< state_type , double , state_type , double ,
+typedef boost::numeric::odeint::runge_kutta4< state_type , double , state_type , double ,
                                               boost::numeric::odeint::array_algebra > rk4_odeint_type;
 
 
@@ -24,9 +25,17 @@ class odeint_wrapper
 public:
     void reset_init_cond()
     {
+        /* random */
+        /*
         m_x[0] = 10.0 * rand() / RAND_MAX;
         m_x[1] = 10.0 * rand() / RAND_MAX;
         m_x[2] = 10.0 * rand() / RAND_MAX;
+        */
+        /* hand chosen random (cf fortran) */
+        m_x[0] = 8.5;
+        m_x[1] = 3.1;
+        m_x[2] = 1.2;
+
         m_t = 0.0;
     }
 

@@ -54,8 +54,8 @@ void run( Stepper &stepper , const size_t num_of_steps = 20000000 , const double
         if( n>0 )
         {   // take first run as transient
             acc(timer.elapsed());
-            clog.precision(3);
-            clog.width(5);
+            clog.precision(8);
+            clog.width(10);
             clog << acc << " " << stepper.state(0) << endl;
         }
     }
