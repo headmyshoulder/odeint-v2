@@ -100,8 +100,7 @@ int main()
 {
 
     point3D x( 10.0 , 5.0 , 5.0 );
-    //typedef runge_kutta4< point3D , double , point3D , 
-    //                      double , vector_space_algebra > stepper;
+    // point type defines it's own operators -> use vector_space_algebra !
     typedef runge_kutta_dopri5< point3D , double , point3D , 
                                 double , vector_space_algebra > stepper;
     integrate_adaptive( make_controlled<stepper>( 1E-8 , 1E-8 ) , lorenz , x , 

@@ -54,5 +54,8 @@ int main()
     state_type x(3);
     x[0] = 5.0 ; x[1] = 10.0 ; x[2] = 10.0;
 
+    // my_vector works with range_algebra as it's derived from std::vector
+    // no further work is required
+
     integrate_const( runge_kutta4< state_type >() , lorenz , x , 0.0 , 10.0 , 0.1 );
 }

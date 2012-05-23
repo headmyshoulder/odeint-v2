@@ -120,7 +120,7 @@ Time integrate_n_steps(
         {
             stepper.do_step( system );
         }
-        else
+        else if ( stepper.current_time() < end_time )
         { // do the last step ending exactly on the end point
             stepper.initialize( stepper.current_state() , stepper.current_time() , end_time - stepper.current_time() );
             stepper.do_step( system );

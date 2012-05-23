@@ -13,8 +13,6 @@
 
 #include <boost/numeric/odeint/config.hpp>
 
-#include <boost/lambda/lambda.hpp>
-
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
 #include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>
