@@ -401,7 +401,8 @@ private:
             fac = STEPFAC2 / std::pow( error / STEPFAC1 , expo );
             fac = std::max( facmin/STEPFAC4 , std::min( 1.0/facmin , fac ) );
         }
-        return std::abs(h*fac);
+        //return std::abs(h*fac);
+        return h*fac;
     }
 
     controlled_step_result set_k_opt( const size_t k , const value_vector &work , const value_vector &h_opt , time_type &dt )

@@ -523,7 +523,8 @@ private:
             fac = STEPFAC2 / std::pow( error / STEPFAC1 , expo );
             fac = std::max( facmin/STEPFAC4 , std::min( 1.0/facmin , fac ) );
         }
-        return std::abs(h*fac); //std::min( 0.1 , std::abs(h*fac) );
+        //return std::abs(h*fac); //std::min( 0.1 , std::abs(h*fac) );
+        return h*fac;
     }
 
     bool in_convergence_window( const size_t k ) const

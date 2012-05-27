@@ -22,6 +22,8 @@
 #include <boost/numeric/odeint/integrate/detail/integrate_adaptive.hpp>
 #include <boost/numeric/odeint/util/unit_helper.hpp>
 
+#include <boost/numeric/odeint/util/detail/less_with_sign.hpp>
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -105,7 +107,7 @@ Time integrate_n_steps(
     size_t step = 0;
     while( step < num_of_steps )
     {
-        while( ( time < stepper.current_time() ) )
+        while( less_with_sign( time , stepper.current_time() , stepper.current_time_step() ) )
         {
             stepper.calc_state( time , start_state );
             obs( start_state , time );
@@ -113,16 +115,19 @@ Time integrate_n_steps(
             // direct computation of the time avoids error propagation happening when using time += dt
             // we need clumsy type analysis to get boost units working here
             time = start_time + static_cast< typename unit_value_type<Time>::type >(step) * dt;
-            std::clog << time << " (" << end_time << ") " << std::endl;
         }
 
         // we have not reached the end, do another real step
-        if( stepper.current_time()+stepper.current_time_step() < end_time )
+        if( less_with_sign( stepper.current_time()+stepper.current_time_step() ,
+                            end_time ,
+                            stepper.current_time_step() ) )
         {
+            std::cout << stepper.current_time() << " , " << stepper.current_time_step() << std::endl;
             stepper.do_step( system );
         }
-        else
+        else if( less_with_sign( stepper.current_time() , end_time , stepper.current_time_step() ) )
         { // do the last step ending exactly on the end point
+            std::cout << stepper.current_time() << " , " << stepper.current_time_step() << std::endl;
             stepper.initialize( stepper.current_state() , stepper.current_time() , end_time - stepper.current_time() );
             stepper.do_step( system );
         }
@@ -130,12 +135,14 @@ Time integrate_n_steps(
 
     while( stepper.current_time() < end_time )
     {
-        if( stepper.current_time()+stepper.current_time_step() > end_time )
+        std::cout << stepper.current_time() << " , " << stepper.current_time_step() << std::endl;
+        if( less_with_sign( end_time ,
+                            stepper.current_time()+stepper.current_time_step() ,
+                            stepper.current_time_step() ) )
             stepper.initialize( stepper.current_state() , stepper.current_time() , end_time - stepper.current_time() );
         stepper.do_step( system );
     }
 
-    std::cout << stepper.current_time() << std::endl;
     // observation at end point, only if we ended exactly on the end-point (or above due to finite precision)
     obs( stepper.current_state() , end_time );
 
