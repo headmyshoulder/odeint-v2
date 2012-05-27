@@ -17,6 +17,8 @@
 #ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_DETAIL_LESS_WITH_SIGN_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_INTEGRATE_DETAIL_LESS_WITH_SIGN_HPP_INCLUDED
 
+#include <boost/numeric/odeint/util/unit_helper.hpp>
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -28,7 +30,7 @@ namespace detail {
 template< typename T1 , typename T2 , typename T3 >
 bool less_with_sign( const T1 t1 , const T2 t2 , const T3 dt )
 {
-    if( dt > 0 )
+    if( get_unit_value(dt) > 0 )
         return t1 < t2;
     else
         return t1 > t2;
@@ -40,7 +42,7 @@ bool less_with_sign( const T1 t1 , const T2 t2 , const T3 dt )
 template< typename T1 , typename T2 , typename T3>
 bool less_eq_with_sign( const T1 t1 , const T2 t2 , const T3 dt )
 {
-    if( dt > 0 )
+    if( get_unit_value(dt) > 0 )
         return t1 <= t2;
     else
         return t1 >= t2;
