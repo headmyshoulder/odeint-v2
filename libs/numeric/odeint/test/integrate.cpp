@@ -51,11 +51,12 @@ typedef std::vector< value_type > state_type;
 
 void lorenz( const state_type &x , state_type &dxdt , const value_type t )
 {
-    const value_type sigma( 10.0 );
+    //const value_type sigma( 10.0 );
     const value_type R( 28.0 );
     const value_type b( value_type( 8.0 ) / value_type( 3.0 ) );
 
-    dxdt[0] = sigma * ( x[1] - x[0] );
+    // first component trivial
+    dxdt[0] = 1.0; //sigma * ( x[1] - x[0] );
     dxdt[1] = R * x[0] - x[1] - x[0] * x[2];
     dxdt[2] = -b * x[2] + x[0] * x[1];
 }
@@ -87,8 +88,10 @@ struct perform_integrate_const_test
 
         std::vector< value_type > times;
 
-        integrate_const( Stepper() , lorenz , x , 0.0 , t_end ,
+        int steps = integrate_const( Stepper() , lorenz , x , 0.0 , t_end ,
                                         dt , push_back_time( times , x_end ) );
+
+//        std::cout << steps << " , " << times.size() << " , " << 10.0+dt*steps << "=" << x_end[0] << std::endl;
 
         BOOST_CHECK_EQUAL( static_cast<int>(times.size()) , static_cast<int>(floor(t_end/dt))+1 );
 
@@ -99,9 +102,10 @@ struct perform_integrate_const_test
             BOOST_CHECK_SMALL( times[i] - static_cast< value_type >(i)*dt , (i+1) * 2E-16 );
         }
 
-        BOOST_CHECK_EQUAL( x[0] , x_end[0] );
-        BOOST_CHECK_EQUAL( x[1] , x_end[1] );
-        BOOST_CHECK_EQUAL( x[2] , x_end[2] );
+        // check first, trivial, component
+        BOOST_CHECK_SMALL( (10.0 + dt*steps) - x_end[0] , 1E-6 ); // precision of steppers: 1E-6
+        //BOOST_CHECK_EQUAL( x[1] , x_end[1] );
+        //BOOST_CHECK_EQUAL( x[2] , x_end[2] );
     }
 };
 
@@ -119,14 +123,17 @@ struct perform_integrate_adaptive_test
         size_t steps = integrate_adaptive( Stepper() , lorenz , x , 0.0 , t_end ,
                                         dt , push_back_time( times , x_end ) );
 
+//        std::cout << t_end << " , " << steps << " , " << times.size() << " , " << 10.0+dt*steps << "=" << x_end[0] << std::endl;
+
         BOOST_CHECK_EQUAL( times.size() , steps+1 );
 
         BOOST_CHECK_SMALL( times[0] - 0.0 , 2E-16 );
         BOOST_CHECK_SMALL( times[times.size()-1] - t_end , times.size() * 2E-16 );
 
-        BOOST_CHECK_EQUAL( x[0] , x_end[0] );
-        BOOST_CHECK_EQUAL( x[1] , x_end[1] );
-        BOOST_CHECK_EQUAL( x[2] , x_end[2] );
+        // check first, trivial, component
+        BOOST_CHECK_SMALL( (10.0 + t_end) - x_end[0] , 1E-6 ); // precision of steppers: 1E-6
+//        BOOST_CHECK_EQUAL( x[1] , x_end[1] );
+//        BOOST_CHECK_EQUAL( x[2] , x_end[2] );
     }
 };
 
@@ -155,10 +162,10 @@ struct perform_integrate_times_test
             // check if observer was called at times 0,1,2,...
             BOOST_CHECK_EQUAL( times[i] , static_cast<double>(i) );
 
-
-        BOOST_CHECK_EQUAL( x[0] , x_end[0] );
-        BOOST_CHECK_EQUAL( x[1] , x_end[1] );
-        BOOST_CHECK_EQUAL( x[2] , x_end[2] );
+        // check first, trivial, component
+        BOOST_CHECK_SMALL( (10.0 + 1.0*times[times.size()-1]) - x_end[0] , 1E-6 ); // precision of steppers: 1E-6
+//        BOOST_CHECK_EQUAL( x[1] , x_end[1] );
+//        BOOST_CHECK_EQUAL( x[2] , x_end[2] );
     }
 };
 
@@ -187,9 +194,10 @@ struct perform_integrate_n_steps_test
             // check if observer was called at times 0,1,2,...
             BOOST_CHECK_SMALL( times[i] - static_cast< value_type >(i)*dt , 2E-16 );
 
-        BOOST_CHECK_EQUAL( x[0] , x_end[0] );
-        BOOST_CHECK_EQUAL( x[1] , x_end[1] );
-        BOOST_CHECK_EQUAL( x[2] , x_end[2] );
+        // check first, trivial, component
+        BOOST_CHECK_SMALL( (10.0 + end_time) - x_end[0] , 1E-6 ); // precision of steppers: 1E-6
+//        BOOST_CHECK_EQUAL( x[1] , x_end[1] );
+//        BOOST_CHECK_EQUAL( x[2] , x_end[2] );
     }
 };
 
@@ -218,6 +226,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_const_test_case , Stepper, stepper_meth
 {
     perform_integrate_const_test< Stepper > tester;
     tester( 1.005 , 0.01 );
+    tester( 1.0 , 0.01 );
+    tester( 1.1 , 0.01 );
 }
 
 
@@ -225,6 +235,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_adaptive_test_case , Stepper, stepper_m
 {
     perform_integrate_adaptive_test< Stepper > tester;
     tester( 1.005 , 0.01 );
+    tester( 1.0 , 0.01 );
+    tester( 1.1 , 0.01 );
 }
 
 

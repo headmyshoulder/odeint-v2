@@ -60,11 +60,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_do_step , T, stepper_types )
 	time_type dt = 0.1;
 	stepper.do_step( constant_system , x , t , dt );
 
-	deriv_type dxdt = 1.0;
+	//deriv_type dxdt = 1.0;
 	// fails due to equal function signature
 	//stepper.do_step( constant_system , x , dxdt , t , dt );
 
-	state_type x_out;
+	//state_type x_out;
 	// fails due to equal function signature
 	//stepper.do_step( constant_system , x , t , x_out , dt );
 }

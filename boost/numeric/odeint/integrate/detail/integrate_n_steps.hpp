@@ -113,6 +113,7 @@ Time integrate_n_steps(
             // direct computation of the time avoids error propagation happening when using time += dt
             // we need clumsy type analysis to get boost units working here
             time = start_time + static_cast< typename unit_value_type<Time>::type >(step) * dt;
+            std::clog << time << " (" << end_time << ") " << std::endl;
         }
 
         // we have not reached the end, do another real step
@@ -120,17 +121,23 @@ Time integrate_n_steps(
         {
             stepper.do_step( system );
         }
-        else if ( stepper.current_time() < end_time )
+        else
         { // do the last step ending exactly on the end point
             stepper.initialize( stepper.current_state() , stepper.current_time() , end_time - stepper.current_time() );
             stepper.do_step( system );
         }
     }
 
+    while( stepper.current_time() < end_time )
+    {
+        if( stepper.current_time()+stepper.current_time_step() > end_time )
+            stepper.initialize( stepper.current_state() , stepper.current_time() , end_time - stepper.current_time() );
+        stepper.do_step( system );
+    }
+
+    std::cout << stepper.current_time() << std::endl;
     // observation at end point, only if we ended exactly on the end-point (or above due to finite precision)
-    // if due to finite precision current_time happened to be < end_time this observer call would be done in the above loop
-    if( stepper.current_time() >= end_time )
-        obs( start_state , end_time );
+    obs( stepper.current_state() , end_time );
 
     return time;
 }
