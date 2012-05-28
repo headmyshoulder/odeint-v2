@@ -122,12 +122,10 @@ Time integrate_n_steps(
                             end_time ,
                             stepper.current_time_step() ) )
         {
-            std::cout << stepper.current_time() << " , " << stepper.current_time_step() << std::endl;
             stepper.do_step( system );
         }
         else if( less_with_sign( stepper.current_time() , end_time , stepper.current_time_step() ) )
         { // do the last step ending exactly on the end point
-            std::cout << stepper.current_time() << " , " << stepper.current_time_step() << std::endl;
             stepper.initialize( stepper.current_state() , stepper.current_time() , end_time - stepper.current_time() );
             stepper.do_step( system );
         }
@@ -135,7 +133,6 @@ Time integrate_n_steps(
 
     while( stepper.current_time() < end_time )
     {
-        std::cout << stepper.current_time() << " , " << stepper.current_time_step() << std::endl;
         if( less_with_sign( end_time ,
                             stepper.current_time()+stepper.current_time_step() ,
                             stepper.current_time_step() ) )
