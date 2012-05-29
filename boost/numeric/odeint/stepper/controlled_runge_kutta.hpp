@@ -406,9 +406,7 @@ public:
     {
         if( m_dxdt_resizer.adjust_size( in , detail::bind( &controlled_runge_kutta::template resize_m_dxdt_impl< StateIn > , detail::ref( *this ) , detail::_1 ) ) || m_first_call )
         {
-            typename odeint::unwrap_reference< System >::type &sys = system;
-            sys( in , m_dxdt.m_v ,t );
-            m_first_call = false;
+            initialize( system , in , t );
         }
         return try_step( system , in , m_dxdt.m_v , t , out , dt );
     }
@@ -480,6 +478,32 @@ public:
 
 
 
+    void reset( void )
+    {
+        m_first_call = true;
+    }
+
+    template< class DerivIn >
+    void initialize( const DerivIn &deriv )
+    {
+        boost::numeric::odeint::copy( deriv , m_dxdt.m_v );
+        m_first_call = false;
+    }
+
+    template< class System , class StateIn >
+    void initialize( System system , const StateIn &x , const time_type &t )
+    {
+        typename odeint::unwrap_reference< System >::type &sys = system;
+        sys( x , m_dxdt.m_v , t );
+        m_first_call = false;
+    }
+
+    bool is_initialized( void ) const
+    {
+        return ! m_first_call;
+    }
+
+
 
     template< class StateType >
     void adjust_size( const StateType &x )
@@ -536,9 +560,7 @@ private:
     {
         if( m_dxdt_resizer.adjust_size( x , detail::bind( &controlled_runge_kutta::template resize_m_dxdt_impl< StateInOut > , detail::ref( *this ) , detail::_1 ) ) || m_first_call )
         {
-            typename odeint::unwrap_reference< System >::type &sys = system;
-            sys( x , m_dxdt.m_v , t );
-            m_first_call = false;
+        	initialize( system , x , t );
         }
         return try_step( system , x , m_dxdt.m_v , t , dt );
     }
