@@ -1,1 +1,1 @@
-exclude: bin libs
+exclude: bin libs perf
