@@ -258,8 +258,48 @@ In the stochastic part we have used the Mersenne twister for the random number g
 
 Note, how we have used the `make_pair` function for the generation of the system function.
 
+[endsect]
 
+[section Writing own Runge-Kutta steppers]
 
+[import ../examples/heun.cpp]
+
+odeint provides a C++ template meta-algorithm for constructing arbitrary Runge-Kutta schemes [footnote M.Mulanksy, K.Ahnert, Template-Metaprogramming applied to numerical problems, ]. Some schemes are predefined in odeint, for example the classical Runge-Kutta of fourth order, or the Runge-Kutta-Cash-Karp 54 and the Runge-Kutta-Fehlberg 78 method. Of course, you can use this meta algorithm to construct you own solvers. This has the advantage that you make full use of odeint's algebra and operation system.
+
+Consider for example the method of Heun:
+
+[pre
+c1 = 0
+
+c2 = 1/3, a21 = 1/3
+
+c3 = 2/3, a31 =   0, a32 = 2/3
+
+          b1  = 1/4, b2  = 0  , b3  = 3/4
+]
+
+Implementing this method is very easy. First you have to define these constants:
+
+[heun_define_coefficients]
+
+Ok, you are right. This looks rather ugly. Nevertheless, packing alle parameters into a templatized class which is not immediately evaluated has the advantage that you can change the `value_type` of your stepper to any type you like. Of course, one could instantiate the coefficients directly
+
+``
+const boost::array< double , 1 > heun_a1 = {{ 1.0 / 3.0 }};
+const boost::array< double , 2 > heun_a2 = {{ 0.0 , 2.0 / 3.0 }};
+const boost::array< double , 3 > heun_b = {{ 1.0 / 4.0 , 0.0 , 3.0 / 4.0 }};
+const boost::array< double , 3 > heun_c = {{ 0.0 , 1.0 / 3.0 , 2.0 / 3.0 }};
+``
+
+But then you are nailed down to use doubles.
+
+Next, you need to define your stepper:
+
+[heun_stepper_definition]
+
+That's it. Now, we have a new stepper method and we can use it, for example with the Lorenz system:
+
+[heun_example]
 
 [endsect]
 
