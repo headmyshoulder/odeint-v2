@@ -1,6 +1,7 @@
 /* Example for the lorenz system with a 3D point type */
 
 #include <iostream>
+#include <cmath>
 
 #include <boost/operators.hpp>
 
@@ -8,7 +9,7 @@
 
 
 //[point3D
-class point3D :     
+class point3D :
     boost::additive1< point3D ,
     boost::additive2< point3D , double ,
     boost::multiplicative2< point3D , double > > >
@@ -20,7 +21,7 @@ public:
     point3D()
         : x( 0.0 ) , y( 0.0 ) , z( 0.0 )
     { }
-    
+
     point3D( const double val )
         : x( val ) , y( val ) , z( val )
     { }
@@ -53,7 +54,7 @@ point3D operator/( const point3D &p1 , const point3D &p2 )
 
 point3D abs( const point3D &p )
 {
-    return point3D( abs(p.x) , abs(p.y) , abs(p.z) );
+    return point3D( std::abs(p.x) , std::abs(p.y) , std::abs(p.z) );
 }
 //]
 
@@ -68,12 +69,15 @@ struct vector_space_reduce< point3D >
     Value operator() ( const point3D &p , Op op , Value init )
     {
         init = op( init , p.x );
+        //std::cout << init << " ";
         init = op( init , p.y );
+        //std::cout << init << " ";
         init = op( init , p.z );
+        //std::cout << init << std::endl;
         return init;
     }
 };
-} } } 
+} } }
 //]
 
 std::ostream& operator<<( std::ostream &out , const point3D &p )
@@ -101,10 +105,11 @@ int main()
 
     point3D x( 10.0 , 5.0 , 5.0 );
     // point type defines it's own operators -> use vector_space_algebra !
-    typedef runge_kutta_dopri5< point3D , double , point3D , 
+    typedef runge_kutta_dopri5< point3D , double , point3D ,
                                 double , vector_space_algebra > stepper;
-    integrate_adaptive( make_controlled<stepper>( 1E-8 , 1E-8 ) , lorenz , x , 
-                        0.0 , 10.0 , 0.1 );
+    int steps = integrate_adaptive( make_controlled<stepper>( 1E-10 , 1E-10 ) , lorenz , x ,
+                                    0.0 , 10.0 , 0.1 );
     std::cout << x << std::endl;
+    std::cout << "steps: " << steps << std::endl;
 }
 //]
