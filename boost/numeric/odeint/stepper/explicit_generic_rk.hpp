@@ -31,9 +31,6 @@
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 
-namespace mpl = boost::mpl;
-namespace fusion = boost::fusion;
-
 namespace boost {
 namespace numeric {
 namespace odeint {

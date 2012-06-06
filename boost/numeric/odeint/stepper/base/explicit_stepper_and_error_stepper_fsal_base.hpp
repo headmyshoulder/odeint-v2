@@ -121,6 +121,8 @@ public:
      * version 2 : do_step( sys , x , dxdt , t , dt )
      *
      * this version does not solve the forwarding problem, boost.range can not be used
+     *
+     * the disable is needed to avoid ambiguous overloads if state_type = time_type
      */
     template< class System , class StateInOut , class DerivInOut >
     void do_step( System system , StateInOut &x , DerivInOut &dxdt , const time_type &t , const time_type &dt )

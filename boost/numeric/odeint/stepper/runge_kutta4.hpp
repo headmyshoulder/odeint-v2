@@ -30,8 +30,6 @@
 #include <boost/numeric/odeint/util/resizer.hpp>
 
 
-namespace fusion = boost::fusion;
-
 
 namespace boost {
 namespace numeric {
@@ -123,7 +121,7 @@ public:
     typedef typename stepper_base_type::stepper_type stepper_type;
 
     runge_kutta4( const algebra_type &algebra = algebra_type() ) : stepper_base_type(
-            fusion::make_vector( rk4_coefficients_a1<Value>() , rk4_coefficients_a2<Value>() , rk4_coefficients_a3<Value>() ) ,
+            boost::fusion::make_vector( rk4_coefficients_a1<Value>() , rk4_coefficients_a2<Value>() , rk4_coefficients_a3<Value>() ) ,
             rk4_coefficients_b<Value>() , rk4_coefficients_c<Value>() , algebra )
     { }
 
