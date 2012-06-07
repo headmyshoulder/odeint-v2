@@ -40,6 +40,12 @@ namespace odeint {
 /*
  * base class for explicit steppers
  * models the stepper concept
+ *
+ * this class provides the following overloads
+    * do_step( sys , x , t , dt )
+    * do_step( sys , in , t , out , dt )
+    * do_step( sys , x , dxdt_in , t , dt )
+    * do_step( sys , in , dxdt_in , t , out , dt )
  */
 template<
 class Stepper ,

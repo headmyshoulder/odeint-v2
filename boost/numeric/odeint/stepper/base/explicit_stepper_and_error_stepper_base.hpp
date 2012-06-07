@@ -40,6 +40,16 @@ namespace odeint {
 /*
  * base class for explicit stepper and error steppers
  * models the stepper AND the error stepper concept
+ *
+ * this class provides the following do_step variants:
+    * do_step( sys , x , t , dt )
+    * do_step( sys , x , dxdt , t , dt )
+    * do_step( sys , in , t , out , dt )
+    * do_step( sys , in , dxdt , t , out , dt )
+    * do_step( sys , x , t , dt , xerr )
+    * do_step( sys , x , dxdt , t , dt , xerr )
+    * do_step( sys , in , t , out , dt , xerr )
+    * do_step( sys , in , dxdt , t , out , dt , xerr )
  */
 template<
 class Stepper ,
@@ -138,9 +148,12 @@ public:
      * Version 3 : do_step( sys , in , t , out , dt )
      *
      * this version does not solve the forwarding problem, boost.range can not be used
+     *
+     * the disable is needed to avoid ambiguous overloads if state_type = time_type
      */
     template< class System , class StateIn , class StateOut >
-    void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt )
+    typename boost::disable_if< boost::is_same< StateIn , time_type > , void >::type
+    do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt )
     {
         typename odeint::unwrap_reference< System >::type &sys = system;
         m_resizer.adjust_size( in , detail::bind( &internal_stepper_base_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
@@ -152,9 +165,12 @@ public:
      * Version 4 :do_step( sys , in , dxdt , t , out , dt )
      *
      * this version does not solve the forwarding problem, boost.range can not be used
+     *
+     * the disable is needed to avoid ambiguous overloads if state_type = time_type
      */
     template< class System , class StateIn , class DerivIn , class StateOut >
-    void do_step( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt )
+    typename boost::disable_if< boost::is_same< DerivIn , time_type > , void >::type
+    do_step( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt )
     {
         this->stepper().do_step_impl( system , in , dxdt , t , out , dt );
     }
@@ -185,9 +201,12 @@ public:
      * Version 6 :do_step( sys , x , dxdt , t , dt , xerr )
      *
      * this version does not solve the forwarding problem, boost.range can not be used
+     *
+     * the disable is needed to avoid ambiguous overloads if state_type = time_type
      */
     template< class System , class StateInOut , class DerivIn , class Err >
-    void do_step( System system , StateInOut &x , const DerivIn &dxdt , const time_type &t , const time_type &dt , Err &xerr )
+    typename boost::disable_if< boost::is_same< DerivIn , time_type > , void >::type
+    do_step( System system , StateInOut &x , const DerivIn &dxdt , const time_type &t , const time_type &dt , Err &xerr )
     {
         this->stepper().do_step_impl( system , x , dxdt , t , x , dt , xerr );
     }

@@ -39,6 +39,12 @@ namespace odeint {
 /*
  * base class for explicit error steppers
  * models the error stepper concept
+ * 
+ * this class provides the following overloads for the do_step method
+    * do_step( system , x , t , dt , xerr )
+    * do_step( system , x , dxdt , t , dt , xerr )
+    * do_step( system , in , t , out , dt , xerr )
+    * do_step( system , in , dxdt , t , out , dt , xerr )
  */
 template<
 class ErrorStepper ,
@@ -101,7 +107,7 @@ public:
     }
 
     template< class System , class StateInOut , class Err >
-    void do_step( System system , StateInOut &x , const time_type &t , const time_type &dt , Err &xerr )
+    void do_step( System system , const StateInOut &x , const time_type &t , const time_type &dt , Err &xerr )
     {
         do_step_v1( system , x , t , dt , xerr );
     }

@@ -127,6 +127,12 @@ class controlled_runge_kutta ;
 
 /*
  * explicit stepper version
+ *
+ * this class introduces the following try_step overloads
+    * try_step( sys , x , t , dt )
+    * try_step( sys , x , dxdt , t , dt )
+    * try_step( sys , in , t , out , dt )
+    * try_step( sys , in , dxdt , t , out , dt )
  */
 template<
 class ErrorStepper ,
@@ -348,7 +354,11 @@ private:
 /*
  * explicit stepper fsal version
  *
- * ToDo : introduce the same functions as for the above stepper
+ * the class introduces the following try_step overloads
+    * try_step( sys , x , t , dt ) 
+    * try_step( sys , in , t , out , dt )
+    * try_step( sys , x , dxdt , t , dt )
+    * try_step( sys , in , dxdt_in , t , out , dxdt_out , dt )
  */
 template<
 class ErrorStepper ,
