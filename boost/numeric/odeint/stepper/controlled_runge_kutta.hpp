@@ -19,7 +19,11 @@
 #define BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLED_RUNGE_KUTTA_HPP_INCLUDED
 
 
+
 #include <cmath>
+
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 #include <boost/numeric/odeint/util/bind.hpp>
 #include <boost/numeric/odeint/util/unwrap_reference.hpp>
@@ -123,6 +127,12 @@ class controlled_runge_kutta ;
 
 /*
  * explicit stepper version
+ *
+ * this class introduces the following try_step overloads
+    * try_step( sys , x , t , dt )
+    * try_step( sys , x , dxdt , t , dt )
+    * try_step( sys , in , t , out , dt )
+    * try_step( sys , in , dxdt , t , out , dt )
  */
 template<
 class ErrorStepper ,
@@ -201,9 +211,12 @@ public:
      * Version 3 : try_step( sys , in , t , out , dt )
      *
      * this version does not solve the forwarding problem, boost.range can not be used
+     *
+     * the disable is needed to avoid ambiguous overloads if state_type = time_type
      */
     template< class System , class StateIn , class StateOut >
-    controlled_step_result try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
+    typename boost::disable_if< boost::is_same< StateIn , time_type > , controlled_step_result >::type
+    try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
     {
         typename odeint::unwrap_reference< System >::type &sys = system;
         m_dxdt_resizer.adjust_size( in , detail::bind( &controlled_runge_kutta::template resize_m_dxdt_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
@@ -341,7 +354,11 @@ private:
 /*
  * explicit stepper fsal version
  *
- * ToDo : introduce the same functions as for the above stepper
+ * the class introduces the following try_step overloads
+    * try_step( sys , x , t , dt ) 
+    * try_step( sys , in , t , out , dt )
+    * try_step( sys , x , dxdt , t , dt )
+    * try_step( sys , in , dxdt_in , t , out , dxdt_out , dt )
  */
 template<
 class ErrorStepper ,
@@ -433,7 +450,7 @@ public:
 
 
     /*
-     * Version 3 : try_step( sys , in , dxdt , t , out , dt )
+     * Version 4 : try_step( sys , in , dxdt_in , t , out , dxdt_out , dt )
      *
      * This version does not solve the forwarding problem, boost::range can not be used.
      */

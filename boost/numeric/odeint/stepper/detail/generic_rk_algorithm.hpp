@@ -41,9 +41,6 @@
 #include <boost/numeric/odeint/stepper/detail/generic_rk_operations.hpp>
 #include <boost/numeric/odeint/util/bind.hpp>
 
-namespace mpl = boost::mpl;
-namespace fusion = boost::fusion;
-
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -81,15 +78,15 @@ class generic_rk_algorithm {
 public:
     typedef mpl::range_c< size_t , 1 , StageCount > stage_indices;
 
-    typedef typename fusion::result_of::as_vector
+    typedef typename boost::fusion::result_of::as_vector
             <
-            typename mpl::copy
+            typename boost::mpl::copy
             <
             stage_indices ,
-            mpl::inserter
+            boost::mpl::inserter
             <
-            mpl::vector0< > ,
-            mpl::push_back< mpl::_1 , array_wrapper< Value , mpl::_2 > >
+            boost::mpl::vector0< > ,
+            boost::mpl::push_back< boost::mpl::_1 , array_wrapper< Value , boost::mpl::_2 > >
     >
     >::type
     >::type coef_a_type;
@@ -97,17 +94,17 @@ public:
     typedef boost::array< Value , StageCount > coef_b_type;
     typedef boost::array< Value , StageCount > coef_c_type;
 
-    typedef typename fusion::result_of::as_vector
+    typedef typename boost::fusion::result_of::as_vector
             <
-            typename mpl::push_back
+            typename boost::mpl::push_back
             <
-            typename mpl::copy
+            typename boost::mpl::copy
             <
             stage_indices,
-            mpl::inserter
+            boost::mpl::inserter
             <
-            mpl::vector0<> ,
-            mpl::push_back< mpl::_1 , stage_wrapper< Value , mpl::_2 > >
+            boost::mpl::vector0<> ,
+            boost::mpl::push_back< boost::mpl::_1 , stage_wrapper< Value , boost::mpl::_2 > >
     >
     >::type ,
     stage< Value , StageCount >
@@ -129,9 +126,9 @@ public:
             template< class Index >
             void operator()( Index ) const
             {
-                //fusion::at< Index >( m_base ) = stage< double , Index::value+1 , intermediate_stage >( m_c[ Index::value ] , fusion::at< Index >( m_a ) );
-                fusion::at< Index >( m_base ).c  = m_c[ Index::value ];
-                fusion::at< Index >( m_base ).a = fusion::at< Index >( m_a );
+                //boost::fusion::at< Index >( m_base ) = stage< double , Index::value+1 , intermediate_stage >( m_c[ Index::value ] , boost::fusion::at< Index >( m_a ) );
+                boost::fusion::at< Index >( m_base ).c  = m_c[ Index::value ];
+                boost::fusion::at< Index >( m_base ).a = boost::fusion::at< Index >( m_a );
             }
         };
 
@@ -146,9 +143,9 @@ public:
 
             template<class Index>
             void operator()(Index) const {
-                m_os << fusion::at<Index>(m_base).c << " | ";
+                m_os << boost::fusion::at<Index>(m_base).c << " | ";
                 for( size_t i=0 ; i<Index::value ; ++i )
-                    m_os << fusion::at<Index>(m_base).a[i] << " ";
+                    m_os << boost::fusion::at<Index>(m_base).a[i] << " ";
                 m_os << std::endl;
             }
         };
@@ -156,16 +153,16 @@ public:
 
         stage_vector( const coef_a_type &a , const coef_b_type &b , const coef_c_type &c )
         {
-            typedef mpl::range_c< size_t , 0 , StageCount-1 > indices;
-            mpl::for_each< indices >( do_insertion( *this , a , c ) );
-            fusion::at_c< StageCount - 1 >( *this ).c = c[ StageCount - 1 ];
-            fusion::at_c< StageCount - 1 >( *this ).a = b;
+            typedef boost::mpl::range_c< size_t , 0 , StageCount-1 > indices;
+            boost::mpl::for_each< indices >( do_insertion( *this , a , c ) );
+            boost::fusion::at_c< StageCount - 1 >( *this ).c = c[ StageCount - 1 ];
+            boost::fusion::at_c< StageCount - 1 >( *this ).a = b;
         }
 
         void print( std::ostream &os ) const
         {
-            typedef mpl::range_c< size_t , 0 , StageCount > indices;
-            mpl::for_each< indices >( print_butcher( *this , os ) );
+            typedef boost::mpl::range_c< size_t , 0 , StageCount > indices;
+            boost::mpl::for_each< indices >( print_butcher( *this , os ) );
         }
     };
 
@@ -232,7 +229,7 @@ public:
     {
         typedef typename odeint::unwrap_reference< System >::type unwrapped_system_type;
         unwrapped_system_type &sys = system;
-        fusion::for_each( m_stages , calculate_stage<
+        boost::fusion::for_each( m_stages , calculate_stage<
                 unwrapped_system_type , StateIn , StateTemp , DerivIn , Deriv , StateOut , Time >
         ( algebra , sys , in , dxdt , out , x_tmp , F , t , dt ) );
     }

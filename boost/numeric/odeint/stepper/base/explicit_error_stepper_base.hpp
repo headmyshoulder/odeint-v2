@@ -18,6 +18,9 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_BASE_EXPLICIT_ERROR_STEPPER_BASE_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_STEPPER_BASE_EXPLICIT_ERROR_STEPPER_BASE_HPP_INCLUDED
 
+#include <boost/utitlity/enable_if.hpp>
+#include <boost/type_traits/is_same.hpp>
+
 #include <boost/numeric/odeint/util/bind.hpp>
 #include <boost/numeric/odeint/util/unwrap_reference.hpp>
 
@@ -36,6 +39,12 @@ namespace odeint {
 /*
  * base class for explicit error steppers
  * models the error stepper concept
+ * 
+ * this class provides the following overloads for the do_step method
+    * do_step( system , x , t , dt , xerr )
+    * do_step( system , x , dxdt , t , dt , xerr )
+    * do_step( system , in , t , out , dt , xerr )
+    * do_step( system , in , dxdt , t , out , dt , xerr )
  */
 template<
 class ErrorStepper ,
@@ -98,7 +107,7 @@ public:
     }
 
     template< class System , class StateInOut , class Err >
-    void do_step( System system , StateInOut &x , const time_type &t , const time_type &dt , Err &xerr )
+    void do_step( System system , const StateInOut &x , const time_type &t , const time_type &dt , Err &xerr )
     {
         do_step_v1( system , x , t , dt , xerr );
     }
@@ -108,9 +117,12 @@ public:
      * Version 2 : do_step( system , x , dxdt , t , dt , xerr )
      *
      * this version does not solve the forwarding problem, boost.range can not be used
+     *
+     * the disable is needed to avoid ambiguous overloads if state_type = time_type
      */
     template< class System , class StateInOut , class DerivIn , class Err >
-    void do_step( System system , StateInOut &x , const DerivIn &dxdt , const time_type &t , const time_type &dt , Err &xerr )
+    typename boost::disable_if< boost::is_same< DerivIn , time_type > , void >::type
+    do_step( System system , StateInOut &x , const DerivIn &dxdt , const time_type &t , const time_type &dt , Err &xerr )
     {
         this->stepper().do_step_impl( system , x , dxdt , t , x , dt , xerr );
     }

@@ -32,6 +32,8 @@
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
 
+namespace fusion = boost::fusion;
+
 typedef double value_type;
 typedef boost::array< value_type , 2 > state_type;
 
