@@ -22,7 +22,7 @@ using namespace std;
 using namespace boost::numeric::odeint;
 
 //[ stuart_landau_system_function
-typedef boost::array< complex< double > , 1 > state_type;
+typedef complex< double > state_type;
 
 struct stuart_landau
 {
@@ -35,7 +35,7 @@ struct stuart_landau
     void operator()( const state_type &x , state_type &dxdt , double t ) const
     {
         const complex< double > I( 0.0 , 1.0 );
-        dxdt[0] = ( 1.0 + m_eta * I ) * x[0] - ( 1.0 + m_alpha * I ) * norm( x[0] ) * x[0];
+        dxdt = ( 1.0 + m_eta * I ) * x - ( 1.0 + m_alpha * I ) * norm( x ) * x;
     }
 };
 //]
@@ -65,7 +65,7 @@ struct streaming_observer
     void operator()( const State &x , double t ) const
     {
         m_out << t;
-        for( size_t i=0 ; i<x.size() ; ++i ) m_out << "\t" << x[i].real() << "\t" << x[i].imag() ;
+        m_out << "\t" << x.real() << "\t" << x.imag() ;
         m_out << "\n";
     }
 };
@@ -76,11 +76,12 @@ struct streaming_observer
 int main( int argc , char **argv )
 {
     //[ stuart_landau_integration
-    state_type x = {{ complex< double >( 1.0 , 0.0 ) }};
+    state_type x = complex< double >( 1.0 , 0.0 );
 
     const double dt = 0.1;
 
-    typedef runge_kutta4< state_type > stepper_type;
+    typedef runge_kutta4< state_type , double , state_type , double , 
+                          vector_space_algebra > stepper_type;
 
     integrate_const( stepper_type() , stuart_landau( 2.0 , 1.0 ) , x , 0.0 , 10.0 , dt , streaming_observer( cout ) );
     //]
