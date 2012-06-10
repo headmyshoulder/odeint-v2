@@ -4,7 +4,7 @@
 <title>Short Example</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Sandbox.Numeric.Odeint">
 <link rel="up" href="../getting_started.html" title="Getting started">
 <link rel="prev" href="usage__compilation__headers.html" title="Usage, Compilation, Headers">
 <link rel="next" href="../tutorial.html" title="Tutorial">
@@ -23,11 +23,12 @@
 <p>
         Imaging, you want to numerically integrate a harmonic oscillator with friction.
         The equations of motion are given by <span class="emphasis"><em>x'' = -x + &#947; x'</em></span>.
-        This can be transformed to a system of two coupled first-order differential
-        equations with new variables <span class="emphasis"><em>q=x</em></span> and <span class="emphasis"><em>p=x'</em></span>
-        such that <span class="emphasis"><em>w=(q,p)</em></span>. To apply numerical integration one
-        first has to design the right hand side of the equation <span class="emphasis"><em>w' = f(w)
-        = (p,-q+&#947; p)</em></span>:
+        Odeint only deals with first order ODEs that have no higher derivatives than
+        x' involved. However, any higher order ODE can be transformed to a system
+        of first order ODEs by introducing the new variables <span class="emphasis"><em>q=x</em></span>
+        and <span class="emphasis"><em>p=x'</em></span> such that <span class="emphasis"><em>w=(q,p)</em></span>. To
+        apply numerical integration one first has to design the right hand side of
+        the equation <span class="emphasis"><em>w' = f(w) = (p,-q+&#947; p)</em></span>:
       </p>
 <p>
         
@@ -48,12 +49,16 @@
       </p>
 <p>
         Here we chose <code class="computeroutput"><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span></code>
-        as the state type, but others are also possible, for example <code class="computeroutput"><span class="identifier">tr1</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span><span class="number">2</span><span class="special">&gt;</span></code>.
-        Odeint is designed in such a way that you can easily use your own state types.
-        Next, we define the ODE which is in this case a simple function. The parameter
-        signature of this function is crucial: the integration methods will always
-        call them in the form <code class="computeroutput"><span class="identifier">f</span><span class="special">(</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">dxdt</span><span class="special">,</span> <span class="identifier">t</span><span class="special">)</span></code>.
-        So, even if there is no explicit time dependence, one has to define <code class="computeroutput"><span class="identifier">t</span></code> as a function parameter.
+        as the state type, but others are also possible, for example <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span><span class="number">2</span><span class="special">&gt;</span></code>. odeint is designed in such a way that
+        you can easily use your own state types. Next, the ODE is defined which is
+        in this case a simple function calculating <span class="emphasis"><em>f(x)'</em></span>. The
+        parameter signature of this function is crucial: the integration methods
+        will always call them in the form <code class="computeroutput"><span class="identifier">f</span><span class="special">(</span><span class="identifier">x</span><span class="special">,</span>
+        <span class="identifier">dxdt</span><span class="special">,</span>
+        <span class="identifier">t</span><span class="special">)</span></code>
+        (there are exceptions for some special routines). So, even if there is no
+        explicit time dependence, one has to define <code class="computeroutput"><span class="identifier">t</span></code>
+        as a function parameter.
       </p>
 <p>
         Now, we have to define the initial state from which the integration should
@@ -72,7 +77,7 @@
         For the integration itself we'll use the <code class="computeroutput">integrate</code>
         function, which is a convenient way to get quick results. It is based on
         the error-controlled <code class="computeroutput">runge_kutta_rk5_ck</code>
-        stepper (5th order) and uses adaptive stepsize.
+        stepper (5th order) and uses adaptive step-size.
       </p>
 <p>
         
@@ -85,14 +90,15 @@
 <p>
         The integrate function expects as parameters the rhs of the ode as defined
         above, the initial state <code class="computeroutput"><span class="identifier">x</span></code>,
-        the start-and end-time of the integration as well as the initial time step.
+        the start-and end-time of the integration as well as the initial time step=size.
         Note, that <code class="computeroutput">integrate</code>
-        uses an adaptive stepsize during the integration steps so the time points
+        uses an adaptive step-size during the integration steps so the time points
         will not be equally spaced. The integration returns the number of steps that
-        were applied.
+        were applied and updates x which is set to the approximate solution of the
+        ODE at the end of integration.
       </p>
 <p>
-        It is, of course, also possible to implement the ode system as a class. The
+        It is, of course, also possible to represent the ode system as a class. The
         rhs must then be implemented as a functor having defined the ()-operator:
       </p>
 <p>
@@ -129,9 +135,9 @@
       </p>
 <p>
         You surely have already noticed that during the integration a lot of steps
-        have been done. You might wonder if you could access them do observe the
-        solution during the iteration. Yes, you can do that. All you have to do is
-        to provide a reasonable observer. An example is
+        had to be done. You might wonder if you could access them do observe the
+        solution during the iteration. Yes, this is possible, of course. All you
+        have to do is to provide a reasonable observer. An example is
       </p>
 <p>
         
@@ -154,8 +160,10 @@
 <p>
       </p>
 <p>
-        which stores the intermediate steps in a container. Now, you only have to
-        pass this container to the integration function:
+        which stores the intermediate steps in a container. Note, the argument structure
+        of the ()-operator: odeint calls the observer exactly in this way, providing
+        the current state and time. Now, you only have to pass this container to
+        the integration function:
       </p>
 <p>
         

@@ -4,9 +4,9 @@
 <title>Steppers</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
-<link rel="up" href="../odeint_in_detail.html" title="Odeint in detail">
-<link rel="prev" href="../odeint_in_detail.html" title="Odeint in detail">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Sandbox.Numeric.Odeint">
+<link rel="up" href="../odeint_in_detail.html" title="odeint in detail">
+<link rel="prev" href="../odeint_in_detail.html" title="odeint in detail">
 <link rel="next" href="generation_functions.html" title="Generation functions">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -38,9 +38,11 @@
         overview</a></span></dt>
 <dt><span class="section"><a href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.write_own_steppers">Write
         own steppers</a></span></dt>
+<dt><span class="section"><a href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.writing_own_runge_kutta_steppers">Writing
+        own Runge-Kutta steppers</a></span></dt>
 </dl></div>
 <p>
-        Solving ordinary differential equation numerically is ususally done iteratively,
+        Solving ordinary differential equation numerically is usually done iteratively,
         that is a given state of an ordinary differential equation is iterated forward
         <span class="emphasis"><em>x(t) -&gt; x(t+dt) -&gt; x(t+2dt)</em></span>. The steppers in odeint
         perform one single step. The most general stepper type is described by the
@@ -50,7 +52,7 @@
         we briefly present the mathematical and numerical details of the steppers.
         The <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
         has two versions of the <code class="computeroutput"><span class="identifier">do_step</span></code>
-        method, one with an in-place transform of the currrent state and one with
+        method, one with an in-place transform of the current state and one with
         an out-of-place transform:
       </p>
 <p>
@@ -70,11 +72,13 @@
         the ODE. In the first version the second parameter is the step which is here
         updated in-place and the third and the fourth parameters are the time and
         step size (the time step). After a call of <code class="computeroutput"><span class="identifier">do_step</span></code>
-        the time of the ODE is <span class="emphasis"><em>t+dt</em></span>. In the second version the
-        second argument is the state of the ODE at time <span class="emphasis"><em>t</em></span>, the
-        third argument is t, the fourth argument is the state at time <span class="emphasis"><em>t+dt</em></span>
-        which is filled by <code class="computeroutput"><span class="identifier">do_step</span></code>
-        and the fifth argument is the time step.
+        the state <code class="computeroutput"><span class="identifier">inout</span></code> is updated
+        and now represents an approximate solution of the ODE at time <span class="emphasis"><em>t+dt</em></span>.
+        In the second version the second argument is the state of the ODE at time
+        <span class="emphasis"><em>t</em></span>, the third argument is t, the fourth argument is the
+        approximate solution at time <span class="emphasis"><em>t+dt</em></span> which is filled by
+        <code class="computeroutput"><span class="identifier">do_step</span></code> and the fifth argument
+        is the time step. Note that these functions do not change the time <code class="computeroutput"><span class="identifier">t</span></code>.
       </p>
 <p>
         <span class="bold"><strong>System functions</strong></span>
@@ -87,12 +91,23 @@
         <span class="identifier">dxdt</span> <span class="special">,</span>
         <span class="identifier">t</span> <span class="special">)</span></code>
         and it is assumed that it calculates <span class="emphasis"><em>dx/dt = f(x,t)</em></span>.
+        The function structure in most cases looks like:
       </p>
 <p>
-        Other types of system function represent Hamiltonian systems or system which
-        also compute the Jacobian needed in implicit steppers. For informations which
-        stepper uses which system function see the stepper table below. It might
-        be possible, that odeint will introduce new system types in near future.
+        
+</p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">sys</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span> <span class="comment">/*x*/</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span> <span class="comment">/*dxdt*/</span> <span class="special">,</span> <span class="keyword">const</span> <span class="keyword">double</span> <span class="comment">/*t*/</span> <span class="special">)</span>
+<span class="special">{</span>
+    <span class="comment">// ...</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+        Other types of system functions might represent Hamiltonian systems or system
+        which also compute the Jacobian needed in implicit steppers. For information
+        which stepper uses which system function see the stepper table below. It
+        might be possible that odeint will introduce new system types in near future.
         Since the system function is strongly related to the stepper type, such an
         introduction of a new stepper might result in a new type of system function.
       </p>
@@ -104,8 +119,8 @@
 <p>
           A first specialization are the explicit steppers. Explicit means that the
           new state of the ode can be computed explicitly from the current state
-          without solving implicit equations. These steppers have in common that
-          they evaluate the system at time <span class="emphasis"><em>t</em></span> such that the result
+          without solving implicit equations. Such steppers have in common that they
+          evaluate the system at time <span class="emphasis"><em>t</em></span> such that the result
           of <span class="emphasis"><em>f(x,t)</em></span> can be passed to the stepper. In odeint,
           the explicit stepper have two additional methods
         </p>
@@ -134,13 +149,13 @@
 <p>
           
 </p>
-<pre class="programlisting"><span class="identifier">runge_kutta4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">rk</span><span class="special">;</span>
-<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>               <span class="comment">// In-place transformation of inout</span>
-<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys2</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>               <span class="comment">// Ok</span>
-<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>            <span class="comment">// Out-of-place transformation</span>
-<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">dxdtin</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>      <span class="comment">// In-place tranformation of inout</span>
-<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">dxdtin</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// Out-of-place transformation</span>
-</pre>
+<pre class="programlisting"><span class="special">-</span>        <span class="identifier">runge_kutta4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">rk</span><span class="special">;</span>
+        <span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>               <span class="comment">// In-place transformation of inout</span>
+        <span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys2</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>               <span class="comment">// call with different system: Ok</span>
+        <span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>            <span class="comment">// Out-of-place transformation</span>
+        <span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">dxdtin</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>      <span class="comment">// In-place tranformation of inout</span>
+        <span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">dxdtin</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// Out-of-place transformation</span>
+        </pre>
 <p>
         </p>
 <p>
@@ -150,13 +165,21 @@
           <span class="identifier">inout</span> <span class="special">,</span>
           <span class="identifier">t</span> <span class="special">,</span>
           <span class="identifier">dt</span> <span class="special">)</span></code>,
-          but sometimes the derivative of the state is needed to do some external
-          computations or to perform some statistical analysis.
+          but sometimes the derivative of the state is needed externally to do some
+          external computations or to perform some statistical analysis.
         </p>
 <p>
           A special class of the explicit steppers are the FSAL (first-same-as-last)
           steppers, where the last evaluation of the system function is also the
-          first evaluation of the following step. For such stepper a further <code class="computeroutput"><span class="identifier">do_step</span></code> method exist:
+          first evaluation of the following step. For such steppers the <code class="computeroutput"><span class="identifier">do_step</span></code> method are slightly different:
+        </p>
+<p>
+          <code class="computeroutput"><span class="identifier">do_step</span><span class="special">(</span>
+          <span class="identifier">sys</span> <span class="special">,</span>
+          <span class="identifier">inout</span> <span class="special">,</span>
+          <span class="identifier">dxdtinout</span> <span class="special">,</span>
+          <span class="identifier">t</span> <span class="special">,</span>
+          <span class="identifier">dt</span> <span class="special">)</span></code>
         </p>
 <p>
           <code class="computeroutput"><span class="identifier">do_step</span><span class="special">(</span>
@@ -169,12 +192,25 @@
           <span class="identifier">dt</span> <span class="special">)</span></code>
         </p>
 <p>
-          This method also fills the derivative at time <span class="emphasis"><em>t+dt</em></span>
-          into <code class="computeroutput"><span class="identifier">dxdtout</span></code>. Of course,
-          the performance gain of such FSAL steppers only appears when combining
-          with intergrate error estimation, like in the Runge-Kutta-Dopri5 stepper.
-          The FSAL-trick is sometimes also referred as the Fehlberg-Trick. An example
-          how the FSAL steppers can be used is
+          This method takes the derivative at time <code class="computeroutput"><span class="identifier">t</span></code>
+          and also also stores the derivative at time <span class="emphasis"><em>t+dt</em></span>.
+          Calling these functions subsequently iterating along the solution one saves
+          one function call by passing the result for dxdt into the next function
+          call. However, when using FSAL steppers without supplying derivatives:
+        </p>
+<p>
+          <code class="computeroutput"><span class="identifier">do_step</span><span class="special">(</span>
+          <span class="identifier">sys</span> <span class="special">,</span>
+          <span class="identifier">inout</span> <span class="special">,</span>
+          <span class="identifier">t</span> <span class="special">,</span>
+          <span class="identifier">dt</span> <span class="special">)</span></code>
+        </p>
+<p>
+          the stepper internally satisfies the FSAL property which means it remembers
+          the last <code class="computeroutput"><span class="identifier">dxdt</span></code> and uses
+          it for the next step. An example for a FSAL stepper is the Runge-Kutta-Dopri5
+          stepper. The FSAL-trick is sometimes also referred as the Fehlberg-Trick.
+          An example how the FSAL steppers can be used is
         </p>
 <p>
           
@@ -205,7 +241,7 @@
             will initialize <code class="computeroutput"><span class="identifier">dxdt</span></code>
             and for all following calls it is assumed that the same system and the
             same state are used. If you use the FSAL stepper within the integrate
-            functions automatically. See the <a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.using_steppers" title="Using steppers">Using
+            functions this is taken care of automatically. See the <a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.using_steppers" title="Using steppers">Using
             steppers</a> section for more details or look into the table below
             to see which stepper have an internal state.
           </p></td></tr>
@@ -223,24 +259,24 @@
           A special class of symplectic systems are separable systems which can be
           written in the form <span class="emphasis"><em>dqdt/dt = f1(p)</em></span>, <span class="emphasis"><em>dpdt/dt
           = f2(q)</em></span>, where <span class="emphasis"><em>(q,p)</em></span> are the state of system.
-          The space of <span class="emphasis"><em>(q,p)</em></span> is sometimes refered as the phase
+          The space of <span class="emphasis"><em>(q,p)</em></span> is sometimes referred as the phase
           space and <span class="emphasis"><em>q</em></span> and <span class="emphasis"><em>p</em></span> are said the
           be the phase space variables. Symplectic systems in this special form occur
           widely in nature. For example the complete classical mechanics as written
-          down by Newton, Lagrange and Hamilton can be forumulated in this framework.
+          down by Newton, Lagrange and Hamilton can be formulated in this framework.
           Of course, the separability of the system depends on the specific choice
           of coordinates.
         </p>
 <p>
-          Integrable symplectic systems can be solved by odeint by means of the symplectic_euler
+          Symplectic systems can be solved by odeint by means of the symplectic_euler
           stepper and a symplectic Runge-Kutta-Nystrom method of sixth-order. These
-          stepper assume that the system is autonomous, hence the time will not explicitly
-          occur. Furhter they fullfil in principle the default Stepper concept, but
-          they expect the system to be a pair of callable objects. The first entry
-          of this pair calculates <span class="emphasis"><em>f1(p)</em></span> while the second calculates
-          <span class="emphasis"><em>f2(q)</em></span>. The syntax is <code class="computeroutput"><span class="identifier">sys</span><span class="special">.</span><span class="identifier">first</span><span class="special">(</span><span class="identifier">p</span><span class="special">,</span><span class="identifier">dqdt</span><span class="special">)</span></code>
-          and <code class="computeroutput"><span class="identifier">sys</span><span class="special">.</span><span class="identifier">second</span><span class="special">(</span><span class="identifier">q</span><span class="special">,</span><span class="identifier">dpdt</span><span class="special">)</span></code>, where the first and second part can be
-          again simple C-functions of functors. An example is the harmonic oscillator:
+          steppers assume that the system is autonomous, hence the time will not
+          explicitly occur. Further they fulfill in principle the default Stepper
+          concept, but they expect the system to be a pair of callable objects. The
+          first entry of this pair calculates <span class="emphasis"><em>f1(p)</em></span> while the
+          second calculates <span class="emphasis"><em>f2(q)</em></span>. The syntax is <code class="computeroutput"><span class="identifier">sys</span><span class="special">.</span><span class="identifier">first</span><span class="special">(</span><span class="identifier">p</span><span class="special">,</span><span class="identifier">dqdt</span><span class="special">)</span></code> and <code class="computeroutput"><span class="identifier">sys</span><span class="special">.</span><span class="identifier">second</span><span class="special">(</span><span class="identifier">q</span><span class="special">,</span><span class="identifier">dpdt</span><span class="special">)</span></code>,
+          where the first and second part can be again simple C-functions of functors.
+          An example is the harmonic oscillator:
         </p>
 <p>
           
@@ -314,13 +350,13 @@
         </p>
 <p>
           Many Hamiltonian system can be written as <span class="emphasis"><em>dq/dt=p</em></span>,
-          <span class="emphasis"><em>dp/dt=f(q)</em></span> which is computationally much easier then
+          <span class="emphasis"><em>dp/dt=f(q)</em></span> which is computationally much easier than
           the full separable system. Very often, it is also possible to transform
           the original equations of motion to bring the system in this simplified
           form. This kind of system can be used in the symplectic solvers, by simply
           passing <span class="emphasis"><em>f(p)</em></span> to the <code class="computeroutput"><span class="identifier">do_step</span></code>
           method, again <span class="emphasis"><em>f(p)</em></span> will be represented by a simple
-          C-function or a functor. Here, the above example of the harmonic oscaillator
+          C-function or a functor. Here, the above example of the harmonic oscillator
           can be written as
         </p>
 <p>
@@ -338,7 +374,7 @@
           is exactly the same function as in the above examples.
         </p>
 <p>
-          Note, that the state of the ODE must not be contructed explicitly via
+          Note, that the state of the ODE must not be constructed explicitly via
           <code class="computeroutput"><span class="identifier">pair</span><span class="special">&lt;</span>
           <span class="identifier">vector_type</span> <span class="special">,</span>
           <span class="identifier">vector_type</span> <span class="special">&gt;</span>
@@ -377,7 +413,7 @@
           system possesses two or more time scales of very different order. Solvers
           for stiff systems are usually implicit, meaning that they solve equations
           like <span class="emphasis"><em>x(t+dt) = x(t) + dt * f(x(t+1))</em></span>. This particular
-          scheme is the implicit euler method. Implicit methods usually solve the
+          scheme is the implicit Euler method. Implicit methods usually solve the
           system of equations by a root finding algorithm like the Newton method
           and therefore need to know the Jacobian of the system <span class="emphasis"><em>J<sub>&#8203;ij</sub> = df<sub>&#8203;i</sub> /
           dx<sub>&#8203;j</sub></em></span>.
@@ -391,6 +427,16 @@
           is <code class="computeroutput"><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">vector</span></code> and the Jacobian is represented
           by <code class="computeroutput"><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">matrix</span></code>.
         </p>
+<div class="important"><table border="0" summary="Important">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../../images/important.png"></td>
+<th align="left">Important</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Implicit solvers do only work with ublas::vector as state type. At the
+            moment, no other state types are supported.
+          </p></td></tr>
+</table></div>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
@@ -400,15 +446,15 @@
 <p>
           Another large class of solvers are multi-step method. They save a small
           part of the history of the solution and compute the next step with the
-          help of this history. Since multistep methods know a part of their history
+          help of this history. Since multi-step methods know a part of their history
           they do not need to compute the system function very often, usually it
-          is only computed once. This makes multistep methods preferable if a call
+          is only computed once. This makes multi-step methods preferable if a call
           of the system function is expensive. Examples are ODEs defined on networks,
           where the computation of the interaction is usually where expensive (and
           might be of order O(N^2)).
         </p>
 <p>
-          Multistep methods differ from the normal steppers. They safe a part of
+          Multi-step methods differ from the normal steppers. They safe a part of
           their history and this part has to be explicitly calculated and initialized.
           In the following example an Adams-Bashforth-stepper with a history of 5
           steps is instantiated and initialized;
@@ -426,8 +472,8 @@
           The initialization uses a fourth-order Runge-Kutta stepper and after the
           call of <code class="computeroutput"><span class="identifier">initialize</span></code> the
           state of <code class="computeroutput"><span class="identifier">inout</span></code> has changed
-          to the current state, such that can be immediately used by passing it to
-          following calls of <code class="computeroutput"><span class="identifier">do_step</span></code>.
+          to the current state, such that it can be immediately used by passing it
+          to following calls of <code class="computeroutput"><span class="identifier">do_step</span></code>.
           Of course, you can also use you own steppers to initialize the internal
           state of the Adams-Bashforth-Stepper:
         </p>
@@ -439,7 +485,7 @@
 <p>
         </p>
 <p>
-          Many multistep methods are also explicit steppers, hence the parameter
+          Many multi-step methods are also explicit steppers, hence the parameter
           of <code class="computeroutput"><span class="identifier">do_step</span></code> method do not
           differ from the explicit steppers.
         </p>
@@ -449,12 +495,11 @@
 <th align="left">Caution</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-            The multistep methods have some internal variables which depend on the
-            explicit solution. Hence you can not exchange the system of the state
-            between two consecutive calls of <code class="computeroutput"><span class="identifier">do_step</span></code>
-            since then the internal variable do not correspond with the ODE and the
-            current solution. Of course, if you use the integrate functions this
-            will be taken into account. See the <a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.using_steppers" title="Using steppers">Using
+            The multi-step methods have some internal variables which depend on the
+            explicit solution. Hence after any external changes of your state (e.g.
+            size) or system the initialize function has to be called again to adjust
+            the internal state of the stepper. Of course, if you use the integrate
+            functions this will be taken into account. See the <a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.using_steppers" title="Using steppers">Using
             steppers</a> section for more details.
           </p></td></tr>
 </table></div>
@@ -466,7 +511,7 @@
 </h4></div></div></div>
 <p>
           Many of the above introduced steppers possess the possibility to use adaptive
-          stepsize control. Adaptive step size integration works in principle as
+          step-size control. Adaptive step size integration works in principle as
           follows:
         </p>
 <div class="orderedlist"><ol class="orderedlist" type="1">
@@ -475,33 +520,34 @@
               two steps with different orders. The difference between these two steps
               is then used as a measure for the error. Stepper which can calculate
               the error are <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
-              Stepper</a> and they form a own class with an separate concept.
+              Stepper</a> and they form an own class with an separate concept.
             </li>
 <li class="listitem">
               This error is compared against some predefined error tolerances. Are
-              the tolerance violated the step is reject and the stepsize is decreases.
-              Otherwise the step is accepted and possibly the stepsize is increased.
+              the tolerance violated the step is reject and the step-size is decreases.
+              Otherwise the step is accepted and possibly the step-size is increased.
             </li>
 </ol></div>
 <p>
-          The class of controlled steppers has its own concept in odeint - the <a class="link" href="../concepts/controlled_stepper.html" title="Controlled Stepper">Controlled
+          The class of controlled steppers has their own concept in odeint - the
+          <a class="link" href="../concepts/controlled_stepper.html" title="Controlled Stepper">Controlled
           Stepper</a> concept. They are usually constructed from the underlying
           error steppers. An example is the controller for the explicit Runge-Kutta
           steppers. The Runge-Kutta steppers enter the controller as a template argument.
-          Additionally one can pass the Runge-Kutta stepper to the contructor, but
-          this step is not neccessary; the stepper is default-constructed if possible.
+          Additionally one can pass the Runge-Kutta stepper to the constructor, but
+          this step is not necessary; the stepper is default-constructed if possible.
         </p>
 <p>
           Different step size controlling mechanism exist. They all have in common
           that they somehow compare predefined error tolerance against the error
           and that they might reject or accept a step. If a step is rejected the
-          step size is usually decreased and the step is made again. Then the procedure
-          of checking the error tolerances and accepting or rejecting a step is made
-          again and repeated until the step is accepted. The procedure is implemented
-          in the integration functions.
+          step size is usually decreased and the step is made again with the reduced
+          step size. This procedure is repeated until the step is accepted. This
+          algorithm is implemented in the integration functions.
         </p>
 <p>
-          A classical way to decide wether a step is rejected or accepted is
+          A classical way to decide whether a step is rejected or accepted is to
+          calculate
         </p>
 <p>
           <span class="emphasis"><em>val = || | err<sub>&#8203;i</sub> | / ( &#949;<sub>&#8203;abs</sub> + &#949;<sub>&#8203;rel</sub> * ( a<sub>&#8203;x</sub> | x<sub>&#8203;i</sub> | + a<sub>&#8203;dxdt</sub> | | dxdt<sub>&#8203;i</sub> | )||
@@ -516,8 +562,8 @@
           table below.
         </p>
 <p>
-          For the 'controlled_runge_kutta' stepper the new step size is then calculated
-          via
+          For the <code class="computeroutput"><span class="identifier">controlled_runge_kutta</span></code>
+          stepper the new step size is then calculated via
         </p>
 <p>
           <span class="emphasis"><em>val &gt; 1 : dt<sub>&#8203;new</sub> = dt<sub>&#8203;current</sub> max( 0.9 pow( val , -1 / ( O<sub>&#8203;E</sub> - 1
@@ -671,10 +717,11 @@
           fac = max( fac2 , min( fac1 , pow( err , 0.25 ) / safe ) )
         </p>
 <p>
-          To ease to generation of the controlled stepper generation functions exist
+          To ease to generation of the controlled stepper, generation functions exist
           which take the absolute and relative error tolerances and a predefined
-          error stepper and contruct from this knowledge an appropirate controlled
-          stepper. The generation functions are explained in detail in XYZ.
+          error stepper and construct from this knowledge an appropriate controlled
+          stepper. The generation functions are explained in detail in <a class="link" href="generation_functions.html" title="Generation functions">Generation
+          functions</a>.
         </p>
 </div>
 <div class="section">
@@ -686,7 +733,7 @@
           A fourth class of stepper exists which are the so called dense output steppers.
           Dense-output steppers might take larger steps and interpolate the solution
           between two consecutive points. This interpolated points have usually the
-          same order as the order of the stepper. Dense-output stepper are often
+          same order as the order of the stepper. Dense-output steppers are often
           composite stepper which take the underlying method as a template parameter.
           An example is the <code class="computeroutput"><span class="identifier">dense_output_runge_kutta</span></code>
           stepper which takes a Runge-Kutta stepper with dense-output facilities
@@ -704,14 +751,16 @@
 <p>
         </p>
 <p>
-          Dense output stepper have their own concept. The main difference is that
-          they control the state by them-self. If you call <code class="computeroutput"><span class="identifier">do_step</span></code>,
-          only the ODE is passed as argument. Furhtermore <code class="computeroutput"><span class="identifier">do_step</span></code>
-          return the last time interval, hence you interpolate the solution between
-          these two times points. Another difference is that they must be initialized
-          with <code class="computeroutput"><span class="identifier">initialize</span></code>, otherwise
-          the internal state of the stepper is default contructed which might produce
-          funny errors or bugs.
+          Dense output stepper have their own concept. The main difference to usual
+          steppers is that they manage the state and time internally. If you call
+          <code class="computeroutput"><span class="identifier">do_step</span></code>, only the ODE is
+          passed as argument. Furthermore <code class="computeroutput"><span class="identifier">do_step</span></code>
+          return the last time interval: <code class="computeroutput"><span class="identifier">t</span></code>
+          and <code class="computeroutput"><span class="identifier">t</span><span class="special">+</span><span class="identifier">dt</span></code>, hence you can interpolate the solution
+          between these two times points. Another difference is that they must be
+          initialized with <code class="computeroutput"><span class="identifier">initialize</span></code>,
+          otherwise the internal state of the stepper is default constructed which
+          might produce funny errors or bugs.
         </p>
 <p>
           The construction of the dense output stepper looks a little bit nasty,
@@ -728,15 +777,15 @@
 <p>
         </p>
 <p>
-          Of course, this statement is also lengthly; it demonstrates how <code class="computeroutput"><span class="identifier">make_dense_output</span></code> can be used with the
-          <code class="computeroutput"><span class="identifier">result_of</span></code> protocoll. The
+          Of course, this statement is also lengthy; it demonstrates how <code class="computeroutput"><span class="identifier">make_dense_output</span></code> can be used with the
+          <code class="computeroutput"><span class="identifier">result_of</span></code> protocol. The
           parameters to <code class="computeroutput"><span class="identifier">make_dense_output</span></code>
           are the absolute error tolerance, the relative error tolerance and the
           stepper. This explicitly assumes that the underlying stepper is a controlled
           stepper and that this stepper has an absolute and a relative error tolerance.
           For details about the generation functions see <a class="link" href="generation_functions.html" title="Generation functions">Generation
-          functions</a>. Of course, the generation functions have been designed
-          for easy use with the integrate functions:
+          functions</a>. The generation functions have been designed for easy
+          use with the integrate functions:
         </p>
 <p>
           
@@ -752,8 +801,8 @@
         steppers</a>
 </h4></div></div></div>
 <p>
-          This section contains some general informations about the usage of the
-          steppers in odeint.
+          This section contains some general information about the usage of the steppers
+          in odeint.
         </p>
 <p>
           <span class="bold"><strong>Steppers are copied by value</strong></span>
@@ -776,13 +825,13 @@
           </p></td></tr>
 </table></div>
 <p>
-          Some steppers require to store some informations about the state of the
-          ODE between two steps. Examples are the multistep method which store a
-          part of the solution during the evolution of the ODE, or the FSAL steppers
+          Some steppers require to store some information about the state of the
+          ODE between two steps. Examples are the multi-step methods which store
+          a part of the solution during the evolution of the ODE, or the FSAL steppers
           which store the last derivative at time <span class="emphasis"><em>t+dt</em></span>, to be
           used in the next step. In both cases the steppers expect that consecutive
           calls of <code class="computeroutput"><span class="identifier">do_step</span></code> are from
-          the same solution and the same ODE. In this case it is absolutely neccessary
+          the same solution and the same ODE. In this case it is absolutely necessary
           that you call <code class="computeroutput"><span class="identifier">do_step</span></code> with
           the same system function and the same state, see also the examples for
           the FSAL steppers above.
@@ -802,10 +851,10 @@
         </p>
 <p>
           All these stepper have in common, that they initially fill their internal
-          state by themself. Hence you are not required to call initialize. See how
-          this works for the Adams-Bashforth-Moulton stepper: in the example we instantiate
-          a fourth order Adams-Bashforth-Moulton stepper, meaning that it will store
-          4 internal derivatives of the solution at times <code class="computeroutput"><span class="special">(</span><span class="identifier">t</span><span class="special">-</span><span class="identifier">dt</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">2d</span><span class="identifier">t</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">3d</span><span class="identifier">t</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">4d</span><span class="identifier">t</span><span class="special">)</span></code>.
+          state by themselves. Hence you are not required to call initialize. See
+          how this works for the Adams-Bashforth-Moulton stepper: in the example
+          we instantiate a fourth order Adams-Bashforth-Moulton stepper, meaning
+          that it will store 4 internal derivatives of the solution at times <code class="computeroutput"><span class="special">(</span><span class="identifier">t</span><span class="special">-</span><span class="identifier">dt</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">2</span><span class="special">*</span><span class="identifier">dt</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">3</span><span class="special">*</span><span class="identifier">dt</span><span class="special">,</span><span class="identifier">t</span><span class="special">-</span><span class="number">4</span><span class="special">*</span><span class="identifier">dt</span><span class="special">)</span></code>.
         </p>
 <p>
           
@@ -830,43 +879,55 @@
 <p>
           Nearly all steppers in odeint need to store some intermediate results of
           the type <code class="computeroutput"><span class="identifier">state_type</span></code> or
-          <code class="computeroutput"><span class="identifier">deriv_type</span></code>. To do this
-          the size of these temporaries needs to be adjusted. So, most steppers in
-          odeint provide an additional template parameter which controls the size
-          adjustment of the internal variables - the resizer. In detail odeint provides
-          three policy classes (resizers) <code class="computeroutput"><span class="identifier">always_resizer</span></code>,
+          <code class="computeroutput"><span class="identifier">deriv_type</span></code>. To do so odeint
+          need some memory management for the internal temporaries. As this memory
+          management is typically related to adjusting the size of vector-like types,
+          it is called resizing in odeint. So, most steppers in odeint provide an
+          additional template parameter which controls the size adjustment of the
+          internal variables - the resizer. In detail odeint provides three policy
+          classes (resizers) <code class="computeroutput"><span class="identifier">always_resizer</span></code>,
           <code class="computeroutput"><span class="identifier">initially_resizer</span></code>, and
           <code class="computeroutput"><span class="identifier">never_resizer</span></code>. Furthermore,
           all stepper have a method <code class="computeroutput"><span class="identifier">adjust_size</span></code>
           which takes a parameter representing a state type and which manually adjusts
-          the size of the internal variables. Before performing the actual resizing
-          odeint always checks if the sizes of the state and the interal variable
-          differ and only resizes if they are different.
+          the size of the internal variables matching the size of the given instance.
+          Before performing the actual resizing odeint always checks if the sizes
+          of the state and the internal variable differ and only resizes if they
+          are different.
         </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            You only have to worry about memory allocation when using dynamically
+            sized vector types. If your state type is heap allocated, like <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span></code>, no memory allocation is required
+            whatsoever.
+          </p></td></tr>
+</table></div>
 <p>
           By default the resizing parameter is <code class="computeroutput"><span class="identifier">initially_resizer</span></code>,
           meaning that the first call to <code class="computeroutput"><span class="identifier">do_step</span></code>
-          performs the resizing. Of course, if you have changed the size of your
-          system and your state you have to call <code class="computeroutput"><span class="identifier">adjust_size</span></code>
-          by hand. The second resizer is the <code class="computeroutput"><span class="identifier">always_resizer</span></code>
+          performs the resizing, hence memory allocation. Of course, if you have
+          changed the size of your system and your state you have to call <code class="computeroutput"><span class="identifier">adjust_size</span></code> by hand in this case. The
+          second resizer is the <code class="computeroutput"><span class="identifier">always_resizer</span></code>
           which tries to resize the internal variables at every call of <code class="computeroutput"><span class="identifier">do_step</span></code>. Typical use cases for this kind
-          of resizer are self expanding lattics like shown in the tutorial or partial
-          differential equations with an adaptive grid. The third class of resizer
-          is the <code class="computeroutput"><span class="identifier">never_resizer</span></code> which
-          means that the internal variables are never adjusted automatically and
-          always have the adjust by hand.
+          of resizer are self expanding lattices like shown in the tutorial or partial
+          differential equations with an adaptive grid. Here, no calls of <code class="computeroutput"><span class="identifier">adjust_size</span></code> are required, the steppers
+          manage everything themselve. The third class of resizer is the <code class="computeroutput"><span class="identifier">never_resizer</span></code> which means that the internal
+          variables are never adjusted automatically and always have to be adjusted
+          by hand .
         </p>
 <p>
           There is a second mechanism which influences the resizing and which controls
-          if a state type is at least resizeable - a metafunction <code class="computeroutput"><span class="identifier">is_resizeable</span></code>.
-          This metafunction returns a static boolean value if any type is resizable.
-          For example it will return <code class="computeroutput"><span class="keyword">true</span></code>
-          for <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span>
-          <span class="identifier">T</span> <span class="special">&gt;</span></code>
-          but <code class="computeroutput"><span class="keyword">false</span></code> for <code class="computeroutput"><span class="identifier">tr1</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span></code>.
+          if a state type is at least resizeable - a meta-function <code class="computeroutput"><span class="identifier">is_resizeable</span></code>. This meta-function returns
+          a static boolean value if any type is resizable. For example it will return
+          <code class="computeroutput"><span class="keyword">true</span></code> for <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span></code> but <code class="computeroutput"><span class="keyword">false</span></code>
+          for <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span></code>.
           By default and for unknown types <code class="computeroutput"><span class="identifier">is_resizeable</span></code>
           returns <code class="computeroutput"><span class="keyword">false</span></code>, so if you have
-          your own type you need to specialize this metafunction. For more details
+          your own type you need to specialize this meta-function. For more details
           on the resizing mechanism see the section <a class="link" href="state_types__algebras_and_operations.html" title="State types, algebras and operations">Adapt
           you own state types</a>.
         </p>
@@ -889,7 +950,7 @@
 <li class="listitem">
               <code class="computeroutput"><span class="identifier">runge_kutta4</span></code> is a good
               stepper for constant step sizes. It is widely used and very well known.
-              If you need to create artifical time series this stepper should be
+              If you need to create artificial time series this stepper should be
               the first choice.
             </li>
 <li class="listitem">
@@ -1207,7 +1268,7 @@
                 </td>
 <td>
                   <p>
-                    Standard method with error control and dense ouput, to be used
+                    Standard method with error control and dense output, to be used
                     in controlled_error_stepper and in dense_output_controlled_explicit_fsal.
                   </p>
                 </td>
@@ -1495,9 +1556,9 @@
                 </td>
 <td>
                   <p>
-                    Dense ouput for <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
+                    Dense output for <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
                     and <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
-                    Stepper</a> from above if they provide dense ouput functionality
+                    Stepper</a> from above if they provide dense output functionality
                     (like <code class="computeroutput"><span class="identifier">euler</span></code> and
                     <code class="computeroutput"><span class="identifier">runge_kutta_dopri5</span></code>).
                     Order depends on the given stepper.
@@ -1597,8 +1658,8 @@
                 </td>
 <td>
                   <p>
-                    Stepper with step size and order control as well as dense ouput.
-                    Very good if high precision and dense ouput is required.
+                    Stepper with step size and order control as well as dense output.
+                    Very good if high precision and dense output is required.
                   </p>
                 </td>
 </tr>
@@ -1755,12 +1816,12 @@
 <tr>
 <td>
                   <p>
-                    Dense Ouput Rosenbrock 4
+                    Dense Output Rosenbrock 4
                   </p>
                 </td>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">rosenbrock4_dense_ouput</span></code>
+                    <code class="computeroutput"><span class="identifier">rosenbrock4_dense_output</span></code>
                   </p>
                 </td>
 <td>
@@ -1912,13 +1973,13 @@
         own steppers</a>
 </h4></div></div></div>
 <p>
-          Of course, one can write own steppers which are fully compatible with odeint.
-          They only have to fullfil one or several of the stepper <a class="link" href="../concepts.html" title="Concepts">Concepts</a>
+          Finally, one can also write new steppers which are fully compatible with
+          odeint. They only have to fulfill one or several of the stepper <a class="link" href="../concepts.html" title="Concepts">Concepts</a>
           of odeint.
         </p>
 <p>
           We will illustrate how to write your own stepper with the example of the
-          stochastic euler method. This method is suited to solve stochastic differential
+          stochastic Euler method. This method is suited to solve stochastic differential
           equations (SDEs). A SDE has the form
         </p>
 <p>
@@ -1932,8 +1993,8 @@
           the SDE is said to have additive noise. It is not possible to solve SDE
           with the classical solvers for ODEs since the noisy part of the SDE has
           to be scaled differently then the deterministic part with respect to the
-          time step. BUt there exist many solvers for SDEs. A classical and easy
-          method is the stochastic euler solver. It works by iterating
+          time step. But there exist many solvers for SDEs. A classical and easy
+          method is the stochastic Euler solver. It works by iterating
         </p>
 <p>
           <span class="emphasis"><em>x(t+&#916; t) = x(t) + &#916; t f(x(t)) + &#916; t<sup>1/2</sup> g(x) &#958;(t)</em></span>
@@ -1942,8 +2003,8 @@
           where &#958;(t) is an independent normal distributed random variable.
         </p>
 <p>
-          Now we will implement this method. We will call the stepper <code class="computeroutput"><span class="identifier">stochastic_euler</span></code>. It models the __stepper_concept.
-          The class definition looks like
+          Now we will implement this method. We will call the stepper <code class="computeroutput"><span class="identifier">stochastic_euler</span></code>. It models the <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
+          concept. For simplicity, we fix the state type to be an <code class="computeroutput"><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">N</span> <span class="special">&gt;</span></code> The class definition looks like
         </p>
 <p>
           
@@ -1968,7 +2029,7 @@
         </p>
 <p>
           The types are needed in order to fulfill the stepper concept. As internal
-          state and deriv type we use simple arrays in the stochastic euler, they
+          state and deriv type we use simple arrays in the stochastic Euler, they
           are needed for the temporaries. The stepper has the order one which is
           returned from the <code class="computeroutput"><span class="identifier">order</span><span class="special">()</span></code> function.
         </p>
@@ -2004,7 +2065,7 @@
 <p>
         </p>
 <p>
-          This is all. It is quite simple and the stochastic euler stepper implement
+          This is all. It is quite simple and the stochastic Euler stepper implement
           here is quite general. Of course it can be enhanced, for example
         </p>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
@@ -2034,7 +2095,7 @@
 <p>
           where &#958; is Gaussian white noise with standard deviation <span class="emphasis"><em>&#963;</em></span>.
           Implementing the Ornstein-Uhlenbeck process is quite simple. We need two
-          functions or funtors - one for the deterministic and one for the stochastic
+          functions or functors - one for the deterministic and one for the stochastic
           part:
         </p>
 <p>
@@ -2086,6 +2147,174 @@
           Note, how we have used the <code class="computeroutput"><span class="identifier">make_pair</span></code>
           function for the generation of the system function.
         </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_sandbox_numeric_odeint.odeint_in_detail.steppers.writing_own_runge_kutta_steppers"></a><a class="link" href="steppers.html#boost_sandbox_numeric_odeint.odeint_in_detail.steppers.writing_own_runge_kutta_steppers" title="Writing own Runge-Kutta steppers">Writing
+        own Runge-Kutta steppers</a>
+</h4></div></div></div>
+<p>
+          odeint provides a C++ template meta-algorithm for constructing arbitrary
+          Runge-Kutta schemes <sup>[<a name="id630040" href="#ftn.id630040" class="footnote">1</a>]</sup>. Some schemes are predefined in odeint, for example the classical
+          Runge-Kutta of fourth order, or the Runge-Kutta-Cash-Karp 54 and the Runge-Kutta-Fehlberg
+          78 method. Of course, you can use this meta algorithm to construct you
+          own solvers. This has the advantage that you can make full use of odeint's
+          algebra and operation system.
+        </p>
+<p>
+          Consider for example the method of Heun, defined by the following Butcher
+          tableau:
+        </p>
+<pre class="programlisting">c1 = 0
+
+c2 = 1/3, a21 = 1/3
+
+c3 = 2/3, a31 =  0 , a32 = 2/3
+
+          b1  = 1/4, b2  = 0  , b3 = 3/4
+</pre>
+<p>
+          Implementing this method is very easy. First you have to define the constants:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Value</span> <span class="special">=</span> <span class="keyword">double</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">heun_a1</span> <span class="special">:</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="identifier">Value</span> <span class="special">,</span> <span class="number">1</span> <span class="special">&gt;</span> <span class="special">{</span>
+    <span class="identifier">heun_a1</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="special">(*</span><span class="keyword">this</span><span class="special">)[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="keyword">static_cast</span><span class="special">&lt;</span> <span class="identifier">Value</span> <span class="special">&gt;(</span> <span class="number">1</span> <span class="special">)</span> <span class="special">/</span> <span class="keyword">static_cast</span><span class="special">&lt;</span> <span class="identifier">Value</span> <span class="special">&gt;(</span> <span class="number">3</span> <span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Value</span> <span class="special">=</span> <span class="keyword">double</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">heun_a2</span> <span class="special">:</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="identifier">Value</span> <span class="special">,</span> <span class="number">2</span> <span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="identifier">heun_a2</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="special">(*</span><span class="keyword">this</span><span class="special">)[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="keyword">static_cast</span><span class="special">&lt;</span> <span class="identifier">Value</span> <span class="special">&gt;(</span> <span class="number">0</span> <span class="special">);</span>
+        <span class="special">(*</span><span class="keyword">this</span><span class="special">)[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="keyword">static_cast</span><span class="special">&lt;</span> <span class="identifier">Value</span> <span class="special">&gt;(</span> <span class="number">2</span> <span class="special">)</span> <span class="special">/</span> <span class="keyword">static_cast</span><span class="special">&lt;</span> <span class="identifier">Value</span> <span class="special">&gt;(</span> <span class="number">3</span> <span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+
+<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Value</span> <span class="special">=</span> <span class="keyword">double</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">heun_b</span> <span class="special">:</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="identifier">Value</span> <span class="special">,</span> <span class="number">3</span> <span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="identifier">heun_b</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="special">(*</span><span class="keyword">this</span><span class="special">)[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">Value</span><span class="special">&gt;(</span> <span class="number">1</span> <span class="special">)</span> <span class="special">/</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">Value</span><span class="special">&gt;(</span> <span class="number">4</span> <span class="special">);</span>
+        <span class="special">(*</span><span class="keyword">this</span><span class="special">)[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">Value</span><span class="special">&gt;(</span> <span class="number">0</span> <span class="special">);</span>
+        <span class="special">(*</span><span class="keyword">this</span><span class="special">)[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">Value</span><span class="special">&gt;(</span> <span class="number">3</span> <span class="special">)</span> <span class="special">/</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">Value</span><span class="special">&gt;(</span> <span class="number">4</span> <span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Value</span> <span class="special">=</span> <span class="keyword">double</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">heun_c</span> <span class="special">:</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="identifier">Value</span> <span class="special">,</span> <span class="number">3</span> <span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="identifier">heun_c</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="special">(*</span><span class="keyword">this</span><span class="special">)[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="keyword">static_cast</span><span class="special">&lt;</span> <span class="identifier">Value</span> <span class="special">&gt;(</span> <span class="number">0</span> <span class="special">);</span>
+        <span class="special">(*</span><span class="keyword">this</span><span class="special">)[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="keyword">static_cast</span><span class="special">&lt;</span> <span class="identifier">Value</span> <span class="special">&gt;(</span> <span class="number">1</span> <span class="special">)</span> <span class="special">/</span> <span class="keyword">static_cast</span><span class="special">&lt;</span> <span class="identifier">Value</span> <span class="special">&gt;(</span> <span class="number">3</span> <span class="special">);</span>
+        <span class="special">(*</span><span class="keyword">this</span><span class="special">)[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="keyword">static_cast</span><span class="special">&lt;</span> <span class="identifier">Value</span> <span class="special">&gt;(</span> <span class="number">2</span> <span class="special">)</span> <span class="special">/</span> <span class="keyword">static_cast</span><span class="special">&lt;</span> <span class="identifier">Value</span> <span class="special">&gt;(</span> <span class="number">3</span> <span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+        </p>
+<p>
+          Ok, you are right, this looks rather ugly. Nevertheless, packing alle parameters
+          into a templatized class which is not immediately evaluated has the advantage
+          that you can change the <code class="computeroutput"><span class="identifier">value_type</span></code>
+          of your stepper to any type you like - presumably arbitrary precision types.
+          Of course, one could instantiate the coefficients directly
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="number">1</span> <span class="special">&gt;</span> <span class="identifier">heun_a1</span> <span class="special">=</span> <span class="special">{{</span> <span class="number">1.0</span> <span class="special">/</span> <span class="number">3.0</span> <span class="special">}};</span>
+<span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="number">2</span> <span class="special">&gt;</span> <span class="identifier">heun_a2</span> <span class="special">=</span> <span class="special">{{</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">2.0</span> <span class="special">/</span> <span class="number">3.0</span> <span class="special">}};</span>
+<span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="number">3</span> <span class="special">&gt;</span> <span class="identifier">heun_b</span> <span class="special">=</span> <span class="special">{{</span> <span class="number">1.0</span> <span class="special">/</span> <span class="number">4.0</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">3.0</span> <span class="special">/</span> <span class="number">4.0</span> <span class="special">}};</span>
+<span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="number">3</span> <span class="special">&gt;</span> <span class="identifier">heun_c</span> <span class="special">=</span> <span class="special">{{</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">/</span> <span class="number">3.0</span> <span class="special">,</span> <span class="number">2.0</span> <span class="special">/</span> <span class="number">3.0</span> <span class="special">}};</span>
+</pre>
+<p>
+        </p>
+<p>
+          But then you are nailed down to use doubles.
+        </p>
+<p>
+          Next, you need to define your stepper, note that the Heun method has 3
+          stages and produces approximations of order 3:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span>
+    <span class="keyword">class</span> <span class="identifier">State</span> <span class="special">,</span>
+    <span class="keyword">class</span> <span class="identifier">Value</span> <span class="special">=</span> <span class="keyword">double</span> <span class="special">,</span>
+    <span class="keyword">class</span> <span class="identifier">Deriv</span> <span class="special">=</span> <span class="identifier">State</span> <span class="special">,</span>
+    <span class="keyword">class</span> <span class="identifier">Time</span> <span class="special">=</span> <span class="identifier">Value</span> <span class="special">,</span>
+    <span class="keyword">class</span> <span class="identifier">Algebra</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">odeint</span><span class="special">::</span><span class="identifier">range_algebra</span> <span class="special">,</span>
+    <span class="keyword">class</span> <span class="identifier">Operations</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">odeint</span><span class="special">::</span><span class="identifier">default_operations</span> <span class="special">,</span>
+    <span class="keyword">class</span> <span class="identifier">Resizer</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">odeint</span><span class="special">::</span><span class="identifier">initially_resizer</span>
+<span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">heun</span> <span class="special">:</span> <span class="keyword">public</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">odeint</span><span class="special">::</span><span class="identifier">explicit_generic_rk</span><span class="special">&lt;</span> <span class="number">3</span> <span class="special">,</span> <span class="number">3</span> <span class="special">,</span> <span class="identifier">State</span> <span class="special">,</span> <span class="identifier">Value</span> <span class="special">,</span> <span class="identifier">Deriv</span> <span class="special">,</span> <span class="identifier">Time</span> <span class="special">,</span>
+					     <span class="identifier">Algebra</span> <span class="special">,</span> <span class="identifier">Operations</span> <span class="special">,</span> <span class="identifier">Resizer</span> <span class="special">&gt;</span>
+<span class="special">{</span>
+
+<span class="keyword">public</span><span class="special">:</span>
+
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">odeint</span><span class="special">::</span><span class="identifier">explicit_generic_rk</span><span class="special">&lt;</span> <span class="number">3</span> <span class="special">,</span> <span class="number">3</span> <span class="special">,</span> <span class="identifier">State</span> <span class="special">,</span> <span class="identifier">Value</span> <span class="special">,</span> <span class="identifier">Deriv</span> <span class="special">,</span> <span class="identifier">Time</span> <span class="special">,</span>
+							 <span class="identifier">Algebra</span> <span class="special">,</span> <span class="identifier">Operations</span> <span class="special">,</span> <span class="identifier">Resizer</span> <span class="special">&gt;</span> <span class="identifier">stepper_base_type</span><span class="special">;</span>
+
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">stepper_base_type</span><span class="special">::</span><span class="identifier">state_type</span> <span class="identifier">state_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">stepper_base_type</span><span class="special">::</span><span class="identifier">wrapped_state_type</span> <span class="identifier">wrapped_state_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">stepper_base_type</span><span class="special">::</span><span class="identifier">value_type</span> <span class="identifier">value_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">stepper_base_type</span><span class="special">::</span><span class="identifier">deriv_type</span> <span class="identifier">deriv_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">stepper_base_type</span><span class="special">::</span><span class="identifier">wrapped_deriv_type</span> <span class="identifier">wrapped_deriv_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">stepper_base_type</span><span class="special">::</span><span class="identifier">time_type</span> <span class="identifier">time_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">stepper_base_type</span><span class="special">::</span><span class="identifier">algebra_type</span> <span class="identifier">algebra_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">stepper_base_type</span><span class="special">::</span><span class="identifier">operations_type</span> <span class="identifier">operations_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">stepper_base_type</span><span class="special">::</span><span class="identifier">resizer_type</span> <span class="identifier">resizer_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">stepper_base_type</span><span class="special">::</span><span class="identifier">stepper_type</span> <span class="identifier">stepper_type</span><span class="special">;</span>
+
+    <span class="identifier">heun</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span><span class="identifier">algebra</span> <span class="special">=</span> <span class="identifier">algebra_type</span><span class="special">()</span> <span class="special">)</span>
+    <span class="special">:</span> <span class="identifier">stepper_base_type</span><span class="special">(</span>
+            <span class="identifier">fusion</span><span class="special">::</span><span class="identifier">make_vector</span><span class="special">(</span>
+		<span class="identifier">heun_a1</span><span class="special">&lt;</span><span class="identifier">Value</span><span class="special">&gt;()</span> <span class="special">,</span>
+		<span class="identifier">heun_a2</span><span class="special">&lt;</span><span class="identifier">Value</span><span class="special">&gt;()</span> <span class="special">)</span> <span class="special">,</span>
+            <span class="identifier">heun_b</span><span class="special">&lt;</span><span class="identifier">Value</span><span class="special">&gt;()</span> <span class="special">,</span> <span class="identifier">heun_c</span><span class="special">&lt;</span><span class="identifier">Value</span><span class="special">&gt;()</span> <span class="special">,</span> <span class="identifier">algebra</span> <span class="special">)</span>
+    <span class="special">{</span> <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+        </p>
+<p>
+          That's it. Now, we have a new stepper method and we can use it, for example
+          with the Lorenz system:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="number">3</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
+<span class="identifier">heun</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">h</span><span class="special">;</span>
+<span class="identifier">state_type</span> <span class="identifier">x</span> <span class="special">=</span> <span class="special">{{</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">}};</span>
+
+<span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">h</span> <span class="special">,</span> <span class="identifier">lorenz</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">100.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">,</span>
+   <span class="special">[](</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">_x</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">_t</span> <span class="special">)</span> <span class="special">{</span> 
+<span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">_t</span> <span class="special">&lt;&lt;</span> <span class="string">"\t"</span> <span class="special">&lt;&lt;</span> <span class="identifier">_x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="string">"\t"</span> <span class="special">&lt;&lt;</span> <span class="identifier">_x</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="string">"\t"</span> <span class="special">&lt;&lt;</span> <span class="identifier">_x</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
+   <span class="special">});</span>
+</pre>
+<p>
+        </p>
+</div>
+<div class="footnotes">
+<br><hr width="100" align="left">
+<div class="footnote"><p><sup>[<a name="ftn.id630040" href="#id630040" class="para">1</a>] </sup>
+            M. Mulansky, K. Ahnert, Template-Metaprogramming applied to numerical
+            problems, <a href="http://arxiv.org/abs/1110.3233" target="_top">arxiv:1110.3233</a>
+          </p></div>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

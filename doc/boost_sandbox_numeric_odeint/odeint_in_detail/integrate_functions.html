@@ -4,8 +4,8 @@
 <title>Integrate functions</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
-<link rel="up" href="../odeint_in_detail.html" title="Odeint in detail">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Sandbox.Numeric.Odeint">
+<link rel="up" href="../odeint_in_detail.html" title="odeint in detail">
 <link rel="prev" href="generation_functions.html" title="Generation functions">
 <link rel="next" href="state_types__algebras_and_operations.html" title="State types, algebras and operations">
 </head>
@@ -22,9 +22,10 @@
 </h3></div></div></div>
 <p>
         Integrate functions perform the time evolution of a given ODE from some starting
-        time <span class="emphasis"><em>t<sub>0</sub></em></span> to <span class="emphasis"><em>t<sub>1</sub></em></span> and a given start
-        state <span class="emphasis"><em>x<sub>0</sub></em></span> by subsequent calls of a given stepper's <code class="computeroutput"><span class="identifier">do_step</span></code> function. Additionally, the user
-        can provide an <a class="link" href="../concepts/observer.html" title="Observer">observer</a>
+        time <span class="emphasis"><em>t<sub>0</sub></em></span> to a given end time <span class="emphasis"><em>t<sub>1</sub></em></span>
+        and starting at state <span class="emphasis"><em>x<sub>0</sub></em></span> by subsequent calls of a given
+        stepper's <code class="computeroutput"><span class="identifier">do_step</span></code> function.
+        Additionally, the user can provide an <a class="link" href="../concepts/observer.html" title="Observer">observer</a>
         to analyze the state during time evolution. There are five different integrate
         functions which have different strategies on when to call the observer function
         during integration. All of the integrate functions except <code class="computeroutput"><span class="identifier">integrate_n_steps</span></code>
@@ -41,9 +42,10 @@
         observer calls</a>
       </h5>
 <p>
-        If observer calls at equdistant time intervals <span class="emphasis"><em>dt</em></span> are
+        If observer calls at equidistant time intervals <span class="emphasis"><em>dt</em></span> are
         needed, the <code class="computeroutput"><span class="identifier">integrate_const</span></code>
-        function should be used.
+        or <code class="computeroutput"><span class="identifier">integrate_n_steps</span></code> function
+        should be used. We start with explaining <code class="computeroutput"><span class="identifier">integrate_const</span></code>:
       </p>
 <p>
         <code class="computeroutput"><span class="identifier">integrate_const</span><span class="special">(</span>
@@ -65,7 +67,7 @@
         <span class="identifier">observer</span> <span class="special">)</span></code>
       </p>
 <p>
-        Integrates the ODE given by <code class="computeroutput"><span class="identifier">system</span></code>
+        These integrate the ODE given by <code class="computeroutput"><span class="identifier">system</span></code>
         with subsequent steps from <code class="computeroutput"><span class="identifier">stepper</span></code>.
         Integration start at <code class="computeroutput"><span class="identifier">t0</span></code> and
         <code class="computeroutput"><span class="identifier">x0</span></code> and ends at some <span class="emphasis"><em>t'
@@ -109,6 +111,45 @@
             dt</em></span>.
           </li>
 </ul></div>
+<a name="boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.integrate_a_given_number_of_steps"></a><h5>
+<a name="boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.integrate_a_given_number_of_steps-heading"></a>
+        <a class="link" href="integrate_functions.html#boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.integrate_a_given_number_of_steps">Integrate
+        a given number of steps</a>
+      </h5>
+<p>
+        This function is very similar to <code class="computeroutput"><span class="identifier">integrate_const</span></code>
+        above. The only difference is that it does not take the end time as parameter,
+        but rather the number of steps. The integration is then performed until the
+        time <code class="computeroutput"><span class="identifier">t0</span><span class="special">+</span><span class="identifier">n</span><span class="special">*</span><span class="identifier">dt</span></code>.
+      </p>
+<p>
+        <code class="computeroutput"><span class="identifier">integrate_n_steps</span><span class="special">(</span>
+        <span class="identifier">stepper</span> <span class="special">,</span>
+        <span class="identifier">system</span> <span class="special">,</span>
+        <span class="identifier">x0</span> <span class="special">,</span>
+        <span class="identifier">t0</span> <span class="special">,</span>
+        <span class="identifier">dt</span> <span class="special">,</span>
+        <span class="identifier">n</span> <span class="special">)</span></code>
+      </p>
+<p>
+        <code class="computeroutput"><span class="identifier">integrate_n_steps</span><span class="special">(</span>
+        <span class="identifier">stepper</span> <span class="special">,</span>
+        <span class="identifier">system</span> <span class="special">,</span>
+        <span class="identifier">x0</span> <span class="special">,</span>
+        <span class="identifier">t0</span> <span class="special">,</span>
+        <span class="identifier">dt</span> <span class="special">,</span>
+        <span class="identifier">n</span> <span class="special">,</span> <span class="identifier">observer</span> <span class="special">)</span></code>
+      </p>
+<p>
+        Integrates the ODE given by <code class="computeroutput"><span class="identifier">system</span></code>
+        with subsequent steps from <code class="computeroutput"><span class="identifier">stepper</span></code>
+        starting at <span class="emphasis"><em>x<sub>0</sub></em></span> and <span class="emphasis"><em>t<sub>0</sub></em></span>. If provided,
+        <code class="computeroutput"><span class="identifier">observer</span></code> is called after
+        every step and at the beginning with <code class="computeroutput"><span class="identifier">t0</span></code>,
+        similar as above. The approximate result for <span class="emphasis"><em>x( t<sub>0</sub> + n dt )</em></span>
+        is stored in <code class="computeroutput"><span class="identifier">x0</span></code>. This function
+        returns the end time <code class="computeroutput"><span class="identifier">t0</span> <span class="special">+</span> <span class="identifier">n</span><span class="special">*</span><span class="identifier">dt</span></code>.
+      </p>
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_each_step"></a><h5>
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_each_step-heading"></a>
         <a class="link" href="integrate_functions.html#boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_each_step">Observer
@@ -147,9 +188,10 @@
         <code class="computeroutput"><span class="identifier">x0</span></code> and ends at <span class="emphasis"><em>t<sub>1</sub></em></span>.
         <code class="computeroutput"><span class="identifier">x0</span></code> is changed to the approximative
         solution <span class="emphasis"><em>x(t<sub>1</sub>)</em></span> at the end of integration. If provided,
-        the <code class="computeroutput"><span class="identifier">observer</span></code> is after each
-        step of the provided stepper (and before the first step at <code class="computeroutput"><span class="identifier">t0</span></code>). <code class="computeroutput"><span class="identifier">integrate_adaptive</span></code>
-        returns the number of steps performed during the integration.
+        the <code class="computeroutput"><span class="identifier">observer</span></code> is called after
+        each step (and before the first step at <code class="computeroutput"><span class="identifier">t0</span></code>).
+        <code class="computeroutput"><span class="identifier">integrate_adaptive</span></code> returns
+        the number of steps performed during the integration.
       </p>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
@@ -214,7 +256,7 @@
         Integrates the ODE given by <code class="computeroutput"><span class="identifier">system</span></code>
         with subsequent steps from <code class="computeroutput"><span class="identifier">stepper</span></code>.
         Integration starts at <code class="computeroutput"><span class="special">*</span><span class="identifier">times_start</span></code>
-        and ends exactly <code class="computeroutput"><span class="special">*(</span><span class="identifier">times_end</span><span class="special">-</span><span class="number">1</span><span class="special">)</span></code>.
+        and ends exactly at <code class="computeroutput"><span class="special">*(</span><span class="identifier">times_end</span><span class="special">-</span><span class="number">1</span><span class="special">)</span></code>.
         <code class="computeroutput"><span class="identifier">x0</span></code> contains the approximate
         solution at the end point of integration. This function requires an observer
         which is invoked at the subsequent times <code class="computeroutput"><span class="special">*</span><span class="identifier">times_start</span><span class="special">++</span></code>
@@ -254,63 +296,6 @@
             <span class="emphasis"><em>x(t)</em></span> at the time points from the sequence.
           </li>
 </ul></div>
-<a name="boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.integrate_a_given_number_of_steps"></a><h5>
-<a name="boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.integrate_a_given_number_of_steps-heading"></a>
-        <a class="link" href="integrate_functions.html#boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.integrate_a_given_number_of_steps">Integrate
-        a given number of steps</a>
-      </h5>
-<p>
-        If exactly <code class="computeroutput"><span class="identifier">n</span></code> steps with fixed
-        step size <code class="computeroutput"><span class="identifier">dt</span></code> should be executed
-        the <code class="computeroutput"><span class="identifier">integrate_n_steps</span></code> function
-        should be used.
-      </p>
-<div class="warning"><table border="0" summary="Warning">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../images/warning.png"></td>
-<th align="left">Warning</th>
-</tr>
-<tr><td align="left" valign="top"><p>
-          This function works only with steppers fullfilling the <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
-          or <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
-          Stepper</a> concept! Providing a <a class="link" href="../concepts/controlled_stepper.html" title="Controlled Stepper">Controlled
-          Stepper</a> or __dense_out_stepper results in a compilationerror.
-        </p></td></tr>
-</table></div>
-<p>
-        <code class="computeroutput"><span class="identifier">integrate_n_steps</span><span class="special">(</span>
-        <span class="identifier">stepper</span> <span class="special">,</span>
-        <span class="identifier">system</span> <span class="special">,</span>
-        <span class="identifier">x0</span> <span class="special">,</span>
-        <span class="identifier">t0</span> <span class="special">,</span>
-        <span class="identifier">dt</span> <span class="special">,</span>
-        <span class="identifier">n</span> <span class="special">)</span></code>
-      </p>
-<p>
-        <code class="computeroutput"><span class="identifier">integrate_n_steps</span><span class="special">(</span>
-        <span class="identifier">stepper</span> <span class="special">,</span>
-        <span class="identifier">system</span> <span class="special">,</span>
-        <span class="identifier">x0</span> <span class="special">,</span>
-        <span class="identifier">t0</span> <span class="special">,</span>
-        <span class="identifier">dt</span> <span class="special">,</span>
-        <span class="identifier">n</span> <span class="special">,</span> <span class="identifier">observer</span> <span class="special">)</span></code>
-      </p>
-<p>
-        Integrates the ODE given by <code class="computeroutput"><span class="identifier">system</span></code>
-        with subsequent steps from <code class="computeroutput"><span class="identifier">stepper</span></code>
-        starting at <span class="emphasis"><em>x<sub>0</sub></em></span> and <span class="emphasis"><em>t<sub>0</sub></em></span>. If provided,
-        <code class="computeroutput"><span class="identifier">observer</span></code> is called after
-        every step and at the beginning with <code class="computeroutput"><span class="identifier">t0</span></code>.
-        This function works only with steppers fullfilling the <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
-        or <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
-        Stepper</a> concept! It performs exactly <code class="computeroutput"><span class="identifier">n</span></code>
-        steps with fixed step size <code class="computeroutput"><span class="identifier">dt</span></code>
-        ending at <code class="computeroutput"><span class="identifier">t0</span> <span class="special">+</span>
-        <span class="identifier">n</span><span class="special">*</span><span class="identifier">dt</span></code>. The approximate result for <span class="emphasis"><em>x(
-        t<sub>0</sub> + n dt )</em></span> is stored in <code class="computeroutput"><span class="identifier">x0</span></code>.
-        This function returns the end time <code class="computeroutput"><span class="identifier">t0</span>
-        <span class="special">+</span> <span class="identifier">n</span><span class="special">*</span><span class="identifier">dt</span></code>.
-      </p>
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.convenience_integrate_function"></a><h5>
 <a name="boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.convenience_integrate_function-heading"></a>
         <a class="link" href="integrate_functions.html#boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions.convenience_integrate_function">Convenience
@@ -319,7 +304,7 @@
 <p>
         Additionally to the sophisticated integrate function above odeint also provides
         a simple <code class="computeroutput"><span class="identifier">integrate</span></code> routine
-        which uses a dense ouput stepper based on <code class="computeroutput"><span class="identifier">runge_kutta_dopri5</span></code>
+        which uses a dense output stepper based on <code class="computeroutput"><span class="identifier">runge_kutta_dopri5</span></code>
         with standard error bounds <span class="emphasis"><em>10<sup>-6</sup></em></span> for the steps.
       </p>
 <p>

@@ -4,8 +4,8 @@
 <title>Using boost::ref</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
-<link rel="up" href="../odeint_in_detail.html" title="Odeint in detail">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Sandbox.Numeric.Odeint">
+<link rel="up" href="../odeint_in_detail.html" title="odeint in detail">
 <link rel="prev" href="state_types__algebras_and_operations.html" title="State types, algebras and operations">
 <link rel="next" href="using_boost__range.html" title="Using boost::range">
 </head>
@@ -23,7 +23,7 @@
 <p>
         In odeint all system functions and observers are passed by value. For example,
         if you call a <code class="computeroutput"><span class="identifier">do_step</span></code> method
-        of a particular stepper or the integration functions your system and your
+        of a particular stepper or the integration functions, your system and your
         stepper will be passed by value:
       </p>
 <p>
@@ -34,16 +34,16 @@
 <p>
       </p>
 <p>
-        This behaviour is suitable for most systems, especially if your system only
-        does not contain any data or only a few parameters. However, in some cases
-        you might pass some large amount of data with you system function and passing
-        them by value is not desired since the data will be copied.
+        This behavior is suitable for most systems, especially if your system does
+        not contain any data or only a few parameters. However, in some cases you
+        might contain some large amount of data with you system function and passing
+        them by value is not desired since the data would be copied.
       </p>
 <p>
         In such cases you can easily use <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span></code> (and
         its relative <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">cref</span></code>) which passes its argument by reference
-        (or const reference). odeint will unpack the arguments and no copying at
-        all of you system will take place:
+        (or constant reference). odeint will unpack the arguments and no copying
+        at all of your system object will take place:
       </p>
 <p>
         
@@ -53,8 +53,18 @@
 <p>
       </p>
 <p>
-        The same mechanism can for the observers in the integrate functions.
+        The same mechanism can be used for the observers in the integrate functions.
       </p>
+<div class="tip"><table border="0" summary="Tip">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="../../images/tip.png"></td>
+<th align="left">Tip</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          If you are using C++11 you can also use <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">ref</span></code>
+          and <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">cref</span></code>
+        </p></td></tr>
+</table></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

@@ -4,7 +4,7 @@
 <title>Overview</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Sandbox.Numeric.Odeint">
 <link rel="up" href="../getting_started.html" title="Getting started">
 <link rel="prev" href="../getting_started.html" title="Getting started">
 <link rel="next" href="usage__compilation__headers.html" title="Usage, Compilation, Headers">
@@ -25,18 +25,31 @@
 <th align="left">Caution</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-          Boost.Odeint is not an official boost library!
+          Boost.Numeric.Odeint is not an official boost library!
         </p></td></tr>
 </table></div>
 <p>
-        Odeint is a library for solving initial value problems (IVP) of ordinary
+        odeint is a library for solving initial value problems (IVP) of ordinary
         differential equations. Mathematically, these problems are formulated as
-        follows: <span class="emphasis"><em>x'(t) = f(x,t)</em></span>, <span class="emphasis"><em>x(0) = x0</em></span>.
+        follows:
+      </p>
+<p>
+        <span class="emphasis"><em>x'(t) = f(x,t)</em></span>, <span class="emphasis"><em>x(0) = x0</em></span>.
+      </p>
+<p>
         <span class="emphasis"><em>x</em></span> and <span class="emphasis"><em>f</em></span> can be vectors and the
-        solution is some function <span class="emphasis"><em>x(t)</em></span> fullfilling both equations
+        solution is some function <span class="emphasis"><em>x(t)</em></span> fulfilling both equations
         above. In the following we will refer to <span class="emphasis"><em>x'(t)</em></span> also
         <code class="computeroutput"><span class="identifier">dxdt</span></code> which is also our notation
         for the derivative in the source code.
+      </p>
+<p>
+        Ordinary differential equations occur nearly everywhere in natural sciences.
+        For example, the whole Newtonian mechanics are described by second order
+        differential equations. Be sure, you will find them in every discipline.
+        They also occur if partial differential equations (PDEs) are discretized
+        in one coordinate. Then, a system of coupled ordinary differential occurs,
+        sometimes also referred as lattices ODEs.
       </p>
 <p>
         Numerical approximations for the solution <span class="emphasis"><em>x(t)</em></span> are calculated
@@ -388,7 +401,7 @@
               </td>
 <td>
                 <p>
-                  Standard method with error control and dense ouput, to be used
+                  Standard method with error control and dense output, to be used
                   in controlled_error_stepper and in dense_output_controlled_explicit_fsal.
                 </p>
               </td>
@@ -676,9 +689,9 @@
               </td>
 <td>
                 <p>
-                  Dense ouput for <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
+                  Dense output for <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
                   and <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
-                  Stepper</a> from above if they provide dense ouput functionality
+                  Stepper</a> from above if they provide dense output functionality
                   (like <code class="computeroutput"><span class="identifier">euler</span></code> and
                   <code class="computeroutput"><span class="identifier">runge_kutta_dopri5</span></code>).
                   Order depends on the given stepper.
@@ -778,8 +791,8 @@
               </td>
 <td>
                 <p>
-                  Stepper with step size and order control as well as dense ouput.
-                  Very good if high precision and dense ouput is required.
+                  Stepper with step size and order control as well as dense output.
+                  Very good if high precision and dense output is required.
                 </p>
               </td>
 </tr>
@@ -936,12 +949,12 @@
 <tr>
 <td>
                 <p>
-                  Dense Ouput Rosenbrock 4
+                  Dense Output Rosenbrock 4
                 </p>
               </td>
 <td>
                 <p>
-                  <code class="computeroutput"><span class="identifier">rosenbrock4_dense_ouput</span></code>
+                  <code class="computeroutput"><span class="identifier">rosenbrock4_dense_output</span></code>
                 </p>
               </td>
 <td>
@@ -1084,14 +1097,7 @@
 </tbody>
 </table></div>
 </div>
-<br class="table-break"><p>
-        Ordinary differential equations occur nearly everywhere in natural sciences.
-        For example, the whole Newtonian mechanics are described by second order
-        differential equations. Be sure, you will find them in every discipline.
-        They also occur if partial differential equations (PDEs) are discretized
-        in one coordinate. Then, a system of coupled ordinary differential occurs,
-        sometimes also refered as lattices ODEs.
-      </p>
+<br class="table-break">
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

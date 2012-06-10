@@ -4,7 +4,7 @@
 <title>Chaotic systems and Lyapunov exponents</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;boost.sandbox.numeric.odeint">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Sandbox.Numeric.Odeint">
 <link rel="up" href="../tutorial.html" title="Tutorial">
 <link rel="prev" href="solar_system.html" title="Solar system">
 <link rel="next" href="stiff_systems.html" title="Stiff systems">
@@ -21,39 +21,39 @@
       systems and Lyapunov exponents</a>
 </h3></div></div></div>
 <p>
-        Odeint can easily be used to investigate the properties of chaotic deterministic
+        odeint can easily be used to investigate the properties of chaotic deterministic
         systems. In mathematical terms chaotic refers to an exponential growth of
-        perturbations. In order to observe this exponential growth one usually solves
-        the equations for the tangential dynamics which is again an ordinary differential
-        equation. These equations are linear but time dependent and can be obtained
-        via
+        perturbations <span class="emphasis"><em>&#948; x</em></span>. In order to observe this exponential
+        growth one usually solves the equations for the tangential dynamics which
+        is again an ordinary differential equation. These equations are linear but
+        time dependent and can be obtained via
       </p>
 <p>
         <span class="emphasis"><em>d &#948; x / dt = J(x) &#948; x</em></span>
       </p>
 <p>
         where <span class="emphasis"><em>J</em></span> is the Jacobian of the system under consideration.
-        <span class="emphasis"><em>&#948; x</em></span> cam also be interpreted as a perturbation of the original
+        <span class="emphasis"><em>&#948; x</em></span> can also be interpreted as a perturbation of the original
         system. In principle <span class="emphasis"><em>n</em></span> of these perturbations exit,
         they form a hypercube and evolve in the time. The Lyapunov exponents are
         then defined as logarithmic growth rates of the perturbations. If one Lyapunov
-        exponent is larger then zero nearby trajectories divergy exponentially hence
+        exponent is larger then zero nearby trajectories diverge exponentially hence
         they are chaotic. If the largest Lyapunov exponent is zero one is usually
         faced with periodic motion. In the case of a largest Lyapunov exponent smaller
-        then zero the converges the a fixed point. More informations about Lyapunov
+        then zero the converges the a fixed point. More information's about Lyapunov
         exponents and nonlinear dynamical systems can be found in many textbooks,
-        see for example .
+        see for example: E. Ott "Chaos is Dynamical Systems", Cambridge.
       </p>
 <p>
         To calculate the Lyapunov exponents numerically one usually solves the equations
-        of motion for <span class="emphasis"><em>n</em></span> perturbations und orthonormalized them
+        of motion for <span class="emphasis"><em>n</em></span> perturbations and orthonormalizes them
         every <span class="emphasis"><em>k</em></span> steps. The Lyapunov exponent is the average
         the logarithm of the stretching factor of each perturbation.
       </p>
 <p>
         To demonstrate how one can use odeint to determine the Lyapunov exponents
         we choose the Lorenz system. It is one of the most studied dynamical systems
-        in the nonlinear dynamics community. For the standard parameters is possesses
+        in the nonlinear dynamics community. For the standard parameters it possesses
         a strange attractor with non-integer dimension. The Lyapunov exponents take
         values of approximately 0.9, 0 and -12.
       </p>
@@ -67,7 +67,7 @@
 <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">R</span> <span class="special">=</span> <span class="number">28.0</span><span class="special">;</span>
 <span class="keyword">const</span> <span class="keyword">double</span> <span class="identifier">b</span> <span class="special">=</span> <span class="number">8.0</span> <span class="special">/</span> <span class="number">3.0</span><span class="special">;</span>
 
-<span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">tr1</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="number">3</span> <span class="special">&gt;</span> <span class="identifier">lorenz_state_type</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="number">3</span> <span class="special">&gt;</span> <span class="identifier">lorenz_state_type</span><span class="special">;</span>
 
 <span class="keyword">void</span> <span class="identifier">lorenz</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">lorenz_state_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">lorenz_state_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span>
 <span class="special">{</span>
@@ -77,11 +77,11 @@
 <span class="special">}</span>
 </pre>
 <p>
-        We need also need to integrate the set of the perturbations. This is done
-        in parallel to the original system, hence within one system function. Of
-        course, we want to use the above defintion of the Lorenz system, hence the
-        definition of the system function including the Lorenz system itself and
-        the perturbation could look like:
+        We need also to integrate the set of the perturbations. This is done in parallel
+        to the original system, hence within one system function. Of course, we want
+        to use the above definition of the Lorenz system, hence the definition of
+        the system function including the Lorenz system itself and the perturbation
+        could look like:
       </p>
 <p>
         
@@ -164,10 +164,11 @@
 <p>
         The problem is now, that <code class="computeroutput"><span class="identifier">x</span></code>
         is the full state containing also the perturbations and <code class="computeroutput"><span class="identifier">integrate_n_steps</span></code>
-        does not know that it should only use 3 element. In detail, odeint and its
-        steppers determine the length of the system under consideration be determing
-        the length of the state. In the classical solvers from the problem was solved
-        by pointer to the state and an appropriate length, something similar to
+        does not know that it should only use 3 elements. In detail, odeint and its
+        steppers determine the length of the system under consideration by determining
+        the length of the state. In the classical solvers, e.g. from Numerical Recipes,
+        the problem was solved by pointer to the state and an appropriate length,
+        something similar to
       </p>
 <p>
         
@@ -208,7 +209,7 @@
       </p>
 <p>
         This is in principle all. Now, we only have to call <code class="computeroutput"><span class="identifier">integrate_n_steps</span></code>
-        with an suited range:
+        with a range including only the first 3 components of <span class="emphasis"><em>x</em></span>:
       </p>
 <p>
         
@@ -225,8 +226,8 @@
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
             We initialize the perturbations. They are stored linearly behind the
-            state of the Lorenz system. The perturbation are initialized such that
-            they fullfill <span class="emphasis"><em>&lt; p <sub>&#8203;i</sub> , p<sub>&#8203;j</sub> &gt; = &#948; <sub>&#8203;ij</sub> </em></span> where <span class="emphasis"><em>&lt;,&gt;</em></span>
+            state of the Lorenz system. The perturbations are initialized such that
+            they fulfill <span class="emphasis"><em>&lt; p <sub>&#8203;i</sub> , p<sub>&#8203;j</sub> &gt; = &#948; <sub>&#8203;ij</sub> </em></span> where <span class="emphasis"><em>&lt;,&gt;</em></span>
             is the classical scalar product and <span class="emphasis"><em>&#948; <sub>&#8203;ij</sub></em></span> is the Kronecker
             symbol.
           </li>
