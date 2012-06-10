@@ -42,7 +42,7 @@ typedef double value_type;
 
 
 //[ thrust_phase_chain_system
-//change this to host_vector< ... > of you want to run on CPU
+//change this to host_vector< ... > if you want to run on CPU
 typedef thrust::device_vector< value_type > state_type;
 typedef thrust::device_vector< size_t > index_vector_type;
 //typedef thrust::host_vector< value_type > state_type;

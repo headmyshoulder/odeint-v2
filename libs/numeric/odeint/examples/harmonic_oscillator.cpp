@@ -146,21 +146,24 @@ int main(int /* argc */ , char** /* argv */ )
     {
     //[integrate_adapt_full
     double abs_err = 1.0e-10 , rel_err = 1.0e-6 , a_x = 1.0 , a_dxdt = 1.0;
-    controlled_stepper_type controlled_stepper( default_error_checker< double >( abs_err , rel_err , a_x , a_dxdt ) );
+    controlled_stepper_type controlled_stepper( 
+        default_error_checker< double >( abs_err , rel_err , a_x , a_dxdt ) );
     integrate_adaptive( controlled_stepper , harmonic_oscillator , x , 0.0 , 10.0 , 0.01 );
     //]
     }
 
 
     //[integrate_adapt_make_controlled
-    integrate_adaptive( make_controlled< error_stepper_type >( 1.0e-10 , 1.0e-6 ) , harmonic_oscillator , x , 0.0 , 10.0 , 0.01 );
+    integrate_adaptive( make_controlled< error_stepper_type >( 1.0e-10 , 1.0e-6 ) , 
+                        harmonic_oscillator , x , 0.0 , 10.0 , 0.01 );
     //]
 
 
 
 
     //[integrate_adapt_make_controlled_alternative
-    integrate_adaptive( make_controlled( 1.0e-10 , 1.0e-6 , error_stepper_type() ) , harmonic_oscillator , x , 0.0 , 10.0 , 0.01 );
+    integrate_adaptive( make_controlled( 1.0e-10 , 1.0e-6 , error_stepper_type() ) , 
+                        harmonic_oscillator , x , 0.0 , 10.0 , 0.01 );
     //]
 
 }

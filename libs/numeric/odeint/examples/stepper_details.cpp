@@ -19,9 +19,12 @@ const size_t N = 3;
 
 typedef boost::array< double , N > state_type;
 
-void sys( const state_type & /*x*/ , state_type &/*dxdt*/ , const double /*t*/ )
+//[ system_function_structure
+void sys( const state_type & /*x*/ , state_type & /*dxdt*/ , const double /*t*/ )
 {
+    // ...
 }
+//]
 
 void sys1( const state_type &/*x*/ , state_type &/*dxdt*/ , const double /*t*/ )
 {
@@ -74,12 +77,12 @@ int main( int argc , char **argv )
 
     // Explicit stepper example
     {
-        double t , dt;
+        double t( 0.0 ) , dt( 0.1 );
         state_type in , out , dxdtin , inout;
         //[ explicit_stepper_detail_example
-        runge_kutta4< state_type > rk;
+-        runge_kutta4< state_type > rk;
         rk.do_step( sys1 , inout , t , dt );               // In-place transformation of inout
-        rk.do_step( sys2 , inout , t , dt );               // Ok
+        rk.do_step( sys2 , inout , t , dt );               // call with different system: Ok
         rk.do_step( sys1 , in , t , out , dt );            // Out-of-place transformation
         rk.do_step( sys1 , inout , dxdtin , t , dt );      // In-place tranformation of inout
         rk.do_step( sys1 , in , dxdtin , t , out , dt );   // Out-of-place transformation
@@ -90,7 +93,7 @@ int main( int argc , char **argv )
 
     // FSAL stepper example
     {
-        double t , dt;
+        double t( 0.0 ) , dt( 0.1 );
         state_type in , in2 , in3 , out , dxdtin , dxdtout , inout , dxdtinout;
         //[ fsal_stepper_detail_example
         runge_kutta_dopri5< state_type > rk;
@@ -111,7 +114,7 @@ int main( int argc , char **argv )
 
     // Symplectic harmonic oscillator example
     {
-        double t , dt;
+        double t( 0.0 ) , dt( 0.1 );
         //[ symplectic_stepper_detail_example
         pair< vector_type , vector_type > x;
         x.first[0] = 1.0; x.second[0] = 0.0;

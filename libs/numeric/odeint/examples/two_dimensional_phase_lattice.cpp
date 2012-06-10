@@ -23,9 +23,6 @@
 
 #include <boost/numeric/odeint.hpp>
 
-#include <boost/numeric/odeint/util/ublas_wrapper.hpp>
-
-
 using namespace std;
 using namespace boost::numeric::odeint;
 

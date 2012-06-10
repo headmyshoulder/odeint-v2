@@ -2,7 +2,7 @@
 
 [import ../examples/generation_functions.cpp]
 
-In the tutorial we have learned how we can use the generation functions `make_controlled` and `make_dense_output` to create controlled and dense output stepper from a simple stepper or an error stepper. The syntax of these two functions is very simple:
+In the __tutorial we have learned how we can use the generation functions `make_controlled` and `make_dense_output` to create controlled and dense output stepper from a simple stepper or an error stepper. The syntax of these two functions is very simple:
 
 [generation_functions_syntax_auto]
 
@@ -14,7 +14,7 @@ To use your own steppers with the `make_controlled` or `make_dense_output` you n
 
 [generation_functions_get_controller]
 
-The second one is a factory class `boost::numeric::odeint::controller_factory` which the constructs the controller from the tolerances and the stepper. In our dummy implementation this class is
+The second one is a factory class `boost::numeric::odeint::controller_factory` which constructs the controller from the tolerances and the stepper. In our dummy implementation this class is
 
 [generation_functions_controller_factory]
 

@@ -2,14 +2,17 @@
 
 [import ../examples/stiff_system.cpp]
 
-An important class of ordinary differential equations are so called stiff system which are characterized by two or more time scales of different order. Examples of such systems are found in chemical systems where reaction rates of individual sub-reaction might differ over large ranges.
+An important class of ordinary differential equations are so called stiff
+system which are characterized by two or more time scales of different
+order. Examples of such systems are found in chemical systems where reaction
+rates of individual sub-reaction might differ over large ranges, for example:
 
 ['d S[subl 1] / dt = - 101 S[subl 2] - 100 S[subl 1]]
 
 ['d S[subl 2] / dt = S[subl 1]]
 
 
-To solve stiff systems numerically the Jacobian
+To solve stiff systems efficiently using numerics the Jacobian
 
 ['J = d f[subl i] / d x[subl j]]
 
@@ -17,11 +20,17 @@ is needed. Here is the definition of the above example
 
 [stiff_system_definition]
 
-The state type has to be a `ublas::vector` and the matrix type must by a `ublas::matrix` since the stiff integrator only accepts these types. With a little trick you can simply make this functions valid for other state and matrix types, just templatize the `operator()`:
+The state type has to be a `ublas::vector` and the matrix type must by a
+`ublas::matrix` since the stiff integrator only accepts these types. 
+However, you might want use non-stiff intgrators on this system, too - we will
+do so later for demonstration. Therefore we want to use the same function also
+with other state_types, realized by templatizing the `operator()`:
 
 [stiff_system_alternative_definition]
 
-Now you can use `stiff_system` in combination with `std::vector` or `std::tr1::array`. In the example the explicit time derivative of ['f(x,t)] is introduced separately in the Jacobian. If ['df / dt = 0] simply fill `dfdt` with zeros.
+Now you can use `stiff_system` in combination with `std::vector` or
+`boost::array`. In the example the explicit time derivative of ['f(x,t)] is
+introduced separately in the Jacobian. If ['df / dt = 0] simply fill `dfdt` with zeros.
 
 A well know solver for stiff systems is the so called Rosenbrock method. It has a step size control and dense output facilities and can be used like all the other stepper:
 
@@ -31,7 +40,7 @@ During the integration 71 steps have been done. Comparing to a classical Runge-K
 
 [integrate_stiff_system_alternative]
 
-Note, that we have used __boost_phoenix a great functional programming library to create and compose the observer.
+Note, that we have used __boost_phoenix, a great functional programming library to create and compose the observer.
 
 The full example can be found here: [github_link libs/numeric/odeint/examples/stiff_system.cpp stiff_system.cpp]
 

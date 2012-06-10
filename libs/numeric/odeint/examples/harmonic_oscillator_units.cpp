@@ -1,10 +1,16 @@
 #include <iostream>
 #include <vector>
 
+
+/* WARNING: Compilation in debug mode might consume enormous memory 
+   (e.g. ~2GB on gcc 4.4 ) 
+*/
+
+// first increase fusion macro variables (now done by odeint itself)
+//#define BOOST_FUSION_INVOKE_MAX_ARITY 15
+//#define BOOST_RESULT_OF_NUM_ARGS 15
+
 //[ units_define_basic_quantities
-// first increase fusion macro variables
-#define BOOST_FUSION_INVOKE_MAX_ARITY 15
-#define BOOST_RESULT_OF_NUM_ARGS 15
 
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/algebra/fusion_algebra.hpp>

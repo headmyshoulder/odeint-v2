@@ -1,8 +1,17 @@
 [section Using Cuda and Thrust]
 
-Modern graphic cards (graphic processing units - GPUs) can be used to speed up the performance of time consuming algorithms by means of massive parallelization. They are designed to execute many operations in parallel. odeint can utilize the power of GPUs by means of CUDA and __thrust, which is a STL-like interface for the native CUDA API.
+Modern graphic cards (graphic processing units - GPUs) can be used to speed up
+the performance of time consuming algorithms by means of massive
+parallelization. They are designed to execute many operations in
+parallel. odeint can utilize the power of GPUs by means of CUDA and __thrust,
+which is a STL-like interface for the native CUDA API.
 
-To use odeint with CUDA a few points have to be taken into account. First of all, the problem has to be well chosen. It makes absolutely no sense to try to parallelize the code for a three dimensional system, it is simply to small and not worth the effort. One single function call (kernel execution) on the GPU is slow but you can do the operation on a huge set of data with only one call. We have experienced that the vector size over which is parallelized should be of the order of ['10[super 6]] to make full use of the GPU. Secondly you have to use __thrust's functions and functors when implementing the rhs the ODE. This might by tricky since it involves some kind of functional programming knowledge.
+[important Thrust also supports parallelization using OpenMP. You can switch
+between CUDA-parallelization and OpenMP-parallelization by a simple compiler
+switch. Hence, this also provides an easy way to get basic OpenMP
+parallelization into odeint.]
+
+To use odeint with CUDA a few points have to be taken into account. First of all, the problem has to be well chosen. It makes absolutely no sense to try to parallelize the code for a three dimensional system, it is simply to small and not worth the effort. One single function call (kernel execution) on the GPU is slow but you can do the operation on a huge set of data with only one call. We have experienced that the vector size over which is parallelized should be of the order of ['10[super 6]] to make full use of the GPU. Secondly, you have to use __thrust's algorithms and functors when implementing the rhs the ODE. This might be tricky since it involves some kind of functional programming knowledge.
 
 Typical applications for CUDA and odeint are large systems, like lattices or discretizations of PDE, and parameter studies. We introduce now three examples which show how the power of GPUs can be used in combination with odeint.
 
@@ -12,7 +21,14 @@ Typical applications for CUDA and odeint are large systems, like lattices or dis
 
 [import ../examples/thrust/phase_oscillator_ensemble.cu]
 
-The first example is the phase oscillator ensemble from the previous section. It has a phase transition at ['__epsilon = 2] in the limit of infinite numbers of oscillators ['N]. In the case of finite ['N] this transition is smeared out but still clearly visible.
+The first example is the phase oscillator ensemble from the previous
+section:
+
+[' d__phi[subl k] / dt = __omega[subl k] + __epsilon / N __Sigma[subl j] sin( __phi[subl j] - __phi[subl k] ).]
+
+It has a phase transition at ['__epsilon = 2] in the limit of
+infinite numbers of oscillators ['N]. In the case of finite ['N] this
+transition is smeared out but still clearly visible.
 
 __thrust and Cuda are perfectly suited for such kinds of problems where one needs a large number of particles (oscillators). We start by defining the state type which is a `thrust::device_vector`. The content of this vector lives on the GPU. If you are not familiar with this we recommend reading the ['Getting started] section on the __thrust website.
 
@@ -57,7 +73,7 @@ The system function is defined via
 
 This class is used within the `do_step` and `integrate` method. It defines a member structure `sys_functor` for the r.h.s. of each individual oscillator and the `operator()` for the use in the steppers and integrators of odeint. The functor computes first the mean field of ['__phi[subl k]] and secondly calculates the whole r.h.s. of the ODE using this mean field. Note, how nicely `thrust::tuple` and `thrust::zip_iterator` play together.
 
-Now, we are ready to put everything together. All we have to do for making odeint ready for using the GPU is to parametrize the stepper with the appropriate thrust algebra:
+Now, we are ready to put everything together. All we have to do for making odeint ready for using the GPU is to parametrize the stepper with the appropriate thrust algebra/operations:
 
 [thrust_phase_ensemble_define_rk4]
 
@@ -70,7 +86,7 @@ Then, it is straightforward to integrate the phase ensemble by creating an insta
 [thrust_phase_ensemble_system_instance]
 [thrust_phase_ensemble_integration]
 
-We have to use `boost::ref` here in order to pass the rhs class as reference and not by value. This ensure that the natural frequencies of each oscillator are not copied when calling `integrate_const`. In the full example the performance and results of the Runge-Kutta-4 and the Dopri5 solver are compared.
+We have to use `boost::ref` here in order to pass the rhs class as reference and not by value. This ensures that the natural frequencies of each oscillator are not copied when calling `integrate_const`. In the full example the performance and results of the Runge-Kutta-4 and the Dopri5 solver are compared.
 
 The full example can be found at [github_link libs/numeric/odeint/examples/thrust/phase_oscillator_ensemble.cu phase_oscillator_example.cu].
 
@@ -108,7 +124,7 @@ Another important use case for __thrust and Cuda are parameter studies of relati
 
 In the following we will show how you can use __thrust to integrate the above mentioned ensemble of Lorenz systems. We will vary only the parameter ['__beta] but it is straightforward to vary other parameters or even two or all three parameters. Furthermore, we will use the largest Lyapunov exponent to quantify the behavior of the system (chaoticity).
 
-We start be defining the range of the parameters we want to study. Of course, the state_type is again a `thrust::device_vector< value_type >`. 
+We start by defining the range of the parameters we want to study. Of course, the state_type is again a `thrust::device_vector< value_type >`. 
 
 [thrust_lorenz_parameters_define_beta]
 

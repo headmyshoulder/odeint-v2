@@ -43,37 +43,41 @@
      [@http://www.gsl.org GSL]] 
     
 [def __concepts
-    [link boost_sandbox_numeric_odeint.concepts Concepts]]
+    [link boost_numeric_odeint.concepts Concepts]]
 [def __system
-    [link boost_sandbox_numeric_odeint.concepts.system System]]
+    [link boost_numeric_odeint.concepts.system System]]
 [def __symplectic_system
-    [link boost_sandbox_numeric_odeint.concepts.symplectic_system Symplectic System]]
+    [link boost_numeric_odeint.concepts.symplectic_system Symplectic System]]
 [def __simple_symplectic_system
-    [link boost_sandbox_numeric_odeint.concepts.simple_symplectic_system Simple Symplectic System]]
+    [link boost_numeric_odeint.concepts.simple_symplectic_system Simple Symplectic System]]
 [def __implicit_system
-    [link boost_sandbox_numeric_odeint.concepts.implicit_system Implicit System]]
+    [link boost_numeric_odeint.concepts.implicit_system Implicit System]]
 [def __stepper
-    [link boost_sandbox_numeric_odeint.concepts.stepper Stepper]]
+    [link boost_numeric_odeint.concepts.stepper Stepper]]
 [def __error_stepper
-    [link boost_sandbox_numeric_odeint.concepts.error_stepper Error Stepper]]
+    [link boost_numeric_odeint.concepts.error_stepper Error Stepper]]
 [def __controlled_stepper
-    [link boost_sandbox_numeric_odeint.concepts.controlled_stepper Controlled Stepper]]
+    [link boost_numeric_odeint.concepts.controlled_stepper Controlled Stepper]]
 [def __dense_output_stepper
-    [link boost_sandbox_numeric_odeint.concepts.dense_output_stepper Dense Output Stepper]]
+    [link boost_numeric_odeint.concepts.dense_output_stepper Dense Output Stepper]]
 [def __observer
-    [link boost_sandbox_numeric_odeint.concepts.observer observer]]
+    [link boost_numeric_odeint.concepts.observer observer]]
 [def __integrate_functions
-    [link boost_sandbox_numeric_odeint.odeint_in_detail.integrate_functions integrate functions]]
+    [link boost_numeric_odeint.odeint_in_detail.integrate_functions integrate functions]]
+[def __tutorial
+    [link boost_numeric_odeint.tutorial Tutorial]]
 [def __tut_solar_system
-    [link boost_sandbox_numeric_odeint.tutorial.solar_system Solar System]]
+    [link boost_numeric_odeint.tutorial.solar_system Solar System]]
 [def __tut_chaotic_system
-    [link boost_sandbox_numeric_odeint.tutorial.chaotic_systems_and_lyapunov_exponents Chaotic system]]
+    [link boost_numeric_odeint.tutorial.chaotic_systems_and_lyapunov_exponents Chaotic System]]
+[def __tut_harmonic_oscillator
+    [link boost_numeric_odeint.tutorial.harmonic_oscillator Harmonic Oscillator]]
 [def __using_steppers
-    [link boost_sandbox_numeric_odeint.odeint_in_detail.steppers.using_steppers Using steppers]]	
+    [link boost_numeric_odeint.odeint_in_detail.steppers.using_steppers Using steppers]]	
 [def __generation_functions
-    [link boost_sandbox_numeric_odeint.odeint_in_detail.generation_functions Generation functions]]
+    [link boost_numeric_odeint.odeint_in_detail.generation_functions Generation functions]]
 [def __adapt_state_types
-    [link boost_sandbox_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations Adapt you own state types]]
+    [link boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations Adapt you own state types]]
 
 
 [def __alpha '''&#945;''']

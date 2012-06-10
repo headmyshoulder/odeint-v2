@@ -4,11 +4,14 @@
 
 [import ../examples/stuart_landau.cpp]
 
-Of course, odeint can handle complex state types, hence ODEs which are defined on complex vector spaces. An example is the Stuart-Landau oscillator
+Thus far we have seen several examples defined for real values. Of course,
+odeint can handle complex state types, hence ODEs which are defined on complex
+vector spaces, as well. An example is the Stuart-Landau oscillator
 
 ['d __Psi / dt = ( 1 + i __eta ) __Psi + ( 1 + i __alpha ) | __Psi |[super 2] __Psi ]
 
-where ['__Psi] and ['i] is a complex variable. Such systems can easily be represent by an state type like `array< complex< double > , 1 >`. The definition of this ODE in C++ code is very simple
+where ['__Psi] and ['i] is a complex variable. Hence the state type of this
+system is complex< double >. The definition of this ODE in C++ code is very simple
 
 [stuart_landau_system_function]
 
@@ -18,11 +21,22 @@ Of course, one can also use classical functions to implement the state function.
 
 We strongly recommend to use the first ansatz. In this case you have explicit control over the parameters of the system and are not restricted to use global variables to parametrize the oscillator.
 
-Integration is also very easy:
+When chosing the stepper type one has to account for the "unusual" state type:
+it is a single `complex<double>` opposed to the vector types used in the
+previous examples. This means that no iterations over vector elements have to
+be performed inside the stepper algorithm. You can enforce this by supplying
+additional template arguments to the stepper including the
+`vector_space_algebra`. Details on the usage of algebras can be found in the
+section __adapt_state_types.
 
 [stuart_landau_integration]
 
-The full cpp file for the Stuart Landau example can be found here [github_link libs/numeric/odeint/examples/stuart_landau.cpp stuart_landau.cpp]
+The full cpp file for the Stuart Landau example can be found here [github_link
+libs/numeric/odeint/examples/stuart_landau.cpp stuart_landau.cpp]
+
+[note The fact that we have to configure a different algebra is solely due to
+the fact that we use a non-vector state type and not to the usage of complex
+values. So for, e.g. `vector< complex<double> >`, this would not be required.] 
 
 [endsect]
 
@@ -31,23 +45,23 @@ The full cpp file for the Stuart Landau example can be found here [github_link l
 [import ../examples/fpu.cpp]
 
 
-odeint can also be used to solved ordinary differential equations defined on lattices. A prominent example is the Fermi-Pasta-Ulam system [8]. It is a Hamiltonian system of nonlinear coupled harmonic oscillators. The Hamiltonian is
+odeint can also be used to solve ordinary differential equations defined on lattices. A prominent example is the Fermi-Pasta-Ulam system [8]. It is a Hamiltonian system of nonlinear coupled harmonic oscillators. The Hamiltonian is
 
 [' H = __Sigma[subl i] p[subl i][super 2]/2 + 1/2 ( q[subl i+1] - q[subl i] )^2 + __beta / 4 ( q[subl i+1] - q[subl i] )^4 ]
 
 Remarkably, the Fermi-Pasta-Ulam system was the first numerical experiment which has been implemented on a computer in 1953. It was studied at Los Alamos on one of the first computer (a MANIAC I) and it triggered a whole new tree of mathematical and physical science.
  
-The FPU is solved again by a symplectic solver, but in our case we can speed up the computation because the ['q] components trivially reduce to ['dq[subl i] / dt = p[subl i]]. odeint is capable of doing this performance improvement. All you have to do is to call the symplectic solver with an state function for the ['p] components. Here, is how this function looks like
+Like the __tut_solar_system, the FPU is solved again by a symplectic solver, but in this case we can speed up the computation because the ['q] components trivially reduce to ['dq[subl i] / dt = p[subl i]]. odeint is capable of doing this performance improvement. All you have to do is to call the symplectic solver with an state function for the ['p] components. Here is how this function looks like
 
 [fpu_system_function]
 
-Of course, you can also use `std::tr1::array< double , N >` for the state type.
+Of course, you can also use `boost::array< double , N >` for the state type.
 
 Now, you have to define your initial values and perform the integration. All this can be easily done with the following piece of code:
 
 [fpu_integration]
 
-The observer is more or less trivial
+The observer uses a reference to the system object to calculate the local energies:
 
 [fpu_observer]
 
@@ -87,17 +101,41 @@ The full cpp file for this example can be found here [github_link libs/numeric/o
 
 [import ../examples/harmonic_oscillator_units.cpp]
 
-odeint also works well with __boost_units - a library for compile type unit and dimension analysis. The main problem here is, that the `state_type` is now heterogeneous, meaning that every entry has a different type. To overcome this problem compile-type sequences from __boost_fusion can be used.
+odeint also works well with __boost_units - a library for compile time unit
+and dimension analysis. Ot works by decoding unit information into the types
+of values. For a one-dimensional unit you can just use the Boost.Unit types as
+state type, deriv type and time type and hand the `vector_space_algebra` to
+the stepper definition and everything works just fine:
+
+```
+typedef units::quantity< si::time , double > time_type;
+typedef units::quantity< si::length , double > length_type;
+typedef units::quantity< si::velocity , double > velocity_type;
+
+typedef runge_kutta4< length_type , double , velocity_type , time_type ,
+                      vector_space_algebra > stepper_type;
+```
+ 
+If you want to solve more-dimensional problems the individual entries
+typically have different units. That means that the `state_type` is now
+possibly heterogeneous, meaning that every entry might have a different type.
+To solve this problem, compile-time sequences from __boost_fusion can be used.
 
 To illustrate how odeint works with __boost_units we use the harmonic oscillator as primary example. We start with defining all quantities
 
 [units_define_basic_quantities]
 
-Note, that the `state_type` and the `deriv_type` are now a compile-time fusion sequences. They have to be explicitly defined. Next, we define the ordinary differential equation which is completely equivalent to the example in the first section of this tutorial
+Note, that the `state_type` and the `deriv_type` are now a compile-time fusion
+sequences. `deriv_type` represents ['x'] and is now different from the state
+type as it has different unit definitions. Next, we define the ordinary
+differential equation which is completely equivalent to the example in __tut_harmonic_oscillator: 
 
 [units_define_ode]
 
-Having done this, the most difficulties have been done. Next, we instantiate an appropriate stepper. We must explicitly parametrize the stepper with the `state_type`, `deriv_type`, `time_type`. Furthermore, the basic calculations are now performed by the `fusion_algebra` which must also be given.
+Next, we instantiate an appropriate stepper. We must explicitly parametrize
+the stepper with the `state_type`, `deriv_type`, `time_type`. Furthermore, the
+iteration over vector elements is now done by the `fusion_algebra` which must
+also be given. For more on the state types / algebras see chapter __adapt_state_types.
 
 [units_define_stepper]
 
@@ -137,15 +175,19 @@ The full cpp for this example can be found here [github_link libs/numeric/odeint
 
 [section Partial differential equations]
 
-Wave equation
+To be continued:
 
-KdV
+*Wave equation
 
-Ginzburg-Landau
+*KdV
+
+*Ginzburg-Landau
 
 [endsect]
 
 [section Ordinary differential equations on networks]
+
+to be continued
 
 [endsect]
 
@@ -161,7 +203,7 @@ Here is a simple example:
 
 [gmpxx_lorenz]
 
-which can be used
+which can be integrated:
 
 [gmpxx_integration]
 
@@ -176,9 +218,13 @@ The full example can be found at [github_link libs/numeric/odeint/examples/loren
 
 [import ../examples/resizing_lattice.cpp]
 
-odeint supports changes of the state size during integration if a state_type is used which can be resized, like `std::vector`.
-The adjustment of the state type's size has to be done from outside and the stepper has to be instantiated with `always_resizer` as the template argument for the `resizer_type`.
-In this configuration, the stepper checks for changes in the state size and adjust it's internal storage accordingly.
+odeint supports changes of the state size during integration if a state_type
+is used which can be resized, like `std::vector`.
+The adjustment of the state's size has to be done from outside and the stepper
+has to be instantiated with `always_resizer` as the template argument for the
+`resizer_type`.
+In this configuration, the stepper checks for changes in the state size and
+adjust it's internal storage accordingly.
 
 We exemplary show this for a Hamiltonian system of nonlinear, disordered oscillators with nonlinear nearest neighbor coupling.
 

@@ -1,12 +1,12 @@
 [section State types, algebras and operations]
 
-In odeint the integration algorithms are implemented independently of the
+In odeint the stepper algorithms are implemented independently of the
 underlying fundamental mathematical operations.
 This is realized by giving the user full control over the state type and the
 mathematical operations for this state type.
 Technically, this is done by introducing three concepts: StateType, Algebra,
 Operations.
-Most of the steppers in odeint expect three classes types fulfilling these
+Most of the steppers in odeint expect three class types fulfilling these
 concepts as template parameters.
 Note that these concepts are not fully independent of each other but rather a
 valid combination must be provided in order to make the steppers work.
@@ -444,9 +444,11 @@ gsl_vector, gsl_matrix, ublas::matrix, blitz::matrix, thrust
 
 [section Adapt your own operations]
 
-gsl_complex, complex, thrust
+to be continued
 
-min, max, pow
+*thrust
+*gsl_complex
+*min, max, pow
 
 [endsect]
 

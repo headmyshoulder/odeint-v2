@@ -27,27 +27,47 @@ equations of motion
 
 ['dp[subl i] / dt = -dH / dq[subl i]]
 
-In time independent Hamiltonian system the energy and the phase space volume are conserved and special integration methods have to be applied in order to ensure these conservation laws. The odeint library provides classes for separable Hamiltonian systems, which can be written in the form ['H = __Sigma p[subl i][super 2] / (2m[subl i]) + H[subl q](q)], where ['H[subl q](q)] only depends on the coordinates. Although this functional form might look a bit arbitrary it covers nearly all classical mechanical systems with inertia and without dissipation, or where the equations of motion can be written in the form ['dq[subl i] / dt = p[subl i]] / m[subl i] , ['dp[subl i] / dt = f( q[subl i] )].
+In time independent Hamiltonian system the energy and the phase space volume
+are conserved and special integration methods have to be applied in order to
+ensure these conservation laws. The odeint library provides classes for
+separable Hamiltonian systems, which can be written in the form ['H = __Sigma
+p[subl i][super 2] / (2m[subl i]) + H[subl q](q)], where ['H[subl q](q)] only
+depends on the coordinates. Although this functional form might look a bit
+arbitrary, it covers nearly all classical mechanical systems with inertia and
+without dissipation, or where the equations of motion can be written in the
+form ['dq[subl i] / dt = p[subl i]] / m[subl i] , ['dp[subl i] / dt = f(
+q[subl i] )].
+
+[note A short physical note: While the two-body-problem is known to be
+integrable, that means it can be solved with purely analytic techniques,
+already the three-body-problem is not solveable. This was found in the end of the
+19th century by H. Poincare which lead to the whole new subject of
+[@http://en.wikipedia.org/wiki/Chaos_theory Chaos Theory].]
 
 [endsect]
 
 
 [section Define the system function]
 
-To implement this system we define a point type which will represent the space as well as the velocity. Therefore, we use the operators from __boost_operators:
+To implement this system we define a 3D point type which will represent the space as well as the velocity. Therefore, we use the operators from __boost_operators:
 
 [import ../examples/point_type.hpp]
 [point_type]
 
 
-The next step is to define a container type storing the values of ['q] and ['p] and to define system functions. As container type we use `std::tr1::array`
+The next step is to define a container type storing the values of ['q] and ['p] and to define system functions. As container type we use `boost::array`
 
 [import ../examples/solar_system.cpp]
 [container_type_definition]
 
 The `container_type` is different from the state type of the ODE. The state type of the ode is simply a `pair< container_type , container_type >` since it needs the information about the coordinates and the momenta.
 
-As system function we have to provide ['f(p)] and ['f(q)]:
+Next we define the system's equations.
+As we will use a stepper that accounts for the Hamiltonian (energy-preserving)
+character of the system, we have to define the rhs different from the usual
+case where it is just a single function.
+The stepper will make use of the separable character, which means the system
+will be defined by two objects representing ['f(p) = -dH/dq] and ['g(q) = dH/dp]:
 
 [coordinate_function]
 
@@ -55,7 +75,10 @@ As system function we have to provide ['f(p)] and ['f(q)]:
 
 In general a three body-system is chaotic, hence we can not expect that arbitrary initial conditions of the system will lead to a dynamic which is comparable with the solar system. That is we have to define proper initial conditions, which are taken from the book of Hairer, Wannier, Lubich.
 
-As mentioned above, we need to use some special integrators in order to conserve phase space volume and energy. There is a well known family of such integrators, the so-called Runge-Kutta-Nystroem solvers, which we apply here:
+As mentioned above, we need to use some special integrators in order to
+conserve phase space volume. There is a well known family of such integrators,
+the so-called Runge-Kutta-Nystroem solvers, which we apply here in terms of a
+`symplectic_rkn_sb3a_mclachlan` stepper:
 
 [integration_solar_system]
 

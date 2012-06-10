@@ -58,6 +58,7 @@ struct stiff_system
 	template< class State >
 	void operator()( const State &x , State &dxdt , double t )
 	{
+        ...
 	}
 };
 
@@ -66,6 +67,7 @@ struct stiff_system_jacobi
 	template< class State , class Matrix >
 	void operator()( const State &x , Matrix &J , const double &t , State &dfdt )
 	{
+        ...
 	}
 };
 //]

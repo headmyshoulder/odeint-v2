@@ -32,7 +32,7 @@ typedef vector< double > container_type;
 
 
 pair< double , double > calc_mean_field( const container_type &x )
-        {
+{
     size_t n = x.size();
     double cos_sum = 0.0 , sin_sum = 0.0;
     for( size_t i=0 ; i<n ; ++i )
@@ -47,7 +47,7 @@ pair< double , double > calc_mean_field( const container_type &x )
     double Theta = atan2( sin_sum , cos_sum );
 
     return make_pair( K , Theta );
-        }
+}
 
 
 struct phase_ensemble
