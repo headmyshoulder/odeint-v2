@@ -80,7 +80,7 @@ int main( int argc , char **argv )
         double t( 0.0 ) , dt( 0.1 );
         state_type in , out , dxdtin , inout;
         //[ explicit_stepper_detail_example
--        runge_kutta4< state_type > rk;
+	runge_kutta4< state_type > rk;
         rk.do_step( sys1 , inout , t , dt );               // In-place transformation of inout
         rk.do_step( sys2 , inout , t , dt );               // call with different system: Ok
         rk.do_step( sys1 , in , t , out , dt );            // Out-of-place transformation

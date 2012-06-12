@@ -417,9 +417,12 @@ public:
      * Version 2 : try_step( sys , in , t , out , dt );
      *
      * This version does not solve the forwarding problem, boost::range can not be used.
+     * 
+     * The disabler is needed to solve ambigous overloads
      */
     template< class System , class StateIn , class StateOut >
-    controlled_step_result try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
+    typename boost::disable_if< boost::is_same< StateIn , time_type > , controlled_step_result >::type
+    try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
     {
         if( m_dxdt_resizer.adjust_size( in , detail::bind( &controlled_runge_kutta::template resize_m_dxdt_impl< StateIn > , detail::ref( *this ) , detail::_1 ) ) || m_first_call )
         {

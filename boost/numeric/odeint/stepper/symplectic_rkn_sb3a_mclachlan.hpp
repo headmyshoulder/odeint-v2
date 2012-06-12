@@ -57,9 +57,9 @@ namespace symplectic_rkn_sb3a_mclachlan {
 	{
 		coef_a_type( void )
 		{
-			(*this)[0] = 0.40518861839525227722;
-			(*this)[1] = -0.28714404081652408900;
-			(*this)[2] = 0.5 - ( (*this)[0] + (*this)[1] );
+		    (*this)[0] = static_cast< Value >( 0.40518861839525227722 );
+			(*this)[1] = static_cast< Value >( -0.28714404081652408900 );
+			(*this)[2] = static_cast< Value >( 1 ) / static_cast< Value >( 2 ) - ( (*this)[0] + (*this)[1] );
 			(*this)[3] = (*this)[2];
 			(*this)[4] = (*this)[1];
 			(*this)[5] = (*this)[0];
@@ -72,12 +72,12 @@ namespace symplectic_rkn_sb3a_mclachlan {
 	{
 		coef_b_type( void )
 		{
-			(*this)[0] = -3.0 / 73.0;
-			(*this)[1] = 17.0 / 59.0;
-			(*this)[2] = 1.0 - 2.0 * ( (*this)[0] + (*this)[1] );
+			(*this)[0] = static_cast< Value >( -3 ) / static_cast< Value >( 73 );
+			(*this)[1] = static_cast< Value >( 17 ) / static_cast< Value >( 59 );
+			(*this)[2] = static_cast< Value >( 1 ) - static_cast< Value >( 2 ) * ( (*this)[0] + (*this)[1] );
 			(*this)[3] = (*this)[1];
 			(*this)[4] = (*this)[0];
-			(*this)[5] = 0.0;
+			(*this)[5] = static_cast< Value >( 0 );
 		}
 	};
 
