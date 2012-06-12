@@ -132,9 +132,7 @@ range including only the first 3 components of ['x]:
 
 Having integrated a sufficient number of transients steps we are now able to calculate the Lyapunov exponents:
 
-# We initialize the perturbations. They are stored linearly behind the state of the Lorenz system. The perturbations are initialized such that they fulfill 
-[' < p [subl i] , p[subl j] > = __delta [subl ij] ]
-where ['<,>] is the classical scalar product and ['__delta [subl ij]] is the Kronecker symbol.
+# We initialize the perturbations. They are stored linearly behind the state of the Lorenz system. The perturbations are initialized such that [' p [subl ij] = __delta [subl ij]], where ['p [subl ij]] is the ['j]-component of the ['i].-th perturbation and ['__delta [subl ij]] is the Kronecker symbol.
 # Integrate 100 steps of the full system with perturbations
 # Orthonormalize the perturbation using Gram-Schmidt orthonormalization algorithm.
 # Repeat step 2 and 3. Every 10000 steps write the current Lyapunov exponent.

@@ -224,14 +224,22 @@ Some steppers require to store some information about the state of the ODE betwe
 
 Stepper with an internal state support two additional methods: `reset` which resets the state and `initialize` which initializes the internal state. The parameters of `initialize` depend on the specific stepper. For example  the Adams-Bashforth-Moulton stepper provides two initialize methods: `initialize( system , inout , t , dt )` which initializes the internal states with the help of the Runge-Kutta 4 stepper, and `initialize( stepper , system , inout , t , dt )` which initializes with the help of `stepper`. For the case of the FSAL steppers, `initialize` is `initialize( sys , in , t )` which simply calculates the r.h.s. of the ODE and assigns its value to the internal derivative.
 
-All these stepper have in common, that they initially fill their internal state by themselves. Hence you are not required to call initialize. See how this works for the Adams-Bashforth-Moulton stepper: in the example we instantiate a fourth order Adams-Bashforth-Moulton stepper, meaning that it will store 4 internal derivatives of the solution at times `(t-dt,t-2*dt,t-3*dt,t-4*dt)`.
+All these steppers have in common, that they initially fill their internal state by themselves. Hence you are not required to call initialize. See how this works for the Adams-Bashforth-Moulton stepper: in the example we instantiate a fourth order Adams-Bashforth-Moulton stepper, meaning that it will store 4 internal derivatives of the solution at times `(t-dt,t-2*dt,t-3*dt,t-4*dt)`.
 
 ``
 adams_bashforth_moulton< 4 , state_type > stepper;
-stepper.do_step( sys , x , t , dt );   // make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-4dt
-stepper.do_step( sys , x , t , dt );   // make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-3dt
-stepper.do_step( sys , x , t , dt );   // make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-2dt
-stepper.do_step( sys , x , t , dt );   // make one step with the classical Runge-Kutta stepper and initialize the first internal state at time t-dt
+stepper.do_step( sys , x , t , dt );   // make one step with the classical Runge-Kutta stepper and initialize the first internal state
+                                       // the internal array is now [x(t-dt)]
+
+stepper.do_step( sys , x , t , dt );   // make one step with the classical Runge-Kutta stepper and initialize the second internal state
+                                       // the internal state array is now [x(t-dt), x(t-2*dt)]
+
+stepper.do_step( sys , x , t , dt );   // make one step with the classical Runge-Kutta stepper and initialize the third internal state
+                                       // the internal state array is now [x(t-dt), x(t-2*dt), x(t-3*dt)]
+
+stepper.do_step( sys , x , t , dt );   // make one step with the classical Runge-Kutta stepper and initialize the fourth internal state
+                                       // the internal state array is now [x(t-dt), x(t-2*dt), x(t-3*dt), x(t-4*dt)]
+
 stepper.do_step( sys , x , t , dt );   // make one step with Adam-Bashforth-Moulton, the internal array of states is now rotated
 ``
 
