@@ -65,22 +65,22 @@ public:
 
 
     default_error_checker(
-            const value_type eps_abs = static_cast< value_type >( 1.0e-6 ) ,
-            const value_type eps_rel = static_cast< value_type >( 1.0e-6 ) ,
-            const value_type a_x = static_cast< value_type >( 1 ) ,
-            const value_type a_dxdt = static_cast< value_type >( 1 ) )
+            value_type eps_abs = static_cast< value_type >( 1.0e-6 ) ,
+            value_type eps_rel = static_cast< value_type >( 1.0e-6 ) ,
+            value_type a_x = static_cast< value_type >( 1 ) ,
+            value_type a_dxdt = static_cast< value_type >( 1 ) )
     : m_eps_abs( eps_abs ) , m_eps_rel( eps_rel ) , m_a_x( a_x ) , m_a_dxdt( a_dxdt )
     { }
 
 
     template< class State , class Deriv , class Err , class Time >
-    value_type error( const State &x_old , const Deriv &dxdt_old , Err &x_err , const Time &dt )
+    value_type error( const State &x_old , const Deriv &dxdt_old , Err &x_err , Time dt ) const
     {
         return error( algebra_type() , x_old , dxdt_old , x_err , dt );
     }
 
     template< class State , class Deriv , class Err , class Time >
-    value_type error( algebra_type &algebra , const State &x_old , const Deriv &dxdt_old , Err &x_err , const Time &dt )
+    value_type error( algebra_type &algebra , const State &x_old , const Deriv &dxdt_old , Err &x_err , Time dt ) const
     {
         // this overwrites x_err !
         algebra.for_each3( x_err , x_old , dxdt_old ,
@@ -91,7 +91,7 @@ public:
         return res;
     }
 
-    value_type check() { return m_eps_abs; }
+    value_type check( void ) const { return m_eps_abs; }
 
 private:
 
@@ -511,7 +511,7 @@ public:
     }
 
     template< class System , class StateIn >
-    void initialize( System system , const StateIn &x , const time_type &t )
+    void initialize( System system , const StateIn &x , time_type t )
     {
         typename odeint::unwrap_reference< System >::type &sys = system;
         sys( x , m_dxdt.m_v , t );

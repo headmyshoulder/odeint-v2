@@ -111,7 +111,7 @@ public:
     }
 
     template< class StateType >
-    void initialize( const StateType &x0 , const time_type &t0 , const time_type &dt0 )
+    void initialize( const StateType &x0 , time_type t0 , time_type dt0 )
     {
         m_resizer.adjust_size( x0 , detail::bind( &dense_output_stepper_type::template resize_impl< StateType > , detail::ref( *this ) , detail::_1 ) );
         boost::numeric::odeint::copy( x0 , *m_current_state );
@@ -133,13 +133,13 @@ public:
      * The next two overloads are needed to solve the forwarding problem
      */
     template< class StateOut >
-    void calc_state( const time_type &t , StateOut &x )
+    void calc_state( time_type t , StateOut &x )
     {
         m_stepper.calc_state( x , t , *m_old_state , m_t_old , *m_current_state , m_t );
     }
 
     template< class StateOut >
-    void calc_state( const time_type &t , const StateOut &x )
+    void calc_state( time_type t , const StateOut &x )
     {
         m_stepper.calc_state( x , t , *m_old_state , m_t_old , *m_current_state , m_t );
     }
@@ -156,17 +156,17 @@ public:
         return *m_current_state;
     }
 
-    const time_type& current_time( void ) const
+    time_type current_time( void ) const
     {
         return m_t;
     }
 
-    const time_type& previous_state( void ) const
+    const state_type& previous_state( void ) const
     {
         return *m_old_state;
     }
 
-    const time_type& previous_time( void ) const
+    time_type previous_time( void ) const
     {
         return m_t_old;
     }
@@ -281,7 +281,7 @@ public:
     }
 
     template< class StateType >
-    void initialize( const StateType &x0 , const time_type &t0 , const time_type &dt0 )
+    void initialize( const StateType &x0 , time_type t0 , time_type dt0 )
     {
         m_resizer.adjust_size( x0 , detail::bind( &dense_output_stepper_type::template resize< StateType > , detail::ref( *this ) , detail::_1 ) );
         boost::numeric::odeint::copy( x0 , *m_current_state );
@@ -322,13 +322,13 @@ public:
      * The two overloads are needed in order to solve the forwarding problem.
      */
     template< class StateOut >
-    void calc_state( const time_type &t , StateOut &x )
+    void calc_state( time_type t , StateOut &x )
     {
         m_stepper.stepper().calc_state( t , x , *m_old_state , *m_old_deriv , m_t_old , *m_current_state , *m_current_deriv , m_t );
     }
 
     template< class StateOut >
-    void calc_state( const time_type &t , const StateOut &x )
+    void calc_state( time_type t , const StateOut &x )
     {
         m_stepper.stepper().calc_state( t , x , *m_old_state , *m_old_deriv , m_t_old , *m_current_state , *m_current_deriv , m_t );
     }
@@ -358,12 +358,13 @@ public:
         return *m_current_state;
     }
 
+    // ToDo : change to time_type
     const time_type& current_time( void ) const
     {
         return m_t;
     }
 
-    const time_type& previous_state( void ) const
+    const state_type& previous_state( void ) const
     {
         return *m_old_state;
     }

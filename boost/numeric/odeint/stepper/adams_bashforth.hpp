@@ -118,13 +118,13 @@ public :
      * solves the forwarding problem
      */
     template< class System , class StateInOut >
-    void do_step( System system , StateInOut &x , const time_type &t , const time_type &dt )
+    void do_step( System system , StateInOut &x , time_type t , time_type dt )
     {
         do_step( system , x , t , x , dt );
     }
 
     template< class System , class StateInOut >
-    void do_step( System system , const StateInOut &x , const time_type &t , const time_type &dt )
+    void do_step( System system , const StateInOut &x , time_type t , time_type dt )
     {
         do_step( system , x , t , x , dt );
     }
@@ -137,13 +137,13 @@ public :
      * solves the forwarding problem
      */
     template< class System , class StateIn , class StateOut >
-    void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt )
+    void do_step( System system , const StateIn &in , time_type t , StateOut &out , time_type dt )
     {
         do_step_impl( system , in , t , out , dt );
     }
 
     template< class System , class StateIn , class StateOut >
-    void do_step( System system , const StateIn &in , const time_type &t , const StateOut &out , const time_type &dt )
+    void do_step( System system , const StateIn &in , time_type t , const StateOut &out , time_type dt )
     {
         do_step_impl( system , in , t , out , dt );
     }
@@ -159,13 +159,13 @@ public :
     //	 * ToDo: Do we need this methods?
     //	 */
     //	template< class System , class StateInOut , class DerivIn >
-    //	void do_step( System sys , StateInOut &x , const DerivIn &dxdt , const time_type &t , const time_type &dt )
+    //	void do_step( System sys , StateInOut &x , const DerivIn &dxdt , time_type t , time_type dt )
     //	{
     //		do_step( sys , x , dxdt , t , x , dt );
     //	}
     //
     //	template< class System , class StateInOut , class DerivIn >
-    //	void do_step( System sys , const StateInOut &x , const DerivIn &dxdt , const time_type &t , const time_type &dt )
+    //	void do_step( System sys , const StateInOut &x , const DerivIn &dxdt , time_type t , time_type dt )
     //	{
     //		do_step( sys , x , dxdt , t , x , dt );
     //	}
@@ -180,7 +180,7 @@ public :
     // 	 * ToDo: Do we need this methods?
     //	 */
     //	template< class System , class StateIn , class DerivIn , class StateOut >
-    //	void do_step( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt )
+    //	void do_step( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt )
     //	{
     //		m_step_storage.rotate();
     //		boost::numeric::odeint::copy( dxdt , m_step_storage[0] );
@@ -188,7 +188,7 @@ public :
     //	}
     //
     //	template< class System , class StateIn , class DerivIn , class StateOut >
-    //	void do_step( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , const StateOut &out , const time_type &dt )
+    //	void do_step( System system , const StateIn &in , const DerivIn &dxdt , time_type t , const StateOut &out , time_type dt )
     //	{
     //		m_step_storage.rotate();
     //		boost::numeric::odeint::copy( dxdt , m_step_storage[0] );
@@ -221,7 +221,7 @@ public :
     }
 
     template< class ExplicitStepper , class System , class StateIn >
-    void initialize( ExplicitStepper explicit_stepper , System system , StateIn &x , time_type &t , const time_type &dt )
+    void initialize( ExplicitStepper explicit_stepper , System system , StateIn &x , time_type &t , time_type dt )
     {
         typename odeint::unwrap_reference< ExplicitStepper >::type &stepper = explicit_stepper;
         typename odeint::unwrap_reference< System >::type &sys = system;
@@ -239,7 +239,7 @@ public :
     }
 
     template< class System , class StateIn >
-    void initialize( System system , StateIn &x , time_type &t , const time_type &dt )
+    void initialize( System system , StateIn &x , time_type &t , time_type dt )
     {
         initialize( detail::ref( m_initializing_stepper ) , system , x , t , dt );
     }
@@ -261,7 +261,7 @@ public :
 private:
 
     template< class System , class StateIn , class StateOut >
-    void do_step_impl( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt )
+    void do_step_impl( System system , const StateIn &in , time_type t , StateOut &out , time_type dt )
     {
         typename odeint::unwrap_reference< System >::type &sys = system;
         if( m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) ) )
