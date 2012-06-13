@@ -101,13 +101,13 @@ public:
      * the two overloads are needed in order to solve the forwarding problem
      */
     template< class System , class StateInOut , class Err >
-    void do_step( System system , StateInOut &x , const time_type &t , const time_type &dt , Err &xerr )
+    void do_step( System system , StateInOut &x , time_type t , time_type dt , Err &xerr )
     {
         do_step_v1( system , x , t , dt , xerr );
     }
 
     template< class System , class StateInOut , class Err >
-    void do_step( System system , const StateInOut &x , const time_type &t , const time_type &dt , Err &xerr )
+    void do_step( System system , const StateInOut &x , time_type t , time_type dt , Err &xerr )
     {
         do_step_v1( system , x , t , dt , xerr );
     }
@@ -122,7 +122,7 @@ public:
      */
     template< class System , class StateInOut , class DerivIn , class Err >
     typename boost::disable_if< boost::is_same< DerivIn , time_type > , void >::type
-    do_step( System system , StateInOut &x , const DerivIn &dxdt , const time_type &t , const time_type &dt , Err &xerr )
+    do_step( System system , StateInOut &x , const DerivIn &dxdt , time_type t , time_type dt , Err &xerr )
     {
         this->stepper().do_step_impl( system , x , dxdt , t , x , dt , xerr );
     }
@@ -134,7 +134,7 @@ public:
      * this version does not solve the forwarding problem, boost.range can not be used
      */
     template< class System , class StateIn , class StateOut , class Err >
-    void do_step( System system , const StateIn &in , const time_type &t , StateOut &out , const time_type &dt , Err &xerr )
+    void do_step( System system , const StateIn &in , time_type t , StateOut &out , time_type dt , Err &xerr )
     {
         typename odeint::unwrap_reference< System >::type &sys = system;
         m_resizer.adjust_size( in , detail::bind( &internal_stepper_base_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
@@ -149,7 +149,7 @@ public:
      * this version does not solve the forwarding problem, boost.range can not be used
      */
     template< class System , class StateIn , class DerivIn , class StateOut , class Err >
-    void do_step( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt , Err &xerr )
+    void do_step( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt , Err &xerr )
     {
         this->stepper().do_step_impl( system , in , dxdt , t , out , dt , xerr );
     }
@@ -173,7 +173,7 @@ private:
 
 
     template< class System , class StateInOut , class Err >
-    void do_step_v1( System system , StateInOut &x , const time_type &t , const time_type &dt , Err &xerr )
+    void do_step_v1( System system , StateInOut &x , time_type t , time_type dt , Err &xerr )
     {
         typename odeint::unwrap_reference< System >::type &sys = system;
         m_resizer.adjust_size( in , detail::bind( &internal_stepper_base_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );

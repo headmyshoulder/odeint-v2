@@ -179,11 +179,11 @@ public:
         StateOut &x_out;
         const DerivIn &dxdt;
         Deriv *F;
-        const Time t;
-        const Time dt;
+        Time t;
+        Time dt;
 
         calculate_stage( Algebra &_algebra , System &_system , const StateIn &_x , const DerivIn &_dxdt , StateOut &_out ,
-                StateTemp &_x_tmp , Deriv *_F , const Time &_t , const Time &_dt )
+                StateTemp &_x_tmp , Deriv *_F , Time _t , Time _dt )
         : algebra( _algebra ) , system( _system ) , x( _x ) , x_tmp( _x_tmp ) , x_out( _out) , dxdt( _dxdt ) , F( _F ) , t( _t ) , dt( _dt )
         {}
 
@@ -224,7 +224,7 @@ public:
 
     template< class System , class StateIn , class DerivIn , class Time , class StateOut , class StateTemp , class Deriv >
     void inline do_step( Algebra &algebra , System system , const StateIn &in , const DerivIn &dxdt ,
-            const Time &t , StateOut &out , const Time &dt ,
+            Time t , StateOut &out , Time dt ,
             StateTemp &x_tmp , Deriv F[StageCount-1] ) const
     {
         typedef typename odeint::unwrap_reference< System >::type unwrapped_system_type;
