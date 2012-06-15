@@ -25,7 +25,6 @@
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
-#include <boost/numeric/odeint/stepper/detail/macros.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
 
 namespace boost {
@@ -49,9 +48,21 @@ class modified_midpoint
 
 public :
 
-    BOOST_ODEINT_EXPLICIT_STEPPERS_TYPEDEFS( modified_midpoint , 2 );
+    typedef explicit_stepper_base<
+    modified_midpoint< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
+    2 , State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_base_type;
 
-    typedef modified_midpoint< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
+    typedef typename stepper_base_type::state_type state_type;
+    typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
+    typedef typename stepper_base_type::value_type value_type;
+    typedef typename stepper_base_type::deriv_type deriv_type;
+    typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
+    typedef typename stepper_base_type::time_type time_type;
+    typedef typename stepper_base_type::algebra_type algebra_type;
+    typedef typename stepper_base_type::operations_type operations_type;
+    typedef typename stepper_base_type::resizer_type resizer_type;
+    typedef typename stepper_base_type::stepper_type stepper_type;
+
 
     modified_midpoint( unsigned short steps = 2 , const algebra_type &algebra = algebra_type() )
     : stepper_base_type( algebra ) , m_steps( steps )

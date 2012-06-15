@@ -24,7 +24,6 @@
 #include <boost/numeric/odeint/util/resizer.hpp>
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
-#include <boost/numeric/odeint/stepper/detail/macros.hpp>
 
 namespace boost {
 namespace numeric {
@@ -51,9 +50,18 @@ public :
 
     friend class dense_output_explicit_euler< State , Value , Deriv , Time , Algebra , Operations , Resizer >;
 
-    BOOST_ODEINT_EXPLICIT_STEPPERS_TYPEDEFS( euler , 1 );
+    typedef explicit_stepper_base< euler< State , Value , Deriv , Time , Algebra , Operations , Resizer > , 1 , State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_base_type;
+    typedef typename stepper_base_type::state_type state_type;
+    typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
+    typedef typename stepper_base_type::value_type value_type;
+    typedef typename stepper_base_type::deriv_type deriv_type;
+    typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
+    typedef typename stepper_base_type::time_type time_type;
+    typedef typename stepper_base_type::algebra_type algebra_type;
+    typedef typename stepper_base_type::operations_type operations_type;
+    typedef typename stepper_base_type::resizer_type resizer_type;
+    typedef typename stepper_base_type::stepper_type stepper_type;
 
-    typedef euler< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
 
     euler( const algebra_type &algebra = algebra_type() ) : stepper_base_type( algebra )
     { }

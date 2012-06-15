@@ -24,8 +24,6 @@
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
 
-#include <boost/numeric/odeint/stepper/detail/macros.hpp>
-
 #include <boost/array.hpp>
 
 namespace boost {
@@ -107,9 +105,17 @@ class symplectic_rkn_sb3a_mclachlan :
 {
 public:
 
-    BOOST_ODEINT_SYMPLECTIC_NYSTROEM_STEPPER_TYPEDEFS( symplectic_rkn_sb3a_mclachlan , 6 );
+    typedef symplectic_nystroem_stepper_base
+    <
+    6 ,
+    symplectic_rkn_sb3a_mclachlan< Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer > ,
+    Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer
+    > stepper_base_type;
 
-	symplectic_rkn_sb3a_mclachlan( const algebra_type &algebra = algebra_type() )
+    typedef typename stepper_base_type::algebra_type algebra_type;
+    typedef typename stepper_base_type::value_type value_type;
+
+    symplectic_rkn_sb3a_mclachlan( const algebra_type &algebra = algebra_type() )
         : stepper_base_type(
             detail::symplectic_rkn_sb3a_mclachlan::coef_a_type< value_type >() ,
             detail::symplectic_rkn_sb3a_mclachlan::coef_b_type< value_type >() ,
