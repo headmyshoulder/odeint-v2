@@ -1,4 +1,4 @@
-/*
+ /*
  * phase_oscillator_ensemble.cu
  *
  * The example how the phase_oscillator ensemble can be implemented using CUDA and thrust
