@@ -61,7 +61,7 @@ public :
 
 
     template< class System , class StateIn , class DerivIn , class StateOut >
-    void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt )
+    void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt )
     {
         // ToDo : check if size of in,dxdt,out are equal?
 

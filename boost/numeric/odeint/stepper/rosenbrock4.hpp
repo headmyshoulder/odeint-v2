@@ -269,9 +269,9 @@ public:
     }
 
 
-    void calc_state( const time_type &t , state_type &x ,
-            const state_type &x_old , const time_type &t_old ,
-            const state_type &x_new , const time_type &t_new )
+    void calc_state( time_type t , state_type &x ,
+            const state_type &x_old , time_type t_old ,
+            const state_type &x_new , time_type t_new )
     {
         const size_t n = m_g1.m_v.size();
         time_type dt = t_new - t_old;

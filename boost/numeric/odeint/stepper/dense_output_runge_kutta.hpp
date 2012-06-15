@@ -156,7 +156,7 @@ public:
         return *m_current_state;
     }
 
-    time_type current_time( void ) const
+    const time_type& current_time( void ) const
     {
         return m_t;
     }
@@ -166,7 +166,7 @@ public:
         return *m_old_state;
     }
 
-    time_type previous_time( void ) const
+    const time_type& previous_time( void ) const
     {
         return m_t_old;
     }
@@ -358,7 +358,6 @@ public:
         return *m_current_state;
     }
 
-    // ToDo : change to time_type
     const time_type& current_time( void ) const
     {
         return m_t;

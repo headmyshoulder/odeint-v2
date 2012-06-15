@@ -53,12 +53,12 @@ public :
 
     typedef modified_midpoint< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
 
-    modified_midpoint( const unsigned short steps = 2 , const algebra_type &algebra = algebra_type() )
+    modified_midpoint( unsigned short steps = 2 , const algebra_type &algebra = algebra_type() )
     : stepper_base_type( algebra ) , m_steps( steps )
     { }
 
     template< class System , class StateIn , class DerivIn , class StateOut >
-    void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt )
+    void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt )
     {
         static const value_type val1 = static_cast< value_type >( 1 );
         static const value_type val05 = static_cast< value_type >( 1 ) / static_cast< value_type >( 2 );
@@ -99,11 +99,11 @@ public :
     }
 
 
-    void set_steps( const unsigned short steps )
+    void set_steps( unsigned short steps )
     {   m_steps = steps; }
 
 
-    unsigned short steps() const
+    unsigned short steps( void ) const
     {   return m_steps; }
 
 
@@ -169,7 +169,7 @@ public :
     typedef modified_midpoint_dense_out< State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
     typedef std::vector< wrapped_deriv_type > deriv_table_type;
 
-    modified_midpoint_dense_out( const unsigned short steps = 2 , const algebra_type &algebra = algebra_type() )
+    modified_midpoint_dense_out( unsigned short steps = 2 , const algebra_type &algebra = algebra_type() )
     : m_algebra( algebra ) , m_steps( steps )
     { }
 
@@ -180,7 +180,7 @@ public :
      */
 
     template< class System , class StateIn , class DerivIn , class StateOut >
-    void do_step( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt ,
+    void do_step( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt ,
             state_type &x_mp , deriv_table_type &derivs )
     {
 
@@ -231,11 +231,11 @@ public :
     }
 
 
-    void set_steps( const unsigned short steps )
+    void set_steps( unsigned short steps )
     {   m_steps = steps; }
 
 
-    unsigned short steps() const
+    unsigned short steps( void ) const
     {   return m_steps; }
 
 

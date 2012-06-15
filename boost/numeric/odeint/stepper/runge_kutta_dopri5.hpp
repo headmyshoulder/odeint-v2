@@ -62,8 +62,8 @@ public :
 
 
     template< class System , class StateIn , class DerivIn , class StateOut , class DerivOut >
-    void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt_in , const time_type &t ,
-            StateOut &out , DerivOut &dxdt_out , const time_type &dt )
+    void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt_in , time_type t ,
+            StateOut &out , DerivOut &dxdt_out , time_type dt )
     {
         const value_type a2 = static_cast<value_type> ( 1 ) / static_cast<value_type>( 5 );
         const value_type a3 = static_cast<value_type> ( 3 ) / static_cast<value_type> ( 10 );
@@ -132,8 +132,8 @@ public :
 
 
     template< class System , class StateIn , class DerivIn , class StateOut , class DerivOut , class Err >
-    void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt_in , const time_type &t ,
-            StateOut &out , DerivOut &dxdt_out , const time_type &dt , Err &xerr )
+    void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt_in , time_type t ,
+            StateOut &out , DerivOut &dxdt_out , time_type dt , Err &xerr )
     {
         const value_type c1 = static_cast<value_type> ( 35 ) / static_cast<value_type>( 384 );
         const value_type c3 = static_cast<value_type> ( 500 ) / static_cast<value_type>( 1113 );
@@ -181,9 +181,9 @@ public :
      * www-m2.ma.tum.de/homepages/simeon/numerik3/kap3.ps
      */
     template< class StateOut , class StateIn1 , class DerivIn1 , class StateIn2 , class DerivIn2 >
-    void calc_state( const time_type &t , StateOut &x ,
-            const StateIn1 &x_old , const DerivIn1 &deriv_old , const time_type &t_old ,
-            const StateIn2 & /* x_new */ , const DerivIn2 &deriv_new , const time_type &t_new )
+    void calc_state( time_type t , StateOut &x ,
+            const StateIn1 &x_old , const DerivIn1 &deriv_old , time_type t_old ,
+            const StateIn2 & /* x_new */ , const DerivIn2 &deriv_new , time_type t_new )
     {
         const value_type b1 = static_cast<value_type> ( 35 ) / static_cast<value_type>( 384 );
         const value_type b3 = static_cast<value_type> ( 500 ) / static_cast<value_type>( 1113 );

@@ -39,9 +39,9 @@ template< class Value = double >
 struct rk4_coefficients_a1 : boost::array< Value , 1 >
 {
     rk4_coefficients_a1( void )
-            {
+    {
         (*this)[0] = static_cast< Value >( 1 ) / static_cast< Value >( 2 );
-            }
+    }
 };
 
 template< class Value = double >

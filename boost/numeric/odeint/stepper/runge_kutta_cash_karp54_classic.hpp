@@ -68,7 +68,7 @@ public :
 
 
     template< class System , class StateIn , class DerivIn , class StateOut , class Err >
-    void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt , Err &xerr )
+    void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt , Err &xerr )
     {
         const value_type c1 = static_cast<value_type> ( 37 ) / static_cast<value_type>( 378 );
         const value_type c3 = static_cast<value_type> ( 250 ) / static_cast<value_type>( 621 );
@@ -92,7 +92,7 @@ public :
 
 
     template< class System , class StateIn , class DerivIn , class StateOut >
-    void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , const time_type &t , StateOut &out , const time_type &dt )
+    void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt )
     {
         const value_type a2 = static_cast<value_type> ( 1 ) / static_cast<value_type> ( 5 );
         const value_type a3 = static_cast<value_type> ( 3 ) / static_cast<value_type> ( 10 );

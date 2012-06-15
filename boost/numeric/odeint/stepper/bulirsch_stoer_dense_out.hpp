@@ -423,7 +423,7 @@ public:
 
     /* performs the interpolation from a calculated step */
     template< class StateOut >
-    void calc_state( const time_type &t , StateOut &x )
+    void calc_state( time_type t , StateOut &x )
     {
         //std::cout << "===========" << std::endl << "doing interpolation for t=" << t << std::endl;
         do_interpolation( t , x );
@@ -441,7 +441,7 @@ public:
         return m_t;
     }
 
-    const time_type& previous_state( void ) const
+    const state_type& previous_state( void ) const
     {
         return *m_old_state;
     }
@@ -475,7 +475,7 @@ public:
 private:
 
     template< class StateInOut , class StateVector >
-    void extrapolate( const size_t k , StateVector &table , const value_matrix &coeff , StateInOut &xest , const size_t order_start_index = 0 )
+    void extrapolate( size_t k , StateVector &table , const value_matrix &coeff , StateInOut &xest , size_t order_start_index = 0 )
     //polynomial extrapolation, see http://www.nr.com/webnotes/nr3web21.pdf
     {
         static const time_type val1 = static_cast< time_type >( 1.0 );
@@ -492,7 +492,7 @@ private:
 
 
     template< class StateVector >
-    void extrapolate_dense_out( const size_t k , StateVector &table , const value_matrix &coeff , const size_t order_start_index = 0 )
+    void extrapolate_dense_out( size_t k , StateVector &table , const value_matrix &coeff , size_t order_start_index = 0 )
     //polynomial extrapolation, see http://www.nr.com/webnotes/nr3web21.pdf
     {
         // result is written into table[0]
@@ -511,7 +511,7 @@ private:
                         -coeff[k + order_start_index][order_start_index]) );
     }
 
-    time_type calc_h_opt( const time_type h , const value_type error , const size_t k ) const
+    time_type calc_h_opt( time_type h , value_type error , size_t k ) const
     {
         time_type expo=1.0/(m_interval_sequence[k-1]);
         time_type facmin = std::pow( STEPFAC3 , expo );
@@ -527,14 +527,14 @@ private:
         return h*fac;
     }
 
-    bool in_convergence_window( const size_t k ) const
+    bool in_convergence_window( size_t k ) const
     {
         if( (k == m_current_k_opt-1) && !m_last_step_rejected )
             return true; // decrease order only if last step was not rejected
         return ( (k == m_current_k_opt) || (k == m_current_k_opt+1) );
     }
 
-    bool should_reject( const time_type error , const size_t k ) const
+    bool should_reject( time_type error , size_t k ) const
     {
         if( (k == m_current_k_opt-1) )
         {
@@ -552,8 +552,8 @@ private:
     }
 
     template< class StateIn1 , class DerivIn1 , class StateIn2 , class DerivIn2 >
-    value_type prepare_dense_output( const int k , const StateIn1 &x_start , const DerivIn1 &dxdt_start ,
-            const StateIn2 & /* x_end */ , const DerivIn2 & /*dxdt_end */ , const time_type dt )  // k is the order to which the result was approximated
+    value_type prepare_dense_output( int k , const StateIn1 &x_start , const DerivIn1 &dxdt_start ,
+            const StateIn2 & /* x_end */ , const DerivIn2 & /*dxdt_end */ , time_type dt )  // k is the order to which the result was approximated
     {
 
         // compute the coefficients of the interpolation polynomial
@@ -674,7 +674,7 @@ private:
     }
 
     template< class DerivIn >
-    void calculate_finite_difference( const size_t j , const size_t kappa , const time_type fac , const DerivIn &dxdt )
+    void calculate_finite_difference( size_t j , size_t kappa , time_type fac , const DerivIn &dxdt )
     {
         const int m = m_interval_sequence[j]/2-1;
         if( kappa == 0) // no calculation required for 0th derivative of f
@@ -724,7 +724,7 @@ private:
     }
 
     template< class StateOut >
-    void do_interpolation( const time_type t , StateOut &out )
+    void do_interpolation( time_type t , StateOut &out )
     {
         // interpolation polynomial is defined for theta = -1 ... 1
         // m_k_final is the number of order-iterations done for the last step - it governs the order of the interpolation polynomial

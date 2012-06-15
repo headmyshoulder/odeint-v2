@@ -373,7 +373,7 @@ private:
 
 
     template< class StateInOut >
-    void extrapolate( const size_t k , state_table_type &table , const value_matrix &coeff , StateInOut &xest )
+    void extrapolate( size_t k , state_table_type &table , const value_matrix &coeff , StateInOut &xest )
     //polynomial extrapolation, see http://www.nr.com/webnotes/nr3web21.pdf
     {
         //std::cout << "extrapolate k=" << k << ":" << std::endl;
@@ -389,7 +389,7 @@ private:
                 typename operations_type::template scale_sum2< time_type , time_type >( val1 + coeff[k][0] , -coeff[k][0]) );
     }
 
-    time_type calc_h_opt( const time_type h , const value_type error , const size_t k ) const
+    time_type calc_h_opt( time_type h , value_type error , size_t k ) const
     {
         time_type expo=1.0/(2*k+1);
         time_type facmin = std::pow( STEPFAC3 , expo );
@@ -405,7 +405,7 @@ private:
         return h*fac;
     }
 
-    controlled_step_result set_k_opt( const size_t k , const value_vector &work , const value_vector &h_opt , time_type &dt )
+    controlled_step_result set_k_opt( size_t k , const value_vector &work , const value_vector &h_opt , time_type &dt )
     {
         //std::cout << "finding k_opt..." << std::endl;
         if( k == 1 )
@@ -434,14 +434,14 @@ private:
         }
     }
 
-    bool in_convergence_window( const size_t k ) const
+    bool in_convergence_window( size_t k ) const
     {
         if( (k == m_current_k_opt-1) && !m_last_step_rejected )
             return true; // decrease stepsize only if last step was not rejected
         return ( (k == m_current_k_opt) || (k == m_current_k_opt+1) );
     }
 
-    bool should_reject( const time_type error , const size_t k ) const
+    bool should_reject( time_type error , size_t k ) const
     {
         if( (k == m_current_k_opt-1) )
         {

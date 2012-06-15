@@ -28,7 +28,7 @@ namespace detail {
  * return t1 < t2 if dt > 0 and t1 > t2 if dt < 0
  */
 template< typename T1 , typename T2 , typename T3 >
-bool less_with_sign( const T1 t1 , const T2 t2 , const T3 dt )
+bool less_with_sign( T1 t1 , T2 t2 , T3 dt )
 {
     if( get_unit_value(dt) > 0 )
         return t1 < t2;
@@ -40,7 +40,7 @@ bool less_with_sign( const T1 t1 , const T2 t2 , const T3 dt )
  * return t1 <= t2 if dt > 0 and t1 => t2 if dt < 0
  */
 template< typename T1 , typename T2 , typename T3>
-bool less_eq_with_sign( const T1 t1 , const T2 t2 , const T3 dt )
+bool less_eq_with_sign( T1 t1 , T2 t2 , T3 dt )
 {
     if( get_unit_value(dt) > 0 )
         return t1 <= t2;
