@@ -15,7 +15,7 @@ Note that all error steppers are also basic steppers.
 * DefaultConstructable
 * CopyConstructable
 
-[/
+
 [heading Associated types]
 
 *  '''<para>'''[*state_type]'''</para>'''
@@ -37,7 +37,7 @@ Note that all error steppers are also basic steppers.
 *  '''<para>'''[*order_type]'''</para>'''
 '''<para>'''`Stepper::order_type`'''</para>'''
 '''<para>'''The type characterizing the order of the ODE, typically `unsigned short`.'''</para>'''
-]
+
 
 [heading Notation]
 
@@ -55,18 +55,22 @@ Note that all error steppers are also basic steppers.
 
 [table
   [[Name] [Expression] [Type] [Semantics]]
-  [/[Get the order] [`stepper.order()`] [`Order`] [Returns the order of the stepper which is used for error calculation.] ]
+  [[Get the order] [`stepper.order()`] [`order_type`] [Returns the order of the stepper.]]
   [[Do step] [`stepper.do_step( sys , x , t , dt )`] [`void`] [Performs one step of step size `dt`.  The newly obtained state is written in place in `x`.] ]
-  [[Do step with reference] [`stepper.do_step( boost::ref(sys) , x , t , dt )`] [`void`] [Performs one step of step size `dt`.  The newly obtained state is written in place in `x`.] ]
-  [/[Do step out-of-place] [`stepper.do_step( sys , in , t , out , dt )`] [`void`] [Performs one step. The newly obtained state is written to `out`] ]
+
+  [/ [Do step with reference] [`stepper.do_step( boost::ref(sys) , x , t , dt )`] [`void`] [Performs one step of step size `dt`.  The newly obtained state is written in place in `x`.] ]
+
+  [/ [Do step out-of-place] [`stepper.do_step( sys , in , t , out , dt )`] [`void`] [Performs one step. The newly obtained state is written to `out`] ]
 ]
 
 [heading Models]
 
-* runge_kutta4
-* euler
-* runge_kutta_cash_karp54
-* runge_kutta_dopri5
-* runge_kutta_fehlberg78
+* `runge_kutta4`
+* `euler`
+* `runge_kutta_cash_karp54`
+* `runge_kutta_dopri5`
+* `runge_kutta_fehlberg78`
+* `modified_midpoint`
+* `rosenbrock4`
 
 [endsect]
