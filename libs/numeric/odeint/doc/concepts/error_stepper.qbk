@@ -1,12 +1,28 @@
 [section Error Stepper]
 
-This concepts specifies the interface an error stepper has to fulfill to be used within a ControlledErrorStepper.
+This concepts specifies the interface an error stepper has to fulfill to be used within a ControlledErrorStepper. An error stepper must always fullfil the stepper concept. This can trivially implemented by
+
+``
+template< class System >
+error_stepper::do_step( System sys , state_type &x , time_type t , time_type dt )
+{
+    state_type xerr;
+    // allocate xerr
+    do_step( sys , x , t , dt , xerr );
+}
+``
 
 [heading Description]
 
-An error stepper following this Error Stepper concept is capable of doing one step of the solution /x(t)/ of an ODE with step-size /dt/ to obtain /x(t+dt)/ and also computing an error estimate /x[sub err]/ of the result.
+An error stepper following this Error Stepper concept is capable of doing one step of the solution /x(t)/ of an ODE with step-size /dt/ to obtain /x(t+dt)/ and also computing an error estimate ['x[sub err]] of the result.
 Error Steppers can be Runge Kutta steppers, symplectic steppers as well as implicit steppers.
 Based on the stepper type, the ODE is defined as __system, __symplectic_system, __simple_symplectic_system or __implicit_system.
+
+[heading Refinement of]
+
+* DefaultConstructable
+* CopyConstructable
+* Stepper
 
 [heading Associated types]
 
@@ -49,9 +65,11 @@ Based on the stepper type, the ODE is defined as __system, __symplectic_system, 
 
 [table
   [[Name] [Expression] [Type] [Semantics]]
-  [[Get the stepper order] [`stepper.stepper_order()`] [`order_type`] [Returns the order of the stepper which is used for error calculation.]]
+  [[Get the stepper order] [`stepper.order()`] [`order_type`] [Returns the order of the stepper for one step without error estimation.]]
+  [[Get the stepper order] [`stepper.stepper_order()`] [`order_type`] [Returns the order of the stepper for one error estimation step which is used for error calculation.]]
   [[Get the error order] [`stepper.errorr_order()`] [`order_type`] [Returns the order of the error step which is used for error calculation.]]
-  [[Do step] [`stepper.do_step( sys , x , t , dt , xerr )`] [`void`] [Performs one step of step size `dt` with error estimation.  The newly obtained state is written in-place to `x` and the estimated error to `xerr`.] ]
+  [[Do step] [`stepper.do_step( sys , x , t , dt )`] [`void`] [Performs one step of step size `dt`. The newly obtained state is written in-place to `x`.] ]
+  [[Do step with error estimation] [`stepper.do_step( sys , x , t , dt , xerr )`] [`void`] [Performs one step of step size `dt` with error estimation.  The newly obtained state is written in-place to `x` and the estimated error to `xerr`.] ]
   [/ [Do step with reference] [`stepper.do_step( boost::ref(sys) , x , t , dt , xerr )`] [`void`] [Performs one step of step size `dt`.  The newly obtained state is written in-place to `x` and the estimated error to `xerr`.] ]
 ]
 

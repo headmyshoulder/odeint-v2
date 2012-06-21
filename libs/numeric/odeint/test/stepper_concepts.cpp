@@ -74,6 +74,7 @@ typedef boost::array< double , 1 > array_type;
 
 
 const double result = 2.2;
+const double error_stepper_result = 2.4;
 
 typedef mpl::vector< vector_type , vector_space_type , array_type >::type container_types;
 
@@ -132,7 +133,9 @@ void check_error_stepper_concept( Stepper &stepper , System system , typename St
     typedef typename stepper_type::order_type order_type;
     typedef typename stepper_type::time_type time_type;
 
+    stepper.do_step( system , typename boost::add_reference< container_type>::type( x ), 0.0 , 0.1 );
     stepper.do_step( system , typename boost::add_reference< container_type>::type( x ), 0.0 , 0.1 ,  typename boost::add_reference< container_type>::type( xerr ) );
+
 }
 
 template< class Stepper , class System >
@@ -268,7 +271,7 @@ struct perform_error_stepper_test< Stepper , vector_type >
 		Stepper stepper;
 		check_error_stepper_concept( stepper , constant_system_vector , x , xerr );
 		check_error_stepper_concept( stepper , boost::cref( constant_system_vector_class() ) , x , xerr );
-		BOOST_CHECK_SMALL( fabs( x[0] - result ) , eps );
+		BOOST_CHECK_SMALL( fabs( x[0] - error_stepper_result ) , eps );
 	}
 };
 
@@ -283,7 +286,7 @@ struct perform_error_stepper_test< Stepper , vector_space_type >
 		Stepper stepper;
 		check_error_stepper_concept( stepper , constant_system_vector_space , x , xerr );
 		check_error_stepper_concept( stepper , boost::cref( constant_system_vector_space_class() ) , x , xerr );
-		BOOST_CHECK_SMALL( fabs( x.m_x - result ) , eps );
+		BOOST_CHECK_SMALL( fabs( x.m_x - error_stepper_result ) , eps );
 	}
 };
 
@@ -297,7 +300,7 @@ struct perform_error_stepper_test< Stepper , array_type >
 		Stepper stepper;
 		check_error_stepper_concept( stepper , constant_system_array , x , xerr );
 		check_error_stepper_concept( stepper , boost::cref( constant_system_array_class() ) , x , xerr );
-		BOOST_CHECK_SMALL( fabs( x[0] - result ) , eps );
+		BOOST_CHECK_SMALL( fabs( x[0] - error_stepper_result ) , eps );
 	}
 };
 

@@ -1,6 +1,6 @@
 /*
  [auto_generated]
- boost/numeric/odeint/stepper/base/explicit_stepper_and_error_stepper_fsal_base.hpp
+ boost/numeric/odeint/stepper/base/explicit_error_stepper_fsal_base.hpp
 
  [begin_description]
  Base class for all explicit first-same-as-last Runge Kutta steppers.
@@ -15,8 +15,8 @@
  */
 
 
-#ifndef BOOST_NUMERIC_ODEINT_STEPPER_BASE_EXPLICIT_STEPPER_AND_ERROR_STEPPER_FSAL_BASE_HPP_INCLUDED
-#define BOOST_NUMERIC_ODEINT_STEPPER_BASE_EXPLICIT_STEPPER_AND_ERROR_STEPPER_FSAL_BASE_HPP_INCLUDED
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_BASE_EXPLICIT_ERROR_STEPPER_FSAL_BASE_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STEPPER_BASE_EXPLICIT_ERROR_STEPPER_FSAL_BASE_HPP_INCLUDED
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -64,7 +64,7 @@ class Algebra ,
 class Operations ,
 class Resizer
 >
-class explicit_stepper_and_error_stepper_fsal_base : public algebra_stepper_base< Algebra , Operations >
+class explicit_error_stepper_fsal_base : public algebra_stepper_base< Algebra , Operations >
 {
 public:
 
@@ -81,7 +81,7 @@ public:
     typedef state_wrapper< state_type > wrapped_state_type;
     typedef state_wrapper< deriv_type > wrapped_deriv_type;
 
-    typedef explicit_stepper_and_error_stepper_fsal_base< Stepper , Order , StepperOrder , ErrorOrder ,
+    typedef explicit_error_stepper_fsal_base< Stepper , Order , StepperOrder , ErrorOrder ,
             State , Value , Deriv , Time , Algebra , Operations , Resizer > internal_stepper_base_type;
 
     typedef unsigned short order_type;
@@ -90,7 +90,7 @@ public:
     static const order_type error_order_value = ErrorOrder;
 
 
-    explicit_stepper_and_error_stepper_fsal_base( const algebra_type &algebra = algebra_type() )
+    explicit_error_stepper_fsal_base( const algebra_type &algebra = algebra_type() )
     : algebra_stepper_base_type( algebra ) , m_first_call( true )
     { }
 
@@ -334,4 +334,4 @@ protected:
 } // numeric
 } // boost
 
-#endif // BOOST_NUMERIC_ODEINT_STEPPER_BASE_EXPLICIT_STEPPER_AND_ERROR_STEPPER_FSAL_BASE_HPP_INCLUDED
+#endif // BOOST_NUMERIC_ODEINT_STEPPER_BASE_EXPLICIT_ERROR_STEPPER_FSAL_BASE_HPP_INCLUDED

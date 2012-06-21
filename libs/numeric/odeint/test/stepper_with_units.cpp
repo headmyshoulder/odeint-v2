@@ -201,7 +201,7 @@ void check_controlled_stepper( Stepper &stepper )
 	typedef typename stepper_type::value_type value_type;
 	typedef typename stepper_type::deriv_type deriv_type;
 	typedef typename stepper_type::time_type time_type;
-	typedef typename stepper_type::order_type order_type;
+//	typedef typename stepper_type::order_type order_type;
 //	typedef typename stepper_type::algebra_type algebra_type;
 //	typedef typename stepper_type::operations_type operations_type;
 

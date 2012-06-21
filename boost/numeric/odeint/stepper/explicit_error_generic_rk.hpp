@@ -18,7 +18,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_EXPLICIT_ERROR_GENERIC_RK_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_STEPPER_EXPLICIT_ERROR_GENERIC_RK_HPP_INCLUDED
 
-#include <boost/numeric/odeint/stepper/base/explicit_stepper_and_error_stepper_base.hpp>
+#include <boost/numeric/odeint/stepper/base/explicit_error_stepper_base.hpp>
 
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
@@ -50,7 +50,7 @@ class Operations = default_operations ,
 class Resizer = initially_resizer
 >
 class explicit_error_generic_rk
-: public explicit_stepper_and_error_stepper_base<
+: public explicit_error_stepper_base<
   explicit_error_generic_rk< StageCount , Order , StepperOrder , ErrorOrder , State ,
   Value , Deriv , Time , Algebra , Operations , Resizer > ,
   Order , StepperOrder , ErrorOrder , State , Value , Deriv , Time , Algebra ,
@@ -59,7 +59,7 @@ class explicit_error_generic_rk
 
 public:
 
-    typedef explicit_stepper_and_error_stepper_base<
+    typedef explicit_error_stepper_base<
             explicit_error_generic_rk< StageCount , Order , StepperOrder , ErrorOrder , State ,
             Value , Deriv , Time , Algebra , Operations , Resizer > ,
             Order , StepperOrder , ErrorOrder , State , Value , Deriv , Time , Algebra ,

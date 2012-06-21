@@ -21,7 +21,7 @@
 
 #include <boost/numeric/odeint/util/bind.hpp>
 
-#include <boost/numeric/odeint/stepper/base/explicit_stepper_and_error_stepper_fsal_base.hpp>
+#include <boost/numeric/odeint/stepper/base/explicit_error_stepper_fsal_base.hpp>
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
@@ -46,14 +46,14 @@ class Operations = default_operations ,
 class Resizer = initially_resizer
 >
 class runge_kutta_dopri5
-: public explicit_stepper_and_error_stepper_fsal_base<
+: public explicit_error_stepper_fsal_base<
   runge_kutta_dopri5< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
   5 , 5 , 4 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
 {
 
 public :
 
-    typedef explicit_stepper_and_error_stepper_fsal_base<
+    typedef explicit_error_stepper_fsal_base<
     runge_kutta_dopri5< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
     5 , 5 , 4 , State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_base_type;
     
