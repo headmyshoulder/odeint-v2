@@ -148,7 +148,7 @@ public:
         return *m_current_state;
     }
 
-    const time_type& current_time( void ) const
+    time_type current_time( void ) const
     {
         return m_t;
     }
@@ -158,12 +158,12 @@ public:
         return *m_old_state;
     }
 
-    const time_type& previous_time( void ) const
+    time_type previous_time( void ) const
     {
         return m_t_old;
     }
 
-    const time_type& current_time_step( void ) const
+    time_type current_time_step( void ) const
     {
         return m_dt;
     }

@@ -11,7 +11,10 @@
 
 #include <boost/numeric/odeint.hpp>
 
-#include <boost/spirit/include/phoenix.hpp>
+#include <boost/phoenix/core.hpp>
+
+#include <boost/phoenix/core.hpp>
+#include <boost/phoenix/operator.hpp>
 
 using namespace std;
 using namespace boost::numeric::odeint;
