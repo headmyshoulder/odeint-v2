@@ -76,13 +76,19 @@ public:
     typedef std::vector< size_t > int_vector;
     typedef std::vector< wrapped_state_type > state_table_type;
 
+    const static size_t m_k_max = 8;
+
+
     bulirsch_stoer(
             time_type eps_abs = 1E-6 , time_type eps_rel = 1E-6 ,
             time_type factor_x = 1.0 , time_type factor_dxdt = 1.0 )
-    : m_error_checker( eps_abs , eps_rel , factor_x, factor_dxdt ),
-      m_k_max(8) ,
+    : m_error_checker( eps_abs , eps_rel , factor_x, factor_dxdt ) , m_midpoint() ,
       m_last_step_rejected( false ) , m_first( true ) ,
-      m_dt_last( 1.0E30 ) ,
+      m_dt_last( 1.0E30 ) , m_t_last() ,
+      m_current_k_opt() ,
+      m_algebra() ,
+      m_dxdt_resizer() , m_xnew_resizer() , m_resizer() ,
+      m_xnew() , m_err() , m_dxdt() ,
       m_interval_sequence( m_k_max+1 ) ,
       m_coeff( m_k_max+1 ) ,
       m_cost( m_k_max+1 ) ,
@@ -113,19 +119,6 @@ public:
 
     }
 
-    bulirsch_stoer( const bulirsch_stoer &bs )
-    : m_error_checker( bs.m_error_checker ) ,
-      m_midpoint( bs.m_midpoint ) ,
-      m_k_max( bs.m_k_max ) ,
-      m_last_step_rejected( bs.m_last_step_rejected ) , m_first( bs.m_first ) ,
-      m_dt_last( bs.m_dt_last ) , m_t_last( bs.m_t_last ) ,
-      m_current_k_opt( bs.m_current_k_opt ) ,
-      m_interval_sequence( bs.m_interval_sequence ) ,
-      m_coeff( bs.m_coeff ) ,
-      m_cost( bs.m_cost ) ,
-      m_table( bs.m_table ) ,
-      STEPFAC1( bs.STEPFAC1 ) , STEPFAC2( bs.STEPFAC2 ) , STEPFAC3( bs.STEPFAC3 ) , STEPFAC4( bs.STEPFAC4 ) , KFAC1( bs.KFAC1 ) , KFAC2( bs.KFAC2 )
-    { }
 
     /*
      * Version 1 : try_step( sys , x , t , dt )
@@ -459,8 +452,6 @@ private:
 
     default_error_checker< value_type, algebra_type , operations_type > m_error_checker;
     modified_midpoint< state_type , value_type , deriv_type , time_type , algebra_type , operations_type , resizer_type > m_midpoint;
-
-    const size_t m_k_max;
 
     bool m_last_step_rejected;
     bool m_first;
