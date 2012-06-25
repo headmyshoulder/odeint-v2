@@ -148,7 +148,7 @@ int main( int argc , char **argv )
 
     integrate_const( h , lorenz() , x , 0.0 , 100.0 , 0.01 ,
 		     []( const state_type &_x , double _t ) { 
-			 cout << _t << "\t" << _x[0] << "\t" << _x[1] << "\t" << _x[2] << "\n";
+                         std::cout << _t << "\t" << _x[0] << "\t" << _x[1] << "\t" << _x[2] << "\n";
 		     });
     //]
 
