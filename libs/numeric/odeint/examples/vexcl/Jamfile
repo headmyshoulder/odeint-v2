@@ -1,0 +1,23 @@
+import boost ;
+import os ;
+
+boost.use-project ;
+
+
+# change these lines to fit you configuration
+local HOME = [ os.environ HOME ] ;
+VEXCL_INCLUDE = $(HOME)/boost/vexcl ;
+CUDA_INCLUDE = /usr/local/cuda/include ;
+
+
+lib opencl : : <name>OpenCL ;
+
+project : requirements
+        <library>/boost//headers
+        <include>../../../../..
+        <include>$(VEXCL_INCLUDE)
+        <include>$(CUDA_INCLUDE)
+        <toolset>gcc:<cxxflags>-std=c++0x
+        ;
+
+exe lorenz_ensemble : lorenz_ensemble.cpp opencl ;

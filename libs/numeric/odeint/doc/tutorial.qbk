@@ -12,6 +12,8 @@
 
 [include tutorial_thrust_cuda.qbk]
 
+[include tutorial_vexcl_opencl.qbk]
+
 
 [section All examples]
 

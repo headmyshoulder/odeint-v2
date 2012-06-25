@@ -31,17 +31,18 @@
     [@http://www.boost.org/doc/libs/release/libs/fusion/index.html Boost.Fusion]]
 [def __boost_graph
     [@http://www.boost.org/doc/libs/1_47_0/libs/graph/doc/table_of_contents.html Boost.Graph]]
+
 [def __thrust
     [@http://code.google.com/p/thrust/ Thrust]]
 [def __ublas
     [@http://www.boost.org/doc/libs/release/libs/numeric/ublas/index.html Boost.UBlas]]
-
 [def __intel_mkl
      [@http://software.intel.com/en-us/articles/intel-mkl/ Intel Math Kernel Library]]
-
 [def __gsl
      [@http://www.gsl.org GSL]] 
-    
+[def __vexcl
+     [@https://github.com/ddemidov/vexcl VexCL]]
+
 [def __concepts
     [link boost_numeric_odeint.concepts Concepts]]
 [def __system
