@@ -173,23 +173,23 @@ The full cpp for this example can be found here [github_link libs/numeric/odeint
 
 [endsect]
 
-[section Partial differential equations]
-
-To be continued:
-
-*Wave equation
-
-*KdV
-
-*Ginzburg-Landau
-
-[endsect]
-
-[section Ordinary differential equations on networks]
-
-to be continued
-
-[endsect]
+# [section Partial differential equations]
+# 
+# To be continued:
+# 
+# *Wave equation
+# 
+# *KdV
+# 
+# *Ginzburg-Landau
+# 
+# [endsect]
+# 
+# [section Ordinary differential equations on networks]
+# 
+# to be continued
+#
+# [endsect]
 
 [section Using arbitrary precision floating point types]
 
