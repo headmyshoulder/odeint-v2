@@ -1,7 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <utility>
-#include <tuple>
 
 #include <vexcl/vexcl.hpp>
 

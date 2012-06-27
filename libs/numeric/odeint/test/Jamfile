@@ -6,14 +6,17 @@
 
 
 import testing ;
+
 use-project boost : $(BOOST_ROOT) ;
 
 project
     : requirements
-	  <library>/boost/test//boost_unit_test_framework
+      <library>/boost/test//boost_unit_test_framework
       <define>BOOST_ALL_NO_LIB=1
       <include>../../../..
-	  <link>static
+      <link>static
+      <toolset>clang:<cxxflags>-Wno-unused-variable
+
 #	  <cxxflags>-D_SCL_SECURE_NO_WARNINGS
     ;
 

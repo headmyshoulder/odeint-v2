@@ -19,6 +19,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_ADAMS_BASHFORTH_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_STEPPER_ADAMS_BASHFORTH_HPP_INCLUDED
 
+#include <boost/static_assert.hpp>
 
 #include <boost/numeric/odeint/util/bind.hpp>
 #include <boost/numeric/odeint/util/unwrap_reference.hpp>
@@ -62,7 +63,7 @@ class InitializingStepper = runge_kutta4< State , Value , Deriv , Time , Algebra
 >
 class adams_bashforth : public algebra_stepper_base< Algebra , Operations >
 {
-private:
+    BOOST_STATIC_ASSERT(( Steps > 0 ));
 
 public :
 
@@ -81,6 +82,8 @@ public :
     typedef InitializingStepper initializing_stepper_type;
 
     static const size_t steps = Steps;
+
+
 
     typedef unsigned short order_type;
     static const order_type order_value = steps;
