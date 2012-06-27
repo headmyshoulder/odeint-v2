@@ -71,7 +71,8 @@ public:
 
     typedef bulirsch_stoer< State , Value , Deriv , Time , Algebra , Operations , Resizer > controlled_error_bs_type;
 
-    typedef std::vector< time_type > value_vector;
+    typedef std::vector< value_type > value_vector;
+    typedef std::vector< time_type > time_vector;
     typedef std::vector< value_vector > value_matrix;
     typedef std::vector< size_t > int_vector;
     typedef std::vector< wrapped_state_type > state_table_type;
@@ -80,21 +81,22 @@ public:
 
 
     bulirsch_stoer(
-            time_type eps_abs = 1E-6 , time_type eps_rel = 1E-6 ,
-            time_type factor_x = 1.0 , time_type factor_dxdt = 1.0 )
+            value_type eps_abs = 1E-6 , value_type eps_rel = 1E-6 ,
+            value_type factor_x = 1.0 , value_type factor_dxdt = 1.0 )
     : m_error_checker( eps_abs , eps_rel , factor_x, factor_dxdt ) , m_midpoint() ,
       m_last_step_rejected( false ) , m_first( true ) ,
-      m_dt_last( 1.0E30 ) , m_t_last() ,
+      /* , m_t_last() ,
       m_current_k_opt() ,
       m_algebra() ,
       m_dxdt_resizer() , m_xnew_resizer() , m_resizer() ,
-      m_xnew() , m_err() , m_dxdt() ,
+      m_xnew() , m_err() , m_dxdt() ,*/
       m_interval_sequence( m_k_max+1 ) ,
       m_coeff( m_k_max+1 ) ,
       m_cost( m_k_max+1 ) ,
       m_table( m_k_max ) ,
       STEPFAC1( 0.65 ) , STEPFAC2( 0.94 ) , STEPFAC3( 0.02 ) , STEPFAC4( 4.0 ) , KFAC1( 0.8 ) , KFAC2( 0.9 )
     {
+        //m_dt_last = 1.0E30;
         for( unsigned short i = 0; i < m_k_max+1; i++ )
         {
             m_interval_sequence[i] = 2 * (i+1);
@@ -105,13 +107,13 @@ public:
             m_coeff[i].resize(i);
             for( size_t k = 0 ; k < i ; ++k  )
             {
-                const time_type r = static_cast< time_type >( m_interval_sequence[i] ) / static_cast< time_type >( m_interval_sequence[k] );
-                m_coeff[i][k] = 1.0 / ( r*r - static_cast< time_type >( 1.0 ) ); // coefficients for extrapolation
+                const value_type r = static_cast< value_type >( m_interval_sequence[i] ) / static_cast< value_type >( m_interval_sequence[k] );
+                m_coeff[i][k] = 1.0 / ( r*r - static_cast< value_type >( 1.0 ) ); // coefficients for extrapolation
                 //std::cout << i << "," << k << " " << m_coeff[i][k] << '\t' ;
             }
             //std ::cout << std::endl;
             // crude estimate of optimal order
-            const time_type logfact( -log10( std::max( eps_rel , 1.0E-12 ) ) * 0.6 + 0.5 );
+            const value_type logfact( -log10( std::max( eps_rel , 1.0E-12 ) ) * 0.6 + 0.5 );
             m_current_k_opt = std::max( 1 , std::min( static_cast<int>( m_k_max-1 ) , static_cast<int>( logfact ) ));
             //m_current_k_opt = m_k_max - 1;
             //std::cout << m_cost[i] << std::endl;
@@ -172,7 +174,7 @@ public:
     template< class System , class StateIn , class DerivIn , class StateOut >
     controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt , time_type &t , StateOut &out , time_type &dt )
     {
-        static const time_type val1( static_cast< time_type >( 1.0 ) );
+        static const value_type val1( 1.0 );
 
         typename odeint::unwrap_reference< System >::type &sys = system;
         if( m_resizer.adjust_size( in , detail::bind( &controlled_error_bs_type::template resize_impl< StateIn > , detail::ref( *this ) , detail::_1 ) ) )
@@ -187,7 +189,7 @@ public:
 
         bool reject( true );
 
-        value_vector h_opt( m_k_max+1 );
+        time_vector h_opt( m_k_max+1 );
         value_vector work( m_k_max+1 );
 
         //std::cout << "t=" << t <<", dt=" << dt << "(" << m_dt_last << ")" << ", k_opt=" << m_current_k_opt << std::endl;
@@ -208,8 +210,8 @@ public:
                 extrapolate( k , m_table , m_coeff , out );
                 // get error estimate
                 m_algebra.for_each3( m_err.m_v , out , m_table[0].m_v ,
-                        typename operations_type::template scale_sum2< time_type , time_type >( val1 , -val1 ) );
-                const time_type error = m_error_checker.error( m_algebra , in , dxdt , m_err.m_v , dt );
+                        typename operations_type::template scale_sum2< value_type , value_type >( val1 , -val1 ) );
+                const value_type error = m_error_checker.error( m_algebra , in , dxdt , m_err.m_v , dt );
                 h_opt[k] = calc_h_opt( dt , error , k );
                 work[k] = m_cost[k]/h_opt[k];
                 //std::cout << '\t' << "h_opt=" << h_opt[k] << ", work=" << work[k] << std::endl;
@@ -225,7 +227,8 @@ public:
                         {
                             // leave order as is (except we were in first round)
                             m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , std::max( 2 , static_cast<int>(k)+1 ) );
-                            new_h = h_opt[k] * m_cost[k+1]/m_cost[k];
+                            new_h = h_opt[k];
+                            new_h *= m_cost[k+1]/m_cost[k];
                         } else {
                             m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , std::max( 2 , static_cast<int>(k) ) );
                             new_h = h_opt[k];
@@ -253,7 +256,8 @@ public:
                         else if( (work[k] < KFAC2*work[k-1]) && !m_last_step_rejected )
                         {
                             m_current_k_opt = std::min( static_cast<int>(m_k_max-1) , static_cast<int>(m_current_k_opt)+1 );
-                            new_h = h_opt[k]*m_cost[m_current_k_opt]/m_cost[k];
+                            new_h = h_opt[k];
+                            new_h *= m_cost[m_current_k_opt]/m_cost[k];
                             //std::cout << new_h << std::endl;
                         } else
                             new_h = h_opt[m_current_k_opt];
@@ -369,23 +373,23 @@ private:
     //polynomial extrapolation, see http://www.nr.com/webnotes/nr3web21.pdf
     {
         //std::cout << "extrapolate k=" << k << ":" << std::endl;
-        static const time_type val1 = static_cast< time_type >( 1.0 );
+        static const value_type val1 = static_cast< value_type >( 1.0 );
         for( int j=k-1 ; j>0 ; --j )
         {
             //std::cout << '\t' << m_coeff[k][j];
             m_algebra.for_each3( table[j-1].m_v , table[j].m_v , table[j-1].m_v ,
-                    typename operations_type::template scale_sum2< time_type , time_type >( val1 + coeff[k][j] , -coeff[k][j] ) );
+                    typename operations_type::template scale_sum2< value_type , value_type >( val1 + coeff[k][j] , -coeff[k][j] ) );
         }
         //std::cout << std::endl << m_coeff[k][0] << std::endl;
         m_algebra.for_each3( xest , table[0].m_v , xest ,
-                typename operations_type::template scale_sum2< time_type , time_type >( val1 + coeff[k][0] , -coeff[k][0]) );
+                typename operations_type::template scale_sum2< value_type , value_type >( val1 + coeff[k][0] , -coeff[k][0]) );
     }
 
     time_type calc_h_opt( time_type h , value_type error , size_t k ) const
     {
-        time_type expo=1.0/(2*k+1);
-        time_type facmin = std::pow( STEPFAC3 , expo );
-        time_type fac;
+        value_type expo=1.0/(2*k+1);
+        value_type facmin = std::pow( STEPFAC3 , expo );
+        value_type fac;
         if (error == 0.0)
             fac=1.0/facmin;
         else
@@ -397,7 +401,7 @@ private:
         return h*fac;
     }
 
-    controlled_step_result set_k_opt( size_t k , const value_vector &work , const value_vector &h_opt , time_type &dt )
+    controlled_step_result set_k_opt( size_t k , const value_vector &work , const time_vector &h_opt , time_type &dt )
     {
         //std::cout << "finding k_opt..." << std::endl;
         if( k == 1 )
@@ -433,18 +437,18 @@ private:
         return ( (k == m_current_k_opt) || (k == m_current_k_opt+1) );
     }
 
-    bool should_reject( time_type error , size_t k ) const
+    bool should_reject( value_type error , size_t k ) const
     {
         if( (k == m_current_k_opt-1) )
         {
-            const time_type d = m_interval_sequence[m_current_k_opt] * m_interval_sequence[m_current_k_opt+1] /
+            const value_type d = m_interval_sequence[m_current_k_opt] * m_interval_sequence[m_current_k_opt+1] /
                     (m_interval_sequence[0]*m_interval_sequence[0]);
             //step will fail, criterion 17.3.17 in NR
             return ( error > d*d );
         }
         else if( k == m_current_k_opt )
         {
-            const time_type d = m_interval_sequence[m_current_k_opt] / m_interval_sequence[0];
+            const value_type d = m_interval_sequence[m_current_k_opt] / m_interval_sequence[0];
             return ( error > d*d );
         } else
             return error > 1.0;
@@ -477,7 +481,7 @@ private:
 
     state_table_type m_table; // sequence of states for extrapolation
 
-    const time_type STEPFAC1 , STEPFAC2 , STEPFAC3 , STEPFAC4 , KFAC1 , KFAC2;
+    const value_type STEPFAC1 , STEPFAC2 , STEPFAC3 , STEPFAC4 , KFAC1 , KFAC2;
 };
 
 
