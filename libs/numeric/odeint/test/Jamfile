@@ -45,5 +45,6 @@ test-suite "odeint"
 	 [ run integrate_implicit.cpp ]
 	 [ run generation.cpp ]
 	 [ run trivial_state.cpp ]
+         [ run const_step_iterator.cpp ]
 	: <testing.launcher>valgrind
 	;
