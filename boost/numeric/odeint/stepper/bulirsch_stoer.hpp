@@ -73,6 +73,7 @@ public:
 
     typedef std::vector< value_type > value_vector;
     typedef std::vector< time_type > time_vector;
+    typedef std::vector< time_type > inv_time_vector;  //should be 1/time_type for boost.units
     typedef std::vector< value_vector > value_matrix;
     typedef std::vector< size_t > int_vector;
     typedef std::vector< wrapped_state_type > state_table_type;
@@ -190,7 +191,7 @@ public:
         bool reject( true );
 
         time_vector h_opt( m_k_max+1 );
-        value_vector work( m_k_max+1 );
+        inv_time_vector work( m_k_max+1 );
 
         //std::cout << "t=" << t <<", dt=" << dt << "(" << m_dt_last << ")" << ", k_opt=" << m_current_k_opt << std::endl;
 
@@ -401,7 +402,7 @@ private:
         return h*fac;
     }
 
-    controlled_step_result set_k_opt( size_t k , const value_vector &work , const time_vector &h_opt , time_type &dt )
+    controlled_step_result set_k_opt( size_t k , const inv_time_vector &work , const time_vector &h_opt , time_type &dt )
     {
         //std::cout << "finding k_opt..." << std::endl;
         if( k == 1 )
