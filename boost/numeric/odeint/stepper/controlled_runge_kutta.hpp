@@ -475,7 +475,7 @@ public:
         if( max_rel_err > 1.0 )
         {
             // error too large - decrease dt ,limit scaling factor to 0.2 and reset state
-            dt *= max( static_cast<value_type>(9)/static_cast<value_type>(10) * pow( max_rel_err , static_cast<value_type>(-1) / ( m_stepper.error_order() - 1 ) ) , static_cast<value_type>(1)/static_cast<value_type> (5) );
+            dt *= max( static_cast<value_type>( static_cast<value_type>(9)/static_cast<value_type>(10) * pow( max_rel_err , static_cast<value_type>(-1) / ( m_stepper.error_order() - 1 ) ) ) , static_cast<value_type>( static_cast<value_type>(1)/static_cast<value_type> (5)) );
             return fail;
         }
         else
@@ -483,7 +483,7 @@ public:
             if( max_rel_err < 0.5 )
             {                //error too small - increase dt and keep the evolution and limit scaling factor to 5.0
                 t += dt;
-                dt *= min( static_cast<value_type>(9)/static_cast<value_type>(10) * pow( max_rel_err , static_cast<value_type>(-1) / m_stepper.stepper_order() ) , static_cast<value_type>(5) );
+                dt *= min( static_cast<value_type>( static_cast<value_type>(9)/static_cast<value_type>(10) * pow( max_rel_err , static_cast<value_type>(-1) / m_stepper.stepper_order() ) ) , static_cast<value_type>(5) );
                 return success;
             }
             else
