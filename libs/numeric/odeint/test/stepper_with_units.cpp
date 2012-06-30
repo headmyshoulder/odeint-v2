@@ -266,8 +266,8 @@ class fsal_error_stepper_types : public mpl::vector
 class controlled_stepper_types : public mpl::vector
 <
     controlled_runge_kutta< runge_kutta_cash_karp54_classic< state_type , value_type , deriv_type , time_type , fusion_algebra > > ,
-    controlled_runge_kutta< runge_kutta_dopri5< state_type , value_type , deriv_type , time_type , fusion_algebra > >
-    //, bulirsch_stoer< state_type , value_type , deriv_type , time_type , fusion_algebra >
+    controlled_runge_kutta< runge_kutta_dopri5< state_type , value_type , deriv_type , time_type , fusion_algebra > > 
+//    bulirsch_stoer< state_type , value_type , deriv_type , time_type , fusion_algebra >
     //, controlled_error_stepper< runge_kutta_fehlberg78< state_type , value_type , deriv_type , time_type , fusion_algebra > >
 > { };
 

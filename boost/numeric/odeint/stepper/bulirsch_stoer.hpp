@@ -38,12 +38,18 @@
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
+#include <boost/numeric/odeint/util/unit_helper.hpp>
+
 
 namespace boost {
 namespace numeric {
 namespace odeint {
 
+
+
 /** ToDo try_step stepsize changed return values doesn't make too much sense here as we have order control as well */
+
+
 
 template<
 class State ,
@@ -71,9 +77,11 @@ public:
 
     typedef bulirsch_stoer< State , Value , Deriv , Time , Algebra , Operations , Resizer > controlled_error_bs_type;
 
+    typedef typename inverse_time< time_type >::type inv_time_type;
+
     typedef std::vector< value_type > value_vector;
     typedef std::vector< time_type > time_vector;
-    typedef std::vector< time_type > inv_time_vector;  //should be 1/time_type for boost.units
+    typedef std::vector< inv_time_type > inv_time_vector;  //should be 1/time_type for boost.units
     typedef std::vector< value_vector > value_matrix;
     typedef std::vector< size_t > int_vector;
     typedef std::vector< wrapped_state_type > state_table_type;

@@ -21,6 +21,8 @@
 
 #ifndef __CUDACC__
 #include <boost/units/quantity.hpp>
+#include <boost/units/get_dimension.hpp>
+#include <boost/units/get_system.hpp>
 #endif
 
 
@@ -112,6 +114,32 @@ namespace detail {
 	typedef Y type;
     };
 #endif
+
+
+
+
+
+
+
+
+
+
+    template< typename Time >
+    struct inverse_time
+    {
+        typedef Time type;
+    };
+
+    template< typename Unit , typename Value >
+    struct inverse_time< boost::units::quantity< Unit , Value > >
+    {
+        typedef boost::units::quantity< Unit , Value > time_type;
+        typedef typename boost::units::get_dimension< time_type >::type dimension;
+        typedef typename boost::units::get_system< time_type >::type system;
+        typedef typename boost::mpl::divides< boost::units::dimensionless_type , dimension >::type inv_dimension;
+        typedef boost::units::unit< inv_dimension , system > inv_unit;
+        typedef boost::units::quantity< inv_unit , Value > type;
+    };
 
 
 
