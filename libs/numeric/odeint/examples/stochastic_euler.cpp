@@ -14,8 +14,8 @@
 
 #include <vector>
 #include <iostream>
-#include <random>
-#include <array>
+#include <boost/random.hpp>
+#include <boost/array.hpp>
 
 #include <boost/numeric/odeint.hpp>
 
@@ -26,8 +26,8 @@ template< size_t N > class stochastic_euler
 {
 public:
 
-    typedef std::array< double , N > state_type;
-    typedef std::array< double , N > deriv_type;
+    typedef boost::array< double , N > state_type;
+    typedef boost::array< double , N > deriv_type;
     typedef double value_type;
     typedef double time_type;
     typedef unsigned short order_type;
@@ -71,8 +71,8 @@ class stochastic_euler
 {
 public:
 
-    typedef std::array< double , N > state_type;
-    typedef std::array< double , N > deriv_type;
+    typedef boost::array< double , N > state_type;
+    typedef boost::array< double , N > deriv_type;
     typedef double value_type;
     typedef double time_type;
     typedef unsigned short order_type;
@@ -97,7 +97,7 @@ public:
 
 //[ stochastic_euler_ornstein_uhlenbeck_def
 const static size_t N = 1;
-typedef std::array< double , N > state_type;
+typedef boost::array< double , N > state_type;
 
 struct ornstein_det
 {
@@ -109,8 +109,8 @@ struct ornstein_det
 
 struct ornstein_stoch
 {
-    std::mt19937 m_rng;
-    std::normal_distribution<> m_dist;
+    boost::mt19937 m_rng;
+    boost::normal_distribution<> m_dist;
 
     ornstein_stoch( double sigma ) : m_rng() , m_dist( 0.0 , sigma ) { }
 

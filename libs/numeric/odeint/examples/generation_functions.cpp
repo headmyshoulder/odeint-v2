@@ -11,11 +11,11 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#include <array>
+#include <boost/array.hpp>
 
 #include <boost/numeric/odeint.hpp>
 
-typedef std::array< double , 1 > state_type;
+typedef boost::array< double , 1 > state_type;
 
 using namespace boost::numeric::odeint;
 
@@ -73,10 +73,12 @@ int main( int argc , char **argv )
     {
         typedef runge_kutta_dopri5< state_type > stepper_type;
 
+        /*
         //[ generation_functions_syntax_auto
         auto stepper1 = make_controlled( 1.0e-6 , 1.0e-6 , stepper_type() );
         auto stepper2 = make_dense_output( 1.0e-6 , 1.0e-6 , stepper_type() );
         //]
+        */
 
         //[ generation_functions_syntax_result_of
         result_of::make_controlled< stepper_type >::type stepper3 = make_controlled( 1.0e-6 , 1.0e-6 , stepper_type() );
@@ -85,9 +87,13 @@ int main( int argc , char **argv )
     }
 
     {
+        /*
         //[ generation_functions_example_custom_controller
         auto stepper5 = make_controlled( 1.0e-6 , 1.0e-6 , custom_stepper() );
         //]
+        */
+
+        result_of::make_controlled< custom_stepper >::type stepper5 = make_controlled( 1.0e-6 , 1.0e-6 , custom_stepper() );
     }
     return 0;
 }
