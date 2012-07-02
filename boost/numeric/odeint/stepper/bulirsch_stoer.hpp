@@ -222,7 +222,7 @@ public:
                         typename operations_type::template scale_sum2< value_type , value_type >( val1 , -val1 ) );
                 const value_type error = m_error_checker.error( m_algebra , in , dxdt , m_err.m_v , dt );
                 h_opt[k] = calc_h_opt( dt , error , k );
-                work[k] = m_cost[k]/h_opt[k];
+                work[k] = static_cast<value_type>( m_cost[k] ) / h_opt[k];
                 //std::cout << '\t' << "h_opt=" << h_opt[k] << ", work=" << work[k] << std::endl;
                 //std::cout << '\t' << "error: " << error << std::endl;
 
@@ -237,7 +237,7 @@ public:
                             // leave order as is (except we were in first round)
                             m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , std::max( 2 , static_cast<int>(k)+1 ) );
                             new_h = h_opt[k];
-                            new_h *= m_cost[k+1]/m_cost[k];
+                            new_h *= static_cast<value_type>( m_cost[k+1] ) / static_cast<value_type>( m_cost[k] );
                         } else {
                             m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , std::max( 2 , static_cast<int>(k) ) );
                             new_h = h_opt[k];

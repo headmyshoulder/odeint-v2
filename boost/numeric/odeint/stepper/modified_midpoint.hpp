@@ -76,8 +76,8 @@ public :
 
         m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
 
-        const time_type h = dt /  m_steps ;
-        const time_type h2 = 2 * h;
+        const time_type h = dt /  static_cast<value_type>( m_steps );
+        const time_type h2 = static_cast<value_type>(2) * h;
 
         typename odeint::unwrap_reference< System >::type &sys = system;
 
@@ -200,8 +200,8 @@ public :
 
         m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize< StateIn > , detail::ref( *this ) , detail::_1 ) );
 
-        const time_type h = dt / static_cast<time_type>( m_steps );
-        const time_type h2 = static_cast<time_type>( 2 ) * h;
+        const time_type h = dt / static_cast<value_type>( m_steps );
+        const time_type h2 = static_cast<value_type>( 2 ) * h;
 
         typename odeint::unwrap_reference< System >::type &sys = system;
 

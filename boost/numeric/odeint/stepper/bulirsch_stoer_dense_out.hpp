@@ -36,6 +36,7 @@
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
+#include <boost/numeric/odeint/util/unit_helper.hpp>
 
 #include <boost/type_traits.hpp>
 
@@ -87,8 +88,11 @@ public:
 
     typedef bulirsch_stoer_dense_out< State , Value , Deriv , Time , Algebra , Operations , Resizer > controlled_error_bs_type;
 
+    typedef typename inverse_time< time_type >::type inv_time_type;
+
     typedef std::vector< value_type > value_vector;
     typedef std::vector< time_type > time_vector;
+    typedef std::vector< inv_time_type > inv_time_vector;  //should be 1/time_type for boost.units
     typedef std::vector< value_vector > value_matrix;
     typedef std::vector< size_t > int_vector;
     typedef std::vector< wrapped_state_type > state_vector_type;
@@ -104,15 +108,9 @@ public:
             value_type eps_abs = 1E-6 , value_type eps_rel = 1E-6 ,
             value_type factor_x = 1.0 , value_type factor_dxdt = 1.0 ,
             bool control_interpolation = false )
-    : m_error_checker( eps_abs , eps_rel , factor_x, factor_dxdt ) , m_midpoint() , 
+    : m_error_checker( eps_abs , eps_rel , factor_x, factor_dxdt ) , 
       m_control_interpolation( control_interpolation) ,
       m_last_step_rejected( false ) , m_first( true ) ,
-      /*m_t() , m_dt() ,
-      m_dt_last( 1.0E30 ) , m_t_last() ,
-      m_current_k_opt() ,
-      m_k_final(0) ,
-      m_algebra() , m_resizer() ,
-      m_x1() , m_x2() , m_dxdt1() , m_dxdt2() , m_err() ,*/
       m_current_state_x1( true ) ,
       m_error( m_k_max ) ,
       m_interval_sequence( m_k_max+1 ) ,
@@ -185,7 +183,7 @@ public:
         bool reject( true );
 
         time_vector h_opt( m_k_max+1 );
-        value_vector work( m_k_max+1 );
+        inv_time_vector work( m_k_max+1 );
 
         m_k_final = 0;
         time_type new_h = dt;
@@ -209,7 +207,7 @@ public:
                         typename operations_type::template scale_sum2< value_type , value_type >( val1 , -val1 ) );
                 const value_type error = m_error_checker.error( m_algebra , in , dxdt , m_err.m_v , dt );
                 h_opt[k] = calc_h_opt( dt , error , k );
-                work[k] = m_cost[k]/h_opt[k];
+                work[k] = static_cast<value_type>( m_cost[k] ) / h_opt[k];
                 //std::cout << '\t' << "h_opt=" << h_opt[k] << ", work=" << work[k] << std::endl;
                 //std::cout << '\t' << "error: " << error << std::endl;
 
@@ -225,7 +223,7 @@ public:
                         {
                             // leave order as is (except we were in first round)
                             m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , std::max( 2 , static_cast<int>(k)+1 ) );
-                            new_h = h_opt[k] * m_cost[k+1]/m_cost[k];
+                            new_h = h_opt[k] * static_cast<value_type>( m_cost[k+1] ) / static_cast<value_type>( m_cost[k] );
                         } else {
                             m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , std::max( 2 , static_cast<int>(k) ) );
                             new_h = h_opt[k];
@@ -253,7 +251,7 @@ public:
                         else if( (work[k] < KFAC2*work[k-1]) && !m_last_step_rejected )
                         {
                             m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , static_cast<int>(m_current_k_opt)+1 );
-                            new_h = h_opt[k]*m_cost[m_current_k_opt]/m_cost[k];
+                            new_h = h_opt[k]*static_cast<value_type>( m_cost[m_current_k_opt] ) / static_cast<value_type>( m_cost[k] );
                         } else
                             new_h = h_opt[m_current_k_opt];
                         break;
@@ -502,7 +500,7 @@ private:
         for( int j = 0 ; j<=k ; j++ )
         {
             /* not working with boost units... */
-            const value_type d = m_interval_sequence[j] / ( 2*dt );
+            const value_type d = m_interval_sequence[j] / ( static_cast<value_type>(2) * dt );
             value_type f = 1.0; //factor 1/2 here because our interpolation interval has length 2 !!!
             for( int kappa = 0 ; kappa <= 2*j+1 ; ++kappa )
             {
@@ -664,7 +662,7 @@ private:
     {
         // interpolation polynomial is defined for theta = -1 ... 1
         // m_k_final is the number of order-iterations done for the last step - it governs the order of the interpolation polynomial
-        const time_type theta = 2*(t - m_t_last)/(m_t - m_t_last) - 1;
+        const value_type theta = 2 * get_unit_value( (t - m_t_last) / (m_t - m_t_last) ) - 1;
         //std::cout << "theta=" << theta << std::endl;
         //start with x = a0 + a_{2k+1} theta^{2k+1} + a_{2k+2} theta^{2k+2} + a_{2k+3} theta^{2k+3} + a_{2k+4} theta^{2k+4}
         //std::cout << "x = a_0 + ";
@@ -809,7 +807,7 @@ private:
 
     //wrapped_state_type m_a1 , m_a2 , m_a3 , m_a4;
 
-    const time_type STEPFAC1 , STEPFAC2 , STEPFAC3 , STEPFAC4 , KFAC1 , KFAC2;
+    const value_type STEPFAC1 , STEPFAC2 , STEPFAC3 , STEPFAC4 , KFAC1 , KFAC2;
 };
 
 }
