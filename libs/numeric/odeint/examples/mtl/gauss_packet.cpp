@@ -16,9 +16,9 @@
 #include <complex>
 
 #include <boost/numeric/odeint.hpp>
-#include "mtl_bindings.hpp"
+#include <boost/numeric/odeint/external/mtl4/mtl4_resize.hpp>
 
-
+#include <boost/numeric/mtl/mtl.hpp>
 
 
 using namespace std;
