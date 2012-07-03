@@ -26,12 +26,18 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+
+    template< class Stepper , class System , class StepperTag = typename Stepper::stepper_category > 
+    class const_step_iterator;
+
+
+    // Specilization for steppers and error steppers
     template< class Stepper , class System >
-    class const_step_iterator : public boost::iterator_facade
+    class const_step_iterator< Stepper , System , stepper_tag > : public boost::iterator_facade
     <
-        const_step_iterator< Stepper , System > ,
+        const_step_iterator< Stepper , System , stepper_tag > ,
         typename Stepper::state_type ,
-        boost::incrementable_traversal_tag
+        boost::single_pass_traversal_tag
     >
     {
     private:
@@ -76,6 +82,10 @@ namespace odeint {
 
     };
 
+    /*
+     * ToDo : create specializations for controlled steppers and dense output steppers
+     */
+
 
     template< class Stepper , class System >
     const_step_iterator< Stepper , System > make_const_step_iterator(
@@ -89,12 +99,28 @@ namespace odeint {
     }
 
 
+    template< class Stepper , class System >
+    std::pair< const_step_iterator< Stepper , System > , const_step_iterator< Stepper , System > >
+    make_const_step_range(
+        Stepper stepper ,
+        System system , 
+        typename Stepper::state_type &x ,
+        typename Stepper::time_type t_start ,
+        typename Stepper::time_type t_end ,
+        typename Stepper::time_type dt )
+    {
+        return std::make_pair(
+            const_step_iterator< Stepper , System >( stepper , system , x , t_start , dt ) ,
+            const_step_iterator< Stepper , System >( stepper , system , x , t_end , dt ) );
+    }
 
 
 
 
 
-// make_const_step_ode_iterator
+
+
+
 
 
 
