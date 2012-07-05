@@ -31,12 +31,13 @@ namespace odeint {
     class const_step_iterator;
 
 
+
     // Specilization for steppers and error steppers
     template< class Stepper , class System >
     class const_step_iterator< Stepper , System , stepper_tag > : public boost::iterator_facade
     <
         const_step_iterator< Stepper , System , stepper_tag > ,
-        typename Stepper::state_type ,
+        typename Stepper::state_type const ,
         boost::single_pass_traversal_tag
     >
     {
@@ -54,8 +55,6 @@ namespace odeint {
 
     private:
 
-
-
         friend class boost::iterator_core_access;
 
         void increment()
@@ -69,7 +68,7 @@ namespace odeint {
             return m_t > other.m_t;
         }
 
-        state_type& dereference() const
+        const state_type& dereference() const
         {
             return m_state;
         }
@@ -81,6 +80,65 @@ namespace odeint {
         time_type m_dt;
 
     };
+
+
+
+    // Specilization for dense output stepper
+    template< class Stepper , class System >
+    class const_step_iterator< Stepper , System , dense_output_stepper_tag > : public boost::iterator_facade
+    <
+        const_step_iterator< Stepper , System , dense_output_stepper_tag > ,
+        typename Stepper::state_type const ,
+        boost::single_pass_traversal_tag
+    >
+    {
+    private:
+
+        typedef Stepper stepper_type;
+        typedef System system_type;
+        typedef typename stepper_type::state_type state_type;
+        typedef typename stepper_type::time_type time_type;
+
+    public:
+   
+        const_step_iterator( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type dt )
+            : m_stepper( stepper ) , m_system( sys ) , m_state( s ) , m_t( t ) , m_dt( dt )
+        {
+            m_stepper.initialize( m_state , m_t , m_dt );
+        }
+
+    private:
+
+        friend class boost::iterator_core_access;
+
+        void increment( void )
+        {
+            m_t += m_dt;
+            while(  m_stepper.current_time() < m_state.second )
+                m_stepper.do_step( m_system );
+            m_stepper.calc_state( m_t , m_state );
+        }
+
+        bool equal( const_step_iterator const& other ) const
+        {
+            return m_t > other.m_t;
+        }
+
+        const state_type& dereference( void ) const
+        {
+            return m_state;
+        }
+
+        stepper_type m_stepper;
+        system_type m_system;
+        state_type &m_state;
+        time_type m_t;
+        time_type m_dt;
+    };
+
+
+
+
 
     /*
      * ToDo : create specializations for controlled steppers and dense output steppers
