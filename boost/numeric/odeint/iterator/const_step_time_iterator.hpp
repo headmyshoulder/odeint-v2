@@ -115,7 +115,7 @@ namespace odeint {
         void increment()
         {
             m_state.second += m_dt;
-            if( m_stepper.current_time() < m_state.second )
+            while(  m_stepper.current_time() < m_state.second )
                 m_stepper.do_step( m_system );
             m_stepper.calc_state( m_state.second , m_state.first );
         }
