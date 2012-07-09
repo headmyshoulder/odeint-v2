@@ -193,6 +193,18 @@ int main( int argc , char **argv )
     }
 
 
+    // boost::range::find with time iterator
+    {
+        runge_kutta4< state_type > stepper;
+        state_type x = {{ 10.0 , 10.0 , 10.0 }};
+        auto iter = boost::find_if( make_const_step_time_range( stepper , lorenz() , x , 0.0 , 1.0 , 0.01 ) ,
+                                    []( const std::pair< state_type & , double > &x ) {
+                                        return ( x.first[0] < 0.0 ); } );
+        cout << iter->second << "\t" << iter->first[0] << "\t" << iter->first[1] << "\t" << iter->first[2] << "\n";
+                                    
+    }
+
+
 
 
 
@@ -226,6 +238,9 @@ int main( int argc , char **argv )
                                     std::cout << x.second << tab << x.first[0] << tab << x.first[1] << tab << x.first[2] << "\n"; } );
 
     }
+
+
+
 
 
 
