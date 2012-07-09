@@ -88,16 +88,18 @@ struct perform_integrate_const_test
 
         std::vector< value_type > times;
 
-        int steps = integrate_const( Stepper() , lorenz , x , 0.0 , t_end ,
+        integrate_const( Stepper() , lorenz , x , 0.0 , t_end ,
                                         dt , push_back_time( times , x_end ) );
 
-        std::cout << steps << " , " << times.size() << " , " << 10.0+dt*steps << "=" << x_end[0] << std::endl;
+        int steps = times.size()-1;
+
+        std::cout << t_end << " (" << dt << "), " << steps << " , " << times.size() << " , " << 10.0+dt*steps << "=" << x_end[0] << std::endl;
 
         BOOST_CHECK_EQUAL( static_cast<int>(times.size()) , static_cast<int>(floor(t_end/dt))+1 );
 
         for( size_t i=0 ; i<times.size() ; ++i )
         {
-            //std::cout << i << std::endl;
+            //std::cout << i << " , " << times[i] << " , " << static_cast< value_type >(i)*dt << std::endl;
             // check if observer was called at times 0,1,2,...
             BOOST_CHECK_SMALL( times[i] - static_cast< value_type >(i)*dt , (i+1) * 2E-16 );
         }
@@ -229,7 +231,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_const_test_case , Stepper, stepper_meth
     tester( 1.005 , 0.01 );
     tester( 1.0 , 0.01 );
     tester( 1.1 , 0.01 );
-    tester( -1.0 , -0.01 );
+    tester( -1.005 , -0.01 );
 }
 
 
@@ -239,7 +241,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_adaptive_test_case , Stepper, stepper_m
     tester( 1.005 , 0.01 );
     tester( 1.0 , 0.01 );
     tester( 1.1 , 0.01 );
-    tester( -1.0 , -0.01 );
+    tester( -1.005 , -0.01 );
 }
 
 

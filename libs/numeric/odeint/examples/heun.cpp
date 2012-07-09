@@ -15,7 +15,6 @@
  */
 
 #include <iostream>
-#include <array>
 
 
 #include <boost/fusion/container/vector.hpp>
@@ -136,6 +135,19 @@ struct lorenz
     }
 };
 
+struct streaming_observer
+{
+    std::ostream &m_out;
+    streaming_observer( std::ostream &out ) : m_out( out ) { }
+    template< typename State , typename Value >
+    void operator()( const State &x , Value t ) const
+    {
+        m_out << t;
+        for( size_t i=0 ; i<x.size() ; ++i ) m_out << "\t" << x[i];
+        m_out << "\n";
+    }
+};
+
 
 
 int main( int argc , char **argv )
@@ -145,14 +157,13 @@ int main( int argc , char **argv )
 
 
     //[ heun_example
-    typedef array< double , 3 > state_type;
+    typedef boost::array< double , 3 > state_type;
     heun< state_type > h;
     state_type x = {{ 10.0 , 10.0 , 10.0 }};
 
     integrate_const( h , lorenz() , x , 0.0 , 100.0 , 0.01 ,
-		     []( const state_type &_x , double _t ) { 
-                         std::cout << _t << "\t" << _x[0] << "\t" << _x[1] << "\t" << _x[2] << "\n";
-		     });
+                     streaming_observer( std::cout ) );
+
     //]
 
     return 0;

@@ -43,6 +43,8 @@
 #include <boost/numeric/odeint/stepper/runge_kutta_fehlberg78.hpp>
 #include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_runge_kutta.hpp>
+#include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
+#include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>
 #include <boost/numeric/odeint/algebra/fusion_algebra.hpp>
 
 
@@ -264,16 +266,19 @@ class fsal_error_stepper_types : public mpl::vector
 
 class controlled_stepper_types : public mpl::vector
 <
-	controlled_runge_kutta< runge_kutta_cash_karp54_classic< state_type , value_type , deriv_type , time_type , fusion_algebra > > ,
-	controlled_runge_kutta< runge_kutta_dopri5< state_type , value_type , deriv_type , time_type , fusion_algebra > >
-    //, controlled_error_stepper< runge_kutta_fehlberg78< state_type , value_type , deriv_type , time_type , fusion_algebra > >
+    controlled_runge_kutta< runge_kutta_cash_karp54_classic< state_type , value_type , deriv_type , time_type , fusion_algebra > > ,
+    controlled_runge_kutta< runge_kutta_dopri5< state_type , value_type , deriv_type , time_type , fusion_algebra > >
+    , bulirsch_stoer< state_type , value_type , deriv_type , time_type , fusion_algebra >
+    // rk78 with units needs up to 3GB memory to compile - disable testing...
+    //, controlled_runge_kutta< runge_kutta_fehlberg78< state_type , value_type , deriv_type , time_type , fusion_algebra > >
 > { };
 
 class dense_output_stepper_types : public mpl::vector
 <
-	dense_output_runge_kutta< euler< state_type , value_type , deriv_type , time_type , fusion_algebra > > ,
-	dense_output_runge_kutta<
-		controlled_runge_kutta< runge_kutta_dopri5< state_type , value_type , deriv_type , time_type , fusion_algebra > > >
+    dense_output_runge_kutta< euler< state_type , value_type , deriv_type , time_type , fusion_algebra > > ,
+    dense_output_runge_kutta<
+        controlled_runge_kutta< runge_kutta_dopri5< state_type , value_type , deriv_type , time_type , fusion_algebra > > > 
+    //, bulirsch_stoer_dense_out< state_type , value_type , deriv_type , time_type , fusion_algebra >
 > { };
 
 
