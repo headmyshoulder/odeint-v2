@@ -19,8 +19,9 @@
 #ifndef BOOST_NUMERIC_ODEINT_ITERATOR_CONST_STEP_ODE_ITERATOR_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_ITERATOR_CONST_STEP_ODE_ITERATOR_HPP_INCLUDED
 
-# include <boost/iterator/iterator_facade.hpp>
+#include <boost/iterator/iterator_facade.hpp>
 
+#include <boost/numeric/odeint/util/unit_helper.hpp>
 
 namespace boost {
 namespace numeric {
@@ -47,11 +48,12 @@ namespace odeint {
         typedef System system_type;
         typedef typename stepper_type::state_type state_type;
         typedef typename stepper_type::time_type time_type;
+        typedef typename stepper_type::value_type ode_value_type;
 
     public:
    
-        const_step_iterator( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type dt )
-            : m_stepper( stepper ) , m_system( sys ) , m_state( s ) , m_t( t ) , m_dt( dt ) {}
+        const_step_iterator( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type dt , bool first )
+            : m_stepper( stepper ) , m_system( sys ) , m_state( s ) , m_t( t ) , m_dt( dt ) , m_first( first ) {}
 
     private:
 
@@ -65,7 +67,14 @@ namespace odeint {
 
         bool equal( const_step_iterator const& other ) const
         {
-            return m_t > other.m_t;
+            if( m_first )
+            {
+                return ( get_unit_value( m_dt ) > static_cast< ode_value_type >( 0.0 ) ) ? ( m_t > other.m_t ) : ( m_t < other.m_t ) ;
+            }
+            else
+            {
+                return ( get_unit_value( m_dt ) > static_cast< ode_value_type >( 0.0 ) ) ? ( m_t < other.m_t ) : ( m_t > other.m_t ) ;
+            }
         }
 
         const state_type& dereference() const
@@ -78,7 +87,7 @@ namespace odeint {
         state_type &m_state;
         time_type m_t;
         time_type m_dt;
-
+        bool m_first;
     };
 
 
@@ -98,11 +107,12 @@ namespace odeint {
         typedef System system_type;
         typedef typename stepper_type::state_type state_type;
         typedef typename stepper_type::time_type time_type;
+        typedef typename stepper_type::value_type ode_value_type;
 
     public:
    
-        const_step_iterator( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type dt )
-            : m_stepper( stepper ) , m_system( sys ) , m_state( s ) , m_t( t ) , m_dt( dt )
+        const_step_iterator( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type dt , bool first )
+            : m_stepper( stepper ) , m_system( sys ) , m_state( s ) , m_t( t ) , m_dt( dt ) , m_first( first )
         {
             m_stepper.initialize( m_state , m_t , m_dt );
         }
@@ -121,7 +131,14 @@ namespace odeint {
 
         bool equal( const_step_iterator const& other ) const
         {
-            return m_t > other.m_t;
+            if( m_first )
+            {
+                return ( get_unit_value( m_dt ) > static_cast< ode_value_type >( 0.0 ) ) ? ( m_t > other.m_t ) : ( m_t < other.m_t ) ;
+            }
+            else
+            {
+                return ( get_unit_value( m_dt ) > static_cast< ode_value_type >( 0.0 ) ) ? ( m_t < other.m_t ) : ( m_t > other.m_t ) ;
+            }
         }
 
         const state_type& dereference( void ) const
@@ -134,6 +151,7 @@ namespace odeint {
         state_type &m_state;
         time_type m_t;
         time_type m_dt;
+        bool m_first;
     };
 
 
@@ -146,14 +164,25 @@ namespace odeint {
 
 
     template< class Stepper , class System >
-    const_step_iterator< Stepper , System > make_const_step_iterator(
+    const_step_iterator< Stepper , System > make_const_step_iterator_begin(
         Stepper stepper ,
         System system , 
         typename Stepper::state_type &x ,
         typename Stepper::time_type t ,
         typename Stepper::time_type dt )
     {
-        return const_step_iterator< Stepper , System >( stepper , system , x , t , dt );
+        return const_step_iterator< Stepper , System >( stepper , system , x , t , dt , true );
+    }
+
+    template< class Stepper , class System >
+    const_step_iterator< Stepper , System > make_const_step_iterator_end(
+        Stepper stepper ,
+        System system , 
+        typename Stepper::state_type &x ,
+        typename Stepper::time_type t ,
+        typename Stepper::time_type dt )
+    {
+        return const_step_iterator< Stepper , System >( stepper , system , x , t , dt , false );
     }
 
 
@@ -168,8 +197,8 @@ namespace odeint {
         typename Stepper::time_type dt )
     {
         return std::make_pair(
-            const_step_iterator< Stepper , System >( stepper , system , x , t_start , dt ) ,
-            const_step_iterator< Stepper , System >( stepper , system , x , t_end , dt ) );
+            const_step_iterator< Stepper , System >( stepper , system , x , t_start , dt , true ) ,
+            const_step_iterator< Stepper , System >( stepper , system , x , t_end , dt , false ) );
     }
 
 

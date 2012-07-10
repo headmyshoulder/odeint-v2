@@ -10,6 +10,7 @@
 #include <utility>
 #include <algorithm>
 #include <array>
+#include <cassert>
 
 #include <boost/range/algorithm.hpp>
 #include <boost/range/adaptor/filtered.hpp>
@@ -51,8 +52,8 @@ int main( int argc , char **argv )
     {
         runge_kutta4< state_type > stepper;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
-        std::for_each( make_const_step_time_iterator( stepper , lorenz() , x , 0.0 , 0.01 ) ,
-                       make_const_step_time_iterator( stepper , lorenz() , x , 1.0 , 0.01 ) ,
+        std::for_each( make_const_step_time_iterator_begin( stepper , lorenz() , x , 0.0 , 0.01 ) ,
+                       make_const_step_time_iterator_end( stepper , lorenz() , x , 1.0 , 0.01 ) ,
                        []( const std::pair< state_type&, double > &x ) {
                            std::cout << x.second << tab << x.first[0] << tab << x.first[1] << tab << x.first[2] << "\n"; } );
     }
@@ -62,8 +63,8 @@ int main( int argc , char **argv )
         std::vector< state_type > res;
         runge_kutta4< state_type > stepper;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
-        std::copy_if( make_const_step_iterator( stepper , lorenz() , x , 0.0 , 0.01 ) ,
-                      make_const_step_iterator( stepper , lorenz() , x , 1.0 , 0.01 ) ,
+        std::copy_if( make_const_step_iterator_begin( stepper , lorenz() , x , 0.0 , 0.01 ) ,
+                      make_const_step_iterator_end( stepper , lorenz() , x , 1.0 , 0.01 ) ,
                       std::back_inserter( res ) ,
                       []( const state_type& x ) {
                           return ( x[0] > 0.0 ) ? true : false; } );
@@ -75,8 +76,8 @@ int main( int argc , char **argv )
     {
         runge_kutta4< state_type > stepper;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
-        double res = std::accumulate( make_const_step_iterator( stepper , lorenz() , x , 0.0 , 0.01 ) ,
-                                      make_const_step_iterator( stepper , lorenz() , x , 1.0 , 0.01 ) ,
+        double res = std::accumulate( make_const_step_iterator_begin( stepper , lorenz() , x , 0.0 , 0.01 ) ,
+                                      make_const_step_iterator_end( stepper , lorenz() , x , 1.0 , 0.01 ) ,
                                       0.0 ,
                                       []( double sum , const state_type &x ) {
                                           return sum + x[0]; } );
@@ -89,8 +90,8 @@ int main( int argc , char **argv )
         runge_kutta4< state_type > stepper;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
         vector< double > weights;
-        std::transform( make_const_step_iterator( stepper , lorenz() , x , 0.0 , 0.01 ) ,
-                        make_const_step_iterator( stepper , lorenz() , x , 1.0 , 0.01 ) ,
+        std::transform( make_const_step_iterator_begin( stepper , lorenz() , x , 0.0 , 0.01 ) ,
+                        make_const_step_iterator_end( stepper , lorenz() , x , 1.0 , 0.01 ) ,
                         back_inserter( weights ) ,
                         []( const state_type &x ) {
                             return sqrt( x[0] * x[0] + x[1] * x[1] + x[2] * x[2] ); } );
@@ -105,8 +106,8 @@ int main( int argc , char **argv )
         runge_kutta4< state_type > stepper;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
         vector< double > weights;
-        std::transform( make_const_step_time_iterator( stepper , lorenz() , x , 0.0 , 0.01 ) ,
-                        make_const_step_time_iterator( stepper , lorenz() , x , 1.0 , 0.01 ) ,
+        std::transform( make_const_step_time_iterator_begin( stepper , lorenz() , x , 0.0 , 0.01 ) ,
+                        make_const_step_time_iterator_end( stepper , lorenz() , x , 1.0 , 0.01 ) ,
                         back_inserter( weights ) ,
                         []( const std::pair< state_type &, double > &x ) {
                             return sqrt( x.first[0] * x.first[0] + x.first[1] * x.first[1] + x.first[2] * x.first[2] ); } );
@@ -237,6 +238,39 @@ int main( int argc , char **argv )
                                 []( const std::pair< state_type& , double > &x ) {
                                     std::cout << x.second << tab << x.first[0] << tab << x.first[1] << tab << x.first[2] << "\n"; } );
 
+    }
+
+
+
+
+
+    /*
+     * Pure iterators
+     */
+    {
+        runge_kutta4< state_type > stepper;
+        state_type x = {{ 10.0 , 10.0 , 10.0 }};
+        auto first = make_const_step_iterator_begin( stepper , lorenz() , x , 0.0 , 0.01 );
+        auto last  = make_const_step_iterator_end( stepper , lorenz() , x , 1.0 , 0.01 );
+        while( first != last )
+        {
+            assert( last != first );
+            cout << (*first)[0] << tab << (*first)[1] << tab << (*first)[2] << "\n";
+            ++first;
+        }
+    }
+
+    {
+        runge_kutta4< state_type > stepper;
+        state_type x = {{ 10.0 , 10.0 , 10.0 }};
+        auto first = make_const_step_time_iterator_begin( stepper , lorenz() , x , 0.0 , 0.01 );
+        auto last  = make_const_step_time_iterator_end( stepper , lorenz() , x , 1.0 , 0.01 );
+        while( first != last )
+        {
+            assert( last != first );
+            cout << first->second << tab << first->first[0] << tab << first->first[1] << tab << first->first[2] << "\n";
+            ++first;
+        }
     }
 
 
