@@ -28,12 +28,14 @@ namespace numeric {
 namespace odeint {
 
 
-    template< class Stepper , class System , class StepperTag = typename Stepper::stepper_category > 
+    template< class Stepper , class System , class StepperTag = typename base_tag< typename Stepper::stepper_category >::type > 
     class const_step_iterator;
 
 
 
-    // Specilization for steppers and error steppers
+    /*
+     * Specilization for steppers and error steppers
+     */
     template< class Stepper , class System >
     class const_step_iterator< Stepper , System , stepper_tag > : public boost::iterator_facade
     <
@@ -92,7 +94,9 @@ namespace odeint {
 
 
 
-    // Specilization for dense output stepper
+    /*
+     * Specilization for dense output stepper
+     */
     template< class Stepper , class System >
     class const_step_iterator< Stepper , System , dense_output_stepper_tag > : public boost::iterator_facade
     <
@@ -156,11 +160,6 @@ namespace odeint {
 
 
 
-
-
-    /*
-     * ToDo : create specializations for controlled steppers and dense output steppers
-     */
 
 
     template< class Stepper , class System >
