@@ -1,9 +1,9 @@
-/* Boost check_implicit_euler.cpp test file
+/* Boost adams_bashforth.cpp test file
 
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky
 
- This file tests the use of the euler stepper
+ This file tests the use of the adams bashforth stepper
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
