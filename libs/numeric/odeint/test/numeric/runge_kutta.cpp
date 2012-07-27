@@ -31,6 +31,7 @@
 
 
 #include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
 
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
@@ -65,7 +66,7 @@ BOOST_AUTO_TEST_CASE( test_order )
     stepper.do_step( osc() , x0 , t , x1 , dt );
     const double f = 2.0 * std::abs( sin(dt) - x1[0] ) / std::pow( dt , o );
 
-    std::cout << safety << std::endl;
+    std::cout << f << std::endl;
 
     /* as long as we have errors above machine precision */
     while( std::pow( dt , o ) > 1E-16 )
