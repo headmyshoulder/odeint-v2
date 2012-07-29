@@ -27,7 +27,7 @@ namespace odeint {
 
 // resize function
 // standard implementation relies on boost.range and resize member function
-template< class StateOut , class StateIn >
+template< class StateOut , class StateIn , class Enabler = void >
 struct resize_impl
 {
     static void resize( StateOut &x1 , const StateIn &x2 )

@@ -34,7 +34,7 @@ namespace odeint {
 
 namespace detail {
 
-    template<class T>
+    template<class T , class Enabler = void >
     struct get_unit_value_impl
     {
 	static T value(const T &t)
@@ -60,7 +60,7 @@ namespace detail {
 
 
 
-    template<class T , class V>
+    template<class T , class V , class Enabler = void >
     struct set_unit_value_impl
     {
 	static void set_value(T &t , const V &v)
