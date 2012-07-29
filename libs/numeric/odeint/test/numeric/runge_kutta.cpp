@@ -107,7 +107,7 @@ struct perform_runge_kutta_error_test
     void operator()( void )
     {
         Stepper stepper;
-        const int o = stepper.error_order(); //order of the error is order of approximation + 1
+        const int o = stepper.error_order()+1; //order of the error is order of approximation + 1
 
         const state_type x0 = {{ 0.0 , 1.0 }};
         state_type x1 , x_err;
@@ -115,9 +115,9 @@ struct perform_runge_kutta_error_test
         /* do a first step with dt=0.1 to get an estimate on the prefactor of the error dx = f * dt^(order+1) */
         double dt = 0.5;
         stepper.do_step( osc() , x0 , t , x1 , dt , x_err );
-        const double f = 2.0 * std::abs( x_err[1] ) / std::pow( dt , o );
+        const double f = 2.0 * std::abs( x_err[0] ) / std::pow( dt , o );
 
-        std::cout << o << " , " << f << std::endl;
+        std::cout << o << " , " << f << " , " << x0[0] << std::endl;
 
         /* as long as we have errors above machine precision */
         while( f*std::pow( dt , o ) > 1E-16 )
@@ -127,7 +127,7 @@ struct perform_runge_kutta_error_test
             
             stepper.do_step( osc() , x0 , t , x1 , dt , x_err );
             std::cout << "Testing dt=" << dt << ": " << x_err[1] << std::endl;
-            BOOST_CHECK_SMALL( std::abs( x_err[1] ) , f*std::pow( dt , o ) );
+            BOOST_CHECK_SMALL( std::abs( x_err[0] ) , f*std::pow( dt , o ) );
             dt *= 0.5;
         }
     }
@@ -155,8 +155,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( runge_kutta_test , Stepper, runge_kutta_steppers 
 typedef mpl::vector<
     runge_kutta_cash_karp54_classic< state_type > ,
     runge_kutta_cash_karp54< state_type > ,
-    // CHECK FAIL FOR  DOPRI5
-    // runge_kutta_dopri5< state_type > ,
+    runge_kutta_dopri5< state_type > ,
     runge_kutta_fehlberg78< state_type >
     > runge_kutta_error_steppers;
 

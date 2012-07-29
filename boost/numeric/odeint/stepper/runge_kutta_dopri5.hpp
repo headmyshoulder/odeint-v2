@@ -160,11 +160,17 @@ public :
         const value_type dc6 = c6 - static_cast<value_type> ( 187 ) / static_cast<value_type>( 2100 );
         const value_type dc7 = static_cast<value_type>( -1 ) / static_cast<value_type> ( 40 );
 
+        /* ToDo: copy only if &dxdt_in == &dxdt_out ? */
+
+        wrapped_deriv_type dxdt_tmp;
+        boost::numeric::odeint::copy( dxdt_in , dxdt_tmp.m_v );
+
         do_step_impl( system , in , dxdt_in , t , out , dxdt_out , dt );
 
         //error estimate
-        stepper_base_type::m_algebra.for_each7( xerr , dxdt_in , m_k3.m_v , m_k4.m_v , m_k5.m_v , m_k6.m_v , dxdt_out ,
+        stepper_base_type::m_algebra.for_each7( xerr , dxdt_tmp.m_v , m_k3.m_v , m_k4.m_v , m_k5.m_v , m_k6.m_v , dxdt_out ,
                 typename operations_type::template scale_sum6< time_type , time_type , time_type , time_type , time_type , time_type >( dt*dc1 , dt*dc3 , dt*dc4 , dt*dc5 , dt*dc6 , dt*dc7 ) );
+
     }
 
 
