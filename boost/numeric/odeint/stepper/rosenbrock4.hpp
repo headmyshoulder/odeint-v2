@@ -162,6 +162,7 @@ public:
     { }
 
 
+    order_type order() const { return stepper_order; } 
 
     template< class System >
     void do_step( System system , const state_type &x , time_type t , state_type &xout , time_type dt , state_type &xerr )

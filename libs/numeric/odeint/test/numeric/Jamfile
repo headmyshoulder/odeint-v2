@@ -24,5 +24,6 @@ test-suite "odeint"
 	:
 	 [ run runge_kutta.cpp ]
          [ run symplectic.cpp ]
+         [ run rosenbrock.cpp ]
 	: <testing.launcher>valgrind
 	;
