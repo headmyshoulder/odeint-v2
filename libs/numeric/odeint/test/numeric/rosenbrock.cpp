@@ -34,6 +34,7 @@ typedef double value_type;
 typedef boost::numeric::ublas::vector< value_type > state_type;
 typedef boost::numeric::ublas::matrix< value_type > matrix_type;
 
+// harmonic oscillator, analytic solution x[0] = sin( t )
 struct sys
 {
     void operator()( const state_type &x , state_type &dxdt , const value_type &t ) const
