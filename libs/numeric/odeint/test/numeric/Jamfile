@@ -23,5 +23,6 @@ project
 test-suite "odeint"
 	:
 	 [ run runge_kutta.cpp ]
+         [ run symplectic.cpp ]
 	: <testing.launcher>valgrind
 	;
