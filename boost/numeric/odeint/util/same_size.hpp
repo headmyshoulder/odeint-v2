@@ -27,7 +27,7 @@ namespace odeint {
 
 // same_size function
 // standard implementation relies on boost.range
-template< class State1 , class State2 >
+template< class State1 , class State2 , class Enabler = void >
 struct same_size_impl
 {
     static bool same_size( const State1 &x1 , const State2 &x2 )

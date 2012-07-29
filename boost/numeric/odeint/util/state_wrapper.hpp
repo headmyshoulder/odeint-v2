@@ -32,7 +32,7 @@ namespace numeric {
 namespace odeint {
 
 
-template< class V >
+template< class V , class Enabler = void >
 struct state_wrapper
 {
     typedef state_wrapper< V > state_wrapper_type;

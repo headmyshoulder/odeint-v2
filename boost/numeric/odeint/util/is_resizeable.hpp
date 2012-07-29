@@ -31,7 +31,7 @@ namespace odeint {
 /*
  * by default any type is not resizable
  */
-template< class Container >
+template< class Container , class Enabler = void >
 struct is_resizeable
 {
     //struct type : public boost::false_type { };

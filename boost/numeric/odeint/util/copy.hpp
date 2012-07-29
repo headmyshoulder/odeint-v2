@@ -49,7 +49,7 @@ void do_copying( const Container1 &from , Container2 &to , boost::mpl::false_ )
  * Default implementation of the copy operation used the assign operator
  * gsl_vector must copied differently
  */
-template< class Container1, class Container2 >
+    template< class Container1, class Container2 , class Enabler = void >
 struct copy_impl
 {
     static void copy( const Container1 &from , Container2 &to )
