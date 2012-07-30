@@ -379,7 +379,7 @@ Implementing this method is very easy. First you have to define the constants:
 
 [heun_define_coefficients]
 
-Ok, you are right, this looks rather ugly. Nevertheless, packing alle
+Ok, you are right, this looks rather ugly. Nevertheless, packing all
 parameters into a templatized class which is not immediately evaluated has the
 advantage that you can change the `value_type` of your stepper to any type you
 like - presumably arbitrary precision types. Of course, one could instantiate
