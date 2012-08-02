@@ -24,12 +24,21 @@ using namespace std;
 using namespace boost::numeric::odeint;
 
 typedef std::array< double , 3 > state_type;
+typedef std::vector< double  > state_type2;
 
 std::ostream& operator<<( std::ostream &out , const state_type &x )
 {
     out << x[0] << "\t" << x[1] << "\t" << x[2];
     return out;
 }
+
+std::ostream& operator<<( std::ostream &out , const state_type2 &x )
+{
+    if( !x.empty() ) out << x[0];
+    for( size_t i=1 ; i<x.size() ; ++i ) out << "\t" << x[i];
+    return out;
+}
+
 
 const double sigma = 10.0;
 const double R = 28.0;
@@ -46,39 +55,106 @@ struct lorenz
     }
 };
 
-state_type test1_iterator( double t_end = 1000000.0 , double dt = 0.01 )
+boost::timer timer;
+
+void test1_iterator( double t_end = 1000000.0 , double dt = 0.01 )
 {
+    cout << "Test 1 Iterator with array : ";
+    timer.restart();
+
+    runge_kutta4< state_type > stepper;
+    state_type x = {{ 10.0 , 10.0 , 10.0 }};
+    auto first = make_const_step_iterator_begin( stepper , lorenz() , x , 0.0 , dt );
+    auto last = make_const_step_iterator_end( stepper , lorenz() , x , t_end , dt );
+    for( ; first != last ; )
+        ++first;
+
+    cout << "\t" << x << " elapsed time : " << timer.elapsed() << " s" << endl;
+}
+
+void test1_time_iterator( double t_end = 1000000.0 , double dt = 0.01 )
+{
+    cout << "Test 1 Time iterator with array : ";
+    timer.restart();
+
     runge_kutta4< state_type > stepper;
     state_type x = {{ 10.0 , 10.0 , 10.0 }};
     auto first = make_const_step_time_iterator_begin( stepper , lorenz() , x , 0.0 , dt );
     auto last = make_const_step_time_iterator_end( stepper , lorenz() , x , t_end , dt );
     for( ; first != last ; )
         ++first;
-    return x;
+
+    cout << "\t" << x << " elapsed time : " << timer.elapsed() << " s" << endl;
 }
 
-state_type test1_integrate( double t_end = 1000000.0 , double dt = 0.01 )
+void test1_integrate( double t_end = 1000000.0 , double dt = 0.01 )
 {
+    cout << "Test 1 Integrate with array : ";
+    timer.restart();
+
     runge_kutta4< state_type > stepper;
     state_type x = {{ 10.0 , 10.0 , 10.0 }};
     integrate_const( stepper , lorenz() , x , 0.0 , t_end , dt );
-    return x;
+
+    cout << "\t" << x << " elapsed time : " << timer.elapsed() << " s" << endl;
+}
+
+
+
+
+void test2_iterator( double t_end = 1000000.0 , double dt = 0.01 )
+{
+    cout << "Test 2 Iterator with vector : ";
+    timer.restart();
+
+    runge_kutta4< state_type2 > stepper;
+    state_type2 x = { 10.0 , 10.0 , 10.0 };
+    auto first = make_const_step_iterator_begin( stepper , lorenz() , x , 0.0 , dt );
+    auto last = make_const_step_iterator_end( stepper , lorenz() , x , t_end , dt );
+    for( ; first != last ; )
+        ++first;
+
+    cout << "\t" << x << " elapsed time : " << timer.elapsed() << " s" << endl;
+}
+
+void test2_time_iterator( double t_end = 1000000.0 , double dt = 0.01 )
+{
+    cout << "Test 2 Time iterator with vector : ";
+    timer.restart();
+
+    runge_kutta4< state_type2 > stepper;
+    state_type2 x = { 10.0 , 10.0 , 10.0 };
+    auto first = make_const_step_time_iterator_begin( stepper , lorenz() , x , 0.0 , dt );
+    auto last = make_const_step_time_iterator_end( stepper , lorenz() , x , t_end , dt );
+    for( ; first != last ; )
+        ++first;
+
+    cout << "\t" << x << " elapsed time : " << timer.elapsed() << " s" << endl;
+}
+
+void test2_integrate( double t_end = 1000000.0 , double dt = 0.01 )
+{
+    cout << "Test 2 Integrate with vector : ";
+    timer.restart();
+    runge_kutta4< state_type2 > stepper;
+    state_type2 x = { 10.0 , 10.0 , 10.0 };
+    integrate_const( stepper , lorenz() , x , 0.0 , t_end , dt );
+    cout << "\t" << x << " elapsed time : " << timer.elapsed() << " s" << endl;
 }
 
 
 
 int main( int argc , char **argv )
 {
-    boost::timer timer;
+    test1_iterator( 1000000.0 );
+    test1_time_iterator( 1000000.0 );
+    test1_integrate( 1000000.0 );
 
-    cout << "Test 1 : " << endl;
-    timer.restart();
-    state_type x = test1_iterator( 1000000.0 );
-    cout << "\tIterator : " << x << " elapsed time : " << timer.elapsed() << " s" << endl;
+    test2_iterator( 1000000.0 );
+    test2_time_iterator( 1000000.0 );
+    test2_integrate( 1000000.0 );
 
-    timer.restart();
-    x = test1_integrate( 1000000.0 );
-    cout << "\tIntegrate : " << x << " elapsed time : " << timer.elapsed() << " s" << endl;
+
     
     return 0;
 }
