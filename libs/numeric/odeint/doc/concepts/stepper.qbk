@@ -38,6 +38,10 @@ Note that all error steppers are also basic steppers.
 '''<para>'''`Stepper::order_type`'''</para>'''
 '''<para>'''The type characterizing the order of the ODE, typically `unsigned short`.'''</para>'''
 
+*  '''<para>'''[*stepper_category]'''</para>'''
+'''<para>'''`Stepper::stepper_category`'''</para>'''
+'''<para>'''A tag type characterizing the category of the stepper. This type must be convertible to `stepper_tag`.'''</para>'''
+
 
 [heading Notation]
 

@@ -3,15 +3,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Using Cuda and Thrust</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<meta name="generator" content="DocBook XSL Stylesheets V1.77.0">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../tutorial.html" title="Tutorial">
 <link rel="prev" href="special_topics.html" title="Special topics">
 <link rel="next" href="using_opencl_and_vexcl.html" title="Using OpenCL and VexCL">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
-<hr>
 <div class="spirit-nav">
 <a accesskey="p" href="special_topics.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="using_opencl_and_vexcl.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
@@ -141,7 +139,7 @@
 <p>
           For the purpose of integrating the phase oscillator ensemble we need
         </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
               to calculate the system function, hence the r.h.s. of the ODE.
             </li>
@@ -178,8 +176,8 @@
     <span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span> <span class="identifier">value_type</span> <span class="special">,</span> <span class="identifier">value_type</span> <span class="special">&gt;</span> <span class="identifier">get_mean</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">)</span>
     <span class="special">{</span>
         <span class="identifier">value_type</span> <span class="identifier">sin_sum</span> <span class="special">=</span> <span class="identifier">thrust</span><span class="special">::</span><span class="identifier">reduce</span><span class="special">(</span>
-        <span class="identifier">thrust</span><span class="special">::</span><span class="identifier">make_transform_iterator</span><span class="special">(</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">sin_functor</span><span class="special">()</span> <span class="special">)</span> <span class="special">,</span>
-        <span class="identifier">thrust</span><span class="special">::</span><span class="identifier">make_transform_iterator</span><span class="special">(</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">end</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">sin_functor</span><span class="special">()</span> <span class="special">)</span> <span class="special">);</span>
+                <span class="identifier">thrust</span><span class="special">::</span><span class="identifier">make_transform_iterator</span><span class="special">(</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">sin_functor</span><span class="special">()</span> <span class="special">)</span> <span class="special">,</span>
+                <span class="identifier">thrust</span><span class="special">::</span><span class="identifier">make_transform_iterator</span><span class="special">(</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">end</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">sin_functor</span><span class="special">()</span> <span class="special">)</span> <span class="special">);</span>
         <span class="identifier">value_type</span> <span class="identifier">cos_sum</span> <span class="special">=</span> <span class="identifier">thrust</span><span class="special">::</span><span class="identifier">reduce</span><span class="special">(</span>
                 <span class="identifier">thrust</span><span class="special">::</span><span class="identifier">make_transform_iterator</span><span class="special">(</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">cos_functor</span><span class="special">()</span> <span class="special">)</span> <span class="special">,</span>
                 <span class="identifier">thrust</span><span class="special">::</span><span class="identifier">make_transform_iterator</span><span class="special">(</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">end</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">cos_functor</span><span class="special">()</span> <span class="special">)</span> <span class="special">);</span>

@@ -25,6 +25,10 @@ Dense output steppers also can interpolate the solution to calculate the state /
 '''<para>'''`Stepper::value_type`'''</para>'''
 '''<para>'''The numerical data type which is used within the stepper, something like `float`, `double`, `complex&lt; double &gt;`.'''</para>'''
 
+*  '''<para>'''[*stepper_category]'''</para>'''
+'''<para>'''`Stepper::stepper_category`'''</para>'''
+'''<para>'''A tag type characterizing the category of the stepper. This type must be convertible to `dense_output_stepper_tag`.'''</para>'''
+
 
 [heading Notation]
 
