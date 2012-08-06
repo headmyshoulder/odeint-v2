@@ -11,6 +11,7 @@
 */
 
 // disable checked iterator warning for msvc
+
 #include <boost/config.hpp>
 #ifdef BOOST_MSVC
     #pragma warning(disable:4996)
