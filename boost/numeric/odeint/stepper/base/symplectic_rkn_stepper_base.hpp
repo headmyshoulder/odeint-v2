@@ -45,6 +45,7 @@ namespace odeint {
  */
 template<
 size_t NumOfStages ,
+unsigned short Order ,
 class Stepper ,
 class Coor ,
 class Momentum ,
@@ -79,8 +80,11 @@ public:
     typedef Resizer resizer_type;
     typedef Stepper stepper_type;
     typedef stepper_tag stepper_category;
-    typedef symplectic_nystroem_stepper_base< NumOfStages , Stepper , Coor , Momentum , Value ,
+    typedef symplectic_nystroem_stepper_base< NumOfStages , Order , Stepper , Coor , Momentum , Value ,
             CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer > internal_stepper_base_type;
+    typedef unsigned short order_type;
+
+    static const order_type order_value = Order;
 
     typedef boost::array< value_type , num_of_stages > coef_type;
 
@@ -101,6 +105,11 @@ public:
         m_dqdt = stepper.m_dqdt;
         m_dpdt = stepper.m_dpdt;
         return *this;
+    }
+
+    order_type order( void ) const
+    {
+        return order_value;
     }
 
     /*

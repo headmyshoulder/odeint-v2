@@ -70,7 +70,7 @@ class Resizer = initially_resizer
 class symplectic_euler :
 public symplectic_nystroem_stepper_base
 <
-1 ,
+1 , 1 ,
 symplectic_euler< Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer > ,
 Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer
 >
@@ -78,7 +78,7 @@ Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operation
 public:
 
     typedef symplectic_nystroem_stepper_base<
-    1 ,symplectic_euler< Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer > ,
+    1 , 1 , symplectic_euler< Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer > ,
     Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer > stepper_base_type;
 
     typedef typename stepper_base_type::algebra_type algebra_type;
