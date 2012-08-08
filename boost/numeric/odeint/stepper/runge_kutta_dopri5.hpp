@@ -29,7 +29,7 @@
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
-
+#include <boost/numeric/odeint/util/same_instance.hpp>
 
 namespace boost {
 namespace numeric {
@@ -110,7 +110,7 @@ public :
 
         typename odeint::unwrap_reference< System >::type &sys = system;
 
-        m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
+        m_k_x_tmp_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_k_x_tmp_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
 
         //m_x_tmp = x + dt*b21*dxdt
         stepper_base_type::m_algebra.for_each3( m_x_tmp.m_v , in , dxdt_in ,
@@ -161,15 +161,24 @@ public :
         const value_type dc7 = static_cast<value_type>( -1 ) / static_cast<value_type> ( 40 );
 
         /* ToDo: copy only if &dxdt_in == &dxdt_out ? */
+        if( same_instance( dxdt_in , dxdt_out ) )
+        {
+            m_dxdt_tmp_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_dxdt_tmp_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
+            boost::numeric::odeint::copy( dxdt_in , m_dxdt_tmp.m_v );
+            do_step_impl( system , in , dxdt_in , t , out , dxdt_out , dt );
+            //error estimate
+            stepper_base_type::m_algebra.for_each7( xerr , m_dxdt_tmp.m_v , m_k3.m_v , m_k4.m_v , m_k5.m_v , m_k6.m_v , dxdt_out ,
+                                                    typename operations_type::template scale_sum6< time_type , time_type , time_type , time_type , time_type , time_type >( dt*dc1 , dt*dc3 , dt*dc4 , dt*dc5 , dt*dc6 , dt*dc7 ) );
 
-        wrapped_deriv_type dxdt_tmp;
-        boost::numeric::odeint::copy( dxdt_in , dxdt_tmp.m_v );
-
-        do_step_impl( system , in , dxdt_in , t , out , dxdt_out , dt );
-
-        //error estimate
-        stepper_base_type::m_algebra.for_each7( xerr , dxdt_tmp.m_v , m_k3.m_v , m_k4.m_v , m_k5.m_v , m_k6.m_v , dxdt_out ,
-                typename operations_type::template scale_sum6< time_type , time_type , time_type , time_type , time_type , time_type >( dt*dc1 , dt*dc3 , dt*dc4 , dt*dc5 , dt*dc6 , dt*dc7 ) );
+        }
+        else
+        {
+            do_step_impl( system , in , dxdt_in , t , out , dxdt_out , dt );
+            //error estimate
+            stepper_base_type::m_algebra.for_each7( xerr , dxdt_in , m_k3.m_v , m_k4.m_v , m_k5.m_v , m_k6.m_v , dxdt_out ,
+                                                    typename operations_type::template scale_sum6< time_type , time_type , time_type , time_type , time_type , time_type >( dt*dc1 , dt*dc3 , dt*dc4 , dt*dc5 , dt*dc6 , dt*dc7 ) );
+        
+        }
 
     }
 
@@ -249,15 +258,16 @@ public :
     template< class StateIn >
     void adjust_size( const StateIn &x )
     {
-        resize_impl( x );
+        resize_k_x_tmp_impl( x );
+        resize_dxdt_tmp_impl( x );
         stepper_base_type::adjust_size( x );
     }
-
+    
 
 private:
 
     template< class StateIn >
-    bool resize_impl( const StateIn &x )
+    bool resize_k_x_tmp_impl( const StateIn &x )
     {
         bool resized = false;
         resized |= adjust_size_by_resizeability( m_x_tmp , x , typename is_resizeable<state_type>::type() );
@@ -269,10 +279,19 @@ private:
         return resized;
     }
 
+    template< class StateIn >
+    bool resize_dxdt_tmp_impl( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_dxdt_tmp , x , typename is_resizeable<deriv_type>::type() );
+    }
+        
+
 
     wrapped_state_type m_x_tmp;
     wrapped_deriv_type m_k2 , m_k3 , m_k4 , m_k5 , m_k6 ;
-    resizer_type m_resizer;
+    wrapped_deriv_type m_dxdt_tmp;
+    resizer_type m_k_x_tmp_resizer;
+    resizer_type m_dxdt_tmp_resizer;
 };
 
 
