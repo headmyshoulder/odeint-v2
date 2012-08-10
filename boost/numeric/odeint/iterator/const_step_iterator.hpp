@@ -70,11 +70,7 @@ namespace odeint {
 
         bool equal( const_step_iterator const& other ) const
         {
-            if( m_first && other.m_first )
-            {
-                return false;
-            }
-            else if( ( !m_first ) && ( !other.m_first ) )
+            if( m_first == other.m_first )
             {
                 return true;
             }

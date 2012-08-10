@@ -1,11 +1,11 @@
 /*
- * const_step_iterator.cpp
+ * adaptive_iterator.cpp
  *
  *  Created on: Aug 6, 2012
  *      Author: Karsten Ahnert
  */
 
-#define BOOST_TEST_MODULE odeint_const_step_iterator
+#define BOOST_TEST_MODULE odeint_adaptive_iterator
 
 #include <iterator>
 #include <algorithm>
@@ -19,7 +19,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/floating_point_comparison.hpp>
 
-#include <boost/numeric/odeint/iterator/const_step_iterator.hpp>
+#include <boost/numeric/odeint/iterator/adaptive_iterator.hpp>
 #include "dummy_steppers.hpp"
 
 namespace mpl = boost::mpl;
@@ -30,17 +30,17 @@ struct dummy_system { };
 typedef dummy_stepper::state_type state_type;
 typedef dummy_stepper::value_type value_type;
 
-BOOST_AUTO_TEST_SUITE( const_step_iterator_test )
+BOOST_AUTO_TEST_SUITE( adaptive_iterator_test )
 
 typedef mpl::vector<
-    dummy_stepper
-    , dummy_dense_output_stepper
+    dummy_controlled_stepper
+//    , dummy_dense_output_stepper
     > dummy_steppers;
 
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( transitivity1 , Stepper , dummy_steppers )
 {
-    typedef const_step_iterator< Stepper , dummy_system > stepper_iterator;
+    typedef adaptive_iterator< Stepper , dummy_system > stepper_iterator;
 
     state_type x = {{ 1.0 }};
     stepper_iterator first1( Stepper() , dummy_system() , x , 1.5 , 0.1 , true );
@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( transitivity1 , Stepper , dummy_steppers )
 // this test would fail
 BOOST_AUTO_TEST_CASE_TEMPLATE( transitivity2 , Stepper , dummy_steppers )
 {
-    typedef const_step_iterator< Stepper , dummy_system > stepper_iterator;
+    typedef adaptive_iterator< Stepper , dummy_system > stepper_iterator;
     // state_type x = {{ 1.0 }};
     // stepper_iterator first1( dummy_stepper() , dummy_system() , x , 1.5 , 0.1 , true );
     // stepper_iterator first2( dummy_stepper() , dummy_system() , x , 2.0 , 0.1 , false );
@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( transitivity2 , Stepper , dummy_steppers )
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm , Stepper , dummy_steppers )
 {
-    typedef const_step_iterator< Stepper , dummy_system > stepper_iterator;
+    typedef adaptive_iterator< Stepper , dummy_system > stepper_iterator;
     state_type x = {{ 1.0 }};
     std::vector< state_type > res;
     stepper_iterator first( Stepper() , dummy_system() , x , 0.0 , 0.1 , true );
@@ -84,8 +84,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm_with_factory , Stepper , dummy_ste
 {
     state_type x = {{ 1.0 }};
     std::vector< state_type > res;
-    std::copy( make_const_step_iterator_begin( Stepper() , dummy_system() , x , 0.0 , 0.1 ) ,
-               make_const_step_iterator_end( Stepper() , dummy_system() , x , 0.35 , 0.1 ) ,
+    std::copy( make_adaptive_iterator_begin( Stepper() , dummy_system() , x , 0.0 , 0.1 ) ,
+               make_adaptive_iterator_end( Stepper() , dummy_system() , x , 0.35 , 0.1 ) ,
                std::back_insert_iterator< std::vector< state_type > >( res ) );
 
     BOOST_CHECK_EQUAL( res.size() , size_t( 4 ) );
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm_with_range_factory , Stepper , dum
 {
     state_type x = {{ 1.0 }};
     std::vector< state_type > res;
-    boost::range::copy( make_const_step_range( Stepper() , dummy_system() , x , 0.0 , 0.35 , 0.1 ) ,
+    boost::range::copy( make_adaptive_range( Stepper() , dummy_system() , x , 0.0 , 0.35 , 0.1 ) ,
                         std::back_insert_iterator< std::vector< state_type > >( res ) );
 
     BOOST_CHECK_EQUAL( res.size() , size_t( 4 ) );

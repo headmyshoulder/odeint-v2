@@ -21,6 +21,9 @@
 
 # include <boost/iterator/iterator_facade.hpp>
 
+#include <boost/numeric/odeint/util/unit_helper.hpp>
+#include <boost/numeric/odeint/stepper/stepper_categories.hpp>
+
 
 namespace boost {
 namespace numeric {
@@ -67,20 +70,25 @@ namespace odeint {
 
         bool equal( const_step_time_iterator const& other ) const
         {
-            if( m_first )
+            if( m_first == other.m_first )
             {
-                return ( get_unit_value( m_dt ) > static_cast< ode_value_type >( 0.0 ) ) ?
-                    ( m_state.second > other.m_state.second ) :
-                    ( m_state.second < other.m_state.second ) ;
+                return true;
             }
             else
             {
-                return ( get_unit_value( m_dt ) > static_cast< ode_value_type >( 0.0 ) ) ?
-                    ( m_state.second < other.m_state.second ) :
-                    ( m_state.second > other.m_state.second ) ;
+                if( m_first )
+                {
+                    return ( get_unit_value( m_dt ) > static_cast< ode_value_type >( 0.0 ) ) ?
+                        ( m_state.second > other.m_state.second ) :
+                        ( m_state.second < other.m_state.second ) ;
+                }
+                else
+                {
+                    return ( get_unit_value( m_dt ) > static_cast< ode_value_type >( 0.0 ) ) ?
+                        ( m_state.second < other.m_state.second ) :
+                        ( m_state.second > other.m_state.second ) ;
+                }
             }
-
-            return m_state.second > other.m_state.second;
         }
 
         const std::pair< state_type& , time_type >& dereference() const
@@ -141,17 +149,24 @@ namespace odeint {
 
         bool equal( const_step_time_iterator const& other ) const
         {
-            if( m_first )
+            if( m_first == other.m_first )
             {
-                return ( get_unit_value( m_dt ) > static_cast< ode_value_type >( 0.0 ) ) ?
-                    ( m_state.second > other.m_state.second ) :
-                    ( m_state.second < other.m_state.second ) ;
+                return true;
             }
             else
             {
-                return ( get_unit_value( m_dt ) > static_cast< ode_value_type >( 0.0 ) ) ?
-                    ( m_state.second < other.m_state.second ) :
-                    ( m_state.second > other.m_state.second ) ;
+                if( m_first )
+                {
+                    return ( get_unit_value( m_dt ) > static_cast< ode_value_type >( 0.0 ) ) ?
+                        ( m_state.second > other.m_state.second ) :
+                        ( m_state.second < other.m_state.second ) ;
+                }
+                else
+                {
+                    return ( get_unit_value( m_dt ) > static_cast< ode_value_type >( 0.0 ) ) ?
+                        ( m_state.second < other.m_state.second ) :
+                        ( m_state.second > other.m_state.second ) ;
+                }
             }
         }
 
