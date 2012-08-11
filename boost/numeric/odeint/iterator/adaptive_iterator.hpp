@@ -124,69 +124,77 @@ namespace odeint {
     /*
      * Specilization for steppers and error steppers
      */
-    // template< class Stepper , class System >
-    // class adaptive_iterator< Stepper , System , dense_output_stepper_tag > : public boost::iterator_facade
-    // <
-    //     adaptive_iterator< Stepper , System , dense_output_stepper_tag > ,
-    //     std::pair< typename Stepper::state_type& , typename Stepper::time_type > const ,
-    //     boost::single_pass_traversal_tag
-    // >
-    // {
-    // private:
+    template< class Stepper , class System >
+    class adaptive_iterator< Stepper , System , dense_output_stepper_tag > : public boost::iterator_facade
+    <
+        adaptive_iterator< Stepper , System , dense_output_stepper_tag > ,
+        typename Stepper::state_type const ,
+        boost::single_pass_traversal_tag
+    >
+    {
+    private:
 
-    //     typedef Stepper stepper_type;
-    //     typedef System system_type;
-    //     typedef typename stepper_type::state_type state_type;
-    //     typedef typename stepper_type::time_type time_type;
-    //     typedef typename stepper_type::value_type ode_value_type;
+        typedef Stepper stepper_type;
+        typedef System system_type;
+        typedef typename stepper_type::state_type state_type;
+        typedef typename stepper_type::time_type time_type;
+        typedef typename stepper_type::value_type ode_value_type;
 
-    // public:
+    public:
    
-    //     adaptive_iterator( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type dt , bool first )
-    //         : m_stepper( stepper ) , m_system( sys ) , m_state( s , t ) , m_dt( dt ) , m_first( first )
-    //     {
-    //         m_stepper.initialize( m_state.first , m_state.second , m_dt );
-    //     }
+        adaptive_iterator( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type dt , bool first )
+            : m_stepper( stepper ) , m_system( sys ) , m_state( s ) , m_t( t ) , m_dt( dt ) , m_first( first )
+        {
+            m_stepper.initialize( m_state , m_t , m_dt );
+        }
 
-    // private:
+    private:
 
-    //     friend class boost::iterator_core_access;
+        friend class boost::iterator_core_access;
 
-    //     void increment()
-    //     {
-    //         m_state.second += m_dt;
-    //         while(  m_stepper.current() < m_state.second )
-    //             m_stepper.do_step( m_system );
-    //         m_stepper.calc_state( m_state.second , m_state.first );
-    //     }
+        void increment()
+        {
+            m_t += m_dt;
+            while(  m_stepper.current_time() < m_t )
+                m_stepper.do_step( m_system );
+            m_stepper.calc_state( m_t , m_state );
+        }
 
-    //     bool equal( adaptive_iterator const& other ) const
-    //     {
-    //         if( m_first )
-    //         {
-    //             return ( get_unit_value( m_dt ) > static_cast< ode_value_type >( 0.0 ) ) ?
-    //                 ( m_state.second > other.m_state.second ) :
-    //                 ( m_state.second < other.m_state.second ) ;
-    //         }
-    //         else
-    //         {
-    //             return ( get_unit_value( m_dt ) > static_cast< ode_value_type >( 0.0 ) ) ?
-    //                 ( m_state.second < other.m_state.second ) :
-    //                 ( m_state.second > other.m_state.second ) ;
-    //         }
-    //     }
+        bool equal( adaptive_iterator const& other ) const
+        {
+            if( m_first == other.m_first )
+            {
+                return true;
+            }
+            else
+            {
+                if( m_first )
+                {
+                    return ( get_unit_value( m_dt ) > static_cast< ode_value_type >( 0.0 ) ) ?
+                        ( m_t > other.m_t ) :
+                        ( m_t < other.m_t ) ;
+                }
+                else
+                {
+                    return ( get_unit_value( m_dt ) > static_cast< ode_value_type >( 0.0 ) ) ?
+                        ( m_t < other.m_t ) :
+                        ( m_t > other.m_t ) ;
+                }
+            }
+        }
 
-    //     const std::pair< state_type& , time_type >& dereference() const
-    //     {
-    //         return m_state;
-    //     }
+        const state_type& dereference() const
+        {
+            return m_state;
+        }
 
-    //     stepper_type m_stepper;
-    //     system_type m_system;
-    //     std::pair< state_type& , time_type > m_state;
-    //     time_type m_dt;
-    //     bool m_first;
-    // };
+        stepper_type m_stepper;
+        system_type m_system;
+        state_type& m_state;
+        time_type m_t;
+        time_type m_dt;
+        bool m_first;
+    };
 
 
 

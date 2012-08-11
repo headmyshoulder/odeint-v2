@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_SUITE( adaptive_iterator_test )
 
 typedef mpl::vector<
     dummy_controlled_stepper
-//    , dummy_dense_output_stepper
+    , dummy_dense_output_stepper
     > dummy_steppers;
 
 
