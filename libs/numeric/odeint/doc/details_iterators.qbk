@@ -1,0 +1,20 @@
+[section ODE Iterators]
+
+odeint supports iterators for iterating throught an ordinary differential equation. They offer you an alternative to the integrate functions. Furthermore, many of the standard algorithms in the C++ standard library and Boost.Range can be used with the odeint't iterators.
+
+[warning odeint's iterators do not satisfy the iterator concepts defined in the standard completely. In detail the iterator transitivity is violated in some rare cases. But this is not relevant for all algorithms in the C++ standard library and in Boost.Range.]
+
+odeint provides for four new iterators.
+
+
+
+const step iterator, factory functions
+
+const step time iterator, factory functions
+
+adaptive iterator, factory functions
+
+adaptive time iterator, factory functions
+
+
+[endsect]
