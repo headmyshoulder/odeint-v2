@@ -146,12 +146,14 @@ int main( int argc , char **argv )
 
     // boost::range::accumulate
     {
+        //[adaptive_time_iterator_accumulate_range
         auto stepper = make_controlled( 1.0e-6 , 1.0e-6 , runge_kutta_cash_karp54< state_type >() );
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
         double res = boost::accumulate( make_adaptive_time_range( stepper , lorenz() , x , 0.0 , 1.0 , 0.01 ) , 0.0 ,
                                         []( double sum , const pair< state_type& , double > &x ) {
                                             return sum + x.first[0]; } );
         cout << res << endl;
+        //]
     }
 
 
@@ -310,12 +312,14 @@ int main( int argc , char **argv )
 
     // boost::range::accumulate
     {
+        //[adaptive_iterator_accumulate_range
         auto stepper = make_controlled( 1.0e-6 , 1.0e-6 , runge_kutta_cash_karp54< state_type >() );
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
         double res = boost::accumulate( make_adaptive_range( stepper , lorenz() , x , 0.0 , 1.0 , 0.01 ) , 0.0 ,
                                         []( double sum , const state_type& x ) {
                                             return sum + x[0]; } );
         cout << res << endl;
+        //]
     }
 
 

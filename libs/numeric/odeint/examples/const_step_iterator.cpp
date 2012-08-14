@@ -74,6 +74,7 @@ int main( int argc , char **argv )
 
     // std::accumulate
     {
+        //[ const_step_iterator_accumulate
         runge_kutta4< state_type > stepper;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
         double res = std::accumulate( make_const_step_iterator_begin( stepper , lorenz() , x , 0.0 , 0.01 ) ,
@@ -82,6 +83,7 @@ int main( int argc , char **argv )
                                       []( double sum , const state_type &x ) {
                                           return sum + x[0]; } );
         cout << res << endl;
+        //]
     }
 
 
@@ -162,22 +164,26 @@ int main( int argc , char **argv )
 
     // boost::range::accumulate
     {
+        //[const_step_iterator_accumulate_range
         runge_kutta4< state_type > stepper;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
         double res = boost::accumulate( make_const_step_range( stepper , lorenz() , x , 0.0 , 1.0 , 0.01 ) , 0.0 ,
                                         []( double sum , const state_type &x ) {
                                             return sum + x[0]; } );
         cout << res << endl;
+        //]
     }
 
     // boost::range::accumulate with time iterator
     {
+        //[const_step_time_iterator_accumulate_range
         runge_kutta4< state_type > stepper;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
         double res = boost::accumulate( make_const_step_time_range( stepper , lorenz() , x , 0.0 , 1.0 , 0.01 ) , 0.0 ,
                                         []( double sum , const std::pair< state_type &, double > &x ) {
                                             return sum + x.first[0]; } );
         cout << res << endl;
+        //]
     }
 
 
