@@ -1,3 +1,12 @@
+# Copyright 2009-2012 Karsten Ahnert
+# Copyright 2009-2012 Mario Mulansky
+#
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or
+# copy at http://www.boost.org/LICENSE_1_0.txt)
+
+
+
 # CUDA_ROOT = /home/karsten/boost/cuda4.1/cuda/
 CUDA_ROOT = /usr/local/cuda
 ARCH = sm_13
