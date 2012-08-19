@@ -52,8 +52,8 @@ int main( int argc , char **argv )
     {
         runge_kutta4< state_type > stepper;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
-        std::for_each( make_const_step_time_iterator_begin( stepper , lorenz() , x , 0.0 , 0.01 ) ,
-                       make_const_step_time_iterator_end( stepper , lorenz() , x , 1.0 , 0.01 ) ,
+        std::for_each( make_const_step_time_iterator_begin( stepper , lorenz() , x , 0.0 , 1.0 , 0.01 ) ,
+                       make_const_step_time_iterator_end( stepper , lorenz() , x ) ,
                        []( const std::pair< state_type&, double > &x ) {
                            std::cout << x.second << tab << x.first[0] << tab << x.first[1] << tab << x.first[2] << "\n"; } );
     }
@@ -108,8 +108,8 @@ int main( int argc , char **argv )
         runge_kutta4< state_type > stepper;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
         vector< double > weights;
-        std::transform( make_const_step_time_iterator_begin( stepper , lorenz() , x , 0.0 , 0.01 ) ,
-                        make_const_step_time_iterator_end( stepper , lorenz() , x , 1.0 , 0.01 ) ,
+        std::transform( make_const_step_time_iterator_begin( stepper , lorenz() , x , 0.0 , 1.0 , 0.01 ) ,
+                        make_const_step_time_iterator_end( stepper , lorenz() , x ) ,
                         back_inserter( weights ) ,
                         []( const std::pair< state_type &, double > &x ) {
                             return sqrt( x.first[0] * x.first[0] + x.first[1] * x.first[1] + x.first[2] * x.first[2] ); } );
@@ -269,8 +269,8 @@ int main( int argc , char **argv )
     {
         runge_kutta4< state_type > stepper;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
-        auto first = make_const_step_time_iterator_begin( stepper , lorenz() , x , 0.0 , 0.01 );
-        auto last  = make_const_step_time_iterator_end( stepper , lorenz() , x , 1.0 , 0.01 );
+        auto first = make_const_step_time_iterator_begin( stepper , lorenz() , x , 0.0 , 1.0 , 0.01 );
+        auto last  = make_const_step_time_iterator_end( stepper , lorenz() , x );
         while( first != last )
         {
             assert( last != first );

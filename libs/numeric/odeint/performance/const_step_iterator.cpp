@@ -64,8 +64,8 @@ void test1_iterator( double t_end = 1000000.0 , double dt = 0.01 )
 
     runge_kutta4< state_type > stepper;
     state_type x = {{ 10.0 , 10.0 , 10.0 }};
-    auto first = make_const_step_iterator_begin( stepper , lorenz() , x , 0.0 , dt );
-    auto last = make_const_step_iterator_end( stepper , lorenz() , x , t_end , dt );
+    auto first = make_const_step_iterator_begin( stepper , lorenz() , x , 0.0 , t_end , dt );
+    auto last = make_const_step_iterator_end( stepper , lorenz() , x );
     for( ; first != last ; )
         ++first;
 
@@ -79,8 +79,8 @@ void test1_time_iterator( double t_end = 1000000.0 , double dt = 0.01 )
 
     runge_kutta4< state_type > stepper;
     state_type x = {{ 10.0 , 10.0 , 10.0 }};
-    auto first = make_const_step_time_iterator_begin( stepper , lorenz() , x , 0.0 , dt );
-    auto last = make_const_step_time_iterator_end( stepper , lorenz() , x , t_end , dt );
+    auto first = make_const_step_time_iterator_begin( stepper , lorenz() , x , 0.0 , t_end , dt );
+    auto last = make_const_step_time_iterator_end( stepper , lorenz() , x );
     for( ; first != last ; )
         ++first;
 
@@ -109,8 +109,8 @@ void test2_iterator( double t_end = 1000000.0 , double dt = 0.01 )
 
     runge_kutta4< state_type2 > stepper;
     state_type2 x = { 10.0 , 10.0 , 10.0 };
-    auto first = make_const_step_iterator_begin( stepper , lorenz() , x , 0.0 , dt );
-    auto last = make_const_step_iterator_end( stepper , lorenz() , x , t_end , dt );
+    auto first = make_const_step_iterator_begin( stepper , lorenz() , x , 0.0 , t_end , dt );
+    auto last = make_const_step_iterator_end( stepper , lorenz() , x );
     for( ; first != last ; )
         ++first;
 
@@ -124,8 +124,8 @@ void test2_time_iterator( double t_end = 1000000.0 , double dt = 0.01 )
 
     runge_kutta4< state_type2 > stepper;
     state_type2 x = { 10.0 , 10.0 , 10.0 };
-    auto first = make_const_step_time_iterator_begin( stepper , lorenz() , x , 0.0 , dt );
-    auto last = make_const_step_time_iterator_end( stepper , lorenz() , x , t_end , dt );
+    auto first = make_const_step_time_iterator_begin( stepper , lorenz() , x , 0.0 , t_end , dt );
+    auto last = make_const_step_time_iterator_end( stepper , lorenz() , x );
     for( ; first != last ; )
         ++first;
 
