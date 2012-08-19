@@ -16,7 +16,10 @@
 
 #include <iostream>
 
-#include <boost/fusion/container.hpp>
+
+#include <boost/fusion/container/vector.hpp>
+#include <boost/fusion/container/generation/make_vector.hpp>
+
 #include <boost/array.hpp>
 
 #include <boost/numeric/odeint.hpp>

@@ -61,6 +61,14 @@ struct push_back_state_and_time
 };
 //]
 
+struct write_state
+{
+    void operator()( const state_type &x ) const
+    {
+        std::cout << x[0] << "\t" << x[1] << "\n";
+    }
+};
+
 
 int main(int /* argc */ , char** /* argv */ )
 {
@@ -164,6 +172,13 @@ int main(int /* argc */ , char** /* argv */ )
     //[integrate_adapt_make_controlled_alternative
     integrate_adaptive( make_controlled( 1.0e-10 , 1.0e-6 , error_stepper_type() ) , 
                         harmonic_oscillator , x , 0.0 , 10.0 , 0.01 );
+    //]
+
+
+    //[harm_iterator_const_step
+    std::for_each( make_adaptive_iterator_begin( controlled_stepper , harmonic_oscillator , x , 0.0 , 10.0 , 0.01 ) , 
+                   make_adaptive_iterator_end( controlled_stepper , harmonic_oscillator , x ) , 
+                   write_state() );
     //]
 
 }

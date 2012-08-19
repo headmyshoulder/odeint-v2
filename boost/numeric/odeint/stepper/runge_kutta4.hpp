@@ -19,7 +19,8 @@
 #define BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA4_HPP_INCLUDED
 
 
-#include <boost/fusion/container.hpp>
+#include <boost/fusion/container/vector.hpp>
+#include <boost/fusion/container/generation/make_vector.hpp>
 
 #include <boost/numeric/odeint/stepper/explicit_generic_rk.hpp>
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
