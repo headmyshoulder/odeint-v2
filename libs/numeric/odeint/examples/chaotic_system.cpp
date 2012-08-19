@@ -14,8 +14,6 @@
  */
 
 
- */
-
 #include <iostream>
 #include <boost/array.hpp>
 
