@@ -43,24 +43,15 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( transitivity1 , Stepper , dummy_steppers )
     typedef adaptive_iterator< Stepper , dummy_system > stepper_iterator;
 
     state_type x = {{ 1.0 }};
-    stepper_iterator first1( Stepper() , dummy_system() , x , 1.5 , 0.1 , true );
-    stepper_iterator last1( Stepper() , dummy_system() , x , 1.0 , 0.1 , false );
-    stepper_iterator last2( Stepper() , dummy_system() , x , 1.0 , 0.1 , false );
+    stepper_iterator first1( Stepper() , dummy_system() , x , 2.5 , 2.0 , 0.1 );
+    stepper_iterator last1( Stepper() , dummy_system() , x );
+    stepper_iterator last2( Stepper() , dummy_system() , x );
 
     BOOST_CHECK( first1 == last1 );
     BOOST_CHECK( first1 == last2 );
     BOOST_CHECK( last1 == last2 );
 }
 
-// this test would fail
-BOOST_AUTO_TEST_CASE_TEMPLATE( transitivity2 , Stepper , dummy_steppers )
-{
-    typedef adaptive_iterator< Stepper , dummy_system > stepper_iterator;
-    // state_type x = {{ 1.0 }};
-    // stepper_iterator first1( dummy_stepper() , dummy_system() , x , 1.5 , 0.1 , true );
-    // stepper_iterator first2( dummy_stepper() , dummy_system() , x , 2.0 , 0.1 , false );
-    // stepper_iterator last( dummy_stepper() , dummy_system() , x , 1.0 , 0.1 , false );
-}
 
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm , Stepper , dummy_steppers )
@@ -68,8 +59,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm , Stepper , dummy_steppers )
     typedef adaptive_iterator< Stepper , dummy_system > stepper_iterator;
     state_type x = {{ 1.0 }};
     std::vector< state_type > res;
-    stepper_iterator first( Stepper() , dummy_system() , x , 0.0 , 0.1 , true );
-    stepper_iterator last( Stepper() , dummy_system() , x , 0.35 , 0.1 , false );
+    stepper_iterator first( Stepper() , dummy_system() , x , 0.0 , 0.35 , 0.1 );
+    stepper_iterator last( Stepper() , dummy_system() , x );
 
     std::copy( first , last , std::back_insert_iterator< std::vector< state_type > >( res ) );
 
@@ -84,8 +75,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm_with_factory , Stepper , dummy_ste
 {
     state_type x = {{ 1.0 }};
     std::vector< state_type > res;
-    std::copy( make_adaptive_iterator_begin( Stepper() , dummy_system() , x , 0.0 , 0.1 ) ,
-               make_adaptive_iterator_end( Stepper() , dummy_system() , x , 0.35 , 0.1 ) ,
+    std::copy( make_adaptive_iterator_begin( Stepper() , dummy_system() , x , 0.0 , 0.35 , 0.1 ) ,
+               make_adaptive_iterator_end( Stepper() , dummy_system() , x ) ,
                std::back_insert_iterator< std::vector< state_type > >( res ) );
 
     BOOST_CHECK_EQUAL( res.size() , size_t( 4 ) );

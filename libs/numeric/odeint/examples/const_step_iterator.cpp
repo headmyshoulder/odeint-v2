@@ -63,8 +63,8 @@ int main( int argc , char **argv )
         std::vector< state_type > res;
         runge_kutta4< state_type > stepper;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
-        std::copy_if( make_const_step_iterator_begin( stepper , lorenz() , x , 0.0 , 0.01 ) ,
-                      make_const_step_iterator_end( stepper , lorenz() , x , 1.0 , 0.01 ) ,
+        std::copy_if( make_const_step_iterator_begin( stepper , lorenz() , x , 0.0 , 1.0 , 0.01 ) ,
+                      make_const_step_iterator_end( stepper , lorenz() , x ) ,
                       std::back_inserter( res ) ,
                       []( const state_type& x ) {
                           return ( x[0] > 0.0 ) ? true : false; } );
@@ -77,8 +77,8 @@ int main( int argc , char **argv )
         //[ const_step_iterator_accumulate
         runge_kutta4< state_type > stepper;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
-        double res = std::accumulate( make_const_step_iterator_begin( stepper , lorenz() , x , 0.0 , 0.01 ) ,
-                                      make_const_step_iterator_end( stepper , lorenz() , x , 1.0 , 0.01 ) ,
+        double res = std::accumulate( make_const_step_iterator_begin( stepper , lorenz() , x , 0.0 , 1.0 , 0.01 ) ,
+                                      make_const_step_iterator_end( stepper , lorenz() , x ) ,
                                       0.0 ,
                                       []( double sum , const state_type &x ) {
                                           return sum + x[0]; } );
@@ -92,8 +92,8 @@ int main( int argc , char **argv )
         runge_kutta4< state_type > stepper;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
         vector< double > weights;
-        std::transform( make_const_step_iterator_begin( stepper , lorenz() , x , 0.0 , 0.01 ) ,
-                        make_const_step_iterator_end( stepper , lorenz() , x , 1.0 , 0.01 ) ,
+        std::transform( make_const_step_iterator_begin( stepper , lorenz() , x , 0.0 , 1.0 , 0.01 ) ,
+                        make_const_step_iterator_end( stepper , lorenz() , x ) ,
                         back_inserter( weights ) ,
                         []( const state_type &x ) {
                             return sqrt( x[0] * x[0] + x[1] * x[1] + x[2] * x[2] ); } );
@@ -256,8 +256,8 @@ int main( int argc , char **argv )
     {
         runge_kutta4< state_type > stepper;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
-        auto first = make_const_step_iterator_begin( stepper , lorenz() , x , 0.0 , 0.01 );
-        auto last  = make_const_step_iterator_end( stepper , lorenz() , x , 1.0 , 0.01 );
+        auto first = make_const_step_iterator_begin( stepper , lorenz() , x , 0.0 , 1.0 , 0.01 );
+        auto last  = make_const_step_iterator_end( stepper , lorenz() , x );
         while( first != last )
         {
             assert( last != first );

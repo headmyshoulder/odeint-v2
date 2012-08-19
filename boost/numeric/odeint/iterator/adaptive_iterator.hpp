@@ -19,11 +19,14 @@
 #ifndef BOOST_NUMERIC_ODEINT_ITERATOR_ADAPTIVE_ITERATOR_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_ITERATOR_ADAPTIVE_ITERATOR_HPP_INCLUDED
 
-# include <boost/iterator/iterator_facade.hpp>
+#include <boost/numeric/odeint/iterator/detail/ode_iterator_base.hpp>
 
 #include <boost/numeric/odeint/util/unit_helper.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
+
+#include <iostream>
+using namespace std;
 
 
 namespace boost {
@@ -39,11 +42,10 @@ namespace odeint {
      * Specilization for controlled steppers
      */
     template< class Stepper , class System >
-    class adaptive_iterator< Stepper , System , controlled_stepper_tag > : public boost::iterator_facade
+    class adaptive_iterator< Stepper , System , controlled_stepper_tag > : public detail::ode_iterator_base
     <
         adaptive_iterator< Stepper , System , controlled_stepper_tag > ,
-        typename Stepper::state_type const ,
-        boost::single_pass_traversal_tag
+        Stepper , System , controlled_stepper_tag 
     >
     {
     private:
@@ -53,13 +55,20 @@ namespace odeint {
         typedef typename stepper_type::state_type state_type;
         typedef typename stepper_type::time_type time_type;
         typedef typename stepper_type::value_type ode_value_type;
+        typedef detail::ode_iterator_base<
+            adaptive_iterator< Stepper , System , controlled_stepper_tag > ,
+            Stepper , System , controlled_stepper_tag 
+            > base_type;
 
     public:
    
-        adaptive_iterator( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type dt , bool first  )
-            : m_stepper( stepper ) , m_system( sys ) , m_state( s ) , m_t( t ) , m_dt( dt ) , m_first( first ) {}
+        adaptive_iterator( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type t_end , time_type dt )
+            : base_type( stepper , sys , s , t , t_end , dt ) { }
 
-    private:
+        adaptive_iterator( stepper_type stepper , system_type sys , state_type &s )
+            : base_type( stepper , sys , s ) { } 
+
+    protected:
 
         friend class boost::iterator_core_access;
 
@@ -70,7 +79,7 @@ namespace odeint {
             controlled_step_result res = success;
             do
             {
-                res = m_stepper.try_step( m_system , m_state , m_t , m_dt );
+                res = this->m_stepper.try_step( this->m_system , this->m_state , this->m_t , this->m_dt );
                 ++trials;
             }
             while( ( res == fail ) && ( trials < max_attempts ) );
@@ -78,42 +87,8 @@ namespace odeint {
             {
                 throw std::overflow_error( "Adaptive iterator : Maximal number of iterations reached. A step size could not be found." );
             }
+            this->check_end();
         }
-
-        bool equal( adaptive_iterator const& other ) const
-        {
-            if( m_first == other.m_first )
-            {
-                return true;
-            }
-            else
-            {
-                if( m_first )
-                {
-                    return ( get_unit_value( m_dt ) > static_cast< ode_value_type >( 0.0 ) ) ?
-                        ( m_t > other.m_t ) :
-                        ( m_t < other.m_t ) ;
-                }
-                else
-                {
-                    return ( get_unit_value( m_dt ) > static_cast< ode_value_type >( 0.0 ) ) ?
-                        ( m_t < other.m_t ) :
-                        ( m_t > other.m_t ) ;
-                }
-            }
-        }
-
-        const state_type& dereference() const
-        {
-            return m_state;
-        }
-
-        stepper_type m_stepper;
-        system_type m_system;
-        state_type& m_state;
-        time_type m_t;
-        time_type m_dt;
-        bool m_first;
     };
 
 
@@ -122,14 +97,13 @@ namespace odeint {
 
 
     /*
-     * Specilization for steppers and error steppers
+     * Specilization for dense outputer steppers
      */
     template< class Stepper , class System >
-    class adaptive_iterator< Stepper , System , dense_output_stepper_tag > : public boost::iterator_facade
+    class adaptive_iterator< Stepper , System , dense_output_stepper_tag > : public detail::ode_iterator_base
     <
         adaptive_iterator< Stepper , System , dense_output_stepper_tag > ,
-        typename Stepper::state_type const ,
-        boost::single_pass_traversal_tag
+        Stepper , System , dense_output_stepper_tag 
     >
     {
     private:
@@ -139,61 +113,41 @@ namespace odeint {
         typedef typename stepper_type::state_type state_type;
         typedef typename stepper_type::time_type time_type;
         typedef typename stepper_type::value_type ode_value_type;
+        typedef detail::ode_iterator_base<
+            adaptive_iterator< Stepper , System , dense_output_stepper_tag > ,
+            Stepper , System , dense_output_stepper_tag 
+            > base_type;
 
     public:
+
    
-        adaptive_iterator( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type dt , bool first )
-            : m_stepper( stepper ) , m_system( sys ) , m_state( s ) , m_t( t ) , m_dt( dt ) , m_first( first )
+        adaptive_iterator( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type t_end , time_type dt )
+            : base_type( stepper , sys , s , t , t_end , dt )
         {
-            m_stepper.initialize( m_state , m_t , m_dt );
+            this->m_stepper.initialize( this->m_state , this->m_t , this->m_dt );
         }
 
-    private:
+        adaptive_iterator( stepper_type stepper , system_type sys , state_type &s )
+            : base_type( stepper , sys , s ) { } 
+
+    protected:
 
         friend class boost::iterator_core_access;
 
         void increment()
         {
-            m_t += m_dt;
-            while(  m_stepper.current_time() < m_t )
-                m_stepper.do_step( m_system );
-            m_stepper.calc_state( m_t , m_state );
+            this->m_stepper.do_step( this->m_system );
+            this->m_t = this->m_stepper.current_time();
+            this->check_end();
         }
 
-        bool equal( adaptive_iterator const& other ) const
-        {
-            if( m_first == other.m_first )
-            {
-                return true;
-            }
-            else
-            {
-                if( m_first )
-                {
-                    return ( get_unit_value( m_dt ) > static_cast< ode_value_type >( 0.0 ) ) ?
-                        ( m_t > other.m_t ) :
-                        ( m_t < other.m_t ) ;
-                }
-                else
-                {
-                    return ( get_unit_value( m_dt ) > static_cast< ode_value_type >( 0.0 ) ) ?
-                        ( m_t < other.m_t ) :
-                        ( m_t > other.m_t ) ;
-                }
-            }
-        }
-
+        // overwrite dereference from ode_iterator_base
         const state_type& dereference() const
         {
-            return m_state;
+            return this->m_stepper.current_state();
         }
 
-        stepper_type m_stepper;
-        system_type m_system;
-        state_type& m_state;
-        time_type m_t;
-        time_type m_dt;
-        bool m_first;
+
     };
 
 
@@ -209,20 +163,19 @@ namespace odeint {
         System system , 
         typename Stepper::state_type &x ,
         typename Stepper::time_type t ,
+        typename Stepper::time_type t_end ,
         typename Stepper::time_type dt )
     {
-        return adaptive_iterator< Stepper , System >( stepper , system , x , t , dt , true );
+        return adaptive_iterator< Stepper , System >( stepper , system , x , t , t_end , dt );
     }
 
     template< class Stepper , class System >
     adaptive_iterator< Stepper , System > make_adaptive_iterator_end(
         Stepper stepper ,
         System system , 
-        typename Stepper::state_type &x ,
-        typename Stepper::time_type t ,
-        typename Stepper::time_type dt )
+        typename Stepper::state_type &x )
     {
-        return adaptive_iterator< Stepper , System >( stepper , system , x , t , dt , false );
+        return adaptive_iterator< Stepper , System >( stepper , system , x );
     }
 
 
@@ -237,8 +190,9 @@ namespace odeint {
         typename Stepper::time_type dt )
     {
         return std::make_pair(
-            adaptive_iterator< Stepper , System >( stepper , system , x , t_start , dt , true ) ,
-            adaptive_iterator< Stepper , System >( stepper , system , x , t_end , dt , false ) );
+            adaptive_iterator< Stepper , System >( stepper , system , x , t_start , t_end , dt ) ,
+            adaptive_iterator< Stepper , System >( stepper , system , x )
+            );
     }
 
 

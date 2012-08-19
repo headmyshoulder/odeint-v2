@@ -227,8 +227,8 @@ int main( int argc , char **argv )
     {
         auto stepper = make_controlled( 1.0e-6 , 1.0e-6 , runge_kutta_cash_karp54< state_type >() );
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
-        std::for_each( make_adaptive_iterator_begin( stepper , lorenz() , x , 0.0 , 0.01 ) ,
-                       make_adaptive_iterator_end( stepper , lorenz() , x , 1.0 , 0.01 ) ,
+        std::for_each( make_adaptive_iterator_begin( stepper , lorenz() , x , 0.0 , 1.0 , 0.01 ) ,
+                       make_adaptive_iterator_end( stepper , lorenz() , x ) ,
                        []( const state_type& x ) {
                            std::cout << x[0] << tab << x[1] << tab << x[2] << "\n"; } );
     }
@@ -238,8 +238,8 @@ int main( int argc , char **argv )
         std::vector< state_type > res;
         auto stepper = make_controlled( 1.0e-6 , 1.0e-6 , runge_kutta_cash_karp54< state_type >() );
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
-        std::copy_if( make_adaptive_iterator_begin( stepper , lorenz() , x , 0.0 , 0.01 ) ,
-                      make_adaptive_iterator_end( stepper , lorenz() , x , 1.0 , 0.01 ) ,
+        std::copy_if( make_adaptive_iterator_begin( stepper , lorenz() , x , 0.0 , 1.0 , 0.01 ) ,
+                      make_adaptive_iterator_end( stepper , lorenz() , x ) ,
                       std::back_inserter( res ) ,
                       []( const state_type& x ) {
                           return ( x[0] > 0.0 ) ? true : false; } );
@@ -251,8 +251,8 @@ int main( int argc , char **argv )
     {
         auto stepper = make_controlled( 1.0e-6 , 1.0e-6 , runge_kutta_cash_karp54< state_type >() );
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
-        double res = std::accumulate( make_adaptive_iterator_begin( stepper , lorenz() , x , 0.0 , 0.01 ) ,
-                                      make_adaptive_iterator_end( stepper , lorenz() , x , 1.0 , 0.01 ) ,
+        double res = std::accumulate( make_adaptive_iterator_begin( stepper , lorenz() , x , 0.0 , 1.0 , 0.01 ) ,
+                                      make_adaptive_iterator_end( stepper , lorenz() , x ) ,
                                       0.0 ,
                                       []( double sum , const state_type& x ) {
                                           return sum + x[0]; } );
@@ -265,8 +265,8 @@ int main( int argc , char **argv )
         auto stepper = make_controlled( 1.0e-6 , 1.0e-6 , runge_kutta_cash_karp54< state_type >() );
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
         vector< double > weights;
-        std::transform( make_adaptive_iterator_begin( stepper , lorenz() , x , 0.0 , 0.01 ) ,
-                        make_adaptive_iterator_end( stepper , lorenz() , x , 1.0 , 0.01 ) ,
+        std::transform( make_adaptive_iterator_begin( stepper , lorenz() , x , 0.0 , 1.0 , 0.01 ) ,
+                        make_adaptive_iterator_end( stepper , lorenz() , x ) ,
                         back_inserter( weights ) ,
                         []( const state_type& x ) {
                             return sqrt( x[0] * x[0] + x[1] * x[1] + x[2] * x[2] ); } );
