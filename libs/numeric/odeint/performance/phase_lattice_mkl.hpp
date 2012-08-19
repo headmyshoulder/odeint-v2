@@ -1,9 +1,16 @@
 /*
  * phase_lattice_mkl.hpp
  *
- *  Created on: Jul 19, 2011
- *      Author: mario
+ * Copyright 2009-2012 Karsten Ahnert
+ * Copyright 2009-2012 Mario Mulansky
+ *
+ * Distributed under the Boost Software License, Version 1.0.
+ * (See accompanying file LICENSE_1_0.txt or
+ * copy at http://www.boost.org/LICENSE_1_0.txt)
  */
+
+
+
 
 #ifndef PHASE_LATTICE_MKL_HPP_
 #define PHASE_LATTICE_MKL_HPP_

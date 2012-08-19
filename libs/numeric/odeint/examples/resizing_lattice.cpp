@@ -5,10 +5,7 @@
  * Examplary system is a strongly nonlinear, disordered Hamiltonian lattice
  * where the spreading of energy is invastigated
  *
- *  Created on: Aug 16, 2011
- *      Author: mario
- *
- * Copyright 2009 Karsten Ahnert and Mario Mulansky.
+ * Copyright 2009-2012 Karsten Ahnert and Mario Mulansky.
  * Distributed under the Boost Software License, Version 1.0. (See
  * accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)

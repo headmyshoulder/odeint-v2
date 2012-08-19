@@ -4,7 +4,6 @@
  * This example demonstrates how one can use odeint to solve the Fermi-Pasta-Ulam system.
 
  *  Created on: July 13, 2011
- *      Author: karsten
  *
  * Copyright 2009 Karsten Ahnert and Mario Mulansky.
  * Distributed under the Boost Software License, Version 1.0. (See

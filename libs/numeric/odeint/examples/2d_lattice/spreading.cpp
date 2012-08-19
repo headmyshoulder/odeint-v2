@@ -1,4 +1,14 @@
 /*
+ Copyright 2009-2012 Karsten Ahnert
+ Copyright 2009-2012 Mario Mulansky
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
+
+/*
  * Example of a 2D simulation of nonlinearly coupled oscillators.
  * Program just prints final energy which should be close to the initial energy (1.0).
  * No parallelization is employed here.

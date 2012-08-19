@@ -1,8 +1,13 @@
 /*
- *  van_der_pol_stiff.cpp
+ * van_der_pol_stiff.cpp
  *  
- *  Created on: Dec 12, 2011
- *      Author: rajeev
+ * Created on: Dec 12, 2011
+ *
+ * Copyright 2011 Rajeev Singh
+ *
+ * Distributed under the Boost Software License, Version 1.0.
+ * (See accompanying file LICENSE_1_0.txt or
+ * copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
 #include <iostream>
