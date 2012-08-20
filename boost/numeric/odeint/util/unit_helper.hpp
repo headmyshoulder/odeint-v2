@@ -130,6 +130,7 @@ namespace detail {
         typedef Time type;
     };
 
+#ifndef __CUDACC__
     template< typename Unit , typename Value >
     struct inverse_time< boost::units::quantity< Unit , Value > >
     {
@@ -140,7 +141,7 @@ namespace detail {
         typedef boost::units::unit< inv_dimension , system > inv_unit;
         typedef boost::units::quantity< inv_unit , Value > type;
     };
-
+#endif
 
 
 } // namespace odeint
