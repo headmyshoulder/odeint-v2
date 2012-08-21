@@ -1,14 +1,18 @@
 /*
- boost header: xyz/vector_space_1d.hpp
+ [auto_generated]
+ libs/numeric/odeint/test/trivial_state.cpp
 
- Copyright 2009 Karsten Ahnert
- Copyright 2009 Mario Mulansky
- Copyright 2009 Andre Bergner
+ [begin_description]
+ This file defines a vector_space 1d class with the appropriate operators.
+ [end_description]
+
+ Copyright 2009-2012 Karsten Ahnert
+ Copyright 2009-2012 Mario Mulansky
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
  copy at http://www.boost.org/LICENSE_1_0.txt)
-*/
+ */
 
 #ifndef VECTOR_SPACE_1D_HPP_INCLUDED
 #define VECTOR_SPACE_1D_HPP_INCLUDED

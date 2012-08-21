@@ -1,17 +1,19 @@
-/* Boost stepper_euler.cpp test file
+/*
+ [auto_generated]
+ libs/numeric/odeint/test/stepper_concepts.cpp
 
- Copyright 2009 Karsten Ahnert
- Copyright 2009 Mario Mulansky
+ [begin_description]
+ This file tests the Stepper concepts of odeint with nearly all steppers. Its one of the main tests
+ of odeint.
+ [end_description]
 
- This file tests the use of the all different steppers with several state types:
- std::vector< double >
- vector_space_1d< double >  (see vector_space_1d.hpp)
- boost::array< double , 1 >
+ Copyright 2009-2012 Karsten Ahnert
+ Copyright 2009-2012 Mario Mulansky
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
  copy at http://www.boost.org/LICENSE_1_0.txt)
-*/
+ */
 
 // disable checked iterator warning for msvc
 #include <boost/config.hpp>

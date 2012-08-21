@@ -1,9 +1,19 @@
 /*
- * const_step_iterator.cpp
- *
- *  Created on: Aug 6, 2012
- *      Author: Karsten Ahnert
+ [auto_generated]
+ libs/numeric/odeint/test/const_step_iterator.cpp
+
+ [begin_description]
+ This file tests the const step iterator.
+ [end_description]
+
+ Copyright 2009-2012 Karsten Ahnert
+ Copyright 2009-2012 Mario Mulansky
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
  */
+
 
 #define BOOST_TEST_MODULE odeint_const_step_iterator
 

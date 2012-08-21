@@ -1,9 +1,19 @@
 /*
- * check_operations.cpp
- *
- *  Created on: Jan 20, 2011
- *      Author: karsten
+ [auto_generated]
+ libs/numeric/odeint/test/fusion_algebra.cpp
+
+ [begin_description]
+ This file tests the Fusion algebra.
+ [end_description]
+
+ Copyright 2009-2012 Karsten Ahnert
+ Copyright 2009-2012 Mario Mulansky
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
  */
+
 
 #define BOOST_TEST_MODULE odeint_fusion_algebra
 

@@ -1,14 +1,18 @@
-/* Boost check_implicit_euler.cpp test file
+/*
+ [auto_generated]
+ libs/numeric/odeint/test/rosenbrock4.cpp
 
- Copyright 2009 Karsten Ahnert
- Copyright 2009 Mario Mulansky
+ [begin_description]
+ This file tests the Rosenbrock 4 stepper and its controller and dense output stepper.
+ [end_description]
 
- This file tests the use of the euler stepper
+ Copyright 2009-2012 Karsten Ahnert
+ Copyright 2009-2012 Mario Mulansky
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
  copy at http://www.boost.org/LICENSE_1_0.txt)
-*/
+ */
 
 // disable checked iterator warning for msvc
 #include <boost/config.hpp>
