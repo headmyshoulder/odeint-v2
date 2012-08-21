@@ -241,12 +241,12 @@ public :
         value_type b6_theta = A * b6 - C * X6;
         value_type b7_theta = B + C * X7;
 
-        //		const state_type &k1 = *m_old_deriv;
-        //		const state_type &k3 = dopri5().m_k3;
-        //		const state_type &k4 = dopri5().m_k4;
-        //		const state_type &k5 = dopri5().m_k5;
-        //		const state_type &k6 = dopri5().m_k6;
-        //		const state_type &k7 = *m_current_deriv;
+        // const state_type &k1 = *m_old_deriv;
+        // onst state_type &k3 = dopri5().m_k3;
+        // const state_type &k4 = dopri5().m_k4;
+        // const state_type &k5 = dopri5().m_k5;
+        // const state_type &k6 = dopri5().m_k6;
+        // const state_type &k7 = *m_current_deriv;
 
         stepper_base_type::m_algebra.for_each8( x , x_old , deriv_old , m_k3.m_v , m_k4.m_v , m_k5.m_v , m_k6.m_v , deriv_new ,
                 typename operations_type::template scale_sum7< value_type , time_type , time_type , time_type , time_type , time_type , time_type >( 1.0 , dt * b1_theta , dt * b3_theta , dt * b4_theta , dt * b5_theta , dt * b6_theta , dt * b7_theta ) );

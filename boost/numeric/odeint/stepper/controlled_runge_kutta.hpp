@@ -1,5 +1,4 @@
-/*
- [auto_generated]
+/* [auto_generated]
  boost/numeric/odeint/stepper/controlled_runge_kutta.hpp
 
  [begin_description]
@@ -22,6 +21,7 @@
 
 #include <cmath>
 
+#include <boost/config.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_same.hpp>
 
@@ -38,8 +38,6 @@
 
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
-
-
 
 namespace boost {
 namespace numeric {
@@ -90,8 +88,6 @@ public:
                 typename operations_type::template maximum< value_type >() , static_cast< value_type >( 0 ) );
         return res;
     }
-
-    value_type check( void ) const { return m_eps_abs; }
 
 private:
 
@@ -232,8 +228,8 @@ public:
     template< class System , class StateIn , class DerivIn , class StateOut >
     controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt , time_type &t , StateOut &out , time_type &dt )
     {
-        using std::max;
-        using std::min;
+        BOOST_USING_STD_MIN();
+        BOOST_USING_STD_MAX();
         using std::pow;
 
         m_xerr_resizer.adjust_size( in , detail::bind( &controlled_runge_kutta::template resize_m_xerr_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
@@ -246,7 +242,7 @@ public:
         if( m_max_rel_error > 1.0 )
         {
             // error too large - decrease dt ,limit scaling factor to 0.2 and reset state
-            dt *= max( static_cast<value_type>(9)/static_cast<value_type>(10) * pow( m_max_rel_error ,
+            dt *= max BOOST_PREVENT_MACRO_SUBSTITUTION ( static_cast<value_type>(9)/static_cast<value_type>(10) * pow( m_max_rel_error ,
                                                            static_cast<value_type>(-1) / ( m_stepper.error_order() - 1 ) ) ,
                        static_cast<value_type>(1)/static_cast<value_type> (5) );
             return fail;
@@ -257,7 +253,7 @@ public:
             {
                 //error too small - increase dt and keep the evolution and limit scaling factor to 5.0
                 t += dt;
-                dt *= min( static_cast<value_type>(9)/static_cast<value_type>(10) * pow( m_max_rel_error ,
+                dt *= min BOOST_PREVENT_MACRO_SUBSTITUTION ( static_cast<value_type>(9)/static_cast<value_type>(10) * pow( m_max_rel_error ,
                                                                static_cast<value_type>(-1) / m_stepper.stepper_order() ) ,
                            static_cast<value_type>(5) );
                 return success;
@@ -459,8 +455,9 @@ public:
     controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt_in , time_type &t ,
             StateOut &out , DerivOut &dxdt_out , time_type &dt )
     {
-        using std::max;
-        using std::min;
+        BOOST_USING_STD_MIN();
+        BOOST_USING_STD_MAX();
+
         using std::pow;
 
         m_xerr_resizer.adjust_size( in , detail::bind( &controlled_runge_kutta::template resize_m_xerr_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
@@ -475,7 +472,7 @@ public:
         if( max_rel_err > 1.0 )
         {
             // error too large - decrease dt ,limit scaling factor to 0.2 and reset state
-            dt *= max( static_cast<value_type>( static_cast<value_type>(9)/static_cast<value_type>(10) * pow( max_rel_err , static_cast<value_type>(-1) / ( m_stepper.error_order() - 1 ) ) ) , static_cast<value_type>( static_cast<value_type>(1)/static_cast<value_type> (5)) );
+            dt *= max BOOST_PREVENT_MACRO_SUBSTITUTION ( static_cast<value_type>( static_cast<value_type>(9)/static_cast<value_type>(10) * pow( max_rel_err , static_cast<value_type>(-1) / ( m_stepper.error_order() - 1 ) ) ) , static_cast<value_type>( static_cast<value_type>(1)/static_cast<value_type> (5)) );
             return fail;
         }
         else
@@ -483,7 +480,7 @@ public:
             if( max_rel_err < 0.5 )
             {                //error too small - increase dt and keep the evolution and limit scaling factor to 5.0
                 t += dt;
-                dt *= min( static_cast<value_type>( static_cast<value_type>(9)/static_cast<value_type>(10) * pow( max_rel_err , static_cast<value_type>(-1) / m_stepper.stepper_order() ) ) , static_cast<value_type>(5) );
+                dt *= min BOOST_PREVENT_MACRO_SUBSTITUTION ( static_cast<value_type>( static_cast<value_type>(9)/static_cast<value_type>(10) * pow( max_rel_err , static_cast<value_type>(-1) / m_stepper.stepper_order() ) ) , static_cast<value_type>(5) );
                 return success;
             }
             else

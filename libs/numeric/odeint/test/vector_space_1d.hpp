@@ -17,6 +17,7 @@
 #ifndef VECTOR_SPACE_1D_HPP_INCLUDED
 #define VECTOR_SPACE_1D_HPP_INCLUDED
 
+#include <boost/config.hpp>
 #include <boost/operators.hpp>
 
 template< class T >
@@ -93,7 +94,7 @@ vector_space_1d< T > abs( const vector_space_1d< T > &v)
 
 
 template< class T >
-T max( const vector_space_1d< T > &v )
+T max BOOST_PREVENT_MACRO_SUBSTITUTION ( const vector_space_1d< T > &v )
 {
 	return v.m_x;
 }
