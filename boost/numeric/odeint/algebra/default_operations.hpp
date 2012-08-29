@@ -88,10 +88,6 @@ struct default_operations
         }
 
         typedef void result_type;
-
-    private:
-        scale_sum2< Fac1 , Fac2 >& operator=( const scale_sum2< Fac1 , Fac2 > &sum2 )
-        { }
     };
 
 
