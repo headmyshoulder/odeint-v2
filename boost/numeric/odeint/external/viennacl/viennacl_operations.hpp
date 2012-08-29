@@ -18,14 +18,6 @@
 #ifndef BOOST_NUMERIC_ODEINT_EXTERNAL_VIENNACL_VIENNACL_OPERATIONS_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_EXTERNAL_VIENNACL_VIENNACL_OPERATIONS_HPP_INCLUDED
 
-//#include <algorithm>
-
-//#include <boost/config.hpp>
-//#include <boost/array.hpp>
-
-//#include <boost/numeric/odeint/util/unit_helper.hpp>
-
-#include <memory>
 #include <viennacl/vector.hpp>
 #include <viennacl/generator/custom_operation.hpp>
 
@@ -35,7 +27,7 @@ namespace odeint {
 
 
 
-struct default_operations
+struct viennacl_operations
 {
 
     template< class Fac1 = double , class Fac2 = Fac1 >
@@ -67,7 +59,12 @@ struct default_operations
 		           + sym_a2 * sym_v3
 		    );
 
-	    ocl::enqueue( op(v1, v2, v3, m_alpha1, m_alpha2) );
+	    ocl::enqueue( op(v1,
+			const_cast< viennacl::vector<T2>& >(v2),
+			const_cast< viennacl::vector<T3>& >(v3),
+			const_cast< Fac1& >(m_alpha1),
+			const_cast< Fac2& >(m_alpha2)
+			) );
         }
 
         typedef void result_type;
@@ -108,7 +105,14 @@ struct default_operations
 		           + sym_a3 * sym_v4
 		    );
 
-	    ocl::enqueue( op(v1, v2, v3, v4, m_alpha1, m_alpha2, m_alpha3) );
+	    ocl::enqueue( op(v1,
+			const_cast< viennacl::vector<T2>& >(v2),
+			const_cast< viennacl::vector<T3>& >(v3),
+			const_cast< viennacl::vector<T4>& >(v4),
+			const_cast< Fac1& >(m_alpha1),
+			const_cast< Fac2& >(m_alpha2),
+			const_cast< Fac3& >(m_alpha3)
+			) );
         }
 
         typedef void result_type;
@@ -153,8 +157,16 @@ struct default_operations
 		           + sym_a4 * sym_v5
 		    );
 
-	    ocl::enqueue( op(v1, v2, v3, v4, v5,
-			m_alpha1, m_alpha2, m_alpha3, m_alpha4) );
+	    ocl::enqueue( op(v1,
+			const_cast< viennacl::vector<T2>& >(v2),
+			const_cast< viennacl::vector<T3>& >(v3),
+			const_cast< viennacl::vector<T4>& >(v4),
+			const_cast< viennacl::vector<T5>& >(v5),
+			const_cast< Fac1& >(m_alpha1),
+			const_cast< Fac2& >(m_alpha2),
+			const_cast< Fac3& >(m_alpha3),
+			const_cast< Fac4& >(m_alpha4)
+			) );
         }
 
         typedef void result_type;
@@ -204,8 +216,18 @@ struct default_operations
 		           + sym_a5 * sym_v6
 		    );
 
-	    ocl::enqueue( op(v1, v2, v3, v4, v5, v6,
-			m_alpha1, m_alpha2, m_alpha3, m_alpha4, m_alpha5) );
+	    ocl::enqueue( op(v1,
+			const_cast< viennacl::vector<T2>& >(v2),
+			const_cast< viennacl::vector<T3>& >(v3),
+			const_cast< viennacl::vector<T4>& >(v4),
+			const_cast< viennacl::vector<T5>& >(v5),
+			const_cast< viennacl::vector<T6>& >(v6),
+			const_cast< Fac1& >(m_alpha1),
+			const_cast< Fac2& >(m_alpha2),
+			const_cast< Fac3& >(m_alpha3),
+			const_cast< Fac4& >(m_alpha4),
+			const_cast< Fac5& >(m_alpha5)
+			) );
         }
 
         typedef void result_type;
