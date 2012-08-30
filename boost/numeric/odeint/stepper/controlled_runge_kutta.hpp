@@ -575,7 +575,7 @@ private:
     {
         if( m_dxdt_resizer.adjust_size( x , detail::bind( &controlled_runge_kutta::template resize_m_dxdt_impl< StateInOut > , detail::ref( *this ) , detail::_1 ) ) || m_first_call )
         {
-        	initialize( system , x , t );
+            initialize( system , x , t );
         }
         return try_step( system , x , m_dxdt.m_v , t , dt );
     }

@@ -37,18 +37,18 @@ template< class Value >
 struct coef_a_type : public boost::array< Value , 1 >
 {
     coef_a_type( void )
-		        {
+    {
         (*this)[0] = 1.0;
-		        }
+    }
 };
 
 template< class Value >
 struct coef_b_type : public boost::array< Value , 1 >
 {
     coef_b_type( void )
-		        {
-			    (*this)[0] = static_cast< Value >( 1 );
-		        }
+    {
+        (*this)[0] = static_cast< Value >( 1 );
+    }
 };
 
 } // namespace symplectic_euler_coef

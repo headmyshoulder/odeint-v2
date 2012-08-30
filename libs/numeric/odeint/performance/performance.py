@@ -33,21 +33,21 @@ print "Performance tests for " , bin_path
 print
 
 for bin in bins:
-	#system( "bjam toolset=" + toolset + " -a " + bin );
-	if isfile( bin_path + bin + extension):
-		print "Running" , bin
-		res = popen( bin_path+bin+extension ).read()
-		print bin , res
-		results.append( res )
-	else:
-		print "no executable found:" , bin_path + bin + extension
-		results.append( 0 )
+        #system( "bjam toolset=" + toolset + " -a " + bin );
+        if isfile( bin_path + bin + extension):
+                print "Running" , bin
+                res = popen( bin_path+bin+extension ).read()
+                print bin , res
+                results.append( res )
+        else:
+                print "no executable found:" , bin_path + bin + extension
+                results.append( 0 )
 
 print "Results from" , bin_path
 print
 
 for i in range(len(bins)):
-	print bins[i] , results[i]
+        print bins[i] , results[i]
 
 res = array( results , dtype='float' )
 savetxt( bin_path + "rk4_lorenz.dat" , res )

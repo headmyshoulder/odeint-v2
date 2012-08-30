@@ -17,13 +17,13 @@ project
       <link>static
       <toolset>clang:<cxxflags>-Wno-unused-variable
 
-#	  <cxxflags>-D_SCL_SECURE_NO_WARNINGS
+# <cxxflags>-D_SCL_SECURE_NO_WARNINGS
     ;
 
 test-suite "odeint"
-	:
-	 [ run runge_kutta.cpp ]
-         [ run symplectic.cpp ]
-         [ run rosenbrock.cpp ]
-	: <testing.launcher>valgrind
-	;
+     :
+     [ run runge_kutta.cpp ]
+     [ run symplectic.cpp ]
+     [ run rosenbrock.cpp ]
+     : <testing.launcher>valgrind
+     ;

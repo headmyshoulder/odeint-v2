@@ -43,10 +43,10 @@ void gram_schmidt( StateType &x , LyapType &lyap , size_t n )
     typedef typename StateType::value_type value_type;
     typedef typename StateType::iterator iterator;
 
-	value_type norm[num_of_lyap];
+    value_type norm[num_of_lyap];
     value_type tmp[num_of_lyap];
-	iterator first = x.begin() + n;
-	iterator beg1 = first , end1 = first + n ;
+    iterator first = x.begin() + n;
+    iterator beg1 = first , end1 = first + n ;
 
     std::fill( norm , norm+num_of_lyap , 0.0 );
 
@@ -62,7 +62,7 @@ void gram_schmidt( StateType &x , LyapType &lyap , size_t n )
         for( size_t k=0 ; k<j ; ++k )
         {
             tmp[k] = std::inner_product( beg1 , end1 , first + k*n , 0.0 );
-            //			clog << j << " " << k << " " << tmp[k] << "\n";
+            //  clog << j << " " << k << " " << tmp[k] << "\n";
         }
 
 
@@ -72,7 +72,7 @@ void gram_schmidt( StateType &x , LyapType &lyap , size_t n )
 
         // nromalize j-th vector
         norm[j] = sqrt( std::inner_product( beg1 , end1 , beg1 , 0.0 ) );
-        //		clog << j << " " << norm[j] << "\n";
+        // clog << j << " " << norm[j] << "\n";
         normalize( beg1 , end1 , norm[j] );
     }
 

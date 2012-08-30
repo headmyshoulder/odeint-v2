@@ -71,7 +71,7 @@ struct fusion_algebra< 1 >
         for( size_t i=0 ; i<dim ; ++i )
         {
             x_tmp[i] = x[i]
-						+ a[0]*dt*k_vector[0][i];
+                + a[0]*dt*k_vector[0][i];
         }
     }
 

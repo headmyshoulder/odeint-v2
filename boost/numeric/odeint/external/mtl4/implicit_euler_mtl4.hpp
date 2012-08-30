@@ -81,7 +81,7 @@ public:
         m_identity.m_v = 1;
 
         t += dt;
-        m_x.m_v = x;	
+        m_x.m_v = x;
 
         deriv_func( x , m_dxdt.m_v , t );
         jacobi_func( x , m_jacobi.m_v , t );

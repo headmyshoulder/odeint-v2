@@ -37,9 +37,9 @@ struct sys_func
 
     void operator()( const state_type &x , state_type &dxdt , double t ) const
     {
-	dxdt(0) = -sigma * ( x(0) - x(1) );
-	dxdt(1) = R * x(0) - x(1) - x(0) * x(2);
-	dxdt(2) = - b * x(2) + x(0) * x(1);
+        dxdt(0) = -sigma * ( x(0) - x(1) );
+        dxdt(1) = R * x(0) - x(1) - x(0) * x(2);
+        dxdt(2) = - b * x(2) + x(0) * x(1);
     }
 };
 //]

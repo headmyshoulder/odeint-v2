@@ -7,8 +7,6 @@ project
     : requirements 
       <include>../../../../..
       <define>BOOST_ALL_NO_LIB=1
-    : build-dir .
-    : default-build release
     ;
     
 exe spreading : spreading.cpp ;

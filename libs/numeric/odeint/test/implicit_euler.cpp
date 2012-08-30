@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE( test_euler )
 
     value_type eps = 1E-12;
 
-	/* make_pair doesn't work with function pointers on msvc 10 */
+    /* make_pair doesn't work with function pointers on msvc 10 */
     stepper.do_step( std::make_pair( sys() , jacobi() ) , x , 0.0 , 0.1 );
 
     using std::abs;
