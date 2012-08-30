@@ -41,7 +41,7 @@ struct resize_impl< viennacl::vector< T > , viennacl::vector< T > >
 {
     static void resize( viennacl::vector< T > &x1 , const viennacl::vector< T > &x2 )
     {
-	x1.resize( x2.size() , false );
+        x1.resize( x2.size() , false );
     }
 };
 
@@ -50,7 +50,7 @@ struct same_size_impl< viennacl::vector< T > , viennacl::vector< T > >
 {
     static bool same_size( const viennacl::vector< T > &x1 , const viennacl::vector< T > &x2 )
     {
-	return x1.size() == x2.size();
+        return x1.size() == x2.size();
     }
 };
 
