@@ -37,22 +37,22 @@ namespace detail {
     template<class T , class Enabler = void >
     struct get_unit_value_impl
     {
-	static T value(const T &t)
-	{
-	    return t;
-	}
-	typedef T result_type;
+        static T value(const T &t)
+        {
+            return t;
+        }
+        typedef T result_type;
     };
-
+    
 #ifndef __CUDACC__
     template<class Unit , class T>
     struct get_unit_value_impl< boost::units::quantity< Unit , T> >
     {
-	static T value( const boost::units::quantity< Unit , T> &t )
-	{
-	    return t.value();
-	}
-	typedef T result_type;
+        static T value( const boost::units::quantity< Unit , T> &t )
+        {
+            return t.value();
+        }
+        typedef T result_type;
     };
 #endif
 
@@ -63,20 +63,20 @@ namespace detail {
     template<class T , class V , class Enabler = void >
     struct set_unit_value_impl
     {
-	static void set_value(T &t , const V &v)
-	{
-	    t = v;
-	}
+        static void set_value(T &t , const V &v)
+        {
+            t = v;
+        }
     };
 
 #ifndef __CUDACC__
     template<class Unit , class T , class V>
     struct set_unit_value_impl<boost::units::quantity<Unit , T> , V>
     {
-	static void set_value(boost::units::quantity<Unit , T> &t , const V &v)
-	{
-	    t = boost::units::quantity<Unit , T>::from_value(v);
-	}
+        static void set_value(boost::units::quantity<Unit , T> &t , const V &v)
+        {
+            t = boost::units::quantity<Unit , T>::from_value(v);
+        }
     };
 #endif
 
@@ -88,7 +88,7 @@ namespace detail {
     template<class T>
     typename detail::get_unit_value_impl<T>::result_type get_unit_value(const T &t)
     {
-	return detail::get_unit_value_impl<T>::value(t);
+        return detail::get_unit_value_impl<T>::value(t);
     }
 
 
@@ -96,7 +96,7 @@ namespace detail {
 
     void set_unit_value(T &t , const V &v)
     {
-	return detail::set_unit_value_impl<T , V>::set_value(t , v);
+        return detail::set_unit_value_impl<T , V>::set_value(t , v);
     }
 
 
@@ -104,14 +104,14 @@ namespace detail {
     template< class T >
     struct unit_value_type
     {
-	typedef T type;
+        typedef T type;
     };
 
 #ifndef __CUDACC__
     template< class Unit , class Y >
     struct unit_value_type< boost::units::quantity< Unit , Y > >
     {
-	typedef Y type;
+        typedef Y type;
     };
 #endif
 

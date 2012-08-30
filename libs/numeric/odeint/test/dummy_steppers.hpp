@@ -73,12 +73,12 @@ struct dummy_dense_output_stepper
         x[0] = m_x[0] - 0.25 * theta;
         
     }
-	
+
     const time_type& current_time( void ) const
     {
         return m_t;
     }
-	
+
     const state_type& current_state( void ) const
     {
         return m_x;

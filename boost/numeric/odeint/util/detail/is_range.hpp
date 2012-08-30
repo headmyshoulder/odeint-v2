@@ -39,7 +39,7 @@ namespace odeint {
 namespace range_detail
 {
 BOOST_MPL_HAS_XXX_TRAIT_DEF(iterator)
-		        BOOST_MPL_HAS_XXX_TRAIT_DEF(const_iterator)
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(const_iterator)
 }
 
 namespace detail

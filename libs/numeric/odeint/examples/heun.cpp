@@ -87,13 +87,13 @@ template<
 >
 class heun : public
 boost::numeric::odeint::explicit_generic_rk< 3 , 3 , State , Value , Deriv , Time ,
-					     Algebra , Operations , Resizer >
+                                             Algebra , Operations , Resizer >
 {
 
 public:
 
     typedef boost::numeric::odeint::explicit_generic_rk< 3 , 3 , State , Value , Deriv , Time ,
-							 Algebra , Operations , Resizer > stepper_base_type;
+                                                         Algebra , Operations , Resizer > stepper_base_type;
 
     typedef typename stepper_base_type::state_type state_type;
     typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
@@ -109,8 +109,8 @@ public:
     heun( const algebra_type &algebra = algebra_type() )
     : stepper_base_type(
             fusion::make_vector(
-		heun_a1<Value>() ,
-		heun_a2<Value>() ) ,
+                heun_a1<Value>() ,
+                heun_a2<Value>() ) ,
             heun_b<Value>() , heun_c<Value>() , algebra )
     { }
 };

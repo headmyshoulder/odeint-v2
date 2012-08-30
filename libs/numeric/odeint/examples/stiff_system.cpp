@@ -62,20 +62,20 @@ typedef boost::numeric::ublas::matrix< double > matrix_type;
 
 struct stiff_system
 {
-	template< class State >
-	void operator()( const State &x , State &dxdt , double t )
-	{
+    template< class State >
+    void operator()( const State &x , State &dxdt , double t )
+    {
         ...
-	}
+    }
 };
 
 struct stiff_system_jacobi
 {
-	template< class State , class Matrix >
-	void operator()( const State &x , Matrix &J , const double &t , State &dfdt )
-	{
+    template< class State , class Matrix >
+    void operator()( const State &x , Matrix &J , const double &t , State &dfdt )
+    {
         ...
-	}
+    }
 };
 //]
  */

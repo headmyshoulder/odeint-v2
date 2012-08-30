@@ -17,7 +17,7 @@ struct rt_algebra
     template< typename T , size_t dim >
     inline static void foreach( boost::array< T , dim > & x_tmp , 
                                 const boost::array< T , dim > &x ,
-				//const vector< double > &a ,
+                                //const vector< double > &a ,
                                 const double* a ,
                                 const boost::array< T , dim > *k_vector , 
                                 const double dt , const size_t s )

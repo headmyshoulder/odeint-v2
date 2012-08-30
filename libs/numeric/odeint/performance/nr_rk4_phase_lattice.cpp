@@ -56,8 +56,8 @@ public:
     void reset_init_cond()
     {
         for( size_t i = 0 ; i<dim ; ++i )
-			m_x[i] = 2.0*3.1415927*rand() / RAND_MAX;
-		m_t = 0.0;
+            m_x[i] = 2.0*3.1415927*rand() / RAND_MAX;
+        m_t = 0.0;
     }
 
     inline void do_step( const double dt )
@@ -77,7 +77,7 @@ private:
 
 int main()
 {
-	srand( 12312354 );
+    srand( 12312354 );
 
     nr_wrapper stepper;
 

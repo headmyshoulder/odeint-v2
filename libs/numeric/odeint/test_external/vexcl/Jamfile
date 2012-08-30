@@ -25,9 +25,9 @@ project
 lib OpenCL : : <name>OpenCL <link>shared ;
 
 test-suite "odeint"
-	:
-	 [ run lorenz.cpp OpenCL ]
-	: <testing.launcher>valgrind
-	: 
-	: <link>shared:<define>BOOST_TEST_DYN_LINK=1
-	;
+    :
+    [ run lorenz.cpp OpenCL ]
+    : <testing.launcher>valgrind
+    : 
+    : <link>shared:<define>BOOST_TEST_DYN_LINK=1
+    ;

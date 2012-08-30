@@ -57,21 +57,21 @@ typedef boost::array< double , 1 > test_array_type;
 namespace boost { namespace numeric { namespace odeint {
 
 
-	template<>
-	struct is_resizeable< test_array_type >
-	{
-		typedef boost::true_type type;
-		const static bool value = type::value;
-	};
+    template<>
+    struct is_resizeable< test_array_type >
+    {
+        typedef boost::true_type type;
+        const static bool value = type::value;
+    };
 
-	template<>
-	struct same_size_impl< test_array_type , test_array_type >
-	{
-	    static bool same_size( const test_array_type &x1 , const test_array_type &x2 )
-	    {
-	        return false;
-	    }
-	};
+    template<>
+    struct same_size_impl< test_array_type , test_array_type >
+    {
+        static bool same_size( const test_array_type &x1 , const test_array_type &x2 )
+        {
+            return false;
+        }
+    };
 
     template<>
     struct resize_impl< test_array_type , test_array_type >
@@ -107,33 +107,33 @@ typedef runge_kutta4< test_array_type , double , test_array_type , double , rang
 
 
 typedef mpl::vector<
-	mpl::vector< euler_manual_type , mpl::int_<1> , mpl::int_<0> > ,
-	mpl::vector< euler_initially_type , mpl::int_<1> , mpl::int_<1> > ,
-	mpl::vector< euler_always_type , mpl::int_<1> , mpl::int_<3> > ,
-	mpl::vector< rk4_manual_type , mpl::int_<5> , mpl::int_<0> > ,
-	mpl::vector< rk4_initially_type , mpl::int_<5> , mpl::int_<1> > ,
-	mpl::vector< rk4_always_type , mpl::int_<5> , mpl::int_<3> > ,
-	mpl::vector< rk4_gen_manual_type , mpl::int_<5> , mpl::int_<0> > ,
+    mpl::vector< euler_manual_type , mpl::int_<1> , mpl::int_<0> > ,
+    mpl::vector< euler_initially_type , mpl::int_<1> , mpl::int_<1> > ,
+    mpl::vector< euler_always_type , mpl::int_<1> , mpl::int_<3> > ,
+    mpl::vector< rk4_manual_type , mpl::int_<5> , mpl::int_<0> > ,
+    mpl::vector< rk4_initially_type , mpl::int_<5> , mpl::int_<1> > ,
+    mpl::vector< rk4_always_type , mpl::int_<5> , mpl::int_<3> > ,
+    mpl::vector< rk4_gen_manual_type , mpl::int_<5> , mpl::int_<0> > ,
     mpl::vector< rk4_gen_initially_type , mpl::int_<5> , mpl::int_<1> > ,
     mpl::vector< rk4_gen_always_type , mpl::int_<5> , mpl::int_<3> >
->::type resize_check_types;
+    >::type resize_check_types;
 
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_resize , T, resize_check_types )
 {
-	typedef typename mpl::at< T , mpl::int_< 0 > >::type stepper_type;
-	const size_t resize_calls = mpl::at< T , mpl::int_< 1 > >::type::value;
-	const size_t multiplicity = mpl::at< T , mpl::int_< 2 > >::type::value;
-	adjust_size_count = 0;
+    typedef typename mpl::at< T , mpl::int_< 0 > >::type stepper_type;
+    const size_t resize_calls = mpl::at< T , mpl::int_< 1 > >::type::value;
+    const size_t multiplicity = mpl::at< T , mpl::int_< 2 > >::type::value;
+    adjust_size_count = 0;
 
-	stepper_type stepper;
-	test_array_type x;
-	stepper.do_step( constant_system , x , 0.0 , 0.1 );
-	stepper.do_step( constant_system , x , 0.0 , 0.1 );
-	stepper.do_step( constant_system , x , 0.0 , 0.1 );
+    stepper_type stepper;
+    test_array_type x;
+    stepper.do_step( constant_system , x , 0.0 , 0.1 );
+    stepper.do_step( constant_system , x , 0.0 , 0.1 );
+    stepper.do_step( constant_system , x , 0.0 , 0.1 );
 
-	BOOST_TEST_MESSAGE( "adjust_size_count : " << adjust_size_count );
-	BOOST_CHECK_MESSAGE( adjust_size_count == resize_calls * multiplicity , "adjust_size_count : " << adjust_size_count << " expected: " << resize_calls * multiplicity );
+    BOOST_TEST_MESSAGE( "adjust_size_count : " << adjust_size_count );
+    BOOST_CHECK_MESSAGE( adjust_size_count == resize_calls * multiplicity , "adjust_size_count : " << adjust_size_count << " expected: " << resize_calls * multiplicity );
 }
 
 

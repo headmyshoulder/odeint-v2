@@ -26,7 +26,7 @@ struct lattice2d {
     std::vector< std::vector< double > > m_omega;
 
     lattice2d( const double beta )
-	: m_beta( beta )
+        : m_beta( beta )
     { }
 
     template< class StateIn , class StateOut >

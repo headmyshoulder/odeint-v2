@@ -100,9 +100,9 @@ int main( int argc , char **argv )
     while( true )
     {
 
-    	t = integrate_n_steps( rk4 , lorenz_with_lyap , x , t , dt , 100 );
-    	gram_schmidt< num_of_lyap >( x , lyap , n );
-    	++count;
+        t = integrate_n_steps( rk4 , lorenz_with_lyap , x , t , dt , 100 );
+        gram_schmidt< num_of_lyap >( x , lyap , n );
+        ++count;
 
         if( !(count % 100000) )
         {

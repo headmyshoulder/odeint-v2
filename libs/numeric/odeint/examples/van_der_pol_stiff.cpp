@@ -33,8 +33,8 @@ struct vdp_stiff
 {
     void operator()( const vector_type &x , vector_type &dxdt , double t )
     {
-	dxdt[0] = x[1];
-	dxdt[1] = -x[0] - mu * x[1] * (x[0]*x[0]-1.0);
+        dxdt[0] = x[1];
+        dxdt[1] = -x[0] - mu * x[1] * (x[0]*x[0]-1.0);
     }
 };
 
@@ -42,13 +42,13 @@ struct vdp_stiff_jacobi
 {
     void operator()( const vector_type &x , matrix_type &J , const double &t , vector_type &dfdt )
     {
-	J(0, 0) = 0.0;
-	J(0, 1) = 1.0;
-	J(1, 0) = -1.0 - 2.0*mu * x[0] * x[1];
-	J(1, 1) = -mu * ( x[0] * x[0] - 1.0);
+        J(0, 0) = 0.0;
+        J(0, 1) = 1.0;
+        J(1, 0) = -1.0 - 2.0*mu * x[0] * x[1];
+        J(1, 1) = -mu * ( x[0] * x[0] - 1.0);
 
-	dfdt[0] = 0.0;
-	dfdt[1] = 0.0;
+        dfdt[0] = 0.0;
+        dfdt[1] = 0.0;
     }
 };
 
