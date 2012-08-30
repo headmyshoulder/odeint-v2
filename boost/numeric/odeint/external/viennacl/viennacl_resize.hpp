@@ -41,7 +41,7 @@ struct resize_impl< viennacl::vector< T > , viennacl::vector< T > >
 {
     static void resize( viennacl::vector< T > &x1 , const viennacl::vector< T > &x2 )
     {
-	x1.resize( x2.queue_list() , x2.size() );
+	x1.resize( x2.size() , false );
     }
 };
 
