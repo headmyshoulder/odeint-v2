@@ -1,14 +1,18 @@
-/* Boost generic_stepper.cpp test file
+/*
+ [auto_generated]
+ libs/numeric/odeint/test/generic_stepper.cpp
 
- Copyright 2011 Karsten Ahnert
- Copyright 2011 Mario Mulansky
+ [begin_description]
+ This file tests the generic stepper.
+ [end_description]
 
- This file tests the use of the generic stepper
+ Copyright 2009-2012 Karsten Ahnert
+ Copyright 2009-2012 Mario Mulansky
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
  copy at http://www.boost.org/LICENSE_1_0.txt)
-*/
+ */
 
 // disable checked iterator warning for msvc
 #include <boost/config.hpp>
@@ -61,39 +65,39 @@ BOOST_AUTO_TEST_SUITE( generic_stepper_test )
 BOOST_AUTO_TEST_CASE( test_generic_stepper )
 {
     //simultaneously test copying
-	rk_generic_type rk_generic_( a , b , c );
-	rk_generic_type rk_generic = rk_generic_;
+    rk_generic_type rk_generic_( a , b , c );
+    rk_generic_type rk_generic = rk_generic_;
 
-	rk4_generic_type rk4_generic_;
-	rk4_generic_type rk4_generic = rk4_generic_;
+    rk4_generic_type rk4_generic_;
+    rk4_generic_type rk4_generic = rk4_generic_;
 
-	//std::cout << stepper;
+    //std::cout << stepper;
 
-	rk4_type rk4_;
-	rk4_type rk4 = rk4_;
+    rk4_type rk4_;
+    rk4_type rk4 = rk4_;
 
-	typedef rk_generic_type::state_type state_type;
-	typedef rk_generic_type::value_type stepper_value_type;
-	typedef rk_generic_type::deriv_type deriv_type;
-	typedef rk_generic_type::time_type time_type;
+    typedef rk_generic_type::state_type state_type;
+    typedef rk_generic_type::value_type stepper_value_type;
+    typedef rk_generic_type::deriv_type deriv_type;
+    typedef rk_generic_type::time_type time_type;
 
-	state_type x = {{ 0.0 , 1.0 }};
-	state_type y = x;
-	state_type z = x;
+    state_type x = {{ 0.0 , 1.0 }};
+    state_type y = x;
+    state_type z = x;
 
-	rk_generic.do_step( sys , x , 0.0 , 0.1 );
-	
-	rk4_generic.do_step( sys , y , 0.0 , 0.1 );
+    rk_generic.do_step( sys , x , 0.0 , 0.1 );
 
-	rk4.do_step( sys , z , 0.0 , 0.1 );
+    rk4_generic.do_step( sys , y , 0.0 , 0.1 );
 
-	BOOST_CHECK_NE( 0.0 , x[0] );
-	BOOST_CHECK_NE( 1.0 , x[1] );
-	// compare with analytic solution of above system
-	BOOST_CHECK_EQUAL( x[0] , y[0] );
-	BOOST_CHECK_EQUAL( x[1] , y[1] );
-	BOOST_CHECK_EQUAL( x[0] , z[0] );
-	BOOST_CHECK_EQUAL( x[1] , z[1] );
+    rk4.do_step( sys , z , 0.0 , 0.1 );
+
+    BOOST_CHECK_NE( 0.0 , x[0] );
+    BOOST_CHECK_NE( 1.0 , x[1] );
+    // compare with analytic solution of above system
+    BOOST_CHECK_EQUAL( x[0] , y[0] );
+    BOOST_CHECK_EQUAL( x[1] , y[1] );
+    BOOST_CHECK_EQUAL( x[0] , z[0] );
+    BOOST_CHECK_EQUAL( x[1] , z[1] );
 
 }
 

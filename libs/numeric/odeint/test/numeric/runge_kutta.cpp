@@ -147,8 +147,8 @@ typedef mpl::vector<
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( runge_kutta_test , Stepper, runge_kutta_steppers )
 {
-	perform_runge_kutta_test< Stepper > tester;
-	tester();
+    perform_runge_kutta_test< Stepper > tester;
+    tester();
 }
 
 
@@ -161,8 +161,8 @@ typedef mpl::vector<
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( runge_kutta_error_test , Stepper, runge_kutta_error_steppers )
 {
-	perform_runge_kutta_error_test< Stepper > tester;
-	tester();
+    perform_runge_kutta_error_test< Stepper > tester;
+    tester();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

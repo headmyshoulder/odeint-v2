@@ -22,7 +22,7 @@ project
     ;
     
 test-suite "odeint-mtl4"
-	:
-	 [ run mtl4_resize.cpp ]
-	: <testing.launcher>valgrind
-	;
+    :
+    [ run mtl4_resize.cpp ]
+    : <testing.launcher>valgrind
+    ;

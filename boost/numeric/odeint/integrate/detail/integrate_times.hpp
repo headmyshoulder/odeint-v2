@@ -20,6 +20,7 @@
 
 #include <stdexcept>
 
+#include <boost/config.hpp>
 #include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/util/detail/less_with_sign.hpp>
@@ -42,6 +43,8 @@ size_t integrate_times(
         Observer observer , stepper_tag
 )
 {
+    BOOST_USING_STD_MIN();
+
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
 
     size_t steps = 0;
@@ -54,7 +57,7 @@ size_t integrate_times(
             break;
         while( less_with_sign( current_time , *start_time , current_dt ) )
         {
-            current_dt = std::min( dt , *start_time - current_time );
+            current_dt = min BOOST_PREVENT_MACRO_SUBSTITUTION ( dt , *start_time - current_time );
             stepper.do_step( system , start_state , current_time , current_dt );
             current_time += current_dt;
             steps++;
@@ -73,6 +76,8 @@ size_t integrate_times(
         Observer observer , controlled_stepper_tag
 )
 {
+    BOOST_USING_STD_MIN();
+
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
 
     const size_t max_attempts = 1000;
@@ -87,7 +92,7 @@ size_t integrate_times(
             break;
         while( less_with_sign( current_time , *start_time , dt ) )
         {
-            dt = std::min( dt , *start_time - current_time );
+            dt = min BOOST_PREVENT_MACRO_SUBSTITUTION ( dt , *start_time - current_time );
             if( stepper.try_step( system , start_state , current_time , dt ) == success )
             {
                 ++steps;

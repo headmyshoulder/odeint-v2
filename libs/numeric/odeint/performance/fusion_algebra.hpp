@@ -1,9 +1,14 @@
 /*
  * fusion_algebra.hpp
  *
- *  Created on: Apr 26, 2011
- *      Author: mario
+ * Copyright 2009-2012 Karsten Ahnert
+ * Copyright 2009-2012 Mario Mulansky
+ *
+ * Distributed under the Boost Software License, Version 1.0.
+ * (See accompanying file LICENSE_1_0.txt or
+ * copy at http://www.boost.org/LICENSE_1_0.txt)
  */
+
 
 #ifndef FUSION_ALGEBRA_HPP_
 #define FUSION_ALGEBRA_HPP_
@@ -66,7 +71,7 @@ struct fusion_algebra< 1 >
         for( size_t i=0 ; i<dim ; ++i )
         {
             x_tmp[i] = x[i]
-						+ a[0]*dt*k_vector[0][i];
+                + a[0]*dt*k_vector[0][i];
         }
     }
 

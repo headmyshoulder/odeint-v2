@@ -1,3 +1,13 @@
+"""
+ Copyright 2009-2012 Karsten Ahnert
+ Copyright 2009-2012 Mario Mulansky
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+"""
+
+
 from os import popen
 from os import system
 from os.path import isfile
@@ -23,21 +33,21 @@ print "Performance tests for " , bin_path
 print
 
 for bin in bins:
-	#system( "bjam toolset=" + toolset + " -a " + bin );
-	if isfile( bin_path + bin + extension):
-		print "Running" , bin
-		res = popen( bin_path+bin+extension ).read()
-		print bin , res
-		results.append( res )
-	else:
-		print "no executable found:" , bin_path + bin + extension
-		results.append( 0 )
+        #system( "bjam toolset=" + toolset + " -a " + bin );
+        if isfile( bin_path + bin + extension):
+                print "Running" , bin
+                res = popen( bin_path+bin+extension ).read()
+                print bin , res
+                results.append( res )
+        else:
+                print "no executable found:" , bin_path + bin + extension
+                results.append( 0 )
 
 print "Results from" , bin_path
 print
 
 for i in range(len(bins)):
-	print bins[i] , results[i]
+        print bins[i] , results[i]
 
 res = array( results , dtype='float' )
 savetxt( bin_path + "rk4_lorenz.dat" , res )

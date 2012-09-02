@@ -88,8 +88,8 @@ typedef mpl::vector<
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( symplectic_test , Stepper, symplectic_steppers )
 {
-	perform_symplectic_test< Stepper > tester;
-	tester();
+    perform_symplectic_test< Stepper > tester;
+    tester();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -18,7 +18,8 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA_CASH_KARP54_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA_CASH_KARP54_HPP_INCLUDED
 
-#include <boost/fusion/container.hpp>
+#include <boost/fusion/container/vector.hpp>
+#include <boost/fusion/container/generation/make_vector.hpp>
 
 #include <boost/numeric/odeint/stepper/explicit_error_generic_rk.hpp>
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
@@ -166,7 +167,7 @@ public:
     typedef typename stepper_base_type::stepper_type stepper_type;
 
     runge_kutta_cash_karp54( const algebra_type &algebra = algebra_type() ) : stepper_base_type(
-	boost::fusion::make_vector( rk54_ck_coefficients_a1<Value>() ,
+        boost::fusion::make_vector( rk54_ck_coefficients_a1<Value>() ,
                                  rk54_ck_coefficients_a2<Value>() ,
                                  rk54_ck_coefficients_a3<Value>() ,
                                  rk54_ck_coefficients_a4<Value>() ,

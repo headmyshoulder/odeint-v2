@@ -1,8 +1,17 @@
 /*
- * integrate.cpp
- *
- *  Created on: Aug 17, 2011
- *      Author: mario
+ [auto_generated]
+ libs/numeric/odeint/test/integrate_implicit.cpp
+
+ [begin_description]
+ This file tests the integrate function and its variants with the implicit steppers.
+ [end_description]
+
+ Copyright 2009-2012 Karsten Ahnert
+ Copyright 2009-2012 Mario Mulansky
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
 #define BOOST_TEST_MODULE odeint_integrate_functions_implicit

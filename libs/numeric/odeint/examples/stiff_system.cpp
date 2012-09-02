@@ -1,8 +1,12 @@
 /*
  * rosenbrock4.cpp
  *
- *  Created on: Jan 9, 2011
- *      Author: karsten
+ * Copyright 2009-2012 Karsten Ahnert
+ * Copyright 2009-2012 Mario Mulansky
+ *
+ * Distributed under the Boost Software License, Version 1.0.
+ * (See accompanying file LICENSE_1_0.txt or
+ * copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
 #include <iostream>
@@ -58,20 +62,20 @@ typedef boost::numeric::ublas::matrix< double > matrix_type;
 
 struct stiff_system
 {
-	template< class State >
-	void operator()( const State &x , State &dxdt , double t )
-	{
+    template< class State >
+    void operator()( const State &x , State &dxdt , double t )
+    {
         ...
-	}
+    }
 };
 
 struct stiff_system_jacobi
 {
-	template< class State , class Matrix >
-	void operator()( const State &x , Matrix &J , const double &t , State &dfdt )
-	{
+    template< class State , class Matrix >
+    void operator()( const State &x , Matrix &J , const double &t , State &dfdt )
+    {
         ...
-	}
+    }
 };
 //]
  */

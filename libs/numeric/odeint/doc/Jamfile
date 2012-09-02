@@ -1,4 +1,4 @@
-# (C) Copyright 2010 : Karsten Ahnert, Mario Mulansky
+# (C) Copyright 2009 - 2012 : Karsten Ahnert, Mario Mulansky
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
@@ -13,14 +13,14 @@ project
 
 
 #xml odeint_xml
-#	: 
-#	  odeint.qbk
-#	 ;
-	 
+#    : 
+#    odeint.qbk
+#    ;
+
 boostbook odeint
-	:
-	  odeint.qbk
-	:
+:
+        odeint.qbk
+:
           <xsl:param>navig.graphics=1
           <xsl:param>boost.root=../../../..
           <xsl:param>chunk.section.depth=2
@@ -34,14 +34,14 @@ boostbook odeint
 #        <xsl:param>toc.max.depth=4
 #        <xsl:param>generate.section.toc.level=10
         
-	;
+;
 
 install doc
         : [ glob-tree *.html *.jpg *.css ]
         : <location>../../../../doc/ <install-source-root>html
         ;
 
-	
+
 # doxygen reference.doxy
 # cd xml
 # xsltproc combine.xsd index.xml > all.xml

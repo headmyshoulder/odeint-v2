@@ -5,9 +5,14 @@
  * exponents of a chaotic system namely the well known Lorenz system. Furthermore,
  * it shows how odeint interacts with boost.range.
  *
- *  Created on: Apr 5, 2011
- *      Author: karsten
+ * Copyright 2009-2012 Karsten Ahnert
+ * Copyright 2009-2012 Mario Mulansky
+ *
+ * Distributed under the Boost Software License, Version 1.0.
+ * (See accompanying file LICENSE_1_0.txt or
+ * copy at http://www.boost.org/LICENSE_1_0.txt)
  */
+
 
 #include <iostream>
 #include <boost/array.hpp>
@@ -95,9 +100,9 @@ int main( int argc , char **argv )
     while( true )
     {
 
-    	t = integrate_n_steps( rk4 , lorenz_with_lyap , x , t , dt , 100 );
-    	gram_schmidt< num_of_lyap >( x , lyap , n );
-    	++count;
+        t = integrate_n_steps( rk4 , lorenz_with_lyap , x , t , dt , 100 );
+        gram_schmidt< num_of_lyap >( x , lyap , n );
+        ++count;
 
         if( !(count % 100000) )
         {

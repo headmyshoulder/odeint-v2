@@ -3,8 +3,13 @@
  *
  * This example demonstrates some details about the steppers in odeint.
  *
- *  Created on: Nov 13, 2011
- *      Author: karsten
+ *
+ * Copyright 2009-2012 Karsten Ahnert
+ * Copyright 2009-2012 Mario Mulansky
+ *
+ * Distributed under the Boost Software License, Version 1.0.
+ * (See accompanying file LICENSE_1_0.txt or
+ * copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
 #include <iostream>
@@ -80,7 +85,7 @@ int main( int argc , char **argv )
         double t( 0.0 ) , dt( 0.1 );
         state_type in , out , dxdtin , inout;
         //[ explicit_stepper_detail_example
-	runge_kutta4< state_type > rk;
+        runge_kutta4< state_type > rk;
         rk.do_step( sys1 , inout , t , dt );               // In-place transformation of inout
         rk.do_step( sys2 , inout , t , dt );               // call with different system: Ok
         rk.do_step( sys1 , in , t , out , dt );            // Out-of-place transformation

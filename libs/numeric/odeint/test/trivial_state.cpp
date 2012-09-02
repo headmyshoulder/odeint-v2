@@ -1,14 +1,18 @@
-/* Boost trivial_state.cpp test file
+/*
+ [auto_generated]
+ libs/numeric/odeint/test/trivial_state.cpp
 
- Copyright 2009 Karsten Ahnert
- Copyright 2009 Mario Mulansky
+ [begin_description]
+ This file tests if the steppers can integrate the trivial state consisting of a single double.
+ [end_description]
 
- This file tests the use of the euler stepper
+ Copyright 2009-2012 Karsten Ahnert
+ Copyright 2009-2012 Mario Mulansky
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
  copy at http://www.boost.org/LICENSE_1_0.txt)
-*/
+ */
 
 // disable checked iterator warning for msvc
 #include <boost/config.hpp>
@@ -53,22 +57,22 @@ typedef mpl::vector<
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_do_step , T, stepper_types )
 {
-	typedef T stepper_type;
-	stepper_type stepper;
-	state_type x = 0.0;
-	time_type t = 0.0;
-	time_type dt = 0.1;
-	stepper.do_step( constant_system , x , t , dt );
-	BOOST_CHECK_CLOSE( x , 0.1 , 1.0e-10 );
+    typedef T stepper_type;
+    stepper_type stepper;
+    state_type x = 0.0;
+    time_type t = 0.0;
+    time_type dt = 0.1;
+    stepper.do_step( constant_system , x , t , dt );
+    BOOST_CHECK_CLOSE( x , 0.1 , 1.0e-10 );
 
-	// this overload is not allowed if the types of dxdt and dt are the same
-	// deriv_type dxdt = 1.0;
-	// stepper.do_step( constant_system , x , dxdt , t , dt );
+    // this overload is not allowed if the types of dxdt and dt are the same
+    // deriv_type dxdt = 1.0;
+    // stepper.do_step( constant_system , x , dxdt , t , dt );
 
-	state_type x_out;
-	stepper.do_step( constant_system , x , t , x_out , dt );
-	BOOST_CHECK_CLOSE( x , 0.1 , 1.0e-10 );
-	BOOST_CHECK_CLOSE( x_out , 0.2 , 1.0e-10 );
+    state_type x_out;
+    stepper.do_step( constant_system , x , t , x_out , dt );
+    BOOST_CHECK_CLOSE( x , 0.1 , 1.0e-10 );
+    BOOST_CHECK_CLOSE( x_out , 0.2 , 1.0e-10 );
 }
 
 
@@ -76,9 +80,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_do_step , T, stepper_types )
 
 typedef mpl::vector<
     runge_kutta_cash_karp54< state_type , value_type , deriv_type , time_type ,
-     			     vector_space_algebra , default_operations , never_resizer > ,
+                             vector_space_algebra , default_operations , never_resizer > ,
     runge_kutta_dopri5< state_type , value_type , deriv_type , time_type ,
-			vector_space_algebra , default_operations , never_resizer >
+                        vector_space_algebra , default_operations , never_resizer >
     > error_stepper_types;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_integrate , T , error_stepper_types )

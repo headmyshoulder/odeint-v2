@@ -33,51 +33,35 @@ namespace odeint {
 namespace detail {
 namespace symplectic_rkn_sb3a_mclachlan {
 
-/*
-	rk_a[0]=0.40518861839525227722;
-	rk_a[1]=-0.28714404081652408900;
-	rk_a[2]=0.5-(rk_a[0]+rk_a[1]);
-	rk_a[3]=rk_a[2];
-	rk_a[4]=rk_a[1];
-	rk_a[5]=rk_a[0];
 
-	rk_b[0]=-3.0/73.0;
-	rk_b[1]=17.0/59.0;
-	rk_b[2]=1.0-2.0*(rk_b[0]+rk_b[1]);
-	rk_b[3]=rk_b[1];
-	rk_b[4]=rk_b[0];
-	rk_b[5]=0.0;
-*/
+    template< class Value >
+    struct coef_a_type : public boost::array< Value , 6 >
+    {
+        coef_a_type( void )
+        {
+            (*this)[0] = static_cast< Value >( 0.40518861839525227722 );
+            (*this)[1] = static_cast< Value >( -0.28714404081652408900 );
+            (*this)[2] = static_cast< Value >( 1 ) / static_cast< Value >( 2 ) - ( (*this)[0] + (*this)[1] );
+            (*this)[3] = (*this)[2];
+            (*this)[4] = (*this)[1];
+            (*this)[5] = (*this)[0];
 
+        }
+    };
 
-	template< class Value >
-	struct coef_a_type : public boost::array< Value , 6 >
-	{
-		coef_a_type( void )
-		{
-		    (*this)[0] = static_cast< Value >( 0.40518861839525227722 );
-			(*this)[1] = static_cast< Value >( -0.28714404081652408900 );
-			(*this)[2] = static_cast< Value >( 1 ) / static_cast< Value >( 2 ) - ( (*this)[0] + (*this)[1] );
-			(*this)[3] = (*this)[2];
-			(*this)[4] = (*this)[1];
-			(*this)[5] = (*this)[0];
-
-		}
-	};
-
-	template< class Value >
-	struct coef_b_type : public boost::array< Value , 6 >
-	{
-		coef_b_type( void )
-		{
-			(*this)[0] = static_cast< Value >( -3 ) / static_cast< Value >( 73 );
-			(*this)[1] = static_cast< Value >( 17 ) / static_cast< Value >( 59 );
-			(*this)[2] = static_cast< Value >( 1 ) - static_cast< Value >( 2 ) * ( (*this)[0] + (*this)[1] );
-			(*this)[3] = (*this)[1];
-			(*this)[4] = (*this)[0];
-			(*this)[5] = static_cast< Value >( 0 );
-		}
-	};
+    template< class Value >
+    struct coef_b_type : public boost::array< Value , 6 >
+    {
+        coef_b_type( void )
+        {
+            (*this)[0] = static_cast< Value >( -3 ) / static_cast< Value >( 73 );
+            (*this)[1] = static_cast< Value >( 17 ) / static_cast< Value >( 59 );
+            (*this)[2] = static_cast< Value >( 1 ) - static_cast< Value >( 2 ) * ( (*this)[0] + (*this)[1] );
+            (*this)[3] = (*this)[1];
+            (*this)[4] = (*this)[0];
+            (*this)[5] = static_cast< Value >( 0 );
+        }
+    };
 
 } // namespace symplectic_rkn_sb3a_mclachlan
 } // namespace detail
@@ -85,23 +69,23 @@ namespace symplectic_rkn_sb3a_mclachlan {
 
 
 template<
-	class Coor ,
-	class Momentum = Coor ,
-	class Value = double ,
-	class CoorDeriv = Coor ,
-	class MomentumDeriv = Coor ,
-	class Time = Value ,
-	class Algebra = range_algebra ,
-	class Operations = default_operations ,
-	class Resizer = initially_resizer
-	>
+    class Coor ,
+    class Momentum = Coor ,
+    class Value = double ,
+    class CoorDeriv = Coor ,
+    class MomentumDeriv = Coor ,
+    class Time = Value ,
+    class Algebra = range_algebra ,
+    class Operations = default_operations ,
+    class Resizer = initially_resizer
+    >
 class symplectic_rkn_sb3a_mclachlan :
-	public symplectic_nystroem_stepper_base
-	<
-            6 , 4 ,
-            symplectic_rkn_sb3a_mclachlan< Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer > ,
-            Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer
-	>
+        public symplectic_nystroem_stepper_base
+<
+    6 , 4 ,
+    symplectic_rkn_sb3a_mclachlan< Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer > ,
+    Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer
+    >
 {
 public:
 

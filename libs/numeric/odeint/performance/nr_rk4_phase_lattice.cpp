@@ -1,9 +1,14 @@
 /*
  * nr_rk4_phase_lattice.cpp
  *
- *  Created on: May 15, 2011
- *      Author: mario
+ * Copyright 2009-2012 Karsten Ahnert
+ * Copyright 2009-2012 Mario Mulansky
+ *
+ * Distributed under the Boost Software License, Version 1.0.
+ * (See accompanying file LICENSE_1_0.txt or
+ * copy at http://www.boost.org/LICENSE_1_0.txt)
  */
+
 
 #include <boost/array.hpp>
 
@@ -51,8 +56,8 @@ public:
     void reset_init_cond()
     {
         for( size_t i = 0 ; i<dim ; ++i )
-			m_x[i] = 2.0*3.1415927*rand() / RAND_MAX;
-		m_t = 0.0;
+            m_x[i] = 2.0*3.1415927*rand() / RAND_MAX;
+        m_t = 0.0;
     }
 
     inline void do_step( const double dt )
@@ -72,7 +77,7 @@ private:
 
 int main()
 {
-	srand( 12312354 );
+    srand( 12312354 );
 
     nr_wrapper stepper;
 

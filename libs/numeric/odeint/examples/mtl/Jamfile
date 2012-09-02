@@ -10,8 +10,6 @@ project
       <include>../../../../..
       <include>$(MTL4_INCLUDE)
       <define>BOOST_ALL_NO_LIB=1
-    : build-dir .
-    : default-build release
     ;
     
 exe gauss_packet : gauss_packet.cpp ;

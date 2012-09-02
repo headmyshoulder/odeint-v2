@@ -1,14 +1,18 @@
-/* Boost check_implicit_euler.cpp test file
+/*
+ [auto_generated]
+ libs/numeric/odeint/test/rosenbrock4.cpp
 
- Copyright 2009 Karsten Ahnert
- Copyright 2009 Mario Mulansky
+ [begin_description]
+ This file tests the Rosenbrock 4 stepper and its controller and dense output stepper.
+ [end_description]
 
- This file tests the use of the euler stepper
+ Copyright 2009-2012 Karsten Ahnert
+ Copyright 2009-2012 Mario Mulansky
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
  copy at http://www.boost.org/LICENSE_1_0.txt)
-*/
+ */
 
 // disable checked iterator warning for msvc
 #include <boost/config.hpp>
@@ -64,63 +68,63 @@ BOOST_AUTO_TEST_SUITE( rosenbrock4_test )
 
 BOOST_AUTO_TEST_CASE( test_rosenbrock4_stepper )
 {
-	typedef rosenbrock4< value_type > stepper_type;
-	stepper_type stepper;
+    typedef rosenbrock4< value_type > stepper_type;
+    stepper_type stepper;
 
-	typedef stepper_type::state_type state_type;
-	typedef stepper_type::value_type stepper_value_type;
-	typedef stepper_type::deriv_type deriv_type;
-	typedef stepper_type::time_type time_type;
+    typedef stepper_type::state_type state_type;
+    typedef stepper_type::value_type stepper_value_type;
+    typedef stepper_type::deriv_type deriv_type;
+    typedef stepper_type::time_type time_type;
 
-	state_type x( 2 ) , xerr( 2 );
-	x(0) = 0.0; x(1) = 1.0;
+    state_type x( 2 ) , xerr( 2 );
+    x(0) = 0.0; x(1) = 1.0;
 
-	stepper.do_step( std::make_pair( sys() , jacobi() ) , x , 0.0 , 0.1 , xerr );
+    stepper.do_step( std::make_pair( sys() , jacobi() ) , x , 0.0 , 0.1 , xerr );
 
-	stepper.do_step( std::make_pair( sys() , jacobi() ) , x , 0.0 , 0.1 );
+    stepper.do_step( std::make_pair( sys() , jacobi() ) , x , 0.0 , 0.1 );
 
-//	using std::abs;
-//	value_type eps = 1E-12;
+//    using std::abs;
+//    value_type eps = 1E-12;
 //
-//	// compare with analytic solution of above system
-//	BOOST_CHECK_SMALL( abs( x(0) - 20.0/81.0 ) , eps );
-//	BOOST_CHECK_SMALL( abs( x(1) - 10.0/9.0 ) , eps );
+//    // compare with analytic solution of above system
+//    BOOST_CHECK_SMALL( abs( x(0) - 20.0/81.0 ) , eps );
+//    BOOST_CHECK_SMALL( abs( x(1) - 10.0/9.0 ) , eps );
 
 }
 
 BOOST_AUTO_TEST_CASE( test_rosenbrock4_controller )
 {
-	typedef rosenbrock4_controller< rosenbrock4< value_type > > stepper_type;
-	stepper_type stepper;
+    typedef rosenbrock4_controller< rosenbrock4< value_type > > stepper_type;
+    stepper_type stepper;
 
-	typedef stepper_type::state_type state_type;
-	typedef stepper_type::value_type stepper_value_type;
-	typedef stepper_type::deriv_type deriv_type;
-	typedef stepper_type::time_type time_type;
+    typedef stepper_type::state_type state_type;
+    typedef stepper_type::value_type stepper_value_type;
+    typedef stepper_type::deriv_type deriv_type;
+    typedef stepper_type::time_type time_type;
 
-	state_type x( 2 );
-	x( 0 ) = 0.0 ; x(1) = 1.0;
+    state_type x( 2 );
+    x( 0 ) = 0.0 ; x(1) = 1.0;
 
-	value_type t = 0.0 , dt = 0.01;
-	stepper.try_step( std::make_pair( sys() , jacobi() ) , x , t , dt );
+    value_type t = 0.0 , dt = 0.01;
+    stepper.try_step( std::make_pair( sys() , jacobi() ) , x , t , dt );
 }
 
 BOOST_AUTO_TEST_CASE( test_rosenbrock4_dense_output )
 {
-	typedef rosenbrock4_dense_output< rosenbrock4_controller< rosenbrock4< value_type > > > stepper_type;
+    typedef rosenbrock4_dense_output< rosenbrock4_controller< rosenbrock4< value_type > > > stepper_type;
     typedef rosenbrock4_controller< rosenbrock4< value_type > > controlled_stepper_type;
     controlled_stepper_type  c_stepper;
-	stepper_type stepper( c_stepper );
+    stepper_type stepper( c_stepper );
 
-	typedef stepper_type::state_type state_type;
-	typedef stepper_type::value_type stepper_value_type;
-	typedef stepper_type::deriv_type deriv_type;
-	typedef stepper_type::time_type time_type;
-	state_type x( 2 );
-	x( 0 ) = 0.0 ; x(1) = 1.0;
-	stepper.initialize( x , 0.0 , 0.1 );
-	std::pair< value_type , value_type > tr = stepper.do_step( std::make_pair( sys() , jacobi() ) );
-	stepper.calc_state( 0.5 * ( tr.first + tr.second ) , x );
+    typedef stepper_type::state_type state_type;
+    typedef stepper_type::value_type stepper_value_type;
+    typedef stepper_type::deriv_type deriv_type;
+    typedef stepper_type::time_type time_type;
+    state_type x( 2 );
+    x( 0 ) = 0.0 ; x(1) = 1.0;
+    stepper.initialize( x , 0.0 , 0.1 );
+    std::pair< value_type , value_type > tr = stepper.do_step( std::make_pair( sys() , jacobi() ) );
+    stepper.calc_state( 0.5 * ( tr.first + tr.second ) , x );
 }
 
 

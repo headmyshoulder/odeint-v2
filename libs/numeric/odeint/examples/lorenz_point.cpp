@@ -1,4 +1,13 @@
-/* Example for the lorenz system with a 3D point type */
+/*
+ * Copyright 2009-2012 Karsten Ahnert
+ * Copyright 2009-2012 Mario Mulansky
+ *
+ * Distributed under the Boost Software License, Version 1.0.
+ * (See accompanying file LICENSE_1_0.txt or
+ * copy at http://www.boost.org/LICENSE_1_0.txt)
+ *
+ * Example for the lorenz system with a 3D point type
+*/
 
 #include <iostream>
 #include <cmath>

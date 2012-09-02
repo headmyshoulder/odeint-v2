@@ -154,49 +154,6 @@ public :
 
 
 
-    //	/*
-    //	 * Version 3 : do_step( system , x , dxdt , t , dt );
-    //	 *
-    //	 * solves the forwarding proble
-    //	 *
-    //	 * ToDo: Do we need this methods?
-    //	 */
-    //	template< class System , class StateInOut , class DerivIn >
-    //	void do_step( System sys , StateInOut &x , const DerivIn &dxdt , time_type t , time_type dt )
-    //	{
-    //		do_step( sys , x , dxdt , t , x , dt );
-    //	}
-    //
-    //	template< class System , class StateInOut , class DerivIn >
-    //	void do_step( System sys , const StateInOut &x , const DerivIn &dxdt , time_type t , time_type dt )
-    //	{
-    //		do_step( sys , x , dxdt , t , x , dt );
-    //	}
-    //
-    //
-    //
-    //	/*
-    //	 * Version 4 : do_step( system , in , dxdt , t , out , dt )
-    //	 *
-    //	 * solves the forwarding problem
-    //	 *
-    // 	 * ToDo: Do we need this methods?
-    //	 */
-    //	template< class System , class StateIn , class DerivIn , class StateOut >
-    //	void do_step( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt )
-    //	{
-    //		m_step_storage.rotate();
-    //		boost::numeric::odeint::copy( dxdt , m_step_storage[0] );
-    //		do_step_impl( in , t , out , dt );
-    //	}
-    //
-    //	template< class System , class StateIn , class DerivIn , class StateOut >
-    //	void do_step( System system , const StateIn &in , const DerivIn &dxdt , time_type t , const StateOut &out , time_type dt )
-    //	{
-    //		m_step_storage.rotate();
-    //		boost::numeric::odeint::copy( dxdt , m_step_storage[0] );
-    //		do_step_impl( in , t , out , dt );
-    //	}
 
 
 

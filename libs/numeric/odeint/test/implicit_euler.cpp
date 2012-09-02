@@ -1,14 +1,19 @@
-/* Boost check_implicit_euler.cpp test file
+/*
+ [auto_generated]
+ libs/numeric/odeint/test/implicit_euler.cpp
 
- Copyright 2009 Karsten Ahnert
- Copyright 2009 Mario Mulansky
+ [begin_description]
+ This file tests the implicit Euler stepper.
+ [end_description]
 
- This file tests the use of the euler stepper
+ Copyright 2009-2012 Karsten Ahnert
+ Copyright 2009-2012 Mario Mulansky
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
  copy at http://www.boost.org/LICENSE_1_0.txt)
-*/
+ */
+
 
 // disable checked iterator warning for msvc
 #include <boost/config.hpp>
@@ -67,7 +72,7 @@ BOOST_AUTO_TEST_CASE( test_euler )
 
     value_type eps = 1E-12;
 
-	/* make_pair doesn't work with function pointers on msvc 10 */
+    /* make_pair doesn't work with function pointers on msvc 10 */
     stepper.do_step( std::make_pair( sys() , jacobi() ) , x , 0.0 , 0.1 );
 
     using std::abs;

@@ -21,6 +21,15 @@
 
 #include <boost/range.hpp>
 
+#include <boost/utility/enable_if.hpp>
+#include <boost/fusion/include/is_sequence.hpp>
+#include <boost/fusion/include/zip_view.hpp>
+#include <boost/fusion/include/vector.hpp>
+#include <boost/fusion/include/make_fused.hpp>
+#include <boost/fusion/include/for_each.hpp>
+
+#include <boost/numeric/odeint/util/is_resizeable.hpp>
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -43,6 +52,45 @@ void resize( StateOut &x1 , const StateIn &x2 )
 {
     resize_impl< StateOut , StateIn >::resize( x1 , x2 );
 }
+
+struct resizer
+{
+    typedef void result_type;
+
+    template< class StateOut , class StateIn >
+    void operator()( StateOut &x1 , const StateIn &x2 ) const
+    {
+        resize_op( x1 , x2 , typename is_resizeable< StateOut >::type() );
+    }
+
+    template< class StateOut , class StateIn >
+    void resize_op( StateOut &x1 , const StateIn &x2 , boost::true_type ) const
+    {
+        resize( x1 , x2 );
+    }
+
+    template< class StateOut , class StateIn >
+    void resize_op( StateOut &x1 , const StateIn &x2 , boost::false_type ) const
+    {
+    }
+
+};
+
+
+/*
+ * specialization for fusion sequences
+ */
+template< class FusionSeq >
+struct resize_impl< FusionSeq , FusionSeq , typename boost::enable_if< typename boost::fusion::traits::is_sequence< FusionSeq >::type >::type >
+{
+    static void resize( FusionSeq &x1 , const FusionSeq &x2 )
+    {
+        typedef boost::fusion::vector< FusionSeq& , const FusionSeq& > Sequences;
+        Sequences sequences( x1 , x2 );
+        boost::fusion::for_each( boost::fusion::zip_view< Sequences >( sequences ) , boost::fusion::make_fused( resizer() ) );
+    }
+};
+
 
 
 

@@ -1,3 +1,12 @@
+/*
+ * Copyright 2009-2012 Karsten Ahnert
+ * Copyright 2009-2012 Mario Mulansky
+ *
+ * Distributed under the Boost Software License, Version 1.0.
+ * (See accompanying file LICENSE_1_0.txt or
+ * copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
 #include <iostream>
 #include <vector>
 
@@ -28,9 +37,9 @@ struct sys_func
 
     void operator()( const state_type &x , state_type &dxdt , double t ) const
     {
-	dxdt(0) = -sigma * ( x(0) - x(1) );
-	dxdt(1) = R * x(0) - x(1) - x(0) * x(2);
-	dxdt(2) = - b * x(2) + x(0) * x(1);
+        dxdt(0) = -sigma * ( x(0) - x(1) );
+        dxdt(1) = R * x(0) - x(1) - x(0) * x(2);
+        dxdt(2) = - b * x(2) + x(0) * x(1);
     }
 };
 //]
