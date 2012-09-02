@@ -23,6 +23,8 @@
 
 #include <algorithm>
 
+#include <boost/config.hpp> // for min/max guidelines
+
 #include <boost/numeric/odeint/util/bind.hpp>
 
 #include <boost/math/special_functions/binomial.hpp>
@@ -62,14 +64,14 @@ std::ostream& operator<<( std::ostream& output , const boost::array< T , N >& a 
 
 
 template<
-class State ,
-class Value = double ,
-class Deriv = State ,
-class Time = Value ,
-class Algebra = range_algebra ,
-class Operations = default_operations ,
-class Resizer = initially_resizer
->
+    class State ,
+    class Value = double ,
+    class Deriv = State ,
+    class Time = Value ,
+    class Algebra = range_algebra ,
+    class Operations = default_operations ,
+    class Resizer = initially_resizer
+    >
 class bulirsch_stoer_dense_out {
 
 
@@ -105,23 +107,26 @@ public:
 
 
     bulirsch_stoer_dense_out(
-            value_type eps_abs = 1E-6 , value_type eps_rel = 1E-6 ,
-            value_type factor_x = 1.0 , value_type factor_dxdt = 1.0 ,
-            bool control_interpolation = false )
-    : m_error_checker( eps_abs , eps_rel , factor_x, factor_dxdt ) , 
-      m_control_interpolation( control_interpolation) ,
-      m_last_step_rejected( false ) , m_first( true ) ,
-      m_current_state_x1( true ) ,
-      m_error( m_k_max ) ,
-      m_interval_sequence( m_k_max+1 ) ,
-      m_coeff( m_k_max+1 ) ,
-      m_cost( m_k_max+1 ) ,
-      m_table( m_k_max ) ,
-      m_mp_states( m_k_max+1 ) ,
-      m_derivs( m_k_max+1 ) ,
-      m_diffs( 2*m_k_max+1 ) ,
-      STEPFAC1( 0.65 ) , STEPFAC2( 0.94 ) , STEPFAC3( 0.02 ) , STEPFAC4( 4.0 ) , KFAC1( 0.8 ) , KFAC2( 0.9 )
+        value_type eps_abs = 1E-6 , value_type eps_rel = 1E-6 ,
+        value_type factor_x = 1.0 , value_type factor_dxdt = 1.0 ,
+        bool control_interpolation = false )
+        : m_error_checker( eps_abs , eps_rel , factor_x, factor_dxdt ) , 
+          m_control_interpolation( control_interpolation) ,
+          m_last_step_rejected( false ) , m_first( true ) ,
+          m_current_state_x1( true ) ,
+          m_error( m_k_max ) ,
+          m_interval_sequence( m_k_max+1 ) ,
+          m_coeff( m_k_max+1 ) ,
+          m_cost( m_k_max+1 ) ,
+          m_table( m_k_max ) ,
+          m_mp_states( m_k_max+1 ) ,
+          m_derivs( m_k_max+1 ) ,
+          m_diffs( 2*m_k_max+1 ) ,
+          STEPFAC1( 0.65 ) , STEPFAC2( 0.94 ) , STEPFAC3( 0.02 ) , STEPFAC4( 4.0 ) , KFAC1( 0.8 ) , KFAC2( 0.9 )
     {
+        BOOST_USING_STD_MIN();
+        BOOST_USING_STD_MAX();
+
         for( unsigned short i = 0; i < m_k_max+1; i++ )
         {
             m_interval_sequence[i] = 2 + 4*i;  // 2 6 10 14 ...
@@ -139,8 +144,8 @@ public:
             }
             //std ::cout << std::endl;
             // crude estimate of optimal order
-            const value_type logfact( -log10( std::max( eps_rel , 1.0E-12 ) ) * 0.6 + 0.5 );
-            m_current_k_opt = std::max( 1 , std::min( static_cast<int>( m_k_max-1 ) , static_cast<int>( logfact ) ));
+            const value_type logfact( -log10( max BOOST_PREVENT_MACRO_SUBSTITUTION( eps_rel , 1.0E-12 ) ) * 0.6 + 0.5 );
+            m_current_k_opt = max BOOST_PREVENT_MACRO_SUBSTITUTION( 1 , min BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<int>( m_k_max-1 ) , static_cast<int>( logfact ) ));
             //m_current_k_opt = m_k_max - 1;
             //std::cout << m_cost[i] << std::endl;
         }
@@ -156,22 +161,26 @@ public:
 
 
 /*
-    template< class System , class StateInOut >
-    controlled_step_result try_step( System system , StateInOut &x , time_type &t , time_type &dt )
-    {
-        m_xnew_resizer.adjust_size( x , detail::bind( &controlled_error_bs_type::template resize_m_xnew< StateInOut > , detail::ref( *this ) , detail::_1 ) );
-        controlled_step_result res = try_step( system , x , t , m_xnew.m_v , dt );
-        if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged ) )
-        {
-            boost::numeric::odeint::copy( m_xnew.m_v , x );
-        }
-        return res;
-    }
+  template< class System , class StateInOut >
+  controlled_step_result try_step( System system , StateInOut &x , time_type &t , time_type &dt )
+  {
+  m_xnew_resizer.adjust_size( x , detail::bind( &controlled_error_bs_type::template resize_m_xnew< StateInOut > , detail::ref( *this ) , detail::_1 ) );
+  controlled_step_result res = try_step( system , x , t , m_xnew.m_v , dt );
+  if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged ) )
+  {
+  boost::numeric::odeint::copy( m_xnew.m_v , x );
+  }
+  return res;
+  }
 */
 
     template< class System , class StateIn , class DerivIn , class StateOut , class DerivOut >
     controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt , time_type &t , StateOut &out , DerivOut &dxdt_new , time_type &dt )
     {
+        BOOST_USING_STD_MIN();
+        BOOST_USING_STD_MAX();
+        using std::pow;
+        
         static const value_type val1( 1.0 );
 
         typename odeint::unwrap_reference< System >::type &sys = system;
@@ -204,7 +213,7 @@ public:
                 extrapolate( k , m_table , m_coeff , out );
                 // get error estimate
                 m_algebra.for_each3( m_err.m_v , out , m_table[0].m_v ,
-                        typename operations_type::template scale_sum2< value_type , value_type >( val1 , -val1 ) );
+                                     typename operations_type::template scale_sum2< value_type , value_type >( val1 , -val1 ) );
                 const value_type error = m_error_checker.error( m_algebra , in , dxdt , m_err.m_v , dt );
                 h_opt[k] = calc_h_opt( dt , error , k );
                 work[k] = static_cast<value_type>( m_cost[k] ) / h_opt[k];
@@ -222,10 +231,10 @@ public:
                         if( (work[k] < KFAC2*work[k-1]) || (m_current_k_opt <= 2) )
                         {
                             // leave order as is (except we were in first round)
-                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , std::max( 2 , static_cast<int>(k)+1 ) );
+                            m_current_k_opt = min BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<int>(m_k_max)-1 , max BOOST_PREVENT_MACRO_SUBSTITUTION( 2 , static_cast<int>(k)+1 ) );
                             new_h = h_opt[k] * static_cast<value_type>( m_cost[k+1] ) / static_cast<value_type>( m_cost[k] );
                         } else {
-                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , std::max( 2 , static_cast<int>(k) ) );
+                            m_current_k_opt = min BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<int>(m_k_max)-1 , max BOOST_PREVENT_MACRO_SUBSTITUTION( 2 , static_cast<int>(k) ) );
                             new_h = h_opt[k];
                         }
                         break;
@@ -245,12 +254,12 @@ public:
                         reject = false;
                         if( (work[k-1] < KFAC2*work[k]) )
                         {
-                            m_current_k_opt = std::max( 2 , static_cast<int>(m_current_k_opt)-1 );
+                            m_current_k_opt = max BOOST_PREVENT_MACRO_SUBSTITUTION( 2 , static_cast<int>(m_current_k_opt)-1 );
                             new_h = h_opt[m_current_k_opt];
                         }
                         else if( (work[k] < KFAC2*work[k-1]) && !m_last_step_rejected )
                         {
-                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , static_cast<int>(m_current_k_opt)+1 );
+                            m_current_k_opt = min BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<int>(m_k_max)-1 , static_cast<int>(m_current_k_opt)+1 );
                             new_h = h_opt[k]*static_cast<value_type>( m_cost[m_current_k_opt] ) / static_cast<value_type>( m_cost[k] );
                         } else
                             new_h = h_opt[m_current_k_opt];
@@ -269,9 +278,9 @@ public:
                     {   //convergence
                         reject = false;
                         if( work[k-2] < KFAC2*work[k-1] )
-                            m_current_k_opt = std::max( 2 , static_cast<int>(m_current_k_opt)-1 );
+                            m_current_k_opt = max BOOST_PREVENT_MACRO_SUBSTITUTION( 2 , static_cast<int>(m_current_k_opt)-1 );
                         if( (work[k] < KFAC2*work[m_current_k_opt]) && !m_last_step_rejected )
-                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , static_cast<int>(k) );
+                            m_current_k_opt = min BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<int>(m_k_max)-1 , static_cast<int>(k) );
                         new_h = h_opt[m_current_k_opt];
                     } else
                     {
@@ -295,7 +304,7 @@ public:
             if( error > static_cast<value_type>(10) ) // we are not as accurate for interpolation as for the steps
             {
                 reject = true;
-                new_h = dt * std::pow( error , static_cast<value_type>(-1)/(2*m_k_final+2) );
+                new_h = dt * pow BOOST_PREVENT_MACRO_SUBSTITUTION( error , static_cast<value_type>(-1)/(2*m_k_final+2) );
                 //std::cout << "####### rejected #######! (t=" << t << ") interpolation error: " << error << " , new dt: " << new_h << std::endl;
             } else {
                 //std::cout << "####### accepted ####### - new k: " << m_current_k_opt << ", new stepsize: " << new_h << std::endl;
@@ -415,12 +424,12 @@ private:
         for( int j=k-1 ; j>0 ; --j )
         {
             m_algebra.for_each3( table[j-1].m_v , table[j].m_v , table[j-1].m_v ,
-                    typename operations_type::template scale_sum2< value_type , value_type >( val1 + coeff[k + order_start_index][j + order_start_index] ,
-                            -coeff[k + order_start_index][j + order_start_index] ) );
+                                 typename operations_type::template scale_sum2< value_type , value_type >( val1 + coeff[k + order_start_index][j + order_start_index] ,
+                                                                                                           -coeff[k + order_start_index][j + order_start_index] ) );
         }
         m_algebra.for_each3( xest , table[0].m_v , xest ,
-                typename operations_type::template scale_sum2< value_type , value_type >( val1 + coeff[k + order_start_index][0 + order_start_index] ,
-                        -coeff[k + order_start_index][0 + order_start_index]) );
+                             typename operations_type::template scale_sum2< value_type , value_type >( val1 + coeff[k + order_start_index][0 + order_start_index] ,
+                                                                                                       -coeff[k + order_start_index][0 + order_start_index]) );
     }
 
 
@@ -435,26 +444,30 @@ private:
         {
             //std::cout << '\t' << coeff[k + order_start_index][j + order_start_index - 1];
             m_algebra.for_each3( table[j-1].m_v , table[j].m_v , table[j-1].m_v ,
-                    typename operations_type::template scale_sum2< value_type , value_type >( val1 + coeff[k + order_start_index][j + order_start_index - 1] ,
-                            -coeff[k + order_start_index][j + order_start_index - 1] ) );
+                                 typename operations_type::template scale_sum2< value_type , value_type >( val1 + coeff[k + order_start_index][j + order_start_index - 1] ,
+                                                                                                           -coeff[k + order_start_index][j + order_start_index - 1] ) );
         }
         //std::cout << std::endl << coeff[k + order_start_index][order_start_index] << std::endl;
         m_algebra.for_each3( table[0].m_v , table[1].m_v , table[0].m_v ,
-                typename operations_type::template scale_sum2< value_type , value_type >( val1 + coeff[k + order_start_index][order_start_index] ,
-                        -coeff[k + order_start_index][order_start_index]) );
+                             typename operations_type::template scale_sum2< value_type , value_type >( val1 + coeff[k + order_start_index][order_start_index] ,
+                                                                                                       -coeff[k + order_start_index][order_start_index]) );
     }
 
     time_type calc_h_opt( time_type h , value_type error , size_t k ) const
     {
+        BOOST_USING_STD_MIN();
+        BOOST_USING_STD_MAX();
+        using std::pow;
+
         value_type expo=1.0/(m_interval_sequence[k-1]);
-        value_type facmin = std::pow( STEPFAC3 , expo );
+        value_type facmin = pow BOOST_PREVENT_MACRO_SUBSTITUTION( STEPFAC3 , expo );
         value_type fac;
         if (error == 0.0)
             fac=1.0/facmin;
         else
         {
-            fac = STEPFAC2 / std::pow( error / STEPFAC1 , expo );
-            fac = std::max( facmin/STEPFAC4 , std::min( 1.0/facmin , fac ) );
+            fac = STEPFAC2 / pow BOOST_PREVENT_MACRO_SUBSTITUTION( error / STEPFAC1 , expo );
+            fac = max BOOST_PREVENT_MACRO_SUBSTITUTION( facmin/STEPFAC4 , min BOOST_PREVENT_MACRO_SUBSTITUTION( 1.0/facmin , fac ) );
         }
         //return std::abs(h*fac); //std::min( 0.1 , std::abs(h*fac) );
         return h*fac;
@@ -472,7 +485,7 @@ private:
         if( (k == m_current_k_opt-1) )
         {
             const value_type d = m_interval_sequence[m_current_k_opt] * m_interval_sequence[m_current_k_opt+1] /
-                    (m_interval_sequence[0]*m_interval_sequence[0]);
+                (m_interval_sequence[0]*m_interval_sequence[0]);
             //step will fail, criterion 17.3.17 in NR
             return ( error > d*d );
         }
@@ -486,7 +499,7 @@ private:
 
     template< class StateIn1 , class DerivIn1 , class StateIn2 , class DerivIn2 >
     value_type prepare_dense_output( int k , const StateIn1 &x_start , const DerivIn1 &dxdt_start ,
-            const StateIn2 & /* x_end */ , const DerivIn2 & /*dxdt_end */ , time_type dt )  // k is the order to which the result was approximated
+                                     const StateIn2 & /* x_end */ , const DerivIn2 & /*dxdt_end */ , time_type dt )  // k is the order to which the result was approximated
     {
 
         // compute the coefficients of the interpolation polynomial
@@ -557,52 +570,52 @@ private:
         // we don't use additional terms in the polynomial, the following calculations are thus not required
 
 /*
-        m_algebra.for_each5( m_a1.m_v , x_end , x_start , dxdt_end , dxdt_start ,
-                typename operations_type::template scale_sum4< value_type >( static_cast<value_type>(2*k+5)/static_cast<value_type>(4),
-                                                                               static_cast<value_type>(-2*k-5)/static_cast<value_type>(4),
-                                                                               static_cast<value_type>(-dt)/static_cast<value_type>(8) ,
-                                                                               static_cast<value_type>(-dt)/static_cast<value_type>(8) ) );
-        for( int i = 0 ; i<k ; ++i )
-            m_algebra.for_each3( m_a1.m_v , m_a1.m_v , m_diffs[2*i][0].m_v ,
-                    typename operations_type::template scale_sum2< value_type >( 1 , i-k-2 ) );
+  m_algebra.for_each5( m_a1.m_v , x_end , x_start , dxdt_end , dxdt_start ,
+  typename operations_type::template scale_sum4< value_type >( static_cast<value_type>(2*k+5)/static_cast<value_type>(4),
+  static_cast<value_type>(-2*k-5)/static_cast<value_type>(4),
+  static_cast<value_type>(-dt)/static_cast<value_type>(8) ,
+  static_cast<value_type>(-dt)/static_cast<value_type>(8) ) );
+  for( int i = 0 ; i<k ; ++i )
+  m_algebra.for_each3( m_a1.m_v , m_a1.m_v , m_diffs[2*i][0].m_v ,
+  typename operations_type::template scale_sum2< value_type >( 1 , i-k-2 ) );
 
-        //std::cout << "a_" << 2*k+1 << " = " << m_a1.m_v << std::endl;
+  //std::cout << "a_" << 2*k+1 << " = " << m_a1.m_v << std::endl;
 
-        // calculate coefficient a_{2k+2} = (k+2)/2 * x_end + (k+2)/2 * x_start - 1/4 * dxdt_end + 1/4 * dxdt_start + (k+2)/2 * x_mp + sum_i=1...k (i-k-2)*a_{2i}
-        m_algebra.for_each6( m_a2.m_v , x_end , x_start , dxdt_end , dxdt_start , m_mp_states[0].m_v ,
-                typename operations_type::template scale_sum5< value_type >( static_cast<value_type>(k+2)/static_cast<value_type>(2),
-                                                                               static_cast<value_type>(k+2)/static_cast<value_type>(2),
-                                                                               static_cast<value_type>(-dt)/static_cast<value_type>(8) ,
-                                                                               static_cast<value_type>(dt)/static_cast<value_type>(8) ,
-                                                                               static_cast<value_type>(-k-2) ) );
-        for( int i = 1 ; i<=k ; ++i )
-            m_algebra.for_each3( m_a2.m_v , m_a2.m_v , m_diffs[2*i-1][0].m_v ,
-                    typename operations_type::template scale_sum2< value_type >( 1 , i-k-2 ) );
+  // calculate coefficient a_{2k+2} = (k+2)/2 * x_end + (k+2)/2 * x_start - 1/4 * dxdt_end + 1/4 * dxdt_start + (k+2)/2 * x_mp + sum_i=1...k (i-k-2)*a_{2i}
+  m_algebra.for_each6( m_a2.m_v , x_end , x_start , dxdt_end , dxdt_start , m_mp_states[0].m_v ,
+  typename operations_type::template scale_sum5< value_type >( static_cast<value_type>(k+2)/static_cast<value_type>(2),
+  static_cast<value_type>(k+2)/static_cast<value_type>(2),
+  static_cast<value_type>(-dt)/static_cast<value_type>(8) ,
+  static_cast<value_type>(dt)/static_cast<value_type>(8) ,
+  static_cast<value_type>(-k-2) ) );
+  for( int i = 1 ; i<=k ; ++i )
+  m_algebra.for_each3( m_a2.m_v , m_a2.m_v , m_diffs[2*i-1][0].m_v ,
+  typename operations_type::template scale_sum2< value_type >( 1 , i-k-2 ) );
 
-        //std::cout << "a_" << 2*k+2 << " = " << m_a2.m_v << std::endl;
+  //std::cout << "a_" << 2*k+2 << " = " << m_a2.m_v << std::endl;
 
-        // calculate coefficient a_{2k+3} = -(2k+3)/4 * x_end + (2k+3)/4 * x_start + 1/4 * dxdt_end + 1/4 * dxdt_start + sum_i=0...k-1 (k+1-i)*a_{2i+1}
-        m_algebra.for_each5( m_a3.m_v , x_end , x_start , dxdt_end , dxdt_start ,
-                typename operations_type::template scale_sum4< value_type >( static_cast<value_type>(-2*k-3)/static_cast<value_type>(4),
-                                                                               static_cast<value_type>(2*k+3)/static_cast<value_type>(4),
-                                                                               static_cast<value_type>(dt)/static_cast<value_type>(8) ,
-                                                                               static_cast<value_type>(dt)/static_cast<value_type>(8) ) );
-        for( int i = 0 ; i<k ; ++i )
-            m_algebra.for_each3( m_a3.m_v , m_a3.m_v , m_diffs[2*i][0].m_v ,
-                    typename operations_type::template scale_sum2< value_type >( 1 , k+1-i ) );
+  // calculate coefficient a_{2k+3} = -(2k+3)/4 * x_end + (2k+3)/4 * x_start + 1/4 * dxdt_end + 1/4 * dxdt_start + sum_i=0...k-1 (k+1-i)*a_{2i+1}
+  m_algebra.for_each5( m_a3.m_v , x_end , x_start , dxdt_end , dxdt_start ,
+  typename operations_type::template scale_sum4< value_type >( static_cast<value_type>(-2*k-3)/static_cast<value_type>(4),
+  static_cast<value_type>(2*k+3)/static_cast<value_type>(4),
+  static_cast<value_type>(dt)/static_cast<value_type>(8) ,
+  static_cast<value_type>(dt)/static_cast<value_type>(8) ) );
+  for( int i = 0 ; i<k ; ++i )
+  m_algebra.for_each3( m_a3.m_v , m_a3.m_v , m_diffs[2*i][0].m_v ,
+  typename operations_type::template scale_sum2< value_type >( 1 , k+1-i ) );
 
-        //std::cout << "a_" << 2*k+3 << " = " << m_a3.m_v << std::endl;
+  //std::cout << "a_" << 2*k+3 << " = " << m_a3.m_v << std::endl;
 
-        // calculate coefficient a_{2k+4} = -(k+1)/2 * x_end - (k+1)/2 * x_start + 1/4 * dxdt_end - 1/4 * dxdt_start - (k+1)/2 * x_mp + sum_i=0...k-1 (k+1-i)*a_{2i}
-        m_algebra.for_each6( m_a4.m_v , x_end , x_start , dxdt_end , dxdt_start , m_mp_states[0].m_v ,
-                typename operations_type::template scale_sum5< value_type >( static_cast<value_type>(-k-1)/static_cast<value_type>(2),
-                                                                               static_cast<value_type>(-k-1)/static_cast<value_type>(2),
-                                                                               static_cast<value_type>(dt)/static_cast<value_type>(8) ,
-                                                                               static_cast<value_type>(-dt)/static_cast<value_type>(8),
-                                                                               static_cast<value_type>(k+1) ) );
-        for( int i = 1 ; i<=k ; ++i )
-            m_algebra.for_each3( m_a4.m_v , m_a4.m_v , m_diffs[2*i-1][0].m_v ,
-                    typename operations_type::template scale_sum2< value_type >( 1 , k+1-i ) );
+  // calculate coefficient a_{2k+4} = -(k+1)/2 * x_end - (k+1)/2 * x_start + 1/4 * dxdt_end - 1/4 * dxdt_start - (k+1)/2 * x_mp + sum_i=0...k-1 (k+1-i)*a_{2i}
+  m_algebra.for_each6( m_a4.m_v , x_end , x_start , dxdt_end , dxdt_start , m_mp_states[0].m_v ,
+  typename operations_type::template scale_sum5< value_type >( static_cast<value_type>(-k-1)/static_cast<value_type>(2),
+  static_cast<value_type>(-k-1)/static_cast<value_type>(2),
+  static_cast<value_type>(dt)/static_cast<value_type>(8) ,
+  static_cast<value_type>(-dt)/static_cast<value_type>(8),
+  static_cast<value_type>(k+1) ) );
+  for( int i = 1 ; i<=k ; ++i )
+  m_algebra.for_each3( m_a4.m_v , m_a4.m_v , m_diffs[2*i-1][0].m_v ,
+  typename operations_type::template scale_sum2< value_type >( 1 , k+1-i ) );
 */
         //std::cout << "a_" << 2*k+4 << " = " << m_a4.m_v << std::endl;
     }
@@ -614,7 +627,7 @@ private:
         if( kappa == 0) // no calculation required for 0th derivative of f
         {
             m_algebra.for_each2( m_diffs[0][j].m_v , m_derivs[j][m].m_v ,
-                    typename operations_type::template scale_sum1< value_type >( fac ) );
+                                 typename operations_type::template scale_sum1< value_type >( fac ) );
             //std::cout << "j=" << j << ", kappa=" << kappa << ", m=" << m;
             //std::cout << ": m_diffs[" << kappa << "][" << j << "] = " << fac << " * f[" << m << "]  ";
             //std::cout << "(size(f)=" << m_derivs[j].size() << ") = " << m_diffs[0][j].m_v << std::endl;
@@ -630,24 +643,24 @@ private:
             //std::cout << "j=" << j << ", kappa=" << kappa << ", m=" << m << ": m_diffs[" << kappa << "][" << j_diffs << "] = " << fac << " ( 1*f[" << m+kappa << "]";
 
             m_algebra.for_each2( m_diffs[kappa][j_diffs].m_v , m_derivs[j][m+kappa].m_v ,
-                    typename operations_type::template scale_sum1< value_type >( fac ) );
+                                 typename operations_type::template scale_sum1< value_type >( fac ) );
             value_type sign = -1.0;
             int c = 1;
-             //computes the j-th order finite difference for the kappa-th derivative of f at t+dt/2 using function evaluations stored in m_derivs
+            //computes the j-th order finite difference for the kappa-th derivative of f at t+dt/2 using function evaluations stored in m_derivs
             for( int i = m+static_cast<int>(kappa)-2 ; i >= m-static_cast<int>(kappa) ; i -= 2 )
             {
                 if( i >= 0 )
                 {
                     m_algebra.for_each3( m_diffs[kappa][j_diffs].m_v , m_diffs[kappa][j_diffs].m_v , m_derivs[j][i].m_v ,
-                            typename operations_type::template scale_sum2< value_type , value_type >( 1.0 ,
-                                    sign * fac * boost::math::binomial_coefficient< double >( kappa , c ) ) );
+                                         typename operations_type::template scale_sum2< value_type , value_type >( 1.0 ,
+                                                                                                                   sign * fac * boost::math::binomial_coefficient< double >( kappa , c ) ) );
                     //std::cout << ( (sign > 0.0) ? " + " : " - " ) <<
                     //        boost::math::binomial_coefficient< double >( kappa , c ) << "*f[" << i << "]";
                 }
                 else
                 {
                     m_algebra.for_each3( m_diffs[kappa][j_diffs].m_v , m_diffs[kappa][j_diffs].m_v , dxdt ,
-                            typename operations_type::template scale_sum2< value_type , value_type >( 1.0 , sign * fac ) );
+                                         typename operations_type::template scale_sum2< value_type , value_type >( 1.0 , sign * fac ) );
                     //std::cout << ( (sign > 0.0) ? " + " : " - " ) << "dxdt";
                 }
                 sign *= -1;
@@ -668,12 +681,12 @@ private:
         //std::cout << "x = a_0 + ";
 
 /*        m_algebra.for_each6( out , m_mp_states[0].m_v , m_a1.m_v , m_a2.m_v , m_a3.m_v , m_a4.m_v ,
-                typename operations_type::template scale_sum5< time_type >(
-                        static_cast<time_type>( 1 ) ,
-                        std::pow( theta , 2*m_k_final+1 ) ,
-                        std::pow( theta , 2*m_k_final+2 ) ,
-                        std::pow( theta , 2*m_k_final+3 ) ,
-                        std::pow( theta , 2*m_k_final+4 ) ) );
+          typename operations_type::template scale_sum5< time_type >(
+          static_cast<time_type>( 1 ) ,
+          std::pow( theta , 2*m_k_final+1 ) ,
+          std::pow( theta , 2*m_k_final+2 ) ,
+          std::pow( theta , 2*m_k_final+3 ) ,
+          std::pow( theta , 2*m_k_final+4 ) ) );
 */
 
         // we use only values at interval center, that is theta=0, for interpolation
@@ -686,7 +699,7 @@ private:
         {
             //std::cout << "a_" << i+1 << " theta^" << i+1 << " = " << m_diffs[i][0].m_v[0] * std::pow( theta , i+1 ) << std::endl;
             m_algebra.for_each3( out , out , m_diffs[i][0].m_v ,
-                typename operations_type::template scale_sum2< value_type >( static_cast<value_type>(1) , theta_pow ) );
+                                 typename operations_type::template scale_sum2< value_type >( static_cast<value_type>(1) , theta_pow ) );
             theta_pow *= theta;
         }
     }
@@ -706,7 +719,7 @@ private:
         for( size_t i = 0 ; i < m_k_max ; ++i )
             resized |= adjust_size_by_resizeability( m_table[i] , x , typename is_resizeable<state_type>::type() );
         for( size_t i = 0 ; i < m_k_max+1 ; ++i )
-                    resized |= adjust_size_by_resizeability( m_mp_states[i] , x , typename is_resizeable<state_type>::type() );
+            resized |= adjust_size_by_resizeability( m_mp_states[i] , x , typename is_resizeable<state_type>::type() );
         for( size_t i = 0 ; i < m_k_max+1 ; ++i )
             for( size_t j = 0 ; j < m_derivs[i].size() ; ++j )
                 resized |= adjust_size_by_resizeability( m_derivs[i][j] , x , typename is_resizeable<deriv_type>::type() );

@@ -1,21 +1,21 @@
 /*
- [auto_generated]
- boost/numeric/odeint/stepper/bulirsch_stoer.hpp
+  [auto_generated]
+  boost/numeric/odeint/stepper/bulirsch_stoer.hpp
 
- [begin_description]
- Implementaiton of the Burlish-Stoer method. As described in
- Ernst Hairer, Syvert Paul Norsett, Gerhard Wanner
- Solving Ordinary Differential Equations I. Nonstiff Problems.
- Springer Series in Comput. Mathematics, Vol. 8, Springer-Verlag 1987, Second revised edition 1993.
- [end_description]
+  [begin_description]
+  Implementaiton of the Burlish-Stoer method. As described in
+  Ernst Hairer, Syvert Paul Norsett, Gerhard Wanner
+  Solving Ordinary Differential Equations I. Nonstiff Problems.
+  Springer Series in Comput. Mathematics, Vol. 8, Springer-Verlag 1987, Second revised edition 1993.
+  [end_description]
 
- Copyright 2009-2011 Karsten Ahnert
- Copyright 2009-2011 Mario Mulansky
+  Copyright 2009-2011 Karsten Ahnert
+  Copyright 2009-2011 Mario Mulansky
 
- Distributed under the Boost Software License, Version 1.0.
- (See accompanying file LICENSE_1_0.txt or
- copy at http://www.boost.org/LICENSE_1_0.txt)
- */
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or
+  copy at http://www.boost.org/LICENSE_1_0.txt)
+*/
 
 
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_BULIRSCH_STOER_HPP_INCLUDED
@@ -25,6 +25,8 @@
 #include <iostream>
 
 #include <algorithm>
+
+#include <boost/config.hpp> // for min/max guidelines
 
 #include <boost/numeric/odeint/util/bind.hpp>
 #include <boost/numeric/odeint/util/unwrap_reference.hpp>
@@ -45,21 +47,17 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-
-
 /** ToDo try_step stepsize changed return values doesn't make too much sense here as we have order control as well */
 
-
-
 template<
-class State ,
-class Value = double ,
-class Deriv = State ,
-class Time = Value ,
-class Algebra = range_algebra ,
-class Operations = default_operations ,
-class Resizer = initially_resizer
->
+    class State ,
+    class Value = double ,
+    class Deriv = State ,
+    class Time = Value ,
+    class Algebra = range_algebra ,
+    class Operations = default_operations ,
+    class Resizer = initially_resizer
+    >
 class bulirsch_stoer {
 
 public:
@@ -90,21 +88,23 @@ public:
 
 
     bulirsch_stoer(
-            value_type eps_abs = 1E-6 , value_type eps_rel = 1E-6 ,
-            value_type factor_x = 1.0 , value_type factor_dxdt = 1.0 )
-    : m_error_checker( eps_abs , eps_rel , factor_x, factor_dxdt ) , m_midpoint() ,
-      m_last_step_rejected( false ) , m_first( true ) ,
-      /* , m_t_last() ,
-      m_current_k_opt() ,
-      m_algebra() ,
-      m_dxdt_resizer() , m_xnew_resizer() , m_resizer() ,
-      m_xnew() , m_err() , m_dxdt() ,*/
-      m_interval_sequence( m_k_max+1 ) ,
-      m_coeff( m_k_max+1 ) ,
-      m_cost( m_k_max+1 ) ,
-      m_table( m_k_max ) ,
-      STEPFAC1( 0.65 ) , STEPFAC2( 0.94 ) , STEPFAC3( 0.02 ) , STEPFAC4( 4.0 ) , KFAC1( 0.8 ) , KFAC2( 0.9 )
+        value_type eps_abs = 1E-6 , value_type eps_rel = 1E-6 ,
+        value_type factor_x = 1.0 , value_type factor_dxdt = 1.0 )
+        : m_error_checker( eps_abs , eps_rel , factor_x, factor_dxdt ) , m_midpoint() ,
+          m_last_step_rejected( false ) , m_first( true ) ,
+          /* , m_t_last() ,
+             m_current_k_opt() ,
+             m_algebra() ,
+             m_dxdt_resizer() , m_xnew_resizer() , m_resizer() ,
+             m_xnew() , m_err() , m_dxdt() ,*/
+          m_interval_sequence( m_k_max+1 ) ,
+          m_coeff( m_k_max+1 ) ,
+          m_cost( m_k_max+1 ) ,
+          m_table( m_k_max ) ,
+          STEPFAC1( 0.65 ) , STEPFAC2( 0.94 ) , STEPFAC3( 0.02 ) , STEPFAC4( 4.0 ) , KFAC1( 0.8 ) , KFAC2( 0.9 )
     {
+        BOOST_USING_STD_MIN();
+        BOOST_USING_STD_MAX();
         //m_dt_last = 1.0E30;
         for( unsigned short i = 0; i < m_k_max+1; i++ )
         {
@@ -122,8 +122,8 @@ public:
             }
             //std ::cout << std::endl;
             // crude estimate of optimal order
-            const value_type logfact( -log10( std::max( eps_rel , 1.0E-12 ) ) * 0.6 + 0.5 );
-            m_current_k_opt = std::max( 1 , std::min( static_cast<int>( m_k_max-1 ) , static_cast<int>( logfact ) ));
+            const value_type logfact( -log10( max BOOST_PREVENT_MACRO_SUBSTITUTION( eps_rel , 1.0E-12 ) ) * 0.6 + 0.5 );
+            m_current_k_opt = max BOOST_PREVENT_MACRO_SUBSTITUTION( 1 , min BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<int>( m_k_max-1 ) , static_cast<int>( logfact ) ));
             //m_current_k_opt = m_k_max - 1;
             //std::cout << m_cost[i] << std::endl;
         }
@@ -183,6 +183,9 @@ public:
     template< class System , class StateIn , class DerivIn , class StateOut >
     controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt , time_type &t , StateOut &out , time_type &dt )
     {
+        BOOST_USING_STD_MIN();
+        BOOST_USING_STD_MAX();
+
         static const value_type val1( 1.0 );
 
         typename odeint::unwrap_reference< System >::type &sys = system;
@@ -219,7 +222,7 @@ public:
                 extrapolate( k , m_table , m_coeff , out );
                 // get error estimate
                 m_algebra.for_each3( m_err.m_v , out , m_table[0].m_v ,
-                        typename operations_type::template scale_sum2< value_type , value_type >( val1 , -val1 ) );
+                                     typename operations_type::template scale_sum2< value_type , value_type >( val1 , -val1 ) );
                 const value_type error = m_error_checker.error( m_algebra , in , dxdt , m_err.m_v , dt );
                 h_opt[k] = calc_h_opt( dt , error , k );
                 work[k] = static_cast<value_type>( m_cost[k] ) / h_opt[k];
@@ -235,11 +238,11 @@ public:
                         if( (work[k] < KFAC2*work[k-1]) || (m_current_k_opt <= 2) )
                         {
                             // leave order as is (except we were in first round)
-                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , std::max( 2 , static_cast<int>(k)+1 ) );
+                            m_current_k_opt = min BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<int>(m_k_max)-1 , max BOOST_PREVENT_MACRO_SUBSTITUTION( 2 , static_cast<int>(k)+1 ) );
                             new_h = h_opt[k];
                             new_h *= static_cast<value_type>( m_cost[k+1] ) / static_cast<value_type>( m_cost[k] );
                         } else {
-                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , std::max( 2 , static_cast<int>(k) ) );
+                            m_current_k_opt = min BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<int>(m_k_max)-1 , max BOOST_PREVENT_MACRO_SUBSTITUTION( 2 , static_cast<int>(k) ) );
                             new_h = h_opt[k];
                         }
                         break;
@@ -259,12 +262,12 @@ public:
                         reject = false;
                         if( (work[k-1] < KFAC2*work[k]) )
                         {
-                            m_current_k_opt = std::max( 2 , static_cast<int>(m_current_k_opt)-1 );
+                            m_current_k_opt = max BOOST_PREVENT_MACRO_SUBSTITUTION( 2 , static_cast<int>(m_current_k_opt)-1 );
                             new_h = h_opt[m_current_k_opt];
                         }
                         else if( (work[k] < KFAC2*work[k-1]) && !m_last_step_rejected )
                         {
-                            m_current_k_opt = std::min( static_cast<int>(m_k_max-1) , static_cast<int>(m_current_k_opt)+1 );
+                            m_current_k_opt = min BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<int>(m_k_max-1) , static_cast<int>(m_current_k_opt)+1 );
                             new_h = h_opt[k];
                             new_h *= m_cost[m_current_k_opt]/m_cost[k];
                             //std::cout << new_h << std::endl;
@@ -286,9 +289,9 @@ public:
                     {   //convergence
                         reject = false;
                         if( work[k-2] < KFAC2*work[k-1] )
-                            m_current_k_opt = std::max( 2 , static_cast<int>(m_current_k_opt)-1 );
+                            m_current_k_opt = max BOOST_PREVENT_MACRO_SUBSTITUTION( 2 , static_cast<int>(m_current_k_opt)-1 );
                         if( (work[k] < KFAC2*work[m_current_k_opt]) && !m_last_step_rejected )
-                            m_current_k_opt = std::min( static_cast<int>(m_k_max)-1 , static_cast<int>(k) );
+                            m_current_k_opt = min BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<int>(m_k_max)-1 , static_cast<int>(k) );
                         new_h = h_opt[m_current_k_opt];
                     } else
                     {
@@ -304,7 +307,7 @@ public:
         {
             t += dt;
         }// else
-         //   std::cout << "REJECT!" << std::endl;
+        //   std::cout << "REJECT!" << std::endl;
 
         if( !m_last_step_rejected || (new_h < dt) )
         {
@@ -387,24 +390,27 @@ private:
         {
             //std::cout << '\t' << m_coeff[k][j];
             m_algebra.for_each3( table[j-1].m_v , table[j].m_v , table[j-1].m_v ,
-                    typename operations_type::template scale_sum2< value_type , value_type >( val1 + coeff[k][j] , -coeff[k][j] ) );
+                                 typename operations_type::template scale_sum2< value_type , value_type >( val1 + coeff[k][j] , -coeff[k][j] ) );
         }
         //std::cout << std::endl << m_coeff[k][0] << std::endl;
         m_algebra.for_each3( xest , table[0].m_v , xest ,
-                typename operations_type::template scale_sum2< value_type , value_type >( val1 + coeff[k][0] , -coeff[k][0]) );
+                             typename operations_type::template scale_sum2< value_type , value_type >( val1 + coeff[k][0] , -coeff[k][0]) );
     }
 
     time_type calc_h_opt( time_type h , value_type error , size_t k ) const
     {
+        BOOST_USING_STD_MIN();
+        BOOST_USING_STD_MAX();
+        using std::pow;
         value_type expo=1.0/(2*k+1);
-        value_type facmin = std::pow( STEPFAC3 , expo );
+        value_type facmin = pow BOOST_PREVENT_MACRO_SUBSTITUTION( STEPFAC3 , expo );
         value_type fac;
         if (error == 0.0)
             fac=1.0/facmin;
         else
         {
-            fac = STEPFAC2 / std::pow( error / STEPFAC1 , expo );
-            fac = std::max( facmin/STEPFAC4 , std::min( 1.0/facmin , fac ) );
+            fac = STEPFAC2 / pow BOOST_PREVENT_MACRO_SUBSTITUTION( error / STEPFAC1 , expo );
+            fac = max BOOST_PREVENT_MACRO_SUBSTITUTION( facmin/STEPFAC4 , min BOOST_PREVENT_MACRO_SUBSTITUTION( 1.0/facmin , fac ) );
         }
         //return std::abs(h*fac);
         return h*fac;
@@ -451,7 +457,7 @@ private:
         if( (k == m_current_k_opt-1) )
         {
             const value_type d = m_interval_sequence[m_current_k_opt] * m_interval_sequence[m_current_k_opt+1] /
-                    (m_interval_sequence[0]*m_interval_sequence[0]);
+                (m_interval_sequence[0]*m_interval_sequence[0]);
             //step will fail, criterion 17.3.17 in NR
             return ( error > d*d );
         }
