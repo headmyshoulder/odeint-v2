@@ -32,8 +32,6 @@
 #include <boost/mpl/vector.hpp>
 
 // nearly everything from odeint is used in these tests
-#include <boost/numeric/odeint.hpp>
-
 #include <boost/numeric/odeint/integrate/integrate_const.hpp>
 #include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
 #include <boost/numeric/odeint/integrate/integrate_times.hpp>

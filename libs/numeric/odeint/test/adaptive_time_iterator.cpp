@@ -85,6 +85,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm , Stepper , dummy_steppers )
     BOOST_CHECK_CLOSE( res[2].second , 0.2 , 1.0e-13 );
     BOOST_CHECK_CLOSE( res[3].first[0] , 1.75 , 1.0e-13 );
     BOOST_CHECK_CLOSE( res[3].second , 0.3 , 1.0e-13 );
+
+    BOOST_CHECK_CLOSE( x[0] , 2.0 , 1.0e-14 );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm_with_factory , Stepper , dummy_steppers )
@@ -104,6 +106,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm_with_factory , Stepper , dummy_ste
     BOOST_CHECK_CLOSE( res[2].second , 0.2 , 1.0e-13 );
     BOOST_CHECK_CLOSE( res[3].first[0] , 1.75 , 1.0e-13 );
     BOOST_CHECK_CLOSE( res[3].second , 0.3 , 1.0e-13 );
+
+    BOOST_CHECK_CLOSE( x[0] , 2.0 , 1.0e-14 );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm_with_range_factory , Stepper , dummy_steppers )
@@ -122,6 +126,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm_with_range_factory , Stepper , dum
     BOOST_CHECK_CLOSE( res[2].second , 0.2 , 1.0e-13 );
     BOOST_CHECK_CLOSE( res[3].first[0] , 1.75 , 1.0e-13 );
     BOOST_CHECK_CLOSE( res[3].second , 0.3 , 1.0e-13 );
+
+    BOOST_CHECK_CLOSE( x[0] , 2.0 , 1.0e-14 );
 }
 
 

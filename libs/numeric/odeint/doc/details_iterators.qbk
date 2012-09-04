@@ -53,7 +53,7 @@ The other two iterator types adaptive iterators which are completely analogous t
   * `make_const_step_iterator_end( stepper , system , state , t_end , dt )`
   * `make_const_step_range( stepper , system , state , t_start , t_end , dt )`
 * This stepper works with all steppers fullfilling the Stepper concept or the DenseOutputStepper concept.
-
+* This stepper updates the value of `state`. The value of `state` is the current state of the ODE during the iteration.
 
 [endsect]
 
@@ -66,6 +66,8 @@ The other two iterator types adaptive iterators which are completely analogous t
   * `make_const_step_time_iterator_end( stepper , system , state , t_end , dt )`
   * `make_const_step_time_range( stepper , system , state , t_start , t_end , dt )`
 * This stepper works with all steppers fullfilling the Stepper concept or the DenseOutputStepper concept.
+* This stepper updates the value of `state`. The value of `state` is the current state of the ODE during the iteration.
+
 
 [endsect]
 
@@ -79,6 +81,7 @@ The other two iterator types adaptive iterators which are completely analogous t
   * `make_adaptive_iterator_end( stepper , system , state , t_end , dt )`
   * `make_adaptive_range( stepper , system , state , t_start , t_end , dt )`
 * This stepper works with all steppers fullfilling the ControlledStepper concept or the DenseOutputStepper concept.
+* For steppers fulfilling the ControlledStepper concept `state` is modified according to the current state of the ODE. For DenseOutputStepper the state is not modified due to performance optimizations.
 
 
 [endsect]
@@ -92,6 +95,7 @@ The other two iterator types adaptive iterators which are completely analogous t
   * `make_adaptive_time_iterator_end( stepper , system , state , t_end , dt )`
   * `make_adaptive_time_range( stepper , system , state , t_start , t_end , dt )`
 * This stepper works with all steppers fullfilling the ControlledStepper concept or the DenseOutputStepper concept.
+
 
 [endsect]
 

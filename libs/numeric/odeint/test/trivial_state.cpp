@@ -28,7 +28,13 @@
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/at.hpp>
 
-#include <boost/numeric/odeint.hpp>
+#include <boost/numeric/odeint/stepper/euler.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
+#include <boost/numeric/odeint/stepper/generation.hpp>
+#include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
+#include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
