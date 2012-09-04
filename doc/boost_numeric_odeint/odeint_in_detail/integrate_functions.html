@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Integrate functions</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<meta name="generator" content="DocBook XSL Stylesheets V1.77.0">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../odeint_in_detail.html" title="odeint in detail">
 <link rel="prev" href="generation_functions.html" title="Generation functions">
@@ -23,10 +23,10 @@
         time <span class="emphasis"><em>t<sub>0</sub></em></span> to a given end time <span class="emphasis"><em>t<sub>1</sub></em></span>
         and starting at state <span class="emphasis"><em>x<sub>0</sub></em></span> by subsequent calls of a given
         stepper's <code class="computeroutput"><span class="identifier">do_step</span></code> function.
-        Additionally, the user can provide an <a class="link" href="../../">observer</a>
-        to analyze the state during time evolution. There are five different integrate
-        functions which have different strategies on when to call the observer function
-        during integration. All of the integrate functions except <code class="computeroutput"><span class="identifier">integrate_n_steps</span></code>
+        Additionally, the user can provide an __observer to analyze the state during
+        time evolution. There are five different integrate functions which have different
+        strategies on when to call the observer function during integration. All
+        of the integrate functions except <code class="computeroutput"><span class="identifier">integrate_n_steps</span></code>
         can be called with any stepper following one of the stepper concepts: <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a> , <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error
         Stepper</a> , <a class="link" href="../concepts/controlled_stepper.html" title="Controlled Stepper">Controlled
         Stepper</a> , <a class="link" href="../concepts/dense_output_stepper.html" title="Dense Output Stepper">Dense
@@ -35,7 +35,7 @@
       </p>
 <h5>
 <a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.h0"></a>
-        <span><a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.equidistant_observer_calls"></a></span><a class="link" href="integrate_functions.html#boost_numeric_odeint.odeint_in_detail.integrate_functions.equidistant_observer_calls">Equidistant
+        <span class="phrase"><a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.equidistant_observer_calls"></a></span><a class="link" href="integrate_functions.html#boost_numeric_odeint.odeint_in_detail.integrate_functions.equidistant_observer_calls">Equidistant
         observer calls</a>
       </h5>
 <p>
@@ -79,7 +79,7 @@
         steps you should prefer the <code class="computeroutput"><span class="identifier">integrate_n_steps</span></code>
         function below.
       </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
             If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a> or <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error Stepper</a>
             then <code class="computeroutput"><span class="identifier">dt</span></code> is also the step
@@ -108,7 +108,7 @@
 </ul></div>
 <h5>
 <a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.h1"></a>
-        <span><a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.integrate_a_given_number_of_steps"></a></span><a class="link" href="integrate_functions.html#boost_numeric_odeint.odeint_in_detail.integrate_functions.integrate_a_given_number_of_steps">Integrate
+        <span class="phrase"><a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.integrate_a_given_number_of_steps"></a></span><a class="link" href="integrate_functions.html#boost_numeric_odeint.odeint_in_detail.integrate_functions.integrate_a_given_number_of_steps">Integrate
         a given number of steps</a>
       </h5>
 <p>
@@ -147,7 +147,7 @@
       </p>
 <h5>
 <a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.h2"></a>
-        <span><a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_each_step"></a></span><a class="link" href="integrate_functions.html#boost_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_each_step">Observer
+        <span class="phrase"><a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_each_step"></a></span><a class="link" href="integrate_functions.html#boost_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_each_step">Observer
         calls at each step</a>
       </h5>
 <p>
@@ -188,7 +188,7 @@
         <code class="computeroutput"><span class="identifier">integrate_adaptive</span></code> returns
         the number of steps performed during the integration.
       </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
             If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a> or <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error Stepper</a>
             then <code class="computeroutput"><span class="identifier">dt</span></code> is the step size
@@ -217,7 +217,7 @@
 </ul></div>
 <h5>
 <a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.h3"></a>
-        <span><a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_given_time_points"></a></span><a class="link" href="integrate_functions.html#boost_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_given_time_points">Observer
+        <span class="phrase"><a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_given_time_points"></a></span><a class="link" href="integrate_functions.html#boost_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_given_time_points">Observer
         calls at given time points</a>
       </h5>
 <p>
@@ -264,7 +264,7 @@
         <code class="computeroutput"><span class="identifier">integrate_times</span></code> returns the
         number of steps performed during the integration.
       </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
             If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a> or <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error Stepper</a>
             <code class="computeroutput"><span class="identifier">dt</span></code> is the step size used
@@ -291,7 +291,7 @@
 </ul></div>
 <h5>
 <a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.h4"></a>
-        <span><a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.convenience_integrate_function"></a></span><a class="link" href="integrate_functions.html#boost_numeric_odeint.odeint_in_detail.integrate_functions.convenience_integrate_function">Convenience
+        <span class="phrase"><a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.convenience_integrate_function"></a></span><a class="link" href="integrate_functions.html#boost_numeric_odeint.odeint_in_detail.integrate_functions.convenience_integrate_function">Convenience
         integrate function</a>
       </h5>
 <p>

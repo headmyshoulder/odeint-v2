@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Iterators</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<meta name="generator" content="DocBook XSL Stylesheets V1.77.0">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../odeint_in_detail.html" title="odeint in detail">
 <link rel="prev" href="integrate_functions.html" title="Integrate functions">
@@ -29,18 +29,6 @@
         many of the standard algorithms in the C++ standard library and Boost.Range
         can be used with the odeint't iterators.
       </p>
-<div class="warning"><table border="0" summary="Warning">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../images/warning.png"></td>
-<th align="left">Warning</th>
-</tr>
-<tr><td align="left" valign="top"><p>
-          odeint's iterators do not satisfy the iterator concepts defined in the
-          standard completely. In detail the iterator transitivity is violated in
-          some rare cases. But this is not relevant for all algorithms in the C++
-          standard library and in Boost.Range.
-        </p></td></tr>
-</table></div>
 <p>
         Four iterators are provided. They are all single pass iterators. The first
         one is a iterator which solves the odeint with constant step size. An example
@@ -129,7 +117,7 @@
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_numeric_odeint.odeint_in_detail.iterators.const_step_iterator"></a><a class="link" href="iterators.html#boost_numeric_odeint.odeint_in_detail.iterators.const_step_iterator" title="const_step_iterator">const_step_iterator</a>
 </h4></div></div></div>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
               Definition: <code class="computeroutput"><span class="identifier">const_step_iterator</span><span class="special">&lt;</span> <span class="identifier">Stepper</span>
               <span class="special">,</span> <span class="identifier">System</span>
@@ -140,12 +128,13 @@
             </li>
 <li class="listitem">
               Factory functions
-              <div class="itemizedlist"><ul class="itemizedlist" type="circle">
+              <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
 <li class="listitem">
                     <code class="computeroutput"><span class="identifier">make_const_step_iterator_begin</span><span class="special">(</span> <span class="identifier">stepper</span>
                     <span class="special">,</span> <span class="identifier">system</span>
                     <span class="special">,</span> <span class="identifier">state</span>
                     <span class="special">,</span> <span class="identifier">t_start</span>
+                    <span class="special">,</span> <span class="identifier">t_end</span>
                     <span class="special">,</span> <span class="identifier">dt</span>
                     <span class="special">)</span></code>
                   </li>
@@ -153,8 +142,6 @@
                     <code class="computeroutput"><span class="identifier">make_const_step_iterator_end</span><span class="special">(</span> <span class="identifier">stepper</span>
                     <span class="special">,</span> <span class="identifier">system</span>
                     <span class="special">,</span> <span class="identifier">state</span>
-                    <span class="special">,</span> <span class="identifier">t_end</span>
-                    <span class="special">,</span> <span class="identifier">dt</span>
                     <span class="special">)</span></code>
                   </li>
 <li class="listitem">
@@ -183,7 +170,7 @@
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_numeric_odeint.odeint_in_detail.iterators.const_step_time_iterator"></a><a class="link" href="iterators.html#boost_numeric_odeint.odeint_in_detail.iterators.const_step_time_iterator" title="const_step_time_iterator">const_step_time_iterator</a>
 </h4></div></div></div>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
               Definition: <code class="computeroutput"><span class="identifier">const_step_iterator</span><span class="special">&lt;</span> <span class="identifier">Stepper</span>
               <span class="special">,</span> <span class="identifier">System</span>
@@ -197,12 +184,13 @@
             </li>
 <li class="listitem">
               Factory functions
-              <div class="itemizedlist"><ul class="itemizedlist" type="circle">
+              <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
 <li class="listitem">
                     <code class="computeroutput"><span class="identifier">make_const_step_time_iterator_begin</span><span class="special">(</span> <span class="identifier">stepper</span>
                     <span class="special">,</span> <span class="identifier">system</span>
                     <span class="special">,</span> <span class="identifier">state</span>
                     <span class="special">,</span> <span class="identifier">t_start</span>
+                    <span class="special">,</span> <span class="identifier">t_end</span>
                     <span class="special">,</span> <span class="identifier">dt</span>
                     <span class="special">)</span></code>
                   </li>
@@ -210,8 +198,6 @@
                     <code class="computeroutput"><span class="identifier">make_const_step_time_iterator_end</span><span class="special">(</span> <span class="identifier">stepper</span>
                     <span class="special">,</span> <span class="identifier">system</span>
                     <span class="special">,</span> <span class="identifier">state</span>
-                    <span class="special">,</span> <span class="identifier">t_end</span>
-                    <span class="special">,</span> <span class="identifier">dt</span>
                     <span class="special">)</span></code>
                   </li>
 <li class="listitem">
@@ -240,7 +226,7 @@
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_numeric_odeint.odeint_in_detail.iterators.adaptive_step_iterator"></a><a class="link" href="iterators.html#boost_numeric_odeint.odeint_in_detail.iterators.adaptive_step_iterator" title="adaptive_step_iterator">adaptive_step_iterator</a>
 </h4></div></div></div>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
               Definition: <code class="computeroutput"><span class="identifier">adaptive_iterator</span><span class="special">&lt;</span> <span class="identifier">Stepper</span>
               <span class="special">,</span> <span class="identifier">System</span>
@@ -251,12 +237,13 @@
             </li>
 <li class="listitem">
               Factory functions
-              <div class="itemizedlist"><ul class="itemizedlist" type="circle">
+              <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
 <li class="listitem">
                     <code class="computeroutput"><span class="identifier">make_adaptive_iterator_begin</span><span class="special">(</span> <span class="identifier">stepper</span>
                     <span class="special">,</span> <span class="identifier">system</span>
                     <span class="special">,</span> <span class="identifier">state</span>
                     <span class="special">,</span> <span class="identifier">t_start</span>
+                    <span class="special">,</span> <span class="identifier">t_end</span>
                     <span class="special">,</span> <span class="identifier">dt</span>
                     <span class="special">)</span></code>
                   </li>
@@ -264,8 +251,6 @@
                     <code class="computeroutput"><span class="identifier">make_adaptive_iterator_end</span><span class="special">(</span> <span class="identifier">stepper</span>
                     <span class="special">,</span> <span class="identifier">system</span>
                     <span class="special">,</span> <span class="identifier">state</span>
-                    <span class="special">,</span> <span class="identifier">t_end</span>
-                    <span class="special">,</span> <span class="identifier">dt</span>
                     <span class="special">)</span></code>
                   </li>
 <li class="listitem">
@@ -294,7 +279,7 @@
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_numeric_odeint.odeint_in_detail.iterators.adaptive_step_time_iterator"></a><a class="link" href="iterators.html#boost_numeric_odeint.odeint_in_detail.iterators.adaptive_step_time_iterator" title="adaptive_step_time_iterator">adaptive_step_time_iterator</a>
 </h4></div></div></div>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
               Definition: <code class="computeroutput"><span class="identifier">adaptive_iterator</span><span class="special">&lt;</span> <span class="identifier">Stepper</span>
               <span class="special">,</span> <span class="identifier">System</span>
@@ -308,12 +293,13 @@
             </li>
 <li class="listitem">
               Factory functions
-              <div class="itemizedlist"><ul class="itemizedlist" type="circle">
+              <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
 <li class="listitem">
                     <code class="computeroutput"><span class="identifier">make_adaptive_time_iterator_begin</span><span class="special">(</span> <span class="identifier">stepper</span>
                     <span class="special">,</span> <span class="identifier">system</span>
                     <span class="special">,</span> <span class="identifier">state</span>
                     <span class="special">,</span> <span class="identifier">t_start</span>
+                    <span class="special">,</span> <span class="identifier">t_end</span>
                     <span class="special">,</span> <span class="identifier">dt</span>
                     <span class="special">)</span></code>
                   </li>
@@ -321,8 +307,6 @@
                     <code class="computeroutput"><span class="identifier">make_adaptive_time_iterator_end</span><span class="special">(</span> <span class="identifier">stepper</span>
                     <span class="special">,</span> <span class="identifier">system</span>
                     <span class="special">,</span> <span class="identifier">state</span>
-                    <span class="special">,</span> <span class="identifier">t_end</span>
-                    <span class="special">,</span> <span class="identifier">dt</span>
                     <span class="special">)</span></code>
                   </li>
 <li class="listitem">
@@ -339,6 +323,11 @@
 <li class="listitem">
               This stepper works with all steppers fullfilling the ControlledStepper
               concept or the DenseOutputStepper concept.
+            </li>
+<li class="listitem">
+              This stepper updates the value of <code class="computeroutput"><span class="identifier">state</span></code>.
+              The value of <code class="computeroutput"><span class="identifier">state</span></code>
+              is the current state of the ODE during the iteration.
             </li>
 </ul></div>
 </div>
