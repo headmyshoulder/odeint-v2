@@ -82,20 +82,20 @@
 
 <span class="keyword">struct</span> <span class="identifier">stiff_system</span>
 <span class="special">{</span>
-	<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">State</span> <span class="special">&gt;</span>
-	<span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span>
-	<span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">State</span> <span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span>
+    <span class="special">{</span>
         <span class="special">...</span>
-	<span class="special">}</span>
+    <span class="special">}</span>
 <span class="special">};</span>
 
 <span class="keyword">struct</span> <span class="identifier">stiff_system_jacobi</span>
 <span class="special">{</span>
-	<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">State</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Matrix</span> <span class="special">&gt;</span>
-	<span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">Matrix</span> <span class="special">&amp;</span><span class="identifier">J</span> <span class="special">,</span> <span class="keyword">const</span> <span class="keyword">double</span> <span class="special">&amp;</span><span class="identifier">t</span> <span class="special">,</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">dfdt</span> <span class="special">)</span>
-	<span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">State</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Matrix</span> <span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">Matrix</span> <span class="special">&amp;</span><span class="identifier">J</span> <span class="special">,</span> <span class="keyword">const</span> <span class="keyword">double</span> <span class="special">&amp;</span><span class="identifier">t</span> <span class="special">,</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">dfdt</span> <span class="special">)</span>
+    <span class="special">{</span>
         <span class="special">...</span>
-	<span class="special">}</span>
+    <span class="special">}</span>
 <span class="special">};</span>
 </pre>
 <p>

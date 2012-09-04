@@ -16,8 +16,6 @@
 
 odeint supports iterators for iterating through an ordinary differential equation. They offer you an alternative to the integrate functions. Furthermore, many of the standard algorithms in the C++ standard library and Boost.Range can be used with the odeint't iterators.
 
-[warning odeint's iterators do not satisfy the iterator concepts defined in the standard completely. In detail the iterator transitivity is violated in some rare cases. But this is not relevant for all algorithms in the C++ standard library and in Boost.Range.]
-
 [import ../examples/const_step_iterator.cpp]
 
 Four iterators are provided. They are all single pass iterators. The first one is a iterator which solves the odeint with constant step size. An example is 
@@ -49,8 +47,8 @@ The other two iterator types adaptive iterators which are completely analogous t
 * Definition: `const_step_iterator< Stepper , System >`
 * `value_type` is `Stepper::state_type`
 * Factory functions
-  * `make_const_step_iterator_begin( stepper , system , state , t_start , dt )`
-  * `make_const_step_iterator_end( stepper , system , state , t_end , dt )`
+  * `make_const_step_iterator_begin( stepper , system , state , t_start , t_end , dt )`
+  * `make_const_step_iterator_end( stepper , system , state )`
   * `make_const_step_range( stepper , system , state , t_start , t_end , dt )`
 * This stepper works with all steppers fullfilling the Stepper concept or the DenseOutputStepper concept.
 * This stepper updates the value of `state`. The value of `state` is the current state of the ODE during the iteration.
@@ -62,8 +60,8 @@ The other two iterator types adaptive iterators which are completely analogous t
 * Definition: `const_step_iterator< Stepper , System >`
 * `value_type` is `std::pair< Stepper::state_type& , Stepper::time_type >`
 * Factory functions
-  * `make_const_step_time_iterator_begin( stepper , system , state , t_start , dt )`
-  * `make_const_step_time_iterator_end( stepper , system , state , t_end , dt )`
+  * `make_const_step_time_iterator_begin( stepper , system , state , t_start , t_end , dt )`
+  * `make_const_step_time_iterator_end( stepper , system , state )`
   * `make_const_step_time_range( stepper , system , state , t_start , t_end , dt )`
 * This stepper works with all steppers fullfilling the Stepper concept or the DenseOutputStepper concept.
 * This stepper updates the value of `state`. The value of `state` is the current state of the ODE during the iteration.
@@ -77,8 +75,8 @@ The other two iterator types adaptive iterators which are completely analogous t
 * Definition: `adaptive_iterator< Stepper , System >`
 * `value_type` is `Stepper::state_type`
 * Factory functions
-  * `make_adaptive_iterator_begin( stepper , system , state , t_start , dt )`
-  * `make_adaptive_iterator_end( stepper , system , state , t_end , dt )`
+  * `make_adaptive_iterator_begin( stepper , system , state , t_start , t_end , dt )`
+  * `make_adaptive_iterator_end( stepper , system , state )`
   * `make_adaptive_range( stepper , system , state , t_start , t_end , dt )`
 * This stepper works with all steppers fullfilling the ControlledStepper concept or the DenseOutputStepper concept.
 * For steppers fulfilling the ControlledStepper concept `state` is modified according to the current state of the ODE. For DenseOutputStepper the state is not modified due to performance optimizations.
@@ -91,10 +89,11 @@ The other two iterator types adaptive iterators which are completely analogous t
 * Definition: `adaptive_iterator< Stepper , System >`
 * `value_type` is `std::pair< Stepper::state_type& , Stepper::time_type >`
 * Factory functions
-  * `make_adaptive_time_iterator_begin( stepper , system , state , t_start , dt )`
-  * `make_adaptive_time_iterator_end( stepper , system , state , t_end , dt )`
+  * `make_adaptive_time_iterator_begin( stepper , system , state , t_start , t_end , dt )`
+  * `make_adaptive_time_iterator_end( stepper , system , state )`
   * `make_adaptive_time_range( stepper , system , state , t_start , t_end , dt )`
 * This stepper works with all steppers fullfilling the ControlledStepper concept or the DenseOutputStepper concept.
+* This stepper updates the value of `state`. The value of `state` is the current state of the ODE during the iteration.
 
 
 [endsect]

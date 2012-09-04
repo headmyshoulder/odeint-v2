@@ -74,8 +74,6 @@
     [link boost_numeric_odeint.concepts.controlled_stepper Controlled Stepper]]
 [def __dense_output_stepper
     [link boost_numeric_odeint.concepts.dense_output_stepper Dense Output Stepper]]
-[def __observer
-    [link boost_numeric_odeint.concepts.observer observer]]
 [def __integrate_functions
     [link boost_numeric_odeint.odeint_in_detail.integrate_functions integrate functions]]
 [def __tutorial

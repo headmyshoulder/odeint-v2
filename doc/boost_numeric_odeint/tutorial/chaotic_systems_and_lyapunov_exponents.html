@@ -243,9 +243,9 @@
 <span class="keyword">while</span><span class="special">(</span> <span class="keyword">true</span> <span class="special">)</span>
 <span class="special">{</span>
 
-	<span class="identifier">t</span> <span class="special">=</span> <span class="identifier">integrate_n_steps</span><span class="special">(</span> <span class="identifier">rk4</span> <span class="special">,</span> <span class="identifier">lorenz_with_lyap</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">,</span> <span class="number">100</span> <span class="special">);</span>
-	<span class="identifier">gram_schmidt</span><span class="special">&lt;</span> <span class="identifier">num_of_lyap</span> <span class="special">&gt;(</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">lyap</span> <span class="special">,</span> <span class="identifier">n</span> <span class="special">);</span>
-	<span class="special">++</span><span class="identifier">count</span><span class="special">;</span>
+    <span class="identifier">t</span> <span class="special">=</span> <span class="identifier">integrate_n_steps</span><span class="special">(</span> <span class="identifier">rk4</span> <span class="special">,</span> <span class="identifier">lorenz_with_lyap</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">,</span> <span class="number">100</span> <span class="special">);</span>
+    <span class="identifier">gram_schmidt</span><span class="special">&lt;</span> <span class="identifier">num_of_lyap</span> <span class="special">&gt;(</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">lyap</span> <span class="special">,</span> <span class="identifier">n</span> <span class="special">);</span>
+    <span class="special">++</span><span class="identifier">count</span><span class="special">;</span>
 
     <span class="keyword">if</span><span class="special">(</span> <span class="special">!(</span><span class="identifier">count</span> <span class="special">%</span> <span class="number">100000</span><span class="special">)</span> <span class="special">)</span>
     <span class="special">{</span>

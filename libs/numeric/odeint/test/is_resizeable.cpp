@@ -85,6 +85,4 @@ BOOST_AUTO_TEST_CASE( test_fusion_quantity_sequence )
     typedef boost::fusion::vector< length_type , velocity_type > state_type;
 
     BOOST_CHECK( !( is_resizeable< state_type >::value ) );
-
-
 }
