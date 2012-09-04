@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Steppers</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.77.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../odeint_in_detail.html" title="odeint in detail">
 <link rel="prev" href="../odeint_in_detail.html" title="odeint in detail">
@@ -145,11 +145,11 @@
 <p>
 </p>
 <pre class="programlisting"><span class="identifier">runge_kutta4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">rk</span><span class="special">;</span>
-       <span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>               <span class="comment">// In-place transformation of inout</span>
-       <span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys2</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>               <span class="comment">// call with different system: Ok</span>
-       <span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>            <span class="comment">// Out-of-place transformation</span>
-       <span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">dxdtin</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>      <span class="comment">// In-place tranformation of inout</span>
-       <span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">dxdtin</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// Out-of-place transformation</span>
+<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>               <span class="comment">// In-place transformation of inout</span>
+<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys2</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>               <span class="comment">// call with different system: Ok</span>
+<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>            <span class="comment">// Out-of-place transformation</span>
+<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">inout</span> <span class="special">,</span> <span class="identifier">dxdtin</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>      <span class="comment">// In-place tranformation of inout</span>
+<span class="identifier">rk</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys1</span> <span class="special">,</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">dxdtin</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">);</span>   <span class="comment">// Out-of-place transformation</span>
 </pre>
 <p>
         </p>
@@ -929,7 +929,7 @@
           user is left with the question of which stepper fits his needs. Our personal
           recommendations are:
         </p>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
               <code class="computeroutput"><span class="identifier">runge_kutta_dopri5</span></code>
               is maybe the best default stepper. It has step size control as well
@@ -2002,8 +2002,8 @@
 <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
 
-    <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">N</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">N</span> <span class="special">&gt;</span> <span class="identifier">deriv_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">N</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">N</span> <span class="special">&gt;</span> <span class="identifier">deriv_type</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="keyword">double</span> <span class="identifier">value_type</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="keyword">double</span> <span class="identifier">time_type</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">short</span> <span class="identifier">order_type</span><span class="special">;</span>
@@ -2056,7 +2056,7 @@
           This is all. It is quite simple and the stochastic Euler stepper implement
           here is quite general. Of course it can be enhanced, for example
         </p>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
               use of operations and algebras as well as the resizing mechanism for
               maximal flexibility and portability
@@ -2089,7 +2089,7 @@
 <p>
 </p>
 <pre class="programlisting"><span class="keyword">const</span> <span class="keyword">static</span> <span class="identifier">size_t</span> <span class="identifier">N</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span>
-<span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">N</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">N</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
 
 <span class="keyword">struct</span> <span class="identifier">ornstein_det</span>
 <span class="special">{</span>
@@ -2101,8 +2101,8 @@
 
 <span class="keyword">struct</span> <span class="identifier">ornstein_stoch</span>
 <span class="special">{</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">mt19937</span> <span class="identifier">m_rng</span><span class="special">;</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">normal_distribution</span><span class="special">&lt;&gt;</span> <span class="identifier">m_dist</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mt19937</span> <span class="identifier">m_rng</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">normal_distribution</span><span class="special">&lt;&gt;</span> <span class="identifier">m_dist</span><span class="special">;</span>
 
     <span class="identifier">ornstein_stoch</span><span class="special">(</span> <span class="keyword">double</span> <span class="identifier">sigma</span> <span class="special">)</span> <span class="special">:</span> <span class="identifier">m_rng</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">m_dist</span><span class="special">(</span> <span class="number">0.0</span> <span class="special">,</span> <span class="identifier">sigma</span> <span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
 
@@ -2141,7 +2141,7 @@
 </h4></div></div></div>
 <p>
           odeint provides a C++ template meta-algorithm for constructing arbitrary
-          Runge-Kutta schemes <a href="#ftn.boost_numeric_odeint.odeint_in_detail.steppers.writing_own_runge_kutta_steppers.f0" class="footnote"><sup class="footnote"><a name="boost_numeric_odeint.odeint_in_detail.steppers.writing_own_runge_kutta_steppers.f0"></a>[1]</sup></a>. Some schemes are predefined in odeint, for example the classical
+          Runge-Kutta schemes <sup>[<a name="boost_numeric_odeint.odeint_in_detail.steppers.writing_own_runge_kutta_steppers.f0" href="#ftn.boost_numeric_odeint.odeint_in_detail.steppers.writing_own_runge_kutta_steppers.f0" class="footnote">1</a>]</sup>. Some schemes are predefined in odeint, for example the classical
           Runge-Kutta of fourth order, or the Runge-Kutta-Cash-Karp 54 and the Runge-Kutta-Fehlberg
           78 method. Of course, you can use this meta algorithm to construct you
           own solvers. This has the advantage that you can make full use of odeint's
@@ -2208,7 +2208,7 @@ c3 = 2/3, a31 =  0 , a32 = 2/3
 <p>
         </p>
 <p>
-          Ok, you are right, this looks rather ugly. Nevertheless, packing alle parameters
+          Ok, you are right, this looks rather ugly. Nevertheless, packing all parameters
           into a templatized class which is not immediately evaluated has the advantage
           that you can change the <code class="computeroutput"><span class="identifier">value_type</span></code>
           of your stepper to any type you like - presumably arbitrary precision types.
@@ -2243,13 +2243,13 @@ c3 = 2/3, a31 =  0 , a32 = 2/3
 <span class="special">&gt;</span>
 <span class="keyword">class</span> <span class="identifier">heun</span> <span class="special">:</span> <span class="keyword">public</span>
 <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">odeint</span><span class="special">::</span><span class="identifier">explicit_generic_rk</span><span class="special">&lt;</span> <span class="number">3</span> <span class="special">,</span> <span class="number">3</span> <span class="special">,</span> <span class="identifier">State</span> <span class="special">,</span> <span class="identifier">Value</span> <span class="special">,</span> <span class="identifier">Deriv</span> <span class="special">,</span> <span class="identifier">Time</span> <span class="special">,</span>
-					     <span class="identifier">Algebra</span> <span class="special">,</span> <span class="identifier">Operations</span> <span class="special">,</span> <span class="identifier">Resizer</span> <span class="special">&gt;</span>
+                                             <span class="identifier">Algebra</span> <span class="special">,</span> <span class="identifier">Operations</span> <span class="special">,</span> <span class="identifier">Resizer</span> <span class="special">&gt;</span>
 <span class="special">{</span>
 
 <span class="keyword">public</span><span class="special">:</span>
 
     <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">odeint</span><span class="special">::</span><span class="identifier">explicit_generic_rk</span><span class="special">&lt;</span> <span class="number">3</span> <span class="special">,</span> <span class="number">3</span> <span class="special">,</span> <span class="identifier">State</span> <span class="special">,</span> <span class="identifier">Value</span> <span class="special">,</span> <span class="identifier">Deriv</span> <span class="special">,</span> <span class="identifier">Time</span> <span class="special">,</span>
-							 <span class="identifier">Algebra</span> <span class="special">,</span> <span class="identifier">Operations</span> <span class="special">,</span> <span class="identifier">Resizer</span> <span class="special">&gt;</span> <span class="identifier">stepper_base_type</span><span class="special">;</span>
+                                                         <span class="identifier">Algebra</span> <span class="special">,</span> <span class="identifier">Operations</span> <span class="special">,</span> <span class="identifier">Resizer</span> <span class="special">&gt;</span> <span class="identifier">stepper_base_type</span><span class="special">;</span>
 
     <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">stepper_base_type</span><span class="special">::</span><span class="identifier">state_type</span> <span class="identifier">state_type</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">stepper_base_type</span><span class="special">::</span><span class="identifier">wrapped_state_type</span> <span class="identifier">wrapped_state_type</span><span class="special">;</span>
@@ -2265,8 +2265,8 @@ c3 = 2/3, a31 =  0 , a32 = 2/3
     <span class="identifier">heun</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span><span class="identifier">algebra</span> <span class="special">=</span> <span class="identifier">algebra_type</span><span class="special">()</span> <span class="special">)</span>
     <span class="special">:</span> <span class="identifier">stepper_base_type</span><span class="special">(</span>
             <span class="identifier">fusion</span><span class="special">::</span><span class="identifier">make_vector</span><span class="special">(</span>
-		<span class="identifier">heun_a1</span><span class="special">&lt;</span><span class="identifier">Value</span><span class="special">&gt;()</span> <span class="special">,</span>
-		<span class="identifier">heun_a2</span><span class="special">&lt;</span><span class="identifier">Value</span><span class="special">&gt;()</span> <span class="special">)</span> <span class="special">,</span>
+                <span class="identifier">heun_a1</span><span class="special">&lt;</span><span class="identifier">Value</span><span class="special">&gt;()</span> <span class="special">,</span>
+                <span class="identifier">heun_a2</span><span class="special">&lt;</span><span class="identifier">Value</span><span class="special">&gt;()</span> <span class="special">)</span> <span class="special">,</span>
             <span class="identifier">heun_b</span><span class="special">&lt;</span><span class="identifier">Value</span><span class="special">&gt;()</span> <span class="special">,</span> <span class="identifier">heun_c</span><span class="special">&lt;</span><span class="identifier">Value</span><span class="special">&gt;()</span> <span class="special">,</span> <span class="identifier">algebra</span> <span class="special">)</span>
     <span class="special">{</span> <span class="special">}</span>
 <span class="special">};</span>
@@ -2279,21 +2279,19 @@ c3 = 2/3, a31 =  0 , a32 = 2/3
         </p>
 <p>
 </p>
-<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="number">3</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">,</span> <span class="number">3</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
 <span class="identifier">heun</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">h</span><span class="special">;</span>
 <span class="identifier">state_type</span> <span class="identifier">x</span> <span class="special">=</span> <span class="special">{{</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">}};</span>
 
 <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">h</span> <span class="special">,</span> <span class="identifier">lorenz</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">100.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">,</span>
-   <span class="special">[](</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">_x</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">_t</span> <span class="special">)</span> <span class="special">{</span>
-<span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">_t</span> <span class="special">&lt;&lt;</span> <span class="string">"\t"</span> <span class="special">&lt;&lt;</span> <span class="identifier">_x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="string">"\t"</span> <span class="special">&lt;&lt;</span> <span class="identifier">_x</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="string">"\t"</span> <span class="special">&lt;&lt;</span> <span class="identifier">_x</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
-   <span class="special">});</span>
+                 <span class="identifier">streaming_observer</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">)</span> <span class="special">);</span>
 </pre>
 <p>
         </p>
 </div>
 <div class="footnotes">
-<br><hr style="width:100; align:left;">
-<div id="ftn.boost_numeric_odeint.odeint_in_detail.steppers.writing_own_runge_kutta_steppers.f0" class="footnote"><p><a href="#boost_numeric_odeint.odeint_in_detail.steppers.writing_own_runge_kutta_steppers.f0" class="para"><sup class="para">[1] </sup></a>
+<br><hr width="100" align="left">
+<div class="footnote"><p><sup>[<a name="ftn.boost_numeric_odeint.odeint_in_detail.steppers.writing_own_runge_kutta_steppers.f0" href="#boost_numeric_odeint.odeint_in_detail.steppers.writing_own_runge_kutta_steppers.f0" class="para">1</a>] </sup>
             M. Mulansky, K. Ahnert, Template-Metaprogramming applied to numerical
             problems, <a href="http://arxiv.org/abs/1110.3233" target="_top">arxiv:1110.3233</a>
           </p></div>

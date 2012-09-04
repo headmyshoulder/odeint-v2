@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Dense Output Stepper</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.77.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../concepts.html" title="Concepts">
 <link rel="prev" href="controlled_stepper.html" title="Controlled Stepper">
@@ -25,7 +25,7 @@
       </p>
 <h5>
 <a name="boost_numeric_odeint.concepts.dense_output_stepper.h0"></a>
-        <span class="phrase"><a name="boost_numeric_odeint.concepts.dense_output_stepper.description"></a></span><a class="link" href="dense_output_stepper.html#boost_numeric_odeint.concepts.dense_output_stepper.description">Description</a>
+        <span><a name="boost_numeric_odeint.concepts.dense_output_stepper.description"></a></span><a class="link" href="dense_output_stepper.html#boost_numeric_odeint.concepts.dense_output_stepper.description">Description</a>
       </h5>
 <p>
         A dense output stepper following this Dense Output Stepper concept provides
@@ -37,10 +37,10 @@
       </p>
 <h5>
 <a name="boost_numeric_odeint.concepts.dense_output_stepper.h1"></a>
-        <span class="phrase"><a name="boost_numeric_odeint.concepts.dense_output_stepper.associated_types"></a></span><a class="link" href="dense_output_stepper.html#boost_numeric_odeint.concepts.dense_output_stepper.associated_types">Associated
+        <span><a name="boost_numeric_odeint.concepts.dense_output_stepper.associated_types"></a></span><a class="link" href="dense_output_stepper.html#boost_numeric_odeint.concepts.dense_output_stepper.associated_types">Associated
         types</a>
       </h5>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
             <p><span class="bold"><strong>state_type</strong></span></p>
 <p><code class="computeroutput"><span class="identifier">Stepper</span><span class="special">::</span><span class="identifier">state_type</span></code></p>
@@ -68,14 +68,21 @@
             <code class="computeroutput"><span class="keyword">float</span></code>, <code class="computeroutput"><span class="keyword">double</span></code>,
             <code class="computeroutput"><span class="identifier">complex</span><span class="special">&amp;</span><span class="identifier">lt</span><span class="special">;</span> <span class="keyword">double</span> <span class="special">&amp;</span><span class="identifier">gt</span><span class="special">;</span></code>.</p>
           </li>
+<li class="listitem">
+            <p><span class="bold"><strong>stepper_category</strong></span></p>
+<p><code class="computeroutput"><span class="identifier">Stepper</span><span class="special">::</span><span class="identifier">stepper_category</span></code></p>
+<p>A
+            tag type characterizing the category of the stepper. This type must be
+            convertible to <code class="computeroutput"><span class="identifier">dense_output_stepper_tag</span></code>.</p>
+          </li>
 </ul></div>
 <h5>
 <a name="boost_numeric_odeint.concepts.dense_output_stepper.h2"></a>
-        <span class="phrase"><a name="boost_numeric_odeint.concepts.dense_output_stepper.notation"></a></span><a class="link" href="dense_output_stepper.html#boost_numeric_odeint.concepts.dense_output_stepper.notation">Notation</a>
+        <span><a name="boost_numeric_odeint.concepts.dense_output_stepper.notation"></a></span><a class="link" href="dense_output_stepper.html#boost_numeric_odeint.concepts.dense_output_stepper.notation">Notation</a>
       </h5>
 <div class="variablelist">
 <p class="title"><b></b></p>
-<dl class="variablelist">
+<dl>
 <dt><span class="term"><code class="computeroutput"><span class="identifier">Stepper</span></code></span></dt>
 <dd><p>
               A type that is a model of Dense Output Stepper
@@ -108,7 +115,7 @@
 </div>
 <h5>
 <a name="boost_numeric_odeint.concepts.dense_output_stepper.h3"></a>
-        <span class="phrase"><a name="boost_numeric_odeint.concepts.dense_output_stepper.valid_expressions"></a></span><a class="link" href="dense_output_stepper.html#boost_numeric_odeint.concepts.dense_output_stepper.valid_expressions">Valid
+        <span><a name="boost_numeric_odeint.concepts.dense_output_stepper.valid_expressions"></a></span><a class="link" href="dense_output_stepper.html#boost_numeric_odeint.concepts.dense_output_stepper.valid_expressions">Valid
         Expressions</a>
       </h5>
 <div class="informaltable"><table class="table">
@@ -272,9 +279,9 @@
 </table></div>
 <h5>
 <a name="boost_numeric_odeint.concepts.dense_output_stepper.h4"></a>
-        <span class="phrase"><a name="boost_numeric_odeint.concepts.dense_output_stepper.models"></a></span><a class="link" href="dense_output_stepper.html#boost_numeric_odeint.concepts.dense_output_stepper.models">Models</a>
+        <span><a name="boost_numeric_odeint.concepts.dense_output_stepper.models"></a></span><a class="link" href="dense_output_stepper.html#boost_numeric_odeint.concepts.dense_output_stepper.models">Models</a>
       </h5>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
             <code class="computeroutput"><span class="identifier">dense_output_controlled_explicit_fsal</span><span class="special">&lt;</span> <span class="identifier">controlled_error_stepper_fsal</span><span class="special">&lt;</span> <span class="identifier">runge_kutta_dopri5</span>
             <span class="special">&gt;</span></code>
