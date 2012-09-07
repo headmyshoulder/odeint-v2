@@ -28,7 +28,6 @@ exe list_lattice : list_lattice.cpp ;
 exe stepper_details : stepper_details.cpp ;
 exe my_vector : my_vector.cpp ;
 exe lorenz_point : lorenz_point.cpp ;
-exe bs_bug : bs_bug.cpp ;
 exe van_der_pol_stiff : van_der_pol_stiff.cpp ;
 exe simple1d : simple1d.cpp ;
 exe stochastic_euler : stochastic_euler.cpp : <cxxflags>-std=c++0x ;
