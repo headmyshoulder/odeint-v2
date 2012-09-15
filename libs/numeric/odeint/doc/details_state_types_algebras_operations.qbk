@@ -100,18 +100,24 @@ By default, odeint now expects the support of `boost::size(x)` and a
     [`void`] [Resizes x to have the same size as y.]]
 ]
 
-[section Vectors derived from `std::vector`]
-
-As a first example we take the most simple case and implement our own vector
-`my_vector` which will be derived from `std::vector`.
-Using `std::vector` as base class ensures that resizing and iteration via
-__boost_range work out-of-box.
-The only thing that has to be done is declaring my_vector as resizeable as it
-is a dynamically sized array:
-
+[section Using the container interface]
 [import ../examples/my_vector.cpp]
 
+As a first example we take the most simple case and implement our own vector
+`my_vector` which will provide a container interface.
+This makes __boost_range working out-of-box.
+We add a little functionality to our vector which makes it allocate some 
+default capacity by construction.
+This is helpful when using resizing as then a resize can be assured to not 
+require a new allocation.
+
 [my_vector]
+
+
+The only thing that has to be done other than defining is thus declaring 
+my_vector as resizeable:
+
+[my_vector_resizeable]
 
 If we wouldn't specialize the `is_resizeable` template, the code would still
 compile but odeint would not adjust the size of temporary internal instances

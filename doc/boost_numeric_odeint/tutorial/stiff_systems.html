@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Stiff systems</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.77.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../tutorial.html" title="Tutorial">
 <link rel="prev" href="chaotic_systems_and_lyapunov_exponents.html" title="Chaotic systems and Lyapunov exponents">
@@ -82,20 +82,20 @@
 
 <span class="keyword">struct</span> <span class="identifier">stiff_system</span>
 <span class="special">{</span>
-	<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">State</span> <span class="special">&gt;</span>
-	<span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span>
-	<span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">State</span> <span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span>
+    <span class="special">{</span>
         <span class="special">...</span>
-	<span class="special">}</span>
+    <span class="special">}</span>
 <span class="special">};</span>
 
 <span class="keyword">struct</span> <span class="identifier">stiff_system_jacobi</span>
 <span class="special">{</span>
-	<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">State</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Matrix</span> <span class="special">&gt;</span>
-	<span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">Matrix</span> <span class="special">&amp;</span><span class="identifier">J</span> <span class="special">,</span> <span class="keyword">const</span> <span class="keyword">double</span> <span class="special">&amp;</span><span class="identifier">t</span> <span class="special">,</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">dfdt</span> <span class="special">)</span>
-	<span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">State</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Matrix</span> <span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">Matrix</span> <span class="special">&amp;</span><span class="identifier">J</span> <span class="special">,</span> <span class="keyword">const</span> <span class="keyword">double</span> <span class="special">&amp;</span><span class="identifier">t</span> <span class="special">,</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">dfdt</span> <span class="special">)</span>
+    <span class="special">{</span>
         <span class="special">...</span>
-	<span class="special">}</span>
+    <span class="special">}</span>
 <span class="special">};</span>
 </pre>
 <p>
