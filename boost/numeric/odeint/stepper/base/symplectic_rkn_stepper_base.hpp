@@ -33,6 +33,10 @@
 
 #include <boost/numeric/odeint/stepper/base/algebra_stepper_base.hpp>
 
+#include <iostream>
+#define tab "\t"
+using namespace std;
+
 
 
 namespace boost {
@@ -89,23 +93,10 @@ public:
     typedef boost::array< value_type , num_of_stages > coef_type;
 
     symplectic_nystroem_stepper_base( const coef_type &coef_a , const coef_type &coef_b , const algebra_type &algebra = algebra_type() )
-    : algebra_stepper_base_type( algebra ) , m_coef_a( coef_a ) , m_coef_b( coef_b )
+        : algebra_stepper_base_type( algebra ) , m_coef_a( coef_a ) , m_coef_b( coef_b ) ,
+          m_dqdt_resizer() , m_dpdt_resizer() , m_dqdt() , m_dpdt() 
     { }
 
-    symplectic_nystroem_stepper_base( const symplectic_nystroem_stepper_base &stepper )
-    : m_coef_a( stepper.m_coef_a ) , m_coef_b( stepper.m_coef_b ) ,
-      m_dqdt_resizer( stepper.m_dqdt_resizer ) , m_dpdt_resizer( stepper.m_dpdt_resizer ) ,
-      m_dqdt( stepper.m_dqdt ) , m_dpdt( stepper.m_dpdt )
-    { }
-
-    symplectic_nystroem_stepper_base& operator = ( const symplectic_nystroem_stepper_base &stepper )
-    {
-        m_dqdt_resizer = stepper.m_dqdt_resizer;
-        m_dpdt_resizer = stepper.m_dpdt_resizer;
-        m_dqdt = stepper.m_dqdt;
-        m_dpdt = stepper.m_dpdt;
-        return *this;
-    }
 
     order_type order( void ) const
     {

@@ -41,7 +41,6 @@
 #include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 
-//#include <boost/numeric/odeint/util/state_wrapper.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
 

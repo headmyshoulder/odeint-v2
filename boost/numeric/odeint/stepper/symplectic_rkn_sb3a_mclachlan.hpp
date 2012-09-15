@@ -33,6 +33,13 @@ namespace odeint {
 namespace detail {
 namespace symplectic_rkn_sb3a_mclachlan {
 
+    /*
+      exp( a1 t A ) exp( b1 t B )
+      exp( a2 t A ) exp( b2 t B )
+      exp( a3 t A ) exp( b3 t B ) exp( a3 t A )
+      exp( b2 t B ) exp( a2 t A )
+      exp( b1 t B ) exp( a1 t A )
+    */
 
     template< class Value >
     struct coef_a_type : public boost::array< Value , 6 >
@@ -105,18 +112,6 @@ public:
             detail::symplectic_rkn_sb3a_mclachlan::coef_b_type< value_type >() ,
             algebra )
     { }
-
-
-    symplectic_rkn_sb3a_mclachlan( const symplectic_rkn_sb3a_mclachlan &stepper )
-        : stepper_base_type( stepper )
-    { }
-
-    symplectic_rkn_sb3a_mclachlan& operator = ( const symplectic_rkn_sb3a_mclachlan &stepper )
-    {
-        stepper_base_type::operator=( stepper );
-        return *this;
-    }
-
 };
 
 

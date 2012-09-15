@@ -38,7 +38,7 @@ struct coef_a_type : public boost::array< Value , 1 >
 {
     coef_a_type( void )
     {
-        (*this)[0] = 1.0;
+        (*this)[0] = static_cast< Value >( 1 );
     }
 };
 
