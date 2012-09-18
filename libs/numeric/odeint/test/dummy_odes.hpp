@@ -1,0 +1,65 @@
+/*
+  [auto_generated]
+  libs/numeric/odeint/test/dummy_odes.hpp
+
+  [begin_description]
+  tba.
+  [end_description]
+
+  Copyright 2009-2012 Karsten Ahnert
+  Copyright 2009-2012 Mario Mulansky
+
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or
+  copy at http://www.boost.org/LICENSE_1_0.txt)
+*/
+
+
+#ifndef LIBS_NUMERIC_ODEINT_TEST_DUMMY_ODES_HPP_DEFINED
+#define LIBS_NUMERIC_ODEINT_TEST_DUMMY_ODES_HPP_DEFINED
+
+#include "vector_space_1d.hpp"
+
+
+struct constant_mom_func
+{
+    template< class StateIn , class StateOut >
+    void operator()( const StateIn &q , StateOut &dp ) const
+    {
+        dp[0] = 1.0;
+    }
+};
+
+struct default_coor_func
+{
+    template< class StateIn , class StateOut >
+    void operator()( const StateIn &p , StateOut &dq ) const
+    {
+        dq[0] = p[0];
+    }
+};
+
+
+
+struct constant_mom_func_vector_space_1d
+{
+    template< class T >
+    void operator()( const vector_space_1d< T > &q , vector_space_1d< T > &dp ) const
+    {
+        dp.m_x = 1.0;
+    }
+};
+
+struct default_coor_func_vector_space_1d
+{
+    template< class T >
+    void operator()( const vector_space_1d< T > &p , vector_space_1d< T > &dq ) const
+    {
+        dq.m_x = p.m_x;
+    }
+};
+
+
+
+
+#endif // LIBS_NUMERIC_ODEINT_TEST_DUMMY_ODES_HPP_DEFINED

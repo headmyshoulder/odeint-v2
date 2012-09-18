@@ -30,7 +30,6 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/zip_view.hpp>
 #include <boost/mpl/vector_c.hpp>
-#include <boost/mpl/range_c.hpp>
 #include <boost/mpl/insert_range.hpp>
 #include <boost/mpl/end.hpp>
 #include <boost/mpl/size.hpp>
@@ -38,19 +37,18 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/inserter.hpp>
 #include <boost/mpl/at.hpp>
-// #include <boost/mpl/for_each.hpp>
+
 #include <boost/fusion/container/vector.hpp>
 
+#include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 #include <boost/numeric/odeint/stepper/symplectic_euler.hpp>
 #include <boost/numeric/odeint/stepper/symplectic_rkn_sb3a_mclachlan.hpp>
 #include <boost/numeric/odeint/stepper/symplectic_rkn_sb3a_m4_mclachlan.hpp>
 
 #include "diagnostic_state_type.hpp"
 #include "const_range.hpp"
-
-#include <iostream>
-#include <typeinfo>
-using namespace std;
+#include "dummy_odes.hpp"
+#include "vector_space_1d.hpp"
 
 
 
@@ -63,18 +61,24 @@ class custom_range_algebra : public range_algebra { };
 class custom_default_operations : public default_operations { };
 
 
-template< class Resizer >
-class vector_steppers : public mpl::vector<
-    symplectic_euler< diagnostic_state_type , diagnostic_state_type2 , double ,
-                      diagnostic_deriv_type , diagnostic_deriv_type2 , double ,
-                      custom_range_algebra , custom_default_operations , Resizer > ,
-    symplectic_rkn_sb3a_mclachlan< diagnostic_state_type , diagnostic_state_type2 , double ,
-                                   diagnostic_deriv_type , diagnostic_deriv_type2 , double ,
-                                   custom_range_algebra , custom_default_operations , Resizer > ,
-    symplectic_rkn_sb3a_m4_mclachlan< diagnostic_state_type , diagnostic_state_type2 , double ,
-                                      diagnostic_deriv_type , diagnostic_deriv_type2 , double ,
-                                      custom_range_algebra , custom_default_operations , Resizer > 
+template< class Coor , class Mom , class Value , class CoorDeriv , class MomDeriv , class Time ,
+          class Algebra , class Operations , class Resizer >
+class complete_steppers : public mpl::vector<
+    symplectic_euler< Coor , Mom , Value , CoorDeriv , MomDeriv , Time ,
+                      Algebra , Operations , Resizer > ,
+    symplectic_rkn_sb3a_mclachlan< Coor , Mom , Value , CoorDeriv , MomDeriv , Time ,
+                      Algebra , Operations , Resizer > ,
+    symplectic_rkn_sb3a_m4_mclachlan< Coor , Mom , Value , CoorDeriv , MomDeriv , Time ,
+                      Algebra , Operations , Resizer >
     > {};
+
+template< class Resizer >
+class vector_steppers : public complete_steppers<
+    diagnostic_state_type , diagnostic_state_type2 , double ,
+    diagnostic_deriv_type , diagnostic_deriv_type2 , double ,
+    custom_range_algebra , custom_default_operations , Resizer
+    > { };
+
 
 typedef mpl::vector< initially_resizer , always_resizer , never_resizer > resizers;
 typedef mpl::vector_c< int , 1 , 3 , 0 > resizer_multiplicities ;
@@ -107,14 +111,7 @@ typedef mpl::copy<
     >::type all_multiplicities;
                                                                                  
 
-struct constant_system
-{
-    template< class StateIn , class StateOut >
-    void operator()( const StateIn &q , StateOut &dp ) const
-    {
-        dp[0] = 1.0;
-    }
-};
+
 
 
 
@@ -188,9 +185,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_resizing , Stepper , zipped_steppers )
     {
         stepper_type stepper;
         std::pair< diagnostic_state_type , diagnostic_state_type2 > x;
-        stepper.do_step( constant_system() , x , 0.0 , 0.1 );
-        stepper.do_step( constant_system() , x , 0.0 , 0.1 );
-        stepper.do_step( constant_system() , x , 0.0 , 0.1 );
+        stepper.do_step( constant_mom_func() , x , 0.0 , 0.1 );
+        stepper.do_step( constant_mom_func() , x , 0.0 , 0.1 );
+        stepper.do_step( constant_mom_func() , x , 0.0 , 0.1 );
     }
 
     TEST_COUNTERS( counter_state , 0 , 0 , 0 , 0 );
@@ -198,6 +195,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_resizing , Stepper , zipped_steppers )
     TEST_COUNTERS( counter_deriv , multiplicity , 1 , 0 , 1 );
     TEST_COUNTERS( counter_deriv2 , multiplicity , 1 , 0 , 1 );
 }
+
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_copying1 , Stepper , vector_steppers< initially_resizer > )
 {
@@ -217,6 +215,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_copying1 , Stepper , vector_steppers< initia
     TEST_COUNTERS( counter_deriv2 , 0 , 2 , 1 , 2 );
 }
 
+
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_copying2 , Stepper , vector_steppers< initially_resizer > )
 {
     counter_state::init_counter();
@@ -227,7 +226,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_copying2 , Stepper , vector_steppers< initia
     {
         Stepper stepper;
         std::pair< diagnostic_state_type , diagnostic_state_type2 > x;
-        stepper.do_step( constant_system() , x , 0.0 , 0.1 );
+        stepper.do_step( constant_mom_func() , x , 0.0 , 0.1 );
         Stepper stepper2( stepper );
     }
 
@@ -238,22 +237,90 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_copying2 , Stepper , vector_steppers< initia
 }
 
 
-
-
-//[ put in separate file
-// also test boost::ref
-BOOST_AUTO_TEST_CASE( test_do_step_v1 )
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_do_step_v1 , Stepper , vector_steppers< initially_resizer > )
 {
+    Stepper s;
+    std::pair< diagnostic_state_type , diagnostic_state_type2 > x1 , x2 , x3 , x4;
+    x1.first[0] = 1.0;
+    x1.second[0] = 2.0;
+    x2 = x3 = x4 = x1;
+    diagnostic_state_type x5_coor , x5_mom;
+    x5_coor[0] = x1.first[0];
+    x5_mom[0] = x1.second[0];
+
+    s.do_step( constant_mom_func() , x1 , 0.0 , 0.1 );
+
+    s.do_step( std::make_pair( default_coor_func() , constant_mom_func() ) , x2 , 0.0 , 0.1 );
+
+    default_coor_func cf;
+    constant_mom_func mf;
+    s.do_step( std::make_pair( boost::ref( cf ) , boost::ref( mf ) ) , x3 , 0.0 , 0.1 );
+
+    std::pair< default_coor_func , constant_mom_func > pf;
+    s.do_step( boost::ref( pf ) , x4 , 0.0 , 0.1 );
+
+    s.do_step( constant_mom_func() , std::make_pair( boost::ref( x5_coor ) , boost::ref( x5_mom ) ) , 0.0 , 0.1 );
+
+    // checking for absolute values is not possible here, since the steppers are to different
+    BOOST_CHECK_CLOSE( x1.first[0] , x2.first[0] , 1.0e-14 );
+    BOOST_CHECK_CLOSE( x2.first[0] , x3.first[0] , 1.0e-14 );
+    BOOST_CHECK_CLOSE( x3.first[0] , x4.first[0] , 1.0e-14 );
+    BOOST_CHECK_CLOSE( x4.first[0] , x5_coor[0] , 1.0e-14 );
+
+    BOOST_CHECK_CLOSE( x1.second[0] , x2.second[0] , 1.0e-14 );
+    BOOST_CHECK_CLOSE( x2.second[0] , x3.second[0] , 1.0e-14 );
+    BOOST_CHECK_CLOSE( x3.second[0] , x4.second[0] , 1.0e-14 );
+    BOOST_CHECK_CLOSE( x4.second[0] , x5_mom[0] , 1.0e-14 );
 }
 
-BOOST_AUTO_TEST_CASE( test_do_step_v2 )
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_do_step_v2 , Stepper , vector_steppers< initially_resizer > )
 {
+    Stepper s;
+    diagnostic_state_type q , p ;
+    q[0] = 1.0;
+    p[0] = 2.0;
+    diagnostic_state_type q2 = q , p2 = p;
+
+
+    s.do_step( constant_mom_func() , q , p , 0.0 , 0.1 );
+    s.do_step( constant_mom_func() , std::make_pair( boost::ref( q2 ) , boost::ref( p2 ) ) , 0.0 , 0.1 );
+    
+    BOOST_CHECK_CLOSE( q[0] , q2[0] , 1.0e-14 );
+    BOOST_CHECK_CLOSE( p[0] , p2[0] , 1.0e-14 );
 }
-//]
 
-
-BOOST_AUTO_TEST_CASE( test_with_vector_space_algebra )
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_do_step_v3 , Stepper , vector_steppers< initially_resizer > )
 {
+    Stepper s;
+    std::pair< diagnostic_state_type , diagnostic_state_type2 > x_in , x_out;
+    x_in.first[0] = 1.0;
+    x_in.second[0] = 2.0;
+    diagnostic_state_type q2 , p2;
+    q2[0] = x_in.first[0];
+    p2[0] = x_in.second[0];
+
+
+    s.do_step( constant_mom_func() , x_in , 0.0 , x_out , 0.1 );
+    s.do_step( constant_mom_func() , std::make_pair( boost::ref( q2 ) , boost::ref( p2 ) ) , 0.0 , 0.1 );
+    
+    BOOST_CHECK_CLOSE( x_in.first[0] , 1.0 , 1.0e-14 );
+    BOOST_CHECK_CLOSE( x_in.second[0] , 2.0 , 1.0e-14 );
+    BOOST_CHECK_CLOSE( x_out.first[0] , q2[0] , 1.0e-14 );
+    BOOST_CHECK_CLOSE( x_out.second[0] , p2[0] , 1.0e-14 );
+}
+
+
+typedef vector_space_1d< double > vector_space;
+typedef complete_steppers< vector_space , vector_space , double , 
+                           vector_space , vector_space , double , 
+                           vector_space_algebra , default_operations , initially_resizer > vector_space_steppers;
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_with_vector_space_algebra , Stepper , vector_space_steppers )
+{
+    Stepper s;
+    std::pair< vector_space , vector_space > x;
+    s.do_step( constant_mom_func_vector_space_1d() , x , 0.0 , 0.1 );
+
+    s.do_step( std::make_pair( default_coor_func_vector_space_1d() , constant_mom_func_vector_space_1d() ) , x , 0.0 , 0.1 );
 }
 
 BOOST_AUTO_TEST_CASE( test_with_fusion_algebra )
