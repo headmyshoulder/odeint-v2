@@ -6,8 +6,8 @@
  Default integrate times implementation.
  [end_description]
 
- Copyright 2009-2011 Karsten Ahnert
- Copyright 2009-2011 Mario Mulansky
+ Copyright 2009-2012 Karsten Ahnert
+ Copyright 2009-2012 Mario Mulansky
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
@@ -118,7 +118,10 @@ size_t integrate_times(
 )
 {
      typename odeint::unwrap_reference< Observer >::type &obs = observer;
-
+	 
+     if( start_time == end_time )
+         return 0;
+		 
      Time last_time_point = *(end_time-1);
 
      stepper.initialize( start_state , *start_time , dt );
@@ -127,8 +130,7 @@ size_t integrate_times(
      size_t count = 0;
      while( start_time != end_time )
      {
-         while( less_eq_with_sign( *start_time , stepper.current_time() , stepper.current_time_step() )
-                && ( start_time != end_time ) )
+         while( ( start_time != end_time ) && less_eq_with_sign( *start_time , stepper.current_time() , stepper.current_time_step() ) )
          {
              stepper.calc_state( *start_time , start_state );
              obs( start_state , *start_time );
@@ -150,8 +152,6 @@ size_t integrate_times(
              ++count;
          }
      }
-     // do the last step
-
      return count;
 }
 

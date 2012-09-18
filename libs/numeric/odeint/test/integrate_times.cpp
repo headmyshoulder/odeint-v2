@@ -30,7 +30,8 @@
 #include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
 #include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
-#include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>
+#include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>#
+#include <boost/numeric/odeint/stepper/dense_output_runge_kutta.hpp>
 #include <boost/numeric/odeint/integrate/integrate_times.hpp>
 
 using namespace boost::unit_test;
@@ -107,6 +108,17 @@ BOOST_AUTO_TEST_CASE( test_integrate_times )
 
 
     // dense output stepper
+	
+    integrate_times( dense_output_runge_kutta< controlled_runge_kutta< runge_kutta_dopri5< state_type > > >() ,
+                     lorenz , x ,
+                     boost::counting_iterator<int>(0) , boost::counting_iterator<int>(10) ,
+                     dt , push_back_time( times ) );
+
+    for( int i=0 ; i<10 ; ++i )
+        // check if observer was called at times 0,1,2,...
+        BOOST_CHECK_EQUAL( times[i] , static_cast<double>(i) );
+		
+		
     integrate_times( bulirsch_stoer_dense_out< state_type >() , lorenz , x ,
                 boost::counting_iterator<int>(0) , boost::counting_iterator<int>(10) ,
                 dt , push_back_time( times ) );

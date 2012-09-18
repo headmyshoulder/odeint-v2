@@ -101,7 +101,7 @@ struct perform_integrate_const_test
 
         int steps = times.size()-1;
 
-        std::cout << t_end << " (" << dt << "), " << steps << " , " << times.size() << " , " << 10.0+dt*steps << "=" << x_end[0] << std::endl;
+        //std::cout << t_end << " (" << dt << "), " << steps << " , " << times.size() << " , " << 10.0+dt*steps << "=" << x_end[0] << std::endl;
 
         BOOST_CHECK_EQUAL( static_cast<int>(times.size()) , static_cast<int>(floor(t_end/dt))+1 );
 
@@ -151,7 +151,7 @@ struct perform_integrate_adaptive_test
 template< class Stepper >
 struct perform_integrate_times_test
 {
-    void operator()( const int n = 10 , const int dn=1 , const value_type dt = 0.01 )
+    void operator()( const int n = 10 , const int dn=1 , const value_type dt = 0.03 )
     {
         std::cout << "Testing integrate_times with " << typeid( Stepper ).name() << std::endl;
 
@@ -164,8 +164,9 @@ struct perform_integrate_times_test
         for( int i=0 ; boost::numeric::odeint::detail::less_with_sign( i ,
                        static_cast<int>(obs_times.size()) ,
                        dt ) ; i+=dn )
+        {
             obs_times[i] = i;
-
+        }
         // simple stepper
         integrate_times( Stepper() , lorenz , x , obs_times.begin() , obs_times.end() ,
                     dt , push_back_time( times , x_end ) );
@@ -209,6 +210,7 @@ struct perform_integrate_n_steps_test
         BOOST_CHECK_SMALL( (10.0 + end_time) - x_end[0] , 1E-6 ); // precision of steppers: 1E-6
 //        BOOST_CHECK_EQUAL( x[1] , x_end[1] );
 //        BOOST_CHECK_EQUAL( x[2] , x_end[2] );
+
     }
 };
 
