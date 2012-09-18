@@ -35,5 +35,6 @@
   [[Dense Output Rosenbrock 4] [`rosenbrock4_dense_output`] [__dense_output_stepper] [__implicit_system] [4] [Yes] [Yes] [No] [Controlled Rosenbrock 4 with dense output. Works only with __ublas vectors as state types.]]
 
   [[Symplectic Euler] [`symplectic_euler`] [__stepper] [__symplectic_system __simple_symplectic_system] [1] [No] [No] [No] [Basic symplectic solver for separable Hamiltonian system]]
-  [[Symplectic RKN McLachlan] [`symplectic_rkn_sb3a_mclachlan`] [__stepper] [__symplectic_system __simple_symplectic_system] [6] [No] [No] [No] [Symplectic solver for separable Hamiltonian system with order 6]]
+  [[Symplectic RKN McLachlan] [`symplectic_rkn_sb3a_mclachlan`] [__stepper] [__symplectic_system __simple_symplectic_system] [4] [No] [No] [No] [Symplectic solver for separable Hamiltonian system with 6 stages and order 4.]]
+  [[Symplectic RKN McLachlan] [`symplectic_rkn_sb3a_m4_mclachlan`] [__stepper] [__symplectic_system __simple_symplectic_system] [4] [No] [No] [No] [Symplectic solver with 5 stages and order 4, can be used with arbirary precision types.]]
 ]
