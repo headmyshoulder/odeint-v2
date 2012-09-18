@@ -46,45 +46,6 @@ template<> struct algebra_dispatcher< array_type > { typedef array_algebra type;
 template<> struct algebra_dispatcher< vector_space_type > { typedef vector_space_algebra type; };
 template<> struct algebra_dispatcher< double > { typedef vector_space_algebra type; };
 
-/* rhs functors/functions for different state types */
-struct constant_system_functor_standard
-{
-    template< class State , class Deriv , class Time >
-    void operator()( const State &x , Deriv &dxdt , const Time t ) const
-    {
-        dxdt[0] = 1.0;
-    }
-};
-
-struct constant_system_functor_vector_space
-{
-    template< class State , class Deriv , class Time >
-    void operator()( const State &x , Deriv &dxdt , const Time t  ) const
-    {
-        dxdt.m_x = 1.0;
-    }
-};
-
-struct constant_system_functor_fusion
-{
-    template< class State , class Deriv , class Time >
-    void operator()( const State &x , Deriv &dxdt , const Time t ) const
-    {
-        fusion::at_c< 0 >( dxdt ) = fusion::at_c< 0 >( x ) / Time( 1.0 );
-    }
-};
-
-template< class State , class Deriv , class Time >
-void constant_system_standard( const State &x , Deriv &dxdt , const Time t )
-{ dxdt[0] = 1.0; }
-
-template< class State , class Deriv , class Time >
-void constant_system_vector_space( const State &x , Deriv &dxdt , const Time t ) 
-{ dxdt.m_x = 1.0; }
-
-template< class State , class Deriv , class Time >
-void constant_system_fusion( const State &x , Deriv &dxdt , const Time t ) 
-{ fusion::at_c< 0 >( dxdt ) = fusion::at_c< 0 >( x ) / Time( 1.0 ); }
 
 
 /*

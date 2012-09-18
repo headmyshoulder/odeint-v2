@@ -56,7 +56,7 @@
 #include <boost/numeric/odeint/stepper/runge_kutta_fehlberg78.hpp>
 
 #include "prepare_stepper_testing.hpp"
-
+#include "dummy_odes.hpp"
 
 using std::vector;
 
