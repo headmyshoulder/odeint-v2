@@ -54,7 +54,7 @@
 #include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
 
 #include "prepare_stepper_testing.hpp"
-
+#include "dummy_odes.hpp"
 
 using std::vector;
 

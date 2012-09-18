@@ -20,7 +20,62 @@
 
 #include "vector_space_1d.hpp"
 
+#include <boost/fusion/include/at_c.hpp>
 
+/*
+ * rhs functors/functions for different state types
+ */
+struct constant_system_functor_standard
+{
+    template< class State , class Deriv , class Time >
+    void operator()( const State &x , Deriv &dxdt , const Time t ) const
+    {
+        dxdt[0] = 1.0;
+    }
+};
+
+struct constant_system_functor_vector_space
+{
+    template< class State , class Deriv , class Time >
+    void operator()( const State &x , Deriv &dxdt , const Time t  ) const
+    {
+        dxdt.m_x = 1.0;
+    }
+};
+
+struct constant_system_functor_fusion
+{
+    template< class State , class Deriv , class Time >
+    void operator()( const State &x , Deriv &dxdt , const Time t ) const
+    {
+        boost::fusion::at_c< 0 >( dxdt ) = boost::fusion::at_c< 0 >( x ) / Time( 1.0 );
+    }
+};
+
+template< class State , class Deriv , class Time >
+void constant_system_standard( const State &x , Deriv &dxdt , const Time t )
+{
+    dxdt[0] = 1.0;
+}
+
+template< class State , class Deriv , class Time >
+void constant_system_vector_space( const State &x , Deriv &dxdt , const Time t ) 
+{
+    dxdt.m_x = 1.0;
+}
+
+template< class State , class Deriv , class Time >
+void constant_system_fusion( const State &x , Deriv &dxdt , const Time t ) 
+{
+    boost::fusion::at_c< 0 >( dxdt ) = boost::fusion::at_c< 0 >( x ) / Time( 1.0 );
+}
+
+
+
+
+/*
+ * rhs functors for symplectic steppers
+ */
 struct constant_mom_func
 {
     template< class StateIn , class StateOut >
