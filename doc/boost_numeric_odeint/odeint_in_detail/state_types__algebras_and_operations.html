@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>State types, algebras and operations</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.77.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../odeint_in_detail.html" title="odeint in detail">
 <link rel="prev" href="iterators.html" title="Iterators">
@@ -56,7 +56,7 @@
         and maybe how to allocate memory (resizing). All in all, the following things
         have to be taken care of when odeint is used with non-standard state types:
       </p>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
             construction/destruction
           </li>
@@ -78,8 +78,8 @@
 <a name="boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations.construction_resizing"></a><a class="link" href="state_types__algebras_and_operations.html#boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations.construction_resizing" title="Construction/Resizing">Construction/Resizing</a>
 </h4></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="state_types__algebras_and_operations.html#boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations.construction_resizing.vectors_derived_from__std__vector_">Vectors
-          derived from <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span></code></a></span></dt>
+<dt><span class="section"><a href="state_types__algebras_and_operations.html#boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations.construction_resizing.using_the_container_interface">Using
+          the container interface</a></span></dt>
 <dt><span class="section"><a href="state_types__algebras_and_operations.html#boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations.construction_resizing.std__list">std::list</a></span></dt>
 </dl></div>
 <p>
@@ -380,40 +380,58 @@
 </table></div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations.construction_resizing.vectors_derived_from__std__vector_"></a><a class="link" href="state_types__algebras_and_operations.html#boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations.construction_resizing.vectors_derived_from__std__vector_" title="Vectors derived from std::vector">Vectors
-          derived from <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span></code></a>
+<a name="boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations.construction_resizing.using_the_container_interface"></a><a class="link" href="state_types__algebras_and_operations.html#boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations.construction_resizing.using_the_container_interface" title="Using the container interface">Using
+          the container interface</a>
 </h5></div></div></div>
 <p>
             As a first example we take the most simple case and implement our own
             vector <code class="computeroutput"><span class="identifier">my_vector</span></code> which
-            will be derived from <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span></code>.
-            Using <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span></code> as base class ensures that resizing
-            and iteration via <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
-            work out-of-box. The only thing that has to be done is declaring my_vector
-            as resizeable as it is a dynamically sized array:
+            will provide a container interface. This makes <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
+            working out-of-box. We add a little functionality to our vector which
+            makes it allocate some default capacity by construction. This is helpful
+            when using resizing as then a resize can be assured to not require a
+            new allocation.
           </p>
 <p>
 </p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">my_vector</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="identifier">MAX_N</span> <span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">my_vector</span>
 <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">vector</span><span class="special">;</span>
+
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">vector</span><span class="special">::</span><span class="identifier">iterator</span> <span class="identifier">iterator</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">vector</span><span class="special">::</span><span class="identifier">const_iterator</span> <span class="identifier">const_iterator</span><span class="special">;</span>
+
 <span class="keyword">public</span><span class="special">:</span>
     <span class="identifier">my_vector</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">N</span> <span class="special">)</span>
-        <span class="special">:</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;(</span> <span class="identifier">N</span> <span class="special">)</span>
-    <span class="special">{</span> <span class="special">}</span>
+        <span class="special">:</span> <span class="identifier">m_v</span><span class="special">(</span> <span class="identifier">N</span> <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">m_v</span><span class="special">.</span><span class="identifier">reserve</span><span class="special">(</span> <span class="identifier">MAX_N</span> <span class="special">);</span>
+    <span class="special">}</span>
 
     <span class="identifier">my_vector</span><span class="special">()</span>
-        <span class="special">:</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;()</span>
-    <span class="special">{</span> <span class="special">}</span>
+        <span class="special">:</span> <span class="identifier">m_v</span><span class="special">()</span>
+    <span class="special">{</span>
+        <span class="identifier">m_v</span><span class="special">.</span><span class="identifier">reserve</span><span class="special">(</span> <span class="identifier">MAX_N</span> <span class="special">);</span>
+    <span class="special">}</span>
 
-<span class="comment">// ...</span>
-<span class="special">};</span>
-
-<span class="comment">// define my_vector as reizeable</span>
+<span class="comment">// ... [ implement container interface ]</span>
+</pre>
+<p>
+          </p>
+<p>
+            The only thing that has to be done other than defining is thus declaring
+            my_vector as resizeable:
+          </p>
+<p>
+</p>
+<pre class="programlisting"><span class="comment">// define my_vector as reizeable</span>
 
 <span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">numeric</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">odeint</span> <span class="special">{</span>
 
-<span class="keyword">template</span><span class="special">&lt;&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">is_resizeable</span><span class="special">&lt;</span> <span class="identifier">my_vector</span> <span class="special">&gt;</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="identifier">size_t</span> <span class="identifier">N</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">is_resizeable</span><span class="special">&lt;</span> <span class="identifier">my_vector</span><span class="special">&lt;</span><span class="identifier">N</span><span class="special">&gt;</span> <span class="special">&gt;</span>
 <span class="special">{</span>
     <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">true_type</span> <span class="identifier">type</span><span class="special">;</span>
     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="identifier">type</span><span class="special">::</span><span class="identifier">value</span><span class="special">;</span>
@@ -595,7 +613,7 @@
           library. If your state type is not supported by <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
           there are several possibilities to tell odeint how to do algebraic operations:
         </p>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
               Implement <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">begin</span></code> and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">end</span></code>
               for your state type so it works with <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>.
@@ -1279,7 +1297,7 @@
 <p>
           to be continued
         </p>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
               thrust
             </li>
@@ -1294,8 +1312,8 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2009-2011 Karsten Ahnert
-      and Mario Mulansky<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009-2012 Karsten
+      Ahnert and Mario Mulansky<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

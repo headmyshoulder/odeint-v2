@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Steppers</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.77.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../odeint_in_detail.html" title="odeint in detail">
 <link rel="prev" href="../odeint_in_detail.html" title="odeint in detail">
@@ -263,7 +263,7 @@
         </p>
 <p>
           Symplectic systems can be solved by odeint by means of the symplectic_euler
-          stepper and a symplectic Runge-Kutta-Nystrom method of sixth-order. These
+          stepper and a symplectic Runge-Kutta-Nystrom method of fourth order. These
           steppers assume that the system is autonomous, hence the time will not
           explicitly occur. Further they fulfill in principle the default Stepper
           concept, but they expect the system to be a pair of callable objects. The
@@ -929,7 +929,7 @@
           user is left with the question of which stepper fits his needs. Our personal
           recommendations are:
         </p>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
               <code class="computeroutput"><span class="identifier">runge_kutta_dopri5</span></code>
               is maybe the best default stepper. It has step size control as well
@@ -1927,7 +1927,7 @@
                 </td>
 <td>
                   <p>
-                    6
+                    4
                   </p>
                 </td>
 <td>
@@ -1947,8 +1947,58 @@
                 </td>
 <td>
                   <p>
-                    Symplectic solver for separable Hamiltonian system with order
-                    6
+                    Symplectic solver for separable Hamiltonian system with 6 stages
+                    and order 4.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    Symplectic RKN McLachlan
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">symplectic_rkn_sb3a_m4_mclachlan</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../concepts/symplectic_system.html" title="Symplectic System">Symplectic
+                    System</a> <a class="link" href="../concepts/simple_symplectic_system.html" title="Simple Symplectic System">Simple
+                    Symplectic System</a>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    4
+                  </p>
+                </td>
+<td>
+                  <p>
+                    No
+                  </p>
+                </td>
+<td>
+                  <p>
+                    No
+                  </p>
+                </td>
+<td>
+                  <p>
+                    No
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Symplectic solver with 5 stages and order 4, can be used with
+                    arbirary precision types.
                   </p>
                 </td>
 </tr>
@@ -2056,7 +2106,7 @@
           This is all. It is quite simple and the stochastic Euler stepper implement
           here is quite general. Of course it can be enhanced, for example
         </p>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
               use of operations and algebras as well as the resizing mechanism for
               maximal flexibility and portability
@@ -2141,7 +2191,7 @@
 </h4></div></div></div>
 <p>
           odeint provides a C++ template meta-algorithm for constructing arbitrary
-          Runge-Kutta schemes <a href="#ftn.boost_numeric_odeint.odeint_in_detail.steppers.writing_own_runge_kutta_steppers.f0" class="footnote"><sup class="footnote"><a name="boost_numeric_odeint.odeint_in_detail.steppers.writing_own_runge_kutta_steppers.f0"></a>[1]</sup></a>. Some schemes are predefined in odeint, for example the classical
+          Runge-Kutta schemes <sup>[<a name="boost_numeric_odeint.odeint_in_detail.steppers.writing_own_runge_kutta_steppers.f0" href="#ftn.boost_numeric_odeint.odeint_in_detail.steppers.writing_own_runge_kutta_steppers.f0" class="footnote">1</a>]</sup>. Some schemes are predefined in odeint, for example the classical
           Runge-Kutta of fourth order, or the Runge-Kutta-Cash-Karp 54 and the Runge-Kutta-Fehlberg
           78 method. Of course, you can use this meta algorithm to construct you
           own solvers. This has the advantage that you can make full use of odeint's
@@ -2290,8 +2340,8 @@ c3 = 2/3, a31 =  0 , a32 = 2/3
         </p>
 </div>
 <div class="footnotes">
-<br><hr style="width:100; align:left;">
-<div id="ftn.boost_numeric_odeint.odeint_in_detail.steppers.writing_own_runge_kutta_steppers.f0" class="footnote"><p><a href="#boost_numeric_odeint.odeint_in_detail.steppers.writing_own_runge_kutta_steppers.f0" class="para"><sup class="para">[1] </sup></a>
+<br><hr width="100" align="left">
+<div class="footnote"><p><sup>[<a name="ftn.boost_numeric_odeint.odeint_in_detail.steppers.writing_own_runge_kutta_steppers.f0" href="#boost_numeric_odeint.odeint_in_detail.steppers.writing_own_runge_kutta_steppers.f0" class="para">1</a>] </sup>
             M. Mulansky, K. Ahnert, Template-Metaprogramming applied to numerical
             problems, <a href="http://arxiv.org/abs/1110.3233" target="_top">arxiv:1110.3233</a>
           </p></div>
@@ -2299,8 +2349,8 @@ c3 = 2/3, a31 =  0 , a32 = 2/3
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2009-2011 Karsten Ahnert
-      and Mario Mulansky<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009-2012 Karsten
+      Ahnert and Mario Mulansky<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
