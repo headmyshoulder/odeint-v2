@@ -482,7 +482,7 @@ private:
 
     bool should_reject( value_type error , size_t k ) const
     {
-        if( (k == m_current_k_opt-1) )
+        if( k == m_current_k_opt-1 )
         {
             const value_type d = m_interval_sequence[m_current_k_opt] * m_interval_sequence[m_current_k_opt+1] /
                 (m_interval_sequence[0]*m_interval_sequence[0]);
