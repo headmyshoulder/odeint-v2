@@ -23,7 +23,9 @@ project
 test-suite "odeint"
     :
     [ run euler_stepper.cpp ]
-    [ run stepper_concepts.cpp ]
+    [ run runge_kutta_concepts.cpp ]
+    [ run runge_kutta_error_concepts.cpp ]
+    [ run runge_kutta_controlled_concepts.cpp ]
     [ run resizing.cpp ]
     [ run default_operations.cpp ]
     [ run range_algebra.cpp ]

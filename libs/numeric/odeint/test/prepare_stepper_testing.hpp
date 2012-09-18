@@ -19,41 +19,75 @@
 
 #include <boost/array.hpp>
 #include <vector>
+#include <boost/fusion/sequence.hpp>
 
 #include <boost/mpl/vector.hpp>
 
+#include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
+#include <boost/numeric/odeint/algebra/array_algebra.hpp>
+
+#include "vector_space_1d.hpp"
+
 namespace mpl = boost::mpl;
+namespace fusion = boost::fusion;
 
+using namespace boost::numeric::odeint;
 
-struct constant_system_standard
+/* the state types that will be tested */
+typedef std::vector< double > vector_type;
+typedef vector_space_1d< double > vector_space_type;
+typedef boost::array< double , 1 > array_type;
+
+typedef mpl::vector< vector_type , vector_space_type , array_type >::type container_types;
+
+/* choose the right algebra */
+template< class State > struct algebra_dispatcher { typedef range_algebra type; };
+template<> struct algebra_dispatcher< array_type > { typedef array_algebra type; };
+template<> struct algebra_dispatcher< vector_space_type > { typedef vector_space_algebra type; };
+template<> struct algebra_dispatcher< double > { typedef vector_space_algebra type; };
+
+/* rhs functors/functions for different state types */
+struct constant_system_functor_standard
 {
     template< class State , class Deriv , class Time >
-    void operator()( const State &x , Deriv &dxdt , const Time &t ) const
+    void operator()( const State &x , Deriv &dxdt , const Time t ) const
     {
         dxdt[0] = 1.0;
     }
 };
 
-struct constant_system_vector_space
+struct constant_system_functor_vector_space
 {
     template< class State , class Deriv , class Time >
-    void operator()( const State &x , class Deriv &dxdt , const Time &t  ) const
+    void operator()( const State &x , Deriv &dxdt , const Time t  ) const
     {
         dxdt.m_x = 1.0;
     }
 };
 
-struct constant_system_fusion
+struct constant_system_functor_fusion
 {
     template< class State , class Deriv , class Time >
-    void operator()( const State &x , class Deriv &dxdt , const Time &t ) const
+    void operator()( const State &x , Deriv &dxdt , const Time t ) const
     {
         fusion::at_c< 0 >( dxdt ) = fusion::at_c< 0 >( x ) / Time( 1.0 );
     }
 };
 
+template< class State , class Deriv , class Time >
+void constant_system_standard( const State &x , Deriv &dxdt , const Time t )
+{ dxdt[0] = 1.0; }
+
+template< class State , class Deriv , class Time >
+void constant_system_vector_space( const State &x , Deriv &dxdt , const Time t ) 
+{ dxdt.m_x = 1.0; }
+
+template< class State , class Deriv , class Time >
+void constant_system_fusion( const State &x , Deriv &dxdt , const Time t ) 
+{ fusion::at_c< 0 >( dxdt ) = fusion::at_c< 0 >( x ) / Time( 1.0 ); }
 
 
+/*
 typedef mpl::vector
 <
     mpl::vector< float , boost::array< float , 1 > , boost::array< float , 1 > , constant_system_standard , stepper_type > ,
@@ -72,6 +106,6 @@ struct check_stepper
         typedef typename mpl::at_c< Vector , 3 >::type system_type;
     }
 };
-
+*/
 
 #endif /* PREPARE_STEPPER_TESTING_HPP_ */
