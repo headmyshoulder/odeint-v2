@@ -17,7 +17,7 @@
 #ifndef PREPARE_STEPPER_TESTING_HPP_
 #define PREPARE_STEPPER_TESTING_HPP_
 
-#include <tr1/array>
+#include <boost/array.hpp>
 #include <vector>
 
 #include <boost/mpl/vector.hpp>
@@ -56,8 +56,8 @@ struct constant_system_fusion
 
 typedef mpl::vector
 <
-    mpl::vector< float , std::tr1::array< float , 1 > , std::tr1::array< float , 1 > , constant_system_standard , stepper_type > ,
-    mpl::vector< float , std::tr1::array< float , 1 > , std::vector< float > , constant_system_standard , stepper_type >
+    mpl::vector< float , boost::array< float , 1 > , boost::array< float , 1 > , constant_system_standard , stepper_type > ,
+    mpl::vector< float , boost::array< float , 1 > , std::vector< float > , constant_system_standard , stepper_type >
     > types_and_systems_matrix;
 
 
