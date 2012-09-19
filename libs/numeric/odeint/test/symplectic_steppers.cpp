@@ -21,6 +21,11 @@
 
 #define BOOST_TEST_MODULE odeint_symplectic_steppers
 
+#define BOOST_FUSION_INVOKE_MAX_ARITY 15
+#define BOOST_RESULT_OF_NUM_ARGS 15
+#define FUSION_MAX_VECTOR_SIZE 15
+
+
 #include <boost/test/unit_test.hpp>
 
 #include <boost/array.hpp>
@@ -39,8 +44,10 @@
 #include <boost/mpl/at.hpp>
 
 #include <boost/fusion/container/vector.hpp>
+#include <boost/fusion/include/make_vector.hpp>
 
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
+#include <boost/numeric/odeint/algebra/fusion_algebra.hpp>
 #include <boost/numeric/odeint/stepper/symplectic_euler.hpp>
 #include <boost/numeric/odeint/stepper/symplectic_rkn_sb3a_mclachlan.hpp>
 #include <boost/numeric/odeint/stepper/symplectic_rkn_sb3a_m4_mclachlan.hpp>
@@ -49,7 +56,7 @@
 #include "const_range.hpp"
 #include "dummy_odes.hpp"
 #include "vector_space_1d.hpp"
-
+#include "boost_units_helpers.hpp"
 
 
 using namespace boost::unit_test;
@@ -65,11 +72,11 @@ template< class Coor , class Mom , class Value , class CoorDeriv , class MomDeri
           class Algebra , class Operations , class Resizer >
 class complete_steppers : public mpl::vector<
     symplectic_euler< Coor , Mom , Value , CoorDeriv , MomDeriv , Time ,
-                      Algebra , Operations , Resizer > ,
-    symplectic_rkn_sb3a_mclachlan< Coor , Mom , Value , CoorDeriv , MomDeriv , Time ,
-                      Algebra , Operations , Resizer > ,
-    symplectic_rkn_sb3a_m4_mclachlan< Coor , Mom , Value , CoorDeriv , MomDeriv , Time ,
                       Algebra , Operations , Resizer >
+    , symplectic_rkn_sb3a_mclachlan< Coor , Mom , Value , CoorDeriv , MomDeriv , Time ,
+                                     Algebra , Operations , Resizer >
+    , symplectic_rkn_sb3a_m4_mclachlan< Coor , Mom , Value , CoorDeriv , MomDeriv , Time ,
+                                        Algebra , Operations , Resizer >
     > {};
 
 template< class Resizer >
@@ -273,6 +280,27 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_do_step_v1 , Stepper , vector_steppers< init
     BOOST_CHECK_CLOSE( x4.second[0] , x5_mom[0] , 1.0e-14 );
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_do_step_range , Stepper , vector_steppers< initially_resizer > )
+{
+    Stepper s;
+    diagnostic_state_type q , p ;
+    q[0] = 1.0;
+    p[0] = 2.0;
+
+    std::vector< double > x;
+    x.push_back( 1.0 );
+    x.push_back( 2.0 );
+    s.do_step( constant_mom_func() ,
+               std::make_pair( x.begin() , x.begin() + 1 ) ,
+               std::make_pair( x.begin() + 1 , x.begin() + 2 ) ,
+               0.0 , 0.1 );
+
+    s.do_step( constant_mom_func() , q , p , 0.0 , 0.1 );
+
+    BOOST_CHECK_CLOSE( q[0] , x[0] , 1.0e-14 );
+    BOOST_CHECK_CLOSE( p[0] , x[1] , 1.0e-14 );
+}
+
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_do_step_v2 , Stepper , vector_steppers< initially_resizer > )
 {
     Stepper s;
@@ -323,12 +351,38 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_with_vector_space_algebra , Stepper , vector
     s.do_step( std::make_pair( default_coor_func_vector_space_1d() , constant_mom_func_vector_space_1d() ) , x , 0.0 , 0.1 );
 }
 
-BOOST_AUTO_TEST_CASE( test_with_fusion_algebra )
-{
-}
 
-BOOST_AUTO_TEST_CASE( test_with_boost_units )
+typedef boost::fusion::vector< length_type > coor_type;
+typedef boost::fusion::vector< velocity_type > mom_type;
+typedef boost::fusion::vector< acceleration_type > acc_type;
+typedef complete_steppers< coor_type , mom_type , double , 
+                           mom_type , acc_type , time_type, 
+                           fusion_algebra , default_operations , initially_resizer > boost_unit_steppers;
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_with_boost_units , Stepper , boost_unit_steppers )
 {
+    namespace fusion = boost::fusion;
+    namespace si = boost::units::si;
+    Stepper s;
+
+    coor_type q = fusion::make_vector( 1.0 * si::meter );
+    mom_type p = fusion::make_vector( 2.0 * si::meter_per_second );
+    time_type t = 0.0 * si::second;
+    time_type dt = 0.1 * si::second;
+
+    coor_type q1 = q , q2 = q;
+    mom_type p1 = p , p2 = p;
+
+    s.do_step( oscillator_mom_func_units() , std::make_pair( boost::ref( q ) , boost::ref( p ) ) , t , dt );
+
+    s.do_step( std::make_pair( oscillator_coor_func_units() , oscillator_mom_func_units() ) ,
+               std::make_pair( boost::ref( q1 ) , boost::ref( p1 ) ) , t , dt );
+
+    s.do_step( oscillator_mom_func_units() , q2 , p2 , t , dt );
+
+    BOOST_CHECK_CLOSE( ( fusion::at_c< 0 >( q  ).value() ) , ( fusion::at_c< 0 >( q1 ).value() ) , 1.0e-14 );
+    BOOST_CHECK_CLOSE( ( fusion::at_c< 0 >( q1 ).value() ) , ( fusion::at_c< 0 >( q2 ).value() ) , 1.0e-14 );
+    BOOST_CHECK_CLOSE( ( fusion::at_c< 0 >( p  ).value() ) , ( fusion::at_c< 0 >( p1 ).value() ) , 1.0e-14 );
+    BOOST_CHECK_CLOSE( ( fusion::at_c< 0 >( p1 ).value() ) , ( fusion::at_c< 0 >( p2 ).value() ) , 1.0e-14 );
 }
 
 

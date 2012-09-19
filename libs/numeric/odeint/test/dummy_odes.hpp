@@ -22,6 +22,11 @@
 
 #include <boost/fusion/include/at_c.hpp>
 
+
+
+
+
+
 /*
  * rhs functors/functions for different state types
  */
@@ -113,6 +118,7 @@ struct default_coor_func_vector_space_1d
         dq.m_x = p.m_x;
     }
 };
+
 
 
 

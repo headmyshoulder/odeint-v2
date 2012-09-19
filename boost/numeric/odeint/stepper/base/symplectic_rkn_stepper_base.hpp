@@ -33,9 +33,6 @@
 
 #include <boost/numeric/odeint/stepper/base/algebra_stepper_base.hpp>
 
-#include <iostream>
-#define tab "\t"
-using namespace std;
 
 
 
@@ -253,23 +250,22 @@ private:
 
         // ToDo: check sizes?
 
-
         for( size_t l=0 ; l<num_of_stages ; ++l )
         {
             if( l == 0 )
             {
                 this->m_algebra.for_each3( coor_out  , coor_in , momentum_in ,
                         typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_a[l] * dt ) );
-                momentum_func( coor_out , m_dqdt.m_v );
-                this->m_algebra.for_each3( momentum_out , momentum_in , m_dqdt.m_v ,
-                        typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[l] * dt ) );
+                momentum_func( coor_out , m_dpdt.m_v );
+                this->m_algebra.for_each3( momentum_out , momentum_in , m_dpdt.m_v ,
+                                           typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[l] * dt ) );
             }
             else
             {
                 this->m_algebra.for_each3( coor_out , coor_out , momentum_out ,
                         typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_a[l] * dt ) );
-                momentum_func( coor_out , m_dqdt.m_v );
-                this->m_algebra.for_each3( momentum_out , momentum_out , m_dqdt.m_v ,
+                momentum_func( coor_out , m_dpdt.m_v );
+                this->m_algebra.for_each3( momentum_out , momentum_out , m_dpdt.m_v ,
                         typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[l] * dt ) );
             }
         }
