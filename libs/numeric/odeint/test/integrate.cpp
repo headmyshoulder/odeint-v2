@@ -99,7 +99,7 @@ struct perform_integrate_const_test
         integrate_const( Stepper() , lorenz , x , 0.0 , t_end ,
                                         dt , push_back_time( times , x_end ) );
 
-        int steps = times.size()-1;
+        // int steps = times.size()-1;
 
         //std::cout << t_end << " (" << dt << "), " << steps << " , " << times.size() << " , " << 10.0+dt*steps << "=" << x_end[0] << std::endl;
 
