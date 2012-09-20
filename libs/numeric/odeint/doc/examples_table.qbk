@@ -88,7 +88,7 @@
   [[[github_link libs/numeric/odeint/examples/mtl/gauss_packet.cpp mtl/gauss_packet.cpp]]
   [The MTL-Gauss-packet example shows how the MTL can be easily used with odeint.]]
 
-  [[[github_link libs/numeric/odeint/examples/mtl/implicit_euler_mpl.cpp mtl/implicit_euler_mpl.cpp]]
+  [[[github_link libs/numeric/odeint/examples/mtl/implicit_euler_mpl.cpp mtl/implicit_euler_mtl.cpp]]
   [This examples shows the usage of the MTL implicit Euler method with a sparse matrix type.]]
 
   [[[github_link libs/numeric/odeint/examples/thrust/phase_oscillator_ensemble.cu thrust/phase_oscillator_ensemble.cu]]
