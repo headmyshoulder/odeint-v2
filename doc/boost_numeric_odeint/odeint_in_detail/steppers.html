@@ -263,7 +263,7 @@
         </p>
 <p>
           Symplectic systems can be solved by odeint by means of the symplectic_euler
-          stepper and a symplectic Runge-Kutta-Nystrom method of sixth-order. These
+          stepper and a symplectic Runge-Kutta-Nystrom method of fourth order. These
           steppers assume that the system is autonomous, hence the time will not
           explicitly occur. Further they fulfill in principle the default Stepper
           concept, but they expect the system to be a pair of callable objects. The
@@ -1927,7 +1927,7 @@
                 </td>
 <td>
                   <p>
-                    6
+                    4
                   </p>
                 </td>
 <td>
@@ -1947,8 +1947,58 @@
                 </td>
 <td>
                   <p>
-                    Symplectic solver for separable Hamiltonian system with order
-                    6
+                    Symplectic solver for separable Hamiltonian system with 6 stages
+                    and order 4.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    Symplectic RKN McLachlan
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">symplectic_rkn_sb3a_m4_mclachlan</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../concepts/symplectic_system.html" title="Symplectic System">Symplectic
+                    System</a> <a class="link" href="../concepts/simple_symplectic_system.html" title="Simple Symplectic System">Simple
+                    Symplectic System</a>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    4
+                  </p>
+                </td>
+<td>
+                  <p>
+                    No
+                  </p>
+                </td>
+<td>
+                  <p>
+                    No
+                  </p>
+                </td>
+<td>
+                  <p>
+                    No
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Symplectic solver with 5 stages and order 4, can be used with
+                    arbirary precision types.
                   </p>
                 </td>
 </tr>
@@ -2299,8 +2349,8 @@ c3 = 2/3, a31 =  0 , a32 = 2/3
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2009-2011 Karsten Ahnert
-      and Mario Mulansky<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009-2012 Karsten
+      Ahnert and Mario Mulansky<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

@@ -29,18 +29,6 @@
         many of the standard algorithms in the C++ standard library and Boost.Range
         can be used with the odeint't iterators.
       </p>
-<div class="warning"><table border="0" summary="Warning">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../images/warning.png"></td>
-<th align="left">Warning</th>
-</tr>
-<tr><td align="left" valign="top"><p>
-          odeint's iterators do not satisfy the iterator concepts defined in the
-          standard completely. In detail the iterator transitivity is violated in
-          some rare cases. But this is not relevant for all algorithms in the C++
-          standard library and in Boost.Range.
-        </p></td></tr>
-</table></div>
 <p>
         Four iterators are provided. They are all single pass iterators. The first
         one is a iterator which solves the odeint with constant step size. An example
@@ -146,6 +134,7 @@
                     <span class="special">,</span> <span class="identifier">system</span>
                     <span class="special">,</span> <span class="identifier">state</span>
                     <span class="special">,</span> <span class="identifier">t_start</span>
+                    <span class="special">,</span> <span class="identifier">t_end</span>
                     <span class="special">,</span> <span class="identifier">dt</span>
                     <span class="special">)</span></code>
                   </li>
@@ -153,8 +142,6 @@
                     <code class="computeroutput"><span class="identifier">make_const_step_iterator_end</span><span class="special">(</span> <span class="identifier">stepper</span>
                     <span class="special">,</span> <span class="identifier">system</span>
                     <span class="special">,</span> <span class="identifier">state</span>
-                    <span class="special">,</span> <span class="identifier">t_end</span>
-                    <span class="special">,</span> <span class="identifier">dt</span>
                     <span class="special">)</span></code>
                   </li>
 <li class="listitem">
@@ -203,6 +190,7 @@
                     <span class="special">,</span> <span class="identifier">system</span>
                     <span class="special">,</span> <span class="identifier">state</span>
                     <span class="special">,</span> <span class="identifier">t_start</span>
+                    <span class="special">,</span> <span class="identifier">t_end</span>
                     <span class="special">,</span> <span class="identifier">dt</span>
                     <span class="special">)</span></code>
                   </li>
@@ -210,8 +198,6 @@
                     <code class="computeroutput"><span class="identifier">make_const_step_time_iterator_end</span><span class="special">(</span> <span class="identifier">stepper</span>
                     <span class="special">,</span> <span class="identifier">system</span>
                     <span class="special">,</span> <span class="identifier">state</span>
-                    <span class="special">,</span> <span class="identifier">t_end</span>
-                    <span class="special">,</span> <span class="identifier">dt</span>
                     <span class="special">)</span></code>
                   </li>
 <li class="listitem">
@@ -257,6 +243,7 @@
                     <span class="special">,</span> <span class="identifier">system</span>
                     <span class="special">,</span> <span class="identifier">state</span>
                     <span class="special">,</span> <span class="identifier">t_start</span>
+                    <span class="special">,</span> <span class="identifier">t_end</span>
                     <span class="special">,</span> <span class="identifier">dt</span>
                     <span class="special">)</span></code>
                   </li>
@@ -264,8 +251,6 @@
                     <code class="computeroutput"><span class="identifier">make_adaptive_iterator_end</span><span class="special">(</span> <span class="identifier">stepper</span>
                     <span class="special">,</span> <span class="identifier">system</span>
                     <span class="special">,</span> <span class="identifier">state</span>
-                    <span class="special">,</span> <span class="identifier">t_end</span>
-                    <span class="special">,</span> <span class="identifier">dt</span>
                     <span class="special">)</span></code>
                   </li>
 <li class="listitem">
@@ -314,6 +299,7 @@
                     <span class="special">,</span> <span class="identifier">system</span>
                     <span class="special">,</span> <span class="identifier">state</span>
                     <span class="special">,</span> <span class="identifier">t_start</span>
+                    <span class="special">,</span> <span class="identifier">t_end</span>
                     <span class="special">,</span> <span class="identifier">dt</span>
                     <span class="special">)</span></code>
                   </li>
@@ -321,8 +307,6 @@
                     <code class="computeroutput"><span class="identifier">make_adaptive_time_iterator_end</span><span class="special">(</span> <span class="identifier">stepper</span>
                     <span class="special">,</span> <span class="identifier">system</span>
                     <span class="special">,</span> <span class="identifier">state</span>
-                    <span class="special">,</span> <span class="identifier">t_end</span>
-                    <span class="special">,</span> <span class="identifier">dt</span>
                     <span class="special">)</span></code>
                   </li>
 <li class="listitem">
@@ -340,13 +324,18 @@
               This stepper works with all steppers fullfilling the ControlledStepper
               concept or the DenseOutputStepper concept.
             </li>
+<li class="listitem">
+              This stepper updates the value of <code class="computeroutput"><span class="identifier">state</span></code>.
+              The value of <code class="computeroutput"><span class="identifier">state</span></code>
+              is the current state of the ODE during the iteration.
+            </li>
 </ul></div>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2009-2011 Karsten Ahnert
-      and Mario Mulansky<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009-2012 Karsten
+      Ahnert and Mario Mulansky<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
