@@ -41,6 +41,8 @@
   [ [bulirsch_stoer] [['tol=1/2]] [-] [['dt[subl new] = dt[subl old][super 1/a]]] ]
 ]
 
+[/
+
 safe = 0.9 , fac1 = 5.0 , fac2 = 1.0 / 6.0
 
 value_type fac_pred = ( m_dt_old / dt ) * pow( err * err / m_err_old , 0.25 ) / safe;
@@ -50,3 +52,4 @@ value_type fac_pred = ( m_dt_old / dt ) * pow( err * err / m_err_old , 0.25 ) / 
 
 
 fac = max( fac2 , min( fac1 , pow( err , 0.25 ) / safe ) )
+]

@@ -25,7 +25,7 @@ follows:
 
 ['x] and ['f] can be vectors and the solution is some function ['x(t)] fulfilling both equations above. In the following we will refer to ['x'(t)] also `dxdt` which is also our notation for the derivative in the source code.
 
-Ordinary differential equations occur nearly everywhere in natural sciences. For example, the whole Newtonian mechanics are described by second order differential equations. Be sure, you will find them in every discipline. They also occur if partial differential equations (PDEs) are discretized in one coordinate. Then, a system of coupled ordinary differential occurs, sometimes also referred as lattices ODEs.
+Ordinary differential equations occur nearly everywhere in natural sciences. For example, the whole Newtonian mechanics are described by second order differential equations. Be sure, you will find them in every discipline. They also occur if partial differential equations (PDEs) are discretized. Then, a system of coupled ordinary differential occurs, sometimes also referred as lattices ODEs.
 
 Numerical approximations for the solution ['x(t)] are calculated iteratively. The easiest algorithm is the Euler-Scheme, where starting at ['x(0)] one finds ['x(dt) = x(0) + dt f(x(0),0)]. Now one can use ['x(dt)] and obtain ['x(2dt)] in a similar way and so on. The Euler method is of order 1, that means the error at each step is ['~ dt[super 2]]. This is, of course, not very satisfying, which is why the Euler method is rarely used for real life problems and serves just as illustrative example. 
 
@@ -39,6 +39,7 @@ In doing so, odeint is applicable for a broad variety of situations and it can b
 * __boost_fusion (the state type can be a fusion vector)
 * __boost_units
 * __intel_mkl for maximum performance
+* __vexcl for OpenCL
 * __boost_graph (still experimentally)
 
 In odeint, the following algorithms are implemented:
@@ -56,10 +57,22 @@ odeint is completely header-only, no linking against pre-compiled code is requir
 ``
 #include <boost/numeric/odeint.hpp>
 ``
+
 which includes all headers of the library. All functions and classes from odeint live in the namespace
+
 ``
  using namespace boost::numeric::odeint;
 ``
+
+It is also possible to include only parts of the library. This is the recommended way since it saves a lot of compilation time.
+
+* `#include <boost/numeric/odeint/stepper/XYZ.hpp>` - the include path for all steppers, XYZ is a placeholder for a stepper.
+* `#include <boost/numeric/odeint/algebra/XYZ.hpp>` - all algebras.
+* `#include <boost/numeric/odeint/util/XYZ.hpp>` - the utility functions like `is_resizeable`, `same_size`, or `resize`.
+* `#include <boost/numeric/odeint/integrate/XYZ.hpp>` - the integrate routines.
+* `#include <boost/numeric/odeint/iterator/XYZ.hpp>` - the range and iterator functions.
+* `#include <boost/numeric/odeint/external/XYZ.hpp>` - any binders to external libraries.
+
 
 
 [endsect]
@@ -78,7 +91,7 @@ first order ODEs by introducing the new variables ['q=x] and ['p=x'] such that [
 Here we chose `vector<double>` as the state type, but others are also
 possible, for example `boost::array<double,2>`. odeint is designed in such a
 way that you can easily use your own state types. Next, the ODE is defined
-which is in this case a simple function calculating ['f(x)']. The parameter
+which is in this case a simple function calculating ['f(x)]. The parameter
 signature of this function is crucial: the integration methods will always
 call them in the form `f(x, dxdt, t)` (there are exceptions for some special routines). So, even if there is no explicit time dependence, one has to define `t` as a function parameter.
 

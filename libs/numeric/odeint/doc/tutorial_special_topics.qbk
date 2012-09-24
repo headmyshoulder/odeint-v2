@@ -61,7 +61,7 @@ odeint can also be used to solve ordinary differential equations defined on latt
 
 [' H = __Sigma[subl i] p[subl i][super 2]/2 + 1/2 ( q[subl i+1] - q[subl i] )^2 + __beta / 4 ( q[subl i+1] - q[subl i] )^4 ]
 
-Remarkably, the Fermi-Pasta-Ulam system was the first numerical experiment which has been implemented on a computer in 1953. It was studied at Los Alamos on one of the first computer (a MANIAC I) and it triggered a whole new tree of mathematical and physical science.
+Remarkably, the Fermi-Pasta-Ulam system was the first numerical experiment to be implemented on a computer. It was studied at Los Alamos in 1953 on one of the first computers (a MANIAC I) and it triggered a whole new tree of mathematical and physical science.
  
 Like the __tut_solar_system, the FPU is solved again by a symplectic solver, but in this case we can speed up the computation because the ['q] components trivially reduce to ['dq[subl i] / dt = p[subl i]]. odeint is capable of doing this performance improvement. All you have to do is to call the symplectic solver with an state function for the ['p] components. Here is how this function looks like
 
@@ -156,7 +156,7 @@ It is quite easy but the compilation time might take very long. Furthermore, the
 [units_observer]
 
 [caution Using __boost_units works nicely but compilation can be very time and
-memory consuming. For example the unit test for __boost_units take up to 4 GB
+memory consuming. For example the unit test for the usage of __boost_units in odeint take up to 4 GB
 of memory at compilation.]
 
 The full cpp file for this example can be found here [github_link libs/numeric/odeint/examples/harmonic_oscillator_units.cpp harmonic_oscillator_units.cpp].
@@ -175,33 +175,34 @@ The definition of the system is
 
 [two_dimensional_phase_lattice_definition]
 
-This is in principle all. Please note, that the above code is far from being optimal. Better performance can be achieved if every interaction is only calculated once and iterators for columns and rows are used. Below are some visualizations of the evolution of this lattice equation.
+In principle this is all. Please note, that the above code is far from being optimal. Better performance can be achieved if every interaction is only calculated once and iterators for columns and rows are used. Below are some visualizations of the evolution of this lattice equation.
 
 [$phase_lattice_2d_0000.jpg] [$phase_lattice_2d_0100.jpg] [$phase_lattice_2d_1000.jpg]
 
 The full cpp for this example can be found here [github_link libs/numeric/odeint/examples/two_dimensional_phase_lattice.cpp two_dimensional_phase_lattice.cpp].
 
+[endsect]
 
+[/
+
+[section Partial differential equations]
+
+To be continued:
+ 
+*Wave equation
+
+*KdV
+*Ginzburg-Landau
 
 [endsect]
 
-# [section Partial differential equations]
-# 
-# To be continued:
-# 
-# *Wave equation
-# 
-# *KdV
-# 
-# *Ginzburg-Landau
-# 
-# [endsect]
-# 
-# [section Ordinary differential equations on networks]
-# 
-# to be continued
-#
-# [endsect]
+[section Ordinary differential equations on networks]
+
+to be continued
+
+[endsect]
+
+]
 
 [section Using arbitrary precision floating point types]
 
@@ -219,7 +220,7 @@ which can be integrated:
 
 [gmpxx_integration]
 
-[caution The full support of arbitrary precision types depends on the functionality they provide. For example, the types from gmp are lacking of functions for calculating the power and arbitrary roots, hence they can not be used with the controlled steppers. In detail, for full support the `min( x , y )`, `max( x , y )`, `pow( y , y )` must be callable.]
+[caution The full support of arbitrary precision types depends on the functionality they provide. For example, the types from gmp are lacking of functions for calculating the power and arbitrary roots, hence they can not be used with the controlled steppers. In detail, for full support the `min( x , y )`, `max( x , y )`, `pow( x , y )` must be callable.]
 
 The full example can be found at [github_link libs/numeric/odeint/examples/lorenz_gmpxx.cpp lorenz_gmpxx.cpp].
 
@@ -238,7 +239,7 @@ has to be instantiated with `always_resizer` as the template argument for the
 In this configuration, the stepper checks for changes in the state size and
 adjust it's internal storage accordingly.
 
-We exemplary show this for a Hamiltonian system of nonlinear, disordered oscillators with nonlinear nearest neighbor coupling.
+We show this for a Hamiltonian system of nonlinear, disordered oscillators with nonlinear nearest neighbor coupling.
 
 The system function is implemented in terms of a class that also provides functions for calculating the energy.
 Note, that this class stores the random potential internally which is not resized, but rather a start index is kept which should be changed whenever the states' size change.

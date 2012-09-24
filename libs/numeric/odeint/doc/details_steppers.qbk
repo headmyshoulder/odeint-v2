@@ -130,7 +130,7 @@ For some kind of systems the stability properties of the classical Runge-Kutta a
 
 For implicit solvers the system is again a pair, where the first component computes ['f(x,t)] and the second the Jacobian. The syntax is `sys.first( x , dxdt , t )` and `sys.second( x , J , t )`. For the implicit solver the `state_type` is `ublas::vector` and the Jacobian is represented by `ublas::matrix`.
 
-[important Implicit solvers do only work with ublas::vector as state type. At
+[important Implicit solvers only work with ublas::vector as state type. At
 the moment, no other state types are supported.]
 
 [endsect]
@@ -139,7 +139,7 @@ the moment, no other state types are supported.]
 
 Another large class of solvers are multi-step method. They save a small part of the history of the solution and compute the next step with the help of this history. Since multi-step methods know a part of their history they do not need to compute the system function very often, usually it is only computed once. This makes multi-step methods preferable if a call of the system function is expensive. Examples are ODEs defined on networks, where the computation of the interaction is usually where expensive (and might be of order O(N^2)).
 
-Multi-step methods differ from the normal steppers. They safe a part of their history and this part has to be explicitly calculated and initialized. In the following example an Adams-Bashforth-stepper with a history of 5 steps is instantiated and initialized;
+Multi-step methods differ from the normal steppers. They save a part of their history and this part has to be explicitly calculated and initialized. In the following example an Adams-Bashforth-stepper with a history of 5 steps is instantiated and initialized;
 
 [multistep_detail_example]
 
@@ -283,7 +283,7 @@ course, if you have changed the size of your system and your state you have to
 call `adjust_size` by hand in this case. The second resizer is the
 `always_resizer` which tries to resize the internal variables at every call of
 `do_step`. Typical use cases for this kind of resizer are self expanding
-lattices like shown in the tutorial or partial differential equations with an
+lattices like shown in the tutorial (__resizing_lattice_example) or partial differential equations with an
 adaptive grid. Here, no calls of `adjust_size` are required, the steppers manage
 everything themselve. The third class of resizer is the `never_resizer` which
 means that the internal variables are never adjusted automatically and always

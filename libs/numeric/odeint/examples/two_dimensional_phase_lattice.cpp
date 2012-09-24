@@ -48,7 +48,7 @@ struct two_dimensional_phase_lattice
         }
 
         for( size_t i=0 ; i<x.size1() ; ++i ) dxdt( i , 0 ) = dxdt( i , x.size2() -1 ) = 0.0;
-        for( size_t j=0 ; j<x.size2() ; ++j ) dxdt( 0 , j ) = dxdt( 0 , x.size1() -1 ) = 0.0;
+        for( size_t j=0 ; j<x.size2() ; ++j ) dxdt( 0 , j ) = dxdt( x.size1() -1 , j ) = 0.0;
     }
 
     double coupling_func( double x ) const

@@ -182,7 +182,9 @@ int main( int argc , char **argv )
         state_type inout;
         double t_start = 0.0 , t_end = 1.0;
         //[ dense_output_detail_generation1
-        boost::numeric::odeint::result_of::make_dense_output< runge_kutta_dopri5< state_type > >::type dense2 = make_dense_output( 1.0e-6 , 1.0e-6 , runge_kutta_dopri5< state_type >() );
+        typedef boost::numeric::odeint::result_of::make_dense_output<
+            runge_kutta_dopri5< state_type > >::type dense_stepper_type;
+        dense_stepper_type dense2 = make_dense_output( 1.0e-6 , 1.0e-6 , runge_kutta_dopri5< state_type >() );
         //]
 
         //[ dense_output_detail_generation2

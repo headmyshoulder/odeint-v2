@@ -45,7 +45,7 @@ Now you can use `stiff_system` in combination with `std::vector` or
 `boost::array`. In the example the explicit time derivative of ['f(x,t)] is
 introduced separately in the Jacobian. If ['df / dt = 0] simply fill `dfdt` with zeros.
 
-A well know solver for stiff systems is the so called Rosenbrock method. It has a step size control and dense output facilities and can be used like all the other stepper:
+A well know solver for stiff systems is the Rosenbrock method. It has a step size control and dense output facilities and can be used like all the other stepper:
 
 [integrate_stiff_system]
 
