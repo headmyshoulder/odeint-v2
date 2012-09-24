@@ -38,7 +38,7 @@ Symplectic systems are used in symplectic steppers like `symplectic_rkn_sb3a_mcl
 [heading Notation]
 
 [variablelist
-  [[`System`] [A type that is a model of Symplectic_System]]
+  [[`System`] [A type that is a model of SymplecticSystem]]
   [[`Coor`] [The type of the coordinate  ['q]]]
   [[`Momentum`] [The type of the momentum ['p]]]
   [[`CoorDeriv`] [The type of the derivative of coordinate ['q']]]
@@ -75,12 +75,12 @@ while for /p'/ we still have the general form
 [' p'(t) = g(q) ]
 
 As this case is very frequent we introduced a concept where only the nontrivial equation for /p'/ has to be provided to the symplectic stepper.
-We call this concept ['Simple_Symplectic_System]
+We call this concept ['SimpleSymplecticSystem]
 
 [heading Notation]
 
 [variablelist
-  [[System] [A type that is a model of Simple_Symplectic_System]]
+  [[System] [A type that is a model of SimpleSymplecticSystem]]
   [[Coor] [The type of the coordinate  ['q]]]
   [[MomentumDeriv] [The type of the derivative of momentum ['p']]]
   [[sys] [An object that models System]]

@@ -370,8 +370,8 @@ So for controlled steppers the following things have to be implemented:
   [[Name] [Expression] [Type] [Semantics]]
   [[Division] [`x / y`] [`state_type`] [Calculates the element-wise division 'x/y']]
   [[Absolute value] [`abs( x )`] [`state_type`] [Element wise absolute value]]
-  [[Reduce] [`vector_space_reduce_impl< state_type >::reduce( state , operator , init )`] [`value_type`] 
-    [Performs the operation `operator` for subsequently each element of `state` and returns the aggregate value.
+  [[Reduce] [`vector_space_reduce_impl< state_type >::reduce( state , operation , init )`] [`value_type`] 
+    [Performs the `operation` for subsequently each element of `state` and returns the aggregate value.
     E.g.
     
 `init = operator( init , state[0] );`

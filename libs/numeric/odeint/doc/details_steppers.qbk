@@ -335,7 +335,7 @@ the state type to be an `array< double , N >` The class definition looks like
 
 The types are needed in order to fulfill the stepper concept. As internal state and deriv type we use simple arrays in the stochastic Euler, they are needed for the temporaries. The stepper has the order one which is returned from the `order()` function.
 
-The system functions needs to calculate the deterministic and the stochastic part of our stochastic differential equation. So it might be suitable that the system function itself is a pair of functions, one for computing the deterministic and one for the stochastic part. The first element of the pair simply computes the deterministic part while the second the stochastic one. Then, the second part also needs to calculate the random numbers in order to simulate the stochastic process. We can now implement the `do_step` method
+The system functions needs to calculate the deterministic and the stochastic part of our stochastic differential equation. So it might be suitable that the system function is a pair of functions. The first element of the pair computes the deterministic part and the second the stochastic one. Then, the second part also needs to calculate the random numbers in order to simulate the stochastic process. We can now implement the `do_step` method
 
 [stochastic_euler_do_step]
 
