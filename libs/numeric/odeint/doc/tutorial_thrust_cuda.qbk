@@ -10,7 +10,7 @@
 =============================================================================/]
 
 
-[section Using Cuda and Thrust]
+[section Using CUDA (or OpenMP, TBB, ...) via Thrust]
 
 Modern graphic cards (graphic processing units - GPUs) can be used to speed up
 the performance of time consuming algorithms by means of massive
@@ -18,10 +18,10 @@ parallelization. They are designed to execute many operations in
 parallel. odeint can utilize the power of GPUs by means of CUDA and __thrust,
 which is a STL-like interface for the native CUDA API.
 
-[important Thrust also supports parallelization using OpenMP. You can switch
-between CUDA-parallelization and OpenMP-parallelization by a simple compiler
+[important Thrust also supports parallelization using OpenMP and Intel Threading Building Blocks (TBB). You can switch
+between CUDA, OpenMP and TBB parallelizations by a simple compiler
 switch. Hence, this also provides an easy way to get basic OpenMP
-parallelization into odeint.]
+parallelization into odeint. The examples discussed below are focued on GPU parallelization, though. ]
 
 To use odeint with CUDA a few points have to be taken into account. First of all, the problem has to be well chosen. It makes absolutely no sense to try to parallelize the code for a three dimensional system, it is simply too small and not worth the effort. One single function call (kernel execution) on the GPU is slow but you can do the operation on a huge set of data with only one call. We have experienced that the vector size over which is parallelized should be of the order of ['10[super 6]] to make full use of the GPU. Secondly, you have to use __thrust's algorithms and functors when implementing the rhs the ODE. This might be tricky since it involves some kind of functional programming knowledge.
 
@@ -42,7 +42,7 @@ It has a phase transition at ['__epsilon = 2] in the limit of
 infinite numbers of oscillators ['N]. In the case of finite ['N] this
 transition is smeared out but still clearly visible.
 
-__thrust and Cuda are perfectly suited for such kinds of problems where one needs a large number of particles (oscillators). We start by defining the state type which is a `thrust::device_vector`. The content of this vector lives on the GPU. If you are not familiar with this we recommend reading the ['Getting started] section on the __thrust website.
+__thrust and CUDA are perfectly suited for such kinds of problems where one needs a large number of particles (oscillators). We start by defining the state type which is a `thrust::device_vector`. The content of this vector lives on the GPU. If you are not familiar with this we recommend reading the ['Getting started] section on the __thrust website.
 
 [thrust_phase_ensemble_state_type]
 
@@ -89,7 +89,7 @@ Now, we are ready to put everything together. All we have to do for making odein
 
 [thrust_phase_ensemble_define_rk4]
 
-Of course, you can also use a controlled or dense output stepper, e.g.
+You can also use a controlled or dense output stepper, e.g.
 
 [thrust_phase_ensemble_define_dopri5]
 
@@ -131,12 +131,12 @@ The full example can be found at [github_link libs/numeric/odeint/examples/thrus
 
 [import ../examples/thrust/lorenz_parameters.cu]
 
-Another important use case for __thrust and Cuda are parameter studies of relatively small systems. Consider for example the three-dimensional Lorenz system from the chaotic systems example in the previous section which has three parameters. If you want to study the behavior of this system for different parameters you usually have to integrate the system for many parameter values. Using thrust and odeint you can do this integration in parallel, hence you integrate a whole ensemble of Lorenz systems where each individual realization has a different parameter value. 
+Another important use case for __thrust and CUDA are parameter studies of relatively small systems. Consider for example the three-dimensional Lorenz system from the chaotic systems example in the previous section which has three parameters. If you want to study the behavior of this system for different parameters you usually have to integrate the system for many parameter values. Using thrust and odeint you can do this integration in parallel, hence you integrate a whole ensemble of Lorenz systems where each individual realization has a different parameter value. 
 [/ The Lorenz system is dissipative, such that you can assume that different initial conditions will lead to the same attractor so . For Hamiltonian systems this is not the case. Here it might be interesting to study a range of initial conditions to quantify different regions in the phase space.]
 
 In the following we will show how you can use __thrust to integrate the above mentioned ensemble of Lorenz systems. We will vary only the parameter ['__beta] but it is straightforward to vary other parameters or even two or all three parameters. Furthermore, we will use the largest Lyapunov exponent to quantify the behavior of the system (chaoticity).
 
-We start by defining the range of the parameters we want to study. Of course, the state_type is again a `thrust::device_vector< value_type >`. 
+We start by defining the range of the parameters we want to study. The state_type is again a `thrust::device_vector< value_type >`. 
 
 [thrust_lorenz_parameters_define_beta]
 

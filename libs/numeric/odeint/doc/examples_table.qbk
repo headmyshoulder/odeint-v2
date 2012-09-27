@@ -80,7 +80,7 @@
   [The 2D phase oscillator example shows how a two-dimensional lattice works with odeint and how matrix types can be used as state types in odeint.]]
 
   [[[github_link libs/numeric/odeint/examples/van_der_pol_stiff.cpp van_der_pol_stiff.cpp]]
-  [This stiff system example again shows the usage of the stiff solvers by integrating the van der Pol osscillator.]]
+  [This stiff system example again shows the usage of the stiff solvers by integrating the van der Pol oscillator.]]
 
   [[[github_link libs/numeric/odeint/examples/gmpxx/lorenz_gmpxx.cpp gmpxx/lorenz_gmpxx.cpp]]
   [This examples integrates the Lorenz system by means of an arbitrary precision type.]]

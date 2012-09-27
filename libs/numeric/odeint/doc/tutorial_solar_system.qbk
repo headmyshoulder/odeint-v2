@@ -53,7 +53,7 @@ q[subl i] )].
 
 [note A short physical note: While the two-body-problem is known to be
 integrable, that means it can be solved with purely analytic techniques,
-already the three-body-problem is not solveable. This was found in the end of the
+already the three-body-problem is not solvable. This was found in the end of the
 19th century by H. Poincare which led to the whole new subject of
 [@http://en.wikipedia.org/wiki/Chaos_theory Chaos Theory].]
 
@@ -86,7 +86,7 @@ will be defined by two objects representing ['f(p) = -dH/dq] and ['g(q) = dH/dp]
 
 [momentum_function]
 
-In general a three body-system is chaotic, hence we can not expect that arbitrary initial conditions of the system will lead to a dynamic which is comparable with the solar system. That is we have to define proper initial conditions, which are taken from the book of Hairer, Wannier, Lubich.
+In general a three body-system is chaotic, hence we can not expect that arbitrary initial conditions of the system will lead to a solution comparable with the solar system dynamics. That is we have to define proper initial conditions, which are taken from the book of Hairer, Wannier, Lubich [4].
 
 As mentioned above, we need to use some special integrators in order to
 conserve phase space volume. There is a well known family of such integrators,

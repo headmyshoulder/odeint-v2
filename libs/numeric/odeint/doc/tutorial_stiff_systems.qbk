@@ -25,7 +25,7 @@ rates of individual sub-reaction might differ over large ranges, for example:
 ['d S[subl 2] / dt = S[subl 1]]
 
 
-To solve stiff systems efficiently using numerics the Jacobian
+In order to efficiently solve stiff systems numerically the Jacobian
 
 ['J = d f[subl i] / d x[subl j]]
 
@@ -45,7 +45,7 @@ Now you can use `stiff_system` in combination with `std::vector` or
 `boost::array`. In the example the explicit time derivative of ['f(x,t)] is
 introduced separately in the Jacobian. If ['df / dt = 0] simply fill `dfdt` with zeros.
 
-A well know solver for stiff systems is the Rosenbrock method. It has a step size control and dense output facilities and can be used like all the other stepper:
+A well know solver for stiff systems is the Rosenbrock method. It has a step size control and dense output facilities and can be used like all the other steppers:
 
 [integrate_stiff_system]
 
@@ -53,7 +53,7 @@ During the integration 71 steps have been done. Comparing to a classical Runge-K
 
 [integrate_stiff_system_alternative]
 
-Note, that we have used __boost_phoenix, a great functional programming library to create and compose the observer.
+Note, that we have used __boost_phoenix, a great functional programming library, to create and compose the observer.
 
 The full example can be found here: [github_link libs/numeric/odeint/examples/stiff_system.cpp stiff_system.cpp]
 

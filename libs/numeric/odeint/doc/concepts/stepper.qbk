@@ -18,7 +18,7 @@ This concepts specifies the interface a simple stepper has to fulfill to be used
 
 The basic stepper concept.
 A basic stepper following this Stepper concept is able to perform a single step of the solution /x(t)/ of an ODE to obtain /x(t+dt)/ using a given step size /dt/.
-Basic steppers can be Runge Kutta steppers, symplectic steppers as well as implicit steppers.
+Basic steppers can be Runge-Kutta steppers, symplectic steppers as well as implicit steppers.
 Depending on the actual stepper, the ODE is defined as __system, __symplectic_system, __simple_symplectic_system or __implicit_system.
 Note that all error steppers are also basic steppers.
 
