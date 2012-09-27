@@ -48,7 +48,7 @@
 [def __thrust
     [@http://code.google.com/p/thrust/ Thrust]]
 [def __ublas
-    [@http://www.boost.org/doc/libs/release/libs/numeric/ublas/index.html Boost.UBlas]]
+    [@http://www.boost.org/doc/libs/release/libs/numeric/ublas/index.html Boost.uBLAS]]
 [def __intel_mkl
      [@http://software.intel.com/en-us/articles/intel-mkl/ Intel Math Kernel Library]]
 [def __gsl
@@ -89,9 +89,9 @@
 [def __generation_functions
     [link boost_numeric_odeint.odeint_in_detail.generation_functions Generation functions]]
 [def __adapt_state_types
-    [link boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations Adapt you own state types]]
+    [link boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations Adapt your own state types]]
 [def __resizing_lattice_example
-    [link boost_numeric_odeint.tutorial.special_topics.self_expanding_lattices Self exanding lattices]]
+    [link boost_numeric_odeint.tutorial.special_topics.self_expanding_lattices Self expanding lattices]]
 
 
 [def __alpha '''&#945;''']

@@ -15,9 +15,9 @@
 
 [section Define the ODE]
 
-First of all, you have to specify the data type that represents a state ['x] of your system. Mathematically, this usually is an n-dimensional vector with real numbers or complex numbers as scalar objects. For odeint the most natural way is to use `vector< double >` or `vector< complex< double > >` to represent the system state. However, odeint can deal with other container types as well, e.g. `boost::array< double , N >`, as long as it is fulfills some requirements defined below.
+First of all, you have to specify the data type that represents a state ['x] of your system. Mathematically, this usually is an n-dimensional vector with real numbers or complex numbers as scalar objects. For odeint the most natural way is to use `vector< double >` or `vector< complex< double > >` to represent the system state. However, odeint can deal with other container types as well, e.g. `boost::array< double , N >`, as long as it fulfills some requirements defined below.
 
-To integrate a differential equation numerically, one also has to define the rhs of the equation ['x' = f(x)]. In odeint you supply this function in terms of an object that implements the ()-operator with a certain parameter structure. Hence, the straight forward way would be to just define a function, e.g:
+To integrate a differential equation numerically, one also has to define the rhs of the equation ['x' = f(x)]. In odeint you supply this function in terms of an object that implements the ()-operator with a certain parameter structure. Hence, the straightforward way would be to just define a function, e.g:
 
 [rhs_function]
 
@@ -54,7 +54,7 @@ The basic stepper just performs one time-step and doesn't give you any informati
 
 [define_const_stepper]
 
-This call integrates the system defined by `harmonic_oscillator` using the RK4 method from ['t=0] to ['10] with a step-size ['dt=0.01] and the initial condition given in `x`. The result, ['x(t=10)] is stored in `x` (in-place). Each stepper defines a `do_step` method which can used directly. So, you write down the above example as 
+This call integrates the system defined by `harmonic_oscillator` using the RK4 method from ['t=0] to ['10] with a step-size ['dt=0.01] and the initial condition given in `x`. The result, ['x(t=10)] is stored in `x` (in-place). Each stepper defines a `do_step` method which can also be used directly. So, you write down the above example as 
 
 [integrate_const_loop]
 
@@ -78,7 +78,7 @@ Given the error stepper, one still needs an instance that checks the error and a
 
 As above, this integrates the system defined by `harmonic_oscillator`, but now using an adaptive step size method based on the Runge-Kutta Cash-Karp 54 scheme from ['t=0] to ['10] with an initial step size of ['dt=0.01] (will be adjusted) and the initial condition given in x. The result, ['x(t=10)], will also be stored in x (in-place).
 
-In the above example an error stepper is nested in a controlled stepper. This is a nice technique; however one drawback is that one always needs to define both steppers. Of course, one could also write the instantiation of the controlled stepper into the call of the integrate function but a complete knowledge of the underlying stepper types is still necessary. Another point is, that the error tolerances for the step size control are not easily included into the controlled stepper. Both issues can be solved by using `make_controlled`:
+In the above example an error stepper is nested in a controlled stepper. This is a nice technique; however one drawback is that one always needs to define both steppers. One could also write the instantiation of the controlled stepper into the call of the integrate function but a complete knowledge of the underlying stepper types is still necessary. Another point is, that the error tolerances for the step size control are not easily included into the controlled stepper. Both issues can be solved by using `make_controlled`:
 
 [integrate_adapt_make_controlled]
 
@@ -88,7 +88,7 @@ relative error tolerance ['eps_rel] which is used during the integration. The te
 
 [integrate_adapt_make_controlled_alternative]
 
-For the Runge Kutta controller the error made during one step is compared with ['eps_abs + eps_rel * ( a[sub x] * |x| + a[sub dxdt] * dt * |dxdt| )]. If the error is smaller than this value the current step is accept otherwise it is rejected and the step size is decreased. Note, that the step size is also increased if the error gets too small compared to the rhs of the above relation. The full instantiation of the `controlled_runge_kutta` with all parameters is therefore
+For the Runge-Kutta controller the error made during one step is compared with ['eps_abs + eps_rel * ( a[sub x] * |x| + a[sub dxdt] * dt * |dxdt| )]. If the error is smaller than this value the current step is accepted, otherwise it is rejected and the step size is decreased. Note, that the step size is also increased if the error gets too small compared to the rhs of the above relation. The full instantiation of the `controlled_runge_kutta` with all parameters is therefore
 
 [integrate_adapt_full]
 

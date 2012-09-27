@@ -28,7 +28,7 @@ error_stepper::do_step( System sys , state_type &x , time_type t , time_type dt 
 [heading Description]
 
 An error stepper following this Error Stepper concept is capable of doing one step of the solution /x(t)/ of an ODE with step-size /dt/ to obtain /x(t+dt)/ and also computing an error estimate ['x[sub err]] of the result.
-Error Steppers can be Runge Kutta steppers, symplectic steppers as well as implicit steppers.
+Error Steppers can be Runge-Kutta steppers, symplectic steppers as well as implicit steppers.
 Based on the stepper type, the ODE is defined as __system, __symplectic_system, __simple_symplectic_system or __implicit_system.
 
 [heading Refinement of]

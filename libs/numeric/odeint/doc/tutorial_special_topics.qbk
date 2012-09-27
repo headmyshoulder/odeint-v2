@@ -16,24 +16,24 @@
 
 [import ../examples/stuart_landau.cpp]
 
-Thus far we have seen several examples defined for real values. Of course,
+Thus far we have seen several examples defined for real values. 
 odeint can handle complex state types, hence ODEs which are defined on complex
 vector spaces, as well. An example is the Stuart-Landau oscillator
 
 ['d __Psi / dt = ( 1 + i __eta ) __Psi + ( 1 + i __alpha ) | __Psi |[super 2] __Psi ]
 
-where ['__Psi] and ['i] is a complex variable. Hence the state type of this
-system is complex< double >. The definition of this ODE in C++ code is very simple
+where ['__Psi] and ['i] is a complex variable. The definition of this ODE in C++
+using complex< double > as a state type may look as follows
 
 [stuart_landau_system_function]
 
-Of course, one can also use classical functions to implement the state function. In this cast the Stuart-Landau oscillator looks like
+One can also use a function instead of a functor to implement it
 
 [stuart_landau_system_function_alternative]
 
 We strongly recommend to use the first ansatz. In this case you have explicit control over the parameters of the system and are not restricted to use global variables to parametrize the oscillator.
 
-When chosing the stepper type one has to account for the "unusual" state type:
+When choosing the stepper type one has to account for the "unusual" state type:
 it is a single `complex<double>` opposed to the vector types used in the
 previous examples. This means that no iterations over vector elements have to
 be performed inside the stepper algorithm. You can enforce this by supplying
@@ -43,7 +43,7 @@ section __adapt_state_types.
 
 [stuart_landau_integration]
 
-The full cpp file for the Stuart Landau example can be found here [github_link
+The full cpp file for the Stuart-Landau example can be found here [github_link
 libs/numeric/odeint/examples/stuart_landau.cpp stuart_landau.cpp]
 
 [note The fact that we have to configure a different algebra is solely due to
@@ -67,9 +67,9 @@ Like the __tut_solar_system, the FPU is solved again by a symplectic solver, but
 
 [fpu_system_function]
 
-Of course, you can also use `boost::array< double , N >` for the state type.
+You can also use `boost::array< double , N >` for the state type.
 
-Now, you have to define your initial values and perform the integration. All this can be easily done with the following piece of code:
+Now, you have to define your initial values and perform the integration:
 
 [fpu_integration]
 
@@ -85,7 +85,7 @@ The full cpp file for this FPU example can be found here [github_link libs/numer
 
 [import ../examples/phase_oscillator_ensemble.cpp]
 
-Another import high dimensional system of coupled ordinary differential equations is an ensemble of ['N] all-to-all coupled phase oscillators [9]. It is defined as
+Another important high dimensional system of coupled ordinary differential equations is an ensemble of ['N] all-to-all coupled phase oscillators [9]. It is defined as
 
 [' d__phi[subl k] / dt = __omega[subl k] + __epsilon / N __Sigma[subl j] sin( __phi[subl j] - __phi[subl k] )]
 
@@ -114,7 +114,7 @@ The full cpp file for this example can be found here [github_link libs/numeric/o
 [import ../examples/harmonic_oscillator_units.cpp]
 
 odeint also works well with __boost_units - a library for compile time unit
-and dimension analysis. Ot works by decoding unit information into the types
+and dimension analysis. It works by decoding unit information into the types
 of values. For a one-dimensional unit you can just use the Boost.Unit types as
 state type, deriv type and time type and hand the `vector_space_algebra` to
 the stepper definition and everything works just fine:
@@ -169,7 +169,7 @@ The full cpp file for this example can be found here [github_link libs/numeric/o
 
 odeint works well with a variety of different state types. It is not restricted to pure vector-wise types, like `vector< double >`, `array< double , N >`, `fusion::vector< double , double >`, etc. but also works with types having a different topology then simple vectors. Here, we show how odeint can be used with matrices as states type, in the next section we will show how can be used to solve ODEs defined on complex networks.
 
-By default, odeint can be used with `ublas::matrix< T >` as state type for matrices. A simple example is a two-dimensional lattice of coupled phase oscillators. We like phase oscillators, they are extremely easy and might serve for different demonstration purposes. Other matrix types like `mtl::dense_matrix` or blitz arrays and matrices can used as well but need some kind of activation in order to work with odeint. This activation is described in following sections,
+By default, odeint can be used with `ublas::matrix< T >` as state type for matrices. A simple example is a two-dimensional lattice of coupled phase oscillators. Other matrix types like `mtl::dense_matrix` or blitz arrays and matrices can used as well but need some kind of activation in order to work with odeint. This activation is described in following sections,
 
 The definition of the system is
 
@@ -184,24 +184,15 @@ The full cpp for this example can be found here [github_link libs/numeric/odeint
 [endsect]
 
 [/
-
 [section Partial differential equations]
-
 To be continued:
- 
 *Wave equation
-
 *KdV
 *Ginzburg-Landau
-
 [endsect]
-
 [section Ordinary differential equations on networks]
-
 to be continued
-
 [endsect]
-
 ]
 
 [section Using arbitrary precision floating point types]
@@ -210,7 +201,7 @@ to be continued
 
 Besides the classical floating point number like `float`, `double`, `complex< double >` you can also use arbitrary precision types, like the types from [@http://gmplib.org/ gmp] and [@http://www.mpfr.org/ mpfr]. But you have to be careful about instantiating any numbers.
 
-For gmp types you have to set the default precision before any number is instantiated. This can be easily done by calling `mpf_set_default_prec( precision )` as the first function in your main program. Secondly, you can not use any global constant variables since they will not be set with the default precision you have already set.
+For gmp types you have to set the default precision before any number is instantiated. This can be done by calling `mpf_set_default_prec( precision )` as the first function in your main program. Secondly, you can not use any global constant variables since they will not be set with the default precision you have already set.
 
 Here is a simple example:
 

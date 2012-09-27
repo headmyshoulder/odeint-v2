@@ -22,7 +22,7 @@ Solving ordinary differential equation numerically is usually done iteratively, 
 The first parameter is always the system function - a function describing the
 ODE. In the first version the second parameter is the step which is here
 updated in-place and the third and the fourth parameters are the time and step
-size (the time step). After a call of `do_step` the state `inout` is updated
+size (the time step). After a call to `do_step` the state `inout` is updated
 and now represents an approximate solution of the ODE at time ['t+dt]. In the
 second version the second argument is the state of the ODE at time ['t], the
 third argument is t, the fourth argument is the approximate solution at time
@@ -40,7 +40,7 @@ The function structure in most cases looks like:
 
 [system_function_structure] 
 
-Other types of system functions might represent Hamiltonian systems or system which also compute the Jacobian needed in implicit steppers. For information which stepper uses which system function see the stepper table below. It might be possible that odeint will introduce new system types in near future. Since the system function is strongly related to the stepper type, such an introduction of a new stepper might result in a new type of system function.
+Other types of system functions might represent Hamiltonian systems or systems which also compute the Jacobian needed in implicit steppers. For information which stepper uses which system function see the stepper table below. It might be possible that odeint will introduce new system types in near future. Since the system function is strongly related to the stepper type, such an introduction of a new stepper might result in a new type of system function.
 
 [section Explicit steppers]
 
@@ -52,11 +52,11 @@ solving implicit equations. Such steppers have in common that they evaluate the 
 
 `do_step( sys , in , dxdtin , t , out , dt )`
 
-Here, the additional parameter is the value of the function ['f] at state ['x] and time ['t]. An example is the Runge Kutta stepper of fourth order:
+Here, the additional parameter is the value of the function ['f] at state ['x] and time ['t]. An example is the Runge-Kutta stepper of fourth order:
 
 [explicit_stepper_detail_example]
 
-Of course, you do not need to call these two method. You can always use the
+In fact, you do not need to call these two methods. You can always use the
 simpler `do_step( sys , inout , t , dt )`, but sometimes the derivative of the
 state is needed externally to do some external computations or to perform some statistical analysis.
 
@@ -79,7 +79,7 @@ However, when using FSAL steppers without supplying derivatives:
 
 the stepper internally satisfies the FSAL property which means it remembers
 the last `dxdt` and uses it for the next step.
-An example for a FSAL stepper is the Runge-Kutta-Dopri5 stepper. The FSAL-trick is sometimes also referred as the Fehlberg-Trick. An example how the FSAL steppers can be used is
+An example for a FSAL stepper is the Runge-Kutta-Dopri5 stepper. The FSAL trick is sometimes also referred as the Fehlberg trick. An example how the FSAL steppers can be used is
 
 [fsal_stepper_detail_example]
 
@@ -94,7 +94,7 @@ within the integrate functions this is taken care of automatically. See the __us
 
 [section Symplectic solvers]
 
-As mentioned above symplectic solvers are used for Hamiltonian systems. Symplectic solvers conserve the phase space volume exactly and if the Hamiltonian system is energy conservative they also conserve the energy approximately. A special class of symplectic systems are separable systems which can be written in the form ['dqdt/dt = f1(p)], ['dpdt/dt = f2(q)], where ['(q,p)] are the state of system. The space of ['(q,p)] is sometimes referred as the phase space and ['q] and ['p] are said the be the phase space variables. Symplectic systems in this special form occur widely in nature. For example the complete classical mechanics as written down by Newton, Lagrange and Hamilton can be formulated in this framework. Of course, the separability of the system depends on the specific choice of coordinates.
+As mentioned above symplectic solvers are used for Hamiltonian systems. Symplectic solvers conserve the phase space volume exactly and if the Hamiltonian system is energy conservative they also conserve the energy approximately. A special class of symplectic systems are separable systems which can be written in the form ['dqdt/dt = f1(p)], ['dpdt/dt = f2(q)], where ['(q,p)] are the state of system. The space of ['(q,p)] is sometimes referred as the phase space and ['q] and ['p] are said the be the phase space variables. Symplectic systems in this special form occur widely in nature. For example the complete classical mechanics as written down by Newton, Lagrange and Hamilton can be formulated in this framework. The separability of the system depends on the specific choice of coordinates.
 
 Symplectic systems can be solved by odeint by means of the symplectic_euler stepper and a symplectic Runge-Kutta-Nystrom method of fourth order. These steppers assume that the system is autonomous, hence the time will not explicitly occur. Further they fulfill in principle the default Stepper concept, but they expect the system to be a pair of callable objects. The first entry of this pair calculates ['f1(p)] while the second calculates ['f2(q)].  The syntax is `sys.first(p,dqdt)` and `sys.second(q,dpdt)`, where the first and second part can be again simple C-functions of functors. An example is the harmonic oscillator: 
 
@@ -145,7 +145,7 @@ Multi-step methods differ from the normal steppers. They save a part of their hi
 
 The initialization uses a fourth-order Runge-Kutta stepper and after the call
 of `initialize` the state of `inout` has changed to the current state, such
-that it can be immediately used by passing it to following calls of `do_step`. Of course, you can also use you own steppers to initialize the internal state of the Adams-Bashforth-Stepper:
+that it can be immediately used by passing it to following calls of `do_step`. You can also use you own steppers to initialize the internal state of the Adams-Bashforth-Stepper:
 
 [multistep_detail_own_stepper_initialization]
 
@@ -154,7 +154,7 @@ Many multi-step methods are also explicit steppers, hence the parameter of  `do_
 [caution The multi-step methods have some internal variables which depend on
 the explicit solution. Hence after any external changes of your state (e.g. size) or
 system the initialize function has to be called again to adjust the internal
-state of the stepper. Of course, if you use the integrate functions this will
+state of the stepper. If you use the integrate functions this will
 be taken into account. See the __using_steppers section for more details.]
 
 
@@ -213,7 +213,7 @@ The construction of the dense output stepper looks a little bit nasty, since in 
 
 [dense_output_detail_generation1]
 
-Of course, this statement is also lengthy; it demonstrates how `make_dense_output` can be used with the `result_of` protocol. The parameters to `make_dense_output` are the absolute error tolerance, the relative error tolerance and the stepper. This explicitly assumes that the underlying stepper is a controlled stepper and that this stepper has an absolute and a relative error tolerance. For details about the generation functions see __generation_functions. The generation functions have been designed for easy use with the integrate functions:
+This statement is also lengthy; it demonstrates how `make_dense_output` can be used with the `result_of` protocol. The parameters to `make_dense_output` are the absolute error tolerance, the relative error tolerance and the stepper. This explicitly assumes that the underlying stepper is a controlled stepper and that this stepper has an absolute and a relative error tolerance. For details about the generation functions see __generation_functions. The generation functions have been designed for easy use with the integrate functions:
 
 [dense_output_detail_generation2]
 
@@ -278,18 +278,18 @@ sized vector types. If your state type is heap allocated, like `boost::array`,
 no memory allocation is required whatsoever.]
 
 By default the resizing parameter is `initially_resizer`, meaning that the
-first call to `do_step` performs the resizing, hence memory allocation. Of
-course, if you have changed the size of your system and your state you have to
+first call to `do_step` performs the resizing, hence memory allocation. 
+If you have changed the size of your system and your state you have to
 call `adjust_size` by hand in this case. The second resizer is the
 `always_resizer` which tries to resize the internal variables at every call of
 `do_step`. Typical use cases for this kind of resizer are self expanding
 lattices like shown in the tutorial (__resizing_lattice_example) or partial differential equations with an
 adaptive grid. Here, no calls of `adjust_size` are required, the steppers manage
-everything themselve. The third class of resizer is the `never_resizer` which
+everything themselves. The third class of resizer is the `never_resizer` which
 means that the internal variables are never adjusted automatically and always
 have to be adjusted by hand       .
 
-There is a second mechanism which influences the resizing and which controls if a state type is at least resizeable - a meta-function `is_resizeable`. This meta-function returns a static boolean value if any type is resizable. For example it will return `true` for `std::vector< T >` but `false` for `boost::array< T >`. By default and for unknown types `is_resizeable` returns `false`, so if you have your own type you need to specialize this meta-function. For more details on the resizing mechanism see the section __adapt_state_types.
+There is a second mechanism which influences the resizing and which controls if a state type is at least resizeable - a meta-function `is_resizeable`. This meta-function returns a static Boolean value if any type is resizable. For example it will return `true` for `std::vector< T >` but `false` for `boost::array< T >`. By default and for unknown types `is_resizeable` returns `false`, so if you have your own type you need to specialize this meta-function. For more details on the resizing mechanism see the section __adapt_state_types.
 
 
 
@@ -311,7 +311,7 @@ odeint provides a quite large number of different steppers such that the user is
 [endsect]
 
 
-[section Write own steppers]
+[section Custom steppers]
 
 [import ../examples/stochastic_euler.cpp]
 
@@ -362,7 +362,7 @@ Note, how we have used the `make_pair` function for the generation of the system
 
 [endsect]
 
-[section Writing own Runge-Kutta steppers]
+[section Custom Runge-Kutta steppers]
 
 [import ../examples/heun.cpp]
 
@@ -370,8 +370,8 @@ odeint provides a C++ template meta-algorithm for constructing arbitrary
 Runge-Kutta schemes [footnote M. Mulansky, K. Ahnert, Template-Metaprogramming
 applied to numerical problems, [@http://arxiv.org/abs/1110.3233 arxiv:1110.3233]]. Some schemes are predefined in odeint, for
 example the classical Runge-Kutta of fourth order, or the
-Runge-Kutta-Cash-Karp 54 and the Runge-Kutta-Fehlberg 78 method. Of course,
-you can use this meta algorithm to construct you own solvers. This has the
+Runge-Kutta-Cash-Karp 54 and the Runge-Kutta-Fehlberg 78 method. 
+You can use this meta algorithm to construct you own solvers. This has the
 advantage that you can make full use of odeint's algebra and operation system.
 
 Consider for example the method of Heun, defined by the following Butcher tableau:
@@ -390,10 +390,10 @@ Implementing this method is very easy. First you have to define the constants:
 
 [heun_define_coefficients]
 
-Ok, you are right, this looks rather ugly. Nevertheless, packing all
+While this might look cumbersome, packing all
 parameters into a templatized class which is not immediately evaluated has the
 advantage that you can change the `value_type` of your stepper to any type you
-like - presumably arbitrary precision types. Of course, one could instantiate
+like - presumably arbitrary precision types. One could also instantiate
 the coefficients directly
 
 ``

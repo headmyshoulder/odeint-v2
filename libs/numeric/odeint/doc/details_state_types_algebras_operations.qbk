@@ -328,8 +328,7 @@ This eventually makes odeint work with gsl vectors as state types.
 The full code for these bindings is found in [github_link
 boost/numeric/odeint/external/gsl/gsl_wrapper.hpp gsl_wrapper.hpp].
 It might look rather complicated but keep in mind that gsl is a pre-compiled C
-library so it is quite an achievement that it's possible to get it working at
-all in the first place.
+library.
 [endsect]
 
 

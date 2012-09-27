@@ -10,7 +10,7 @@
 =============================================================================/]
 
 
-[section Using OpenCL and VexCL]
+[section Using OpenCL via VexCL]
 
 [import ../examples/vexcl/lorenz_ensemble.cpp]
 
