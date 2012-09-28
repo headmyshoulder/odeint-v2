@@ -27,7 +27,7 @@ follows:
 
 Ordinary differential equations occur nearly everywhere in natural sciences. For example, the whole Newtonian mechanics are described by second order differential equations. Be sure, you will find them in every discipline. They also occur if partial differential equations (PDEs) are discretized. Then, a system of coupled ordinary differential occurs, sometimes also referred as lattices ODEs.
 
-Numerical approximations for the solution ['x(t)] are calculated iteratively. The easiest algorithm is the Euler-Scheme, where starting at ['x(0)] one finds ['x(dt) = x(0) + dt f(x(0),0)]. Now one can use ['x(dt)] and obtain ['x(2dt)] in a similar way and so on. The Euler method is of order 1, that means the error at each step is ['~ dt[super 2]]. This is, of course, not very satisfying, which is why the Euler method is rarely used for real life problems and serves just as illustrative example. 
+Numerical approximations for the solution ['x(t)] are calculated iteratively. The easiest algorithm is the Euler scheme, where starting at ['x(0)] one finds ['x(dt) = x(0) + dt f(x(0),0)]. Now one can use ['x(dt)] and obtain ['x(2dt)] in a similar way and so on. The Euler method is of order 1, that means the error at each step is ['~ dt[super 2]]. This is, of course, not very satisfying, which is why the Euler method is rarely used for real life problems and serves just as illustrative example. 
 
 The main focus of odeint is to provide numerical methods implemented in a way where the algorithm is completely independent on the data structure used to represent the state /x/.
 In doing so, odeint is applicable for a broad variety of situations and it can be used with many other libraries. Besides the usual case where the state is defined as a `std::vector` or a `boost::array`, we provide native support for the following libraries:
@@ -52,7 +52,7 @@ In odeint, the following algorithms are implemented:
 
 [section Usage, Compilation, Headers]
 
-odeint is completely header-only, no linking against pre-compiled code is required. It can be include by
+odeint is a header-only library, no linking against pre-compiled code is required. It can be included by
 
 ``
 #include <boost/numeric/odeint.hpp>
@@ -111,8 +111,8 @@ the integration steps so the time points will not be equally spaced. The
 integration returns the number of steps that were applied and updates x which
 is set to the approximate solution of the ODE at the end of integration.
 
-It is, of course, also possible to represent the ode system as a class. The
-rhs must then be implemented as a functor having defined the ()-operator:
+It is also possible to represent the ode system as a class. The
+rhs must then be implemented as a functor - a class with an overloaded function call operator:
 
 [rhs_class]
 
@@ -120,9 +120,8 @@ which can be used via
 
 [integration_class]
 
-You surely have already noticed that during the integration a lot of steps had
-to be done. You might wonder if you could access them do observe the solution
-during the iteration. Yes, this is possible, of course. All you have to do is
+In order to observe the solution
+during the integration steps all you have to do is
 to provide a reasonable observer. An example is
 
 [integrate_observer]
@@ -134,9 +133,10 @@ to pass this container to the integration function:
 
 [integrate_observ]
 
-That is all. Of course, you can use functional libraries like __boost_lambda or __boost_phoenix to ease the creation of observer functions.
+That is all. You can use functional libraries like __boost_lambda or __boost_phoenix to ease the creation of observer functions.
 
-The full cpp file for this example can be found here: [@../../examples/harmonic_oscillator.cpp]
+The full cpp file for this example can be found here: [github_link libs/numeric/odeint/examples/harmonic_oscillator.cpp harmonic_oscillator.cpp]
+
 
 
 [endsect]
