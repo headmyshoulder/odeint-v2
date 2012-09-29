@@ -31,8 +31,6 @@
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
 
-using namespace std;
-
 class const_gsl_vector_iterator;
 
 /*

@@ -25,10 +25,6 @@
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 
-#include <iostream>
-using namespace std;
-
-
 namespace boost {
 namespace numeric {
 namespace odeint {
