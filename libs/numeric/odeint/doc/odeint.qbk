@@ -135,7 +135,32 @@
 
 [include concepts.qbk]
 
-[/ [xinclude reference.xml] ]
+[xinclude reference.xml]
+
+[? enable_index
+'''
+  <index type="class_name">
+   <title>Class Index</title>
+  </index>
+  
+  <index type="typedef_name">
+  <title>Typedef Index</title>
+  </index>
+  
+  <index type="function_name">
+   <title>Function Index</title>
+  </index>
+
+    
+  <index type="macro_name">
+  <title>Macro Index</title>
+  </index>
+
+  <index/>
+'''
+]
+
+
 
 
 [/

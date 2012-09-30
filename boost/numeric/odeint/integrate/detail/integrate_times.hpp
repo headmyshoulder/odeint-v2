@@ -117,42 +117,43 @@ size_t integrate_times(
         Observer observer , dense_output_stepper_tag
 )
 {
-     typename odeint::unwrap_reference< Observer >::type &obs = observer;
-	 
-     if( start_time == end_time )
-         return 0;
-		 
-     Time last_time_point = *(end_time-1);
+    typename odeint::unwrap_reference< Observer >::type &obs = observer;
 
-     stepper.initialize( start_state , *start_time , dt );
-     obs( start_state , *start_time++ );
 
-     size_t count = 0;
-     while( start_time != end_time )
-     {
-         while( ( start_time != end_time ) && less_eq_with_sign( *start_time , stepper.current_time() , stepper.current_time_step() ) )
-         {
-             stepper.calc_state( *start_time , start_state );
-             obs( start_state , *start_time );
-             start_time++;
-         }
+    if( start_time == end_time )
+        return 0;
 
-         // we have not reached the end, do another real step
-         if( less_eq_with_sign( stepper.current_time() + stepper.current_time_step() ,
-                                last_time_point ,
-                                stepper.current_time_step() ) )
-         {
-             stepper.do_step( system );
-             ++count;
-         }
-         else if( start_time != end_time )
-         { // do the last step ending exactly on the end point
-             stepper.initialize( stepper.current_state() , stepper.current_time() , last_time_point - stepper.current_time() );
-             stepper.do_step( system );
-             ++count;
-         }
-     }
-     return count;
+    Time last_time_point = *(end_time-1);
+
+    stepper.initialize( start_state , *start_time , dt );
+    obs( start_state , *start_time++ );
+
+    size_t count = 0;
+    while( start_time != end_time )
+    {
+        while( ( start_time != end_time ) && less_eq_with_sign( *start_time , stepper.current_time() , stepper.current_time_step() ) )
+        {
+            stepper.calc_state( *start_time , start_state );
+            obs( start_state , *start_time );
+            start_time++;
+        }
+
+        // we have not reached the end, do another real step
+        if( less_eq_with_sign( stepper.current_time() + stepper.current_time_step() ,
+                               last_time_point ,
+                               stepper.current_time_step() ) )
+        {
+            stepper.do_step( system );
+            ++count;
+        }
+        else if( start_time != end_time )
+        { // do the last step ending exactly on the end point
+            stepper.initialize( stepper.current_state() , stepper.current_time() , last_time_point - stepper.current_time() );
+            stepper.do_step( system );
+            ++count;
+        }
+    }
+    return count;
 }
 
 
