@@ -12,6 +12,7 @@ import modules ;
 if --enable-index in  [ modules.peek : ARGV ]
 {
     ECHO "Building the Checks docs with automatic index generation enabled." ;
+    ECHO "An error will occur odeint.auto_index.docbook. There are two xml elements with idx_id_84 which must removed manually. Sorry, I do not how to handle this at the moment."
 
     using auto-index ;
 
