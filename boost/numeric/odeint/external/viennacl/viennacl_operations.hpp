@@ -57,7 +57,7 @@ struct viennacl_operations
             static generator::custom_operation op(
                     sym_v1 = sym_a1 * sym_v2
                            + sym_a2 * sym_v3,
-		    "scale_sum2"
+                    "scale_sum2"
                     );
 
             ocl::enqueue( op(v1,
@@ -104,7 +104,7 @@ struct viennacl_operations
                     sym_v1 = sym_a1 * sym_v2
                            + sym_a2 * sym_v3
                            + sym_a3 * sym_v4,
-		    "scale_sum3"
+                    "scale_sum3"
                     );
 
             ocl::enqueue( op(v1,
@@ -157,7 +157,7 @@ struct viennacl_operations
                            + sym_a2 * sym_v3
                            + sym_a3 * sym_v4
                            + sym_a4 * sym_v5,
-		    "scale_sum4"
+                    "scale_sum4"
                     );
 
             ocl::enqueue( op(v1,
@@ -217,7 +217,7 @@ struct viennacl_operations
                            + sym_a3 * sym_v4
                            + sym_a4 * sym_v5
                            + sym_a5 * sym_v6,
-		    "scale_sum5"
+                    "scale_sum5"
                     );
 
             ocl::enqueue( op(v1,
