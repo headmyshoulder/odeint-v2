@@ -53,6 +53,7 @@ test-suite "odeint"
     [ run adaptive_time_iterator.cpp ]
     [ run is_resizeable.cpp ]
     [ run resize.cpp ]
+    [ run same_size.cpp ]
     [ run symplectic_steppers.cpp ]
     : <testing.launcher>valgrind
     ;
