@@ -137,6 +137,7 @@
 
 [xinclude reference.xml]
 
+
 [? enable_index
 '''
   <index type="class_name">
