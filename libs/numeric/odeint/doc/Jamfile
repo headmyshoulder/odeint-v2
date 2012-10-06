@@ -8,6 +8,9 @@ import boostbook ;
 import doxygen ;
 import modules ;
 
+project : requirements
+        <include>$(BOOST_ROOT)/tools/auto_index/include
+        ;
 
 if --enable-index in  [ modules.peek : ARGV ]
 {

@@ -8,7 +8,6 @@ import modules ;
 import path ;
 
 path-constant BOOST_ROOT : [ os.environ BOOST_ROOT ] ; 
-#path-constant BOOST_ROOT : /neutrino/mario/boost_1_47_0/ ;
 
 project 
    : requirements 

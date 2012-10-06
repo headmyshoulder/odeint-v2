@@ -28,6 +28,10 @@
      ]
 ]
 
+[include auto_index_helpers.qbk]
+
+
+
 [def __boost_lambda
     [@http://www.boost.org/doc/libs/release/doc/html/lambda.html Boost.Lambda]]
 [def __boost_phoenix
