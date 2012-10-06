@@ -49,7 +49,8 @@ doxygen reference
     :
     [ glob ../../../../boost/numeric/odeint/*.hpp ] 
     [ glob ../../../../boost/numeric/odeint/stepper/*.hpp ]
-    [ glob ../../../../boost/numeric/odeint/generation/*.hpp ]
+    [ glob ../../../../boost/numeric/odeint/stepper/base/*.hpp ]
+    [ glob ../../../../boost/numeric/odeint/stepper/generation/*.hpp ]
     [ glob ../../../../boost/numeric/odeint/integrate/*.hpp ]
     [ glob ../../../../boost/numeric/odeint/iterator/*.hpp ]
     [ glob ../../../../boost/numeric/odeint/algebra/*.hpp ]
@@ -78,13 +79,13 @@ doxygen reference
     # <doxygen:param>ABBREVIATE_BRIEF=NO # Probably not wanted.
     # <doxygen:param>EXTRACT_ALL=YES # Documents everything, probably best to use to start and only extract selected items if it proves to be unmanageable.
     <doxygen:param>INLINE_INHERITED_MEMB=YES # Show all inherited members of a class in the documentation of that class as if those members were ordinary class members.
+    <doxygen:param>INHERIT_DOCS=YES
     <doxygen:param>SORT_MEMBER_DOCS=YES # sort docs into alphabetical order - generally useful.
     #<doxygen:param>EXTRACT_PRIVATE=YES # Show all private members. Less useful for user documentation.
     <doxygen:param>EXTRACT_PRIVATE=NO # If the EXTRACT_PRIVATE tag is set to YES all private members of a class will be included in the documentation
     <doxygen:param>EXTRACT_STATIC=YES # Show all static members.
 
-    # <doxygen:param>EXTRACT_LOCAL_METHODS=YES # Only useful for Objective C.
-    # <doxygen:param>EXTRACT_ANON_NSPACES=YES # Probably not useful for user documentation?
+    <doxygen:param>EXTRACT_ANON_NSPACES=NO # Probably not useful for user documentation?
     <doxygen:param>EXTRACT_LOCAL_CLASSES=YES # If the EXTRACT_LOCAL_CLASSES tag is set to YES classes (and structs) defined locally in source files will be included in the documentation.
     <doxygen:param>EXTRACT_LOCAL_METHODS=YES # Less useful for user documentation.
     # The following are over-ridden by EXTRACT_ALL=YES
@@ -105,7 +106,8 @@ doxygen reference
     \"BOOST_UNITS_STATIC_CONSTANT(a,b)=static const b a\" \\
     \"BOOST_UNITS_TYPEOF(a)=typeof(a)\" \\
     \"BOOST_PREVENT_MACRO_SUBSTITUTION=\" \\
-    \"BOOST_UNITS_HAS_TYPEOF=1\""
+    \"BOOST_UNITS_HAS_TYPEOF=1\" \\
+    \"DOXYGEN_SKIP=1\" "
     <doxygen:param>ENABLE_PREPROCESSING=YES # Evaluates all C-preprocessor directives found in files.
     <doxygen:param>MACRO_EXPANSION=YES # Will expand all macro names.
     <doxygen:param>EXPAND_ONLY_PREDEF=YES # Only predefined macros expanded.  See units library for an example.

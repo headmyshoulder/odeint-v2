@@ -19,6 +19,11 @@
 #define BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA4_HPP_INCLUDED
 
 
+/** \file boost/numeric/odeint/stepper/runge_kutta4.hpp
+ * The file implements the classical Runge-Kutta stepper of fourth order with the help of the generic stepper.
+ */
+
+
 #include <boost/fusion/container/vector.hpp>
 #include <boost/fusion/container/generation/make_vector.hpp>
 
@@ -36,6 +41,7 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+/*! \cond !*/
 template< class Value = double >
 struct rk4_coefficients_a1 : boost::array< Value , 1 >
 {
@@ -90,8 +96,16 @@ struct rk4_coefficients_c : boost::array< Value , 4 >
         (*this)[3] = static_cast<Value>(1);
     }
 };
+/*! \endcond */
 
 
+/**
+ * \class runge_kutta4
+ * \brief The classical Runge-Kutta stepper of fourth order.
+ *
+ * More details.
+ * 
+ */
 template<
 class State ,
 class Value = double ,
@@ -107,19 +121,22 @@ Algebra , Operations , Resizer >
 
 public:
 
-    typedef explicit_generic_rk< 4 , 4 , State , Value , Deriv , Time ,
-            Algebra , Operations , Resizer > stepper_base_type;
 
     typedef typename stepper_base_type::state_type state_type;
-    typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
     typedef typename stepper_base_type::value_type value_type;
     typedef typename stepper_base_type::deriv_type deriv_type;
-    typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
     typedef typename stepper_base_type::time_type time_type;
     typedef typename stepper_base_type::algebra_type algebra_type;
     typedef typename stepper_base_type::operations_type operations_type;
     typedef typename stepper_base_type::resizer_type resizer_type;
     typedef typename stepper_base_type::stepper_type stepper_type;
+
+    #ifndef DOXYGEN_SKIP
+    typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
+    typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
+    typedef explicit_generic_rk< 4 , 4 , State , Value , Deriv , Time ,
+            Algebra , Operations , Resizer > stepper_base_type;
+    #endif 
 
     runge_kutta4( const algebra_type &algebra = algebra_type() ) : stepper_base_type(
             boost::fusion::make_vector( rk4_coefficients_a1<Value>() , rk4_coefficients_a2<Value>() , rk4_coefficients_a3<Value>() ) ,
