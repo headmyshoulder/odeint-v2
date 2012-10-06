@@ -44,7 +44,7 @@ snippet  \<snippet\w*\>
 png
 Quickbook
 Verhoeff
-version \<version\w*\>
+# version \<version\w*\>
 VISA
 warning \<warning\w*\>
 

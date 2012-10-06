@@ -12,7 +12,6 @@ import modules ;
 if --enable-index in  [ modules.peek : ARGV ]
 {
     ECHO "Building the Checks docs with automatic index generation enabled." ;
-    ECHO "An error will occur odeint.auto_index.docbook. There are two xml elements with idx_id_84 which must removed manually. Sorry, I do not how to handle this at the moment."
 
     using auto-index ;
 
@@ -291,40 +290,4 @@ install callouts : [ glob src/images/callouts/*.png ] : <location>html/images/ca
 
 
 
-
-#xml odeint_xml
-#    : 
-#    odeint.qbk
-#    ;
-
-#boostbook odeint
-#:
-#        odeint.qbk
-#:
-#          <xsl:param>navig.graphics=1
-#          <xsl:param>boost.root=../../../..
-#          <xsl:param>chunk.section.depth=2
-#          <xsl:param>chunk.first.sections=1
-#          <xsl:param>toc.section.depth=2
-#          <xsl:param>toc.max.depth=2
-#          <xsl:param>generate.section.toc.level=3
-##        <xsl:param>chunk.section.depth=10
-##        <xsl:param>chunk.first.sections=1
-##        <xsl:param>toc.section.depth=10
-##        <xsl:param>toc.max.depth=4
-##        <xsl:param>generate.section.toc.level=10
-#        
-#;
-
-#install doc
-#        : [ glob-tree *.html *.jpg *.css ]
-#        : <location>../../../../doc/ <install-source-root>html
-#        ;
-
-
-# doxygen reference.doxy
-# cd xml
-# xsltproc combine.xsd index.xml > all.xml
-# cd ..
-# xsltproc /photon/karsten_local/boost/boost_1_45_0/tools/boostbook/xsl/doxygen/doxygen2boostbook.xsl all.xml > reference.xml
 
