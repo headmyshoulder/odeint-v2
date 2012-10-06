@@ -41,7 +41,7 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-/*! \cond !*/
+/*! \cond */
 template< class Value = double >
 struct rk4_coefficients_a1 : boost::array< Value , 1 >
 {
@@ -121,6 +121,12 @@ Algebra , Operations , Resizer >
 
 public:
 
+    #ifndef DOXYGEN_SKIP
+    typedef explicit_generic_rk< 4 , 4 , State , Value , Deriv , Time ,
+            Algebra , Operations , Resizer > stepper_base_type;
+    typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
+    typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
+    #endif
 
     typedef typename stepper_base_type::state_type state_type;
     typedef typename stepper_base_type::value_type value_type;
@@ -131,12 +137,6 @@ public:
     typedef typename stepper_base_type::resizer_type resizer_type;
     typedef typename stepper_base_type::stepper_type stepper_type;
 
-    #ifndef DOXYGEN_SKIP
-    typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
-    typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
-    typedef explicit_generic_rk< 4 , 4 , State , Value , Deriv , Time ,
-            Algebra , Operations , Resizer > stepper_base_type;
-    #endif 
 
     runge_kutta4( const algebra_type &algebra = algebra_type() ) : stepper_base_type(
             boost::fusion::make_vector( rk4_coefficients_a1<Value>() , rk4_coefficients_a2<Value>() , rk4_coefficients_a3<Value>() ) ,
