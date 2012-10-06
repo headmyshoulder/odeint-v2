@@ -1,22 +1,24 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title>Using OpenCL and VexCL</title>
-<link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<title>Using OpenCL via VexCL</title>
+<link rel="stylesheet" href="../.././boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.77.0">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../tutorial.html" title="Tutorial">
-<link rel="prev" href="using_cuda_and_thrust.html" title="Using Cuda and Thrust">
+<link rel="prev" href="using_cuda__or_openmp__tbb_______via_thrust.html" title="Using CUDA (or OpenMP, TBB, ...) via Thrust">
 <link rel="next" href="all_examples.html" title="All examples">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="" width="" height="" src="../../logo.jpg"></td></tr></table>
+<hr>
 <div class="spirit-nav">
-<a accesskey="p" href="using_cuda_and_thrust.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="all_examples.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="using_cuda__or_openmp__tbb_______via_thrust.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="all_examples.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_numeric_odeint.tutorial.using_opencl_and_vexcl"></a><a class="link" href="using_opencl_and_vexcl.html" title="Using OpenCL and VexCL">Using
-      OpenCL and VexCL</a>
+<a name="boost_numeric_odeint.tutorial.using_opencl_via_vexcl"></a><a class="link" href="using_opencl_via_vexcl.html" title="Using OpenCL via VexCL">Using
+      OpenCL via VexCL</a>
 </h3></div></div></div>
 <p>
         In the previous section the usage of odeint in combination with <a href="http://code.google.com/p/thrust/" target="_top">Thrust</a>
@@ -113,9 +115,8 @@
 <p>
         It's very easy, isn't it? These three little lines do all the computations
         for you. There is no need to write your own OpenCL kernels. <a href="https://github.com/ddemidov/vexcl" target="_top">VexCL</a>
-        does everything for you. Next we have to write the main application. This
-        is also very easy. We initialize the vector of parameters (R) and the initial
-        state. Since <a href="https://github.com/ddemidov/vexcl" target="_top">VexCL</a>
+        does everything for you. Next we have to write the main application. We initialize
+        the vector of parameters (R) and the initial state. Since <a href="https://github.com/ddemidov/vexcl" target="_top">VexCL</a>
         supports odeint we can already use the <code class="computeroutput"><span class="identifier">vector_space_algebra</span></code>
         in combination with the <code class="computeroutput"><span class="identifier">default_operations</span></code>
         for the stepper and we are done:
@@ -166,7 +167,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="using_cuda_and_thrust.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="all_examples.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="using_cuda__or_openmp__tbb_______via_thrust.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="all_examples.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

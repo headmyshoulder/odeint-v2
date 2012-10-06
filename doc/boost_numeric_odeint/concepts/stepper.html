@@ -2,14 +2,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Stepper</title>
-<link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="stylesheet" href="../.././boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.77.0">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../concepts.html" title="Concepts">
 <link rel="prev" href="implicit_system.html" title="Implicit System">
 <link rel="next" href="error_stepper.html" title="Error Stepper">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="" width="" height="" src="../../logo.jpg"></td></tr></table>
+<hr>
 <div class="spirit-nav">
 <a accesskey="p" href="implicit_system.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../concepts.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="error_stepper.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
@@ -24,13 +26,13 @@
       </p>
 <h5>
 <a name="boost_numeric_odeint.concepts.stepper.h0"></a>
-        <span><a name="boost_numeric_odeint.concepts.stepper.description"></a></span><a class="link" href="stepper.html#boost_numeric_odeint.concepts.stepper.description">Description</a>
+        <span class="phrase"><a name="boost_numeric_odeint.concepts.stepper.description"></a></span><a class="link" href="stepper.html#boost_numeric_odeint.concepts.stepper.description">Description</a>
       </h5>
 <p>
         The basic stepper concept. A basic stepper following this Stepper concept
         is able to perform a single step of the solution <span class="emphasis"><em>x(t)</em></span>
         of an ODE to obtain <span class="emphasis"><em>x(t+dt)</em></span> using a given step size
-        <span class="emphasis"><em>dt</em></span>. Basic steppers can be Runge Kutta steppers, symplectic
+        <span class="emphasis"><em>dt</em></span>. Basic steppers can be Runge-Kutta steppers, symplectic
         steppers as well as implicit steppers. Depending on the actual stepper, the
         ODE is defined as <a class="link" href="system.html" title="System">System</a>,
         <a class="link" href="symplectic_system.html" title="Symplectic System">Symplectic
@@ -40,10 +42,10 @@
       </p>
 <h5>
 <a name="boost_numeric_odeint.concepts.stepper.h1"></a>
-        <span><a name="boost_numeric_odeint.concepts.stepper.refinement_of"></a></span><a class="link" href="stepper.html#boost_numeric_odeint.concepts.stepper.refinement_of">Refinement
+        <span class="phrase"><a name="boost_numeric_odeint.concepts.stepper.refinement_of"></a></span><a class="link" href="stepper.html#boost_numeric_odeint.concepts.stepper.refinement_of">Refinement
         of</a>
       </h5>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
             DefaultConstructable
           </li>
@@ -53,10 +55,10 @@
 </ul></div>
 <h5>
 <a name="boost_numeric_odeint.concepts.stepper.h2"></a>
-        <span><a name="boost_numeric_odeint.concepts.stepper.associated_types"></a></span><a class="link" href="stepper.html#boost_numeric_odeint.concepts.stepper.associated_types">Associated
+        <span class="phrase"><a name="boost_numeric_odeint.concepts.stepper.associated_types"></a></span><a class="link" href="stepper.html#boost_numeric_odeint.concepts.stepper.associated_types">Associated
         types</a>
       </h5>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
             <p><span class="bold"><strong>state_type</strong></span></p>
 <p><code class="computeroutput"><span class="identifier">Stepper</span><span class="special">::</span><span class="identifier">state_type</span></code></p>
@@ -101,11 +103,11 @@
 </ul></div>
 <h5>
 <a name="boost_numeric_odeint.concepts.stepper.h3"></a>
-        <span><a name="boost_numeric_odeint.concepts.stepper.notation"></a></span><a class="link" href="stepper.html#boost_numeric_odeint.concepts.stepper.notation">Notation</a>
+        <span class="phrase"><a name="boost_numeric_odeint.concepts.stepper.notation"></a></span><a class="link" href="stepper.html#boost_numeric_odeint.concepts.stepper.notation">Notation</a>
       </h5>
 <div class="variablelist">
 <p class="title"><b></b></p>
-<dl>
+<dl class="variablelist">
 <dt><span class="term"><code class="computeroutput"><span class="identifier">Stepper</span></code></span></dt>
 <dd><p>
               A type that is a model of Stepper
@@ -143,7 +145,7 @@
 </div>
 <h5>
 <a name="boost_numeric_odeint.concepts.stepper.h4"></a>
-        <span><a name="boost_numeric_odeint.concepts.stepper.valid_expressions"></a></span><a class="link" href="stepper.html#boost_numeric_odeint.concepts.stepper.valid_expressions">Valid Expressions</a>
+        <span class="phrase"><a name="boost_numeric_odeint.concepts.stepper.valid_expressions"></a></span><a class="link" href="stepper.html#boost_numeric_odeint.concepts.stepper.valid_expressions">Valid Expressions</a>
       </h5>
 <div class="informaltable"><table class="table">
 <colgroup>
@@ -228,9 +230,9 @@
 </table></div>
 <h5>
 <a name="boost_numeric_odeint.concepts.stepper.h5"></a>
-        <span><a name="boost_numeric_odeint.concepts.stepper.models"></a></span><a class="link" href="stepper.html#boost_numeric_odeint.concepts.stepper.models">Models</a>
+        <span class="phrase"><a name="boost_numeric_odeint.concepts.stepper.models"></a></span><a class="link" href="stepper.html#boost_numeric_odeint.concepts.stepper.models">Models</a>
       </h5>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
             <code class="computeroutput"><span class="identifier">runge_kutta4</span></code>
           </li>
