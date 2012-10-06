@@ -73,14 +73,7 @@
     }
 
     h1 { font-size: 140%; }
-    h2 { 
-/* changed by Mario Mulansky to show logo instead of title */
-height: 127px;
-background: white url(logo.jpg) left no-repeat;
-text-indent: -999px;
-/* end change */
-font-weight: bold; font-size: 140%; 
-}
+    h2 { font-weight: bold; font-size: 140%; }
     h3 { font-weight: bold; font-size: 130%; }
     h4 { font-weight: bold; font-size: 120%; }
     h5 { font-weight: normal; font-style: italic; font-size: 110%; }
