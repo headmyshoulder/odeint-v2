@@ -142,29 +142,19 @@
 [xinclude reference.xml]
 
 
-[? enable_index
-'''
-  <index type="class_name">
-   <title>Class Index</title>
-  </index>
-  
-  <index type="function_name">
-   <title>Function Index</title>
-  </index>
 
-  <index/>
-'''
-]
+[section:indexes Indexes]
 
+[named_index class_name Class Index]
+[named_index function_name Function Index]
 [/
-  <index type="typedef_name">
-  <title>Typedef Index</title>
-  </index>
-    
-  <index type="macro_name">
-  <title>Macro Index</title>
-  </index>
+[named_index typedef_name Typedef Index]
+[named_index macro_name Macro Index]
 ]
+[index]
+
+[endsect]
+
 
 
 
