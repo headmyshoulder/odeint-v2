@@ -98,6 +98,20 @@
     [link boost_numeric_odeint.tutorial.special_topics.self_expanding_lattices Self expanding lattices]]
 
 
+[def __nr_ref [link numerical_recipies \[1\] ]]
+[def __hairer_1_ref [link hairer_solving_odes_1 \[2\] ]]
+[def __hairer_2_ref [link hairer_solving_odes_2 \[3\] ]]
+[def __hairer_geom_ref [link hairer_geometrical_numeric_integration \[4\] ]]
+[def __leimkuhler_reich_ref [link leimkuhler_reich_simulating_hamiltonian_dynamics \[5\] ]]
+[def __symplectic_integrator_1_ref [link symplectic_yoshida_symplectic_integrators \[6\] ]]
+[def __symplectic_integrator_2_ref [link symplectic_mylachlan_symmetric_composition_mehtods \[7\] ]]
+[def __fpu_scholarpedia_ref [link fpu_scholarpedia \[8\] ]]
+[def __synchronization_pikovsky_ref [link synchronization_pikovsky_rosenblum \[9\] ]]
+
+
+
+
+
 [def __alpha '''&#945;''']
 [def __beta '''&#946;''']
 [def __delta '''&#948;''']
@@ -131,6 +145,9 @@
 [template github_link[url text]'''<ulink url="https://github.com/headmyshoulder/odeint-v2/tree/master/'''[url]'''" target="_blank">'''[text]'''</ulink>''']
 [/ [template github_link[url text]'''<ulink url="'''[url]'''" target="_blank">'''[text]'''</ulink>'''] ]
 
+
+
+
 [include getting_started.qbk]
 
 [include tutorial.qbk]
@@ -141,8 +158,10 @@
 
 [xinclude reference.xml]
 
+[include literature.qbk]
 
 
+[?enable-index]
 [section:indexes Indexes]
 
 [named_index class_name Class Index]
@@ -154,7 +173,7 @@
 [index]
 
 [endsect]
-
+]
 
 
 

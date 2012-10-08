@@ -99,14 +99,13 @@ Now, we have to define the initial state from which the integration should start
 
 [state_initialization]
 
-For the integration itself we'll use the [funcref boost::numeric::odeint::integrate integrate] function, which is a  convenient way to get quick results. It is based on the error-controlled [classref boost::numeric::odeint::runge_kutta_rk5_ck runge_kutta_rk5_ck] stepper (5th order) and uses adaptive step-size.
+For the integration itself we'll use the `integrate` function, which is a  convenient way to get quick results. It is based on the error-controlled `runge_kutta54_cash_karp` stepper (5th order) and uses adaptive step-size.
 
 [integration]
 
 The integrate function expects as parameters the rhs of the ode as defined
 above, the initial state `x`, the start-and end-time of the integration as
-well as the initial time step=size. Note, that [funcref
-boost::numeric::odeint::integrate integrate] uses an adaptive step-size during
+well as the initial time step=size. Note, that `integrate` uses an adaptive step-size during
 the integration steps so the time points will not be equally spaced. The
 integration returns the number of steps that were applied and updates x which
 is set to the approximate solution of the ODE at the end of integration.

@@ -57,7 +57,7 @@ values. So for, e.g. `vector< complex<double> >`, this would not be required.]
 [import ../examples/fpu.cpp]
 
 
-odeint can also be used to solve ordinary differential equations defined on lattices. A prominent example is the Fermi-Pasta-Ulam system [8]. It is a Hamiltonian system of nonlinear coupled harmonic oscillators. The Hamiltonian is
+odeint can also be used to solve ordinary differential equations defined on lattices. A prominent example is the Fermi-Pasta-Ulam system __fpu_scholarpedia_ref. It is a Hamiltonian system of nonlinear coupled harmonic oscillators. The Hamiltonian is
 
 [' H = __Sigma[subl i] p[subl i][super 2]/2 + 1/2 ( q[subl i+1] - q[subl i] )^2 + __beta / 4 ( q[subl i+1] - q[subl i] )^4 ]
 
@@ -85,7 +85,7 @@ The full cpp file for this FPU example can be found here [github_link libs/numer
 
 [import ../examples/phase_oscillator_ensemble.cpp]
 
-Another important high dimensional system of coupled ordinary differential equations is an ensemble of ['N] all-to-all coupled phase oscillators [9]. It is defined as
+Another important high dimensional system of coupled ordinary differential equations is an ensemble of ['N] all-to-all coupled phase oscillators __synchronization_pikovsky_ref. It is defined as
 
 [' d__phi[subl k] / dt = __omega[subl k] + __epsilon / N __Sigma[subl j] sin( __phi[subl j] - __phi[subl k] )]
 
