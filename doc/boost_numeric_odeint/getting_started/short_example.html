@@ -2,14 +2,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Short Example</title>
-<link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="stylesheet" href="../.././boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.77.0">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../getting_started.html" title="Getting started">
 <link rel="prev" href="usage__compilation__headers.html" title="Usage, Compilation, Headers">
 <link rel="next" href="../tutorial.html" title="Tutorial">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="" width="" height="" src="../../logo.jpg"></td></tr></table>
+<hr>
 <div class="spirit-nav">
 <a accesskey="p" href="usage__compilation__headers.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../getting_started.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="../tutorial.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
@@ -48,7 +50,7 @@
         Here we chose <code class="computeroutput"><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span></code>
         as the state type, but others are also possible, for example <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span><span class="number">2</span><span class="special">&gt;</span></code>. odeint is designed in such a way that
         you can easily use your own state types. Next, the ODE is defined which is
-        in this case a simple function calculating <span class="emphasis"><em>f(x)'</em></span>. The
+        in this case a simple function calculating <span class="emphasis"><em>f(x)</em></span>. The
         parameter signature of this function is crucial: the integration methods
         will always call them in the form <code class="computeroutput"><span class="identifier">f</span><span class="special">(</span><span class="identifier">x</span><span class="special">,</span>
         <span class="identifier">dxdt</span><span class="special">,</span>
@@ -70,7 +72,7 @@
 <p>
       </p>
 <p>
-        For the integration itself we'll use the <code class="computeroutput">integrate</code>
+        For the integration itself we'll use the <code class="computeroutput"><a class="link" href="../../header/boost/numeric/odeint/integrate/integrate_hpp.html#boost.numeric.odeint.integrate_idp22122544">integrate</a></code>
         function, which is a convenient way to get quick results. It is based on
         the error-controlled <code class="computeroutput">runge_kutta_rk5_ck</code>
         stepper (5th order) and uses adaptive step-size.
@@ -86,15 +88,16 @@
         The integrate function expects as parameters the rhs of the ode as defined
         above, the initial state <code class="computeroutput"><span class="identifier">x</span></code>,
         the start-and end-time of the integration as well as the initial time step=size.
-        Note, that <code class="computeroutput">integrate</code>
+        Note, that <code class="computeroutput"><a class="link" href="../../header/boost/numeric/odeint/integrate/integrate_hpp.html#boost.numeric.odeint.integrate_idp22122544">integrate</a></code>
         uses an adaptive step-size during the integration steps so the time points
         will not be equally spaced. The integration returns the number of steps that
         were applied and updates x which is set to the approximate solution of the
         ODE at the end of integration.
       </p>
 <p>
-        It is, of course, also possible to represent the ode system as a class. The
-        rhs must then be implemented as a functor having defined the ()-operator:
+        It is also possible to represent the ode system as a class. The rhs must
+        then be implemented as a functor - a class with an overloaded function call
+        operator:
       </p>
 <p>
 </p>
@@ -127,10 +130,8 @@
 <p>
       </p>
 <p>
-        You surely have already noticed that during the integration a lot of steps
-        had to be done. You might wonder if you could access them do observe the
-        solution during the iteration. Yes, this is possible, of course. All you
-        have to do is to provide a reasonable observer. An example is
+        In order to observe the solution during the integration steps all you have
+        to do is to provide a reasonable observer. An example is
       </p>
 <p>
 </p>
@@ -175,12 +176,12 @@
 <p>
       </p>
 <p>
-        That is all. Of course, you can use functional libraries like <a href="http://www.boost.org/doc/libs/release/doc/html/lambda.html" target="_top">Boost.Lambda</a>
+        That is all. You can use functional libraries like <a href="http://www.boost.org/doc/libs/release/doc/html/lambda.html" target="_top">Boost.Lambda</a>
         or <a href="http://www.boost.org/doc/libs/1_46_1/libs/spirit/phoenix/doc/html/index.html" target="_top">Boost.Phoenix</a>
         to ease the creation of observer functions.
       </p>
 <p>
-        The full cpp file for this example can be found here: <a href="../../../../examples/harmonic_oscillator.cpp" target="_top">../../examples/harmonic_oscillator.cpp</a>
+        The full cpp file for this example can be found here: <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/harmonic_oscillator.cpp" target="_top">harmonic_oscillator.cpp</a>
       </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

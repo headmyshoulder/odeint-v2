@@ -1,33 +1,36 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title>Iterators</title>
-<link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<title>Iterators and Ranges</title>
+<link rel="stylesheet" href="../.././boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.77.0">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../odeint_in_detail.html" title="odeint in detail">
 <link rel="prev" href="integrate_functions.html" title="Integrate functions">
 <link rel="next" href="state_types__algebras_and_operations.html" title="State types, algebras and operations">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="" width="" height="" src="../../logo.jpg"></td></tr></table>
+<hr>
 <div class="spirit-nav">
 <a accesskey="p" href="integrate_functions.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../odeint_in_detail.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="state_types__algebras_and_operations.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_numeric_odeint.odeint_in_detail.iterators"></a><a class="link" href="iterators.html" title="Iterators">Iterators</a>
+<a name="boost_numeric_odeint.odeint_in_detail.iterators_and_ranges"></a><a class="link" href="iterators_and_ranges.html" title="Iterators and Ranges">Iterators
+      and Ranges</a>
 </h3></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="iterators.html#boost_numeric_odeint.odeint_in_detail.iterators.const_step_iterator">const_step_iterator</a></span></dt>
-<dt><span class="section"><a href="iterators.html#boost_numeric_odeint.odeint_in_detail.iterators.const_step_time_iterator">const_step_time_iterator</a></span></dt>
-<dt><span class="section"><a href="iterators.html#boost_numeric_odeint.odeint_in_detail.iterators.adaptive_step_iterator">adaptive_step_iterator</a></span></dt>
-<dt><span class="section"><a href="iterators.html#boost_numeric_odeint.odeint_in_detail.iterators.adaptive_step_time_iterator">adaptive_step_time_iterator</a></span></dt>
+<dt><span class="section"><a href="iterators_and_ranges.html#boost_numeric_odeint.odeint_in_detail.iterators_and_ranges.const_step_iterator">const_step_iterator</a></span></dt>
+<dt><span class="section"><a href="iterators_and_ranges.html#boost_numeric_odeint.odeint_in_detail.iterators_and_ranges.const_step_time_iterator">const_step_time_iterator</a></span></dt>
+<dt><span class="section"><a href="iterators_and_ranges.html#boost_numeric_odeint.odeint_in_detail.iterators_and_ranges.adaptive_step_iterator">adaptive_step_iterator</a></span></dt>
+<dt><span class="section"><a href="iterators_and_ranges.html#boost_numeric_odeint.odeint_in_detail.iterators_and_ranges.adaptive_step_time_iterator">adaptive_step_time_iterator</a></span></dt>
 </dl></div>
 <p>
         odeint supports iterators for iterating through an ordinary differential
         equation. They offer you an alternative to the integrate functions. Furthermore,
         many of the standard algorithms in the C++ standard library and Boost.Range
-        can be used with the odeint't iterators.
+        can be used with the odeint's iterators.
       </p>
 <p>
         Four iterators are provided. They are all single pass iterators. The first
@@ -53,7 +56,7 @@
         factory functions <code class="computeroutput"><span class="identifier">make_const_step_iterator_begin</span></code>
         and <code class="computeroutput"><span class="identifier">make_const_step_iterator_end</span></code>.
         odeint also supports Boost.Range, that is you write the above example in
-        a shortified form with the factory function <code class="computeroutput"><span class="identifier">make_const_step_range</span></code>
+        a more succinct form with the factory function <code class="computeroutput"><span class="identifier">make_const_step_range</span></code>
       </p>
 <p>
 </p>
@@ -115,9 +118,9 @@
       </p>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_numeric_odeint.odeint_in_detail.iterators.const_step_iterator"></a><a class="link" href="iterators.html#boost_numeric_odeint.odeint_in_detail.iterators.const_step_iterator" title="const_step_iterator">const_step_iterator</a>
+<a name="boost_numeric_odeint.odeint_in_detail.iterators_and_ranges.const_step_iterator"></a><a class="link" href="iterators_and_ranges.html#boost_numeric_odeint.odeint_in_detail.iterators_and_ranges.const_step_iterator" title="const_step_iterator">const_step_iterator</a>
 </h4></div></div></div>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
               Definition: <code class="computeroutput"><span class="identifier">const_step_iterator</span><span class="special">&lt;</span> <span class="identifier">Stepper</span>
               <span class="special">,</span> <span class="identifier">System</span>
@@ -128,7 +131,7 @@
             </li>
 <li class="listitem">
               Factory functions
-              <div class="itemizedlist"><ul class="itemizedlist" type="circle">
+              <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
 <li class="listitem">
                     <code class="computeroutput"><span class="identifier">make_const_step_iterator_begin</span><span class="special">(</span> <span class="identifier">stepper</span>
                     <span class="special">,</span> <span class="identifier">system</span>
@@ -156,7 +159,7 @@
 </ul></div>
             </li>
 <li class="listitem">
-              This stepper works with all steppers fullfilling the Stepper concept
+              This stepper works with all steppers fulfilling the Stepper concept
               or the DenseOutputStepper concept.
             </li>
 <li class="listitem">
@@ -168,9 +171,9 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_numeric_odeint.odeint_in_detail.iterators.const_step_time_iterator"></a><a class="link" href="iterators.html#boost_numeric_odeint.odeint_in_detail.iterators.const_step_time_iterator" title="const_step_time_iterator">const_step_time_iterator</a>
+<a name="boost_numeric_odeint.odeint_in_detail.iterators_and_ranges.const_step_time_iterator"></a><a class="link" href="iterators_and_ranges.html#boost_numeric_odeint.odeint_in_detail.iterators_and_ranges.const_step_time_iterator" title="const_step_time_iterator">const_step_time_iterator</a>
 </h4></div></div></div>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
               Definition: <code class="computeroutput"><span class="identifier">const_step_iterator</span><span class="special">&lt;</span> <span class="identifier">Stepper</span>
               <span class="special">,</span> <span class="identifier">System</span>
@@ -184,7 +187,7 @@
             </li>
 <li class="listitem">
               Factory functions
-              <div class="itemizedlist"><ul class="itemizedlist" type="circle">
+              <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
 <li class="listitem">
                     <code class="computeroutput"><span class="identifier">make_const_step_time_iterator_begin</span><span class="special">(</span> <span class="identifier">stepper</span>
                     <span class="special">,</span> <span class="identifier">system</span>
@@ -212,7 +215,7 @@
 </ul></div>
             </li>
 <li class="listitem">
-              This stepper works with all steppers fullfilling the Stepper concept
+              This stepper works with all steppers fulfilling the Stepper concept
               or the DenseOutputStepper concept.
             </li>
 <li class="listitem">
@@ -224,9 +227,9 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_numeric_odeint.odeint_in_detail.iterators.adaptive_step_iterator"></a><a class="link" href="iterators.html#boost_numeric_odeint.odeint_in_detail.iterators.adaptive_step_iterator" title="adaptive_step_iterator">adaptive_step_iterator</a>
+<a name="boost_numeric_odeint.odeint_in_detail.iterators_and_ranges.adaptive_step_iterator"></a><a class="link" href="iterators_and_ranges.html#boost_numeric_odeint.odeint_in_detail.iterators_and_ranges.adaptive_step_iterator" title="adaptive_step_iterator">adaptive_step_iterator</a>
 </h4></div></div></div>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
               Definition: <code class="computeroutput"><span class="identifier">adaptive_iterator</span><span class="special">&lt;</span> <span class="identifier">Stepper</span>
               <span class="special">,</span> <span class="identifier">System</span>
@@ -237,7 +240,7 @@
             </li>
 <li class="listitem">
               Factory functions
-              <div class="itemizedlist"><ul class="itemizedlist" type="circle">
+              <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
 <li class="listitem">
                     <code class="computeroutput"><span class="identifier">make_adaptive_iterator_begin</span><span class="special">(</span> <span class="identifier">stepper</span>
                     <span class="special">,</span> <span class="identifier">system</span>
@@ -265,7 +268,7 @@
 </ul></div>
             </li>
 <li class="listitem">
-              This stepper works with all steppers fullfilling the ControlledStepper
+              This stepper works with all steppers fulfilling the ControlledStepper
               concept or the DenseOutputStepper concept.
             </li>
 <li class="listitem">
@@ -277,9 +280,9 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_numeric_odeint.odeint_in_detail.iterators.adaptive_step_time_iterator"></a><a class="link" href="iterators.html#boost_numeric_odeint.odeint_in_detail.iterators.adaptive_step_time_iterator" title="adaptive_step_time_iterator">adaptive_step_time_iterator</a>
+<a name="boost_numeric_odeint.odeint_in_detail.iterators_and_ranges.adaptive_step_time_iterator"></a><a class="link" href="iterators_and_ranges.html#boost_numeric_odeint.odeint_in_detail.iterators_and_ranges.adaptive_step_time_iterator" title="adaptive_step_time_iterator">adaptive_step_time_iterator</a>
 </h4></div></div></div>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
               Definition: <code class="computeroutput"><span class="identifier">adaptive_iterator</span><span class="special">&lt;</span> <span class="identifier">Stepper</span>
               <span class="special">,</span> <span class="identifier">System</span>
@@ -293,7 +296,7 @@
             </li>
 <li class="listitem">
               Factory functions
-              <div class="itemizedlist"><ul class="itemizedlist" type="circle">
+              <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
 <li class="listitem">
                     <code class="computeroutput"><span class="identifier">make_adaptive_time_iterator_begin</span><span class="special">(</span> <span class="identifier">stepper</span>
                     <span class="special">,</span> <span class="identifier">system</span>
@@ -321,7 +324,7 @@
 </ul></div>
             </li>
 <li class="listitem">
-              This stepper works with all steppers fullfilling the ControlledStepper
+              This stepper works with all steppers fulfilling the ControlledStepper
               concept or the DenseOutputStepper concept.
             </li>
 <li class="listitem">
