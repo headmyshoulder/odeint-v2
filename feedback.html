@@ -1,0 +1,66 @@
+---
+layout: default
+title: odeint - Feedback
+---
+    
+<section>
+<h1 id="top">Feedback</h1>
+
+<p>Here, we collect some statements of satisfied users
+  of <strong>odeint</strong>.
+  If you also happily use our library you are welcome to send us your
+  opinion. Of course, we are even more interested in any problems you encounter
+  so we can try to fix it and make <strong>odeint</strong> even better - just
+  open an issue on <a href="https://github.com/headmyshoulder/odeint-v2/" target="_blank">github</a>.
+</p>
+
+<div class="quote">
+<div class="content">
+<p>One of the largest problems I came up against when working with C or Fortran 
+was the lack of useful integrators. Obviously integrators are available, but I 
+found myself jumping through hoops. In the case of C, I was using the GSL 
+library, which both defines its own complex type (C has had its own since C99) 
+and then fails to use it for the integrator routines, necessitating the 
+doubling of the size of the system. That's not all that difficult in practise, 
+but it's a an additional layer in the code that doesn't help readability. 
+Worse, the routines rely on arcane drivers which means cracking out the 
+manual, which is also unhelpful. In the case of Fortran, the VODE integrators 
+are good, but require your program to be arranged in a particular way. Not so 
+good for plug and play ODE solving.
+</p><p>
+Recently I came across the C++ odeint library. I was so impressed by its 
+flexibility that I actually started using C++ (having had no prior experience) 
+just for the convenience of it. I'm glad that I did this, because C++ has some 
+other very useful features that make solving quantum mechanical systems 
+simpler. Probably the most important feature that I use (perhaps abuse) is 
+functors, a kind class with which instances can be used as functions.</p></div>
+<div class="reference"><a href="https://github.com/qubyte/QuantumBoosty" target="_blank">Mark Everitt</a></div>
+</div>
+
+<div class="quote">
+<div class="content">
+<p>I am impressed of the design.
+To say the big things first, I am impressed by the possibility to use CUDA
+and OpenCL for parallel computation of various ODE types in a simple manner.
+The simple and straight forward interface allowed an immediate usage of the
+library.
+This library is also made for a versatile usage due to the many algorithms
+(steppers) implemented. I can e.g. try different numerical approaches und
+compare the outcome or the performance.
+The performance during simulation is optimal, and outperforms most standard
+libraries (e.g. GSL).
+I also appreciate the modern C++ style (STL), in comparison to GSL which is
+more C oriented.</p></div>
+<div class="reference"><a href="http://lists.boost.org/boost-users/2012/09/76058.php" target="_blank">Peter A. Kolski</a></div>
+</div>
+
+<div class="quote">
+<div class="content">
+<p>First of all, I just found your excellent library odeint-v2. I really 
+like your approach to the design of the library. I was just thinking of 
+trying to write something like this for a project I was doing, but 
+luckily you already did it.</p></div>
+<div class="reference">S&oslash;ren Gammelmark</div>
+</div>
+
+</section>

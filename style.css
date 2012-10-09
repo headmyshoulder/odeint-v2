@@ -199,6 +199,24 @@ ul a:hover {
     text-decoration : underline;
 }
 
+div.quote {
+    padding : 5px 20px 10px 20px;
+    border : solid 1px black;
+    margin-bottom: 30px;
+}
+
+div.quote p {
+    text-align: left;
+}
+
+div.quote div.reference {
+    text-align: right;
+    font-family: Cambria, Arial, sans-serif;
+    font-variant : small-caps;
+    font-size: 12px;
+    font-weight : bolder;
+    color : #081e5f;
+}
 
 /* source code formats */
 .comment { color: #999999; font-style: italic; }
