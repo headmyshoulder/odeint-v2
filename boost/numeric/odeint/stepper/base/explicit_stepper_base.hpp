@@ -50,22 +50,28 @@ namespace odeint {
 
 /**
  * \class explicit_stepper_base
- * \brief Base class for explicit steppers without step size control and dense output.
+ * \brief Base class for explicit steppers without step size control and without dense output.
  *
  * This class serves as the base class for all explicit steppers with algebra and operations.
- * Step size control and error estimation as well as dense output is not provided. It can be
- * used via the CRTP (currently recurring template pattern). It derives from [algebra_stepper_base](@ref algebra_stepper_base).
+ * Step size control and error estimation as well as dense output are not provided. explicit_stepper_base 
+ * is used as the interface in a CRTP (currently recurring template pattern). It derives from
+ * algebra_stepper_base.
  *
- * \tparam Stepper The stepper on which this class should. It is used via CRTP, hence explicit_stepper_base provides the
- *                 interface for the Stepper
+ * \tparam Stepper The stepper on which this class should work. It is used via CRTP, hence explicit_stepper_base
+ * provides the interface for the Stepper.
  * \tparam Order The type for order of the stepper. The default value is unsigned short.
- * \tparam State The state type for the stepper. Represent x.
- * \tparam Value The value type for the stepper. This should be a floating point type, like float, double, or a multiprecision type. It must not neccessary be the value_type of the State. For example the State can be a vector< complex< double > >; in this case the Value must be double. The default value is double.
- * \tparam Deriv The type representing time derivatives of the state type. It is usually the same type as the state type, only if used with Boost.Units bot types differ.
- * \tparam Time The type representing the time. Usually the same type as the value type. When Boost.Units is used, this type has usually a unit.
- * \tparam Algebra The algebra type.
- * \tparam Operations The type for the operations.
- * \tparam Resizer The resizer type.
+ * \tparam State The state type for the stepper.
+ * \tparam Value The value type for the stepper. This should be a floating point type, like float,
+ * double, or a multiprecision type. It must not neccessary be the value_type of the State. For example
+ * the State can be a `vector< complex< double > >` in this case the Value must be double.
+ * The default value is double.
+ * \tparam Deriv The type representing time derivatives of the state type. It is usually the same type as the
+ * state type, only if used with Boost.Units both types differ.
+ * \tparam Time The type representing the time. Usually the same type as the value type. When Boost.Units is
+ * used, this type has usually a unit.
+ * \tparam Algebra The algebra type which must fullfil the Algebra Concept.
+ * \tparam Operations The type for the operations wich must fullfil the Operations Concept.
+ * \tparam Resizer The resizer policy class.
  */
 template<
 class Stepper ,
@@ -109,19 +115,16 @@ public:
 
 
     /**
-     * \brief Default constructor for generic_stepper_base.
-     * \param algebra The algebra type for this stepper. The default value for the algebra will be taken from the 
-     *                default constructor of the algebra, hence if the algebra has a default constructor this parameter 
-     *                can be omitted. Otherwise it must be specified. The algebra is passed by const reference, hence it will 
-     *                copied.
+     * \brief Constructs a explicit_stepper_base class. This constructor can be used as a default
+     * constructor if the algebra has a default constructor.
+     * \param algebra A copy of algebra is made and stored inside explicit_stepper_base.
      */
     explicit_stepper_base( const algebra_type &algebra = algebra_type() )
     : algebra_stepper_base_type( algebra )
     { }
 
     /**
-     * \brief Returns the order of the stepper.
-     * \returns The value of the order.
+     * \return Returns the order of the stepper.
      */
     order_type order( void ) const
     {
@@ -136,8 +139,7 @@ public:
      */
 
     /**
-     * \brief This method performs one step with the stepper passed by Stepper.
-     * It transforms the result in-place.
+     * \brief This method performs one step. It transforms the result in-place.
      *
      * \param system The system function to solve, hence the r.h.s. of the ordinary differential equation. It must fullfil the
      *               Simple System concept.
