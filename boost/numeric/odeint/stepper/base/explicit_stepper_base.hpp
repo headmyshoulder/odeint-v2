@@ -54,7 +54,7 @@ namespace odeint {
  *
  * This class serves as the base class for all explicit steppers with algebra and operations.
  * Step size control and error estimation as well as dense output is not provided. It can be
- * used via the CRTP (currently recurring template pattern). It derives from algebra_stepper_base.
+ * used via the CRTP (currently recurring template pattern). It derives from [algebra_stepper_base](@ref algebra_stepper_base).
  *
  * \tparam Stepper The stepper on which this class should. It is used via CRTP, hence explicit_stepper_base provides the
  *                 interface for the Stepper
@@ -155,7 +155,7 @@ public:
      * \brief This method performs one step with the stepper passed by Stepper. 
      * It transforms the result in-place. This method is needed in order to solve the forwarding problem.
      * The difference to the other version is that it can be used like
-     * 'stepper.do_step( sys , make_range( iter1 , iter2 ) , t , dt )'
+     * `stepper.do_step( sys , make_range( iter1 , iter2 ) , t , dt )`
      *
      * \param system The system function to solve, hence the r.h.s. of the ordinary differential equation. It must fullfil the
      *               Simple System concept.
