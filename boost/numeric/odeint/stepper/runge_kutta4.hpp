@@ -19,9 +19,6 @@
 #define BOOST_NUMERIC_ODEINT_STEPPER_RUNGE_KUTTA4_HPP_INCLUDED
 
 
-/** \file boost/numeric/odeint/stepper/runge_kutta4.hpp
- * The file implements the classical Runge-Kutta stepper of fourth order with the help of the generic stepper.
- */
 
 
 #include <boost/fusion/container/vector.hpp>
@@ -103,8 +100,15 @@ struct rk4_coefficients_c : boost::array< Value , 4 >
  * \class runge_kutta4
  * \brief The classical Runge-Kutta stepper of fourth order.
  *
- * More details.
+ * The Runge-Kutta method of fourth order is one standard method for
+ * solving ordinary differential equations and is widely used. The method is
+ * explicit and fullfils the Stepper concept. Step size control or continous 
+ * output are not provided.
  * 
+ * This class derives from explicit_stepper_base and inherits its interface via
+ * CRTP (current recurring template pattern).
+ *
+ * For more details see ...
  */
 template<
 class State ,
@@ -121,13 +125,8 @@ Algebra , Operations , Resizer >
 
 public:
 
-    #ifndef DOXYGEN_SKIP
     typedef explicit_generic_rk< 4 , 4 , State , Value , Deriv , Time ,
             Algebra , Operations , Resizer > stepper_base_type;
-    typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
-    typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
-    #endif
-
     typedef typename stepper_base_type::state_type state_type;
     typedef typename stepper_base_type::value_type value_type;
     typedef typename stepper_base_type::deriv_type deriv_type;
@@ -136,6 +135,12 @@ public:
     typedef typename stepper_base_type::operations_type operations_type;
     typedef typename stepper_base_type::resizer_type resizer_type;
     typedef typename stepper_base_type::stepper_type stepper_type;
+
+    #ifndef DOXYGEN_SKIP
+    typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
+    typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
+    #endif
+
 
 
     runge_kutta4( const algebra_type &algebra = algebra_type() ) : stepper_base_type(

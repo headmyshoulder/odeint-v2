@@ -65,7 +65,6 @@ doxygen reference
     # The values in your project's doxyfile are what to put as the Doxygen parameters passed below.
     <doxygen:param>WARNINGS=YES
     <doxygen:param>WARN_LOGFILE=AutoDoxywarnings.log
-
     <doxygen:param>WARN_IF_UNDOCUMENTED=NO # Default NO but useful if you aim to Doxygen document *all* members.
     <doxygen:param>QUIET=NO
     <doxygen:param>WARN_NO_PARAMDOC=NO # Default no, but YES useful if you aim to document all function parameters.
@@ -73,6 +72,11 @@ doxygen reference
     <doxygen:param>PROJECT_NAME="odeint" # Shows on Doxygen main page (if you have one).
     <doxygen:param>PROJECT_NUMBER=2.2 # Might be useful for version numbering?
     <doxygen:param>TAB_SIZE=2 # or your choice.
+    <doxygen:param>SORT_MEMBER_DOCS=NO # sort docs into alphabetical order - generally useful.
+    <doxygen:param>SORT_BRIEF_DOCS=NO # Default is to sort brief documentation alphabetically.
+    <doxygen:param>SORT_MEMBERS_CTORS_1ST=NO # Default No puts constructors and destructors first.
+    <doxygen:param>EXTRACT_PRIVATE=NO # If the EXTRACT_PRIVATE tag is set to YES all private members of a class will be included in the documentation
+
     # <doxygen:param>OUTPUT_DIRECTORY # Default is current directory.
     # <doxygen:param>CREATE_SUBDIRS=YES # Unlike to be useful except for a very large project.
     # <doxygen:param>BRIEF_MEMBER_DESC=YES # Doxygen will include brief member descriptions by default, and is what you want.
@@ -82,11 +86,7 @@ doxygen reference
     # <doxygen:param>EXTRACT_ALL=YES # Documents everything, probably best to use to start and only extract selected items if it proves to be unmanageable.
     <doxygen:param>INLINE_INHERITED_MEMB=YES # Show all inherited members of a class in the documentation of that class as if those members were ordinary class members.
     <doxygen:param>INHERIT_DOCS=YES
-    <doxygen:param>SORT_MEMBER_DOCS=YES # sort docs into alphabetical order - generally useful.
-    #<doxygen:param>EXTRACT_PRIVATE=YES # Show all private members. Less useful for user documentation.
-    <doxygen:param>EXTRACT_PRIVATE=NO # If the EXTRACT_PRIVATE tag is set to YES all private members of a class will be included in the documentation
     <doxygen:param>EXTRACT_STATIC=YES # Show all static members.
-
     <doxygen:param>EXTRACT_ANON_NSPACES=NO # Probably not useful for user documentation?
     <doxygen:param>EXTRACT_LOCAL_CLASSES=YES # If the EXTRACT_LOCAL_CLASSES tag is set to YES classes (and structs) defined locally in source files will be included in the documentation.
     <doxygen:param>EXTRACT_LOCAL_METHODS=YES # Less useful for user documentation.
@@ -99,9 +99,8 @@ doxygen reference
     <doxygen:param>INTERNAL_DOCS=YES # Allows implemented details NOT to be included in public docs.
     <doxygen:param>CASE_SENSE_NAMES=NO # Must be NO for Boost which may include Windows file system.  (means that all file names are lower case)
     <doxygen:param>HIDE_SCOPE_NAMES=NO # Default NO is not to full qualify members with class and namespace.
-    <doxygen:param>SORT_MEMBER_DOCS=YES # Default YES is to sort alphabetically.
-    <doxygen:param>SORT_BRIEF_DOCS=YES # Default is to sort brief documentation alphabetically.
-    <doxygen:param>SORT_MEMBERS_CTORS_1ST=NO # Default No puts constructors and destructors first.
+
+
     # Preprocessor settings.
     # Some ugly examples of predefined macro calls (from Boost.Units library) :(
     <doxygen:param>"PREDEFINED= \\
@@ -115,8 +114,7 @@ doxygen reference
     <doxygen:param>EXPAND_ONLY_PREDEF=YES # Only predefined macros expanded.  See units library for an example.
     <doxygen:param>SEARCH_INCLUDES=YES # Search #include files found.
     <doxygen:param>INLINE_INFO=YES # If the INLINE_INFO tag is set to YES (the default) then a tag [inline] is inserted in the documentation for inline members.
-    <doxygen:param>SORT_BRIEF_DOCS=YES # If the SORT_BRIEF_DOCS tag is set to YES then doxygen will sort the brief descriptions of file, namespace and class members alphabetically by member name.
-    <doxygen:param>SORT_MEMBER_DOCS=YES # If the SORT_MEMBER_DOCS tag is set to YES (the default) then doxygen will sort the (detailed) documentation of file and class members alphabetically by member name.
+
     <doxygen:param>SHOW_INCLUDE_FILES=NO # List of the files that are included by a file in the documentation of that file.
     <doxygen:param>REPEAT_BRIEF=YES # Prepend the brief description of a member or function before the detailed description
     <doxygen:param>BRIEF_MEMBER_DESC=YES # Include brief member descriptions after the members that are listed in the file and class

@@ -156,12 +156,12 @@
 
 [include concepts.qbk]
 
-[xinclude reference.xml]
-
 [include literature.qbk]
 
+[include acknowledgements.qbk]
 
-[?enable-index]
+[xinclude reference.xml]
+
 [section:indexes Indexes]
 
 [named_index class_name Class Index]
@@ -173,7 +173,7 @@
 [index]
 
 [endsect]
-]
+
 
 
 
