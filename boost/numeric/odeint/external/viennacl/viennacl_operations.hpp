@@ -60,12 +60,7 @@ struct viennacl_operations
                     "scale_sum2"
                     );
 
-            ocl::enqueue( op(v1,
-                        const_cast< viennacl::vector<T2>& >(v2),
-                        const_cast< viennacl::vector<T3>& >(v3),
-                        const_cast< Fac1& >(m_alpha1),
-                        const_cast< Fac2& >(m_alpha2)
-                        ) );
+            ocl::enqueue( op(v1, v2, v3, m_alpha1, m_alpha2) );
         }
 
         typedef void result_type;
@@ -107,14 +102,7 @@ struct viennacl_operations
                     "scale_sum3"
                     );
 
-            ocl::enqueue( op(v1,
-                        const_cast< viennacl::vector<T2>& >(v2),
-                        const_cast< viennacl::vector<T3>& >(v3),
-                        const_cast< viennacl::vector<T4>& >(v4),
-                        const_cast< Fac1& >(m_alpha1),
-                        const_cast< Fac2& >(m_alpha2),
-                        const_cast< Fac3& >(m_alpha3)
-                        ) );
+            ocl::enqueue( op(v1, v2, v3, v4, m_alpha1, m_alpha2, m_alpha3) );
         }
 
         typedef void result_type;
@@ -160,16 +148,8 @@ struct viennacl_operations
                     "scale_sum4"
                     );
 
-            ocl::enqueue( op(v1,
-                        const_cast< viennacl::vector<T2>& >(v2),
-                        const_cast< viennacl::vector<T3>& >(v3),
-                        const_cast< viennacl::vector<T4>& >(v4),
-                        const_cast< viennacl::vector<T5>& >(v5),
-                        const_cast< Fac1& >(m_alpha1),
-                        const_cast< Fac2& >(m_alpha2),
-                        const_cast< Fac3& >(m_alpha3),
-                        const_cast< Fac4& >(m_alpha4)
-                        ) );
+            ocl::enqueue( op(v1, v2, v3, v4, v5,
+                        m_alpha1, m_alpha2, m_alpha3, m_alpha4) );
         }
 
         typedef void result_type;
@@ -220,18 +200,8 @@ struct viennacl_operations
                     "scale_sum5"
                     );
 
-            ocl::enqueue( op(v1,
-                        const_cast< viennacl::vector<T2>& >(v2),
-                        const_cast< viennacl::vector<T3>& >(v3),
-                        const_cast< viennacl::vector<T4>& >(v4),
-                        const_cast< viennacl::vector<T5>& >(v5),
-                        const_cast< viennacl::vector<T6>& >(v6),
-                        const_cast< Fac1& >(m_alpha1),
-                        const_cast< Fac2& >(m_alpha2),
-                        const_cast< Fac3& >(m_alpha3),
-                        const_cast< Fac4& >(m_alpha4),
-                        const_cast< Fac5& >(m_alpha5)
-                        ) );
+            ocl::enqueue( op(v1, v2, v3, v4, v5, v6,
+                        m_alpha1, m_alpha2, m_alpha3, m_alpha4, m_alpha5) );
         }
 
         typedef void result_type;
