@@ -41,7 +41,7 @@
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 #include <boost/numeric/odeint/util/unit_helper.hpp>
-
+#include <boost/numeric/odeint/util/detail/less_with_sign.hpp>
 
 namespace boost {
 namespace numeric {
@@ -309,7 +309,7 @@ public:
         }// else
         //   std::cout << "REJECT!" << std::endl;
 
-        if( !m_last_step_rejected || (new_h < dt) )
+        if( !m_last_step_rejected || boost::numeric::odeint::detail::less_with_sign(new_h, dt, dt) )
         {
             m_dt_last = new_h;
             dt = new_h;
