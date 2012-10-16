@@ -54,7 +54,9 @@ namespace odeint {
  *
  * This class serves as the base class for all explicit steppers with algebra and operations.
  * Step size control and error estimation as well as dense output are not provided. explicit_stepper_base 
- * is used as the interface in a CRTP (currently recurring template pattern). It derives from
+ * is used as the interface in a CRTP (currently recurring template pattern). In order to work 
+ * correctly the parent class needs to have a method `do_step_impl( system , in , dxdt_in , t , out , dt )`. 
+ * This is method is used by explicit_stepper_base. explicit_stepper_base derives from
  * algebra_stepper_base.
  *
  * \tparam Stepper The stepper on which this class should work. It is used via CRTP, hence explicit_stepper_base
@@ -187,7 +189,9 @@ public:
      *
      * stepper.do_step( sys , x , dxdt , t , dt );
      *
-     * The result is updated in place in x.
+     * The result is updated in place in x. This method is disabled if Time and Deriv are of the same type. In this
+     * case the method could not be distinguished from other `do_step` versions. 
+     * 
      * \note This method does not solve the forwarding problem.
      *
      * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
