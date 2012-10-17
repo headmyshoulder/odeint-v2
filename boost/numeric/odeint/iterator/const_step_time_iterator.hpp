@@ -17,7 +17,7 @@
 
 
 #ifndef BOOST_NUMERIC_ODEINT_ITERATOR_CONST_STEP_TIME_ITERATOR_HPP_INCLUDED
-#define BOOST_NUMERIC_ODEINT_ITERATOR_CONST_STEP_TIME_ITERATOR_TIME_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_ITERATOR_CONST_STEP_TIME_ITERATOR_HPP_INCLUDED
 
 #include <boost/numeric/odeint/util/unit_helper.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>

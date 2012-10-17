@@ -57,11 +57,46 @@ namespace odeint {
  * is used as the interface in a CRTP (currently recurring template pattern). In order to work 
  * correctly the parent class needs to have a method `do_step_impl( system , in , dxdt_in , t , out , dt )`. 
  * This is method is used by explicit_stepper_base. explicit_stepper_base derives from
- * algebra_stepper_base.
+ * algebra_stepper_base. An example how this class can be used is
+ *
+ * \code
+ * template< class State , class Value , class Deriv , class Time , class Algebra , class Operations , class Resizer >
+ * class custom_euler : public explicit_stepper_base< 1 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
+ * {
+ *  public:
+ *     
+ *     typedef explicit_stepper_base< 1 , State , Value , Deriv , Time , Algebra , Operations , Resizer > base_type;
+ *
+ *     custom_euler( const Algebra &algebra = Algebra() ) { }
+ * 
+ *     template< class Sys , class StateIn , class DerivIn , class StateOut >
+ *     void do_step_impl( Sys sys , const StateIn &in , const DerivIn &dxdt , Time t , StateOut &out , Time dt )
+ *     {
+ *         m_algebra.for_each3( out , in , dxdt , Operations::scale_sum2< Value , Time >( 1.0 , dt );
+ *     }
+ *
+ *     template< class State >
+ *     void adjust_size( const State &x )
+ *     {
+ *         base_type::adjust_size( x );
+ *     }
+ * };
+ * \endcode
+ *
+ * For the stepper concept only the `do_step( sys , x , t , dt )` needs to be implemented. But this class
+ * provides additional `do_step` variants since the stepper is explicit. These methods can be used to increase
+ * the performance in some situation, for example if one needs to analyze `dxdt` during each step. In this case 
+ * one can use 
+ *
+ * \code
+ * sys( x , dxdt , t );
+ * stepper.do_step( sys , x , dxdt , t , dt );  // the value of dxdt is used in the performance of the step
+ * t += dt;
+ * \endcode
  *
  * \tparam Stepper The stepper on which this class should work. It is used via CRTP, hence explicit_stepper_base
  * provides the interface for the Stepper.
- * \tparam Order The type for order of the stepper. The default value is unsigned short.
+ * \tparam Order The order of the stepper.
  * \tparam State The state type for the stepper.
  * \tparam Value The value type for the stepper. This should be a floating point type, like float,
  * double, or a multiprecision type. It must not neccessary be the value_type of the State. For example
@@ -185,9 +220,10 @@ public:
      * \brief The method performs one step with the stepper passed by Stepper. Additionally to the other method
      * the derivative of x is also passed to this method. It is equivalent to
      *
+     * \code
      * sys( x , dxdt , t );
-     *
      * stepper.do_step( sys , x , dxdt , t , dt );
+     * \endcode
      *
      * The result is updated in place in x. This method is disabled if Time and Deriv are of the same type. In this
      * case the method could not be distinguished from other `do_step` versions. 
@@ -244,9 +280,10 @@ public:
      * \brief The method performs one step with the stepper passed by Stepper. The state of the ODE is updated out-of-place.
      * Furthermore, the derivative of x at t is passed to the stepper. It is equivalent to:
      *
+     * \code
      * sys( in , dxdt , t );
-     *
      * stepper.do_step( sys , in , dxdt , t , out , dt );
+     * \endcode
      *
      * \note This method does not solve the forwarding problem.
      *
