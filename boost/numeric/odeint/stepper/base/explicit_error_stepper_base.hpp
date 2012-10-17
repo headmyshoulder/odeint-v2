@@ -54,7 +54,7 @@ namespace odeint {
 /**
  * \class explicit_error_stepper_base
  * \brief Base class for explicit steppers with error estimation. This class can used with 
- * controlled steppers with step size control.
+ * controlled steppers for step size control.
  *
  * This class serves as the base class for all explicit steppers with algebra and operations. In contrast to
  * explicit_stepper_base it also estimates the error and can be used in a controlled stepper to provide
@@ -62,13 +62,12 @@ namespace odeint {
  *
  * \note This stepper provides `do_step` methods with and without error estimation. It has therefore three orders,
  * one for the order of a step if the error is not estimated. The other two orders are the orders of the step and 
- * the error step if the error is estimated.
+ * the error step if the error estimation is performed.
  *
  * explicit_error_stepper_base  is used as the interface in a CRTP (currently recurring template
  * pattern). In order to work correctly the parent class needs to have a method
  * `do_step_impl( system , in , dxdt_in , t , out , dt , xerr )`. 
- * This is method is used by explicit_error_stepper_base. explicit_error_stepper_base derives from
- * algebra_stepper_base.
+ * explicit_error_stepper_base derives from algebra_stepper_base.
  *
  * \tparam Stepper The stepper on which this class should work. It is used via CRTP, hence explicit_stepper_base
  * provides the interface for the Stepper.
@@ -223,7 +222,7 @@ public:
      * \endcode
      *
      * The result is updated in place in x. This method is disabled if Time and Deriv are of the same type. In this
-     * case the method could not be distinguished from other `do_step` versions. 
+     * case the method could not be distinguished from other `do_step` versions.
      * 
      * \note This method does not solve the forwarding problem.
      *
@@ -251,7 +250,9 @@ public:
      */
     /**
      * \brief The method performs one step with the stepper passed by Stepper. The state of the ODE is updated out-of-place.
-     * \note This method does not solve the forwarding problem.
+     * This method is disabled if StateIn and Time are the same type. In this case the method can not be distinguished from
+     * other `do_step` variants.
+     * \note This method does not solve the forwarding problem. 
      *
      * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
      *               Simple System concept.
@@ -285,6 +286,8 @@ public:
      * sys( in , dxdt , t );
      * stepper.do_step( sys , in , dxdt , t , out , dt );
      * \endcode
+     *
+     * This method is disabled if DerivIn and Time are of same type.
      *
      * \note This method does not solve the forwarding problem.
      *
@@ -360,6 +363,29 @@ public:
      *
      * the disable is needed to avoid ambiguous overloads if state_type = time_type
      */
+    /**
+     * \brief The method performs one step with the stepper passed by Stepper. Additionally to the other method
+     * the derivative of x is also passed to this method. It is equivalent to
+     *
+     * \code
+     * sys( x , dxdt , t );
+     * stepper.do_step( sys , x , dxdt , t , dt , xerr );
+     * \endcode
+     *
+     * The result is updated in place in x. This method is disabled if Time and Deriv are of the same type. In this
+     * case the method could not be distinguished from other `do_step` versions. This method is disabled if DerivIn and
+     * Time are of the same type.
+     * 
+     * \note This method does not solve the forwarding problem.
+     *
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     *               Simple System concept.
+     * \param x The state of the ODE which should be solved. After calling do_step the result is updated in x.
+     * \param dxdt The derivative of x at t.
+     * \param t The value of the time, at which the step should be performed.
+     * \param dt The step size.
+     * \param xerr The error estimate is stored in xerr.
+     */
     template< class System , class StateInOut , class DerivIn , class Err >
     typename boost::disable_if< boost::is_same< DerivIn , time_type > , void >::type
     do_step( System system , StateInOut &x , const DerivIn &dxdt , time_type t , time_type dt , Err &xerr )
@@ -372,6 +398,20 @@ public:
      * Version 7 : do_step( sys , in , t , out , dt , xerr )
      *
      * this version does not solve the forwarding problem, boost.range can not be used
+     */
+    /**
+     * \brief The method performs one step with the stepper passed by Stepper. The state of the ODE is updated out-of-place.
+     * Furthermore, the error is estimated.
+     *
+     * \note This method does not solve the forwarding problem. 
+     *
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     *               Simple System concept.
+     * \param in The state of the ODE which should be solved. in is not modified in this method
+     * \param t The value of the time, at which the step should be performed.
+     * \param out The result of the step is written in out.
+     * \param dt The step size.
+     * \param xerr The error estimate.
      */
     template< class System , class StateIn , class StateOut , class Err >
     void do_step( System system , const StateIn &in , time_type t , StateOut &out , time_type dt , Err &xerr )
@@ -388,12 +428,38 @@ public:
      *
      * this version does not solve the forwarding problem, boost.range can not be used
      */
+    /**
+     * \brief The method performs one step with the stepper passed by Stepper. The state of the ODE is updated out-of-place.
+     * Furthermore, the derivative of x at t is passed to the stepper and the error is estimated. It is equivalent to:
+     *
+     * \code
+     * sys( in , dxdt , t );
+     * stepper.do_step( sys , in , dxdt , t , out , dt );
+     * \endcode
+     *
+     * This method is disabled if DerivIn and Time are of same type.
+     *
+     * \note This method does not solve the forwarding problem.
+     *
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     *               Simple System concept.
+     * \param in The state of the ODE which should be solved. in is not modified in this method
+     * \param dxdt The derivative of x at t.
+     * \param t The value of the time, at which the step should be performed.
+     * \param out The result of the step is written in out.
+     * \param dt The step size.
+     * \param xerr The error estimate.
+     */
     template< class System , class StateIn , class DerivIn , class StateOut , class Err >
     void do_step( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt , Err &xerr )
     {
         this->stepper().do_step_impl( system , in , dxdt , t , out , dt , xerr );
     }
 
+    /**
+     * \brief Adjust the size of all temporaries in the stepper manually.
+     * \param x A state from which the size of the temporaries to be resized is deduced.
+     */
     template< class StateIn >
     void adjust_size( const StateIn &x )
     {

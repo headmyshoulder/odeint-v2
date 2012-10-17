@@ -83,7 +83,7 @@ namespace odeint {
  * };
  * \endcode
  *
- * For the stepper concept only the `do_step( sys , x , t , dt )` needs to be implemented. But this class
+ * For the Stepper concept only the `do_step( sys , x , t , dt )` needs to be implemented. But this class
  * provides additional `do_step` variants since the stepper is explicit. These methods can be used to increase
  * the performance in some situation, for example if one needs to analyze `dxdt` during each step. In this case 
  * one can use 
@@ -93,6 +93,12 @@ namespace odeint {
  * stepper.do_step( sys , x , dxdt , t , dt );  // the value of dxdt is used in the performance of the step
  * t += dt;
  * \endcode
+ *
+ * In detail explicit_stepper_base provides the following `do_step` variants
+ *   - `do_step( sys , x , t , dt )` - bla
+ *   - `do_step( sys , in , t , out , dt )` - blub
+ *   - `do_step( sys , x , dxdt , t , dt )` - bla 
+ *   - `do_step( sys , in , dxdt , t , out , dt )` -blub
  *
  * \tparam Stepper The stepper on which this class should work. It is used via CRTP, hence explicit_stepper_base
  * provides the interface for the Stepper.
@@ -212,7 +218,7 @@ public:
     /*
      * Version 2 : do_step( sys , x , dxdt , t , dt )
      *
-     * this version does not solve the forwarding problem, boost.range can not be used
+      * this version does not solve the forwarding problem, boost.range can not be used
      *
      * the disable is needed to avoid ambiguous overloads if state_type = time_type
      */
@@ -226,7 +232,7 @@ public:
      * \endcode
      *
      * The result is updated in place in x. This method is disabled if Time and Deriv are of the same type. In this
-     * case the method could not be distinguished from other `do_step` versions. 
+     * case the method could not be distinguished from other `do_step` versions.
      * 
      * \note This method does not solve the forwarding problem.
      *
