@@ -3,17 +3,17 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Header &lt;boost/numeric/odeint/integrate/integrate.hpp&gt;</title>
 <link rel="stylesheet" href="../../../../.././boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.77.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
 <link rel="home" href="../../../../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../../../../../odeint_reference.html" title="odeint Reference">
-<link rel="prev" href="../../../../../FUSION_MAX_VECTOR_SIZE.html" title="Macro FUSION_MAX_VECTOR_SIZE">
+<link rel="prev" href="../../../../../BOOST_RESULT_OF_NUM_ARGS.html" title="Macro BOOST_RESULT_OF_NUM_ARGS">
 <link rel="next" href="integrate_adaptive_hpp.html" title="Header &lt;boost/numeric/odeint/integrate/integrate_adaptive.hpp&gt;">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr><td valign="top"><img alt="" width="" height="" src="../../../../../logo.jpg"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../../../../../FUSION_MAX_VECTOR_SIZE.html"><img src="../../../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../../../odeint_reference.html"><img src="../../../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../../../index.html"><img src="../../../../../images/home.png" alt="Home"></a><a accesskey="n" href="integrate_adaptive_hpp.html"><img src="../../../../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="../../../../../BOOST_RESULT_OF_NUM_ARGS.html"><img src="../../../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../../../odeint_reference.html"><img src="../../../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../../../index.html"><img src="../../../../../images/home.png" alt="Home"></a><a accesskey="n" href="integrate_adaptive_hpp.html"><img src="../../../../../images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
@@ -23,18 +23,18 @@
     <span class="keyword">namespace</span> <span class="identifier">odeint</span> <span class="special">{</span>
       <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> State<span class="special">,</span> <span class="keyword">typename</span> Time<span class="special">,</span> 
                <span class="keyword">typename</span> Observer<span class="special">&gt;</span> 
-        <span class="identifier">size_t</span> <a name="boost.numeric.odeint.integrate_idp22122544"></a><span class="identifier">integrate</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">State</span> <span class="special">&amp;</span> start_state<span class="special">,</span> <span class="identifier">Time</span> start_time<span class="special">,</span> 
+        <span class="identifier">size_t</span> <a name="boost.numeric.odeint.integrate_idp22108720"></a><span class="identifier">integrate</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">State</span> <span class="special">&amp;</span> start_state<span class="special">,</span> <span class="identifier">Time</span> start_time<span class="special">,</span> 
                          <span class="identifier">Time</span> end_time<span class="special">,</span> <span class="identifier">Time</span> dt<span class="special">,</span> <span class="identifier">Observer</span> observer<span class="special">)</span><span class="special">;</span>
       <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> State<span class="special">,</span> <span class="keyword">typename</span> Time<span class="special">,</span> 
                <span class="keyword">typename</span> Observer<span class="special">&gt;</span> 
-        <span class="identifier">size_t</span> <a name="boost.numeric.odeint.integrate_idp22129888"></a><span class="identifier">integrate</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&amp;</span> start_state<span class="special">,</span> 
+        <span class="identifier">size_t</span> <a name="boost.numeric.odeint.integrate_idp22116064"></a><span class="identifier">integrate</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&amp;</span> start_state<span class="special">,</span> 
                          <span class="identifier">Time</span> start_time<span class="special">,</span> <span class="identifier">Time</span> end_time<span class="special">,</span> <span class="identifier">Time</span> dt<span class="special">,</span> 
                          <span class="identifier">Observer</span> observer<span class="special">)</span><span class="special">;</span>
       <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> State<span class="special">,</span> <span class="keyword">typename</span> Time<span class="special">&gt;</span> 
-        <span class="identifier">size_t</span> <a name="boost.numeric.odeint.integrate_idp22137232"></a><span class="identifier">integrate</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">State</span> <span class="special">&amp;</span> start_state<span class="special">,</span> <span class="identifier">Time</span> start_time<span class="special">,</span> 
+        <span class="identifier">size_t</span> <a name="boost.numeric.odeint.integrate_idp22123408"></a><span class="identifier">integrate</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">State</span> <span class="special">&amp;</span> start_state<span class="special">,</span> <span class="identifier">Time</span> start_time<span class="special">,</span> 
                          <span class="identifier">Time</span> end_time<span class="special">,</span> <span class="identifier">Time</span> dt<span class="special">)</span><span class="special">;</span>
       <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> State<span class="special">,</span> <span class="keyword">typename</span> Time<span class="special">&gt;</span> 
-        <span class="identifier">size_t</span> <a name="boost.numeric.odeint.integrate_idp22143328"></a><span class="identifier">integrate</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&amp;</span> start_state<span class="special">,</span> 
+        <span class="identifier">size_t</span> <a name="boost.numeric.odeint.integrate_idp22129504"></a><span class="identifier">integrate</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&amp;</span> start_state<span class="special">,</span> 
                          <span class="identifier">Time</span> start_time<span class="special">,</span> <span class="identifier">Time</span> end_time<span class="special">,</span> <span class="identifier">Time</span> dt<span class="special">)</span><span class="special">;</span>
     <span class="special">}</span>
   <span class="special">}</span>
@@ -51,7 +51,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../../../../../FUSION_MAX_VECTOR_SIZE.html"><img src="../../../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../../../odeint_reference.html"><img src="../../../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../../../index.html"><img src="../../../../../images/home.png" alt="Home"></a><a accesskey="n" href="integrate_adaptive_hpp.html"><img src="../../../../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="../../../../../BOOST_RESULT_OF_NUM_ARGS.html"><img src="../../../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../../../odeint_reference.html"><img src="../../../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../../../index.html"><img src="../../../../../images/home.png" alt="Home"></a><a accesskey="n" href="integrate_adaptive_hpp.html"><img src="../../../../../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

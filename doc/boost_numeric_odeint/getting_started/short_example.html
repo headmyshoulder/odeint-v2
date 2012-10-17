@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Short Example</title>
 <link rel="stylesheet" href="../.././boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.77.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../getting_started.html" title="Getting started">
 <link rel="prev" href="usage__compilation__headers.html" title="Usage, Compilation, Headers">
@@ -72,9 +72,9 @@
 <p>
       </p>
 <p>
-        For the integration itself we'll use the <code class="computeroutput"><a class="link" href="../../header/boost/numeric/odeint/integrate/integrate_hpp.html#boost.numeric.odeint.integrate_idp22122544">integrate</a></code>
+        For the integration itself we'll use the <code class="computeroutput"><span class="identifier">integrate</span></code>
         function, which is a convenient way to get quick results. It is based on
-        the error-controlled <code class="computeroutput">runge_kutta_rk5_ck</code>
+        the error-controlled <code class="computeroutput"><span class="identifier">runge_kutta54_cash_karp</span></code>
         stepper (5th order) and uses adaptive step-size.
       </p>
 <p>
@@ -88,11 +88,11 @@
         The integrate function expects as parameters the rhs of the ode as defined
         above, the initial state <code class="computeroutput"><span class="identifier">x</span></code>,
         the start-and end-time of the integration as well as the initial time step=size.
-        Note, that <code class="computeroutput"><a class="link" href="../../header/boost/numeric/odeint/integrate/integrate_hpp.html#boost.numeric.odeint.integrate_idp22122544">integrate</a></code>
-        uses an adaptive step-size during the integration steps so the time points
-        will not be equally spaced. The integration returns the number of steps that
-        were applied and updates x which is set to the approximate solution of the
-        ODE at the end of integration.
+        Note, that <code class="computeroutput"><span class="identifier">integrate</span></code> uses
+        an adaptive step-size during the integration steps so the time points will
+        not be equally spaced. The integration returns the number of steps that were
+        applied and updates x which is set to the approximate solution of the ODE
+        at the end of integration.
       </p>
 <p>
         It is also possible to represent the ode system as a class. The rhs must

@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Class template algebra_stepper_base</title>
 <link rel="stylesheet" href="../../.././boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.77.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
 <link rel="home" href="../../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../../../header/boost/numeric/odeint/stepper/base/algebra_stepper_base_hpp.html" title="Header &lt;boost/numeric/odeint/stepper/base/algebra_stepper_base.hpp&gt;">
 <link rel="prev" href="../../../header/boost/numeric/odeint/stepper/base/algebra_stepper_base_hpp.html" title="Header &lt;boost/numeric/odeint/stepper/base/algebra_stepper_base.hpp&gt;">
@@ -19,7 +19,7 @@
 <a name="boost.numeric.odeint.algebra_stepper_base"></a><div class="titlepage"></div>
 <div class="refnamediv">
 <h2><span class="refentrytitle">Class template algebra_stepper_base</span></h2>
-<p>boost::numeric::odeint::algebra_stepper_base</p>
+<p>boost::numeric::odeint::algebra_stepper_base &#8212; Base class for all steppers with algebra and operations. </p>
 </div>
 <h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../../../header/boost/numeric/odeint/stepper/base/algebra_stepper_base_hpp.html" title="Header &lt;boost/numeric/odeint/stepper/base/algebra_stepper_base.hpp&gt;">boost/numeric/odeint/stepper/base/algebra_stepper_base.hpp</a>&gt;
@@ -32,27 +32,81 @@
   <span class="keyword">typedef</span> <span class="identifier">Operations</span> <a name="boost.numeric.odeint.algebra_stepper_base.operations_type"></a><span class="identifier">operations_type</span><span class="special">;</span>
 
   <span class="comment">// <a class="link" href="algebra_stepper_base.html#boost.numeric.odeint.algebra_stepper_baseconstruct-copy-destruct">construct/copy/destruct</a></span>
-  <a class="link" href="algebra_stepper_base.html#idp22693200-bb"><span class="identifier">algebra_stepper_base</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <span class="special">=</span> <span class="identifier">algebra_type</span><span class="special">(</span><span class="special">)</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="algebra_stepper_base.html#idp22696064-bb"><span class="identifier">algebra_stepper_base</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <span class="special">=</span> <span class="identifier">algebra_type</span><span class="special">(</span><span class="special">)</span><span class="special">)</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="algebra_stepper_base.html#idp22690880-bb">public member functions</a></span>
-  <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a class="link" href="algebra_stepper_base.html#idp22691280-bb"><span class="identifier">algebra</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a class="link" href="algebra_stepper_base.html#idp22692240-bb"><span class="identifier">algebra</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="comment">// <a class="link" href="algebra_stepper_base.html#idp22691984-bb">public member functions</a></span>
+  <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a class="link" href="algebra_stepper_base.html#idp22692384-bb"><span class="identifier">algebra</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a class="link" href="algebra_stepper_base.html#idp22694224-bb"><span class="identifier">algebra</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp29617520"></a><h2>Description</h2>
+<a name="idp59296736"></a><h2>Description</h2>
+<p>This class serves a base class for all steppers with algebra and operations. It holds the algebra and provides access to the algebra. The operations are not instantiated, since they are static classes inside the operations class.</p>
+<p>
+</p>
 <div class="refsect2">
-<a name="idp29617936"></a><h3>
+<a name="idp59297904"></a><h3>Template Parameters</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">typename</span> Algebra</pre>
+<p>The type of the algebra. Must fullfil the Algebra Concept, at least partially to work with the stepper. </p>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">typename</span> Operations</pre>
+<p>The type of the operations. Must fullfil the Operations Concept, at least partially to work with the stepper. </p>
+</li>
+</ol></div>
+</div>
+<div class="refsect2">
+<a name="idp59303312"></a><h3>
 <a name="boost.numeric.odeint.algebra_stepper_baseconstruct-copy-destruct"></a><code class="computeroutput">algebra_stepper_base</code> 
         public
        construct/copy/destruct</h3>
-<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><pre class="literallayout"><a name="idp22693200-bb"></a><span class="identifier">algebra_stepper_base</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> algebra <span class="special">=</span> <span class="identifier">algebra_type</span><span class="special">(</span><span class="special">)</span><span class="special">)</span><span class="special">;</span></pre></li></ol></div>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+<pre class="literallayout"><a name="idp22696064-bb"></a><span class="identifier">algebra_stepper_base</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> algebra <span class="special">=</span> <span class="identifier">algebra_type</span><span class="special">(</span><span class="special">)</span><span class="special">)</span><span class="special">;</span></pre>Constructs a <code class="computeroutput"><a class="link" href="algebra_stepper_base.html" title="Class template algebra_stepper_base">algebra_stepper_base</a></code> and creates the algebra. This constructor can be used as a default constructor if the algebra has a default constructor. <p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">algebra</code></span></p></td>
+<td><p>The <code class="computeroutput"><a class="link" href="algebra_stepper_base.html" title="Class template algebra_stepper_base">algebra_stepper_base</a></code> stores and uses a copy of algebra. </p></td>
+</tr></tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li></ol></div>
 </div>
 <div class="refsect2">
-<a name="idp29628272"></a><h3>
-<a name="idp22690880-bb"></a><code class="computeroutput">algebra_stepper_base</code> public member functions</h3>
+<a name="idp59319792"></a><h3>
+<a name="idp22691984-bb"></a><code class="computeroutput">algebra_stepper_base</code> public member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
-<li class="listitem"><pre class="literallayout"><span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a name="idp22691280-bb"></a><span class="identifier">algebra</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre></li>
-<li class="listitem"><pre class="literallayout"><span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a name="idp22692240-bb"></a><span class="identifier">algebra</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre></li>
+<li class="listitem">
+<pre class="literallayout"><span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a name="idp22692384-bb"></a><span class="identifier">algebra</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>A reference to the algebra which is held by this class. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a name="idp22694224-bb"></a><span class="identifier">algebra</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>A const reference to the algebra which is held by this class. </p></td>
+</tr></tbody>
+</table></div>
+</li>
 </ol></div>
 </div>
 </div>

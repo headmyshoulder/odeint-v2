@@ -3,9 +3,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Struct template rel_error_max2</title>
 <link rel="stylesheet" href="../../../.././boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.77.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
 <link rel="home" href="../../../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
-<link rel="up" href="../default_operations.html#idp20255840" title="Description">
+<link rel="up" href="../default_operations.html#idp49788272" title="Description">
 <link rel="prev" href="rel_error_max.html" title="Struct template rel_error_max">
 <link rel="next" href="scale.html" title="Struct template scale">
 </head>
@@ -13,7 +13,7 @@
 <table cellpadding="2" width="100%"><tr><td valign="top"><img alt="" width="" height="" src="../../../../logo.jpg"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="rel_error_max.html"><img src="../../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../default_operations.html#idp20255840"><img src="../../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../images/home.png" alt="Home"></a><a accesskey="n" href="scale.html"><img src="../../../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="rel_error_max.html"><img src="../../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../default_operations.html#idp49788272"><img src="../../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../images/home.png" alt="Home"></a><a accesskey="n" href="scale.html"><img src="../../../../images/next.png" alt="Next"></a>
 </div>
 <div class="refentry">
 <a name="boost.numeric.odeint.default_operations.rel_error_max2"></a><div class="titlepage"></div>
@@ -28,32 +28,32 @@
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Fac1 <span class="special">=</span> <span class="keyword">double</span><span class="special">&gt;</span> 
 <span class="keyword">struct</span> <a class="link" href="rel_error_max2.html" title="Struct template rel_error_max2">rel_error_max2</a> <span class="special">{</span>
   <span class="comment">// <a class="link" href="rel_error_max2.html#boost.numeric.odeint.default_operations.rel_error_max2construct-copy-destruct">construct/copy/destruct</a></span>
-  <a class="link" href="rel_error_max2.html#idp21060544-bb"><span class="identifier">rel_error_max2</span></a><span class="special">(</span><span class="identifier">Fac1</span><span class="special">,</span> <span class="identifier">Fac1</span><span class="special">,</span> <span class="identifier">Fac1</span><span class="special">,</span> <span class="identifier">Fac1</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="rel_error_max2.html#idp21045472-bb"><span class="identifier">rel_error_max2</span></a><span class="special">(</span><span class="identifier">Fac1</span><span class="special">,</span> <span class="identifier">Fac1</span><span class="special">,</span> <span class="identifier">Fac1</span><span class="special">,</span> <span class="identifier">Fac1</span><span class="special">)</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="rel_error_max2.html#idp21052656-bb">public member functions</a></span>
+  <span class="comment">// <a class="link" href="rel_error_max2.html#idp21037584-bb">public member functions</a></span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Res<span class="special">,</span> <span class="keyword">typename</span> T1<span class="special">,</span> <span class="keyword">typename</span> T2<span class="special">,</span> <span class="keyword">typename</span> T3<span class="special">,</span> <span class="keyword">typename</span> T4<span class="special">&gt;</span> 
-    <span class="identifier">Res</span> <a class="link" href="rel_error_max2.html#idp21053056-bb"><span class="keyword">operator</span><span class="special">(</span><span class="special">)</span></a><span class="special">(</span><span class="identifier">Res</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T1</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T2</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T3</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T4</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+    <span class="identifier">Res</span> <a class="link" href="rel_error_max2.html#idp21037984-bb"><span class="keyword">operator</span><span class="special">(</span><span class="special">)</span></a><span class="special">(</span><span class="identifier">Res</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T1</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T2</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T3</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T4</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
 
   <span class="comment">// public data members</span>
-  <span class="keyword">const</span> <span class="identifier">Fac1</span> <span class="identifier">m_a_dxdt</span><span class="special">;</span>
-  <span class="keyword">const</span> <span class="identifier">Fac1</span> <span class="identifier">m_a_x</span><span class="special">;</span>
   <span class="keyword">const</span> <span class="identifier">Fac1</span> <span class="identifier">m_eps_abs</span><span class="special">;</span>
   <span class="keyword">const</span> <span class="identifier">Fac1</span> <span class="identifier">m_eps_rel</span><span class="special">;</span>
+  <span class="keyword">const</span> <span class="identifier">Fac1</span> <span class="identifier">m_a_x</span><span class="special">;</span>
+  <span class="keyword">const</span> <span class="identifier">Fac1</span> <span class="identifier">m_a_dxdt</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp20754064"></a><h2>Description</h2>
+<a name="idp50286384"></a><h2>Description</h2>
 <div class="refsect2">
-<a name="idp20754480"></a><h3>
+<a name="idp50286800"></a><h3>
 <a name="boost.numeric.odeint.default_operations.rel_error_max2construct-copy-destruct"></a><code class="computeroutput">rel_error_max2</code> 
         public
        construct/copy/destruct</h3>
-<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><pre class="literallayout"><a name="idp21060544-bb"></a><span class="identifier">rel_error_max2</span><span class="special">(</span><span class="identifier">Fac1</span> eps_abs<span class="special">,</span> <span class="identifier">Fac1</span> eps_rel<span class="special">,</span> <span class="identifier">Fac1</span> a_x<span class="special">,</span> <span class="identifier">Fac1</span> a_dxdt<span class="special">)</span><span class="special">;</span></pre></li></ol></div>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><pre class="literallayout"><a name="idp21045472-bb"></a><span class="identifier">rel_error_max2</span><span class="special">(</span><span class="identifier">Fac1</span> eps_abs<span class="special">,</span> <span class="identifier">Fac1</span> eps_rel<span class="special">,</span> <span class="identifier">Fac1</span> a_x<span class="special">,</span> <span class="identifier">Fac1</span> a_dxdt<span class="special">)</span><span class="special">;</span></pre></li></ol></div>
 </div>
 <div class="refsect2">
-<a name="idp20765328"></a><h3>
-<a name="idp21052656-bb"></a><code class="computeroutput">rel_error_max2</code> public member functions</h3>
+<a name="idp50297680"></a><h3>
+<a name="idp21037584-bb"></a><code class="computeroutput">rel_error_max2</code> public member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Res<span class="special">,</span> <span class="keyword">typename</span> T1<span class="special">,</span> <span class="keyword">typename</span> T2<span class="special">,</span> <span class="keyword">typename</span> T3<span class="special">,</span> <span class="keyword">typename</span> T4<span class="special">&gt;</span> 
-  <span class="identifier">Res</span> <a name="idp21053056-bb"></a><span class="keyword">operator</span><span class="special">(</span><span class="special">)</span><span class="special">(</span><span class="identifier">Res</span> r<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T1</span> <span class="special">&amp;</span> x_old<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T2</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T3</span> <span class="special">&amp;</span> dxdt_old<span class="special">,</span> 
+  <span class="identifier">Res</span> <a name="idp21037984-bb"></a><span class="keyword">operator</span><span class="special">(</span><span class="special">)</span><span class="special">(</span><span class="identifier">Res</span> r<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T1</span> <span class="special">&amp;</span> x_old<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T2</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T3</span> <span class="special">&amp;</span> dxdt_old<span class="special">,</span> 
                  <span class="keyword">const</span> <span class="identifier">T4</span> <span class="special">&amp;</span> x_err<span class="special">)</span><span class="special">;</span></pre></li></ol></div>
 </div>
 </div>
@@ -69,7 +69,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="rel_error_max.html"><img src="../../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../default_operations.html#idp20255840"><img src="../../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../images/home.png" alt="Home"></a><a accesskey="n" href="scale.html"><img src="../../../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="rel_error_max.html"><img src="../../../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../default_operations.html#idp49788272"><img src="../../../../images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../images/home.png" alt="Home"></a><a accesskey="n" href="scale.html"><img src="../../../../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
