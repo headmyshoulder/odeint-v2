@@ -36,9 +36,26 @@ namespace odeint {
 
 
 
-
-/*
- * ToDo: Check orders rk_ckc
+/**
+ * \class runge_kutta_cash_karp54_classic
+ * \brief The Runge-Kutta Cash-Karp method implemented without the generic Runge-Kutta algorithm.
+ *
+ * The Runge-Kutta Cash-Karp method is one of the standard methods for
+ * solving ordinary differential equations, see
+ * <a href="http://en.wikipedia.org/wiki/Cash%E2%80%93Karp_method">en.wikipedia.org/wiki/Cash-Karp_method</a>.
+ * The method is explicit and fullfils the Error Stepper concept. Step size control
+ * is provided but continous output is not available for this method.
+ * 
+ * This class derives from explicit_error_stepper_base and inherits its interface via CRTP (current recurring
+ * template pattern). This class implements the method directly, hence the generic Runge-Kutta algorithm is not used.
+ *
+ * \tparam State The state type.
+ * \tparam Value The value type.
+ * \tparam Deriv The type representing the time derivative of the state.
+ * \tparam Time The time representing the independent variable - the time.
+ * \tparam Algebra The algebra type.
+ * \tparam Operations The operations type.
+ * \tparam Resizer The resizer policy type.
  */
 template<
 class State ,
@@ -49,35 +66,67 @@ class Algebra = range_algebra ,
 class Operations = default_operations ,
 class Resizer = initially_resizer
 >
+#ifndef DOXYGEN_SKIP
 class runge_kutta_cash_karp54_classic
 : public explicit_error_stepper_base<
   runge_kutta_cash_karp54_classic< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
   5 , 5 , 4 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
+#else
+class runge_kutta_cash_karp54_classic
+    : public explicit_error_stepper_base< runge_kutta_cash_karp54_classic< ... > , ... >
+#endif 
 {
 
 
 public :
 
+    #ifndef DOXYGEN_SKIP
     typedef explicit_error_stepper_base<
     runge_kutta_cash_karp54_classic< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
     5 , 5 , 4 , State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_base_type;
+    #else
+    typedef explicit_error_stepper_base< runge_kutta_cash_karp54_classic< ... > , ... > stepper_base_type;
+    #endif
 
     typedef typename stepper_base_type::state_type state_type;
-    typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
     typedef typename stepper_base_type::value_type value_type;
     typedef typename stepper_base_type::deriv_type deriv_type;
-    typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
     typedef typename stepper_base_type::time_type time_type;
     typedef typename stepper_base_type::algebra_type algebra_type;
     typedef typename stepper_base_type::operations_type operations_type;
     typedef typename stepper_base_type::resizer_type resizer_type;
+
+    #ifndef DOXYGEN_SKIP
+    typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
+    typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
     typedef typename stepper_base_type::stepper_type stepper_type;
+    #endif
 
 
+    /**
+     * \brief Constructs the runge_kutta_cash_karp54_classic class. This constructor can be used as a default
+     * constructor if the algebra has a default constructor.
+     * \param algebra A copy of algebra is made and stored inside explicit_stepper_base.
+     */
     runge_kutta_cash_karp54_classic( const algebra_type &algebra = algebra_type() ) : stepper_base_type( algebra )
     { }
 
 
+
+    /**
+     * \brief This method performs one step. The derivative `dxdt` of `in` at the time `t` is passed to the method.
+     * The result is updated out-of-place, hence the input is in `in` and the output in `out`. Futhermore, an
+     * estimation of the error is stored in `xerr`. `do_step_impl` is used by explicit_error_stepper_base.
+     *
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     *               Simple System concept.
+     * \param in The state of the ODE which should be solved. in is not modified in this method
+     * \param dxdt The derivative of x at t.
+     * \param t The value of the time, at which the step should be performed.
+     * \param out The result of the step is written in out.
+     * \param dt The step size.
+     * \param xerr The result of the error estimation is written in xerr.
+     */
     template< class System , class StateIn , class DerivIn , class StateOut , class Err >
     void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt , Err &xerr )
     {
@@ -102,6 +151,19 @@ public :
 
 
 
+    /**
+     * \brief This method performs one step. The derivative `dxdt` of `in` at the time `t` is passed to the method.
+     * The result is updated out-of-place, hence the input is in `in` and the output in `out`. `do_step_impl` is
+     * used by explicit_error_stepper_base.
+     *
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     *               Simple System concept.
+     * \param in The state of the ODE which should be solved. in is not modified in this method
+     * \param dxdt The derivative of x at t.
+     * \param t The value of the time, at which the step should be performed.
+     * \param out The result of the step is written in out.
+     * \param dt The step size.
+     */
     template< class System , class StateIn , class DerivIn , class StateOut >
     void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt )
     {
@@ -164,6 +226,10 @@ public :
 
     }
 
+    /**
+     * \brief Adjust the size of all temporaries in the stepper manually.
+     * \param x A state from which the size of the temporaries to be resized is deduced.
+     */
     template< class StateIn >
     void adjust_size( const StateIn &x )
     {

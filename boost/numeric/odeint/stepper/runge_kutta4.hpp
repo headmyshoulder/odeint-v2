@@ -102,12 +102,13 @@ struct rk4_coefficients_c : boost::array< Value , 4 >
  * \brief The classical Runge-Kutta stepper of fourth order.
  *
  * The Runge-Kutta method of fourth order is one standard method for
- * solving ordinary differential equations and is widely used. The method is
- * explicit and fullfils the Stepper concept. Step size control or continous 
- * output are not provided. This class uses the generic Runge-Kutta algorithm.
+ * solving ordinary differential equations and is widely used, see also
+ * <a href="http://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">en.wikipedia.org/wiki/Runge-Kutta_methods</a>
+ * The method is  explicit and fullfils the Stepper concept. Step size control
+ * or continous output are not provided.
  * 
- * This class derives from explicit_stepper_base and explicit_generic_rk and inherits
- * its interface via CRTP (current recurring template pattern). For more details see
+ * This class derives from explicit_stepper_base and inherits its interface via CRTP (current recurring template pattern).
+ * Furthermore, it derivs from explicit_generic_rk which is a generic Runge-Kutta algorithm. For more details see
  * explicit_stepper_base and explicit_generic_rk.
  *
  * \tparam State The state type.
@@ -116,7 +117,7 @@ struct rk4_coefficients_c : boost::array< Value , 4 >
  * \tparam Time The time representing the independent variable - the time.
  * \tparam Algebra The algebra type.
  * \tparam Operations The operations type.
- * \tparam The resizer policy type.
+ * \tparam Resizer The resizer policy type.
  */
 template<
 class State ,

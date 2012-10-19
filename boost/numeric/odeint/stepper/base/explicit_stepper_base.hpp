@@ -90,15 +90,23 @@ namespace odeint {
  *
  * \code
  * sys( x , dxdt , t );
- * stepper.do_step( sys , x , dxdt , t , dt );  // the value of dxdt is used in the performance of the step
+ * stepper.do_step( sys , x , dxdt , t , dt );  // the value of dxdt is used here
  * t += dt;
  * \endcode
  *
  * In detail explicit_stepper_base provides the following `do_step` variants
- *   - `do_step( sys , x , t , dt )` - bla
- *   - `do_step( sys , in , t , out , dt )` - blub
- *   - `do_step( sys , x , dxdt , t , dt )` - bla 
- *   - `do_step( sys , in , dxdt , t , out , dt )` -blub
+ *   - `do_step( sys , x , t , dt )` - The classical `do_step` method needed to fullfil the Stepper concept. The state is updated in-place.
+ *      A type modelling a Boost.Range can be used for x.
+ *   - `do_step( sys , in , t , out , dt )` - This method updates the state out-of-place, hence the result of the step is stored in `out`.
+ *   - `do_step( sys , x , dxdt , t , dt )` - This method updates the state in-place, but the derivative at the point `t` must be
+ *      explicitely passed in `dxdt`. For an example see the code snippet above.
+ *   - `do_step( sys , in , dxdt , t , out , dt )` - This method update the state out-of-place and expects that the derivative at the point 
+ *     `t` is explicitely passed in `dxdt`. It is a combination of the two `do_step` methods above.
+ *
+ * \note The system is always passed as value, which might result in poor performance if it contains data. In this case it can be used with `boost::ref`
+ * or `std::ref`, for example `stepper.do_step( boost::ref( sys ) , x , t , dt );`
+ *
+ * \note The time `t` is not advanced by the stepper. This has to done manually, or by the appropriate `integrate` routines or `iterator`s.
  *
  * \tparam Stepper The stepper on which this class should work. It is used via CRTP, hence explicit_stepper_base
  * provides the interface for the Stepper.
@@ -308,6 +316,15 @@ public:
     }
 
 
+    /**
+     * \brief Adjust the size of all temporaries in the stepper manually.
+     * \param x A state from which the size of the temporaries to be resized is deduced.
+     */
+    template< class StateIn >
+    void adjust_size( const StateIn &x )
+    {
+        resize_impl( x );
+    }
 
 private:
 

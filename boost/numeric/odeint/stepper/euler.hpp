@@ -29,9 +29,27 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-template< class State , class Value , class Deriv , class Time , class Algebra , class Operations , class Resizer >
-class dense_output_explicit_euler;
 
+
+/**
+ * \class euler
+ * \brief An implementation of the Euler method.
+ *
+ * The Euler method is a very simply solver for ordinary differential equations. This method should not be used
+ * for real applications. It is only useful for demonstration purposes. Step size control is not provided but
+ * trivial continous output is available.
+ * 
+ * This class derives from explicit_stepper_base and inherits its interface via CRTP (current recurring template pattern),
+ * see explicit_stepper_base
+ *
+ * \tparam State The state type.
+ * \tparam Value The value type.
+ * \tparam Deriv The type representing the time derivative of the state.
+ * \tparam Time The time representing the independent variable - the time.
+ * \tparam Algebra The algebra type.
+ * \tparam Operations The operations type.
+ * \tparam Resizer The resizer policy type.
+ */
 template<
 class State ,
 class Value = double ,
@@ -41,31 +59,58 @@ class Algebra = range_algebra ,
 class Operations = default_operations ,
 class Resizer = initially_resizer
 >
+#ifndef DOXYGEN_SKIP
 class euler
 : public explicit_stepper_base<
   euler< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
   1 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
+#else
+class euler : public explicit_stepper_base< euler< ... > , ... >
+#endif
 {
 public :
 
-    friend class dense_output_explicit_euler< State , Value , Deriv , Time , Algebra , Operations , Resizer >;
-
+    #ifndef DOXYGEN_SKIP
     typedef explicit_stepper_base< euler< State , Value , Deriv , Time , Algebra , Operations , Resizer > , 1 , State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_base_type;
+    #else
+    typedef explicit_stepper_base< euler< ... > , ... > stepper_base_type;
+    #endif
     typedef typename stepper_base_type::state_type state_type;
-    typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
     typedef typename stepper_base_type::value_type value_type;
     typedef typename stepper_base_type::deriv_type deriv_type;
-    typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
     typedef typename stepper_base_type::time_type time_type;
     typedef typename stepper_base_type::algebra_type algebra_type;
     typedef typename stepper_base_type::operations_type operations_type;
     typedef typename stepper_base_type::resizer_type resizer_type;
+
+    #ifndef DOXYGEN_SKIP
     typedef typename stepper_base_type::stepper_type stepper_type;
+    typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
+    typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
+    #endif 
 
 
+    /**
+     * \brief Constructs the euler class. This constructor can be used as a default
+     * constructor of the algebra has a default constructor.
+     * \param algebra A copy of algebra is made and stored inside explicit_stepper_base.
+     */
     euler( const algebra_type &algebra = algebra_type() ) : stepper_base_type( algebra )
     { }
 
+    /**
+     * \brief This method performs one step. The derivative `dxdt` of `in` at the time `t` is passed to the method.
+     * The result is updated out of place, hence the input is in `in` and the output in `out`. `do_step_impl` is
+     * used by explicit_stepper_base.
+     *
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     *               Simple System concept.
+     * \param in The state of the ODE which should be solved. in is not modified in this method
+     * \param dxdt The derivative of x at t.
+     * \param t The value of the time, at which the step should be performed.
+     * \param out The result of the step is written in out.
+     * \param dt The step size.
+     */
     template< class System , class StateIn , class DerivIn , class StateOut >
     void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt )
     {
@@ -74,6 +119,11 @@ public :
 
     }
 
+
+    /**
+     * \brief This method is used for continous output and it calculates the state `x` at a time `t` from the 
+     * knowledge of two states `old_state` and `current_state` at time points `t_old` and `t_new`.
+     */
     template< class StateOut , class StateIn1 , class StateIn2 >
     void calc_state( StateOut &x , time_type t ,  const StateIn1 &old_state , time_type t_old , const StateIn2 &current_state , time_type t_new )
     {
@@ -82,7 +132,15 @@ public :
                 typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , delta ) );
     }
 
-
+    /**
+     * \brief Adjust the size of all temporaries in the stepper manually.
+     * \param x A state from which the size of the temporaries to be resized is deduced.
+     */
+    template< class StateType >
+    void adjust_size( const StateType &x )
+    {
+        stepper_base_type::adjust_size( x );
+    }
 };
 
 

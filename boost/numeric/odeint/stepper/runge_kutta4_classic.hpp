@@ -37,9 +37,10 @@ namespace odeint {
  * \brief The classical Runge-Kutta stepper of fourth order.
  *
  * The Runge-Kutta method of fourth order is one standard method for
- * solving ordinary differential equations and is widely used. The method is
- * explicit and fullfils the Stepper concept. Step size control or continous 
- * output are not provided. This class implements the method directly, hence the 
+ * solving ordinary differential equations and is widely used, see also
+ * <a href="http://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">en.wikipedia.org/wiki/Runge-Kutta_methods</a>
+ * The method is explicit and fullfils the Stepper concept. Step size control
+ * or continous output are not provided.  This class implements the method directly, hence the 
  * generic Runge-Kutta algorithm is not used.
  * 
  * This class derives from explicit_stepper_base and inherits its interface via
@@ -52,7 +53,7 @@ namespace odeint {
  * \tparam Time The time representing the independent variable - the time.
  * \tparam Algebra The algebra type.
  * \tparam Operations The operations type.
- * \tparam The resizer policy type.
+ * \tparam Resizer The resizer policy type.
  */
 template<
 class State ,
@@ -63,17 +64,26 @@ class Algebra = range_algebra ,
 class Operations = default_operations ,
 class Resizer = initially_resizer
 >
+#ifndef DOXYGEN_SKIP
 class runge_kutta4_classic
 : public explicit_stepper_base<
   runge_kutta4_classic< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
   4 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
+#else
+class runge_kutta4_classic
+    : public explicit_stepper_base< runge_kutta4_classic< ... > , ... >
+#endif
 {
 
 public :
 
+    #ifndef DOXYGEN_SKIP
     typedef explicit_stepper_base<
     runge_kutta4_classic< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
     4 , State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_base_type;
+    #else
+    typedef explicit_stepper_base< runge_kutta4_classic< ... > , ... > stepper_base_type;
+    #endif
 
     typedef typename stepper_base_type::state_type state_type;
     typedef typename stepper_base_type::value_type value_type;
@@ -82,9 +92,9 @@ public :
     typedef typename stepper_base_type::algebra_type algebra_type;
     typedef typename stepper_base_type::operations_type operations_type;
     typedef typename stepper_base_type::resizer_type resizer_type;
-    typedef typename stepper_base_type::stepper_type stepper_type;
 
     #ifndef DOXYGEN_SKIP
+    typedef typename stepper_base_type::stepper_type stepper_type;
     typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
     typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
     #endif // DOXYGEN_SKIP

@@ -49,15 +49,15 @@ else
 
 doxygen reference 
     :
-    [ glob ../../../../boost/numeric/odeint/*.hpp ] 
+#    [ glob ../../../../boost/numeric/odeint/*.hpp ] 
     [ glob ../../../../boost/numeric/odeint/stepper/*.hpp ]
     [ glob ../../../../boost/numeric/odeint/stepper/base/*.hpp ]
-    [ glob ../../../../boost/numeric/odeint/stepper/generation/*.hpp ]
-    [ glob ../../../../boost/numeric/odeint/integrate/*.hpp ]
-    [ glob ../../../../boost/numeric/odeint/iterator/*.hpp ]
-    [ glob ../../../../boost/numeric/odeint/algebra/*.hpp ]
-    [ glob ../../../../boost/numeric/odeint/util/*.hpp ]
-    ../../../../boost/numeric/odeint.hpp
+#    [ glob ../../../../boost/numeric/odeint/stepper/generation/*.hpp ]
+#    [ glob ../../../../boost/numeric/odeint/integrate/*.hpp ]
+#    [ glob ../../../../boost/numeric/odeint/iterator/*.hpp ]
+#    [ glob ../../../../boost/numeric/odeint/algebra/*.hpp ]
+#    [ glob ../../../../boost/numeric/odeint/util/*.hpp ]
+#    ../../../../boost/numeric/odeint.hpp
     : 
 
     # Lots of parameters passed to Doxygen. You can see these in the doxygen docs, or the Wizard Expert tab displays them.

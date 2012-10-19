@@ -38,6 +38,8 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+
+#ifndef DOXYGEN_SKIP
 template< class Value = double >
 struct rk54_ck_coefficients_a1 : boost::array< Value , 1 >
 {
@@ -136,7 +138,31 @@ struct rk54_ck_coefficients_c : boost::array< Value , 6 >
         (*this)[5] = static_cast<Value>( 7 )/static_cast<Value>( 8 );
     }
 };
+#endif
 
+
+/**
+ * \class runge_kutta_cash_karp54
+ * \brief The Runge-Kutta Cash-Karp method.
+ *
+ * The Runge-Kutta Cash-Karp method is one of the standard methods for
+ * solving ordinary differential equations, see
+ * <a href="http://en.wikipedia.org/wiki/Cash%E2%80%93Karp_methods">en.wikipedia.org/wiki/Cash-Karp_methods</a>.
+ * The method is explicit and fullfils the Error Stepper concept. Step size control
+ * is provided but continous output is not available for this method.
+ * 
+ * This class derives from explicit_error_stepper_base and inherits its interface via CRTP (current recurring template pattern).
+ * Furthermore, it derivs from explicit_error_generic_rk which is a generic Runge-Kutta algorithm with error estimation.
+ * For more details see explicit_error_stepper_base and explicit_error_generic_rk.
+ *
+ * \tparam State The state type.
+ * \tparam Value The value type.
+ * \tparam Deriv The type representing the time derivative of the state.
+ * \tparam Time The time representing the independent variable - the time.
+ * \tparam Algebra The algebra type.
+ * \tparam Operations The operations type.
+ * \tparam Resizer The resizer policy type.
+ */
 template<
     class State ,
     class Value = double ,
@@ -166,6 +192,12 @@ public:
     typedef typename stepper_base_type::resizer_type resizer_typ;
     typedef typename stepper_base_type::stepper_type stepper_type;
 
+
+    /**
+     * \brief Constructs the runge_kutta_cash_karp54 class. This constructor can be used as a default
+     * constructor if the algebra has a default constructor.
+     * \param algebra A copy of algebra is made and stored inside explicit_stepper_base.
+     */
     runge_kutta_cash_karp54( const algebra_type &algebra = algebra_type() ) : stepper_base_type(
         boost::fusion::make_vector( rk54_ck_coefficients_a1<Value>() ,
                                  rk54_ck_coefficients_a2<Value>() ,
