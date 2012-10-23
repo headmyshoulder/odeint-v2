@@ -69,29 +69,34 @@ namespace odeint {
  * `do_step_impl( system , in , dxdt_in , t , out , dt , xerr )`. 
  * explicit_error_stepper_base derives from algebra_stepper_base.
  *
- * explicit_error_stepper_base provides several overloaded `do_step` methods, see the list below. Only two of them are needed
- * to fullfil the Error Stepper concept. The other one are for convenience and for performance. Some of them simply update the
- * state out-of-place, while other expect that the first derivative at `t` is passed to the stepper.
+ * explicit_error_stepper_base provides several overloaded `do_step` methods, see the list below. Only two of them
+ * are needed to fullfil the Error Stepper concept. The other ones are for convenience and for performance. Some
+ * of them simply update the state out-of-place, while other expect that the first derivative at `t` is passed to the
+ * stepper.
  *
- * - `do_step( sys , x , t , dt )` - The classical `do_step` method needed to fullfil the Error Stepper concept. The state is updated in-place.
- *      A type modelling a Boost.Range can be used for x.
- * - `do_step( sys , x , dxdt , t , dt )` - This method updates the state in-place, but the derivative at the point `t` must be
- *      explicitely passed in `dxdt`.
- * - `do_step( sys , in , t , out , dt )` - This method updates the state out-of-place, hence the result of the step is stored in `out`.
- * - `do_step( sys , in , dxdt , t , out , dt )` - This method update the state out-of-place and expects that the derivative at the point 
- *     `t` is explicitely passed in `dxdt`. It is a combination of the two `do_step` methods above.
- * - `do_step( sys , x , t , dt , xerr )` - This `do_step` method is needed to fullfil the Error Stepper concept. The state is updated in-place
- *     and an error estimate is calculated. A type modelling a Boost.Range can be used for x.
- * - `do_step( sys , x , dxdt , t , dt , xerr )` - This method updates the state in-place, but the derivative at the point `t` must be passed
- *      in `dxdt`. An error estimate is calculated.
- * - `do_step( sys , in , t , out , dt , xerr )` - This method updates the state out-of-place and estimates the error during the step.
- * - `do_step( sys , in , dxdt , t , out , dt , xerr )` - This methods updates the state out-of-place and estimates the error during the step. 
- *      Furthermore, the derivative at `t` must be passed in `dxdt`.
+ * - `do_step( sys , x , t , dt )` - The classical `do_step` method needed to fullfil the Error Stepper concept. The
+ *      state is updated in-place. A type modelling a Boost.Range can be used for x.
+ * - `do_step( sys , x , dxdt , t , dt )` - This method updates the state in-place, but the derivative at the point `t`
+ *      must be explicitely passed in `dxdt`.
+ * - `do_step( sys , in , t , out , dt )` - This method updates the state out-of-place, hence the result of the step
+ *      is stored in `out`.
+ * - `do_step( sys , in , dxdt , t , out , dt )` - This method update the state out-of-place and expects that the
+ *     derivative at the point `t` is explicitely passed in `dxdt`. It is a combination of the two `do_step` methods
+ *     above.
+ * - `do_step( sys , x , t , dt , xerr )` - This `do_step` method is needed to fullfil the Error Stepper concept. The
+ *     state is updated in-place and an error estimate is calculated. A type modelling a Boost.Range can be used for x.
+ * - `do_step( sys , x , dxdt , t , dt , xerr )` - This method updates the state in-place, but the derivative at the
+ *      point `t` must be passed in `dxdt`. An error estimate is calculated.
+ * - `do_step( sys , in , t , out , dt , xerr )` - This method updates the state out-of-place and estimates the error
+ *      during the step.
+ * - `do_step( sys , in , dxdt , t , out , dt , xerr )` - This methods updates the state out-of-place and estimates
+ *      the error during the step. Furthermore, the derivative at `t` must be passed in `dxdt`.
  *
- * \note The system is always passed as value, which might result in poor performance if it contains data. In this case it can be used with `boost::ref`
- * or `std::ref`, for example `stepper.do_step( boost::ref( sys ) , x , t , dt );`
+ * \note The system is always passed as value, which might result in poor performance if it contains data. In this
+ *      case it can be used with `boost::ref` or `std::ref`, for example `stepper.do_step( boost::ref( sys ) , x , t , dt );`
  *
- * \note The time `t` is not advanced by the stepper. This has to done manually, or by the appropriate `integrate` routines or `iterator`s.
+ * \note The time `t` is not advanced by the stepper. This has to done manually, or by the appropriate `integrate`
+ *      routines or `iterator`s.
  *
  * \tparam Stepper The stepper on which this class should work. It is used via CRTP, hence explicit_stepper_base
  * provides the interface for the Stepper.
@@ -143,10 +148,9 @@ public:
     #ifndef DOXYGEN_SKIP
     typedef state_wrapper< state_type > wrapped_state_type;
     typedef state_wrapper< deriv_type > wrapped_deriv_type;
-    #endif
-
     typedef explicit_error_stepper_base< Stepper , Order , StepperOrder , ErrorOrder ,
             State , Value , Deriv , Time , Algebra , Operations , Resizer > internal_stepper_base_type;
+    #endif
 
     typedef unsigned short order_type;
     static const order_type order_value = Order;
