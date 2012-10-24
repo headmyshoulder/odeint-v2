@@ -396,9 +396,8 @@ public:
      * stepper.do_step( sys , x , dxdt , t , dt , xerr );
      * \endcode
      *
-     * The result is updated in place in x. This method is disabled if Time and Deriv are of the same type. In this
-     * case the method could not be distinguished from other `do_step` versions. This method is disabled if DerivIn and
-     * Time are of the same type.
+     * The result is updated in place in x. This method is disabled if Time and DerivIn are of the same type. In this
+     * case the method could not be distinguished from other `do_step` versions.
      * 
      * \note This method does not solve the forwarding problem.
      *
