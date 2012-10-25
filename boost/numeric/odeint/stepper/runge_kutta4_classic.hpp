@@ -138,7 +138,9 @@ public :
 
         const value_type val1 = static_cast< value_type >( 1 );
 
-        //m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
+#ifndef DECORATE_CALLS
+        m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
+#endif
 
         typename odeint::unwrap_reference< System >::type &sys = system;
 
