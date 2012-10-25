@@ -28,7 +28,7 @@
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 
-#ifdef __CUDACC__
+#ifdef DECORATE_CALLS
 // We are being compiled by nvcc.
 #  define CALL_DECORATION __host__ __device__
 #else

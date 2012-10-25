@@ -19,7 +19,7 @@
 #define BOOST_NUMERIC_ODEINT_UTIL_UNIT_HELPER_HPP_INCLUDED
 
 
-#ifndef __CUDACC__
+#ifndef DECORATE_CALLS
 #include <boost/units/quantity.hpp>
 #include <boost/units/get_dimension.hpp>
 #include <boost/units/get_system.hpp>
@@ -44,7 +44,7 @@ namespace detail {
         typedef T result_type;
     };
     
-#ifndef __CUDACC__
+#ifndef DECORATE_CALLS
     template<class Unit , class T>
     struct get_unit_value_impl< boost::units::quantity< Unit , T> >
     {
@@ -69,7 +69,7 @@ namespace detail {
         }
     };
 
-#ifndef __CUDACC__
+#ifndef DECORATE_CALLS
     template<class Unit , class T , class V>
     struct set_unit_value_impl<boost::units::quantity<Unit , T> , V>
     {
@@ -107,7 +107,7 @@ namespace detail {
         typedef T type;
     };
 
-#ifndef __CUDACC__
+#ifndef DECORATE_CALLS
     template< class Unit , class Y >
     struct unit_value_type< boost::units::quantity< Unit , Y > >
     {
@@ -130,7 +130,7 @@ namespace detail {
         typedef Time type;
     };
 
-#ifndef __CUDACC__
+#ifndef DECORATE_CALLS
     template< typename Unit , typename Value >
     struct inverse_time< boost::units::quantity< Unit , Value > >
     {

@@ -33,7 +33,7 @@
 
 #include <boost/numeric/odeint/stepper/base/algebra_stepper_base.hpp>
 
-#ifdef __CUDACC__
+#ifdef DECORATE_CALLS
 // We are being compiled by nvcc.
 #  define CALL_DECORATION __host__ __device__
 #else
