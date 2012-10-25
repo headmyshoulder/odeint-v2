@@ -23,6 +23,14 @@
 #include <boost/numeric/odeint/util/same_size.hpp>
 #include <boost/numeric/odeint/util/resize.hpp>
 
+#ifdef __CUDACC__
+// We are being compiled by nvcc.
+#  define CALL_DECORATION __host__ __device__
+#else
+// We are being compiled for CPU.
+#  define CALL_DECORATION
+#endif
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -79,7 +87,7 @@ struct initially_resizer
 struct never_resizer
 {
     template< class State , class ResizeFunction >
-    bool adjust_size( const State &x , ResizeFunction f )
+    CALL_DECORATION bool adjust_size( const State &x , ResizeFunction f )
     {
         return false;
     }
@@ -90,4 +98,5 @@ struct never_resizer
 }
 }
 
+#undef CALL_DECORATION
 #endif // BOOST_NUMERIC_ODEINT_UTIL_RESIZER_HPP_INCLUDED

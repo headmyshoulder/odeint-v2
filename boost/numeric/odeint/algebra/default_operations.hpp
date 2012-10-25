@@ -25,6 +25,14 @@
 
 #include <boost/numeric/odeint/util/unit_helper.hpp>
 
+#ifdef __CUDACC__
+// We are being compiled by nvcc.
+#  define CALL_DECORATION __host__ __device__
+#else
+// We are being compiled for CPU.
+#  define CALL_DECORATION
+#endif
+
 
 namespace boost {
 namespace numeric {
@@ -79,10 +87,10 @@ struct default_operations
         const Fac1 m_alpha1;
         const Fac2 m_alpha2;
 
-        scale_sum2( Fac1 alpha1 , Fac2 alpha2 ) : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) { }
+        CALL_DECORATION scale_sum2( Fac1 alpha1 , Fac2 alpha2 ) : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) { }
 
         template< class T1 , class T2 , class T3 >
-        void operator()( T1 &t1 , const T2 &t2 , const T3 &t3) const
+        CALL_DECORATION void operator()( T1 &t1 , const T2 &t2 , const T3 &t3) const
         {
             t1 = m_alpha1 * t2 + m_alpha2 * t3;
         }
@@ -141,11 +149,11 @@ struct default_operations
         const Fac4 m_alpha4;
         const Fac5 m_alpha5;
 
-        scale_sum5( Fac1 alpha1 , Fac2 alpha2 , Fac3 alpha3 , Fac4 alpha4 , Fac5 alpha5 )
+        CALL_DECORATION scale_sum5( Fac1 alpha1 , Fac2 alpha2 , Fac3 alpha3 , Fac4 alpha4 , Fac5 alpha5 )
         : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) , m_alpha4( alpha4 ) , m_alpha5( alpha5 ) { }
 
         template< class T1 , class T2 , class T3 , class T4 , class T5 , class T6 >
-        void operator()( T1 &t1 , const T2 &t2 , const T3 &t3 , const T4 &t4 , const T5 &t5 , const T6 &t6) const
+        CALL_DECORATION void operator()( T1 &t1 , const T2 &t2 , const T3 &t3 , const T4 &t4 , const T5 &t5 , const T6 &t6) const
         {
             t1 = m_alpha1 * t2 + m_alpha2 * t3 + m_alpha3 * t4 + m_alpha4 * t5 + m_alpha5 * t6;
         }
@@ -599,4 +607,5 @@ struct default_operations
 } // boost
 
 
+#undef CALL_DECORATION
 #endif // BOOST_NUMERIC_ODEINT_ALGEBRA_DEFAULT_OPERATIONS_HPP_INCLUDED

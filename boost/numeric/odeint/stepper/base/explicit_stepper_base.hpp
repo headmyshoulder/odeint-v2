@@ -33,6 +33,14 @@
 
 #include <boost/numeric/odeint/stepper/base/algebra_stepper_base.hpp>
 
+#ifdef __CUDACC__
+// We are being compiled by nvcc.
+#  define CALL_DECORATION __host__ __device__
+#else
+// We are being compiled for CPU.
+#  define CALL_DECORATION
+#endif
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -199,7 +207,7 @@ public:
      * \param dt The step size.
      */
     template< class System , class StateInOut >
-    void do_step( System system , StateInOut &x , time_type t , time_type dt )
+    CALL_DECORATION void do_step( System system , StateInOut &x , time_type t , time_type dt )
     {
         do_step_v1( system , x , t , dt );
     }
@@ -321,36 +329,36 @@ public:
      * \param x A state from which the size of the temporaries to be resized is deduced.
      */
     template< class StateIn >
-    void adjust_size( const StateIn &x )
+    CALL_DECORATION void adjust_size( const StateIn &x )
     {
         resize_impl( x );
     }
 
 private:
 
-    stepper_type& stepper( void )
+    CALL_DECORATION stepper_type& stepper( void )
     {
         return *static_cast< stepper_type* >( this );
     }
 
-    const stepper_type& stepper( void ) const
+    CALL_DECORATION const stepper_type& stepper( void ) const
     {
         return *static_cast< const stepper_type* >( this );
     }
 
 
     template< class StateIn >
-    bool resize_impl( const StateIn &x )
+    CALL_DECORATION bool resize_impl( const StateIn &x )
     {
         return adjust_size_by_resizeability( m_dxdt , x , typename is_resizeable<deriv_type>::type() );
     }
 
 
     template< class System , class StateInOut >
-    void do_step_v1( System system , StateInOut &x , time_type t , time_type dt )
+    CALL_DECORATION void do_step_v1( System system , StateInOut &x , time_type t , time_type dt )
     {
         typename odeint::unwrap_reference< System >::type &sys = system;
-        m_resizer.adjust_size( x , detail::bind( &internal_stepper_base_type::template resize_impl< StateInOut > , detail::ref( *this ) , detail::_1 ) );
+        //m_resizer.adjust_size( x , detail::bind( &internal_stepper_base_type::template resize_impl< StateInOut > , detail::ref( *this ) , detail::_1 ) );
         sys( x , m_dxdt.m_v ,t );
         this->stepper().do_step_impl( system , x , m_dxdt.m_v , t , x , dt );
     }
@@ -368,4 +376,5 @@ protected:
 } // numeric
 } // boost
 
+#undef CALL_DECORATION
 #endif // BOOST_NUMERIC_ODEINT_STEPPER_BASE_EXPLICIT_STEPPER_BASE_HPP_INCLUDED

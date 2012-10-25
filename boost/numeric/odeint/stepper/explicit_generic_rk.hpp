@@ -31,6 +31,14 @@
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 
+#ifdef __CUDACC__
+// We are being compiled by nvcc.
+#  define CALL_DECORATION __host__ __device__
+#else
+// We are being compiled for CPU.
+#  define CALL_DECORATION
+#endif
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -178,7 +186,7 @@ public:
      * \param dt The step size.
      */
     template< class System , class StateIn , class DerivIn , class StateOut >
-    void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt ,
+    CALL_DECORATION void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt ,
             time_type t , StateOut &out , time_type dt )
     {
         m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
@@ -225,4 +233,7 @@ private:
 }
 }
 }
+#undef CALL_DECORATION
+
+#undef CALL_DECORATION
 #endif // BOOST_NUMERIC_ODEINT_STEPPER_EXPLICIT_GENERIC_RK_HPP_INCLUDED
