@@ -29,6 +29,7 @@
 #endif
 
 
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -46,12 +47,13 @@ template<>
 struct vector_space_reduce< double >
 {
   template< class Op >
-  double operator()( double x , Op op , double init ) const
+  CALL_DECORATION double operator()( double x , Op op , double init ) const
   {
       init = op( init , x );
       return init;
   }
 };
+
 
 
 struct vector_space_algebra
@@ -76,13 +78,13 @@ struct vector_space_algebra
     }
 
     template< class S1 , class S2 , class S3 , class S4 , class Op >
-    static void for_each4( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , Op op )
+    CALL_DECORATION static void for_each4( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , Op op )
     {
         op( s1 , s2 , s3 , s4 );
     }
 
     template< class S1 , class S2 , class S3 , class S4 , class S5 , class Op >
-    static void for_each5( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , S5 &s5 , Op op )
+    CALL_DECORATION static void for_each5( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , S5 &s5 , Op op )
     {
         op( s1 , s2 , s3 , s4 , s5 );
     }
@@ -94,19 +96,19 @@ struct vector_space_algebra
     }
 
     template< class S1 , class S2 , class S3 , class S4 , class S5 , class S6 ,class S7 , class Op >
-    static void for_each7( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , S5 &s5 , S6 &s6 , S7 &s7 , Op op )
+    CALL_DECORATION static void for_each7( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , S5 &s5 , S6 &s6 , S7 &s7 , Op op )
     {
         op( s1 , s2 , s3 , s4 , s5 , s6 , s7 );
     }
 
     template< class S1 , class S2 , class S3 , class S4 , class S5 , class S6 ,class S7 , class S8 , class Op >
-    static void for_each8( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , S5 &s5 , S6 &s6 , S7 &s7 , S8 &s8 , Op op )
+    CALL_DECORATION static void for_each8( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , S5 &s5 , S6 &s6 , S7 &s7 , S8 &s8 , Op op )
     {
         op( s1 , s2 , s3 , s4 , s5 , s6 , s7 , s8 );
     }
 
     template< class S1 , class S2 , class S3 , class S4 , class S5 , class S6 ,class S7 , class S8 , class S9 , class Op >
-    static void for_each9( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , S5 &s5 , S6 &s6 , S7 &s7 , S8 &s8 , S9 &s9 , Op op )
+    CALL_DECORATION static void for_each9( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , S5 &s5 , S6 &s6 , S7 &s7 , S8 &s8 , S9 &s9 , Op op )
     {
         op( s1 , s2 , s3 , s4 , s5 , s6 , s7 , s8 , s9 );
     }
@@ -148,7 +150,7 @@ struct vector_space_algebra
     }
 
     template< class Value , class S , class Red >
-    static Value reduce( const S &s , Red red , Value init )
+    CALL_DECORATION static Value reduce( const S &s , Red red , Value init )
     {
         boost::numeric::odeint::vector_space_reduce< S > r;
         return r( s , red , init );
@@ -162,4 +164,6 @@ struct vector_space_algebra
 
 
 #undef CALL_DECORATION
+
+
 #endif // BOOST_NUMERIC_ODEINT_ALGEBRA_VECTOR_SPACE_ALGEBRA_HPP_INCLUDED

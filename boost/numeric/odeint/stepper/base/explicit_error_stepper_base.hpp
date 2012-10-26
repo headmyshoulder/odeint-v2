@@ -32,6 +32,16 @@
 
 #include <boost/numeric/odeint/stepper/base/algebra_stepper_base.hpp>
 
+
+#ifdef DECORATE_CALLS
+// We are being compiled by nvcc.
+#  define CALL_DECORATION __host__ __device__
+#else
+// We are being compiled for CPU.
+#  define CALL_DECORATION
+#endif
+
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -170,7 +180,7 @@ public:
     /**
      * \return Returns the order of the stepper if it used without error estimation.
      */
-    order_type order( void ) const
+    CALL_DECORATION order_type order( void ) const
     {
         return order_value;
     }
@@ -178,7 +188,7 @@ public:
     /**
      * \return Returns the order of a step if the stepper is used without error estimation.
      */
-    order_type stepper_order( void ) const
+    CALL_DECORATION order_type stepper_order( void ) const
     {
         return stepper_order_value;
     }
@@ -186,7 +196,7 @@ public:
     /**
      * \return Returns the order of an error step if the stepper is used without error estimation.
      */
-    order_type error_order( void ) const
+    CALL_DECORATION order_type error_order( void ) const
     {
         return error_order_value;
     }
@@ -208,7 +218,7 @@ public:
      * \param dt The step size.
      */
     template< class System , class StateInOut >
-    void do_step( System system , StateInOut &x , time_type t , time_type dt )
+    CALL_DECORATION void do_step( System system , StateInOut &x , time_type t , time_type dt )
     {
         do_step_v1( system , x , t , dt );
     }
@@ -226,7 +236,7 @@ public:
      * \param dt The step size.
      */
     template< class System , class StateInOut >
-    void do_step( System system , const StateInOut &x , time_type t , time_type dt )
+    CALL_DECORATION void do_step( System system , const StateInOut &x , time_type t , time_type dt )
     {
         do_step_v1( system , x , t , dt );
     }
@@ -263,7 +273,7 @@ public:
      */
     template< class System , class StateInOut , class DerivIn >
     typename boost::disable_if< boost::is_same< DerivIn , time_type > , void >::type
-    do_step( System system , StateInOut &x , const DerivIn &dxdt , time_type t , time_type dt )
+    CALL_DECORATION do_step( System system , StateInOut &x , const DerivIn &dxdt , time_type t , time_type dt )
     {
         this->stepper().do_step_impl( system , x , dxdt , t , x , dt );
     }
@@ -291,7 +301,7 @@ public:
      */
     template< class System , class StateIn , class StateOut >
     typename boost::disable_if< boost::is_same< StateIn , time_type > , void >::type
-    do_step( System system , const StateIn &in , time_type t , StateOut &out , time_type dt )
+    CALL_DECORATION do_step( System system , const StateIn &in , time_type t , StateOut &out , time_type dt )
     {
         typename odeint::unwrap_reference< System >::type &sys = system;
         m_resizer.adjust_size( in , detail::bind( &internal_stepper_base_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
@@ -329,7 +339,7 @@ public:
      */
     template< class System , class StateIn , class DerivIn , class StateOut >
     typename boost::disable_if< boost::is_same< DerivIn , time_type > , void >::type
-    do_step( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt )
+    CALL_DECORATION do_step( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt )
     {
         this->stepper().do_step_impl( system , in , dxdt , t , out , dt );
     }
@@ -355,7 +365,7 @@ public:
      * \param xerr The estimation of the error is stored in xerr.
      */
     template< class System , class StateInOut , class Err >
-    void do_step( System system , StateInOut &x , time_type t , time_type dt , Err &xerr )
+    CALL_DECORATION void do_step( System system , StateInOut &x , time_type t , time_type dt , Err &xerr )
     {
         do_step_v5( system , x , t , dt , xerr );
     }
@@ -374,7 +384,7 @@ public:
      * \param xerr The estimation of the error is stored in xerr.
      */
     template< class System , class StateInOut , class Err >
-    void do_step( System system , const StateInOut &x , time_type t , time_type dt , Err &xerr )
+    CALL_DECORATION void do_step( System system , const StateInOut &x , time_type t , time_type dt , Err &xerr )
     {
         do_step_v5( system , x , t , dt , xerr );
     }
@@ -411,7 +421,7 @@ public:
      */
     template< class System , class StateInOut , class DerivIn , class Err >
     typename boost::disable_if< boost::is_same< DerivIn , time_type > , void >::type
-    do_step( System system , StateInOut &x , const DerivIn &dxdt , time_type t , time_type dt , Err &xerr )
+    CALL_DECORATION do_step( System system , StateInOut &x , const DerivIn &dxdt , time_type t , time_type dt , Err &xerr )
     {
         this->stepper().do_step_impl( system , x , dxdt , t , x , dt , xerr );
     }
@@ -437,7 +447,7 @@ public:
      * \param xerr The error estimate.
      */
     template< class System , class StateIn , class StateOut , class Err >
-    void do_step( System system , const StateIn &in , time_type t , StateOut &out , time_type dt , Err &xerr )
+    CALL_DECORATION void do_step( System system , const StateIn &in , time_type t , StateOut &out , time_type dt , Err &xerr )
     {
         typename odeint::unwrap_reference< System >::type &sys = system;
         m_resizer.adjust_size( in , detail::bind( &internal_stepper_base_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
@@ -474,7 +484,7 @@ public:
      * \param xerr The error estimate.
      */
     template< class System , class StateIn , class DerivIn , class StateOut , class Err >
-    void do_step( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt , Err &xerr )
+    CALL_DECORATION void do_step( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt , Err &xerr )
     {
         this->stepper().do_step_impl( system , in , dxdt , t , out , dt , xerr );
     }
@@ -494,7 +504,7 @@ public:
 private:
 
     template< class System , class StateInOut >
-    void do_step_v1( System system , StateInOut &x , time_type t , time_type dt )
+    CALL_DECORATION void do_step_v1( System system , StateInOut &x , time_type t , time_type dt )
     {
         typename odeint::unwrap_reference< System >::type &sys = system;
         m_resizer.adjust_size( x , detail::bind( &internal_stepper_base_type::template resize_impl<StateInOut> , detail::ref( *this ) , detail::_1 ) );
@@ -503,7 +513,7 @@ private:
     }
 
     template< class System , class StateInOut , class Err >
-    void do_step_v5( System system , StateInOut &x , time_type t , time_type dt , Err &xerr )
+    CALL_DECORATION void do_step_v5( System system , StateInOut &x , time_type t , time_type dt , Err &xerr )
     {
         typename odeint::unwrap_reference< System >::type &sys = system;
         m_resizer.adjust_size( x , detail::bind( &internal_stepper_base_type::template resize_impl<StateInOut> , detail::ref( *this ) , detail::_1 ) );
@@ -517,12 +527,12 @@ private:
         return adjust_size_by_resizeability( m_dxdt , x , typename is_resizeable<deriv_type>::type() );
     }
 
-    stepper_type& stepper( void )
+    CALL_DECORATION stepper_type& stepper( void )
     {
         return *static_cast< stepper_type* >( this );
     }
 
-    const stepper_type& stepper( void ) const
+    CALL_DECORATION const stepper_type& stepper( void ) const
     {
         return *static_cast< const stepper_type* >( this );
     }

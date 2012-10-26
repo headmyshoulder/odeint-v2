@@ -18,6 +18,13 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_BASE_ALGEBRA_STEPPER_BASE_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_STEPPER_BASE_ALGEBRA_STEPPER_BASE_HPP_INCLUDED
 
+#ifdef DECORATE_CALLS
+// We are being compiled by nvcc.
+#  define CALL_DECORATION __host__ __device__
+#else
+// We are being compiled for CPU.
+#  define CALL_DECORATION
+#endif
 
 namespace boost {
 namespace numeric {
@@ -55,7 +62,7 @@ public:
     /**
      * \return A reference to the algebra which is held by this class.
      */
-    algebra_type& algebra()
+    CALL_DECORATION algebra_type& algebra()
     {
         return m_algebra;
     }
@@ -63,7 +70,7 @@ public:
     /**
      * \return A const reference to the algebra which is held by this class.
      */
-    const algebra_type& algebra() const
+    CALL_DECORATION const algebra_type& algebra() const
     {
         return m_algebra;
     }

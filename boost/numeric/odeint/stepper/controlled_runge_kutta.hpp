@@ -39,6 +39,15 @@
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
+
+#ifdef DECORATE_CALLS
+// We are being compiled by nvcc.
+#  define CALL_DECORATION __host__ __device__
+#else
+// We are being compiled for CPU.
+#  define CALL_DECORATION
+#endif
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -72,13 +81,13 @@ public:
 
 
     template< class State , class Deriv , class Err , class Time >
-    value_type error( const State &x_old , const Deriv &dxdt_old , Err &x_err , Time dt ) const
+    CALL_DECORATION value_type error( const State &x_old , const Deriv &dxdt_old , Err &x_err , Time dt ) const
     {
         return error( algebra_type() , x_old , dxdt_old , x_err , dt );
     }
 
     template< class State , class Deriv , class Err , class Time >
-    value_type error( algebra_type &algebra , const State &x_old , const Deriv &dxdt_old , Err &x_err , Time dt ) const
+    CALL_DECORATION value_type error( algebra_type &algebra , const State &x_old , const Deriv &dxdt_old , Err &x_err , Time dt ) const
     {
         // this overwrites x_err !
         algebra.for_each3( x_err , x_old , dxdt_old ,
@@ -172,13 +181,13 @@ public:
      * The overloads are needed to solve the forwarding problem
      */
     template< class System , class StateInOut >
-    controlled_step_result try_step( System system , StateInOut &x , time_type &t , time_type &dt )
+    CALL_DECORATION controlled_step_result try_step( System system , StateInOut &x , time_type &t , time_type &dt )
     {
         return try_step_v1( system , x , t, dt );
     }
 
     template< class System , class StateInOut >
-    controlled_step_result try_step( System system , const StateInOut &x , time_type &t , time_type &dt )
+    CALL_DECORATION controlled_step_result try_step( System system , const StateInOut &x , time_type &t , time_type &dt )
     {
         return try_step_v1( system , x , t, dt );
     }
@@ -191,9 +200,11 @@ public:
      * this version does not solve the forwarding problem, boost.range can not be used
      */
     template< class System , class StateInOut , class DerivIn >
-    controlled_step_result try_step( System system , StateInOut &x , const DerivIn &dxdt , time_type &t , time_type &dt )
+    CALL_DECORATION controlled_step_result try_step( System system , StateInOut &x , const DerivIn &dxdt , time_type &t , time_type &dt )
     {
+        #ifndef DECORATE_CALLS
         m_xnew_resizer.adjust_size( x , detail::bind( &controlled_runge_kutta::template resize_m_xnew_impl< StateInOut > , detail::ref( *this ) , detail::_1 ) );
+        #endif
         controlled_step_result res = try_step( system , x , dxdt , t , m_xnew.m_v , dt );
         if( res == success )
         {
@@ -211,10 +222,12 @@ public:
      */
     template< class System , class StateIn , class StateOut >
     typename boost::disable_if< boost::is_same< StateIn , time_type > , controlled_step_result >::type
-    try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
+    CALL_DECORATION try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
     {
         typename odeint::unwrap_reference< System >::type &sys = system;
+        #ifndef DECORATE_CALLS
         m_dxdt_resizer.adjust_size( in , detail::bind( &controlled_runge_kutta::template resize_m_dxdt_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
+        #endif
         sys( in , m_dxdt.m_v , t );
         return try_step( system , in , m_dxdt.m_v , t , out , dt );
     }
@@ -226,13 +239,15 @@ public:
      * this version does not solve the forwarding problem, boost.range can not be used
      */
     template< class System , class StateIn , class DerivIn , class StateOut >
-    controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt , time_type &t , StateOut &out , time_type &dt )
+    CALL_DECORATION controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt , time_type &t , StateOut &out , time_type &dt )
     {
         BOOST_USING_STD_MIN();
         BOOST_USING_STD_MAX();
         using std::pow;
 
+        #ifndef DECORATE_CALLS
         m_xerr_resizer.adjust_size( in , detail::bind( &controlled_runge_kutta::template resize_m_xerr_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
+        #endif
 
         // do one step with error calculation
         m_stepper.do_step( system , in , dxdt , t , out , dt , m_xerr.m_v );
@@ -296,10 +311,12 @@ private:
 
 
     template< class System , class StateInOut >
-    controlled_step_result try_step_v1( System system , StateInOut &x , time_type &t , time_type &dt )
+    CALL_DECORATION controlled_step_result try_step_v1( System system , StateInOut &x , time_type &t , time_type &dt )
     {
         typename odeint::unwrap_reference< System >::type &sys = system;
+        #ifndef DECORATE_CALLS
         m_dxdt_resizer.adjust_size( x , detail::bind( &controlled_runge_kutta::template resize_m_dxdt_impl< StateInOut > , detail::ref( *this ) , detail::_1 ) );
+        #endif
         sys( x , m_dxdt.m_v ,t );
         return try_step( system , x , m_dxdt.m_v , t , dt );
     }

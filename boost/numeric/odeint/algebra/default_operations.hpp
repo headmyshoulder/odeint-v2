@@ -106,11 +106,11 @@ struct default_operations
         const Fac2 m_alpha2;
         const Fac3 m_alpha3;
 
-        scale_sum3( Fac1 alpha1 , Fac2 alpha2 , Fac3 alpha3 )
+        CALL_DECORATION scale_sum3( Fac1 alpha1 , Fac2 alpha2 , Fac3 alpha3 )
         : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) { }
 
         template< class T1 , class T2 , class T3 , class T4 >
-        void operator()( T1 &t1 , const T2 &t2 , const T3 &t3 , const T4 &t4 ) const
+        CALL_DECORATION void operator()( T1 &t1 , const T2 &t2 , const T3 &t3 , const T4 &t4 ) const
         {
             t1 = m_alpha1 * t2 + m_alpha2 * t3 + m_alpha3 * t4;
         }
@@ -127,11 +127,11 @@ struct default_operations
         const Fac3 m_alpha3;
         const Fac4 m_alpha4;
 
-        scale_sum4( Fac1 alpha1 , Fac2 alpha2 , Fac3 alpha3 , Fac4 alpha4 )
+        CALL_DECORATION scale_sum4( Fac1 alpha1 , Fac2 alpha2 , Fac3 alpha3 , Fac4 alpha4 )
         : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) , m_alpha4( alpha4 ) { }
 
         template< class T1 , class T2 , class T3 , class T4 , class T5 >
-        void operator()( T1 &t1 , const T2 &t2 , const T3 &t3 , const T4 &t4 , const T5 &t5) const
+        CALL_DECORATION void operator()( T1 &t1 , const T2 &t2 , const T3 &t3 , const T4 &t4 , const T5 &t5) const
         {
             t1 = m_alpha1 * t2 + m_alpha2 * t3 + m_alpha3 * t4 + m_alpha4 * t5;
         }
@@ -172,11 +172,11 @@ struct default_operations
         const Fac5 m_alpha5;
         const Fac6 m_alpha6;
 
-        scale_sum6( Fac1 alpha1 , Fac2 alpha2 , Fac3 alpha3 , Fac4 alpha4 , Fac5 alpha5 , Fac6 alpha6 )
+        CALL_DECORATION scale_sum6( Fac1 alpha1 , Fac2 alpha2 , Fac3 alpha3 , Fac4 alpha4 , Fac5 alpha5 , Fac6 alpha6 )
         : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) , m_alpha4( alpha4 ) , m_alpha5( alpha5 ) , m_alpha6( alpha6 ){ }
 
         template< class T1 , class T2 , class T3 , class T4 , class T5 , class T6 , class T7 >
-        void operator()( T1 &t1 , const T2 &t2 , const T3 &t3 , const T4 &t4 , const T5 &t5 , const T6 &t6 ,const T7 &t7) const
+        CALL_DECORATION void operator()( T1 &t1 , const T2 &t2 , const T3 &t3 , const T4 &t4 , const T5 &t5 , const T6 &t6 ,const T7 &t7) const
         {
             t1 = m_alpha1 * t2 + m_alpha2 * t3 + m_alpha3 * t4 + m_alpha4 * t5 + m_alpha5 * t6 + m_alpha6 * t7;
         }
@@ -196,12 +196,12 @@ struct default_operations
         const Fac6 m_alpha6;
         const Fac7 m_alpha7;
 
-        scale_sum7( Fac1 alpha1 , Fac2 alpha2 , Fac3 alpha3 , Fac4 alpha4 ,
+        CALL_DECORATION scale_sum7( Fac1 alpha1 , Fac2 alpha2 , Fac3 alpha3 , Fac4 alpha4 ,
                 Fac5 alpha5 , Fac6 alpha6 , Fac7 alpha7 )
         : m_alpha1( alpha1 ) , m_alpha2( alpha2 ) , m_alpha3( alpha3 ) , m_alpha4( alpha4 ) , m_alpha5( alpha5 ) , m_alpha6( alpha6 ) , m_alpha7( alpha7 ) { }
 
         template< class T1 , class T2 , class T3 , class T4 , class T5 , class T6 , class T7 , class T8 >
-        void operator()( T1 &t1 , const T2 &t2 , const T3 &t3 , const T4 &t4 , const T5 &t5 , const T6 &t6 , const T7 &t7 , const T8 &t8 ) const
+        CALL_DECORATION void operator()( T1 &t1 , const T2 &t2 , const T3 &t3 , const T4 &t4 , const T5 &t5 , const T6 &t6 , const T7 &t7 , const T8 &t8 ) const
         {
             t1 = m_alpha1 * t2 + m_alpha2 * t3 + m_alpha3 * t4 + m_alpha4 * t5 + m_alpha5 * t6 + m_alpha6 * t7 + m_alpha7 * t8;
         }
@@ -440,15 +440,17 @@ struct default_operations
     {
         const Fac1 m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt;
 
-        rel_error( Fac1 eps_abs , Fac1 eps_rel , Fac1 a_x , Fac1 a_dxdt )
+        CALL_DECORATION rel_error( Fac1 eps_abs , Fac1 eps_rel , Fac1 a_x , Fac1 a_dxdt )
         : m_eps_abs( eps_abs ) , m_eps_rel( eps_rel ) , m_a_x( a_x ) , m_a_dxdt( a_dxdt ) { }
 
 
         template< class T1 , class T2 , class T3 >
-        void operator()( T3 &t3 , const T1 &t1 , const T2 &t2 ) const
+        CALL_DECORATION void operator()( T3 &t3 , const T1 &t1 , const T2 &t2 ) const
         {
             using std::abs;
-            set_unit_value( t3 , abs( get_unit_value( t3 ) ) / ( m_eps_abs + m_eps_rel * ( m_a_x * abs( get_unit_value( t1 ) ) + m_a_dxdt * abs( get_unit_value( t2 ) ) ) ) );
+//            t3 = abs( t3 / ( m_eps_abs + m_eps_rel * ( m_a_x * abs( t1 ) + m_a_dxdt * abs( t2 )  ) ) );
+
+            // set_unit_value( t3 , abs( get_unit_value( t3 ) ) / ( m_eps_abs + m_eps_rel * ( m_a_x * abs( get_unit_value( t1 ) ) + m_a_dxdt * abs( get_unit_value( t2 ) ) ) ) );
         }
 
         typedef void result_type;
@@ -496,11 +498,15 @@ struct default_operations
     struct maximum
     {
         template< class Fac1 , class Fac2 >
-        Value operator()( Fac1 t1 , const Fac2 t2 ) const
+        CALL_DECORATION Value operator()( Fac1 t1 , const Fac2 t2 ) const
         {
             using std::abs;
-            Value a1 = abs( get_unit_value( t1 ) ) , a2 = abs( get_unit_value( t2 ) );
-            return ( a1 < a2 ) ? a2 : a1 ;
+//            Value a1 = abs( get_unit_value( t1 ) ) , a2 = abs( get_unit_value( t2 ) );
+//            Value a1 = abs( t1 ) , a2 = abs( t2 );
+            
+            
+//            return ( a1 < a2 ) ? a2 : a1 ;
+            return 1.0;
         }
 
         typedef Value result_type;
