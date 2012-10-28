@@ -26,6 +26,15 @@
 #endif
 
 
+#ifdef DECORATE_CALLS
+// We are being compiled by nvcc.
+#  define CALL_DECORATION __host__ __device__
+#else
+// We are being compiled for CPU.
+#  define CALL_DECORATION
+#endif
+
+
 
 namespace boost {
 namespace numeric {
@@ -37,7 +46,7 @@ namespace detail {
     template<class T , class Enabler = void >
     struct get_unit_value_impl
     {
-        static T value(const T &t)
+        CALL_DECORATION static T value(const T &t)
         {
             return t;
         }
@@ -48,7 +57,7 @@ namespace detail {
     template<class Unit , class T>
     struct get_unit_value_impl< boost::units::quantity< Unit , T> >
     {
-        static T value( const boost::units::quantity< Unit , T> &t )
+        CALL_DECORATION static T value( const boost::units::quantity< Unit , T> &t )
         {
             return t.value();
         }
@@ -63,7 +72,7 @@ namespace detail {
     template<class T , class V , class Enabler = void >
     struct set_unit_value_impl
     {
-        static void set_value(T &t , const V &v)
+        CALL_DECORATION static void set_value(T &t , const V &v)
         {
             t = v;
         }
@@ -73,7 +82,7 @@ namespace detail {
     template<class Unit , class T , class V>
     struct set_unit_value_impl<boost::units::quantity<Unit , T> , V>
     {
-        static void set_value(boost::units::quantity<Unit , T> &t , const V &v)
+        CALL_DECORATION static void set_value(boost::units::quantity<Unit , T> &t , const V &v)
         {
             t = boost::units::quantity<Unit , T>::from_value(v);
         }
@@ -86,7 +95,7 @@ namespace detail {
 
 
     template<class T>
-    typename detail::get_unit_value_impl<T>::result_type get_unit_value(const T &t)
+    CALL_DECORATION typename detail::get_unit_value_impl<T>::result_type get_unit_value(const T &t)
     {
         return detail::get_unit_value_impl<T>::value(t);
     }
@@ -94,7 +103,7 @@ namespace detail {
 
     template<class T , class V>
 
-    void set_unit_value(T &t , const V &v)
+    CALL_DECORATION void set_unit_value(T &t , const V &v)
     {
         return detail::set_unit_value_impl<T , V>::set_value(t , v);
     }

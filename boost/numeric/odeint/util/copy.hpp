@@ -25,6 +25,16 @@
 
 #include <boost/numeric/odeint/util/detail/is_range.hpp>
 
+
+#ifdef DECORATE_CALLS
+// We are being compiled by nvcc.
+#  define CALL_DECORATION __host__ __device__
+#else
+// We are being compiled for CPU.
+#  define CALL_DECORATION
+#endif
+
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -38,7 +48,7 @@ namespace detail {
     }
 
     template< class Container1 , class Container2 >
-    void do_copying( const Container1 &from , Container2 &to , boost::mpl::false_ )
+    CALL_DECORATION void do_copying( const Container1 &from , Container2 &to , boost::mpl::false_ )
     {
         to = from;
     }
@@ -53,7 +63,7 @@ namespace detail {
 template< class Container1, class Container2 , class Enabler = void >
 struct copy_impl
 {
-    static void copy( const Container1 &from , Container2 &to )
+    CALL_DECORATION static void copy( const Container1 &from , Container2 &to )
     {
         typedef typename boost::numeric::odeint::detail::is_range< Container1 >::type is_range_type;
         detail::do_copying( from , to , is_range_type() );
@@ -61,7 +71,7 @@ struct copy_impl
 };
 
 template< class Container1 , class Container2 >
-void copy( const Container1 &from , Container2 &to )
+CALL_DECORATION void copy( const Container1 &from , Container2 &to )
 {
     copy_impl< Container1 , Container2 >::copy( from , to );
 }

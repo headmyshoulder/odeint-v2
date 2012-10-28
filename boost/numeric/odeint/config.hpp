@@ -34,8 +34,6 @@
 #ifndef BOOST_RESULT_OF_NUM_ARGS
 #define BOOST_RESULT_OF_NUM_ARGS 15
 #endif
-/*
- */
 
 #include <boost/config.hpp>
 

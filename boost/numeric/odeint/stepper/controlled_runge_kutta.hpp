@@ -40,6 +40,7 @@
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
 
+
 #ifdef DECORATE_CALLS
 // We are being compiled by nvcc.
 #  define CALL_DECORATION __host__ __device__
@@ -47,6 +48,7 @@
 // We are being compiled for CPU.
 #  define CALL_DECORATION
 #endif
+
 
 namespace boost {
 namespace numeric {
@@ -257,9 +259,15 @@ public:
         if( m_max_rel_error > 1.0 )
         {
             // error too large - decrease dt ,limit scaling factor to 0.2 and reset state
-            dt *= max BOOST_PREVENT_MACRO_SUBSTITUTION ( static_cast<value_type>(9)/static_cast<value_type>(10) * pow( m_max_rel_error ,
-                                                           static_cast<value_type>(-1) / ( m_stepper.error_order() - 1 ) ) ,
+            dt *= fmax( static_cast<value_type>(9)/static_cast<value_type>(10) *
+                       pow( m_max_rel_error ,
+                            static_cast<value_type>(-1) / ( m_stepper.error_order() - 1 ) ) ,
                        static_cast<value_type>(1)/static_cast<value_type> (5) );
+
+  
+            // dt *= max BOOST_PREVENT_MACRO_SUBSTITUTION ( static_cast<value_type>(9)/static_cast<value_type>(10) * pow( m_max_rel_error ,
+            //                                                static_cast<value_type>(-1) / ( m_stepper.error_order() - 1 ) ) ,
+            //            static_cast<value_type>(1)/static_cast<value_type> (5) );
             return fail;
         }
         else
@@ -268,9 +276,14 @@ public:
             {
                 //error too small - increase dt and keep the evolution and limit scaling factor to 5.0
                 t += dt;
-                dt *= min BOOST_PREVENT_MACRO_SUBSTITUTION ( static_cast<value_type>(9)/static_cast<value_type>(10) * pow( m_max_rel_error ,
+                dt *= fmin ( static_cast<value_type>(9)/static_cast<value_type>(10) * pow( m_max_rel_error ,
                                                                static_cast<value_type>(-1) / m_stepper.stepper_order() ) ,
                            static_cast<value_type>(5) );
+
+                // dt *= min BOOST_PREVENT_MACRO_SUBSTITUTION ( static_cast<value_type>(9)/static_cast<value_type>(10) * pow( m_max_rel_error ,
+                //                                                static_cast<value_type>(-1) / m_stepper.stepper_order() ) ,
+                //            static_cast<value_type>(5) );
+
                 return success;
             }
             else
