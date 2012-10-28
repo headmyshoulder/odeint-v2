@@ -25,6 +25,10 @@
 
 #include <boost/numeric/odeint/util/unit_helper.hpp>
 
+// #include <math.h>
+#include <math_functions.h>
+#include <device_functions.h>
+
 #ifdef DECORATE_CALLS
 // We are being compiled by nvcc.
 #  define CALL_DECORATION __host__ __device__
@@ -32,6 +36,8 @@
 // We are being compiled for CPU.
 #  define CALL_DECORATION
 #endif
+
+
 
 
 namespace boost {
@@ -448,9 +454,7 @@ struct default_operations
         CALL_DECORATION void operator()( T3 &t3 , const T1 &t1 , const T2 &t2 ) const
         {
             using std::abs;
-//            t3 = abs( t3 / ( m_eps_abs + m_eps_rel * ( m_a_x * abs( t1 ) + m_a_dxdt * abs( t2 )  ) ) );
-
-            // set_unit_value( t3 , abs( get_unit_value( t3 ) ) / ( m_eps_abs + m_eps_rel * ( m_a_x * abs( get_unit_value( t1 ) ) + m_a_dxdt * abs( get_unit_value( t2 ) ) ) ) );
+            set_unit_value( t3 , abs( get_unit_value( t3 ) ) / ( m_eps_abs + m_eps_rel * ( m_a_x * abs( get_unit_value( t1 ) ) + m_a_dxdt * abs( get_unit_value( t2 ) ) ) ) );
         }
 
         typedef void result_type;
@@ -501,12 +505,10 @@ struct default_operations
         CALL_DECORATION Value operator()( Fac1 t1 , const Fac2 t2 ) const
         {
             using std::abs;
-//            Value a1 = abs( get_unit_value( t1 ) ) , a2 = abs( get_unit_value( t2 ) );
+            Value a1 = abs( get_unit_value( t1 ) ) , a2 = abs( get_unit_value( t2 ) );
 //            Value a1 = abs( t1 ) , a2 = abs( t2 );
-            
-            
-//            return ( a1 < a2 ) ? a2 : a1 ;
-            return 1.0;
+            return ( a1 < a2 ) ? a2 : a1 ;
+
         }
 
         typedef Value result_type;
