@@ -375,6 +375,7 @@ public:
      * \brief The method performs one step with the stepper passed by Stepper and estimates the error. The state of the ODE
      * is updated in-place.
      *
+     *
      * \note This method uses the internal state of the stepper.
      *
      * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
