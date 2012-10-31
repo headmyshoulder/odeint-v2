@@ -30,6 +30,8 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+
+#ifndef DOXYGEN_SKIP
 namespace detail {
 namespace symplectic_euler_coef {
 
@@ -53,9 +55,16 @@ struct coef_b_type : public boost::array< Value , 1 >
 
 } // namespace symplectic_euler_coef
 } // namespace detail
+#endif
 
 
 
+/**
+ * \class symplectic_euler
+ * \brief Implementation of the symplectic Euler method.
+ *
+ *
+ */
 template<
 class Coor ,
 class Momentum = Coor ,
@@ -71,15 +80,13 @@ class symplectic_euler :
 public symplectic_nystroem_stepper_base
 <
 1 , 1 ,
-symplectic_euler< Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer > ,
 Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer
 >
 {
 public:
 
     typedef symplectic_nystroem_stepper_base<
-    1 , 1 , symplectic_euler< Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer > ,
-    Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer > stepper_base_type;
+    1 , 1 , Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer > stepper_base_type;
 
     typedef typename stepper_base_type::algebra_type algebra_type;
     typedef typename stepper_base_type::value_type value_type;

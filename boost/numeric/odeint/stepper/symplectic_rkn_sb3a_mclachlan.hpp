@@ -90,7 +90,6 @@ class symplectic_rkn_sb3a_mclachlan :
         public symplectic_nystroem_stepper_base
 <
     6 , 4 ,
-    symplectic_rkn_sb3a_mclachlan< Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer > ,
     Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer
     >
 {
@@ -99,7 +98,6 @@ public:
     typedef symplectic_nystroem_stepper_base
     <
     6 , 4 ,
-    symplectic_rkn_sb3a_mclachlan< Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer > ,
     Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer
     > stepper_base_type;
 

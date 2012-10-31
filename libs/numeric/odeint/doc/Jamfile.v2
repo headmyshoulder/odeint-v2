@@ -84,7 +84,6 @@ doxygen reference
     <doxygen:param>EXTRACT_LOCAL_METHODS=YES
     <doxygen:param>HIDE_UNDOC_MEMBERS=NO
     <doxygen:param>HIDE_UNDOC_CLASSES=YES
-    <doxygen:param>HIDE_UNDOC_MEMBERS=NO
     <doxygen:param>HIDE_FRIEND_COMPOUNDS=NO
     #<doxygen:param>HIDE_INBODY_DOCS=NO
     <doxygen:param>INTERNAL_DOCS=YES
