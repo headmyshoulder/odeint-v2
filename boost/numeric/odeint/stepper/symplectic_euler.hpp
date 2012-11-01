@@ -63,7 +63,7 @@ struct coef_b_type : public boost::array< Value , 1 >
  * \class symplectic_euler
  * \brief Implementation of the symplectic Euler method.
  *
- *
+ * ToDo: add reference to paper.
  */
 template<
 class Coor ,
@@ -85,12 +85,20 @@ Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operation
 {
 public:
 
+    #ifndef DOXYGEN_SKIP
     typedef symplectic_nystroem_stepper_base<
     1 , 1 , Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer > stepper_base_type;
 
     typedef typename stepper_base_type::algebra_type algebra_type;
     typedef typename stepper_base_type::value_type value_type;
+    #endif
 
+
+    /**
+     * \brief Constructs the symplectic_euler. This constructor can be used as a default
+     * constructor if the algebra has a default constructor.
+     * \param algebra A copy of algebra is made and stored inside explicit_stepper_base.
+     */
     symplectic_euler( const algebra_type &algebra = algebra_type() )
     : stepper_base_type( detail::symplectic_euler_coef::coef_a_type< value_type >() ,
             detail::symplectic_euler_coef::coef_b_type< value_type >() ,
