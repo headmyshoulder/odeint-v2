@@ -552,7 +552,7 @@ private:
         // the error is just the highest order coefficient of the interpolation polynomial
         // this is because we use only the midpoint theta=0 as support for the interpolation (remember that theta = -1 .. 1)
 
-        double error = 0.0;
+        value_type error = 0.0;
         if( m_control_interpolation )
         {
             boost::numeric::odeint::copy( m_diffs[2*k+1][0].m_v , m_err.m_v );
@@ -653,7 +653,7 @@ private:
                 {
                     m_algebra.for_each3( m_diffs[kappa][j_diffs].m_v , m_diffs[kappa][j_diffs].m_v , m_derivs[j][i].m_v ,
                                          typename operations_type::template scale_sum2< value_type , value_type >( 1.0 ,
-                                                                                                                   sign * fac * boost::math::binomial_coefficient< double >( kappa , c ) ) );
+                                                                                                                   sign * fac * boost::math::binomial_coefficient< value_type >( kappa , c ) ) );
                     //std::cout << ( (sign > 0.0) ? " + " : " - " ) <<
                     //        boost::math::binomial_coefficient< double >( kappa , c ) << "*f[" << i << "]";
                 }
