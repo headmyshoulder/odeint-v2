@@ -63,7 +63,18 @@ struct coef_b_type : public boost::array< Value , 1 >
  * \class symplectic_euler
  * \brief Implementation of the symplectic Euler method.
  *
- * ToDo: add reference to paper.
+ * The method is of first order and has one stage. It is described HERE.
+ *
+ * \tparam Order The order of the stepper.
+ * \tparam Coor The type representing the coordinates q.
+ * \tparam Momentum The type representing the coordinates p.
+ * \tparam Value The basic value type. Should be somethink like float, double or a high-precision type.
+ * \tparam CoorDeriv The type representing the time derivative of the coordinate dq/dt.
+ * \tparam MomemtnumDeriv The type representing the time derivative of the momentum dp/dt.
+ * \tparam Time The type representing the time t.
+ * \tparam Algebra The algebra.
+ * \tparam Operations The operations.
+ * \tparam Resizer The resizer policy.
  */
 template<
 class Coor ,
@@ -85,13 +96,11 @@ Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operation
 {
 public:
 
-    #ifndef DOXYGEN_SKIP
     typedef symplectic_nystroem_stepper_base<
     1 , 1 , Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer > stepper_base_type;
 
     typedef typename stepper_base_type::algebra_type algebra_type;
     typedef typename stepper_base_type::value_type value_type;
-    #endif
 
 
     /**

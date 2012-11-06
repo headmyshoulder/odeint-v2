@@ -82,8 +82,21 @@ namespace symplectic_rkn_sb3a_mclachlan {
  * \class symplectic_rkn_sb3a_mclachlan
  * \brief Implement of the symetric B3A method of Runge-Kutta-Nystroem method of sixth order.
  *
+ * The method is of fourth order and has six stages. It is described HERE. This method cannot be used
+ * with multiprecision types since the coefficients are not defined analytically.
+ *
  * ToDo Add reference to the paper.
  *
+ * \tparam Order The order of the stepper.
+ * \tparam Coor The type representing the coordinates q.
+ * \tparam Momentum The type representing the coordinates p.
+ * \tparam Value The basic value type. Should be somethink like float, double or a high-precision type.
+ * \tparam CoorDeriv The type representing the time derivative of the coordinate dq/dt.
+ * \tparam MomemtnumDeriv The type representing the time derivative of the momentum dp/dt.
+ * \tparam Time The type representing the time t.
+ * \tparam Algebra The algebra.
+ * \tparam Operations The operations.
+ * \tparam Resizer The resizer policy.
  */
 template<
     class Coor ,
@@ -105,7 +118,6 @@ class symplectic_rkn_sb3a_mclachlan :
 {
 public:
 
-    #ifndef DOXYGEN_SKIP
     typedef symplectic_nystroem_stepper_base
     <
     6 , 4 ,
@@ -114,7 +126,6 @@ public:
 
     typedef typename stepper_base_type::algebra_type algebra_type;
     typedef typename stepper_base_type::value_type value_type;
-    #endif // DOXYGEN_SKIP
 
 
     /**

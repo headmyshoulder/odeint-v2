@@ -56,12 +56,15 @@ namespace odeint {
  * ToDo : add formula for solver and explanation of the coefficients
  * 
  * symplectic_nystroem_stepper_base uses odeints algebra and operation system. Step size and error estimation are not
- * provided for this class of solvers. It derives from algebra_stepper_base.
+ * provided for this class of solvers. It derives from algebra_stepper_base. Several `do_step` variants are provided:
  *
- * ToDo : add explanantion of the do_step variants
- * - `do_step( sys , x , t , dt )` - tba
- * - `do_step( sys , q , p , t , dt )` - tba
- * - `do_step( sys , x_in , t , x_out , dt )` -tba
+ * - `do_step( sys , x , t , dt )` - The classical `do_step` method. The sys can be either a pair of function objects
+ *    for the coordinate or the momentum part or one function object for the momentum part. `x` is a pair of coordinate
+ *    and momentum. The state is updated in-place.
+ * - `do_step( sys , q , p , t , dt )` - This method is similar to the method above with the difference that the coordinate
+ *    and the momentum are passed explicitely and not packed into a pair.
+ * - `do_step( sys , x_in , t , x_out , dt )` - This method transforms the state out-of-place. `x_in` and `x_out` are here pairs
+ *    of coordinate and momentum.
  *
  * \tparam NumOfStages Number of stages.
  * \tparam Order The order of the stepper.
