@@ -22,6 +22,8 @@
 
 namespace odeint = boost::numeric::odeint;
 
+
+
 typedef std::array< double , 3 > state_type;
 
 struct lorenz
@@ -36,24 +38,19 @@ struct lorenz
         dxdt[1] = R * x[0] - x[1] - x[0] * x[2];
         dxdt[2] = -b * x[2] + x[0] * x[1];
     }
-
-    void obs( const state_type &x , double t ) const
-    {
-        std::cout << t << " " << x[0] << " " << x[1] << " " << x[2] << "\n";
-    }
 };
-
-namespace pl = std::placeholders;
 
 int main( int argc , char *argv[] )
 {
     using namespace boost::numeric::odeint;
+    //[ bind_member_function_cpp11
+    namespace pl = std::placeholders;
 
     state_type x = {{ 10.0 , 10.0 , 10.0 }};
     integrate_const( runge_kutta4< state_type >() ,
                      std::bind( &lorenz::ode , lorenz() , pl::_1 , pl::_2 , pl::_3 ) ,
-                     x , 0.0 , 10.0 , 0.01 ,
-                     std::bind( &lorenz::obs , lorenz() , pl::_1 , pl::_2 ) );
-
+                     x , 0.0 , 10.0 , 0.01  );
+    //]
     return 0;
 }
+
