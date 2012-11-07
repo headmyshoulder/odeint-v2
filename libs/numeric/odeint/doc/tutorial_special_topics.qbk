@@ -10,7 +10,7 @@
 =============================================================================/]
 
 
-[section Special topics]
+[/ [section Special topics] /]
 
 [section Complex state types]
 
@@ -255,4 +255,4 @@ The full example can be found in [github_link libs/numeric/odeint/examples/resiz
 
 [endsect]
 
-[endsect]
+[/ [endsect] /]
