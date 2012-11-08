@@ -40,9 +40,7 @@ allows for cleaner code.
 
 [section Stepper Types]
 
-Numerical integration works iteratively, that means you start at a state ['x(t)] and perform a time-step of length ['dt] to obtain the approximate state ['x(t+dt)]. There exist many different methods to perform such a time-step each of which has a certain order ['q]. If the order of a method is ['q] than it is accurate up to term ['~dt[super q]] that means the error in ['x] made by such a step is ['~dt[super q+1]]. odeint provides several steppers of different orders from which you can choose:
-
-[include stepper_table.qbk]
+Numerical integration works iteratively, that means you start at a state ['x(t)] and perform a time-step of length ['dt] to obtain the approximate state ['x(t+dt)]. There exist many different methods to perform such a time-step each of which has a certain order ['q]. If the order of a method is ['q] than it is accurate up to term ['~dt[super q]] that means the error in ['x] made by such a step is ['~dt[super q+1]]. odeint provides several steppers of different orders, see __odeint_stepper_table.
 
 Some of steppers in the table above are special: Some need the Jacobian of the ODE, others are constructed for special ODE-systems like Hamiltonian systems. We will show typical examples and use-cases in this tutorial and which kind of steppers should be applied.
 

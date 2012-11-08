@@ -12,14 +12,16 @@
 
 [section Acknowledgments]
 
-tba
+Tba
 
+* 
 [/
-  * reviewers
-  * joachim faulhaber
-  * steven watanabe
-  * gsoc and andrew sutton
-  * users
+* Users
+* The reviewers of the Boost review process.
+* Steven Watanabe for managing the review process.
+* Paul Bristow for helping with the documentation.
+* The Google Summer Of Code (GSOC) program for funding and and Andrew Sutton for being our GSOC mentor.
+* Joachim Faulhaber for his motivation.
 ]
 
 [section Contributers]

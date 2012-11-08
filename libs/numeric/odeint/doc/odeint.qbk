@@ -96,6 +96,9 @@
     [link boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations Adapt your own state types]]
 [def __resizing_lattice_example
     [link boost_numeric_odeint.tutorial.special_topics.self_expanding_lattices Self expanding lattices]]
+[def __odeint_stepper_table
+    [link boost_numeric_odeint.odeint_in_detail.steppers.stepper_overview Stepper overview]]
+
 
 
 [def __nr_ref [link numerical_recipies \[1\] ]]
@@ -142,8 +145,8 @@
 [template sub[x]'''<subscript>'''[x]'''</subscript>''']
 [template subl[x]'''<subscript>'''__space[x]'''</subscript>''']
 
-[template github_link[url text]'''<ulink url="https://github.com/headmyshoulder/odeint-v2/tree/master/'''[url]'''" target="_blank">'''[text]'''</ulink>''']
-[/ [template github_link[url text]'''<ulink url="'''[url]'''" target="_blank">'''[text]'''</ulink>'''] ]
+[/ [template github_link[url text]'''<ulink url="https://github.com/headmyshoulder/odeint-v2/tree/master/'''[url]'''" target="_blank">'''[text]'''</ulink>''']]
+[template github_link[url text]'''<ulink url="../../../../../'''[url]'''" target="_blank">'''[text]'''</ulink>''']
 
 
 
