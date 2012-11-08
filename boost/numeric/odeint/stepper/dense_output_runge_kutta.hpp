@@ -98,13 +98,13 @@ public:
      * The next two overloads are needed to solve the forwarding problem
      */
     template< class StateOut >
-    void calc_state( time_type t , StateOut &x )
+    void calc_state( time_type t , StateOut &x ) const
     {
         m_stepper.calc_state( x , t , get_old_state() , m_t_old , get_current_state() , m_t );
     }
 
     template< class StateOut >
-    void calc_state( time_type t , const StateOut &x )
+    void calc_state( time_type t , const StateOut &x ) const
     {
         m_stepper.calc_state( x , t , get_old_state() , m_t_old , get_current_state() , m_t );
     }
@@ -263,14 +263,14 @@ public:
      * The two overloads are needed in order to solve the forwarding problem.
      */
     template< class StateOut >
-    void calc_state( time_type t , StateOut &x )
+    void calc_state( time_type t , StateOut &x ) const
     {
         m_stepper.stepper().calc_state( t , x , get_old_state() , get_old_deriv() , m_t_old ,
                                         get_current_state() , get_current_deriv() , m_t );
     }
 
     template< class StateOut >
-    void calc_state( time_type t , const StateOut &x )
+    void calc_state( time_type t , const StateOut &x ) const
     {
         m_stepper.stepper().calc_state( t , x , get_old_state() , get_old_deriv() , m_t_old ,
                                         get_current_state() , get_current_deriv() , m_t );

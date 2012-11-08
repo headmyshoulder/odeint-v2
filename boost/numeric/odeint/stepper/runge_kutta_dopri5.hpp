@@ -286,8 +286,8 @@ public :
      */
     template< class StateOut , class StateIn1 , class DerivIn1 , class StateIn2 , class DerivIn2 >
     void calc_state( time_type t , StateOut &x ,
-            const StateIn1 &x_old , const DerivIn1 &deriv_old , time_type t_old ,
-            const StateIn2 & /* x_new */ , const DerivIn2 &deriv_new , time_type t_new )
+                     const StateIn1 &x_old , const DerivIn1 &deriv_old , time_type t_old ,
+                     const StateIn2 & /* x_new */ , const DerivIn2 &deriv_new , time_type t_new ) const
     {
         const value_type b1 = static_cast<value_type> ( 35 ) / static_cast<value_type>( 384 );
         const value_type b3 = static_cast<value_type> ( 500 ) / static_cast<value_type>( 1113 );
@@ -295,28 +295,28 @@ public :
         const value_type b5 = static_cast<value_type> ( -2187 ) / static_cast<value_type>( 6784 );
         const value_type b6 = static_cast<value_type> ( 11 ) / static_cast<value_type>( 84 );
 
-        time_type dt = ( t_new - t_old );
-        value_type theta = ( t - t_old ) / dt;
-        value_type X1 = static_cast< value_type >( 5 ) * ( static_cast< value_type >( 2558722523LL ) - static_cast< value_type >( 31403016 ) * theta ) / static_cast< value_type >( 11282082432LL );
-        value_type X3 = static_cast< value_type >( 100 ) * ( static_cast< value_type >( 882725551 ) - static_cast< value_type >( 15701508 ) * theta ) / static_cast< value_type >( 32700410799LL );
-        value_type X4 = static_cast< value_type >( 25 ) * ( static_cast< value_type >( 443332067 ) - static_cast< value_type >( 31403016 ) * theta ) / static_cast< value_type >( 1880347072LL ) ;
-        value_type X5 = static_cast< value_type >( 32805 ) * ( static_cast< value_type >( 23143187 ) - static_cast< value_type >( 3489224 ) * theta ) / static_cast< value_type >( 199316789632LL );
-        value_type X6 = static_cast< value_type >( 55 ) * ( static_cast< value_type >( 29972135 ) - static_cast< value_type >( 7076736 ) * theta ) / static_cast< value_type >( 822651844 );
-        value_type X7 = static_cast< value_type >( 10 ) * ( static_cast< value_type >( 7414447 ) - static_cast< value_type >( 829305 ) * theta ) / static_cast< value_type >( 29380423 );
+        const time_type dt = ( t_new - t_old );
+        const value_type theta = ( t - t_old ) / dt;
+        const value_type X1 = static_cast< value_type >( 5 ) * ( static_cast< value_type >( 2558722523LL ) - static_cast< value_type >( 31403016 ) * theta ) / static_cast< value_type >( 11282082432LL );
+        const value_type X3 = static_cast< value_type >( 100 ) * ( static_cast< value_type >( 882725551 ) - static_cast< value_type >( 15701508 ) * theta ) / static_cast< value_type >( 32700410799LL );
+        const value_type X4 = static_cast< value_type >( 25 ) * ( static_cast< value_type >( 443332067 ) - static_cast< value_type >( 31403016 ) * theta ) / static_cast< value_type >( 1880347072LL ) ;
+        const value_type X5 = static_cast< value_type >( 32805 ) * ( static_cast< value_type >( 23143187 ) - static_cast< value_type >( 3489224 ) * theta ) / static_cast< value_type >( 199316789632LL );
+        const value_type X6 = static_cast< value_type >( 55 ) * ( static_cast< value_type >( 29972135 ) - static_cast< value_type >( 7076736 ) * theta ) / static_cast< value_type >( 822651844 );
+        const value_type X7 = static_cast< value_type >( 10 ) * ( static_cast< value_type >( 7414447 ) - static_cast< value_type >( 829305 ) * theta ) / static_cast< value_type >( 29380423 );
 
-        value_type theta_m_1 = theta - static_cast< value_type >( 1 );
-        value_type theta_sq = theta * theta;
-        value_type A = theta_sq * ( static_cast< value_type >( 3 ) - static_cast< value_type >( 2 ) * theta );
-        value_type B = theta_sq * theta_m_1;
-        value_type C = theta_sq * theta_m_1 * theta_m_1;
-        value_type D = theta * theta_m_1 * theta_m_1;
+        const value_type theta_m_1 = theta - static_cast< value_type >( 1 );
+        const value_type theta_sq = theta * theta;
+        const value_type A = theta_sq * ( static_cast< value_type >( 3 ) - static_cast< value_type >( 2 ) * theta );
+        const value_type B = theta_sq * theta_m_1;
+        const value_type C = theta_sq * theta_m_1 * theta_m_1;
+        const value_type D = theta * theta_m_1 * theta_m_1;
 
-        value_type b1_theta = A * b1 - C * X1 + D;
-        value_type b3_theta = A * b3 + C * X3;
-        value_type b4_theta = A * b4 - C * X4;
-        value_type b5_theta = A * b5 + C * X5;
-        value_type b6_theta = A * b6 - C * X6;
-        value_type b7_theta = B + C * X7;
+        const value_type b1_theta = A * b1 - C * X1 + D;
+        const value_type b3_theta = A * b3 + C * X3;
+        const value_type b4_theta = A * b4 - C * X4;
+        const value_type b5_theta = A * b5 + C * X5;
+        const value_type b6_theta = A * b6 - C * X6;
+        const value_type b7_theta = B + C * X7;
 
         // const state_type &k1 = *m_old_deriv;
         // onst state_type &k3 = dopri5().m_k3;
