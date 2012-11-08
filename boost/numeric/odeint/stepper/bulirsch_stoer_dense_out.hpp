@@ -365,7 +365,7 @@ public:
 
     /* performs the interpolation from a calculated step */
     template< class StateOut >
-    void calc_state( time_type t , StateOut &x )
+    void calc_state( time_type t , StateOut &x ) const
     {
         //std::cout << "===========" << std::endl << "doing interpolation for t=" << t << std::endl;
         do_interpolation( t , x );
@@ -671,7 +671,7 @@ private:
     }
 
     template< class StateOut >
-    void do_interpolation( time_type t , StateOut &out )
+    void do_interpolation( time_type t , StateOut &out ) const
     {
         // interpolation polynomial is defined for theta = -1 ... 1
         // m_k_final is the number of order-iterations done for the last step - it governs the order of the interpolation polynomial
