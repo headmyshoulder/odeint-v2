@@ -127,7 +127,7 @@ public :
     template< class StateOut , class StateIn1 , class StateIn2 >
     void calc_state( StateOut &x , time_type t ,  const StateIn1 &old_state , time_type t_old , const StateIn2 &current_state , time_type t_new ) const
     {
-        time_type delta = t - t_old;
+        const time_type delta = t - t_old;
         stepper_base_type::m_algebra.for_each3( x , old_state , stepper_base_type::m_dxdt.m_v ,
                 typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , delta ) );
     }
