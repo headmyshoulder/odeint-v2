@@ -30,7 +30,7 @@
 #include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
 #include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
-#include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>#
+#include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_runge_kutta.hpp>
 #include <boost/numeric/odeint/integrate/integrate_times.hpp>
 
