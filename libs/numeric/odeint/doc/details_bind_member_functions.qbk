@@ -9,22 +9,10 @@
   http://www.boost.org/LICENSE_1_0.txt)
 =============================================================================/]
 
-[section odeint in detail]
 
-[include details_steppers.qbk]
+[section Binding member functions]
 
-[include details_generation_functions.qbk]
 
-[include details_integrate_functions.qbk]
 
-[include details_iterators.qbk]
-
-[include details_state_types_algebras_operations.qbk]
-
-[include details_boost_ref.qbk]
-
-[include details_boost_range.qbk]
-
-[include details_bind_member_functions.qbk]
 
 [endsect]

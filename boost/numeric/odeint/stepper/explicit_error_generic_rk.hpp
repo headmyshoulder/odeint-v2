@@ -36,6 +36,30 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+
+/**
+ * \class explicit_error_generic_rk
+ * \brief A generic implementation of explicit Runge-Kutta algorithms with error estimation. This class is as a
+ * base class for all explicit Runge-Kutta steppers with error estimateion.
+ *
+ * This class implements the explicit Runge-Kutta algorithms with error estimation in a generic way.
+ * The Butcher tableau is passed to the stepper which constructs the stepper scheme with the help of a
+ * template-metaprogramming algorithm. ToDo : Add example!
+ * 
+ * This class derives explicit_error_stepper_base which provides the stepper interface.
+ *
+ * \tparam StageCount The number of stages of the Runge-Kutta algorithm.
+ * \tparam Order The order of a stepper if the stepper is used without error estimation.
+ * \tparam StepperOrder The order of a step if the stepper is used with error estimation. Usually Order and StepperOrder have 
+ * the same value.
+ * \tparam ErrorOrder The order of the error step if the stepper is used with error estimation.
+ * \tparam State The type representing the state of the ODE.
+ * \tparam Value The floating point type which is used in the computations.
+ * \tparam Time The type representing the independent variable - the time - of the ODE.
+ * \tparam Algebra The algebra type.
+ * \tparam Operations The operations type.
+ * \tparam Resizer The resizer policy type.
+ */
 template<
 size_t StageCount,
 size_t Order,
@@ -102,6 +126,21 @@ public:
     { }
 
 
+    /**
+     * \brief This method performs one step. The derivative `dxdt` of `in` at the time `t` is passed to the method.
+     * The result is updated out-of-place, hence the input is in `in` and the output in `out`. Futhermore, an
+     * estimation of the error is stored in `xerr`. `do_step_impl` is used by explicit_error_stepper_base.
+     *
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     *               Simple System concept.
+     * \param in The state of the ODE which should be solved. in is not modified in this method
+     * \param dxdt The derivative of x at t.
+     * \param t The value of the time, at which the step should be performed.
+     * \param out The result of the step is written in out.
+     * \param dt The step size.
+     * \param xerr The result of the error estimation is written in xerr.
+     */
+
     template< class System , class StateIn , class DerivIn , class StateOut , class Err >
     void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt ,
             time_type t , StateOut &out , time_type dt , Err &xerr )
@@ -114,6 +153,20 @@ public:
                 xerr , dxdt , m_F , detail::generic_rk_scale_sum_err< StageCount , operations_type , value_type , time_type >( m_b2 , dt) );
     }
 
+
+    /**
+     * \brief This method performs one step. The derivative `dxdt` of `in` at the time `t` is passed to the method.
+     * The result is updated out-of-place, hence the input is in `in` and the output in `out`. `do_step_impl` is
+     * used by explicit_error_stepper_base.
+     *
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     *               Simple System concept.
+     * \param in The state of the ODE which should be solved. in is not modified in this method
+     * \param dxdt The derivative of x at t.
+     * \param t The value of the time, at which the step should be performed.
+     * \param out The result of the step is written in out.
+     * \param dt The step size.
+     */
     template< class System , class StateIn , class DerivIn , class StateOut >
     void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt ,
             time_type t , StateOut &out , time_type dt )
@@ -124,6 +177,12 @@ public:
         m_rk_algorithm.do_step( stepper_base_type::m_algebra , system , in , dxdt , t , out , dt , m_x_tmp.m_v , m_F );
     }
 
+
+
+    /**
+     * \brief Adjust the size of all temporaries in the stepper manually.
+     * \param x A state from which the size of the temporaries to be resized is deduced.
+     */
     template< class StateType >
     void adjust_size( const StateType &x )
     {

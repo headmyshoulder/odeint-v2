@@ -16,6 +16,12 @@
   [[[github_link libs/numeric/odeint/examples/adaptive_iterator.cpp adaptive_iterator.cpp]]
   [The adaptive iterator examples shows the usage of the adaptive iterators and how they can be used with C++11 lambdas.]]
 
+  [[[github_link libs/numeric/odeint/examples/bind_member_functions.cpp bind_member_functions.cpp]]
+  [This examples shows how member functions can be used as system functions in odeint.]]
+
+  [[[github_link libs/numeric/odeint/examples/bind_member_functions.cpp bind_member_functions_cpp11.cpp]]
+  [This examples shows how member functions can be used as system functions in odeint with `std::bind` in C++11.]]
+
   [[[github_link libs/numeric/odeint/examples/bulirsch_stoer.cpp bulirsch_stoer.cpp]]
   [Shows the usage of the Bulirsch-Stoer method.]]
 
@@ -112,5 +118,8 @@
 
   [[[github_link libs/numeric/odeint/examples/2d_lattice/spreading.cpp 2d_lattice/spreading.cpp]]
   [This examples shows how a `vector< vector< T > >` can be used a state type for odeint and how a resizing mechanism of this state can be implemented.]]
+
+  [[[github_link libs/numeric/odeint/examples/quadmath/black_hole.cpp quadmath/black_hole.cpp]]
+  [This examples shows how gcc libquadmath can be used with odeint. It provides a high precision floating point type which is adapted to odeint in this example.]]
 
 ]

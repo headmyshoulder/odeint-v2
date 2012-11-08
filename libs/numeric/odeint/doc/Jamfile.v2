@@ -14,7 +14,7 @@ project : requirements
 
 if --enable-index in  [ modules.peek : ARGV ]
 {
-    ECHO "Building the Checks docs with automatic index generation enabled." ;
+    ECHO "Building the odeint docs with automatic index generation enabled." ;
 
     using auto-index ;
 
@@ -42,22 +42,22 @@ if --enable-index in  [ modules.peek : ARGV ]
 }
 else
 {
-    ECHO "Building the Checks docs with automatic index generation disabled. To get an auto-index, try building with --enable-index." ;
+    ECHO "Building the odeint docs with automatic index generation disabled. To get an auto-index, try building with --enable-index." ;
 }
 
 
 
 doxygen reference 
     :
-    [ glob ../../../../boost/numeric/odeint/*.hpp ] 
+#    [ glob ../../../../boost/numeric/odeint/*.hpp ] 
     [ glob ../../../../boost/numeric/odeint/stepper/*.hpp ]
     [ glob ../../../../boost/numeric/odeint/stepper/base/*.hpp ]
-    [ glob ../../../../boost/numeric/odeint/stepper/generation/*.hpp ]
-    [ glob ../../../../boost/numeric/odeint/integrate/*.hpp ]
-    [ glob ../../../../boost/numeric/odeint/iterator/*.hpp ]
-    [ glob ../../../../boost/numeric/odeint/algebra/*.hpp ]
-    [ glob ../../../../boost/numeric/odeint/util/*.hpp ]
-    ../../../../boost/numeric/odeint.hpp
+#    [ glob ../../../../boost/numeric/odeint/stepper/generation/*.hpp ]
+#    [ glob ../../../../boost/numeric/odeint/integrate/*.hpp ]
+#    [ glob ../../../../boost/numeric/odeint/iterator/*.hpp ]
+#    [ glob ../../../../boost/numeric/odeint/algebra/*.hpp ]
+#    [ glob ../../../../boost/numeric/odeint/util/*.hpp ]
+#    ../../../../boost/numeric/odeint.hpp
     : 
 
     # Lots of parameters passed to Doxygen. You can see these in the doxygen docs, or the Wizard Expert tab displays them.
@@ -68,38 +68,27 @@ doxygen reference
     <doxygen:param>WARN_IF_UNDOCUMENTED=NO # Default NO but useful if you aim to Doxygen document *all* members.
     <doxygen:param>QUIET=NO
     <doxygen:param>WARN_NO_PARAMDOC=NO # Default no, but YES useful if you aim to document all function parameters.
-    <doxygen:param>DOXYFILE_ENCODING=UTF-8 # Default is UTF-8 which is almost certainly OK.
-    <doxygen:param>PROJECT_NAME="odeint" # Shows on Doxygen main page (if you have one).
-    <doxygen:param>PROJECT_NUMBER=2.2 # Might be useful for version numbering?
-    <doxygen:param>TAB_SIZE=2 # or your choice.
-    <doxygen:param>SORT_MEMBER_DOCS=NO # sort docs into alphabetical order - generally useful.
-    <doxygen:param>SORT_BRIEF_DOCS=NO # Default is to sort brief documentation alphabetically.
-    <doxygen:param>SORT_MEMBERS_CTORS_1ST=NO # Default No puts constructors and destructors first.
-    <doxygen:param>EXTRACT_PRIVATE=NO # If the EXTRACT_PRIVATE tag is set to YES all private members of a class will be included in the documentation
-
-    # <doxygen:param>OUTPUT_DIRECTORY # Default is current directory.
-    # <doxygen:param>CREATE_SUBDIRS=YES # Unlike to be useful except for a very large project.
-    # <doxygen:param>BRIEF_MEMBER_DESC=YES # Doxygen will include brief member descriptions by default, and is what you want.
-    # <doxygen:param>REPEAT_BRIEF=YES # Prepend brief description before detailed, default and is what you want.
-    # <doxygen:param>ALWAYS_DETAILED_SEC=NO # Probably not wanted.
-    # <doxygen:param>ABBREVIATE_BRIEF=NO # Probably not wanted.
-    # <doxygen:param>EXTRACT_ALL=YES # Documents everything, probably best to use to start and only extract selected items if it proves to be unmanageable.
-    <doxygen:param>INLINE_INHERITED_MEMB=YES # Show all inherited members of a class in the documentation of that class as if those members were ordinary class members.
+    <doxygen:param>DOXYFILE_ENCODING=UTF-8
+    <doxygen:param>PROJECT_NAME="odeint"
+    <doxygen:param>PROJECT_NUMBER=2.2
+    <doxygen:param>TAB_SIZE=2
+    <doxygen:param>SORT_MEMBER_DOCS=NO
+    <doxygen:param>SORT_BRIEF_DOCS=NO
+    <doxygen:param>SORT_MEMBERS_CTORS_1ST=NO
+    <doxygen:param>EXTRACT_PRIVATE=NO 
+    <doxygen:param>INLINE_INHERITED_MEMB=YES
     <doxygen:param>INHERIT_DOCS=YES
-    <doxygen:param>EXTRACT_STATIC=YES # Show all static members.
-    <doxygen:param>EXTRACT_ANON_NSPACES=NO # Probably not useful for user documentation?
-    <doxygen:param>EXTRACT_LOCAL_CLASSES=YES # If the EXTRACT_LOCAL_CLASSES tag is set to YES classes (and structs) defined locally in source files will be included in the documentation.
-    <doxygen:param>EXTRACT_LOCAL_METHODS=YES # Less useful for user documentation.
-    # The following are over-ridden by EXTRACT_ALL=YES
-    <doxygen:param>HIDE_UNDOC_MEMBERS=NO # Not useful unless you have carefully documented all members that you want Doxygen to list.
-    <doxygen:param>HIDE_UNDOC_CLASSES=YES # YES if you only want the items you *have* specifically documented all members that you want Doxygen to list.
-    <doxygen:param>HIDE_UNDOC_MEMBERS=NO # NO if you want all members Doxygen documented.
-    <doxygen:param>HIDE_FRIEND_COMPOUNDS=NO # Default is NO and will append friend information.
-    #<doxygen:param>HIDE_INBODY_DOCS=NO # Default is NO and will append this information. Option no longer supported?
-    <doxygen:param>INTERNAL_DOCS=YES # Allows implemented details NOT to be included in public docs.
-    <doxygen:param>CASE_SENSE_NAMES=NO # Must be NO for Boost which may include Windows file system.  (means that all file names are lower case)
-    <doxygen:param>HIDE_SCOPE_NAMES=NO # Default NO is not to full qualify members with class and namespace.
-
+    <doxygen:param>EXTRACT_STATIC=YES
+    <doxygen:param>EXTRACT_ANON_NSPACES=NO
+    <doxygen:param>EXTRACT_LOCAL_CLASSES=YES
+    <doxygen:param>EXTRACT_LOCAL_METHODS=YES
+    <doxygen:param>HIDE_UNDOC_MEMBERS=NO
+    <doxygen:param>HIDE_UNDOC_CLASSES=YES
+    <doxygen:param>HIDE_FRIEND_COMPOUNDS=NO
+    #<doxygen:param>HIDE_INBODY_DOCS=NO
+    <doxygen:param>INTERNAL_DOCS=YES
+    <doxygen:param>CASE_SENSE_NAMES=NO
+    <doxygen:param>HIDE_SCOPE_NAMES=NO
 
     # Preprocessor settings.
     # Some ugly examples of predefined macro calls (from Boost.Units library) :(

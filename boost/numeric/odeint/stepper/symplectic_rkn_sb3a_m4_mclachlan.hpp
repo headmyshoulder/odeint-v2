@@ -23,7 +23,7 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-
+#ifndef DOXYGEN_SKIP
 namespace detail {
 namespace symplectic_rkn_sb3a_m4_mclachlan {
 
@@ -68,9 +68,31 @@ namespace symplectic_rkn_sb3a_m4_mclachlan {
 
 } // namespace symplectic_rkn_sb3a_m4_mclachlan
 } // namespace detail
+#endif // DOXYGEN_SKIP
 
 
 
+
+/**
+ * \class symplectic_rkn_sb3a_m4_mclachlan
+ * \brief Implementation of the symmetric B3A Runge-Kutta Nystroem method of fifth order.
+ *
+ * The method is of fourth order and has five stages. It is described HERE. This method can be used
+ * with multiprecision types since the coefficients are defined analytically.
+ *
+ * ToDo: add reference to paper.
+ *
+ * \tparam Order The order of the stepper.
+ * \tparam Coor The type representing the coordinates q.
+ * \tparam Momentum The type representing the coordinates p.
+ * \tparam Value The basic value type. Should be somethink like float, double or a high-precision type.
+ * \tparam CoorDeriv The type representing the time derivative of the coordinate dq/dt.
+ * \tparam MomemtnumDeriv The type representing the time derivative of the momentum dp/dt.
+ * \tparam Time The type representing the time t.
+ * \tparam Algebra The algebra.
+ * \tparam Operations The operations.
+ * \tparam Resizer The resizer policy.
+ */
 template<
     class Coor ,
     class Momentum = Coor ,
@@ -86,8 +108,6 @@ class symplectic_rkn_sb3a_m4_mclachlan :
         public symplectic_nystroem_stepper_base
 <
     5 , 4 ,
-    symplectic_rkn_sb3a_m4_mclachlan<
-        Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer > ,
     Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer
     >
 {
@@ -96,14 +116,18 @@ public:
     typedef symplectic_nystroem_stepper_base
     <
     5 , 4 ,
-    symplectic_rkn_sb3a_m4_mclachlan<
-        Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer > ,
     Coor , Momentum , Value , CoorDeriv , MomentumDeriv , Time , Algebra , Operations , Resizer
     > stepper_base_type;
 
     typedef typename stepper_base_type::algebra_type algebra_type;
     typedef typename stepper_base_type::value_type value_type;
 
+
+    /**
+     * \brief Constructs the symplectic_rkn_sb3a_m4_mclachlan. This constructor can be used as a default
+     * constructor if the algebra has a default constructor.
+     * \param algebra A copy of algebra is made and stored inside explicit_stepper_base.
+     */
     symplectic_rkn_sb3a_m4_mclachlan( const algebra_type &algebra = algebra_type() )
         : stepper_base_type(
             detail::symplectic_rkn_sb3a_m4_mclachlan::coef_a_type< value_type >() ,

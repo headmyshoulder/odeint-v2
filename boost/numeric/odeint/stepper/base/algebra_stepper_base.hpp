@@ -53,7 +53,7 @@ public:
     : m_algebra( algebra ) { }
 
     /**
-     * \return A reference to the algebra which is holded by this class.
+     * \return A reference to the algebra which is held by this class.
      */
     algebra_type& algebra()
     {
@@ -61,7 +61,7 @@ public:
     }
 
     /**
-     * \return A const reference to the algebra which is holded by this class.
+     * \return A const reference to the algebra which is held by this class.
      */
     const algebra_type& algebra() const
     {
