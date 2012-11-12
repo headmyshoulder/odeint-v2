@@ -184,6 +184,15 @@ int main(int /* argc */ , char** /* argv */ )
                         harmonic_oscillator , x , 0.0 , 10.0 , 0.01 );
     //]
 
+    #ifdef BOOST_NUMERIC_ODEINT_CXX11
+    //[ define_const_stepper_cpp11
+    runge_kutta4< state_type > stepper;
+    integrate_const( stepper , []( const state_type &x , state_type &dxdt , double t ) {
+            dxdt[0] = x[1]; dxdt[1] = -x[0] - gam*x[1]; }
+        , x , 0.0 , 10.0 , 0.01 );
+    //]
+    #endif
+
 
     //[harm_iterator_const_step
     std::for_each( make_adaptive_iterator_begin( controlled_stepper , harmonic_oscillator , x , 0.0 , 10.0 , 0.01 ) , 

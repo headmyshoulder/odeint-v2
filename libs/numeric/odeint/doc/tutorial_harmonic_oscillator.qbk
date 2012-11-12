@@ -56,6 +56,12 @@ This call integrates the system defined by `harmonic_oscillator` using the RK4 m
 
 [integrate_const_loop]
 
+[tip If you have a C++11 enabled compiler you can easily use lambdas to create the system function :
+
+[define_const_stepper_cpp11]
+
+]
+
 [endsect]
 
 [section Integration with Adaptive Step Size]
