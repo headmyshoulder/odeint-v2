@@ -95,7 +95,7 @@
 [def __adapt_state_types
     [link boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations Adapt your own state types]]
 [def __resizing_lattice_example
-    [link boost_numeric_odeint.tutorial.special_topics.self_expanding_lattices Self expanding lattices]]
+    [link boost_numeric_odeint.tutorial.self_expanding_lattices Self expanding lattices]]
 [def __odeint_stepper_table
     [link boost_numeric_odeint.odeint_in_detail.steppers.stepper_overview Stepper overview]]
 
