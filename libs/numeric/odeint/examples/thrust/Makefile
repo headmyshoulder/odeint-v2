@@ -36,7 +36,7 @@ LDFLAGS = -L$(CUDA_ROOT)/lib64
 	$(NVCC) $(NVCCFLAGS) -c $< -o $@
 
 
-all : phase_oscillator_chain phase_oscillator_ensemble lorenz_parameters relaxation
+all : phase_oscillator_chain phase_oscillator_ensemble lorenz_parameters relaxation gpu_stepper_functor gpu_controlled_stepper_functor
 
 
 phase_oscillator_chain.co : phase_oscillator_chain.cu
@@ -60,7 +60,15 @@ relaxation : relaxation.co
 	$(CC) -o relaxation $(LDFLAGS) $(LDLIBS) relaxation.co
 relaxation.co : relaxation.cu
 
+gpu_stepper_functor : gpu_stepper_functor.co
+	$(CC) -o gpu_stepper_functor $(LDFLAGS) $(LDLIBS) gpu_stepper_functor.co
+gpu_stepper_functor.co : gpu_stepper_functor.cu
+
+gpu_controlled_stepper_functor : gpu_controlled_stepper_functor.co
+	$(CC) -o gpu_controlled_stepper_functor $(LDFLAGS) $(LDLIBS) gpu_controlled_stepper_functor.co
+gpu_controlled_stepper_functor.co : gpu_controlled_stepper_functor.cu
+
 
 
 clean :
-	-rm *~ *.o *.co phase_oscillator_chain phase_oscillator_ensemble lorenz_parameters relaxation 
+	-rm *~ *.o *.co phase_oscillator_chain phase_oscillator_ensemble lorenz_parameters relaxation gpu_stepper_functor gpu_controlled_stepper_functor
