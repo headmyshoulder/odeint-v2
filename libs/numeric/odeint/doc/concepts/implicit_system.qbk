@@ -23,7 +23,7 @@ In odeint this is implemented with use of __ublas, therefore, the ['state_type] 
 [heading Notation]
 
 [variablelist
-  [[`System`] [A type that is a model of `Implicit_System`]]
+  [[`System`] [A type that is a model of `Implicit System`]]
   [[`Time`] [A type representing the time of the ODE]]
   [[`sys`] [An object of type `System`]]
   [[`x`] [Object of type ublas::vector]]
