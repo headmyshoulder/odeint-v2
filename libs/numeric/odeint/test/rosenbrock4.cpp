@@ -127,5 +127,14 @@ BOOST_AUTO_TEST_CASE( test_rosenbrock4_dense_output )
     stepper.calc_state( 0.5 * ( tr.first + tr.second ) , x );
 }
 
+BOOST_AUTO_TEST_CASE( test_rosenbrock4_copy_dense_output )
+{
+    typedef rosenbrock4_controller< rosenbrock4< value_type > > controlled_stepper_type;
+    typedef rosenbrock4_dense_output< controlled_stepper_type > stepper_type;
+
+    controlled_stepper_type  c_stepper;
+    stepper_type stepper( c_stepper );
+    stepper_type stepper2( stepper );
+}
 
 BOOST_AUTO_TEST_SUITE_END()
