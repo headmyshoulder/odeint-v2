@@ -47,8 +47,6 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-/** ToDo try_step stepsize changed return values doesn't make too much sense here as we have order control as well */
-
 template<
     class State ,
     class Value = double ,
@@ -92,11 +90,6 @@ public:
         value_type factor_x = 1.0 , value_type factor_dxdt = 1.0 )
         : m_error_checker( eps_abs , eps_rel , factor_x, factor_dxdt ) , m_midpoint() ,
           m_last_step_rejected( false ) , m_first( true ) ,
-          /* , m_t_last() ,
-             m_current_k_opt() ,
-             m_algebra() ,
-             m_dxdt_resizer() , m_xnew_resizer() , m_resizer() ,
-             m_xnew() , m_err() , m_dxdt() ,*/
           m_interval_sequence( m_k_max+1 ) ,
           m_coeff( m_k_max+1 ) ,
           m_cost( m_k_max+1 ) ,
@@ -105,7 +98,7 @@ public:
     {
         BOOST_USING_STD_MIN();
         BOOST_USING_STD_MAX();
-        //m_dt_last = 1.0E30;
+        /* initialize sequence of stage numbers and work */
         for( unsigned short i = 0; i < m_k_max+1; i++ )
         {
             m_interval_sequence[i] = 2 * (i+1);
@@ -118,14 +111,10 @@ public:
             {
                 const value_type r = static_cast< value_type >( m_interval_sequence[i] ) / static_cast< value_type >( m_interval_sequence[k] );
                 m_coeff[i][k] = 1.0 / ( r*r - static_cast< value_type >( 1.0 ) ); // coefficients for extrapolation
-                //std::cout << i << "," << k << " " << m_coeff[i][k] << '\t' ;
             }
-            //std ::cout << std::endl;
             // crude estimate of optimal order
             const value_type logfact( -log10( max BOOST_PREVENT_MACRO_SUBSTITUTION( eps_rel , 1.0E-12 ) ) * 0.6 + 0.5 );
             m_current_k_opt = max BOOST_PREVENT_MACRO_SUBSTITUTION( 1 , min BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<int>( m_k_max-1 ) , static_cast<int>( logfact ) ));
-            //m_current_k_opt = m_k_max - 1;
-            //std::cout << m_cost[i] << std::endl;
         }
 
     }
@@ -180,6 +169,11 @@ public:
     }
 
 
+    /*
+     * Full version : try_step( sys , in , dxdt_in , t , out , dt )
+     *
+     * contains the actual implementation
+     */
     template< class System , class StateIn , class DerivIn , class StateOut >
     controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt , time_type &t , StateOut &out , time_type &dt )
     {
@@ -204,17 +198,17 @@ public:
         time_vector h_opt( m_k_max+1 );
         inv_time_vector work( m_k_max+1 );
 
-        //std::cout << "t=" << t <<", dt=" << dt << "(" << m_dt_last << ")" << ", k_opt=" << m_current_k_opt << std::endl;
-
         time_type new_h = dt;
 
+        /* m_current_k_opt is the estimated current optimal stage number */
         for( size_t k = 0 ; k <= m_current_k_opt+1 ; k++ )
         {
-            //std::cout << "  k=" << k; //<<": " << ", first: " << m_first << std::endl;
+            /* the stage counts are stored in m_interval_sequence */
             m_midpoint.set_steps( m_interval_sequence[k] );
             if( k == 0 )
             {
                 m_midpoint.do_step( sys , in , dxdt , t , out , dt );
+                /* the first step, nothing more to do */
             }
             else
             {
@@ -226,8 +220,6 @@ public:
                 const value_type error = m_error_checker.error( m_algebra , in , dxdt , m_err.m_v , dt );
                 h_opt[k] = calc_h_opt( dt , error , k );
                 work[k] = static_cast<value_type>( m_cost[k] ) / h_opt[k];
-                //std::cout << '\t' << "h_opt=" << h_opt[k] << ", work=" << work[k] << std::endl;
-                //std::cout << '\t' << "error: " << error << std::endl;
 
                 if( (k == m_current_k_opt-1) || m_first )
                 { // convergence before k_opt ?
@@ -270,7 +262,6 @@ public:
                             m_current_k_opt = min BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<int>(m_k_max-1) , static_cast<int>(m_current_k_opt)+1 );
                             new_h = h_opt[k];
                             new_h *= m_cost[m_current_k_opt]/m_cost[k];
-                            //std::cout << new_h << std::endl;
                         } else
                             new_h = h_opt[m_current_k_opt];
                         break;
@@ -284,7 +275,6 @@ public:
                 }
                 if( k == m_current_k_opt+1 )
                 { // convergence at k_opt+1 ?
-                    //std::cout << "convergence at k_opt+1 ?" << std::endl;
                     if( error < 1.0 )
                     {   //convergence
                         reject = false;
@@ -306,8 +296,7 @@ public:
         if( !reject )
         {
             t += dt;
-        }// else
-        //   std::cout << "REJECT!" << std::endl;
+        }
 
         if( !m_last_step_rejected || boost::numeric::odeint::detail::less_with_sign(new_h, dt, dt) )
         {
@@ -326,7 +315,6 @@ public:
 
     void reset()
     {
-        //std::cout << "reset" << std::endl;
         m_first = true;
         m_last_step_rejected = false;
     }
@@ -382,22 +370,22 @@ private:
 
     template< class StateInOut >
     void extrapolate( size_t k , state_table_type &table , const value_matrix &coeff , StateInOut &xest )
-    //polynomial extrapolation, see http://www.nr.com/webnotes/nr3web21.pdf
+    /* polynomial extrapolation, see http://www.nr.com/webnotes/nr3web21.pdf
+       uses the obtained intermediate results to extrapolate to dt->0 
+    */
     {
-        //std::cout << "extrapolate k=" << k << ":" << std::endl;
         static const value_type val1 = static_cast< value_type >( 1.0 );
         for( int j=k-1 ; j>0 ; --j )
         {
-            //std::cout << '\t' << m_coeff[k][j];
             m_algebra.for_each3( table[j-1].m_v , table[j].m_v , table[j-1].m_v ,
                                  typename operations_type::template scale_sum2< value_type , value_type >( val1 + coeff[k][j] , -coeff[k][j] ) );
         }
-        //std::cout << std::endl << m_coeff[k][0] << std::endl;
         m_algebra.for_each3( xest , table[0].m_v , xest ,
                              typename operations_type::template scale_sum2< value_type , value_type >( val1 + coeff[k][0] , -coeff[k][0]) );
     }
 
     time_type calc_h_opt( time_type h , value_type error , size_t k ) const
+    /* calculates the optimal step size for a given error and stage number */
     {
         BOOST_USING_STD_MIN();
         BOOST_USING_STD_MAX();
@@ -412,17 +400,15 @@ private:
             fac = STEPFAC2 / pow BOOST_PREVENT_MACRO_SUBSTITUTION( error / STEPFAC1 , expo );
             fac = max BOOST_PREVENT_MACRO_SUBSTITUTION( facmin/STEPFAC4 , min BOOST_PREVENT_MACRO_SUBSTITUTION( 1.0/facmin , fac ) );
         }
-        //return std::abs(h*fac);
         return h*fac;
     }
 
     controlled_step_result set_k_opt( size_t k , const inv_time_vector &work , const time_vector &h_opt , time_type &dt )
+    /* calculates the optimal stage number */
     {
-        //std::cout << "finding k_opt..." << std::endl;
         if( k == 1 )
         {
             m_current_k_opt = 2;
-            //dt = h_opt[ m_current_k_opt-1 ] * m_cost[ m_current_k_opt ] / m_cost[ m_current_k_opt-1 ] ;
             return success;
         }
         if( (work[k-1] < KFAC1*work[k]) || (k == m_k_max) )

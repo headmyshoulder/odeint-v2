@@ -167,7 +167,8 @@ public:
     /**
      * \brief This method performs one step. The derivative `dxdt` of `in` at the time `t` is passed to the method.
      * The result is updated out of place, hence the input is in `in` and the output in `out`. `do_step_impl` is
-     * used by explicit_stepper_base.
+     * used by explicit_stepper_base and should not be called directly. Use the do_step methods for this 
+     * functionality.
      *
      * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
      *               Simple System concept.
