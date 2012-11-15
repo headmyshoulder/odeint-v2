@@ -59,7 +59,7 @@ struct same_size_impl< vex::vector< T > , vex::vector< T > >
 
 
 /*
- * specializations for new version of vex::multivector< T, N, own >
+ * specializations for vex::multivector< T >
  */
 template< typename T , size_t N, bool own >
 struct is_resizeable< vex::multivector< T , N , own > > : boost::true_type { };
@@ -74,30 +74,6 @@ struct resize_impl< vex::multivector< T , N , own > , vex::multivector< T , N , 
 };
 
 template< typename T , size_t N, bool own >
-struct same_size_impl< vex::multivector< T , N , own > , vex::multivector< T , N , own > >
-{
-    static bool same_size( const vex::multivector< T , N , own > &x1 , const vex::multivector< T , N , own > &x2 )
-    {
-        return x1.size() == x2.size();
-    }
-};
-
-/*
- * specializations for old version of vex::multivector< T, N, own >
- */
-template< typename T , uint N, bool own >
-struct is_resizeable< vex::multivector< T , N , own > > : boost::true_type { };
-
-template< typename T , uint N, bool own >
-struct resize_impl< vex::multivector< T , N , own > , vex::multivector< T , N , own > >
-{
-    static void resize( vex::multivector< T , N , own > &x1 , const vex::multivector< T , N , own > &x2 )
-    {
-        x1.resize( x2.queue_list() , x2.size() );
-    }
-};
-
-template< typename T , uint N, bool own >
 struct same_size_impl< vex::multivector< T , N , own > , vex::multivector< T , N , own > >
 {
     static bool same_size( const vex::multivector< T , N , own > &x1 , const vex::multivector< T , N , own > &x2 )
