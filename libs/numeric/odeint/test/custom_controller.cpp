@@ -35,12 +35,27 @@ using namespace boost::numeric::odeint;
 struct find_zero_x
 {
     template< class StateIn , class StateOut , class Time >
-    bool operator()( const StateIn &in , const StateOut &out , Time t , Time dt ) const
+    custom_controller_result operator()( const StateIn &in , const StateOut &out , Time t , Time dt ) const
     {
-        if( out[0] >= 0.0 ) return true;
-        else return false;
+        if( out[0] >= 0.0 ) return cc_success;
+        else return cc_stop;
     }
 };
+
+struct find_zero_x_precise
+{
+    template< class StateIn , class StateOut , class Time >
+    custom_controller_result operator()( const StateIn &in , const StateOut &out , Time t , Time dt ) const
+    {
+        if( out[0] >= 0.0 ) return cc_success;
+        else
+        {
+            if( out[0] > -1.0e-7 ) return cc_stop;
+            else return cc_fail;
+        }
+    }
+};
+
 
 struct half_step_size
 {
@@ -69,17 +84,22 @@ BOOST_AUTO_TEST_CASE( test_rk4 )
     typedef boost::array< double , 2 > state_type ;
     state_type x = {{ 1.0 , 0.0 }};
     
-    custom_controller< find_zero_x , half_step_size , runge_kutta4< state_type > > controller;
+    custom_controller< find_zero_x_precise , half_step_size , runge_kutta4< state_type > > controller;
 
     size_t count = 0;
     double t = 0.0;
     double dt = 0.01;
-    while( count < 1000 )
+    custom_controller_result res = cc_success;
+    while( ( res != cc_stop ) && ( count < 1000 ) )
     {
-        controller.try_step( harmonic_oscillator() , x , t , dt );
         std::cout << count << "\t" << t << "\t" << dt << "\t" << x[0] << "\t" << x[1] << "\n";
+        res = controller.try_step( harmonic_oscillator() , x , t , dt );
         ++count;
     }
+
+    // integrate_cond( runge_kutta4< state_type >() , harmonic_oscillator() , x , 0.0 , 100.0 , 0.01 , write_to_cout() ,
+    //                 find_zero_x_precise() , half_step_size() );
+
     // integrate_adaptive( make_custom_controller( find_zero_x() , half_step_size() , runge_kutta4< state_type >() ) ,
     //                     harmonic_oscillator() , x , 0.0 , 100.0 , 0.01 , write_to_cout() );
 }

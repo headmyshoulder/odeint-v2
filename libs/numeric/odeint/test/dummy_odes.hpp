@@ -123,4 +123,18 @@ struct default_coor_func_vector_space_1d
 
 
 
+struct harmonic_oscillator
+{
+    template< class State , class Deriv , class Time >
+    void operator()( const State &x , Deriv &dxdt , Time t ) const
+    {
+        dxdt[0] = x[1];
+        dxdt[1] = - x[0];
+    }
+};
+
+
+
+
+
 #endif // LIBS_NUMERIC_ODEINT_TEST_DUMMY_ODES_HPP_DEFINED

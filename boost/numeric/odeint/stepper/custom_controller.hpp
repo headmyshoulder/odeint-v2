@@ -35,6 +35,13 @@ namespace odeint {
         class StepperCategory = typename Stepper::stepper_category >
     class custom_controller;
 
+    enum custom_controller_result
+    {
+        cc_success ,
+        cc_fail ,
+        cc_stop
+    };
+
 
 
     template< class Pred , class StepPolicy , class Stepper >
@@ -78,13 +85,13 @@ namespace odeint {
          * The overloads are needed to solve the forwarding problem
          */
         template< class System , class StateInOut >
-        controlled_step_result try_step( System system , StateInOut &x , time_type &t , time_type &dt )
+        custom_controller_result try_step( System system , StateInOut &x , time_type &t , time_type &dt )
         {
             return try_step_v1( system , x , t, dt );
         }
 
         template< class System , class StateInOut >
-        controlled_step_result try_step( System system , const StateInOut &x , time_type &t , time_type &dt )
+        custom_controller_result try_step( System system , const StateInOut &x , time_type &t , time_type &dt )
         {
             return try_step_v1( system , x , t, dt );
         }
@@ -98,30 +105,36 @@ namespace odeint {
          * This version does not solve the forwarding problem, boost.range can not be used.
          */
         template< class System , class StateIn , class StateOut >
-        controlled_step_result try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
+        custom_controller_result try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
         {
             m_stepper.do_step( system , in , t , out , dt );
-            bool res = m_pred( in , out , t , dt );
-            if( res )
+            custom_controller_result res = m_pred( in , out , t , dt );
+            switch( res )
             {
+            case cc_success:
                 t += dt;
-                return success;
-            }
-            else
-            {
+                return cc_success;
+                break;
+            case cc_fail:
                 dt = m_step_policy( in , out , t , dt );
-                return fail;
+                return cc_fail;
+                break;
+            case cc_stop:
+                return cc_stop;
+                break;
             }
         }
        
+
     private:
 
+
         template< class System , class StateInOut >
-        controlled_step_result try_step_v1( System system , StateInOut &x , time_type &t , time_type &dt )
+        custom_controller_result try_step_v1( System system , StateInOut &x , time_type &t , time_type &dt )
         {
             m_xnew_resizer.adjust_size( x , detail::bind( &custom_controller::template resize_m_xnew_impl< StateInOut > , detail::ref( *this ) , detail::_1 ) );
-            controlled_step_result res = try_step( system , x , t , m_xnew.m_v , dt );
-            if( res == success )
+            custom_controller_result res = try_step( system , x , t , m_xnew.m_v , dt );
+            if( res == cc_success )
             {
                 boost::numeric::odeint::copy( m_xnew.m_v , x );
             }
