@@ -55,6 +55,6 @@ test-suite "odeint"
     [ run resize.cpp ]
     [ run same_size.cpp ]
     [ run symplectic_steppers.cpp ]
-    [ run custom_controller.cpp ]
+    # [ run custom_controller.cpp ]
     : <testing.launcher>valgrind
     ;
