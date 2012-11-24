@@ -112,9 +112,14 @@ public:
                 const value_type r = static_cast< value_type >( m_interval_sequence[i] ) / static_cast< value_type >( m_interval_sequence[k] );
                 m_coeff[i][k] = 1.0 / ( r*r - static_cast< value_type >( 1.0 ) ); // coefficients for extrapolation
             }
+
             // crude estimate of optimal order
-            const value_type logfact( -log10( max BOOST_PREVENT_MACRO_SUBSTITUTION( eps_rel , 1.0E-12 ) ) * 0.6 + 0.5 );
-            m_current_k_opt = max BOOST_PREVENT_MACRO_SUBSTITUTION( 1 , min BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<int>( m_k_max-1 ) , static_cast<int>( logfact ) ));
+
+            m_current_k_opt = 4;
+            /* no calculation because log10 might not exist for value_type!
+            const value_type logfact( -log10( max BOOST_PREVENT_MACRO_SUBSTITUTION( eps_rel , static_cast< value_type >(1.0E-12) ) ) * 0.6 + 0.5 );
+            m_current_k_opt = max BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<value_type>( 1 ) , min BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<value_type>( m_k_max-1 ) , logfact ));
+            */
         }
 
     }
@@ -160,7 +165,8 @@ public:
      * this version does not solve the forwarding problem, boost.range can not be used
      */
     template< class System , class StateIn , class StateOut >
-    controlled_step_result try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
+    typename boost::disable_if< boost::is_same< StateIn , time_type > , controlled_step_result >::type
+    try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
     {
         typename odeint::unwrap_reference< System >::type &sys = system;
         m_dxdt_resizer.adjust_size( in , detail::bind( &controlled_error_bs_type::template resize_m_dxdt< StateIn > , detail::ref( *this ) , detail::_1 ) );
@@ -390,7 +396,7 @@ private:
         BOOST_USING_STD_MIN();
         BOOST_USING_STD_MAX();
         using std::pow;
-        value_type expo=1.0/(2*k+1);
+        value_type expo( 1.0/(2*k+1) );
         value_type facmin = pow BOOST_PREVENT_MACRO_SUBSTITUTION( STEPFAC3 , expo );
         value_type fac;
         if (error == 0.0)
