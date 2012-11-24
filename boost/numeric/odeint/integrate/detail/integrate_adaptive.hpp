@@ -22,7 +22,7 @@
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
-#include <boost/numeric/odeint/integrate/detail/integrate_n_steps.hpp>
+#include <boost/numeric/odeint/integrate/detail/integrate_const.hpp>
 #include <boost/numeric/odeint/util/bind.hpp>
 #include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
@@ -39,9 +39,9 @@ namespace detail {
 
 // forward declaration
 template< class Stepper , class System , class State , class Time , class Observer>
-Time integrate_n_steps(
+size_t integrate_const(
         Stepper stepper , System system , State &start_state ,
-        Time start_time , Time dt , size_t num_of_steps ,
+        Time start_time , Time end_time , Time dt ,
         Observer observer , stepper_tag );
 
 /*
@@ -54,9 +54,9 @@ size_t integrate_adaptive(
         Observer observer , stepper_tag
 )
 {
-    size_t steps = static_cast< size_t >( (end_time-start_time)/dt );
-    Time end = detail::integrate_n_steps( stepper , system , start_state , start_time ,
-                                          dt , steps , observer , stepper_tag() );
+    size_t steps = detail::integrate_const( stepper , system , start_state , start_time ,
+                                            end_time , dt , observer , stepper_tag() );
+    Time end = start_time + dt*steps;
     if( less_with_sign( end , end_time , dt ) )
     {   //make a last step to end exactly at end_time
         stepper.do_step( system , start_state , end , end_time - end );

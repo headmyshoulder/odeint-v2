@@ -251,11 +251,12 @@ public:
         {
             if( m_max_rel_error < 0.5 )
             {
+                // error should be > 0
+                m_max_rel_error = max BOOST_PREVENT_MACRO_SUBSTITUTION ( pow( 5.0 , -m_stepper.stepper_order() ) , m_max_rel_error ); 
                 //error too small - increase dt and keep the evolution and limit scaling factor to 5.0
                 t += dt;
-                dt *= min BOOST_PREVENT_MACRO_SUBSTITUTION ( static_cast<value_type>(9)/static_cast<value_type>(10) * pow( m_max_rel_error ,
-                                                               static_cast<value_type>(-1) / m_stepper.stepper_order() ) ,
-                           static_cast<value_type>(5) );
+                dt *= static_cast<value_type>(9)/static_cast<value_type>(10) * pow( m_max_rel_error ,
+                                                                                    static_cast<value_type>(-1) / m_stepper.stepper_order() );
                 return success;
             }
             else
@@ -479,8 +480,10 @@ public:
         {
             if( max_rel_err < 0.5 )
             {                //error too small - increase dt and keep the evolution and limit scaling factor to 5.0
+                // error should be > 0
+                max_rel_err = max BOOST_PREVENT_MACRO_SUBSTITUTION ( pow( 5.0 , -m_stepper.stepper_order() ) , max_rel_err ); 
                 t += dt;
-                dt *= min BOOST_PREVENT_MACRO_SUBSTITUTION ( static_cast<value_type>( static_cast<value_type>(9)/static_cast<value_type>(10) * pow( max_rel_err , static_cast<value_type>(-1) / m_stepper.stepper_order() ) ) , static_cast<value_type>(5) );
+                dt *= static_cast<value_type>( static_cast<value_type>(9)/static_cast<value_type>(10) * pow( max_rel_err , static_cast<value_type>(-1) / m_stepper.stepper_order() ) );
                 return success;
             }
             else

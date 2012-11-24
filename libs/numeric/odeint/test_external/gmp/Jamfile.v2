@@ -20,6 +20,7 @@ lib libgmpxx : : <name>gmpxx <link>shared ;
 test-suite "gmp"
     : 
       [ run check_gmp.cpp libgmpxx libgmp : : : <link>shared:<define>BOOST_TEST_DYN_LINK=1 ] 
+      [ run gmp_integrate.cpp libgmpxx libgmp : : : <link>shared:<define>BOOST_TEST_DYN_LINK=1 ] 
     ;
 
 

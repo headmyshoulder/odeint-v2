@@ -12,8 +12,6 @@
 
 #define BOOST_TEST_MODULE odeint_gmp
 
-#include <iostream>
-
 #include <gmpxx.h>
 
 #include <boost/test/unit_test.hpp>
@@ -47,7 +45,7 @@ value_type max( const value_type a , const value_type b )
 }
 value_type pow( const value_type a , const value_type b )
 {
-    // do calculation in double precision
+    // do the calculation in double precision...
     return value_type( std::pow( a.get_d() , b.get_d() ) );
 }
 
@@ -75,7 +73,6 @@ void constant_system( const state_type &x , state_type &dxdt , value_type t )
     dxdt = value_type( 1.0 , precision );
 }
 
-
 /* check runge kutta stepers */
 typedef mpl::vector<
     euler< state_type , value_type , state_type , value_type , vector_space_algebra > ,
@@ -90,7 +87,7 @@ typedef mpl::vector<
 
 
 template< class Stepper >
-struct perform_runge_kutta_test {
+struct perform_integrate_const_test {
 
     void operator()( void )
     {
@@ -106,23 +103,31 @@ struct perform_runge_kutta_test {
         Stepper stepper;
         state_type x;
         x = 0.0;
+        value_type t0( 0.0 );
+        value_type tend( 1.0 );
+        value_type dt(0.1);
 
-        stepper.do_step( constant_system , x , 0.0 , 0.1 );
+        integrate_const( stepper , constant_system , x , t0 , tend , dt );
 
-        BOOST_MESSAGE( eps );
-        BOOST_CHECK_MESSAGE( abs( x - value_type( 0.1 , precision ) ) < eps , x - 0.1 );
+        x = 0.0;
+        t0 = 0.0;
+        dt = 0.1;
+        size_t steps = 10;
+        
+        integrate_n_steps( stepper , constant_system , x , t0 , dt , steps );
+
+        BOOST_CHECK_MESSAGE( abs( x - 10*dt ) < eps , x );
     }
 };
 
 
-BOOST_AUTO_TEST_CASE_TEMPLATE( runge_kutta_stepper_test , Stepper , stepper_types )
+BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_const_test , Stepper , stepper_types )
 {
-    perform_runge_kutta_test< Stepper > tester;
+    perform_integrate_const_test< Stepper > tester;
     tester();
 }
 
 
-/* check controlled steppers */
 typedef mpl::vector<
     controlled_runge_kutta< runge_kutta_cash_karp54_classic< state_type , value_type , state_type , value_type , vector_space_algebra > > ,
     controlled_runge_kutta< runge_kutta_dopri5< state_type , value_type , state_type , value_type , vector_space_algebra > > , 
@@ -132,7 +137,7 @@ typedef mpl::vector<
 
 
 template< class Stepper >
-struct perform_controlled_test {
+struct perform_integrate_adaptive_test {
 
     void operator()( void )
     {
@@ -147,19 +152,18 @@ struct perform_controlled_test {
         Stepper stepper;
         state_type x;
         x = 0.0;
-
-        value_type t(0.0);
+        value_type t0( 0.0 );
+        value_type tend( 1.0 );
         value_type dt(0.1);
 
-        stepper.try_step( constant_system , x , t , dt );
+        integrate_adaptive( stepper , constant_system , x , t0 , tend , dt );
 
-        BOOST_MESSAGE( eps );
-        BOOST_CHECK_MESSAGE( abs( x - value_type( 0.1 , precision ) ) < eps , x - 0.1 );
+        BOOST_CHECK_MESSAGE( abs( x - tend ) < eps , x - 0.1 );
     }
 };
 
-BOOST_AUTO_TEST_CASE_TEMPLATE( controlled_stepper_test , Stepper , controlled_stepper_types )
+BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_adaptive__test , Stepper , controlled_stepper_types )
 {
-    perform_controlled_test< Stepper > tester;
+    perform_integrate_adaptive_test< Stepper > tester;
     tester();
 }
