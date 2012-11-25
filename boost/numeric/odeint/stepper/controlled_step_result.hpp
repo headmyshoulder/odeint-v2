@@ -24,12 +24,14 @@ namespace numeric {
 namespace odeint {
 
 /**
- * \enum Enum representing the return values of the controlled steppers.
+ * \enum controlled_step_result
+ *
+ * \brief Enum representing the return values of the controlled steppers.
  */
 typedef enum
 {
-    success , /** <The trial step war successful, hence the state and the time have been advanced. */
-    fail      /** <The step was not succesful and might possibly be repeated with a small step size. */
+    success , /**< The trial step was successful, hence the state and the time have been advanced. */
+    fail      /**< The step was not succesful and might possibly be repeated with a small step size. */
 } controlled_step_result;
 
 } // namespace odeint

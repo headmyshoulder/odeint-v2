@@ -103,7 +103,7 @@ public :
 
     /**
      * \brief Constructs the runge_kutta4_classic class. This constructor can be used as a default
-     * constructor if the algebra has a default constructor.
+     * constructor if the algebra has a default constructor. 
      * \param algebra A copy of algebra is made and stored inside explicit_stepper_base.
      */
     runge_kutta4_classic( const algebra_type &algebra = algebra_type() ) : stepper_base_type( algebra )
