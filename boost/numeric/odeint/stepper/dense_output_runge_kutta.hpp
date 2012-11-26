@@ -112,6 +112,7 @@ public:
      * inital conditions x,t and the stepsize.
      * \param system The system function to solve, hence the r.h.s. of the ordinary differential equation. It must fullfil the
      *               Simple System concept.
+     * \return Pair with start and end time of the integration step.
      */
     template< class System >
     std::pair< time_type , time_type > do_step( System system )

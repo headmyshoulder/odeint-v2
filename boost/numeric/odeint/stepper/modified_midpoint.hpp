@@ -31,6 +31,13 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+/**
+ * \class modified_midpoint
+ *
+ * Implementation of the modified midpoint method with a configurable 
+ * number of intermediate steps. This class is used by the Bulirsch-Stoer
+ * algorithm and is not meant for direct usage.
+ */
 template<
 class State ,
 class Value = double ,
@@ -153,6 +160,13 @@ private:
  * This Stepper is for use in Bulirsch Stoer only. It DOES NOT meet any stepper concept.
  */
 
+/**
+ * \class modified_midpoint_dense_out
+ *
+ * Implementation of the modified midpoint method with a configurable 
+ * number of intermediate steps. This class is used by the dense ouput
+ * Bulirsch-Stoer algorithm and is not meant for direct usage.
+ */
 template<
 class State ,
 class Value = double ,

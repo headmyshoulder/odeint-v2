@@ -47,6 +47,22 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+/**
+ * \class bulirsch_stoer
+ * \brief The Bulirsch-Stoer algorithm.
+ * 
+ * The Bulirsch-Stoer is a controlled stepper that adjusts both step size
+ * and order of the method. The algorithm uses the modified midpoint and
+ * a polynomial extrapolation compute the solution.
+ *
+ * \tparam State The state type.
+ * \tparam Value The value type.
+ * \tparam Deriv The type representing the time derivative of the state.
+ * \tparam Time The time representing the independent variable - the time.
+ * \tparam Algebra The algebra type.
+ * \tparam Operations The operations type.
+ * \tparam Resizer The resizer policy type.
+ */
 template<
     class State ,
     class Value = double ,
@@ -84,7 +100,15 @@ public:
 
     const static size_t m_k_max = 8;
 
-
+    /**
+     * \brief Constructs the bulirsch_stoer class, including initialization of 
+     * the error bounds.
+     *
+     * \param eps_abs Absolute tolerance level.
+     * \param eps_rel Relative tolerance level.
+     * \param factor_x Factor for the weight of the state.
+     * \param factor_dxdt Factor for the weight of the derivative.
+     */
     bulirsch_stoer(
         value_type eps_abs = 1E-6 , value_type eps_rel = 1E-6 ,
         value_type factor_x = 1.0 , value_type factor_dxdt = 1.0 )
@@ -130,12 +154,50 @@ public:
      *
      * The overloads are needed to solve the forwarding problem
      */
+
+    /**
+     * \brief Tries to perform one step.
+     *
+     * This method tries to do one step with step size dt. If the error estimate
+     * is to large, the step is rejected and the method returns fail and the 
+     * step size dt is reduced. If the error estimate is acceptably small, the
+     * step is performed, success is returned and dt might be increased to make 
+     * the steps as large as possible. This method also updates t if a step is
+     * performed. Also, the internal order of the stepper is adjusted if requried.
+     *
+     * \param system The system function to solve, hence the r.h.s. of the ODE. 
+     * It must fullfil the Simple System concept.
+     * \param x The state of the ODE which should be solved. Overwritten if 
+     * the step is successfull.
+     * \param t The value of the time. Updated if the step is successfull.
+     * \param dt The step size. Updated.
+     * \return success if the step was accepted, fail otherwise.
+     */
     template< class System , class StateInOut >
     controlled_step_result try_step( System system , StateInOut &x , time_type &t , time_type &dt )
     {
         return try_step_v1( system , x , t, dt );
     }
 
+    /**
+     * \brief Tries to perform one step. Solves the forwarding problem and 
+     * allows for using boost range as state_type.
+     *
+     * This method tries to do one step with step size dt. If the error estimate
+     * is to large, the step is rejected and the method returns fail and the 
+     * step size dt is reduced. If the error estimate is acceptably small, the
+     * step is performed, success is returned and dt might be increased to make 
+     * the steps as large as possible. This method also updates t if a step is
+     * performed. Also, the internal order of the stepper is adjusted if requried.
+     *
+     * \param system The system function to solve, hence the r.h.s. of the ODE. 
+     * It must fullfil the Simple System concept.
+     * \param x The state of the ODE which should be solved. Overwritten if 
+     * the step is successfull. Can be a boost range.
+     * \param t The value of the time. Updated if the step is successfull.
+     * \param dt The step size. Updated.
+     * \return success if the step was accepted, fail otherwise.
+     */
     template< class System , class StateInOut >
     controlled_step_result try_step( System system , const StateInOut &x , time_type &t , time_type &dt )
     {
@@ -146,6 +208,25 @@ public:
      * Version 2 : try_step( sys , x , dxdt , t , dt )
      *
      * this version does not solve the forwarding problem, boost.range can not be used
+     */
+    /**
+     * \brief Tries to perform one step.
+     *
+     * This method tries to do one step with step size dt. If the error estimate
+     * is to large, the step is rejected and the method returns fail and the 
+     * step size dt is reduced. If the error estimate is acceptably small, the
+     * step is performed, success is returned and dt might be increased to make 
+     * the steps as large as possible. This method also updates t if a step is
+     * performed. Also, the internal order of the stepper is adjusted if requried.
+     *
+     * \param system The system function to solve, hence the r.h.s. of the ODE. 
+     * It must fullfil the Simple System concept.
+     * \param x The state of the ODE which should be solved. Overwritten if 
+     * the step is successfull.
+     * \param dxdt The derivative of state.
+     * \param t The value of the time. Updated if the step is successfull.
+     * \param dt The step size. Updated.
+     * \return success if the step was accepted, fail otherwise.
      */
     template< class System , class StateInOut , class DerivIn >
     controlled_step_result try_step( System system , StateInOut &x , const DerivIn &dxdt , time_type &t , time_type &dt )
@@ -164,6 +245,26 @@ public:
      *
      * this version does not solve the forwarding problem, boost.range can not be used
      */
+    /**
+     * \brief Tries to perform one step.
+     *
+     * \note This method is disabled if state_type=time_type to avoid ambiguity.
+     *
+     * This method tries to do one step with step size dt. If the error estimate
+     * is to large, the step is rejected and the method returns fail and the 
+     * step size dt is reduced. If the error estimate is acceptably small, the
+     * step is performed, success is returned and dt might be increased to make 
+     * the steps as large as possible. This method also updates t if a step is
+     * performed. Also, the internal order of the stepper is adjusted if requried.
+     *
+     * \param system The system function to solve, hence the r.h.s. of the ODE. 
+     * It must fullfil the Simple System concept.
+     * \param in The state of the ODE which should be solved.
+     * \param t The value of the time. Updated if the step is successfull.
+     * \param out Used to store the result of the step.
+     * \param dt The step size. Updated.
+     * \return success if the step was accepted, fail otherwise.
+     */
     template< class System , class StateIn , class StateOut >
     typename boost::disable_if< boost::is_same< StateIn , time_type > , controlled_step_result >::type
     try_step( System system , const StateIn &in , time_type &t , StateOut &out , time_type &dt )
@@ -179,6 +280,25 @@ public:
      * Full version : try_step( sys , in , dxdt_in , t , out , dt )
      *
      * contains the actual implementation
+     */
+    /**
+     * \brief Tries to perform one step.
+     *
+     * This method tries to do one step with step size dt. If the error estimate
+     * is to large, the step is rejected and the method returns fail and the 
+     * step size dt is reduced. If the error estimate is acceptably small, the
+     * step is performed, success is returned and dt might be increased to make 
+     * the steps as large as possible. This method also updates t if a step is
+     * performed. Also, the internal order of the stepper is adjusted if requried.
+     *
+     * \param system The system function to solve, hence the r.h.s. of the ODE. 
+     * It must fullfil the Simple System concept.
+     * \param in The state of the ODE which should be solved.
+     * \param dxdt The derivative of state.
+     * \param t The value of the time. Updated if the step is successfull.
+     * \param out Used to store the result of the step.
+     * \param dt The step size. Updated.
+     * \return success if the step was accepted, fail otherwise.
      */
     template< class System , class StateIn , class DerivIn , class StateOut >
     controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt , time_type &t , StateOut &out , time_type &dt )
@@ -319,6 +439,9 @@ public:
             return success;
     }
 
+    /**
+     * \brief Resets the internal state of the stepper
+     */
     void reset()
     {
         m_first = true;
@@ -328,7 +451,10 @@ public:
 
     /* Resizer methods */
 
-
+    /**
+     * \brief Adjust the size of all temporaries in the stepper manually.
+     * \param x A state from which the size of the temporaries to be resized is deduced.
+     */
     template< class StateIn >
     void adjust_size( const StateIn &x )
     {

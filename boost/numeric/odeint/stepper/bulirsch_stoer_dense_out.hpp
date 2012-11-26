@@ -47,6 +47,23 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+/**
+ * \class bulirsch_stoer
+ * \brief The Bulirsch-Stoer algorithm.
+ * 
+ * The Bulirsch-Stoer is a controlled stepper that adjusts both step size
+ * and order of the method. The algorithm uses the modified midpoint and
+ * a polynomial extrapolation compute the solution. This class also provides
+ * dense outout facility.
+ *
+ * \tparam State The state type.
+ * \tparam Value The value type.
+ * \tparam Deriv The type representing the time derivative of the state.
+ * \tparam Time The time representing the independent variable - the time.
+ * \tparam Algebra The algebra type.
+ * \tparam Operations The operations type.
+ * \tparam Resizer The resizer policy type.
+ */
 template<
     class State ,
     class Value = double ,
@@ -89,7 +106,17 @@ public:
 
 
 
-
+    /**
+     * \brief Constructs the bulirsch_stoer class, including initialization of 
+     * the error bounds.
+     *
+     * \param eps_abs Absolute tolerance level.
+     * \param eps_rel Relative tolerance level.
+     * \param factor_x Factor for the weight of the state.
+     * \param factor_dxdt Factor for the weight of the derivative.
+     * \param control_interpolation Set true to additionally control the error of 
+     * the interpolation.
+     */
     bulirsch_stoer_dense_out(
         value_type eps_abs = 1E-6 , value_type eps_rel = 1E-6 ,
         value_type factor_x = 1.0 , value_type factor_dxdt = 1.0 ,
@@ -142,6 +169,25 @@ public:
         }
     }
 
+    /**
+     * \brief Tries to perform one step.
+     *
+     * This method tries to do one step with step size dt. If the error estimate
+     * is to large, the step is rejected and the method returns fail and the 
+     * step size dt is reduced. If the error estimate is acceptably small, the
+     * step is performed, success is returned and dt might be increased to make 
+     * the steps as large as possible. This method also updates t if a step is
+     * performed. Also, the internal order of the stepper is adjusted if requried.
+     *
+     * \param system The system function to solve, hence the r.h.s. of the ODE. 
+     * It must fullfil the Simple System concept.
+     * \param in The state of the ODE which should be solved.
+     * \param dxdt The derivative of state.
+     * \param t The value of the time. Updated if the step is successfull.
+     * \param out Used to store the result of the step.
+     * \param dt The step size. Updated.
+     * \return success if the step was accepted, fail otherwise.
+     */
     template< class System , class StateIn , class DerivIn , class StateOut , class DerivOut >
     controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt , time_type &t , StateOut &out , DerivOut &dxdt_new , time_type &dt )
     {
@@ -281,6 +327,13 @@ public:
             return success;
     }
 
+    /**
+     * \brief Initializes the dense output stepper.
+     *
+     * \param x0 The initial state.
+     * \param t0 The initial time.
+     * \param dt0 The initial time step.
+     */
     template< class StateType >
     void initialize( const StateType &x0 , const time_type &t0 , const time_type &dt0 )
     {
@@ -294,6 +347,14 @@ public:
 
     /*  =======================================================
      *  the actual step method that should be called from outside (maybe make try_step private?)
+     */
+    /**
+     * \brief Does one time step.
+     * \note initialize has to be called before using this method to set the
+     * inital conditions x,t and the stepsize.
+     * \param system The system function to solve, hence the r.h.s. of the
+     * ordinary differential equation. It must fullfil the Simple System concept.
+     * \return Pair with start and end time of the integration step.
      */
     template< class System >
     std::pair< time_type , time_type > do_step( System system )
@@ -321,39 +382,66 @@ public:
     }
 
     /* performs the interpolation from a calculated step */
+    /**
+     * \brief Calculates the solution at an intermediate point.
+     * \param t The time at which the solution should be calculated, has to be
+     * in the current time interval.
+     * \param x The output variable where the result is written into.
+     */
     template< class StateOut >
     void calc_state( time_type t , StateOut &x ) const
     {
         do_interpolation( t , x );
     }
 
-
+    /**
+     * \brief Returns the current state of the solution.
+     * \return The current state of the solution x(t).
+     */
     const state_type& current_state( void ) const
     {
         return get_current_state();
     }
 
+    /**
+     * \brief Returns the current time of the solution.
+     * \return The current time of the solution t.
+     */
     time_type current_time( void ) const
     {
         return m_t;
     }
 
+    /**
+     * \brief Returns the last state of the solution.
+     * \return The last state of the solution x(t-dt).
+     */
     const state_type& previous_state( void ) const
     {
         return get_old_state();
     }
 
+    /**
+     * \brief Returns the last time of the solution.
+     * \return The last time of the solution t-dt.
+     */
     time_type previous_time( void ) const
     {
         return m_t_last;
     }
 
+    /**
+     * \brief Returns the current step size.
+     * \return The current step size.
+     */
     time_type current_time_step( void ) const
     {
         return m_dt;
     }
 
-
+    /**
+     * \brief Resets the internal state of the stepper.
+     */
     void reset()
     {
         m_first = true;
@@ -361,6 +449,10 @@ public:
     }
 
 
+    /**
+     * \brief Adjust the size of all temporaries in the stepper manually.
+     * \param x A state from which the size of the temporaries to be resized is deduced.
+     */
     template< class StateIn >
     void adjust_size( const StateIn &x )
     {
