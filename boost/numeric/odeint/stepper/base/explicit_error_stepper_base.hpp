@@ -51,6 +51,259 @@ namespace odeint {
     * do_step( sys , in , t , out , dt , xerr )
     * do_step( sys , in , dxdt , t , out , dt , xerr )
  */
+template<
+class Stepper ,
+unsigned short Order ,
+unsigned short StepperOrder ,
+unsigned short ErrorOrder ,
+class State ,
+class Value ,
+class Deriv ,
+class Time ,
+class Algebra ,
+class Operations ,
+class Resizer
+>
+class explicit_error_stepper_base : public algebra_stepper_base< Algebra , Operations >
+{
+public:
+
+    typedef algebra_stepper_base< Algebra , Operations > algebra_stepper_base_type;
+    typedef typename algebra_stepper_base_type::algebra_type algebra_type;
+
+
+    typedef State state_type;
+    typedef Value value_type;
+    typedef Deriv deriv_type;
+    typedef Time time_type;
+    typedef Resizer resizer_type;
+    typedef Stepper stepper_type;
+    typedef explicit_error_stepper_tag stepper_category;
+    #ifndef DOXYGEN_SKIP
+    typedef state_wrapper< state_type > wrapped_state_type;
+    typedef state_wrapper< deriv_type > wrapped_deriv_type;
+    typedef explicit_error_stepper_base< Stepper , Order , StepperOrder , ErrorOrder ,
+            State , Value , Deriv , Time , Algebra , Operations , Resizer > internal_stepper_base_type;
+    #endif
+
+    typedef unsigned short order_type;
+    static const order_type order_value = Order;
+    static const order_type stepper_order_value = StepperOrder;
+    static const order_type error_order_value = ErrorOrder;
+
+
+    explicit_error_stepper_base( const algebra_type &algebra = algebra_type() )
+    : algebra_stepper_base_type( algebra )
+    { }
+
+    order_type order( void ) const
+    {
+        return order_value;
+    }
+
+    order_type stepper_order( void ) const
+    {
+        return stepper_order_value;
+    }
+
+    order_type error_order( void ) const
+    {
+        return error_order_value;
+    }
+
+
+
+    /*
+     * Version 1 : do_step( sys , x , t , dt )
+     *
+     * the two overloads are needed in order to solve the forwarding problem
+     */
+    template< class System , class StateInOut >
+    void do_step( System system , StateInOut &x , time_type t , time_type dt )
+    {
+        do_step_v1( system , x , t , dt );
+    }
+
+    /**
+     * \brief Second version to solve the forwarding problem, can be called with Boost.Range as StateInOut.
+     */
+    template< class System , class StateInOut >
+    void do_step( System system , const StateInOut &x , time_type t , time_type dt )
+    {
+        do_step_v1( system , x , t , dt );
+    }
+
+
+
+    /*
+     * Version 2 : do_step( sys , x , dxdt , t , dt )
+     *
+     * this version does not solve the forwarding problem, boost.range can not be used
+     *
+     * the disable is needed to avoid ambiguous overloads if state_type = time_type
+     */
+    template< class System , class StateInOut , class DerivIn >
+    typename boost::disable_if< boost::is_same< DerivIn , time_type > , void >::type
+    do_step( System system , StateInOut &x , const DerivIn &dxdt , time_type t , time_type dt )
+    {
+        this->stepper().do_step_impl( system , x , dxdt , t , x , dt );
+    }
+
+
+    /*
+     * Version 3 : do_step( sys , in , t , out , dt )
+     *
+     * this version does not solve the forwarding problem, boost.range can not be used
+     *
+     * the disable is needed to avoid ambiguous overloads if state_type = time_type
+     */
+    template< class System , class StateIn , class StateOut >
+    typename boost::disable_if< boost::is_same< StateIn , time_type > , void >::type
+    do_step( System system , const StateIn &in , time_type t , StateOut &out , time_type dt )
+    {
+        typename odeint::unwrap_reference< System >::type &sys = system;
+        m_resizer.adjust_size( in , detail::bind( &internal_stepper_base_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
+        sys( in , m_dxdt.m_v ,t );
+        this->stepper().do_step_impl( system , in , m_dxdt.m_v , t , out , dt );
+    }
+
+    /*
+     * Version 4 :do_step( sys , in , dxdt , t , out , dt )
+     *
+     * this version does not solve the forwarding problem, boost.range can not be used
+     *
+     * the disable is needed to avoid ambiguous overloads if state_type = time_type
+     */
+    template< class System , class StateIn , class DerivIn , class StateOut >
+    typename boost::disable_if< boost::is_same< DerivIn , time_type > , void >::type
+    do_step( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt )
+    {
+        this->stepper().do_step_impl( system , in , dxdt , t , out , dt );
+    }
+
+
+
+
+
+    /*
+     * Version  5 :do_step( sys , x , t , dt , xerr )
+     *
+     * the two overloads are needed in order to solve the forwarding problem
+     */
+    template< class System , class StateInOut , class Err >
+    void do_step( System system , StateInOut &x , time_type t , time_type dt , Err &xerr )
+    {
+        do_step_v5( system , x , t , dt , xerr );
+    }
+
+    /**
+     * \brief Second version to solve the forwarding problem, can be called with Boost.Range as StateInOut.
+     */
+    template< class System , class StateInOut , class Err >
+    void do_step( System system , const StateInOut &x , time_type t , time_type dt , Err &xerr )
+    {
+        do_step_v5( system , x , t , dt , xerr );
+    }
+
+
+    /*
+     * Version 6 :do_step( sys , x , dxdt , t , dt , xerr )
+     *
+     * this version does not solve the forwarding problem, boost.range can not be used
+     *
+     * the disable is needed to avoid ambiguous overloads if state_type = time_type
+     */
+    template< class System , class StateInOut , class DerivIn , class Err >
+    typename boost::disable_if< boost::is_same< DerivIn , time_type > , void >::type
+    do_step( System system , StateInOut &x , const DerivIn &dxdt , time_type t , time_type dt , Err &xerr )
+    {
+        this->stepper().do_step_impl( system , x , dxdt , t , x , dt , xerr );
+    }
+
+
+    /*
+     * Version 7 : do_step( sys , in , t , out , dt , xerr )
+     *
+     * this version does not solve the forwarding problem, boost.range can not be used
+     */
+    template< class System , class StateIn , class StateOut , class Err >
+    void do_step( System system , const StateIn &in , time_type t , StateOut &out , time_type dt , Err &xerr )
+    {
+        typename odeint::unwrap_reference< System >::type &sys = system;
+        m_resizer.adjust_size( in , detail::bind( &internal_stepper_base_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
+        sys( in , m_dxdt.m_v ,t );
+        this->stepper().do_step_impl( system , in , m_dxdt.m_v , t , out , dt , xerr );
+    }
+
+
+    /*
+     * Version 8 : do_step( sys , in , dxdt , t , out , dt , xerr )
+     *
+     * this version does not solve the forwarding problem, boost.range can not be used
+     */
+    template< class System , class StateIn , class DerivIn , class StateOut , class Err >
+    void do_step( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt , Err &xerr )
+    {
+        this->stepper().do_step_impl( system , in , dxdt , t , out , dt , xerr );
+    }
+
+    template< class StateIn >
+    void adjust_size( const StateIn &x )
+    {
+        resize_impl( x );
+    }
+
+
+
+private:
+
+    template< class System , class StateInOut >
+    void do_step_v1( System system , StateInOut &x , time_type t , time_type dt )
+    {
+        typename odeint::unwrap_reference< System >::type &sys = system;
+        m_resizer.adjust_size( x , detail::bind( &internal_stepper_base_type::template resize_impl<StateInOut> , detail::ref( *this ) , detail::_1 ) );
+        sys( x , m_dxdt.m_v ,t );
+        this->stepper().do_step_impl( system , x , m_dxdt.m_v , t , x , dt );
+    }
+
+    template< class System , class StateInOut , class Err >
+    void do_step_v5( System system , StateInOut &x , time_type t , time_type dt , Err &xerr )
+    {
+        typename odeint::unwrap_reference< System >::type &sys = system;
+        m_resizer.adjust_size( x , detail::bind( &internal_stepper_base_type::template resize_impl<StateInOut> , detail::ref( *this ) , detail::_1 ) );
+        sys( x , m_dxdt.m_v ,t );
+        this->stepper().do_step_impl( system , x , m_dxdt.m_v , t , x , dt , xerr );
+    }
+
+    template< class StateIn >
+    bool resize_impl( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_dxdt , x , typename is_resizeable<deriv_type>::type() );
+    }
+
+    stepper_type& stepper( void )
+    {
+        return *static_cast< stepper_type* >( this );
+    }
+
+    const stepper_type& stepper( void ) const
+    {
+        return *static_cast< const stepper_type* >( this );
+    }
+
+
+    resizer_type m_resizer;
+
+protected:
+
+    wrapped_deriv_type m_dxdt;
+};
+
+
+
+
+/******** DOXYGEN *******/
+
 /**
  * \class explicit_error_stepper_base
  * \brief Base class for explicit steppers with error estimation. This class can used with 
@@ -117,88 +370,33 @@ namespace odeint {
  * \tparam Operations The type for the operations wich must fullfil the Operations Concept.
  * \tparam Resizer The resizer policy class.
  */
-template<
-class Stepper ,
-unsigned short Order ,
-unsigned short StepperOrder ,
-unsigned short ErrorOrder ,
-class State ,
-class Value ,
-class Deriv ,
-class Time ,
-class Algebra ,
-class Operations ,
-class Resizer
->
-class explicit_error_stepper_base : public algebra_stepper_base< Algebra , Operations >
-{
-public:
-
-    typedef algebra_stepper_base< Algebra , Operations > algebra_stepper_base_type;
-    typedef typename algebra_stepper_base_type::algebra_type algebra_type;
-
-
-    typedef State state_type;
-    typedef Value value_type;
-    typedef Deriv deriv_type;
-    typedef Time time_type;
-    typedef Resizer resizer_type;
-    typedef Stepper stepper_type;
-    typedef explicit_error_stepper_tag stepper_category;
-    #ifndef DOXYGEN_SKIP
-    typedef state_wrapper< state_type > wrapped_state_type;
-    typedef state_wrapper< deriv_type > wrapped_deriv_type;
-    typedef explicit_error_stepper_base< Stepper , Order , StepperOrder , ErrorOrder ,
-            State , Value , Deriv , Time , Algebra , Operations , Resizer > internal_stepper_base_type;
-    #endif
-
-    typedef unsigned short order_type;
-    static const order_type order_value = Order;
-    static const order_type stepper_order_value = StepperOrder;
-    static const order_type error_order_value = ErrorOrder;
 
 
     /**
-     * \brief Constructs a explicit_stepper_base class. This constructor can be used as a default
+     * \fn explicit_error_stepper_base::explicit_error_stepper_base( const algebra_type &algebra = algebra_type() )
+     *
+     * \brief Constructs a explicit_error_stepper_base class. This constructor can be used as a default
      * constructor if the algebra has a default constructor.
      * \param algebra A copy of algebra is made and stored inside explicit_stepper_base.
      */
-    explicit_error_stepper_base( const algebra_type &algebra = algebra_type() )
-    : algebra_stepper_base_type( algebra )
-    { }
 
     /**
+     * \fn explicit_error_stepper_base::order( void ) const
      * \return Returns the order of the stepper if it used without error estimation.
      */
-    order_type order( void ) const
-    {
-        return order_value;
-    }
 
     /**
+     * \fn explicit_error_stepper_base::stepper_order( void ) const
      * \return Returns the order of a step if the stepper is used without error estimation.
      */
-    order_type stepper_order( void ) const
-    {
-        return stepper_order_value;
-    }
 
     /**
+     * \fn explicit_error_stepper_base::error_order( void ) const
      * \return Returns the order of an error step if the stepper is used without error estimation.
      */
-    order_type error_order( void ) const
-    {
-        return error_order_value;
-    }
 
-
-
-    /*
-     * Version 1 : do_step( sys , x , t , dt )
-     *
-     * the two overloads are needed in order to solve the forwarding problem
-     */
     /**
+     * \fn explicit_error_stepper_base::do_step( System system , StateInOut &x , time_type t , time_type dt )
      * \brief This method performs one step. It transforms the result in-place.
      *
      * \param system The system function to solve, hence the r.h.s. of the ordinary differential equation. It must fullfil the
@@ -207,42 +405,11 @@ public:
      * \param t The value of the time, at which the step should be performed.
      * \param dt The step size.
      */
-    template< class System , class StateInOut >
-    void do_step( System system , StateInOut &x , time_type t , time_type dt )
-    {
-        do_step_v1( system , x , t , dt );
-    }
 
     /**
-     * \brief This method performs one step with the stepper passed by Stepper. 
-     * It transforms the result in-place. This method is needed in order to solve the forwarding problem.
-     * The difference to the other version is that it can be used like
-     * `stepper.do_step( sys , make_range( iter1 , iter2 ) , t , dt )`
-     *
-     * \param system The system function to solve, hence the r.h.s. of the ordinary differential equation. It must fullfil the
-     *               Simple System concept.
-     * \param x The state of the ODE which should be solved. After calling do_step the result is updated in x.
-     * \param t The value of the time, at which the step should be performed.
-     * \param dt The step size.
-     */
-    template< class System , class StateInOut >
-    void do_step( System system , const StateInOut &x , time_type t , time_type dt )
-    {
-        do_step_v1( system , x , t , dt );
-    }
-
-
-
-    /*
-     * Version 2 : do_step( sys , x , dxdt , t , dt )
-     *
-     * this version does not solve the forwarding problem, boost.range can not be used
-     *
-     * the disable is needed to avoid ambiguous overloads if state_type = time_type
-     */
-    /**
+     * \fn explicit_error_stepper_base::do_step( System system , StateInOut &x , const DerivIn &dxdt , time_type t , time_type dt )
      * \brief The method performs one step with the stepper passed by Stepper. Additionally to the other method
-     * the derivative of x is also passed to this method. It is equivalent to
+     * the derivative of x is also passed to this method. It is supposed to be used in the following way:
      *
      * \code
      * sys( x , dxdt , t );
@@ -261,22 +428,9 @@ public:
      * \param t The value of the time, at which the step should be performed.
      * \param dt The step size.
      */
-    template< class System , class StateInOut , class DerivIn >
-    typename boost::disable_if< boost::is_same< DerivIn , time_type > , void >::type
-    do_step( System system , StateInOut &x , const DerivIn &dxdt , time_type t , time_type dt )
-    {
-        this->stepper().do_step_impl( system , x , dxdt , t , x , dt );
-    }
 
-
-    /*
-     * Version 3 : do_step( sys , in , t , out , dt )
-     *
-     * this version does not solve the forwarding problem, boost.range can not be used
-     *
-     * the disable is needed to avoid ambiguous overloads if state_type = time_type
-     */
     /**
+     * \fn explicit_error_stepper_base::do_step( System system , const StateIn &in , time_type t , StateOut &out , time_type dt )
      * \brief The method performs one step with the stepper passed by Stepper. The state of the ODE is updated out-of-place.
      * This method is disabled if StateIn and Time are the same type. In this case the method can not be distinguished from
      * other `do_step` variants.
@@ -289,26 +443,12 @@ public:
      * \param out The result of the step is written in out.
      * \param dt The step size.
      */
-    template< class System , class StateIn , class StateOut >
-    typename boost::disable_if< boost::is_same< StateIn , time_type > , void >::type
-    do_step( System system , const StateIn &in , time_type t , StateOut &out , time_type dt )
-    {
-        typename odeint::unwrap_reference< System >::type &sys = system;
-        m_resizer.adjust_size( in , detail::bind( &internal_stepper_base_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
-        sys( in , m_dxdt.m_v ,t );
-        this->stepper().do_step_impl( system , in , m_dxdt.m_v , t , out , dt );
-    }
 
-    /*
-     * Version 4 :do_step( sys , in , dxdt , t , out , dt )
-     *
-     * this version does not solve the forwarding problem, boost.range can not be used
-     *
-     * the disable is needed to avoid ambiguous overloads if state_type = time_type
-     */
+
     /**
+     * \fn explicit_error_stepper_base::do_step( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt )
      * \brief The method performs one step with the stepper passed by Stepper. The state of the ODE is updated out-of-place.
-     * Furthermore, the derivative of x at t is passed to the stepper. It is equivalent to:
+     * Furthermore, the derivative of x at t is passed to the stepper. It is supposed to be used in the following way:
      *
      * \code
      * sys( in , dxdt , t );
@@ -327,23 +467,9 @@ public:
      * \param out The result of the step is written in out.
      * \param dt The step size.
      */
-    template< class System , class StateIn , class DerivIn , class StateOut >
-    typename boost::disable_if< boost::is_same< DerivIn , time_type > , void >::type
-    do_step( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt )
-    {
-        this->stepper().do_step_impl( system , in , dxdt , t , out , dt );
-    }
 
-
-
-
-
-    /*
-     * Version  5 :do_step( sys , x , t , dt , xerr )
-     *
-     * the two overloads are needed in order to solve the forwarding problem
-     */
     /**
+     * \fn explicit_error_stepper_base::do_step( System system , StateInOut &x , time_type t , time_type dt , Err &xerr )
      * \brief The method performs one step with the stepper passed by Stepper and estimates the error. The state of the ODE
      * is updated in-place.
      *
@@ -354,42 +480,11 @@ public:
      * \param dt The step size.
      * \param xerr The estimation of the error is stored in xerr.
      */
-    template< class System , class StateInOut , class Err >
-    void do_step( System system , StateInOut &x , time_type t , time_type dt , Err &xerr )
-    {
-        do_step_v5( system , x , t , dt , xerr );
-    }
 
     /**
-     * \brief The method performs one step with the stepper passed by Stepper and estimates the error. The state of the ODE
-     * is updated in-place. This method is needed in order to solve the forwarding problem.
-     * The difference to the other version is that it can be used like
-     * `stepper.do_step( sys , make_range( iter1 , iter2 ) , t , dt )`
-     *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
-     *               Simple System concept.
-     * \param x The state of the ODE which should be solved. x is updated by this method.
-     * \param t The value of the time, at which the step should be performed.
-     * \param dt The step size.
-     * \param xerr The estimation of the error is stored in xerr.
-     */
-    template< class System , class StateInOut , class Err >
-    void do_step( System system , const StateInOut &x , time_type t , time_type dt , Err &xerr )
-    {
-        do_step_v5( system , x , t , dt , xerr );
-    }
-
-
-    /*
-     * Version 6 :do_step( sys , x , dxdt , t , dt , xerr )
-     *
-     * this version does not solve the forwarding problem, boost.range can not be used
-     *
-     * the disable is needed to avoid ambiguous overloads if state_type = time_type
-     */
-    /**
+     * \fn explicit_error_stepper_base::do_step( System system , StateInOut &x , const DerivIn &dxdt , time_type t , time_type dt , Err &xerr )
      * \brief The method performs one step with the stepper passed by Stepper. Additionally to the other method
-     * the derivative of x is also passed to this method. It is equivalent to
+     * the derivative of x is also passed to this method. It is supposed to be used in the following way:
      *
      * \code
      * sys( x , dxdt , t );
@@ -409,20 +504,9 @@ public:
      * \param dt The step size.
      * \param xerr The error estimate is stored in xerr.
      */
-    template< class System , class StateInOut , class DerivIn , class Err >
-    typename boost::disable_if< boost::is_same< DerivIn , time_type > , void >::type
-    do_step( System system , StateInOut &x , const DerivIn &dxdt , time_type t , time_type dt , Err &xerr )
-    {
-        this->stepper().do_step_impl( system , x , dxdt , t , x , dt , xerr );
-    }
 
-
-    /*
-     * Version 7 : do_step( sys , in , t , out , dt , xerr )
-     *
-     * this version does not solve the forwarding problem, boost.range can not be used
-     */
     /**
+     * \fn explicit_error_stepper_base::do_step( System system , const StateIn &in , time_type t , StateOut &out , time_type dt , Err &xerr )
      * \brief The method performs one step with the stepper passed by Stepper. The state of the ODE is updated out-of-place.
      * Furthermore, the error is estimated.
      *
@@ -436,24 +520,12 @@ public:
      * \param dt The step size.
      * \param xerr The error estimate.
      */
-    template< class System , class StateIn , class StateOut , class Err >
-    void do_step( System system , const StateIn &in , time_type t , StateOut &out , time_type dt , Err &xerr )
-    {
-        typename odeint::unwrap_reference< System >::type &sys = system;
-        m_resizer.adjust_size( in , detail::bind( &internal_stepper_base_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
-        sys( in , m_dxdt.m_v ,t );
-        this->stepper().do_step_impl( system , in , m_dxdt.m_v , t , out , dt , xerr );
-    }
 
 
-    /*
-     * Version 8 : do_step( sys , in , dxdt , t , out , dt , xerr )
-     *
-     * this version does not solve the forwarding problem, boost.range can not be used
-     */
     /**
+     * \fn explicit_error_stepper_base::do_step( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt , Err &xerr )
      * \brief The method performs one step with the stepper passed by Stepper. The state of the ODE is updated out-of-place.
-     * Furthermore, the derivative of x at t is passed to the stepper and the error is estimated. It is equivalent to:
+     * Furthermore, the derivative of x at t is passed to the stepper and the error is estimated. It is supposed to be used in the following way:
      *
      * \code
      * sys( in , dxdt , t );
@@ -473,68 +545,13 @@ public:
      * \param dt The step size.
      * \param xerr The error estimate.
      */
-    template< class System , class StateIn , class DerivIn , class StateOut , class Err >
-    void do_step( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt , Err &xerr )
-    {
-        this->stepper().do_step_impl( system , in , dxdt , t , out , dt , xerr );
-    }
+
 
     /**
+     * \fn explicit_error_stepper_base::adjust_size( const StateIn &x )
      * \brief Adjust the size of all temporaries in the stepper manually.
      * \param x A state from which the size of the temporaries to be resized is deduced.
      */
-    template< class StateIn >
-    void adjust_size( const StateIn &x )
-    {
-        resize_impl( x );
-    }
-
-
-
-private:
-
-    template< class System , class StateInOut >
-    void do_step_v1( System system , StateInOut &x , time_type t , time_type dt )
-    {
-        typename odeint::unwrap_reference< System >::type &sys = system;
-        m_resizer.adjust_size( x , detail::bind( &internal_stepper_base_type::template resize_impl<StateInOut> , detail::ref( *this ) , detail::_1 ) );
-        sys( x , m_dxdt.m_v ,t );
-        this->stepper().do_step_impl( system , x , m_dxdt.m_v , t , x , dt );
-    }
-
-    template< class System , class StateInOut , class Err >
-    void do_step_v5( System system , StateInOut &x , time_type t , time_type dt , Err &xerr )
-    {
-        typename odeint::unwrap_reference< System >::type &sys = system;
-        m_resizer.adjust_size( x , detail::bind( &internal_stepper_base_type::template resize_impl<StateInOut> , detail::ref( *this ) , detail::_1 ) );
-        sys( x , m_dxdt.m_v ,t );
-        this->stepper().do_step_impl( system , x , m_dxdt.m_v , t , x , dt , xerr );
-    }
-
-    template< class StateIn >
-    bool resize_impl( const StateIn &x )
-    {
-        return adjust_size_by_resizeability( m_dxdt , x , typename is_resizeable<deriv_type>::type() );
-    }
-
-    stepper_type& stepper( void )
-    {
-        return *static_cast< stepper_type* >( this );
-    }
-
-    const stepper_type& stepper( void ) const
-    {
-        return *static_cast< const stepper_type* >( this );
-    }
-
-
-    resizer_type m_resizer;
-
-protected:
-
-    wrapped_deriv_type m_dxdt;
-};
-
 
 } // odeint
 } // numeric

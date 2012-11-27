@@ -23,6 +23,35 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+template< class Algebra , class Operations >
+class algebra_stepper_base
+{
+public:
+
+    typedef Algebra algebra_type;
+    typedef Operations operations_type;
+
+    algebra_stepper_base( const algebra_type &algebra = algebra_type() )
+    : m_algebra( algebra ) { }
+
+    algebra_type& algebra()
+    {
+        return m_algebra;
+    }
+
+    const algebra_type& algebra() const
+    {
+        return m_algebra;
+    }
+
+protected:
+
+    algebra_type m_algebra;
+};
+
+
+/******* DOXYGEN *******/
+
 /**
  * \class algebra_stepper_base
  * \brief Base class for all steppers with algebra and operations.
@@ -36,42 +65,23 @@ namespace odeint {
  * \tparam Operations The type of the operations. Must fullfil the Operations Concept, at least partially 
  * to work with the stepper.
  */
-template< class Algebra , class Operations >
-class algebra_stepper_base
-{
-public:
-
-    typedef Algebra algebra_type;
-    typedef Operations operations_type;
 
     /**
+     * \fn algebra_stepper_base::algebra_stepper_base( const algebra_type &algebra = algebra_type() )
      * \brief Constructs a algebra_stepper_base and creates the algebra. This constructor can be used as a default
      * constructor if the algebra has a default constructor.
      * \param algebra The algebra_stepper_base stores and uses a copy of algebra.
      */
-    algebra_stepper_base( const algebra_type &algebra = algebra_type() )
-    : m_algebra( algebra ) { }
 
     /**
+     * \fn algebra_type& algebra_stepper_base::algebra()
      * \return A reference to the algebra which is held by this class.
      */
-    algebra_type& algebra()
-    {
-        return m_algebra;
-    }
 
     /**
+     * \fn const algebra_type& algebra_stepper_base::algebra() const
      * \return A const reference to the algebra which is held by this class.
      */
-    const algebra_type& algebra() const
-    {
-        return m_algebra;
-    }
-
-protected:
-
-    algebra_type m_algebra;
-};
 
 } // odeint
 } // numeric
