@@ -97,28 +97,6 @@ struct rk4_coefficients_c : boost::array< Value , 4 >
 
 
 
-/**
- * \class runge_kutta4
- * \brief The classical Runge-Kutta stepper of fourth order.
- *
- * The Runge-Kutta method of fourth order is one standard method for
- * solving ordinary differential equations and is widely used, see also
- * <a href="http://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">en.wikipedia.org/wiki/Runge-Kutta_methods</a>
- * The method is  explicit and fullfils the Stepper concept. Step size control
- * or continous output are not provided.
- * 
- * This class derives from explicit_stepper_base and inherits its interface via CRTP (current recurring template pattern).
- * Furthermore, it derivs from explicit_generic_rk which is a generic Runge-Kutta algorithm. For more details see
- * explicit_stepper_base and explicit_generic_rk.
- *
- * \tparam State The state type.
- * \tparam Value The value type.
- * \tparam Deriv The type representing the time derivative of the state.
- * \tparam Time The time representing the independent variable - the time.
- * \tparam Algebra The algebra type.
- * \tparam Operations The operations type.
- * \tparam Resizer The resizer policy type.
- */
 template<
 class State ,
 class Value = double ,
@@ -150,18 +128,42 @@ public:
     typedef typename stepper_base_type::stepper_type stepper_type;
     #endif
 
-
-    /**
-     * \brief Constructs the runge_kutta4 class. This constructor can be used as a default
-     * constructor if the algebra has a default constructor.
-     * \param algebra A copy of algebra is made and stored inside explicit_stepper_base.
-     */
     runge_kutta4( const algebra_type &algebra = algebra_type() ) : stepper_base_type(
             boost::fusion::make_vector( rk4_coefficients_a1<Value>() , rk4_coefficients_a2<Value>() , rk4_coefficients_a3<Value>() ) ,
             rk4_coefficients_b<Value>() , rk4_coefficients_c<Value>() , algebra )
     { }
 
 };
+
+/**
+ * \class runge_kutta4
+ * \brief The classical Runge-Kutta stepper of fourth order.
+ *
+ * The Runge-Kutta method of fourth order is one standard method for
+ * solving ordinary differential equations and is widely used, see also
+ * <a href="http://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">en.wikipedia.org/wiki/Runge-Kutta_methods</a>
+ * The method is  explicit and fullfils the Stepper concept. Step size control
+ * or continous output are not provided.
+ * 
+ * This class derives from explicit_stepper_base and inherits its interface via CRTP (current recurring template pattern).
+ * Furthermore, it derivs from explicit_generic_rk which is a generic Runge-Kutta algorithm. For more details see
+ * explicit_stepper_base and explicit_generic_rk.
+ *
+ * \tparam State The state type.
+ * \tparam Value The value type.
+ * \tparam Deriv The type representing the time derivative of the state.
+ * \tparam Time The time representing the independent variable - the time.
+ * \tparam Algebra The algebra type.
+ * \tparam Operations The operations type.
+ * \tparam Resizer The resizer policy type.
+ */
+
+/**
+ * \fn runge_kutta4::runge_kutta4( const algebra_type &algebra = algebra_type() )
+ * \brief Constructs the runge_kutta4 class. This constructor can be used as a default
+ * constructor if the algebra has a default constructor.
+ * \param algebra A copy of algebra is made and stored inside explicit_stepper_base.
+ */
 
 }
 }
