@@ -53,7 +53,7 @@ doxygen reference
     [ glob ../../../../boost/numeric/odeint/stepper/*.hpp ]
     [ glob ../../../../boost/numeric/odeint/stepper/base/*.hpp ]
 #    [ glob ../../../../boost/numeric/odeint/stepper/generation/*.hpp ]
-#    [ glob ../../../../boost/numeric/odeint/integrate/*.hpp ]
+    [ glob ../../../../boost/numeric/odeint/integrate/*.hpp ]
 #    [ glob ../../../../boost/numeric/odeint/iterator/*.hpp ]
 #    [ glob ../../../../boost/numeric/odeint/algebra/*.hpp ]
 #    [ glob ../../../../boost/numeric/odeint/util/*.hpp ]
