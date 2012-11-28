@@ -77,11 +77,13 @@ public :
     typedef Resizer resizer_type;
     typedef stepper_tag stepper_category;
 
-    typedef typename algebra_stepper_base< Algebra , Operations >::algebra_type algebra_type;
-    typedef typename algebra_stepper_base< Algebra , Operations >::operations_type operations_type;
-    typedef adams_bashforth< Steps , State , Value , Deriv , Time , Algebra , Operations , Resizer , InitializingStepper > stepper_type;
     typedef InitializingStepper initializing_stepper_type;
 
+    typedef typename algebra_stepper_base< Algebra , Operations >::algebra_type algebra_type;
+    typedef typename algebra_stepper_base< Algebra , Operations >::operations_type operations_type;
+#ifndef DOXYGEN_SKIP
+    typedef adams_bashforth< Steps , State , Value , Deriv , Time , Algebra , Operations , Resizer , InitializingStepper > stepper_type;
+#endif
     static const size_t steps = Steps;
 
 

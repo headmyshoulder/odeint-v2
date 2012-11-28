@@ -106,14 +106,20 @@ class Algebra = range_algebra ,
 class Operations = default_operations ,
 class Resizer = initially_resizer
 >
+#ifndef DOXYGEN_SKIP
 class runge_kutta4 : public explicit_generic_rk< 4 , 4 , State , Value , Deriv , Time ,
 Algebra , Operations , Resizer >
+#else
+class runge_kutta4 : public explicit_generic_rk
+#endif
 {
 
 public:
 
+#ifndef DOXYGEN_SKIP
     typedef explicit_generic_rk< 4 , 4 , State , Value , Deriv , Time ,
             Algebra , Operations , Resizer > stepper_base_type;
+#endif
     typedef typename stepper_base_type::state_type state_type;
     typedef typename stepper_base_type::value_type value_type;
     typedef typename stepper_base_type::deriv_type deriv_type;

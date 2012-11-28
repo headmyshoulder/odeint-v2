@@ -300,7 +300,7 @@ protected:
      */
 
     /**
-     * \fn void explicit_stepper_base::do_step( System system , StateInOut &x , time_type t , time_type dt )
+     * \fn explicit_stepper_base::do_step( System system , StateInOut &x , time_type t , time_type dt )
      * \brief This method performs one step. It transforms the result in-place.
      *
      * \param system The system function to solve, hence the r.h.s. of the ordinary differential equation. It must fullfil the

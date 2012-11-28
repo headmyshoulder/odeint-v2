@@ -251,7 +251,7 @@ private:
 
 
 /**
- * \brief The class representing dense-output Runge-Kutta steppers.
+ * \brief The class representing dense-output Runge-Kutta steppers with FSAL property.
  *
  * The interface is the same as for dense_output_runge_kutta< Stepper , stepper_tag >.
  * This class provides dense output functionality based on methods with step size controlled 

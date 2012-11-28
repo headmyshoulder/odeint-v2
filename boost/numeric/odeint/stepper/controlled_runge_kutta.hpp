@@ -44,18 +44,6 @@ namespace numeric {
 namespace odeint {
 
 
-/**
- * \class default_error_checker
- * \brief The default error checker to be used with Runge-Kutta error steppers
- *
- * This class provides the default mechanism to compare the error estimates 
- * reported by Runge-Kutta error steppers with user defined error bounds.
- * It is used by the controlled_runge_kutta steppers.
- *
- * \tparam Value The value type.
- * \tparam Algebra The algebra type.
- * \tparam Operations The operations type.
- */
 template
 <
 class Value ,
@@ -70,16 +58,6 @@ public:
     typedef Algebra algebra_type;
     typedef Operations operations_type;
 
-    /**
-     * \brief Constructs the error checker.
-     *
-     * The error is calculated as follows: ???? 
-     *
-     * \param eps_abs Absolute tolerance level.
-     * \param eps_rel Relative tolerance level.
-     * \param a_x Factor for the weight of the state.
-     * \param a_dxdt Factor for the weight of the derivative.
-     */
     default_error_checker(
             value_type eps_abs = static_cast< value_type >( 1.0e-6 ) ,
             value_type eps_rel = static_cast< value_type >( 1.0e-6 ) ,
@@ -89,39 +67,12 @@ public:
     { }
 
 
-    /**
-     * \brief Calculates the error level.
-     *
-     * If the returned error level is greater than 1, the estimated error was
-     * larger than the permitted error bounds and the step should be repeated
-     * with a smaller step size.
-     *
-     * \param x_old State at the beginning of the step.
-     * \param dxdt_old Derivative at the beginning of the step.
-     * \param x_err Error estimate.
-     * \param dt Time step.
-     * \return error
-     */
     template< class State , class Deriv , class Err , class Time >
     value_type error( const State &x_old , const Deriv &dxdt_old , Err &x_err , Time dt ) const
     {
         return error( algebra_type() , x_old , dxdt_old , x_err , dt );
     }
 
-    /**
-     * \brief Calculates the error level using a given algebra.
-     *
-     * If the returned error level is greater than 1, the estimated error was
-     * larger than the permitted error bounds and the step should be repeated
-     * with a smaller step size.
-     *
-     * \param algebra The algebra used for calculation of the error.
-     * \param x_old State at the beginning of the step.
-     * \param dxdt_old Derivative at the beginning of the step.
-     * \param x_err Error estimate.
-     * \param dt Time step.
-     * \return error
-     */
     template< class State , class Deriv , class Err , class Time >
     value_type error( algebra_type &algebra , const State &x_old , const Deriv &dxdt_old , Err &x_err , Time dt ) const
     {
@@ -175,7 +126,6 @@ class controlled_runge_kutta ;
     * try_step( sys , in , t , out , dt )
     * try_step( sys , in , dxdt , t , out , dt )
  */
-
 /**
  * \brief Implements step size control for Runge-Kutta steppers with error 
  * estimation.
@@ -921,6 +871,65 @@ private:
 };
 
 
+/********** DOXYGEN **********/
+
+/**** DEFAULT ERROR CHECKER ****/
+
+/**
+ * \class default_error_checker
+ * \brief The default error checker to be used with Runge-Kutta error steppers
+ *
+ * This class provides the default mechanism to compare the error estimates 
+ * reported by Runge-Kutta error steppers with user defined error bounds.
+ * It is used by the controlled_runge_kutta steppers.
+ *
+ * \tparam Value The value type.
+ * \tparam Algebra The algebra type.
+ * \tparam Operations The operations type.
+ */
+
+    /**
+     * \fn default_error_checker( value_type eps_abs , value_type eps_rel , value_type a_x , value_type a_dxdt )
+     * \brief Constructs the error checker.
+     *
+     * The error is calculated as follows: ???? 
+     *
+     * \param eps_abs Absolute tolerance level.
+     * \param eps_rel Relative tolerance level.
+     * \param a_x Factor for the weight of the state.
+     * \param a_dxdt Factor for the weight of the derivative.
+     */
+    
+    /**
+     * \fn error( const State &x_old , const Deriv &dxdt_old , Err &x_err , Time dt ) const
+     * \brief Calculates the error level.
+     *
+     * If the returned error level is greater than 1, the estimated error was
+     * larger than the permitted error bounds and the step should be repeated
+     * with a smaller step size.
+     *
+     * \param x_old State at the beginning of the step.
+     * \param dxdt_old Derivative at the beginning of the step.
+     * \param x_err Error estimate.
+     * \param dt Time step.
+     * \return error
+     */
+
+    /**
+     * \fn error( algebra_type &algebra , const State &x_old , const Deriv &dxdt_old , Err &x_err , Time dt ) const
+     * \brief Calculates the error level using a given algebra.
+     *
+     * If the returned error level is greater than 1, the estimated error was
+     * larger than the permitted error bounds and the step should be repeated
+     * with a smaller step size.
+     *
+     * \param algebra The algebra used for calculation of the error.
+     * \param x_old State at the beginning of the step.
+     * \param dxdt_old Derivative at the beginning of the step.
+     * \param x_err Error estimate.
+     * \param dt Time step.
+     * \return error
+     */
 
 
 } // odeint
