@@ -156,6 +156,8 @@ public:
      *
      * the disable is needed to avoid ambiguous overloads if state_type = time_type
      */
+    template< class System , class StateIn , class StateOut >
+    typename boost::disable_if< boost::is_same< StateIn , time_type > , void >::type
     do_step( System system , const StateIn &in , time_type t , StateOut &out , time_type dt )
     {
         if( m_resizer.adjust_size( in , detail::bind( &internal_stepper_base_type::template resize_impl< StateIn > , detail::ref( *this ) , detail::_1 ) ) || m_first_call )
@@ -209,8 +211,6 @@ public:
      *
      * this version does not solve the forwarding problem, boost.range can not be used
      *
-     * the disable is needed to avoid ambiguous overloads if state_type = time_type
-         *
      * the disable is needed to avoid ambiguous overloads if state_type = time_type
      */
     template< class System , class StateInOut , class DerivInOut , class Err >
