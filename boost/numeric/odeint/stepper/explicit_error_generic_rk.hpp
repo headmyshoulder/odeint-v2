@@ -133,8 +133,8 @@ public:
     }
 
 
-    template< class StateType >
-    void adjust_size( const StateType &x )
+    template< class StateIn >
+    void adjust_size( const StateIn &x )
     {
         resize_impl( x );
         stepper_base_type::adjust_size( x );
@@ -239,7 +239,7 @@ private:
      */
 
     /**
-     * \fn explicit_error_generic_rk::adjust_size( const StateType &x )
+     * \fn explicit_error_generic_rk::adjust_size( const StateIn &x )
      * \brief Adjust the size of all temporaries in the stepper manually.
      * \param x A state from which the size of the temporaries to be resized is deduced.
      */

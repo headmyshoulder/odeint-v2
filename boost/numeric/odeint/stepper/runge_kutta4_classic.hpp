@@ -193,8 +193,9 @@ private:
     /**
      * \fn runge_kutta4_classic::do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt )
      * \brief This method performs one step. The derivative `dxdt` of `in` at the time `t` is passed to the method.
-     * The result is updated out of place, hence the input is in `in` and the output in `out`. `do_step_impl` is
-     * used by explicit_stepper_base.
+     * The result is updated out of place, hence the input is in `in` and the output in `out`.
+     * Access to this step functionality is provided by explicit_stepper_base and 
+     * `do_step_impl` should not be called directly.
      *
      * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
      *               Simple System concept.
