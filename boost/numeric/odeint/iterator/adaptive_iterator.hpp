@@ -37,6 +37,17 @@ namespace odeint {
     /*
      * Specilization for controlled steppers
      */
+    /**
+     * \brief ODE Iterator with adaptive step size control. The value type of this iterator is the state type of the stepper.
+     *
+     * Implements an ODE with adaptive step size control. Uses controlled steppers. adaptive_iterator is a model
+     * of single-pass iterator.
+     *
+     * The value type of this iterator is the state type of the stepper. Hence one can only access the state and not the current time.
+     *
+     * \tparam Stepper The stepper type which should be used during the iteration.
+     * \tparam System The type of the system function (ODE) which should be solved.
+     */
     template< class Stepper , class System >
     class adaptive_iterator< Stepper , System , controlled_stepper_tag > : public detail::ode_iterator_base
     <
@@ -46,21 +57,41 @@ namespace odeint {
     {
     private:
 
+
         typedef Stepper stepper_type;
         typedef System system_type;
         typedef typename stepper_type::state_type state_type;
         typedef typename stepper_type::time_type time_type;
         typedef typename stepper_type::value_type ode_value_type;
+        #ifndef DOXYGEN_SKIP
         typedef detail::ode_iterator_base<
             adaptive_iterator< Stepper , System , controlled_stepper_tag > ,
             Stepper , System , controlled_stepper_tag 
             > base_type;
+        #endif
 
     public:
-   
+
+        /**
+         * \brief Constructs an adaptive_iterator. This constructor should be used to construct the begin iterator.
+         *
+         * \param stepper The stepper to use during the iteration.
+         * \param sys The system function (ODE) to solve.
+         * \param s The initial state. adaptive iterator store a reference of s and changes its value during the iteration.
+         * \param t The initial time.
+         * \param t_end The end time, at which the iteration should stop.
+         * \param dt The initial time step.
+         */
         adaptive_iterator( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type t_end , time_type dt )
             : base_type( stepper , sys , s , t , t_end , dt ) { }
 
+        /**
+         * \brief Constructs an adaptive_iterator. This constructor should be used to construct the end iterator.
+         *
+         * \param stepper The stepper to use during the iteration.
+         * \param sys The system function (ODE) to solve.
+         * \param s The initial state. adaptive iterator store a reference of s and changes its value during the iteration.
+         */
         adaptive_iterator( stepper_type stepper , system_type sys , state_type &s )
             : base_type( stepper , sys , s ) { } 
 
@@ -95,6 +126,17 @@ namespace odeint {
     /*
      * Specilization for dense outputer steppers
      */
+    /**
+     * \brief ODE Iterator with adaptive step size control. The value type of this iterator is the state type of the stepper.
+     *
+     * Implements an ODE with adaptive step size control. Uses dense-output steppers. adaptive_iterator is a model
+     * of single-pass iterator.
+     *
+     * The value type of this iterator is the state type of the stepper. Hence one can only access the state and not the current time.
+     *
+     * \tparam Stepper The stepper type which should be used during the iteration.
+     * \tparam System The type of the system function (ODE) which should be solved.
+     */
     template< class Stepper , class System >
     class adaptive_iterator< Stepper , System , dense_output_stepper_tag > : public detail::ode_iterator_base
     <
@@ -109,20 +151,39 @@ namespace odeint {
         typedef typename stepper_type::state_type state_type;
         typedef typename stepper_type::time_type time_type;
         typedef typename stepper_type::value_type ode_value_type;
+        #ifndef DOXYGEN_SKIP
         typedef detail::ode_iterator_base<
             adaptive_iterator< Stepper , System , dense_output_stepper_tag > ,
             Stepper , System , dense_output_stepper_tag 
             > base_type;
+        #endif
 
     public:
 
-   
+
+        /**
+         * \brief Constructs an adaptive_iterator. This constructor should be used to construct the begin iterator.
+         *
+         * \param stepper The stepper to use during the iteration.
+         * \param sys The system function (ODE) to solve.
+         * \param s The initial state. adaptive iterator store a reference of s and changes its value during the iteration.
+         * \param t The initial time.
+         * \param t_end The end time, at which the iteration should stop.
+         * \param dt The initial time step.
+         */
         adaptive_iterator( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type t_end , time_type dt )
             : base_type( stepper , sys , s , t , t_end , dt )
         {
             this->m_stepper.initialize( this->m_state , this->m_t , this->m_dt );
         }
 
+        /**
+         * \brief Constructs an adaptive_iterator. This constructor should be used to construct the end iterator.
+         *
+         * \param stepper The stepper to use during the iteration.
+         * \param sys The system function (ODE) to solve.
+         * \param s The initial state. adaptive iterator store a reference of s and changes its value during the iteration.
+         */
         adaptive_iterator( stepper_type stepper , system_type sys , state_type &s )
             : base_type( stepper , sys , s ) { } 
 
@@ -165,6 +226,7 @@ namespace odeint {
         return adaptive_iterator< Stepper , System >( stepper , system , x , t , t_end , dt );
     }
 
+
     template< class Stepper , class System >
     adaptive_iterator< Stepper , System > make_adaptive_iterator_end(
         Stepper stepper ,
@@ -196,6 +258,46 @@ namespace odeint {
 
 
 
+
+    /**
+     * \fn make_adaptive_iterator_begin( Stepper stepper , System system , typename Stepper::state_type &x , typename Stepper::time_type t , typename Stepper::time_type t_end , typename Stepper::time_type dt )
+     *
+     * \brief Factory function for adaptive_iterator. Constructs a begin iterator.
+     *
+     * \param stepper The stepper to use during the iteration.
+     * \param system The system function (ODE) to solve.
+     * \param x The initial state. adaptive iterator store a reference of s and changes its value during the iteration.
+     * \param t The initial time.
+     * \param t_end The end time, at which the iteration should stop.
+     * \param dt The initial time step.
+     * \returns The adaptive iterator.
+     */
+
+
+    /**
+     * \fn make_adaptive_iterator_end( Stepper stepper , System system , typename Stepper::state_type &x )
+     * \brief Factory function for adaptive_iterator. Constructs a end iterator.
+     *
+     * \param stepper The stepper to use during the iteration.
+     * \param system The system function (ODE) to solve.
+     * \param x The initial state. adaptive iterator store a reference of s and changes its value during the iteration.
+     * \returns The adaptive iterator.
+     */
+
+
+    /**
+     * \fn make_adaptive_range( Stepper stepper , System system , typename Stepper::state_type &x , typename Stepper::time_type t_start , typename Stepper::time_type t_end , typename Stepper::time_type dt )
+     *
+     * \brief Factory function to construct a single pass range of adaptive iterators. A range is here a pair of adaptive_iterator.
+     *
+     * \param stepper The stepper to use during the iteration.
+     * \param system The system function (ODE) to solve.
+     * \param x The initial state. adaptive iterator store a reference of s and changes its value during the iteration.
+     * \param t The initial time.
+     * \param t_end The end time, at which the iteration should stop.
+     * \param dt The initial time step.
+     * \returns The adaptive range.
+     */
 
 
 
