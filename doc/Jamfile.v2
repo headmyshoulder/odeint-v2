@@ -152,16 +152,11 @@ boostbook standalone
     # Links are relative and trying to make absolute does NOT work.
     # And remember that all links MUST (unless in quotes) use  backslash, not forward that is trip char.
 
-    <xsl:param>boost.root=../../../.. # OK but link to I:/boost_trunk/boost.png
+    <xsl:param>boost.root=../../../../.. # OK but link to I:/boost_trunk/boost.png
 
     # Also control links to admonitions, so need to set separately.
     #<xsl:param>boost.root=../../../../../../../boost_1_47_0 # OK file:///I:/boost_1_48_0/boost.png
     # Quickbook [@boost:/boost/units/detail/utility.hpp] should make it relative to xsl parameter boost.root.
-
-    # Path for libraries index:
-    <xsl:param>boost.libraries=../../../../../../../boost_1_47_0/libs/libraries.htm
-    # Use the main Boost stylesheet:
-    <xsl:param>html.stylesheet=./boostbook.css # in /doc folder.
 
     # Use the your own local Boost stylesheet:
     # <xsl:param>html.stylesheet=../html/boostbook.css
@@ -178,7 +173,6 @@ boostbook standalone
     # defining creates a runtime error: Global parameter nav.layout already defined
     #<xsl:param>nav.layout=horizontal # to get a horizontal navigation bar (you probably DO want this).
 
-    <xsl:param>boost.image=Boost # options are: none (no logo), Boost (for boost.png), or your own logo like proposed_for_boost.png
     <xsl:param>boost.image.src=logo.jpg #
     <xsl:param>boost.image.width=294 # Width of logo in pixels.
     <xsl:param>boost.image.height=127 # Height of logo in pixels.
