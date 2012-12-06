@@ -116,7 +116,6 @@ class controlled_runge_kutta ;
 
 
 
-
 /*
  * explicit stepper version
  *

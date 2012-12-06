@@ -35,13 +35,14 @@ namespace odeint {
     class adaptive_time_iterator;
 
 
+
     /*
      * Specilization for controlled steppers
      */
     /**
      * \brief ODE Iterator with adaptive step size control. The value type of this iterator is a pair of state type and time type of the stepper.
      *
-     * Implements an ODE with adaptive step size control. Uses controlled steppers. adaptive_iterator is a model
+     * Implements an ODE iterator with adaptive step size control. Uses controlled steppers. adaptive_iterator is a model
      * of single-pass iterator.
      *
      * The value type of this iterator is a pair of state type and time type of the stepper.
@@ -75,7 +76,7 @@ namespace odeint {
          *
          * \param stepper The stepper to use during the iteration.
          * \param sys The system function (ODE) to solve.
-         * \param s The initial state. adaptive iterator store a reference of s and changes its value during the iteration.
+         * \param s The initial state. adaptive_time_iterator stores a reference of s and changes its value during the iteration.
          * \param t The initial time.
          * \param t_end The end time, at which the iteration should stop.
          * \param dt The initial time step.
@@ -88,7 +89,7 @@ namespace odeint {
          *
          * \param stepper The stepper to use during the iteration.
          * \param sys The system function (ODE) to solve.
-         * \param s The initial state. adaptive iterator store a reference of s and changes its value during the iteration.
+         * \param s The initial state. adaptive_time_iterator stores a reference of s and changes its value during the iteration.
          */
         adaptive_time_iterator( stepper_type stepper , system_type sys , state_type &s )
             : base_type( stepper , sys , s ) {}
@@ -160,7 +161,7 @@ namespace odeint {
          *
          * \param stepper The stepper to use during the iteration.
          * \param sys The system function (ODE) to solve.
-         * \param s The initial state. adaptive iterator store a reference of s and changes its value during the iteration.
+         * \param s The initial state. adaptive_time_iterator stores a reference of s and changes its value during the iteration.
          * \param t The initial time.
          * \param t_end The end time, at which the iteration should stop.
          * \param dt The initial time step.
@@ -176,7 +177,7 @@ namespace odeint {
          *
          * \param stepper The stepper to use during the iteration.
          * \param sys The system function (ODE) to solve.
-         * \param s The initial state. adaptive iterator store a reference of s and changes its value during the iteration.
+         * \param s The initial state. adaptive_time_iterator stores a reference of s and changes its value during the iteration.
          */
         adaptive_time_iterator( stepper_type stepper , system_type sys , state_type &s )
             : base_type( stepper , sys , s )
@@ -253,7 +254,7 @@ namespace odeint {
      *
      * \param stepper The stepper to use during the iteration.
      * \param system The system function (ODE) to solve.
-     * \param x The initial state. adaptive iterator store a reference of s and changes its value during the iteration.
+     * \param x The initial state. adaptive_time_iterator stores a reference of s and changes its value during the iteration.
      * \param t The initial time.
      * \param t_end The end time, at which the iteration should stop.
      * \param dt The initial time step.
@@ -267,7 +268,7 @@ namespace odeint {
      *
      * \param stepper The stepper to use during the iteration.
      * \param system The system function (ODE) to solve.
-     * \param x The initial state. adaptive iterator store a reference of s and changes its value during the iteration.
+     * \param x The initial state. adaptive_time_iterator stores a reference of s and changes its value during the iteration.
      * \returns The adaptive time iterator.
      */
 
@@ -279,7 +280,7 @@ namespace odeint {
      *
      * \param stepper The stepper to use during the iteration.
      * \param system The system function (ODE) to solve.
-     * \param x The initial state. adaptive iterator store a reference of s and changes its value during the iteration.
+     * \param x The initial state. adaptive_time_iterator stores a reference of s and changes its value during the iteration.
      * \param t The initial time.
      * \param t_end The end time, at which the iteration should stop.
      * \param dt The initial time step.
