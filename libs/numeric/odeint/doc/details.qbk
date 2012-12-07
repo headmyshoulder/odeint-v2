@@ -17,8 +17,6 @@
 
 [include details_integrate_functions.qbk]
 
-[include details_iterators.qbk]
-
 [include details_state_types_algebras_operations.qbk]
 
 [include details_boost_ref.qbk]
