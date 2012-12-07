@@ -213,7 +213,7 @@ which can be integrated:
 
 [caution The full support of arbitrary precision types depends on the functionality they provide. For example, the types from gmp are lacking of functions for calculating the power and arbitrary roots, hence they can not be used with the controlled steppers. In detail, for full support the `min( x , y )`, `max( x , y )`, `pow( x , y )` must be callable.]
 
-The full example can be found at [github_link libs/numeric/odeint/examples/lorenz_gmpxx.cpp lorenz_gmpxx.cpp].
+The full example can be found at [github_link libs/numeric/odeint/examples/gmpxx/lorenz_gmpxx.cpp lorenz_gmpxx.cpp].
 
 
 [endsect]
