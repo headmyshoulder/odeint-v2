@@ -47,22 +47,6 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-/*
-
-template< class T , size_t N >
-std::ostream& operator<<( std::ostream& output , const boost::array< T , N >& a ) {
-    output << "[ " << a[0] ;
-    for( size_t n = 1 ; n<N ; ++n )
-        output << " , " << a[n];
-    output << " ]";
-    return output;  // for multiple << operators.
-}
-
-*/
-
-
-
-
 template<
     class State ,
     class Value = double ,
@@ -84,9 +68,10 @@ public:
     typedef Algebra algebra_type;
     typedef Operations operations_type;
     typedef Resizer resizer_type;
+    typedef dense_output_stepper_tag stepper_category;
+#ifndef DOXYGEN_SKIP
     typedef state_wrapper< state_type > wrapped_state_type;
     typedef state_wrapper< deriv_type > wrapped_deriv_type;
-    typedef dense_output_stepper_tag stepper_category;
 
     typedef bulirsch_stoer_dense_out< State , Value , Deriv , Time , Algebra , Operations , Resizer > controlled_error_bs_type;
 
@@ -100,9 +85,9 @@ public:
     typedef std::vector< wrapped_state_type > state_vector_type;
     typedef std::vector< wrapped_deriv_type > deriv_vector_type;
     typedef std::vector< deriv_vector_type > deriv_table_type;
+#endif //DOXYGEN_SKIP
 
     const static size_t m_k_max = 8;
-
 
 
 
@@ -129,6 +114,7 @@ public:
 
         for( unsigned short i = 0; i < m_k_max+1; i++ )
         {
+            /* only this specific sequence allows for dense ouput */
             m_interval_sequence[i] = 2 + 4*i;  // 2 6 10 14 ...
             m_derivs[i].resize( m_interval_sequence[i] );
             if( i == 0 )
@@ -140,39 +126,22 @@ public:
             {
                 const value_type r = static_cast< value_type >( m_interval_sequence[i] ) / static_cast< value_type >( m_interval_sequence[k] );
                 m_coeff[i][k] = 1.0 / ( r*r - static_cast< value_type >( 1.0 ) ); // coefficients for extrapolation
-                //std::cout << i << "," << k << " " << m_coeff[i][k] << '\t' ;
             }
-            //std ::cout << std::endl;
             // crude estimate of optimal order
+
+            m_current_k_opt = 4;
+            /* no calculation because log10 might not exist for value_type!
             const value_type logfact( -log10( max BOOST_PREVENT_MACRO_SUBSTITUTION( eps_rel , static_cast< value_type >( 1.0E-12 ) ) ) * 0.6 + 0.5 );
             m_current_k_opt = max BOOST_PREVENT_MACRO_SUBSTITUTION( 1 , min BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<int>( m_k_max-1 ) , static_cast<int>( logfact ) ));
-            //m_current_k_opt = m_k_max - 1;
-            //std::cout << m_cost[i] << std::endl;
+            */
         }
         int num = 1;
         for( int i = 2*(m_k_max) ; i >=0  ; i-- )
         {
             m_diffs[i].resize( num );
-            //std::cout << "m_diffs[" << i << "] size: " << num << std::endl;
             num += (i+1)%2;
         }
     }
-
-
-
-/*
-  template< class System , class StateInOut >
-  controlled_step_result try_step( System system , StateInOut &x , time_type &t , time_type &dt )
-  {
-  m_xnew_resizer.adjust_size( x , detail::bind( &controlled_error_bs_type::template resize_m_xnew< StateInOut > , detail::ref( *this ) , detail::_1 ) );
-  controlled_step_result res = try_step( system , x , t , m_xnew.m_v , dt );
-  if( ( res == success_step_size_increased ) || ( res == success_step_size_unchanged ) )
-  {
-  boost::numeric::odeint::copy( m_xnew.m_v , x );
-  }
-  return res;
-  }
-*/
 
     template< class System , class StateIn , class DerivIn , class StateOut , class DerivOut >
     controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt , time_type &t , StateOut &out , DerivOut &dxdt_new , time_type &dt )
@@ -184,10 +153,6 @@ public:
         static const value_type val1( 1.0 );
 
         typename odeint::unwrap_reference< System >::type &sys = system;
-//        if( m_resizer.adjust_size( in , detail::bind( &controlled_error_bs_type::template resize_impl< StateIn > , detail::ref( *this ) , detail::_1 ) ) )
-//            reset(); // system resized -> reset
-//        if( dt != m_dt_last )
-//            reset(); // step size changed from outside -> reset
 
         bool reject( true );
 
@@ -201,7 +166,6 @@ public:
 
         for( size_t k = 0 ; k <= m_current_k_opt+1 ; k++ )
         {
-            //std::cout << "k=" << k <<" (steps=" << m_interval_sequence[k] << "): " << std::endl;
             m_midpoint.set_steps( m_interval_sequence[k] );
             if( k == 0 )
             {
@@ -217,8 +181,6 @@ public:
                 const value_type error = m_error_checker.error( m_algebra , in , dxdt , m_err.m_v , dt );
                 h_opt[k] = calc_h_opt( dt , error , k );
                 work[k] = static_cast<value_type>( m_cost[k] ) / h_opt[k];
-                //std::cout << '\t' << "h_opt=" << h_opt[k] << ", work=" << work[k] << std::endl;
-                //std::cout << '\t' << "error: " << error << std::endl;
 
                 m_k_final = k;
 
@@ -305,14 +267,10 @@ public:
             {
                 reject = true;
                 new_h = dt * pow BOOST_PREVENT_MACRO_SUBSTITUTION( error , static_cast<value_type>(-1)/(2*m_k_final+2) );
-                //std::cout << "####### rejected #######! (t=" << t << ") interpolation error: " << error << " , new dt: " << new_h << std::endl;
             } else {
-                //std::cout << "####### accepted ####### - new k: " << m_current_k_opt << ", new stepsize: " << new_h << std::endl;
-                //increase time
                 t += dt;
             }
-        }// else  std::cout << "####### rejected #######!" << std::endl;
-
+        }
         //set next stepsize
         if( !m_last_step_rejected || (new_h < dt) )
             dt = new_h;
@@ -367,11 +325,8 @@ public:
     template< class StateOut >
     void calc_state( time_type t , StateOut &x ) const
     {
-        //std::cout << "===========" << std::endl << "doing interpolation for t=" << t << std::endl;
         do_interpolation( t , x );
-        //std::cout << "===========" << std::endl;
     }
-
 
     const state_type& current_state( void ) const
     {
@@ -398,13 +353,12 @@ public:
         return m_dt;
     }
 
-
+    /** \brief Resets the internal state of the stepper. */
     void reset()
     {
         m_first = true;
         m_last_step_rejected = false;
     }
-
 
     template< class StateIn >
     void adjust_size( const StateIn &x )
@@ -438,16 +392,13 @@ private:
     //polynomial extrapolation, see http://www.nr.com/webnotes/nr3web21.pdf
     {
         // result is written into table[0]
-        //std::cout << "extrapolate k=" << k << ":" << std::endl;
         static const value_type val1( 1.0 );
         for( int j=k ; j>1 ; --j )
         {
-            //std::cout << '\t' << coeff[k + order_start_index][j + order_start_index - 1];
             m_algebra.for_each3( table[j-1].m_v , table[j].m_v , table[j-1].m_v ,
                                  typename operations_type::template scale_sum2< value_type , value_type >( val1 + coeff[k + order_start_index][j + order_start_index - 1] ,
                                                                                                            -coeff[k + order_start_index][j + order_start_index - 1] ) );
         }
-        //std::cout << std::endl << coeff[k + order_start_index][order_start_index] << std::endl;
         m_algebra.for_each3( table[0].m_v , table[1].m_v , table[0].m_v ,
                              typename operations_type::template scale_sum2< value_type , value_type >( val1 + coeff[k + order_start_index][order_start_index] ,
                                                                                                        -coeff[k + order_start_index][order_start_index]) );
@@ -469,7 +420,6 @@ private:
             fac = STEPFAC2 / pow BOOST_PREVENT_MACRO_SUBSTITUTION( error / STEPFAC1 , expo );
             fac = max BOOST_PREVENT_MACRO_SUBSTITUTION( facmin/STEPFAC4 , min BOOST_PREVENT_MACRO_SUBSTITUTION( 1.0/facmin , fac ) );
         }
-        //return std::abs(h*fac); //std::min( 0.1 , std::abs(h*fac) );
         return h*fac;
     }
 
@@ -499,15 +449,17 @@ private:
 
     template< class StateIn1 , class DerivIn1 , class StateIn2 , class DerivIn2 >
     value_type prepare_dense_output( int k , const StateIn1 &x_start , const DerivIn1 &dxdt_start ,
-                                     const StateIn2 & /* x_end */ , const DerivIn2 & /*dxdt_end */ , time_type dt )  // k is the order to which the result was approximated
+                                     const StateIn2 & /* x_end */ , const DerivIn2 & /*dxdt_end */ , time_type dt )  
+    /* k is the order to which the result was approximated */
     {
 
-        // compute the coefficients of the interpolation polynomial
-        // we parametrize the interval t .. t+dt by theta = -1 .. 1
-        // we use 2k+3 values at the interval center theta=0 to obtain the interpolation coefficients
-        // the values are x(t+dt/2) and the derivatives dx/dt , ... d^(2k+2) x / dt^(2k+2) at the midpoints
-        // the derivatives are approximated via finite differences
-        // all values are obtained from interpolation of the results from the increasing orders of the midpoint calls
+        /* compute the coefficients of the interpolation polynomial
+         * we parametrize the interval t .. t+dt by theta = -1 .. 1
+         * we use 2k+3 values at the interval center theta=0 to obtain the interpolation coefficients
+         * the values are x(t+dt/2) and the derivatives dx/dt , ... d^(2k+2) x / dt^(2k+2) at the midpoints
+         * the derivatives are approximated via finite differences
+         * all values are obtained from interpolation of the results from the increasing orders of the midpoint calls
+         */
 
         // calculate finite difference approximations to derivatives at the midpoint
         for( int j = 0 ; j<=k ; j++ )
@@ -520,13 +472,10 @@ private:
                 calculate_finite_difference( j , kappa , f , dxdt_start );
                 f *= d;
             }
-            //std::cout << "x_mp[" << j << "] = " << m_mp_states[j].m_v << std::endl;
 
             if( j > 0 )
                 extrapolate_dense_out( j , m_mp_states , m_coeff );
         }
-
-        //std::cout << "a_0 = " << m_mp_states[0].m_v << std::endl;
 
         time_type d = dt/2;
 
@@ -537,14 +486,11 @@ private:
                 extrapolate_dense_out( j , m_diffs[kappa] , m_coeff , kappa/2 );
 
             // extrapolation results are now stored in m_diffs[kappa][0]
-            //std::cout << "extrapolation result: " << m_diffs[kappa][0].m_v << std::endl;
 
             // divide kappa-th derivative by kappa because we need these terms for dense output interpolation
             m_algebra.for_each1( m_diffs[kappa][0].m_v , typename operations_type::template scale< time_type >( static_cast<time_type>(d) ) );
 
             d *= dt/(2*(kappa+2));
-
-            //std::cout << "a_" << kappa+1 << " = " << m_diffs[kappa][0].m_v << std::endl;
         }
 
         // dense output coefficients a_0 is stored in m_mp_states[0], a_i for i = 1...2k are stored in m_diffs[i-1][0]
@@ -560,64 +506,6 @@ private:
         }
 
         return error;
-
-        // calculate coefficient a_{2k+1} = (2k+5)/4 * x_end - (2k+5)/4 * x_start - 1/4 * dxdt_end - 1/4 * dxdt_start + sum_i=0...k-1 (i-k-2)*a_{2i+1}
-
-
-        //std::cout << std::endl << x_start << std::endl << x_end << std::endl;
-        //std::cout << std::endl << dxdt_start << std::endl << dxdt_end << std::endl << std::endl;
-
-        // we don't use additional terms in the polynomial, the following calculations are thus not required
-
-/*
-  m_algebra.for_each5( m_a1.m_v , x_end , x_start , dxdt_end , dxdt_start ,
-  typename operations_type::template scale_sum4< value_type >( static_cast<value_type>(2*k+5)/static_cast<value_type>(4),
-  static_cast<value_type>(-2*k-5)/static_cast<value_type>(4),
-  static_cast<value_type>(-dt)/static_cast<value_type>(8) ,
-  static_cast<value_type>(-dt)/static_cast<value_type>(8) ) );
-  for( int i = 0 ; i<k ; ++i )
-  m_algebra.for_each3( m_a1.m_v , m_a1.m_v , m_diffs[2*i][0].m_v ,
-  typename operations_type::template scale_sum2< value_type >( 1 , i-k-2 ) );
-
-  //std::cout << "a_" << 2*k+1 << " = " << m_a1.m_v << std::endl;
-
-  // calculate coefficient a_{2k+2} = (k+2)/2 * x_end + (k+2)/2 * x_start - 1/4 * dxdt_end + 1/4 * dxdt_start + (k+2)/2 * x_mp + sum_i=1...k (i-k-2)*a_{2i}
-  m_algebra.for_each6( m_a2.m_v , x_end , x_start , dxdt_end , dxdt_start , m_mp_states[0].m_v ,
-  typename operations_type::template scale_sum5< value_type >( static_cast<value_type>(k+2)/static_cast<value_type>(2),
-  static_cast<value_type>(k+2)/static_cast<value_type>(2),
-  static_cast<value_type>(-dt)/static_cast<value_type>(8) ,
-  static_cast<value_type>(dt)/static_cast<value_type>(8) ,
-  static_cast<value_type>(-k-2) ) );
-  for( int i = 1 ; i<=k ; ++i )
-  m_algebra.for_each3( m_a2.m_v , m_a2.m_v , m_diffs[2*i-1][0].m_v ,
-  typename operations_type::template scale_sum2< value_type >( 1 , i-k-2 ) );
-
-  //std::cout << "a_" << 2*k+2 << " = " << m_a2.m_v << std::endl;
-
-  // calculate coefficient a_{2k+3} = -(2k+3)/4 * x_end + (2k+3)/4 * x_start + 1/4 * dxdt_end + 1/4 * dxdt_start + sum_i=0...k-1 (k+1-i)*a_{2i+1}
-  m_algebra.for_each5( m_a3.m_v , x_end , x_start , dxdt_end , dxdt_start ,
-  typename operations_type::template scale_sum4< value_type >( static_cast<value_type>(-2*k-3)/static_cast<value_type>(4),
-  static_cast<value_type>(2*k+3)/static_cast<value_type>(4),
-  static_cast<value_type>(dt)/static_cast<value_type>(8) ,
-  static_cast<value_type>(dt)/static_cast<value_type>(8) ) );
-  for( int i = 0 ; i<k ; ++i )
-  m_algebra.for_each3( m_a3.m_v , m_a3.m_v , m_diffs[2*i][0].m_v ,
-  typename operations_type::template scale_sum2< value_type >( 1 , k+1-i ) );
-
-  //std::cout << "a_" << 2*k+3 << " = " << m_a3.m_v << std::endl;
-
-  // calculate coefficient a_{2k+4} = -(k+1)/2 * x_end - (k+1)/2 * x_start + 1/4 * dxdt_end - 1/4 * dxdt_start - (k+1)/2 * x_mp + sum_i=0...k-1 (k+1-i)*a_{2i}
-  m_algebra.for_each6( m_a4.m_v , x_end , x_start , dxdt_end , dxdt_start , m_mp_states[0].m_v ,
-  typename operations_type::template scale_sum5< value_type >( static_cast<value_type>(-k-1)/static_cast<value_type>(2),
-  static_cast<value_type>(-k-1)/static_cast<value_type>(2),
-  static_cast<value_type>(dt)/static_cast<value_type>(8) ,
-  static_cast<value_type>(-dt)/static_cast<value_type>(8),
-  static_cast<value_type>(k+1) ) );
-  for( int i = 1 ; i<=k ; ++i )
-  m_algebra.for_each3( m_a4.m_v , m_a4.m_v , m_diffs[2*i-1][0].m_v ,
-  typename operations_type::template scale_sum2< value_type >( 1 , k+1-i ) );
-*/
-        //std::cout << "a_" << 2*k+4 << " = " << m_a4.m_v << std::endl;
     }
 
     template< class DerivIn >
@@ -628,19 +516,11 @@ private:
         {
             m_algebra.for_each2( m_diffs[0][j].m_v , m_derivs[j][m].m_v ,
                                  typename operations_type::template scale_sum1< value_type >( fac ) );
-            //std::cout << "j=" << j << ", kappa=" << kappa << ", m=" << m;
-            //std::cout << ": m_diffs[" << kappa << "][" << j << "] = " << fac << " * f[" << m << "]  ";
-            //std::cout << "(size(f)=" << m_derivs[j].size() << ") = " << m_diffs[0][j].m_v << std::endl;
-
         }
         else
         {
-            //std::cout << m_derivs[j][1].m_v << " , " << dxdt << std::endl;
-
             // calculate the index of m_diffs for this kappa-j-combination
             const int j_diffs = j - kappa/2;
-
-            //std::cout << "j=" << j << ", kappa=" << kappa << ", m=" << m << ": m_diffs[" << kappa << "][" << j_diffs << "] = " << fac << " ( 1*f[" << m+kappa << "]";
 
             m_algebra.for_each2( m_diffs[kappa][j_diffs].m_v , m_derivs[j][m+kappa].m_v ,
                                  typename operations_type::template scale_sum1< value_type >( fac ) );
@@ -654,19 +534,15 @@ private:
                     m_algebra.for_each3( m_diffs[kappa][j_diffs].m_v , m_diffs[kappa][j_diffs].m_v , m_derivs[j][i].m_v ,
                                          typename operations_type::template scale_sum2< value_type , value_type >( 1.0 ,
                                                                                                                    sign * fac * boost::math::binomial_coefficient< value_type >( kappa , c ) ) );
-                    //std::cout << ( (sign > 0.0) ? " + " : " - " ) <<
-                    //        boost::math::binomial_coefficient< double >( kappa , c ) << "*f[" << i << "]";
                 }
                 else
                 {
                     m_algebra.for_each3( m_diffs[kappa][j_diffs].m_v , m_diffs[kappa][j_diffs].m_v , dxdt ,
                                          typename operations_type::template scale_sum2< value_type , value_type >( 1.0 , sign * fac ) );
-                    //std::cout << ( (sign > 0.0) ? " + " : " - " ) << "dxdt";
                 }
                 sign *= -1;
                 ++c;
             }
-            //std::cout << " ) = " << m_diffs[kappa][j_diffs].m_v << std::endl;
         }
     }
 
@@ -676,19 +552,6 @@ private:
         // interpolation polynomial is defined for theta = -1 ... 1
         // m_k_final is the number of order-iterations done for the last step - it governs the order of the interpolation polynomial
         const value_type theta = 2 * get_unit_value( (t - m_t_last) / (m_t - m_t_last) ) - 1;
-        //std::cout << "theta=" << theta << std::endl;
-        //start with x = a0 + a_{2k+1} theta^{2k+1} + a_{2k+2} theta^{2k+2} + a_{2k+3} theta^{2k+3} + a_{2k+4} theta^{2k+4}
-        //std::cout << "x = a_0 + ";
-
-/*        m_algebra.for_each6( out , m_mp_states[0].m_v , m_a1.m_v , m_a2.m_v , m_a3.m_v , m_a4.m_v ,
-          typename operations_type::template scale_sum5< time_type >(
-          static_cast<time_type>( 1 ) ,
-          std::pow( theta , 2*m_k_final+1 ) ,
-          std::pow( theta , 2*m_k_final+2 ) ,
-          std::pow( theta , 2*m_k_final+3 ) ,
-          std::pow( theta , 2*m_k_final+4 ) ) );
-*/
-
         // we use only values at interval center, that is theta=0, for interpolation
         // our interpolation polynomial is thus of order 2k+2, hence we have 2k+3 terms
 
@@ -697,7 +560,6 @@ private:
         value_type theta_pow( theta );
         for( size_t i=0 ; i<=2*m_k_final+1 ; ++i )
         {
-            //std::cout << "a_" << i+1 << " theta^" << i+1 << " = " << m_diffs[i][0].m_v[0] * std::pow( theta , i+1 ) << std::endl;
             m_algebra.for_each3( out , out , m_diffs[i][0].m_v ,
                                  typename operations_type::template scale_sum2< value_type >( static_cast<value_type>(1) , theta_pow ) );
             theta_pow *= theta;
@@ -822,6 +684,126 @@ private:
 
     const value_type STEPFAC1 , STEPFAC2 , STEPFAC3 , STEPFAC4 , KFAC1 , KFAC2;
 };
+
+
+
+/********** DOXYGEN **********/
+
+/**
+ * \class bulirsch_stoer_dense_out
+ * \brief The Bulirsch-Stoer algorithm.
+ * 
+ * The Bulirsch-Stoer is a controlled stepper that adjusts both step size
+ * and order of the method. The algorithm uses the modified midpoint and
+ * a polynomial extrapolation compute the solution. This class also provides
+ * dense outout facility.
+ *
+ * \tparam State The state type.
+ * \tparam Value The value type.
+ * \tparam Deriv The type representing the time derivative of the state.
+ * \tparam Time The time representing the independent variable - the time.
+ * \tparam Algebra The algebra type.
+ * \tparam Operations The operations type.
+ * \tparam Resizer The resizer policy type.
+ */
+
+    /**
+     * \fn bulirsch_stoer_dense_out::bulirsch_stoer_dense_out( value_type eps_abs , value_type eps_rel , value_type factor_x , value_type factor_dxdt , bool control_interpolation )
+     * \brief Constructs the bulirsch_stoer class, including initialization of 
+     * the error bounds.
+     *
+     * \param eps_abs Absolute tolerance level.
+     * \param eps_rel Relative tolerance level.
+     * \param factor_x Factor for the weight of the state.
+     * \param factor_dxdt Factor for the weight of the derivative.
+     * \param control_interpolation Set true to additionally control the error of 
+     * the interpolation.
+     */
+
+    /**
+     * \fn bulirsch_stoer_dense_out::try_step( System system , const StateIn &in , const DerivIn &dxdt , time_type &t , StateOut &out , DerivOut &dxdt_new , time_type &dt )
+     * \brief Tries to perform one step.
+     *
+     * This method tries to do one step with step size dt. If the error estimate
+     * is to large, the step is rejected and the method returns fail and the 
+     * step size dt is reduced. If the error estimate is acceptably small, the
+     * step is performed, success is returned and dt might be increased to make 
+     * the steps as large as possible. This method also updates t if a step is
+     * performed. Also, the internal order of the stepper is adjusted if requried.
+     *
+     * \param system The system function to solve, hence the r.h.s. of the ODE. 
+     * It must fullfil the Simple System concept.
+     * \param in The state of the ODE which should be solved.
+     * \param dxdt The derivative of state.
+     * \param t The value of the time. Updated if the step is successfull.
+     * \param out Used to store the result of the step.
+     * \param dt The step size. Updated.
+     * \return success if the step was accepted, fail otherwise.
+     */
+
+    /**
+     * \fn bulirsch_stoer_dense_out::initialize( const StateType &x0 , const time_type &t0 , const time_type &dt0 )
+     * \brief Initializes the dense output stepper.
+     *
+     * \param x0 The initial state.
+     * \param t0 The initial time.
+     * \param dt0 The initial time step.
+     */
+
+    /**
+     * \fn bulirsch_stoer_dense_out::do_step( System system )
+     * \brief Does one time step. This is the main method that should be used to 
+     * integrate an ODE with this stepper.
+     * \note initialize has to be called before using this method to set the
+     * inital conditions x,t and the stepsize.
+     * \param system The system function to solve, hence the r.h.s. of the
+     * ordinary differential equation. It must fullfil the Simple System concept.
+     * \return Pair with start and end time of the integration step.
+     */
+
+    /**
+     * \fn bulirsch_stoer_dense_out::calc_state( time_type t , StateOut &x ) const
+     * \brief Calculates the solution at an intermediate point within the las step
+     * \param t The time at which the solution should be calculated, has to be
+     * in the current time interval.
+     * \param x The output variable where the result is written into.
+     */
+
+    /**
+     * \fn bulirsch_stoer_dense_out::current_state( void ) const
+     * \brief Returns the current state of the solution.
+     * \return The current state of the solution x(t).
+     */
+
+    /**
+     * \fn bulirsch_stoer_dense_out::current_time( void ) const
+     * \brief Returns the current time of the solution.
+     * \return The current time of the solution t.
+     */
+
+    /**
+     * \fn bulirsch_stoer_dense_out::previous_state( void ) const
+     * \brief Returns the last state of the solution.
+     * \return The last state of the solution x(t-dt).
+     */
+
+    /**
+     * \fn bulirsch_stoer_dense_out::previous_time( void ) const
+     * \brief Returns the last time of the solution.
+     * \return The last time of the solution t-dt.
+     */
+
+    /**
+     * \fn bulirsch_stoer_dense_out::current_time_step( void ) const
+     * \brief Returns the current step size.
+     * \return The current step size.
+     */
+
+    /**
+     * \fn bulirsch_stoer_dense_out::adjust_size( const StateIn &x )
+     * \brief Adjust the size of all temporaries in the stepper manually.
+     * \param x A state from which the size of the temporaries to be resized is deduced.
+     */
 
 }
 }

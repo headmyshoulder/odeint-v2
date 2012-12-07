@@ -108,14 +108,6 @@ When using `make_controlled` or `make_dense_output` one should be aware which ex
 
 [endsect]
 
-[section Using iterators]
-
-odeint supports iterators for solving ODEs. That is you instantiate a pair of iterators and instead of using the integrate routines with an appropriate observer you put the iterators in one of the algorithm from the C++ standard library or from Boost.Range. An example is
-
-[harm_iterator_const_step]
-
-[endsect]
-
 The full source file for this example can be found here: [github_link libs/numeric/odeint/examples/harmonic_oscillator.cpp harmonic_oscillator.cpp]
 
 

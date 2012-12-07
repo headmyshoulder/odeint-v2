@@ -37,27 +37,6 @@ namespace odeint {
 
 
 
-/**
- * \class runge_kutta_dopri5
- * \brief The Runge-Kutta Dormand-Prince 5 method.
- *
- * The Runge-Kutta Dormand-Prince 5 method is a very popular method for solving ODEs, see
- * <a href=""></a>.
- * The method is explicit and fullfils the Error Stepper concept. Step size control
- * is provided but continous output is available which make this method favourable for many applications. 
- * 
- * This class derives from explicit_error_stepper_fsal_base and inherits its interface via CRTP (current recurring
- * template pattern). The method possesses the FSAL (first-same-as-last) property. See
- * explicit_error_stepper_fsal_base for more details.
- *
- * \tparam State The state type.
- * \tparam Value The value type.
- * \tparam Deriv The type representing the time derivative of the state.
- * \tparam Time The time representing the independent variable - the time.
- * \tparam Algebra The algebra type.
- * \tparam Operations The operations type.
- * \tparam Resizer The resizer policy type.
- */
 template<
 class State ,
 class Value = double ,
@@ -73,7 +52,7 @@ class runge_kutta_dopri5
   runge_kutta_dopri5< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
   5 , 5 , 4 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
 #else
-: public explicit_error_stepper_fsal_base< runge_kutta_dopri5< ... > , ... >
+: public explicit_error_stepper_fsal_base
 #endif
 {
 
@@ -102,30 +81,10 @@ public :
     #endif // DOXYGEN_SKIP
 
 
-    /**
-     * \brief Constructs the runge_kutta_dopri5 class. This constructor can be used as a default
-     * constructor if the algebra has a default constructor.
-     * \param algebra A copy of algebra is made and stored inside explicit_stepper_base.
-     */
     runge_kutta_dopri5( const algebra_type &algebra = algebra_type() ) : stepper_base_type( algebra )
     { }
 
 
-    /**
-     * \brief This method performs one step. The derivative `dxdt_in` of `in` at the time `t` is passed to the
-     * method. The result is updated out-of-place, hence the input is in `in` and the output in `out`. Furthermore,
-     * the derivative is update out-of-place, hence the input is assumed to be in `dxdt_in` and the output in
-     * `dxdt_out`. `do_step_impl` is used by explicit_error_stepper_fsalbase.
-     *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
-     *               Simple System concept.
-     * \param in The state of the ODE which should be solved. in is not modified in this method
-     * \param dxdt_in The derivative of x at t. dxdt_in is not modified by this method
-     * \param t The value of the time, at which the step should be performed.
-     * \param out The result of the step is written in out.
-     * \param dxdt_out The result of the new derivative at time t+dt.
-     * \param dt The step size.
-     */
     template< class System , class StateIn , class DerivIn , class StateOut , class DerivOut >
     void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt_in , time_type t ,
             StateOut &out , DerivOut &dxdt_out , time_type dt )
@@ -197,23 +156,6 @@ public :
 
 
 
-    /**
-     * \brief This method performs one step. The derivative `dxdt_in` of `in` at the time `t` is passed to the
-     * method. The result is updated out-of-place, hence the input is in `in` and the output in `out`. Furthermore,
-     * the derivative is update out-of-place, hence the input is assumed to be in `dxdt_in` and the output in
-     * `dxdt_out`. `do_step_impl` is used by explicit_error_stepper_fsalbase. An estimation of the error is 
-     * calculated.
-     *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
-     *               Simple System concept.
-     * \param in The state of the ODE which should be solved. in is not modified in this method
-     * \param dxdt_in The derivative of x at t. dxdt_in is not modified by this method
-     * \param t The value of the time, at which the step should be performed.
-     * \param out The result of the step is written in out.
-     * \param dxdt_out The result of the new derivative at time t+dt.
-     * \param dt The step size.
-     * \param xerr An estimation of the error.
-     */
     template< class System , class StateIn , class DerivIn , class StateOut , class DerivOut , class Err >
     void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt_in , time_type t ,
             StateOut &out , DerivOut &dxdt_out , time_type dt , Err &xerr )
@@ -278,12 +220,6 @@ public :
      *
      * www-m2.ma.tum.de/homepages/simeon/numerik3/kap3.ps
      */
-    /**
-     * \brief This method is used for continous output and it calculates the state `x` at a time `t` from the 
-     * knowledge of two states `old_state` and `current_state` at time points `t_old` and `t_new`. It also uses
-     * internal variables to calculate the result. Hence this method must be called after two successful `do_step`
-     * calls.
-     */
     template< class StateOut , class StateIn1 , class DerivIn1 , class StateIn2 , class DerivIn2 >
     void calc_state( time_type t , StateOut &x ,
                      const StateIn1 &x_old , const DerivIn1 &deriv_old , time_type t_old ,
@@ -330,12 +266,6 @@ public :
     }
 
 
-
-
-    /**
-     * \brief Adjust the size of all temporaries in the stepper manually.
-     * \param x A state from which the size of the temporaries to be resized is deduced.
-     */
     template< class StateIn >
     void adjust_size( const StateIn &x )
     {
@@ -375,6 +305,92 @@ private:
     resizer_type m_dxdt_tmp_resizer;
 };
 
+
+
+/************* DOXYGEN ************/
+/**
+ * \class runge_kutta_dopri5
+ * \brief The Runge-Kutta Dormand-Prince 5 method.
+ *
+ * The Runge-Kutta Dormand-Prince 5 method is a very popular method for solving ODEs, see
+ * <a href=""></a>.
+ * The method is explicit and fullfils the Error Stepper concept. Step size control
+ * is provided but continous output is available which make this method favourable for many applications. 
+ * 
+ * This class derives from explicit_error_stepper_fsal_base and inherits its interface via CRTP (current recurring
+ * template pattern). The method possesses the FSAL (first-same-as-last) property. See
+ * explicit_error_stepper_fsal_base for more details.
+ *
+ * \tparam State The state type.
+ * \tparam Value The value type.
+ * \tparam Deriv The type representing the time derivative of the state.
+ * \tparam Time The time representing the independent variable - the time.
+ * \tparam Algebra The algebra type.
+ * \tparam Operations The operations type.
+ * \tparam Resizer The resizer policy type.
+ */
+
+
+    /**
+     * \fn runge_kutta_dopri5::runge_kutta_dopri5( const algebra_type &algebra )
+     * \brief Constructs the runge_kutta_dopri5 class. This constructor can be used as a default
+     * constructor if the algebra has a default constructor.
+     * \param algebra A copy of algebra is made and stored inside explicit_stepper_base.
+     */
+
+    /**
+     * \fn runge_kutta_dopri5::do_step_impl( System system , const StateIn &in , const DerivIn &dxdt_in , time_type t , StateOut &out , DerivOut &dxdt_out , time_type dt )
+     * \brief This method performs one step. The derivative `dxdt_in` of `in` at the time `t` is passed to the
+     * method. The result is updated out-of-place, hence the input is in `in` and the output in `out`. Furthermore,
+     * the derivative is update out-of-place, hence the input is assumed to be in `dxdt_in` and the output in
+     * `dxdt_out`. 
+     * Access to this step functionality is provided by explicit_error_stepper_fsal_base and 
+     * `do_step_impl` should not be called directly.
+     *
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     *               Simple System concept.
+     * \param in The state of the ODE which should be solved. in is not modified in this method
+     * \param dxdt_in The derivative of x at t. dxdt_in is not modified by this method
+     * \param t The value of the time, at which the step should be performed.
+     * \param out The result of the step is written in out.
+     * \param dxdt_out The result of the new derivative at time t+dt.
+     * \param dt The step size.
+     */
+
+    /**
+     * \fn runge_kutta_dopri5::do_step_impl( System system , const StateIn &in , const DerivIn &dxdt_in , time_type t , StateOut &out , DerivOut &dxdt_out , time_type dt , Err &xerr )
+     * \brief This method performs one step. The derivative `dxdt_in` of `in` at the time `t` is passed to the
+     * method. The result is updated out-of-place, hence the input is in `in` and the output in `out`. Furthermore,
+     * the derivative is update out-of-place, hence the input is assumed to be in `dxdt_in` and the output in
+     * `dxdt_out`. 
+     * Access to this step functionality is provided by explicit_error_stepper_fsal_base and 
+     * `do_step_impl` should not be called directly.
+     * An estimation of the error is calculated.
+     *
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     *               Simple System concept.
+     * \param in The state of the ODE which should be solved. in is not modified in this method
+     * \param dxdt_in The derivative of x at t. dxdt_in is not modified by this method
+     * \param t The value of the time, at which the step should be performed.
+     * \param out The result of the step is written in out.
+     * \param dxdt_out The result of the new derivative at time t+dt.
+     * \param dt The step size.
+     * \param xerr An estimation of the error.
+     */
+
+    /**
+     * \fn runge_kutta_dopri5::calc_state( time_type t , StateOut &x , const StateIn1 &x_old , const DerivIn1 &deriv_old , time_type t_old , const StateIn2 &  , const DerivIn2 &deriv_new , time_type t_new ) const
+     * \brief This method is used for continous output and it calculates the state `x` at a time `t` from the 
+     * knowledge of two states `old_state` and `current_state` at time points `t_old` and `t_new`. It also uses
+     * internal variables to calculate the result. Hence this method must be called after two successful `do_step`
+     * calls.
+     */
+
+    /**
+     * \fn runge_kutta_dopri5::adjust_size( const StateIn &x )
+     * \brief Adjust the size of all temporaries in the stepper manually.
+     * \param x A state from which the size of the temporaries to be resized is deduced.
+     */
 
 } // odeint
 } // numeric

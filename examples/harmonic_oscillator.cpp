@@ -194,10 +194,4 @@ int main(int /* argc */ , char** /* argv */ )
     #endif
 
 
-    //[harm_iterator_const_step
-    std::for_each( make_adaptive_iterator_begin( controlled_stepper , harmonic_oscillator , x , 0.0 , 10.0 , 0.01 ) , 
-                   make_adaptive_iterator_end( controlled_stepper , harmonic_oscillator , x ) , 
-                   write_state() );
-    //]
-
 }

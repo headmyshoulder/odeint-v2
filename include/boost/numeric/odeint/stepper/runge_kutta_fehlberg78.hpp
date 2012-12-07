@@ -286,6 +286,56 @@ struct rk78_coefficients_c : boost::array< Value , 13 >
 
 
 
+template<
+class State ,
+class Value = double ,
+class Deriv = State ,
+class Time = Value ,
+class Algebra = range_algebra ,
+class Operations = default_operations ,
+class Resizer = initially_resizer
+>
+#ifndef DOXYGEN_SKIP
+class runge_kutta_fehlberg78 : public explicit_error_generic_rk< 13 , 8 , 8 , 7 , State , Value , Deriv , Time ,
+Algebra , Operations , Resizer >
+#else
+class runge_kutta_fehlberg78 : public explicit_error_generic_rk
+#endif
+{
+
+public:
+#ifndef DOXYGEN_SKIP
+    typedef explicit_error_generic_rk< 13 , 8 , 8 , 7 , State , Value , Deriv , Time ,
+            Algebra , Operations , Resizer > stepper_base_type;
+#endif
+    typedef typename stepper_base_type::state_type state_type;
+    typedef typename stepper_base_type::value_type value_type;
+    typedef typename stepper_base_type::deriv_type deriv_type;
+    typedef typename stepper_base_type::time_type time_type;
+    typedef typename stepper_base_type::algebra_type algebra_type;
+    typedef typename stepper_base_type::operations_type operations_type;
+    typedef typename stepper_base_type::resizer_type resizer_type;
+
+    #ifndef DOXYGEN_SKIP
+    typedef typename stepper_base_type::stepper_type stepper_type;
+    typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
+    typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
+    #endif // DOXYGEN_SKIP
+
+
+    runge_kutta_fehlberg78( const algebra_type &algebra = algebra_type() ) : stepper_base_type(
+            boost::fusion::make_vector( rk78_coefficients_a1<Value>() , rk78_coefficients_a2<Value>() , rk78_coefficients_a3<Value>() ,
+                    rk78_coefficients_a4<Value>() , rk78_coefficients_a5<Value>() , rk78_coefficients_a6<Value>() ,
+                    rk78_coefficients_a7<Value>() , rk78_coefficients_a8<Value>() , rk78_coefficients_a9<Value>() ,
+                    rk78_coefficients_a10<Value>() , rk78_coefficients_a11<Value>() , rk78_coefficients_a12<Value>() ) ,
+            rk78_coefficients_b<Value>() , rk78_coefficients_db<Value>() , rk78_coefficients_c<Value>() , algebra )
+    { }
+};
+
+
+
+/************* DOXYGEN *************/
+
 /**
  * \class runge_kutta_fehlberg78
  * \brief The Runge-Kutta Fehlberg 78 method.
@@ -306,51 +356,14 @@ struct rk78_coefficients_c : boost::array< Value , 13 >
  * \tparam Operations The operations type.
  * \tparam Resizer The resizer policy type.
  */
-template<
-class State ,
-class Value = double ,
-class Deriv = State ,
-class Time = Value ,
-class Algebra = range_algebra ,
-class Operations = default_operations ,
-class Resizer = initially_resizer
->
-class runge_kutta_fehlberg78 : public explicit_error_generic_rk< 13 , 8 , 8 , 7 , State , Value , Deriv , Time ,
-Algebra , Operations , Resizer >
-{
 
-public:
-
-    typedef explicit_error_generic_rk< 13 , 8 , 8 , 7 , State , Value , Deriv , Time ,
-            Algebra , Operations , Resizer > stepper_base_type;
-
-    typedef typename stepper_base_type::state_type state_type;
-    typedef typename stepper_base_type::value_type value_type;
-    typedef typename stepper_base_type::deriv_type deriv_type;
-    typedef typename stepper_base_type::time_type time_type;
-    typedef typename stepper_base_type::algebra_type algebra_type;
-    typedef typename stepper_base_type::operations_type operations_type;
-    typedef typename stepper_base_type::resizer_type resizer_type;
-
-    #ifndef DOXYGEN_SKIP
-    typedef typename stepper_base_type::stepper_type stepper_type;
-    typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
-    typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
-    #endif // DOXYGEN_SKIP
 
     /**
+     * \fn runge_kutta_fehlberg78::runge_kutta_fehlberg78( const algebra_type &algebra )
      * \brief Constructs the runge_kutta_cash_fehlberg78 class. This constructor can be used as a default
      * constructor if the algebra has a default constructor.
      * \param algebra A copy of algebra is made and stored inside explicit_stepper_base.
      */
-    runge_kutta_fehlberg78( const algebra_type &algebra = algebra_type() ) : stepper_base_type(
-            boost::fusion::make_vector( rk78_coefficients_a1<Value>() , rk78_coefficients_a2<Value>() , rk78_coefficients_a3<Value>() ,
-                    rk78_coefficients_a4<Value>() , rk78_coefficients_a5<Value>() , rk78_coefficients_a6<Value>() ,
-                    rk78_coefficients_a7<Value>() , rk78_coefficients_a8<Value>() , rk78_coefficients_a9<Value>() ,
-                    rk78_coefficients_a10<Value>() , rk78_coefficients_a11<Value>() , rk78_coefficients_a12<Value>() ) ,
-            rk78_coefficients_b<Value>() , rk78_coefficients_db<Value>() , rk78_coefficients_c<Value>() , algebra )
-    { }
-};
 
 }
 }

@@ -141,6 +141,57 @@ struct rk54_ck_coefficients_c : boost::array< Value , 6 >
 #endif
 
 
+template<
+    class State ,
+    class Value = double ,
+    class Deriv = State ,
+    class Time = Value ,
+    class Algebra = range_algebra ,
+    class Operations = default_operations ,
+    class Resizer = initially_resizer
+    >
+#ifndef DOXYGEN_SKIP
+class runge_kutta_cash_karp54 : public explicit_error_generic_rk< 6 , 5 , 5 , 4 ,
+        State , Value , Deriv , Time , Algebra , Operations , Resizer >
+#else 
+class runge_kutta_cash_karp54 : public explicit_error_generic_rk
+#endif
+{
+
+public:
+#ifndef DOXYGEN_SKIP
+    typedef explicit_error_generic_rk< 6 , 5 , 5 , 4 , State , Value , Deriv , Time ,
+                               Algebra , Operations , Resizer > stepper_base_type;
+#endif
+    typedef typename stepper_base_type::state_type state_type;
+    typedef typename stepper_base_type::value_type value_type;
+    typedef typename stepper_base_type::deriv_type deriv_type;
+    typedef typename stepper_base_type::time_type time_type;
+    typedef typename stepper_base_type::algebra_type algebra_type;
+    typedef typename stepper_base_type::operations_type operations_type;
+    typedef typename stepper_base_type::resizer_type resizer_typ;
+
+    #ifndef DOXYGEN_SKIP
+    typedef typename stepper_base_type::stepper_type stepper_type;
+    typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
+    typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
+    #endif
+
+
+    runge_kutta_cash_karp54( const algebra_type &algebra = algebra_type() ) : stepper_base_type(
+        boost::fusion::make_vector( rk54_ck_coefficients_a1<Value>() ,
+                                 rk54_ck_coefficients_a2<Value>() ,
+                                 rk54_ck_coefficients_a3<Value>() ,
+                                 rk54_ck_coefficients_a4<Value>() ,
+                                 rk54_ck_coefficients_a5<Value>() ) ,
+            rk54_ck_coefficients_b<Value>() , rk54_ck_coefficients_db<Value>() , rk54_ck_coefficients_c<Value>() ,
+            algebra )
+    { }
+};
+
+
+/********** DOXYGEN **********/
+
 /**
  * \class runge_kutta_cash_karp54
  * \brief The Runge-Kutta Cash-Karp method.
@@ -163,55 +214,14 @@ struct rk54_ck_coefficients_c : boost::array< Value , 6 >
  * \tparam Operations The operations type.
  * \tparam Resizer The resizer policy type.
  */
-template<
-    class State ,
-    class Value = double ,
-    class Deriv = State ,
-    class Time = Value ,
-    class Algebra = range_algebra ,
-    class Operations = default_operations ,
-    class Resizer = initially_resizer
-    >
-class runge_kutta_cash_karp54 : public explicit_error_generic_rk< 6 , 5 , 5 , 4 ,
-        State , Value , Deriv , Time , Algebra , Operations , Resizer >
-{
-
-public:
-
-    typedef explicit_error_generic_rk< 6 , 5 , 5 , 4 , State , Value , Deriv , Time ,
-                               Algebra , Operations , Resizer > stepper_base_type;
-
-    typedef typename stepper_base_type::state_type state_type;
-    typedef typename stepper_base_type::value_type value_type;
-    typedef typename stepper_base_type::deriv_type deriv_type;
-    typedef typename stepper_base_type::time_type time_type;
-    typedef typename stepper_base_type::algebra_type algebra_type;
-    typedef typename stepper_base_type::operations_type operations_type;
-    typedef typename stepper_base_type::resizer_type resizer_typ;
-
-    #ifndef DOXYGEN_SKIP
-    typedef typename stepper_base_type::stepper_type stepper_type;
-    typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
-    typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
-    #endif
 
 
     /**
+     * \fn runge_kutta_cash_karp54::runge_kutta_cash_karp54( const algebra_type &algebra )
      * \brief Constructs the runge_kutta_cash_karp54 class. This constructor can be used as a default
      * constructor if the algebra has a default constructor.
      * \param algebra A copy of algebra is made and stored inside explicit_stepper_base.
      */
-    runge_kutta_cash_karp54( const algebra_type &algebra = algebra_type() ) : stepper_base_type(
-        boost::fusion::make_vector( rk54_ck_coefficients_a1<Value>() ,
-                                 rk54_ck_coefficients_a2<Value>() ,
-                                 rk54_ck_coefficients_a3<Value>() ,
-                                 rk54_ck_coefficients_a4<Value>() ,
-                                 rk54_ck_coefficients_a5<Value>() ) ,
-            rk54_ck_coefficients_b<Value>() , rk54_ck_coefficients_db<Value>() , rk54_ck_coefficients_c<Value>() ,
-            algebra )
-    { }
-};
-
 }
 }
 }

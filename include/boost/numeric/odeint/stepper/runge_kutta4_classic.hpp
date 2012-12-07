@@ -32,29 +32,6 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-/**
- * \class runge_kutta4_classic
- * \brief The classical Runge-Kutta stepper of fourth order.
- *
- * The Runge-Kutta method of fourth order is one standard method for
- * solving ordinary differential equations and is widely used, see also
- * <a href="http://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">en.wikipedia.org/wiki/Runge-Kutta_methods</a>
- * The method is explicit and fullfils the Stepper concept. Step size control
- * or continous output are not provided.  This class implements the method directly, hence the 
- * generic Runge-Kutta algorithm is not used.
- * 
- * This class derives from explicit_stepper_base and inherits its interface via
- * CRTP (current recurring template pattern). For more details see
- * explicit_stepper_base.
- *
- * \tparam State The state type.
- * \tparam Value The value type.
- * \tparam Deriv The type representing the time derivative of the state.
- * \tparam Time The time representing the independent variable - the time.
- * \tparam Algebra The algebra type.
- * \tparam Operations The operations type.
- * \tparam Resizer The resizer policy type.
- */
 template<
 class State ,
 class Value = double ,
@@ -70,8 +47,7 @@ class runge_kutta4_classic
   runge_kutta4_classic< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
   4 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
 #else
-class runge_kutta4_classic
-    : public explicit_stepper_base< runge_kutta4_classic< ... > , ... >
+class runge_kutta4_classic : public explicit_stepper_base
 #endif
 {
 
@@ -101,28 +77,10 @@ public :
 
 
 
-    /**
-     * \brief Constructs the runge_kutta4_classic class. This constructor can be used as a default
-     * constructor if the algebra has a default constructor.
-     * \param algebra A copy of algebra is made and stored inside explicit_stepper_base.
-     */
     runge_kutta4_classic( const algebra_type &algebra = algebra_type() ) : stepper_base_type( algebra )
     { }
 
 
-    /**
-     * \brief This method performs one step. The derivative `dxdt` of `in` at the time `t` is passed to the method.
-     * The result is updated out of place, hence the input is in `in` and the output in `out`. `do_step_impl` is
-     * used by explicit_stepper_base.
-     *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
-     *               Simple System concept.
-     * \param in The state of the ODE which should be solved. in is not modified in this method
-     * \param dxdt The derivative of x at t.
-     * \param t The value of the time, at which the step should be performed.
-     * \param out The result of the step is written in out.
-     * \param dt The step size.
-     */
     template< class System , class StateIn , class DerivIn , class StateOut >
     void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt )
     {
@@ -167,10 +125,6 @@ public :
                 typename operations_type::template scale_sum5< value_type , time_type , time_type , time_type , time_type >( 1.0 , dt6 , dt3 , dt3 , dt6 ) );
     }
 
-    /**
-     * \brief Adjust the size of all temporaries in the stepper manually.
-     * \param x A state from which the size of the temporaries to be resized is deduced.
-     */
     template< class StateType >
     void adjust_size( const StateType &x )
     {
@@ -202,7 +156,61 @@ private:
 };
 
 
+/********* DOXYGEN *********/
 
+/**
+ * \class runge_kutta4_classic
+ * \brief The classical Runge-Kutta stepper of fourth order.
+ *
+ * The Runge-Kutta method of fourth order is one standard method for
+ * solving ordinary differential equations and is widely used, see also
+ * <a href="http://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">en.wikipedia.org/wiki/Runge-Kutta_methods</a>
+ * The method is explicit and fullfils the Stepper concept. Step size control
+ * or continous output are not provided.  This class implements the method directly, hence the 
+ * generic Runge-Kutta algorithm is not used.
+ * 
+ * This class derives from explicit_stepper_base and inherits its interface via
+ * CRTP (current recurring template pattern). For more details see
+ * explicit_stepper_base.
+ *
+ * \tparam State The state type.
+ * \tparam Value The value type.
+ * \tparam Deriv The type representing the time derivative of the state.
+ * \tparam Time The time representing the independent variable - the time.
+ * \tparam Algebra The algebra type.
+ * \tparam Operations The operations type.
+ * \tparam Resizer The resizer policy type.
+ */
+
+    /**
+     * \fn runge_kutta4_classic::runge_kutta4_classic( const algebra_type &algebra )
+     * \brief Constructs the runge_kutta4_classic class. This constructor can be used as a default
+     * constructor if the algebra has a default constructor. 
+     * \param algebra A copy of algebra is made and stored inside explicit_stepper_base.
+     */
+
+
+    /**
+     * \fn runge_kutta4_classic::do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt )
+     * \brief This method performs one step. The derivative `dxdt` of `in` at the time `t` is passed to the method.
+     * The result is updated out of place, hence the input is in `in` and the output in `out`.
+     * Access to this step functionality is provided by explicit_stepper_base and 
+     * `do_step_impl` should not be called directly.
+     *
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     *               Simple System concept.
+     * \param in The state of the ODE which should be solved. in is not modified in this method
+     * \param dxdt The derivative of x at t.
+     * \param t The value of the time, at which the step should be performed.
+     * \param out The result of the step is written in out.
+     * \param dt The step size.
+     */
+
+    /**
+     * \fn runge_kutta4_classic::adjust_size( const StateType &x )
+     * \brief Adjust the size of all temporaries in the stepper manually.
+     * \param x A state from which the size of the temporaries to be resized is deduced.
+     */
 
 } // odeint
 } // numeric

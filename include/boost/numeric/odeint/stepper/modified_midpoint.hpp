@@ -40,10 +40,14 @@ class Algebra = range_algebra ,
 class Operations = default_operations ,
 class Resizer = initially_resizer
 >
+#ifndef DOXYGEN_SKIP
 class modified_midpoint
 : public explicit_stepper_base<
   modified_midpoint< State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
   2 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
+#else
+class modified_midpoint : public explicit_stepper_base
+#endif
 {
 
 public :
@@ -152,7 +156,6 @@ private:
 /* Modified midpoint which stores derivatives and state at dt/2 in some external storage for later usage in dense output calculation
  * This Stepper is for use in Bulirsch Stoer only. It DOES NOT meet any stepper concept.
  */
-
 template<
 class State ,
 class Value = double ,
@@ -277,6 +280,30 @@ private:
     wrapped_state_type m_x1;
 
 };
+
+
+
+/********** DOXYGEN ***********/
+
+/**
+ * \class modified_midpoint
+ *
+ * Implementation of the modified midpoint method with a configurable 
+ * number of intermediate steps. This class is used by the Bulirsch-Stoer
+ * algorithm and is not meant for direct usage.
+ */
+
+
+/**
+ * \class modified_midpoint_dense_out
+ *
+ * Implementation of the modified midpoint method with a configurable 
+ * number of intermediate steps. This class is used by the dense ouput
+ * Bulirsch-Stoer algorithm and is not meant for direct usage.
+ * \note This stepper is for internal use only and does not meet 
+ * any stepper concept.
+ */
+
 
 }
 }

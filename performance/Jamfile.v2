@@ -69,7 +69,3 @@ exe rt_generic_rk4_phase_lattice
     ;
 
 
-exe const_step_iterator
-    : const_step_iterator.cpp
-    : <cxxflags>-std=c++0x
-    ;
