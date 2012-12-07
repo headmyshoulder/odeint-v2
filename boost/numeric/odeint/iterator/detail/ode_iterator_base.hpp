@@ -52,13 +52,13 @@ namespace detail {
    
         ode_iterator_base( stepper_type stepper , system_type sys , state_type &s ,
                                   time_type t , time_type t_end , time_type dt )
-            : m_stepper( stepper ) , m_system( sys ) , m_state( s ) , m_t( t ) , m_t_end( t_end ) , m_dt( dt ) , m_first( true )
+            : m_stepper( stepper ) , m_system( sys ) , m_state( &s ) , m_t( t ) , m_t_end( t_end ) , m_dt( dt ) , m_first( true )
         {
             check_end();
         }
 
         ode_iterator_base( stepper_type stepper , system_type sys , state_type &s )
-            : m_stepper( stepper ) , m_system( sys ) , m_state( s ) , m_t() , m_t_end() , m_dt() , m_first( false )
+            : m_stepper( stepper ) , m_system( sys ) , m_state( &s ) , m_t() , m_t_end() , m_dt() , m_first( false )
         {
         }
 
@@ -81,7 +81,7 @@ namespace detail {
 
         const state_type& dereference() const
         {
-            return m_state;
+            return *m_state;
         }
 
         void check_end( void )
@@ -104,7 +104,7 @@ namespace detail {
 
         stepper_type m_stepper;
         system_type m_system;
-        state_type &m_state;
+        state_type *m_state;
         time_type m_t;
         time_type m_t_end;
         time_type m_dt;

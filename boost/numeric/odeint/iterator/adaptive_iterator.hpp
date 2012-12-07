@@ -106,7 +106,7 @@ namespace odeint {
             controlled_step_result res = success;
             do
             {
-                res = this->m_stepper.try_step( this->m_system , this->m_state , this->m_t , this->m_dt );
+                res = this->m_stepper.try_step( this->m_system , *( this->m_state ) , this->m_t , this->m_dt );
                 ++trials;
             }
             while( ( res == fail ) && ( trials < max_attempts ) );
@@ -174,7 +174,7 @@ namespace odeint {
         adaptive_iterator( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type t_end , time_type dt )
             : base_type( stepper , sys , s , t , t_end , dt )
         {
-            this->m_stepper.initialize( this->m_state , this->m_t , this->m_dt );
+            this->m_stepper.initialize( *( this->m_state ) , this->m_t , this->m_dt );
         }
 
         /**
