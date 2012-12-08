@@ -13,9 +13,6 @@
 [table Examples Overview
   [[File] [Brief Description]]
 
-  [[[github_link libs/numeric/odeint/examples/adaptive_iterator.cpp adaptive_iterator.cpp]]
-  [The adaptive iterator examples shows the usage of the adaptive iterators and how they can be used with C++11 lambdas.]]
-
   [[[github_link libs/numeric/odeint/examples/bind_member_functions.cpp bind_member_functions.cpp]]
   [This examples shows how member functions can be used as system functions in odeint.]]
 
@@ -27,9 +24,6 @@
 
   [[[github_link libs/numeric/odeint/examples/chaotic_system.cpp chaotic_system.cpp]]
   [The chaotic system examples integrates the Lorenz system and calculates the Lyapunov exponents.]]
-
-  [[[github_link libs/numeric/odeint/examples/const_step_iterator.cpp const_step_iterator.cpp]]
-  [The adaptive iterator examples shows the usage of the const step iterators and how they can be used with C++11 lambdas.]]
 
   [[[github_link libs/numeric/odeint/examples/elliptic_functions.cpp elliptic_functions.cpp]]
   [Example calculating the elliptic functions using Bulirsch-Stoer and Runge-Kutta-Dopri5 Steppers with dense output.]] 
