@@ -19,14 +19,17 @@
 #define BOOST_NUMERIC_ODEINT_EXTERNAL_VIENNACL_VIENNACL_OPERATIONS_HPP_INCLUDED
 
 #include <viennacl/vector.hpp>
-#include <viennacl/generator/custom_operation.hpp>
+
+#ifdef VIENNACL_WITH_OPENCL
+#  include <viennacl/generator/custom_operation.hpp>
+#endif
 
 namespace boost {
 namespace numeric {
 namespace odeint {
 
 
-
+#ifdef VIENNACL_WITH_OPENCL
 struct viennacl_operations
 {
 
@@ -209,6 +212,9 @@ struct viennacl_operations
 
 
 };
+#else
+struct viennacl_operations : public default_operations {};
+#endif
 
 
 } // odeint
