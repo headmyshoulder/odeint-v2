@@ -8,7 +8,7 @@
  */
 
 
-/* stronlgy nonlinear hamiltonian lattice in 2d */
+/* strongly nonlinear hamiltonian lattice in 2d */
 
 #ifndef LATTICE2D_HPP
 #define LATTICE2D_HPP

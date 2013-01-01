@@ -165,8 +165,8 @@ private:
  * The Runge-Kutta method of fourth order is one standard method for
  * solving ordinary differential equations and is widely used, see also
  * <a href="http://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">en.wikipedia.org/wiki/Runge-Kutta_methods</a>
- * The method is explicit and fullfils the Stepper concept. Step size control
- * or continous output are not provided.  This class implements the method directly, hence the 
+ * The method is explicit and fulfills the Stepper concept. Step size control
+ * or continuous output are not provided.  This class implements the method directly, hence the 
  * generic Runge-Kutta algorithm is not used.
  * 
  * This class derives from explicit_stepper_base and inherits its interface via
@@ -197,7 +197,7 @@ private:
      * Access to this step functionality is provided by explicit_stepper_base and 
      * `do_step_impl` should not be called directly.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param in The state of the ODE which should be solved. in is not modified in this method
      * \param dxdt The derivative of x at t.

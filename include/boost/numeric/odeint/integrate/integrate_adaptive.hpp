@@ -102,7 +102,7 @@ size_t integrate_adaptive(
      * 
      * This function integrates the ODE given by system with the given stepper.
      * The observer is called after each step. If the stepper has no error 
-     * control, the step size remains constant and the observer is calleda at
+     * control, the step size remains constant and the observer is called at
      * equidistant time points t0+n*dt. If the stepper is a ControlledStepper,
      * the step size is adjusted and the observer is called in non-equidistant
      * intervals.
@@ -112,7 +112,7 @@ size_t integrate_adaptive(
      * \param start_state The initial condition x0.
      * \param start_time The initial time t0.
      * \param end_time The final integration time tend.
-     * \param dt The time step between observer calls, _not_ neccessarily the 
+     * \param dt The time step between observer calls, _not_ necessarily the 
      * time step of the integration.
      * \param observer Function/Functor called at equidistant time intervals.
      * \return The number of steps performed.

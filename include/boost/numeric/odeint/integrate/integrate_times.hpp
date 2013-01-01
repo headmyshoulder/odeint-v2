@@ -114,7 +114,7 @@ size_t integrate_times(
      * \param start_state The initial condition x0.
      * \param times_start Iterator to the start time
      * \param times_end Iterator to the end time
-     * \param dt The time step between observer calls, _not_ neccessarily the 
+     * \param dt The time step between observer calls, _not_ necessarily the 
      * time step of the integration.
      * \param observer Function/Functor called at equidistant time intervals.
      * \return The number of steps performed.

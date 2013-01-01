@@ -124,7 +124,7 @@ struct is_range< const wchar_t* const > : boost::mpl::true_
 
 } // namespace detail
 
-} // namespaec odeint
+} // namespace odeint
 } // namespace numeric
 } // namespace boost
 

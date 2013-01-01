@@ -172,7 +172,7 @@ private:
 /**
  * \class explicit_error_generic_rk
  * \brief A generic implementation of explicit Runge-Kutta algorithms with error estimation. This class is as a
- * base class for all explicit Runge-Kutta steppers with error estimateion.
+ * base class for all explicit Runge-Kutta steppers with error estimation.
  *
  * This class implements the explicit Runge-Kutta algorithms with error estimation in a generic way.
  * The Butcher tableau is passed to the stepper which constructs the stepper scheme with the help of a
@@ -212,7 +212,7 @@ private:
      * The result is updated out-of-place, hence the input is in `in` and the output in `out`. Futhermore, an
      * estimation of the error is stored in `xerr`. `do_step_impl` is used by explicit_error_stepper_base.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param in The state of the ODE which should be solved. in is not modified in this method
      * \param dxdt The derivative of x at t.
@@ -229,7 +229,7 @@ private:
      * Access to this step functionality is provided by explicit_stepper_base and 
      * `do_step_impl` should not be called directly.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param in The state of the ODE which should be solved. in is not modified in this method
      * \param dxdt The derivative of x at t.

@@ -132,7 +132,7 @@ class controlled_runge_kutta ;
  * This class implements the step size control for standard Runge-Kutta 
  * steppers with error estimation.
  *
- * \tparam ErrorStepper The stepper type with error estimation, has to fullfill the ErrorStepper concept.
+ * \tparam ErrorStepper The stepper type with error estimation, has to fulfill the ErrorStepper concept.
  * \tparam ErrorChecker The error checker
  * \tparam Resizer The resizer policy type.
  */
@@ -194,11 +194,11 @@ public:
      * the steps as large as possible. This method also updates t if a step is
      * performed.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param x The state of the ODE which should be solved. Overwritten if 
-     * the step is successfull.
-     * \param t The value of the time. Updated if the step is successfull.
+     * the step is successful.
+     * \param t The value of the time. Updated if the step is successful.
      * \param dt The step size. Updated.
      * \return success if the step was accepted, fail otherwise.
      */
@@ -219,11 +219,11 @@ public:
      * the steps as large as possible. This method also updates t if a step is
      * performed.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param x The state of the ODE which should be solved. Overwritten if 
-     * the step is successfull. Can be a boost range.
-     * \param t The value of the time. Updated if the step is successfull.
+     * the step is successful. Can be a boost range.
+     * \param t The value of the time. Updated if the step is successful.
      * \param dt The step size. Updated.
      * \return success if the step was accepted, fail otherwise.
      */
@@ -250,12 +250,12 @@ public:
      * the steps as large as possible. This method also updates t if a step is
      * performed.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param x The state of the ODE which should be solved. Overwritten if 
-     * the step is successfull.
+     * the step is successful.
      * \param dxdt The derivative of state.
-     * \param t The value of the time. Updated if the step is successfull.
+     * \param t The value of the time. Updated if the step is successful.
      * \param dt The step size. Updated.
      * \return success if the step was accepted, fail otherwise.
      */
@@ -290,10 +290,10 @@ public:
      * the steps as large as possible. This method also updates t if a step is
      * performed.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param in The state of the ODE which should be solved.
-     * \param t The value of the time. Updated if the step is successfull.
+     * \param t The value of the time. Updated if the step is successful.
      * \param out Used to store the result of the step.
      * \param dt The step size. Updated.
      * \return success if the step was accepted, fail otherwise.
@@ -324,11 +324,11 @@ public:
      * the steps as large as possible. This method also updates t if a step is
      * performed.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param in The state of the ODE which should be solved.
      * \param dxdt The derivative of state.
-     * \param t The value of the time. Updated if the step is successfull.
+     * \param t The value of the time. Updated if the step is successful.
      * \param out Used to store the result of the step.
      * \param dt The step size. Updated.
      * \return success if the step was accepted, fail otherwise.
@@ -487,7 +487,7 @@ private:
  * This class implements the step size control for FSAL Runge-Kutta 
  * steppers with error estimation.
  *
- * \tparam ErrorStepper The stepper type with error estimation, has to fullfill the ErrorStepper concept.
+ * \tparam ErrorStepper The stepper type with error estimation, has to fulfill the ErrorStepper concept.
  * \tparam ErrorChecker The error checker
  * \tparam Resizer The resizer policy type.
  */
@@ -547,11 +547,11 @@ public:
      * the steps as large as possible. This method also updates t if a step is
      * performed.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param x The state of the ODE which should be solved. Overwritten if 
-     * the step is successfull.
-     * \param t The value of the time. Updated if the step is successfull.
+     * the step is successful.
+     * \param t The value of the time. Updated if the step is successful.
      * \param dt The step size. Updated.
      * \return success if the step was accepted, fail otherwise.
      */
@@ -573,11 +573,11 @@ public:
      * the steps as large as possible. This method also updates t if a step is
      * performed.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param x The state of the ODE which should be solved. Overwritten if 
-     * the step is successfull. Can be a boost range.
-     * \param t The value of the time. Updated if the step is successfull.
+     * the step is successful. Can be a boost range.
+     * \param t The value of the time. Updated if the step is successful.
      * \param dt The step size. Updated.
      * \return success if the step was accepted, fail otherwise.
      */
@@ -594,7 +594,7 @@ public:
      *
      * This version does not solve the forwarding problem, boost::range can not be used.
      * 
-     * The disabler is needed to solve ambigous overloads
+     * The disabler is needed to solve ambiguous overloads
      */
     /**
      * \brief Tries to perform one step.
@@ -608,10 +608,10 @@ public:
      * the steps as large as possible. This method also updates t if a step is
      * performed.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param in The state of the ODE which should be solved.
-     * \param t The value of the time. Updated if the step is successfull.
+     * \param t The value of the time. Updated if the step is successful.
      * \param out Used to store the result of the step.
      * \param dt The step size. Updated.
      * \return success if the step was accepted, fail otherwise.
@@ -643,12 +643,12 @@ public:
      * the steps as large as possible. This method also updates t if a step is
      * performed.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param x The state of the ODE which should be solved. Overwritten if 
-     * the step is successfull.
+     * the step is successful.
      * \param dxdt The derivative of state.
-     * \param t The value of the time. Updated if the step is successfull.
+     * \param t The value of the time. Updated if the step is successful.
      * \param dt The step size. Updated.
      * \return success if the step was accepted, fail otherwise.
      */
@@ -682,11 +682,11 @@ public:
      * the steps as large as possible. This method also updates t if a step is
      * performed.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param in The state of the ODE which should be solved.
      * \param dxdt The derivative of state.
-     * \param t The value of the time. Updated if the step is successfull.
+     * \param t The value of the time. Updated if the step is successful.
      * \param out Used to store the result of the step.
      * \param dt The step size. Updated.
      * \return success if the step was accepted, fail otherwise.
@@ -757,7 +757,7 @@ public:
     /**
      * \brief Initializes the internal state storing an internal copy of the derivative.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param x The initial state of the ODE which should be solved.
      * \param t The initial time.

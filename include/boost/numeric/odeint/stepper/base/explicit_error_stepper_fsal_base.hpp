@@ -340,15 +340,15 @@ protected:
 
 /**
  * \class explicit_error_stepper_fsal_base
- * \brief Base class for explicit steppers with error estimation and stepper fullfiling the FSAL (first-same-as-last)
+ * \brief Base class for explicit steppers with error estimation and stepper fulfilling the FSAL (first-same-as-last)
  * property. This class can be used with controlled steppers for step size control.
  *
- * This class serves as the base class for all explicit steppers with algebra and operations and which fullfil the FSAL
+ * This class serves as the base class for all explicit steppers with algebra and operations and which fulfill the FSAL
  * property. In contrast to explicit_stepper_base it also estimates the error and can be used in a controlled stepper
  * to provide step size control.
  *
  * The FSAL property means that the derivative of the system at t+dt is already used in the current step going from
- * t to t +dt. Therefore, some more do_steps method can be introduced and the controlled steppers can explicitely make use
+ * t to t +dt. Therefore, some more do_steps method can be introduced and the controlled steppers can explicitly make use
  * of this property.
  *
  * \note This stepper provides `do_step` methods with and without error estimation. It has therefore three orders,
@@ -363,7 +363,7 @@ protected:
  * This class can have an intrinsic state depending on the explicit usage of the `do_step` method. This means that some
  * `do_step` methods are expected to be called in order. For example the `do_step( sys , x , t , dt , xerr )` will keep track 
  * of the derivative of `x` which is the internal state. The first call of this method is recognized such that one
- * does not explicitely initialize the internal state, so it is safe to use this method like
+ * does not explicitly initialize the internal state, so it is safe to use this method like
  *
  * \code
  * stepper_type stepper;
@@ -376,18 +376,18 @@ protected:
  * internal state with the `initialize` method or reset the internal state with the `reset` method.
  *
  * explicit_error_stepper_fsal_base provides several overloaded `do_step` methods, see the list below. Only two of them are needed
- * to fullfil the Error Stepper concept. The other ones are for convenience and for better performance. Some of them
+ * to fulfill the Error Stepper concept. The other ones are for convenience and for better performance. Some of them
  * simply update the state out-of-place, while other expect that the first derivative at `t` is passed to the stepper.
  *
- * - `do_step( sys , x , t , dt )` - The classical `do_step` method needed to fullfil the Error Stepper concept. The
+ * - `do_step( sys , x , t , dt )` - The classical `do_step` method needed to fulfill the Error Stepper concept. The
  *      state is updated in-place. A type modelling a Boost.Range can be used for x.
  * - `do_step( sys , x , dxdt , t , dt )` - This method updates the state x and the derivative dxdt in-place. It is expected
  *     that dxdt has the value of the derivative of x at time t.
  * - `do_step( sys , in , t , out , dt )` - This method updates the state out-of-place, hence the result of the step
  *      is stored in `out`.
  * - `do_step( sys , in , dxdt_in , t , out , dxdt_out , dt )` - This method updates the state and the derivative
- *     out-of-place. It expects that the derivative at the point `t` is explicitely passed in `dxdt_in`.
- * - `do_step( sys , x , t , dt , xerr )` - This `do_step` method is needed to fullfil the Error Stepper concept. The
+ *     out-of-place. It expects that the derivative at the point `t` is explicitly passed in `dxdt_in`.
+ * - `do_step( sys , x , t , dt , xerr )` - This `do_step` method is needed to fulfill the Error Stepper concept. The
  *     state is updated in-place and an error estimate is calculated. A type modelling a Boost.Range can be used for x.
  * - `do_step( sys , x , dxdt , t , dt , xerr )` - This method updates the state and the derivative in-place. It is assumed
  *      that the dxdt has the value of the derivative of x at time t. An error estimate is calculated.
@@ -410,15 +410,15 @@ protected:
  * \tparam ErrorOrder The order of the error step if the stepper is used with error estimation.
  * \tparam State The state type for the stepper.
  * \tparam Value The value type for the stepper. This should be a floating point type, like float,
- * double, or a multiprecision type. It must not neccessary be the value_type of the State. For example
+ * double, or a multiprecision type. It must not necessary be the value_type of the State. For example
  * the State can be a `vector< complex< double > >` in this case the Value must be double.
  * The default value is double.
  * \tparam Deriv The type representing time derivatives of the state type. It is usually the same type as the
  * state type, only if used with Boost.Units both types differ.
  * \tparam Time The type representing the time. Usually the same type as the value type. When Boost.Units is
  * used, this type has usually a unit.
- * \tparam Algebra The algebra type which must fullfil the Algebra Concept.
- * \tparam Operations The type for the operations wich must fullfil the Operations Concept.
+ * \tparam Algebra The algebra type which must fulfill the Algebra Concept.
+ * \tparam Operations The type for the operations which must fulfill the Operations Concept.
  * \tparam Resizer The resizer policy class.
  */
 
@@ -454,7 +454,7 @@ protected:
      *
      * \note This method uses the internal state of the stepper.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ordinary differential equation. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ordinary differential equation. It must fulfill the
      *               Simple System concept.
      * \param x The state of the ODE which should be solved. After calling do_step the result is updated in x.
      * \param t The value of the time, at which the step should be performed.
@@ -476,7 +476,7 @@ protected:
      * }
      * \endcode
      *
-     * \note This method does NOT use the initial state, since the first derivative is explicitely passed to this method.
+     * \note This method does NOT use the initial state, since the first derivative is explicitly passed to this method.
      *
      * The result is updated in place in x as well as the derivative dxdt. This method is disabled if
      * Time and StateInOut are of the same type. In this case the method could not be distinguished from other `do_step`
@@ -484,7 +484,7 @@ protected:
      * 
      * \note This method does not solve the forwarding problem.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param x The state of the ODE which should be solved. After calling do_step the result is updated in x.
      * \param dxdt The derivative of x at t. After calling `do_step` dxdt is updated to the new value.
@@ -502,7 +502,7 @@ protected:
      *
      * \note This method does not solve the forwarding problem. 
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param in The state of the ODE which should be solved. in is not modified in this method
      * \param t The value of the time, at which the step should be performed.
@@ -520,7 +520,7 @@ protected:
      *
      * \note This method does NOT use the internal state of the stepper.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param in The state of the ODE which should be solved. in is not modified in this method
      * \param dxdt_in The derivative of x at t.
@@ -538,7 +538,7 @@ protected:
      *
      * \note This method uses the internal state of the stepper.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param x The state of the ODE which should be solved. x is updated by this method.
      * \param t The value of the time, at which the step should be performed.
@@ -561,7 +561,7 @@ protected:
      * 
      * \note This method does not solve the forwarding problem.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param x The state of the ODE which should be solved. After calling do_step the result is updated in x.
      * \param dxdt The derivative of x at t. After calling `do_step` this value is updated to the new value at `t+dt`.
@@ -580,7 +580,7 @@ protected:
      *
      * \note This method does not solve the forwarding problem. 
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param in The state of the ODE which should be solved. in is not modified in this method
      * \param t The value of the time, at which the step should be performed.
@@ -598,7 +598,7 @@ protected:
      *
      * \note This method does not solve the forwarding problem.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param in The state of the ODE which should be solved. in is not modified in this method
      * \param dxdt_in The derivative of x at t.
@@ -623,14 +623,14 @@ protected:
 
     /**
      * \fn explicit_error_stepper_fsal_base::initialize( const DerivIn &deriv )
-     * \brief Initializes the interal state of the stepper.
+     * \brief Initializes the internal state of the stepper.
      * \param deriv The derivative of x. The next call of `do_step` expects that the derivative of `x` passed to `do_step`
      *              has the value of `deriv`.
      */
 
     /**
      * \fn explicit_error_stepper_fsal_base::initialize( System system , const StateIn &x , time_type t )
-     * \brief Initializes the interal state of the stepper.
+     * \brief Initializes the internal state of the stepper.
      *
      * This method is equivalent to 
      * \code

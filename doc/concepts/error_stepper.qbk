@@ -13,7 +13,7 @@
 
 [section Error Stepper]
 
-This concepts specifies the interface an error stepper has to fulfill to be used within a ControlledErrorStepper. An error stepper must always fullfil the stepper concept. This can trivially implemented by
+This concepts specifies the interface an error stepper has to fulfill to be used within a ControlledErrorStepper. An error stepper must always fulfill the stepper concept. This can trivially implemented by
 
 ``
 template< class System >

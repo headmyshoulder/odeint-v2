@@ -341,8 +341,8 @@ public:
  * \brief The Runge-Kutta Fehlberg 78 method.
  *
  * The Runge-Kutta Fehlberg 78 method is a standard method for high-precision applications.
- * The method is explicit and fullfils the Error Stepper concept. Step size control
- * is provided but continous output is not available for this method.
+ * The method is explicit and fulfills the Error Stepper concept. Step size control
+ * is provided but continuous output is not available for this method.
  * 
  * This class derives from explicit_error_stepper_base and inherits its interface via CRTP (current recurring template pattern).
  * Furthermore, it derivs from explicit_error_generic_rk which is a generic Runge-Kutta algorithm with error estimation.
