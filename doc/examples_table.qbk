@@ -32,7 +32,7 @@
   [The Fermi-Pasta-Ulam (FPU) example shows how odeint can be used to integrate lattice systems.]]
 
   [[[github_link libs/numeric/odeint/examples/generation_functions.cpp generation_functions.cpp]]
-  [Shows skeletal code on how to implemente own factory functions.]]
+  [Shows skeletal code on how to implement own factory functions.]]
 
   [[[github_link libs/numeric/odeint/examples/harmonic_oscillator.cpp harmonic_oscillator.cpp]]
   [The harmonic oscillator examples gives a brief introduction to odeint and shows the usage of the classical Runge-Kutta-solvers.]]

@@ -3,7 +3,7 @@
   boost/numeric/odeint/util/unit_helper.hpp
 
   [begin_description]
-  Get and set the the value of a unit.
+  Get and set the value of a unit.
   [end_description]
 
   Copyright 2009-2011 Karsten Ahnert

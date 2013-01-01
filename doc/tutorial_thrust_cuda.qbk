@@ -21,7 +21,7 @@ which is a STL-like interface for the native CUDA API.
 [important Thrust also supports parallelization using OpenMP and Intel Threading Building Blocks (TBB). You can switch
 between CUDA, OpenMP and TBB parallelizations by a simple compiler
 switch. Hence, this also provides an easy way to get basic OpenMP
-parallelization into odeint. The examples discussed below are focued on GPU parallelization, though. ]
+parallelization into odeint. The examples discussed below are focused on GPU parallelization, though. ]
 
 To use odeint with CUDA a few points have to be taken into account. First of all, the problem has to be well chosen. It makes absolutely no sense to try to parallelize the code for a three dimensional system, it is simply too small and not worth the effort. One single function call (kernel execution) on the GPU is slow but you can do the operation on a huge set of data with only one call. We have experienced that the vector size over which is parallelized should be of the order of ['10[super 6]] to make full use of the GPU. Secondly, you have to use __thrust's algorithms and functors when implementing the rhs the ODE. This might be tricky since it involves some kind of functional programming knowledge.
 

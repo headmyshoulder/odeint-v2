@@ -221,7 +221,7 @@ private:
      * Access to this step functionality is provided by explicit_stepper_base and 
      * `do_step_impl` should not be called directly.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param in The state of the ODE which should be solved. in is not modified in this method
      * \param dxdt The derivative of x at t.

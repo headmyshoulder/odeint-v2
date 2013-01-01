@@ -328,7 +328,7 @@ private:
  *    for the coordinate or the momentum part or one function object for the momentum part. `x` is a pair of coordinate
  *    and momentum. The state is updated in-place.
  * - `do_step( sys , q , p , t , dt )` - This method is similar to the method above with the difference that the coordinate
- *    and the momentum are passed explicitely and not packed into a pair.
+ *    and the momentum are passed explicitly and not packed into a pair.
  * - `do_step( sys , x_in , t , x_out , dt )` - This method transforms the state out-of-place. `x_in` and `x_out` are here pairs
  *    of coordinate and momentum.
  *
@@ -336,7 +336,7 @@ private:
  * \tparam Order The order of the stepper.
  * \tparam Coor The type representing the coordinates q.
  * \tparam Momentum The type representing the coordinates p.
- * \tparam Value The basic value type. Should be somethink like float, double or a high-precision type.
+ * \tparam Value The basic value type. Should be something like float, double or a high-precision type.
  * \tparam CoorDeriv The type representing the time derivative of the coordinate dq/dt.
  * \tparam MomemtnumDeriv The type representing the time derivative of the momentum dp/dt.
  * \tparam Time The type representing the time t.
@@ -362,7 +362,7 @@ private:
     /**
      * \fn symplectic_nystroem_stepper_base::do_step( System system , const StateInOut &state , time_type t , time_type dt )
      * \brief This method performs one step. The system can be either a pair of two function object
-     * decribing the momentum part and the coordinate part or one function object describing only
+     * describing the momentum part and the coordinate part or one function object describing only
      * the momentum part. In this case the coordinate is assumed to be trivial dq/dt = p. The state
      * is updated in-place.
      *
@@ -381,7 +381,7 @@ private:
     /**
      * \fn symplectic_nystroem_stepper_base::do_step( System system , CoorInOut &q , MomentumInOut &p , time_type t , time_type dt )
      * \brief This method performs one step. The system can be either a pair of two function object
-     * decribing the momentum part and the coordinate part or one function object describing only
+     * describing the momentum part and the coordinate part or one function object describing only
      * the momentum part. In this case the coordinate is assumed to be trivial dq/dt = p. The state
      * is updated in-place.
      *
@@ -391,7 +391,7 @@ private:
      * \note This method solves the forwarding problem.
      *
      * \param system The system, can be represented as a pair of two function object or one function object. See above.
-     * \param q The coordinate of the ODE. It is updated in-place. Therefore, the new value of the coorindate will be written
+     * \param q The coordinate of the ODE. It is updated in-place. Therefore, the new value of the coordinate will be written
      * into this variable.
      * \param p The momentum of the ODE. It is updated in-place. Therefore, the new value of the momentum will be written info
      * this variable.
@@ -402,7 +402,7 @@ private:
     /**
      * \fn symplectic_nystroem_stepper_base::do_step( System system , const StateIn &in , time_type t , StateOut &out , time_type dt )
      * \brief This method performs one step. The system can be either a pair of two function object
-     * decribing the momentum part and the coordinate part or one function object describing only
+     * describing the momentum part and the coordinate part or one function object describing only
      * the momentum part. In this case the coordinate is assumed to be trivial dq/dt = p. The state
      * is updated out-of-place.
      *

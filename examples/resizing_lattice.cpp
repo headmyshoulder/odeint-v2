@@ -3,7 +3,7 @@
  *
  * Demonstrates the usage of resizing of the state type during integration.
  * Examplary system is a strongly nonlinear, disordered Hamiltonian lattice
- * where the spreading of energy is invastigated
+ * where the spreading of energy is investigated
  *
  * Copyright 2009-2012 Karsten Ahnert and Mario Mulansky.
  * Distributed under the Boost Software License, Version 1.0. (See

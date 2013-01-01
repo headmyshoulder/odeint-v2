@@ -35,7 +35,7 @@ is needed. Here is the definition of the above example
 
 The state type has to be a `ublas::vector` and the matrix type must by a
 `ublas::matrix` since the stiff integrator only accepts these types. 
-However, you might want use non-stiff intgrators on this system, too - we will
+However, you might want use non-stiff integrators on this system, too - we will
 do so later for demonstration. Therefore we want to use the same function also
 with other state_types, realized by templatizing the `operator()`:
 

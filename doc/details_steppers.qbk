@@ -69,7 +69,7 @@ slightly different:
 
 `do_step( sys , in , dxdtin , out , dxdtout , t , dt )`
 
-This method takes the derivative at time `t` and also also stores
+This method takes the derivative at time `t` and also stores
 the derivative at time ['t+dt]. Calling these functions subsequently iterating
 along the solution one saves one function call by passing the result for dxdt
 into the next function call. 

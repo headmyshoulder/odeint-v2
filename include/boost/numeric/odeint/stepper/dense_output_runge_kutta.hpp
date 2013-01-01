@@ -93,7 +93,7 @@ public:
     /**
      * \brief Initializes the stepper. Has to be called before do_step can be 
      * used to set the initial conditions and the step size.
-     * \param x0 The inital state of the ODE which should be solved.
+     * \param x0 The initial state of the ODE which should be solved.
      * \param t0 The initial time, at which the step should be performed.
      * \param dt0 The step size.
      */
@@ -109,8 +109,8 @@ public:
     /**
      * \brief Does one time step.
      * \note initialize has to be called before using this method to set the
-     * inital conditions x,t and the stepsize.
-     * \param system The system function to solve, hence the r.h.s. of the ordinary differential equation. It must fullfil the
+     * initial conditions x,t and the stepsize.
+     * \param system The system function to solve, hence the r.h.s. of the ordinary differential equation. It must fulfill the
      *               Simple System concept.
      * \return Pair with start and end time of the integration step.
      */

@@ -533,13 +533,13 @@ private:
      * step size dt is reduced. If the error estimate is acceptably small, the
      * step is performed, success is returned and dt might be increased to make 
      * the steps as large as possible. This method also updates t if a step is
-     * performed. Also, the internal order of the stepper is adjusted if requried.
+     * performed. Also, the internal order of the stepper is adjusted if required.
      *
      * \param system The system function to solve, hence the r.h.s. of the ODE. 
-     * It must fullfil the Simple System concept.
+     * It must fulfill the Simple System concept.
      * \param x The state of the ODE which should be solved. Overwritten if 
-     * the step is successfull.
-     * \param t The value of the time. Updated if the step is successfull.
+     * the step is successful.
+     * \param t The value of the time. Updated if the step is successful.
      * \param dt The step size. Updated.
      * \return success if the step was accepted, fail otherwise.
      */
@@ -553,14 +553,14 @@ private:
      * step size dt is reduced. If the error estimate is acceptably small, the
      * step is performed, success is returned and dt might be increased to make 
      * the steps as large as possible. This method also updates t if a step is
-     * performed. Also, the internal order of the stepper is adjusted if requried.
+     * performed. Also, the internal order of the stepper is adjusted if required.
      *
      * \param system The system function to solve, hence the r.h.s. of the ODE. 
-     * It must fullfil the Simple System concept.
+     * It must fulfill the Simple System concept.
      * \param x The state of the ODE which should be solved. Overwritten if 
-     * the step is successfull.
+     * the step is successful.
      * \param dxdt The derivative of state.
-     * \param t The value of the time. Updated if the step is successfull.
+     * \param t The value of the time. Updated if the step is successful.
      * \param dt The step size. Updated.
      * \return success if the step was accepted, fail otherwise.
      */
@@ -576,12 +576,12 @@ private:
      * step size dt is reduced. If the error estimate is acceptably small, the
      * step is performed, success is returned and dt might be increased to make 
      * the steps as large as possible. This method also updates t if a step is
-     * performed. Also, the internal order of the stepper is adjusted if requried.
+     * performed. Also, the internal order of the stepper is adjusted if required.
      *
      * \param system The system function to solve, hence the r.h.s. of the ODE. 
-     * It must fullfil the Simple System concept.
+     * It must fulfill the Simple System concept.
      * \param in The state of the ODE which should be solved.
-     * \param t The value of the time. Updated if the step is successfull.
+     * \param t The value of the time. Updated if the step is successful.
      * \param out Used to store the result of the step.
      * \param dt The step size. Updated.
      * \return success if the step was accepted, fail otherwise.
@@ -597,13 +597,13 @@ private:
      * step size dt is reduced. If the error estimate is acceptably small, the
      * step is performed, success is returned and dt might be increased to make 
      * the steps as large as possible. This method also updates t if a step is
-     * performed. Also, the internal order of the stepper is adjusted if requried.
+     * performed. Also, the internal order of the stepper is adjusted if required.
      *
      * \param system The system function to solve, hence the r.h.s. of the ODE. 
-     * It must fullfil the Simple System concept.
+     * It must fulfill the Simple System concept.
      * \param in The state of the ODE which should be solved.
      * \param dxdt The derivative of state.
-     * \param t The value of the time. Updated if the step is successfull.
+     * \param t The value of the time. Updated if the step is successful.
      * \param out Used to store the result of the step.
      * \param dt The step size. Updated.
      * \return success if the step was accepted, fail otherwise.

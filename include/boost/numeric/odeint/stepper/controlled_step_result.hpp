@@ -31,7 +31,7 @@ namespace odeint {
 typedef enum
 {
     success , /**< The trial step was successful, hence the state and the time have been advanced. */
-    fail      /**< The step was not succesful and might possibly be repeated with a small step size. */
+    fail      /**< The step was not successful and might possibly be repeated with a small step size. */
 } controlled_step_result;
 
 } // namespace odeint

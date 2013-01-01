@@ -167,7 +167,7 @@ public:
     template< class System >
     void do_step( System system , const state_type &x , time_type t , state_type &xout , time_type dt , state_type &xerr )
     {
-        // get the systen and jacobi function
+        // get the system and jacobi function
         typedef typename odeint::unwrap_reference< System >::type system_type;
         typedef typename odeint::unwrap_reference< typename system_type::first_type >::type deriv_func_type;
         typedef typename odeint::unwrap_reference< typename system_type::second_type >::type jacobi_func_type;

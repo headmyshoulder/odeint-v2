@@ -127,7 +127,7 @@ struct resize_impl< mtl::compressed2D< Value , MatrixParameters > , mtl::dense_v
 
 
 } // namespace odeint
-} // namesapce numeric
+} // namespace numeric
 } // namespace boost
 
 #endif // BOOST_NUMERIC_ODEINT_EXTERNAL_MTL4_RESIZE_HPP_INCLUDED
