@@ -106,7 +106,7 @@ Time integrate_n_steps(
      * \param system Function/Functor defining the rhs of the ODE.
      * \param start_state The initial condition x0.
      * \param start_time The initial time t0.
-     * \param dt The time step between observer calls, _not_ neccessarily the 
+     * \param dt The time step between observer calls, _not_ necessarily the 
      * time step of the integration.
      * \param num_of_steps Number of steps to be performed
      * \param observer Function/Functor called at equidistant time intervals.

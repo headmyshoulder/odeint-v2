@@ -116,7 +116,7 @@ private:
 
 
     /*
-      Applying approximate iteractive linear solvers
+      Applying approximate iterative linear solvers
       default solver is Biconjugate gradient stabilized method
       itl::bicgstab(A, x, b, L, iter);
     */

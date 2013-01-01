@@ -255,7 +255,7 @@ public :
         const value_type b7_theta = B + C * X7;
 
         // const state_type &k1 = *m_old_deriv;
-        // onst state_type &k3 = dopri5().m_k3;
+        // const state_type &k3 = dopri5().m_k3;
         // const state_type &k4 = dopri5().m_k4;
         // const state_type &k5 = dopri5().m_k5;
         // const state_type &k6 = dopri5().m_k6;
@@ -314,8 +314,8 @@ private:
  *
  * The Runge-Kutta Dormand-Prince 5 method is a very popular method for solving ODEs, see
  * <a href=""></a>.
- * The method is explicit and fullfils the Error Stepper concept. Step size control
- * is provided but continous output is available which make this method favourable for many applications. 
+ * The method is explicit and fulfills the Error Stepper concept. Step size control
+ * is provided but continuous output is available which make this method favourable for many applications. 
  * 
  * This class derives from explicit_error_stepper_fsal_base and inherits its interface via CRTP (current recurring
  * template pattern). The method possesses the FSAL (first-same-as-last) property. See
@@ -347,7 +347,7 @@ private:
      * Access to this step functionality is provided by explicit_error_stepper_fsal_base and 
      * `do_step_impl` should not be called directly.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param in The state of the ODE which should be solved. in is not modified in this method
      * \param dxdt_in The derivative of x at t. dxdt_in is not modified by this method
@@ -367,7 +367,7 @@ private:
      * `do_step_impl` should not be called directly.
      * An estimation of the error is calculated.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param in The state of the ODE which should be solved. in is not modified in this method
      * \param dxdt_in The derivative of x at t. dxdt_in is not modified by this method
@@ -380,7 +380,7 @@ private:
 
     /**
      * \fn runge_kutta_dopri5::calc_state( time_type t , StateOut &x , const StateIn1 &x_old , const DerivIn1 &deriv_old , time_type t_old , const StateIn2 &  , const DerivIn2 &deriv_new , time_type t_new ) const
-     * \brief This method is used for continous output and it calculates the state `x` at a time `t` from the 
+     * \brief This method is used for continuous output and it calculates the state `x` at a time `t` from the 
      * knowledge of two states `old_state` and `current_state` at time points `t_old` and `t_new`. It also uses
      * internal variables to calculate the result. Hence this method must be called after two successful `do_step`
      * calls.

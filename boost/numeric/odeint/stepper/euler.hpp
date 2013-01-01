@@ -106,7 +106,7 @@ public :
  *
  * The Euler method is a very simply solver for ordinary differential equations. This method should not be used
  * for real applications. It is only useful for demonstration purposes. Step size control is not provided but
- * trivial continous output is available.
+ * trivial continuous output is available.
  * 
  * This class derives from explicit_stepper_base and inherits its interface via CRTP (current recurring template pattern),
  * see explicit_stepper_base
@@ -134,7 +134,7 @@ public :
      * Access to this step functionality is provided by explicit_stepper_base and 
      * `do_step_impl` should not be called directly.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param in The state of the ODE which should be solved. in is not modified in this method
      * \param dxdt The derivative of x at t.
@@ -146,7 +146,7 @@ public :
 
     /**
      * \fn euler::calc_state( StateOut &x , time_type t ,  const StateIn1 &old_state , time_type t_old , const StateIn2 &current_state , time_type t_new ) const
-     * \brief This method is used for continous output and it calculates the state `x` at a time `t` from the 
+     * \brief This method is used for continuous output and it calculates the state `x` at a time `t` from the 
      * knowledge of two states `old_state` and `current_state` at time points `t_old` and `t_new`.
      */
 

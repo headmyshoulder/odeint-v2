@@ -148,8 +148,8 @@ public:
  * The Runge-Kutta method of fourth order is one standard method for
  * solving ordinary differential equations and is widely used, see also
  * <a href="http://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">en.wikipedia.org/wiki/Runge-Kutta_methods</a>
- * The method is  explicit and fullfils the Stepper concept. Step size control
- * or continous output are not provided.
+ * The method is  explicit and fulfills the Stepper concept. Step size control
+ * or continuous output are not provided.
  * 
  * This class derives from explicit_stepper_base and inherits its interface via CRTP (current recurring template pattern).
  * Furthermore, it derivs from explicit_generic_rk which is a generic Runge-Kutta algorithm. For more details see

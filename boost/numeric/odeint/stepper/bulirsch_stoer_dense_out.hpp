@@ -114,7 +114,7 @@ public:
 
         for( unsigned short i = 0; i < m_k_max+1; i++ )
         {
-            /* only this specific sequence allows for dense ouput */
+            /* only this specific sequence allows for dense output */
             m_interval_sequence[i] = 2 + 4*i;  // 2 6 10 14 ...
             m_derivs[i].resize( m_interval_sequence[i] );
             if( i == 0 )
@@ -696,7 +696,7 @@ private:
  * The Bulirsch-Stoer is a controlled stepper that adjusts both step size
  * and order of the method. The algorithm uses the modified midpoint and
  * a polynomial extrapolation compute the solution. This class also provides
- * dense outout facility.
+ * dense output facility.
  *
  * \tparam State The state type.
  * \tparam Value The value type.
@@ -729,13 +729,13 @@ private:
      * step size dt is reduced. If the error estimate is acceptably small, the
      * step is performed, success is returned and dt might be increased to make 
      * the steps as large as possible. This method also updates t if a step is
-     * performed. Also, the internal order of the stepper is adjusted if requried.
+     * performed. Also, the internal order of the stepper is adjusted if required.
      *
      * \param system The system function to solve, hence the r.h.s. of the ODE. 
-     * It must fullfil the Simple System concept.
+     * It must fulfill the Simple System concept.
      * \param in The state of the ODE which should be solved.
      * \param dxdt The derivative of state.
-     * \param t The value of the time. Updated if the step is successfull.
+     * \param t The value of the time. Updated if the step is successful.
      * \param out Used to store the result of the step.
      * \param dt The step size. Updated.
      * \return success if the step was accepted, fail otherwise.
@@ -755,15 +755,15 @@ private:
      * \brief Does one time step. This is the main method that should be used to 
      * integrate an ODE with this stepper.
      * \note initialize has to be called before using this method to set the
-     * inital conditions x,t and the stepsize.
+     * initial conditions x,t and the stepsize.
      * \param system The system function to solve, hence the r.h.s. of the
-     * ordinary differential equation. It must fullfil the Simple System concept.
+     * ordinary differential equation. It must fulfill the Simple System concept.
      * \return Pair with start and end time of the integration step.
      */
 
     /**
      * \fn bulirsch_stoer_dense_out::calc_state( time_type t , StateOut &x ) const
-     * \brief Calculates the solution at an intermediate point within the las step
+     * \brief Calculates the solution at an intermediate point within the last step
      * \param t The time at which the solution should be calculated, has to be
      * in the current time interval.
      * \param x The output variable where the result is written into.

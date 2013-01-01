@@ -59,7 +59,7 @@ size_t integrate( System system , State &start_state , Time start_time , Time en
  * \brief Integrates the ODE.
  *
  * Integrates the ODE given by system from start_time to end_time starting 
- * with start_state as initial condtition and dt as initial time step.
+ * with start_state as initial condition and dt as initial time step.
  * This function uses a dense output dopri5 stepper and performs an adaptive
  * integration with step size control, thus dt changes during the integration.
  * This method uses standard error bounds of 1E-6.
@@ -70,7 +70,7 @@ size_t integrate( System system , State &start_state , Time start_time , Time en
  * \param start_state The initial state.
  * \param start_time Start time of the integration.
  * \param end_time End time of the integration.
- * \param dt Initial step size, will be adjusted durinf the integration.
+ * \param dt Initial step size, will be adjusted during the integration.
  * \param observer Observer that will be called after each time step.
  * \return The number of steps performed.
  */
@@ -81,7 +81,7 @@ size_t integrate( System system , State &start_state , Time start_time , Time en
  * \brief Integrates the ODE without observer calls.
  *
  * Integrates the ODE given by system from start_time to end_time starting 
- * with start_state as initial condtition and dt as initial time step.
+ * with start_state as initial condition and dt as initial time step.
  * This function uses a dense output dopri5 stepper and performs an adaptive
  * integration with step size control, thus dt changes during the integration.
  * This method uses standard error bounds of 1E-6.
@@ -92,7 +92,7 @@ size_t integrate( System system , State &start_state , Time start_time , Time en
  * \param start_state The initial state.
  * \param start_time Start time of the integration.
  * \param end_time End time of the integration.
- * \param dt Initial step size, will be adjusted durinf the integration.
+ * \param dt Initial step size, will be adjusted during the integration.
  * \return The number of steps performed.
  */
 
