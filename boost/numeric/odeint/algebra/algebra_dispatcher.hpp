@@ -18,19 +18,22 @@
 #define BOOST_NUMERIC_ODEINT_ALGEBRA_ALGEBRA_DISPATCHER_HPP_INCLUDED
 
 
-#include <boost/array.hpp>
-
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/array_algebra.hpp>
+
+
+#include <boost/array.hpp>
+
+
 
 namespace boost {
 namespace numeric {
 namespace odeint {
 
-template< class StateType >
+template< class StateType , class Enabler = void >
 struct algebra_dispatcher
 {
-        //  range_algebra is the standard algebra
+    //  range_algebra is the standard algebra
     typedef range_algebra algebra_type;
 };
 
@@ -40,6 +43,8 @@ struct algebra_dispatcher< boost::array< T , N > >
 {
     typedef array_algebra algebra_type;
 };
+
+
 
 }
 }

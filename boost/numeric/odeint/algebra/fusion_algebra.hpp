@@ -18,6 +18,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_ALGEBRA_FUSION_ALGEBRA_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_ALGEBRA_FUSION_ALGEBRA_HPP_INCLUDED
 
+#include <boost/numeric/odeint/config.hpp>
 
 #include <boost/fusion/container/vector.hpp>
 #include <boost/fusion/algorithm/iteration/for_each.hpp>
