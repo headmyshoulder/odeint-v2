@@ -128,14 +128,14 @@ struct perform_stepper_test< Stepper , array_type >
 
 
 template< class State > class stepper_methods : public mpl::vector<
-    euler< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-    modified_midpoint< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-    runge_kutta4< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-    runge_kutta4_classic< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-    runge_kutta_cash_karp54_classic< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-    runge_kutta_cash_karp54< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-    runge_kutta_dopri5< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-    runge_kutta_fehlberg78< State , double , State , double , typename algebra_dispatcher< State >::type >
+    euler< State , double , State , double > ,
+    modified_midpoint< State , double , State , double > ,
+    runge_kutta4< State , double , State , double > ,
+    runge_kutta4_classic< State , double , State , double > ,
+    runge_kutta_cash_karp54_classic< State , double , State , double > ,
+    runge_kutta_cash_karp54< State , double , State , double > ,
+    runge_kutta_dopri5< State , double , State , double > ,
+    runge_kutta_fehlberg78< State , double , State , double >
     > { };
 
 

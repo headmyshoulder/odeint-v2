@@ -126,10 +126,10 @@ struct perform_error_stepper_test< Stepper , array_type >
 
 
 template< class State > class error_stepper_methods : public mpl::vector<
-    runge_kutta_cash_karp54_classic< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-    runge_kutta_cash_karp54< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-    runge_kutta_dopri5< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-    runge_kutta_fehlberg78< State , double , State , double , typename algebra_dispatcher< State >::type >
+    runge_kutta_cash_karp54_classic< State , double , State , double > ,
+    runge_kutta_cash_karp54< State , double , State , double > ,
+    runge_kutta_dopri5< State , double , State , double > ,
+    runge_kutta_fehlberg78< State , double , State , double >
     > { };
 
 

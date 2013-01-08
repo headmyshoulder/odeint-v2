@@ -145,10 +145,10 @@ struct perform_controlled_stepper_test< ControlledStepper , array_type >
 };
 
 template< class State > class controlled_stepper_methods : public mpl::vector<
-    controlled_runge_kutta< runge_kutta_cash_karp54_classic< State , double , State , double , typename algebra_dispatcher< State >::type > > ,
-    controlled_runge_kutta< runge_kutta_dopri5< State , double , State , double , typename algebra_dispatcher< State >::type > > , 
-    controlled_runge_kutta< runge_kutta_fehlberg78< State , double , State , double , typename algebra_dispatcher< State >::type > > ,
-    bulirsch_stoer< State , double , State , double , typename algebra_dispatcher< State >::type >
+    controlled_runge_kutta< runge_kutta_cash_karp54_classic< State , double , State , double > > ,
+    controlled_runge_kutta< runge_kutta_dopri5< State , double , State , double > > ,
+    controlled_runge_kutta< runge_kutta_fehlberg78< State , double , State , double > > ,
+    bulirsch_stoer< State , double , State , double >
     > { };
 
 typedef mpl::copy

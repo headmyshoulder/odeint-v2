@@ -68,9 +68,9 @@ struct stage_wrapper
 
 template<
 size_t StageCount,
-class Value = double ,
-class Algebra = range_algebra,
-class Operations = default_operations
+class Value ,
+class Algebra ,
+class Operations
 >
 class generic_rk_algorithm {
 

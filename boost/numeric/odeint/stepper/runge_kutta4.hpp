@@ -27,6 +27,7 @@
 #include <boost/numeric/odeint/stepper/explicit_generic_rk.hpp>
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
+#include <boost/numeric/odeint/algebra/algebra_dispatcher.hpp>
 
 #include <boost/array.hpp>
 
@@ -102,7 +103,7 @@ class State ,
 class Value = double ,
 class Deriv = State ,
 class Time = Value ,
-class Algebra = range_algebra ,
+class Algebra = typename algebra_dispatcher< State >::algebra_type ,
 class Operations = default_operations ,
 class Resizer = initially_resizer
 >

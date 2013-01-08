@@ -23,6 +23,7 @@
 
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
+#include <boost/numeric/odeint/algebra/algebra_dispatcher.hpp>
 
 #include <boost/array.hpp>
 
@@ -66,7 +67,7 @@ class Value = double ,
 class CoorDeriv = Coor ,
 class MomentumDeriv = Coor ,
 class Time = Value ,
-class Algebra = range_algebra ,
+class Algebra = typename algebra_dispatcher< Coor >::algebra_type ,
 class Operations = default_operations ,
 class Resizer = initially_resizer
 >

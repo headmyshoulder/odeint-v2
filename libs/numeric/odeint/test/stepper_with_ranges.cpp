@@ -42,6 +42,15 @@
 typedef std::vector< double > state_type;
 typedef boost::array< double , 3 > state_type2;
 
+/* explicitly force range algebra for this array! */
+namespace boost { namespace numeric { namespace odeint {
+
+template<>
+struct algebra_dispatcher< state_type2 >
+{ typedef range_algebra algebra_type; };
+
+} } }
+
 
 /*
  * The two systems are needed, since for steppers with more than

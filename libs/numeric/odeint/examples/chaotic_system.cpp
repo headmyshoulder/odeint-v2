@@ -78,7 +78,8 @@ int main( int argc , char **argv )
 {
     state_type x;
     lyap_type lyap;
-    runge_kutta4< state_type > rk4;
+    // explicitly choose range_algebra to override default choice of array_algebra
+    runge_kutta4< state_type , double , state_type , double , range_algebra> rk4;
 
     fill( x.begin() , x.end() , 0.0 );
     x[0] = 10.0 ; x[1] = 10.0 ; x[2] = 5.0;
