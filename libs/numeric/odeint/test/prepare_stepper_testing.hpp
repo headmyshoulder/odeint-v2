@@ -27,8 +27,6 @@
 #include <boost/numeric/odeint/algebra/array_algebra.hpp>
 #include <boost/numeric/odeint/algebra/algebra_dispatcher.hpp>
 
-#include "vector_space_1d.hpp"
-
 namespace mpl = boost::mpl;
 namespace fusion = boost::fusion;
 
@@ -36,18 +34,9 @@ using namespace boost::numeric::odeint;
 
 /* the state types that will be tested */
 typedef std::vector< double > vector_type;
-typedef vector_space_1d< double > vector_space_type;
+typedef double vector_space_type;
 typedef boost::array< double , 1 > array_type;
 
 typedef mpl::vector< vector_type , vector_space_type , array_type >::type container_types;
-
-namespace boost { namespace numeric { namespace odeint {
-
-//add vector_space_type to the algebra dispatcher
-template<>
-struct algebra_dispatcher< vector_space_type >
-{ typedef vector_space_algebra algebra_type; };
-
-} } }
 
 #endif /* PREPARE_STEPPER_TESTING_HPP_ */

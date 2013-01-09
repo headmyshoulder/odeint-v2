@@ -99,14 +99,14 @@ struct perform_error_stepper_test< Stepper , vector_space_type >
     void operator()( void ) const
     {
         vector_space_type x , xerr;
-        x.m_x = 2.0;
+        x = 2.0;
         Stepper stepper;
         check_error_stepper_concept( stepper , 
                                      constant_system_vector_space< vector_space_type , vector_space_type , double > , 
                                      x , 
                                      xerr );
         check_error_stepper_concept( stepper , boost::cref( constant_system_functor_vector_space() ) , x , xerr );
-        BOOST_CHECK_SMALL( fabs( x.m_x - result ) , eps );
+        BOOST_CHECK_SMALL( fabs( x - result ) , eps );
     }
 };
 
@@ -126,10 +126,10 @@ struct perform_error_stepper_test< Stepper , array_type >
 
 
 template< class State > class error_stepper_methods : public mpl::vector<
-    runge_kutta_cash_karp54_classic< State , double , State , double > ,
-    runge_kutta_cash_karp54< State , double , State , double > ,
-    runge_kutta_dopri5< State , double , State , double > ,
-    runge_kutta_fehlberg78< State , double , State , double >
+    runge_kutta_cash_karp54_classic< State > ,
+    runge_kutta_cash_karp54< State > ,
+    runge_kutta_dopri5< State > ,
+    runge_kutta_fehlberg78< State >
     > { };
 
 

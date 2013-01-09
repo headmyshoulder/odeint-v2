@@ -34,7 +34,7 @@ void write_cout( const double &x , const double t )
 }
 
 // state_type = value_type = deriv_type = time_type = double
-typedef runge_kutta_dopri5< double , double , double , double , vector_space_algebra , default_operations , never_resizer > stepper_type;
+typedef runge_kutta_dopri5< double > stepper_type;
 
 int main()
 {

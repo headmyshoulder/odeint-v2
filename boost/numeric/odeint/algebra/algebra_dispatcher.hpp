@@ -17,9 +17,11 @@
 #ifndef BOOST_NUMERIC_ODEINT_ALGEBRA_ALGEBRA_DISPATCHER_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_ALGEBRA_ALGEBRA_DISPATCHER_HPP_INCLUDED
 
+#include <complex>
 
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/array_algebra.hpp>
+#include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 
 
 #include <boost/array.hpp>
@@ -44,7 +46,18 @@ struct algebra_dispatcher< boost::array< T , N > >
     typedef array_algebra algebra_type;
 };
 
+//specialize for some integral types
+template<>
+struct algebra_dispatcher< double >
+{
+    typedef vector_space_algebra algebra_type;
+};
 
+template< typename T >
+struct algebra_dispatcher< std::complex<T> >
+{
+    typedef vector_space_algebra algebra_type;
+};
 
 }
 }

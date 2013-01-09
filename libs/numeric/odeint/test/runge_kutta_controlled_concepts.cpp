@@ -110,7 +110,7 @@ struct perform_controlled_stepper_test< ControlledStepper , vector_space_type >
     void operator()( void ) const
     {
         vector_space_type x;
-        x.m_x = 2.0;
+        x = 2.0;
         /*typename ControlledStepper::stepper_type error_stepper;
           default_error_checker< typename ControlledStepper::value_type ,
           typename ControlledStepper::algebra_type ,
@@ -121,7 +121,7 @@ struct perform_controlled_stepper_test< ControlledStepper , vector_space_type >
                                           constant_system_vector_space< vector_space_type , vector_space_type , double >
                                           , x );
         check_controlled_stepper_concept( controlled_stepper , boost::cref( constant_system_functor_vector_space() ) , x );
-        BOOST_CHECK_SMALL( fabs( x.m_x - result ) , eps );
+        BOOST_CHECK_SMALL( fabs( x - result ) , eps );
     }
 };
 
@@ -145,10 +145,10 @@ struct perform_controlled_stepper_test< ControlledStepper , array_type >
 };
 
 template< class State > class controlled_stepper_methods : public mpl::vector<
-    controlled_runge_kutta< runge_kutta_cash_karp54_classic< State , double , State , double > > ,
-    controlled_runge_kutta< runge_kutta_dopri5< State , double , State , double > > ,
-    controlled_runge_kutta< runge_kutta_fehlberg78< State , double , State , double > > ,
-    bulirsch_stoer< State , double , State , double >
+    controlled_runge_kutta< runge_kutta_cash_karp54_classic< State > > ,
+    controlled_runge_kutta< runge_kutta_dopri5< State > > ,
+    controlled_runge_kutta< runge_kutta_fehlberg78< State > > ,
+    bulirsch_stoer< State >
     > { };
 
 typedef mpl::copy

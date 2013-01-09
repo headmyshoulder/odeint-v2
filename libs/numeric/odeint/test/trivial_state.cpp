@@ -54,10 +54,8 @@ BOOST_AUTO_TEST_SUITE( trivial_state_test )
 /* test different do_step methods of simple steppers */
 
 typedef mpl::vector<
-        euler< state_type , value_type , deriv_type , time_type ,
-               vector_space_algebra , default_operations , never_resizer > ,
-        runge_kutta4< state_type , value_type , deriv_type , time_type ,
-                      vector_space_algebra , default_operations , never_resizer >
+        euler< state_type > ,
+        runge_kutta4< state_type >
         >::type stepper_types;
 
 
