@@ -8,6 +8,7 @@ import boost ;
 
 boost.use-project ;
 
+# set your MTL4 directory here
 MTL4_INCLUDE = /home/karsten/boost/MTL-4.0.8862-Linux/usr/include ;
 
 project
