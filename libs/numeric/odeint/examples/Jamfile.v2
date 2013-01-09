@@ -35,7 +35,6 @@ exe generation_functions : generation_functions.cpp ;
 exe heun : heun.cpp ;
 exe bind_member_functions : bind_member_functions.cpp ;
 exe bind_member_functions_cpp11 : bind_member_functions_cpp11.cpp : <cxxflags>-std=c++0x ;
-exe rk_78 : rk_78.cpp ;
 
 # build-project mtl ;
 # build-project ublas ;
