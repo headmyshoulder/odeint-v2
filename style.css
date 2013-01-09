@@ -13,7 +13,7 @@ a:hover {
     text-align : right;
 }
 
-#big {
+.big {
     
     width : 280px;
     margin-left : 180px; 
@@ -181,6 +181,7 @@ section
 
 
 strong {
+    font-size : 14px;
     font-variant : small-caps;
 }
 

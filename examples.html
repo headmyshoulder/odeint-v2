@@ -81,9 +81,8 @@ void</span> write_cout<span class="operator">(</span><span class="keyword"> cons
     cout<span class="operator"> &lt;&lt;</span> t<span class="operator"> &lt;&lt;</span><span class="char"> '\t'</span><span class="operator"> &lt;&lt;</span> x<span class="operator"> &lt;&lt;</span> endl<span class="operator">;
 }</span><span class="comment">
 
-// state_type = value_type = deriv_type = time_type = double
-</span><span class="keyword">typedef</span> runge_kutta_dopri5<span class="operator">&lt;</span><span class="type"> double</span><span class="operator"> ,</span><span class="type"> double</span><span class="operator"> ,</span><span class="type"> double</span><span class="operator"> ,</span><span class="type"> double</span><span class="operator"> ,</span> 
-    vector_space_algebra<span class="operator"> ,</span> default_operations<span class="operator"> ,</span> never_resizer<span class="operator"> &gt;</span> stepper_type<span class="operator">;</span><span class="type">
+// state_type = double
+</span><span class="keyword">typedef</span> runge_kutta_dopri5<span class="operator">&lt;</span><span class="type"> double</span><span class="operator"> &gt;</span> stepper_type<span class="operator">;</span><span class="type">
 
 int</span><span class="keyword"> main</span><span class="operator">()
 {</span><span class="type">
