@@ -19,6 +19,9 @@
 
 #include <complex>
 
+#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/matrix.hpp>
+
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/array_algebra.hpp>
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
@@ -58,6 +61,21 @@ struct algebra_dispatcher< std::complex<T> >
 {
     typedef vector_space_algebra algebra_type;
 };
+
+/* think about that again....
+// specialize for ublas vector and matrix types
+template< class T , class A >
+struct algebra_dispatcher< boost::numeric::ublas::vector< T , A > >
+{
+    typedef vector_space_algebra algebra_type;
+};
+
+template< class T , class L , class A >
+struct algebra_dispatcher< boost::numeric::ublas::matrix< T , L , A > >
+{
+    typedef vector_space_algebra algebra_type;
+};
+*/
 
 }
 }

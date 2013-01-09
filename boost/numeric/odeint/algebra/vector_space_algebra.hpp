@@ -18,6 +18,8 @@
 #ifndef BOOST_NUMERIC_ODEINT_ALGEBRA_VECTOR_SPACE_ALGEBRA_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_ALGEBRA_VECTOR_SPACE_ALGEBRA_HPP_INCLUDED
 
+#include <complex>
+
 #include <boost/type_traits/remove_reference.hpp>
 
 
@@ -32,7 +34,7 @@ namespace odeint {
 template< class State > struct vector_space_reduce;
 
 /*
- * Example: instantiation for sole doubles
+ * Example: instantiation for sole doubles and complex
  */
 template<>
 struct vector_space_reduce< double >
@@ -45,6 +47,16 @@ struct vector_space_reduce< double >
   }
 };
 
+template< typename T >
+struct vector_space_reduce< std::complex<T> >
+{
+  template< class Op >
+  std::complex<T> operator()( std::complex<T> x , Op op , std::complex<T> init ) const
+  {
+      init = op( init , x );
+      return init;
+  }
+};
 
 struct vector_space_algebra
 {

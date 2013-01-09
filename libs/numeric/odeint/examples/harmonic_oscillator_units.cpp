@@ -113,7 +113,8 @@ int main( int argc , char**argv )
 
     state_type x( 1.0 * si::meter , 0.0 * si::meter_per_second );
 
-    integrate_const( make_dense_output( 1.0e-6 , 1.0e-6 , stepper_type() ) , oscillator( 2.0 * si::hertz ) , x , 0.0 * si::second , 100.0 * si::second , 0.1 * si::second , streaming_observer( cout ) );
+    integrate_const( make_dense_output( 1.0e-6 , 1.0e-6 , stepper_type() ) , oscillator( 2.0 * si::hertz ) ,
+                     x , 0.0 * si::second , 100.0 * si::second , 0.1 * si::second , streaming_observer( cout ) );
     //]
 
     return 0;

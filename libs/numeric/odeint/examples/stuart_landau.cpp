@@ -46,7 +46,7 @@ double alpha = 1.0;
 void stuart_landau( const state_type &x , state_type &dxdt , double t )
 {
     const complex< double > I( 0.0 , 1.0 );
-    dxdt[0] = ( 1.0 + m_eta * I ) * x[0] - ( 1.0 + m_alpha * I ) * norm( x[0] ) * x[0];
+    dxdt = ( 1.0 + m_eta * I ) * x - ( 1.0 + m_alpha * I ) * norm( x ) * x;
 }
 //]
 */
@@ -77,8 +77,7 @@ int main( int argc , char **argv )
 
     const double dt = 0.1;
 
-    typedef runge_kutta4< state_type , double , state_type , double , 
-                          vector_space_algebra > stepper_type;
+    typedef runge_kutta4< state_type > stepper_type;
 
     integrate_const( stepper_type() , stuart_landau( 2.0 , 1.0 ) , x , 0.0 , 10.0 , dt , streaming_observer( cout ) );
     //]

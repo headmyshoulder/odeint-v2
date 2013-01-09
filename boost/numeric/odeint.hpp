@@ -55,11 +55,11 @@
 #include <boost/numeric/odeint/stepper/rosenbrock4_controller.hpp>
 #include <boost/numeric/odeint/stepper/rosenbrock4_dense_output.hpp>
 
+#include <boost/numeric/odeint/algebra/algebra_dispatcher.hpp>
 /*
  * Including this algebra slows down the compilation time
  */
 // #include <boost/numeric/odeint/algebra/fusion_algebra.hpp>
-#include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 
 #include <boost/numeric/odeint/integrate/integrate.hpp>
 #include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
