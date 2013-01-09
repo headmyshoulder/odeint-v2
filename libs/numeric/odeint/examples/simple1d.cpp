@@ -33,7 +33,7 @@ void write_cout( const double &x , const double t )
     cout << t << '\t' << x << endl;
 }
 
-// state_type = value_type = deriv_type = time_type = double
+// state_type = double
 typedef runge_kutta_dopri5< double > stepper_type;
 
 int main()
