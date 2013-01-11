@@ -51,5 +51,6 @@ test-suite "odeint"
     [ run resize.cpp ]
     [ run same_size.cpp ]
     [ run symplectic_steppers.cpp ]
+    [ run ublas_vector_space.cpp : : : <cxxflags>-std=c++0x ]
     : <testing.launcher>valgrind
     ;

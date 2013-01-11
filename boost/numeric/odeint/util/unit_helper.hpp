@@ -37,7 +37,7 @@ namespace detail {
     template<class T , class Enabler = void >
     struct get_unit_value_impl
     {
-        static T value(const T &t)
+        static const T& value(const T &t)
         {
             return t;
         }
@@ -48,7 +48,7 @@ namespace detail {
     template<class Unit , class T>
     struct get_unit_value_impl< boost::units::quantity< Unit , T> >
     {
-        static T value( const boost::units::quantity< Unit , T> &t )
+        static const T& value( const boost::units::quantity< Unit , T> &t )
         {
             return t.value();
         }
