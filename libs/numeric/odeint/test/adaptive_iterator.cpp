@@ -110,6 +110,71 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm_with_range_factory , Stepper , dum
     BOOST_CHECK_CLOSE( res[3][0] , 1.75 , 1.0e-14 );
 }
 
+BOOST_AUTO_TEST_CASE( copy_constructor_iterator  )
+{
+    state_type x = {{ 1.0 }};
+    dummy_controlled_stepper stepper;
+    adaptive_iterator< dummy_controlled_stepper , dummy_system > iter1( stepper , dummy_system() , x );
+    adaptive_iterator< dummy_controlled_stepper , dummy_system > iter2( iter1 );
+
+    const state_type *p1 = &( *iter1 );
+    const state_type *p2 = &( *iter2 );
+    
+    BOOST_CHECK_EQUAL( p1 , &x );
+    BOOST_CHECK_EQUAL( p1 , p2 );
+    BOOST_CHECK_EQUAL( p2 , &x );
+}
+
+BOOST_AUTO_TEST_CASE( copy_constructor_iterator_controlled_stepper  )
+{
+    state_type x = {{ 1.0 }};
+    dummy_controlled_stepper stepper;
+    adaptive_iterator< dummy_controlled_stepper , dummy_system > iter1( stepper , dummy_system() , x );
+    adaptive_iterator< dummy_controlled_stepper , dummy_system > iter2( iter1 );
+
+    const state_type *p1 = &( *iter1 );
+    const state_type *p2 = &( *iter2 );
+    
+    BOOST_CHECK_EQUAL( p1 , &x );
+    BOOST_CHECK_EQUAL( p1 , p2 );
+    BOOST_CHECK_EQUAL( p2 , &x );
+
+    ++iter1;
+    ++iter2;
+
+    const state_type *p3 = &( *iter1 );
+    const state_type *p4 = &( *iter2 );
+
+    BOOST_CHECK_EQUAL( p3 , &x );
+    BOOST_CHECK_EQUAL( p3 , p4 );
+    BOOST_CHECK_EQUAL( p4 , &x );
+}
+
+BOOST_AUTO_TEST_CASE( copy_constructor_iterator_dense_output_stepper  )
+{
+    state_type x = {{ 1.0 }};
+    dummy_dense_output_stepper stepper;
+    adaptive_iterator< dummy_dense_output_stepper , dummy_system > iter1( stepper , dummy_system() , x , 0.0 , 10.0 , 0.01 );
+    adaptive_iterator< dummy_dense_output_stepper , dummy_system > iter2( iter1 );
+
+    const state_type &p1 = *iter1;
+    const state_type &p2 = *iter2;
+
+    BOOST_CHECK_EQUAL( p1[0] , p2[0] );
+    BOOST_CHECK_EQUAL( p1[0] , x[0] );
+    
+    ++iter1;
+    ++iter2;
+
+    BOOST_CHECK_EQUAL( p1[0] , p2[0] );
+    
+    const state_type &p3 = *iter1;
+    const state_type &p4 = *iter2;
+
+    BOOST_CHECK_EQUAL( p3[0] , p4[0] );
+    BOOST_CHECK_EQUAL( p3[0] , p1[0] );
+}
+
 
 
 
