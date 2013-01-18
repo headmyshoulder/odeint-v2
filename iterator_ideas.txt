@@ -1,0 +1,84 @@
+Iterator versions:
+
+class XYZ_iterator
+{
+};
+
+
+
+
+
+
+
+
+
+
+
+* never use iterators directly, always use the generation functions
+  * state this clearly in the docs
+
+
+* const__iterator 
+  * stepper -> 
+
+* solver, system, state und zeit gehören zusammen. Wie kann das ausgedrueckt werden
+
+do_step( stepper , system , x , t , dt );
+do_step( stepper , system , in , t , out , dt );
+
+* controlled stepper: solver, system, state und zeit gehören zusammen
+
+try_step( stepper , system , x , t , dt );
+try_step( stepper , system , in , t , out , dt );
+
+* dense_output_stepper solver, system, alter state, neuer state, alte zeit, neue zeit gehören zusammen
+
+do_step( stepper , system , x_old , t_old , x_new , t_new , dt );
+
+
+* stepper, state, system 
+
+
+
+
+stepper s( sys , x , t );
+s.do_step( dt );
+do_step( s , t );
+order( s );
+state( s );
+time( s );
+initialize( sys , x , t );
+
+Problem: wie ändert man algebra?
+
+controlled_stepper s( sys , x , t , dt );
+s.try_step();
+do_step( s );
+
+dense_output_stepper s( sys , x , t );
+s.do_step( dt );
+do_step( s , dt );
+
+controlled_dense_output_stepper s( sys , x , t , dt );
+s.do_step();
+do_step( s );
+
+iterator iter( s , dt );
+
+integrate( make_xyz_stepper( stepper , sys , x , t_start ) , t_start , dt , t_end );
+
+
+
+structure:
+
+low-level
+* steppers
+* algebras
+* operations
+* utils
+
+high-level sitzt auf v2
+* stepper
+* integrate
+* iterate
+* do_step
