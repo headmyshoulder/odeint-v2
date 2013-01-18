@@ -12,7 +12,7 @@ project
     ;
     
 
-exe harmonic_oscillator : harmonic_oscillator.cpp ;
+# exe harmonic_oscillator : harmonic_oscillator.cpp ;
 exe solar_system : solar_system.cpp ;
 exe chaotic_system : chaotic_system.cpp ;
 exe stiff_system : stiff_system.cpp ;
@@ -33,8 +33,8 @@ exe simple1d : simple1d.cpp ;
 exe stochastic_euler : stochastic_euler.cpp ;
 exe generation_functions : generation_functions.cpp ;
 exe heun : heun.cpp ;
-exe const_step_iterator : const_step_iterator.cpp : <cxxflags>-std=c++0x ;
-exe adaptive_iterator : adaptive_iterator.cpp : <cxxflags>-std=c++0x ;
+# exe const_step_iterator : const_step_iterator.cpp : <cxxflags>-std=c++0x ;
+# exe adaptive_iterator : adaptive_iterator.cpp : <cxxflags>-std=c++0x ;
 exe bind_member_functions : bind_member_functions.cpp ;
 exe bind_member_functions_cpp11 : bind_member_functions_cpp11.cpp : <cxxflags>-std=c++0x ;
 

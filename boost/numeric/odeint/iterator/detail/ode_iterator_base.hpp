@@ -22,12 +22,19 @@
 #include <boost/iterator/iterator_facade.hpp>
 
 #include <boost/numeric/odeint/util/unit_helper.hpp>
-
+#include <boost/numeric/odeint/util/unwrap_reference.hpp>
 
 namespace boost {
 namespace numeric {
 namespace odeint {
 namespace detail {
+
+    template< class Stepper >
+    struct get_state_type
+    {
+        typedef typename boost::numeric::odeint::unwrap_reference< Stepper >::type stepper_type;  
+        typedef typename stepper_type::state_type type;
+    };
 
 
 
@@ -36,7 +43,7 @@ namespace detail {
     class ode_iterator_base : public boost::iterator_facade
     <
         Iterator ,
-        typename Stepper::state_type const ,
+        typename get_state_type< Stepper >::type const ,
         boost::single_pass_traversal_tag
     >
     {
@@ -44,9 +51,10 @@ namespace detail {
 
         typedef Stepper stepper_type;
         typedef System system_type;
-        typedef typename stepper_type::state_type state_type;
-        typedef typename stepper_type::time_type time_type;
-        typedef typename stepper_type::value_type ode_value_type;
+        typedef typename boost::numeric::odeint::unwrap_reference< stepper_type >::type unwrapped_stepper_type;
+        typedef typename unwrapped_stepper_type::state_type state_type;
+        typedef typename unwrapped_stepper_type::time_type time_type;
+        typedef typename unwrapped_stepper_type::value_type ode_value_type;
 
     public:
    

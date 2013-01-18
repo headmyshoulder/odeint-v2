@@ -44,9 +44,37 @@ BOOST_AUTO_TEST_SUITE( const_step_iterator_test )
 
 typedef mpl::vector<
     dummy_stepper
-    , dummy_dense_output_stepper
+//    , dummy_dense_output_stepper
     > dummy_steppers;
 
+struct dummy_observer
+{
+    template< class State , class Time >
+    void operator()( const State &s , const Time &t ) const
+    {
+    }
+};
+
+BOOST_AUTO_TEST_CASE( copy_stepper_iterator )
+{
+}
+
+BOOST_AUTO_TEST_CASE( assignment_stepper_iterator )
+{
+}
+
+BOOST_AUTO_TEST_CASE( iterator_with_reference_wrapper )
+{
+    dummy_stepper stepper;
+    dummy_system system;
+    state_type x = {{ 1.0 }};
+
+    std::for_each(
+        make_const_step_iterator_begin( boost::ref( stepper ) , boost::ref( system ) , x , 0.0 , 1.0 , 0.0 ) ,
+        make_const_step_iterator_end( boost::ref( stepper ) , boost::ref( system ) , x ) ,
+        dummy_observer() );
+       
+}
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( transitivity1 , Stepper , dummy_steppers )
 {
