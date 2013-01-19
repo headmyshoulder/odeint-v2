@@ -22,6 +22,9 @@
 #include <boost/numeric/odeint/util/resize.hpp>
 #include <boost/numeric/odeint/util/same_size.hpp>
 
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_base_of.hpp>
+
 #include <Eigen/Dense>
 
 namespace boost {
@@ -29,16 +32,19 @@ namespace numeric {
 namespace odeint {
 
 
-template < typename Scalar , int Rows , int Cols , int Options , int MaxRows , int MaxCols >
-struct is_resizeable< Eigen::Matrix < Scalar , Rows , Cols , Options , MaxRows , MaxCols > >
+
+template< class Derived >
+struct is_resizeable< Derived ,
+                      typename boost::enable_if< typename boost::is_base_of< Eigen::MatrixBase< Derived > , Derived >::type >::type >
 { 
     typedef boost::true_type type;
     const static bool value = type::value;
 };
 
 
-template < typename Scalar , int Rows , int Cols , int Options , int MaxRows , int MaxCols >
-struct is_resizeable< Eigen::Array < Scalar , Rows , Cols , Options , MaxRows , MaxCols > >
+template < class Derived  >
+struct is_resizeable< Derived ,
+                      typename boost::enable_if< typename boost::is_base_of< Eigen::ArrayBase< Derived > , Derived >::type >::type >
 { 
     typedef boost::true_type type;
     const static bool value = type::value;
@@ -46,56 +52,47 @@ struct is_resizeable< Eigen::Array < Scalar , Rows , Cols , Options , MaxRows , 
 
 
 
-
-
-template< typename Scalar , int Rows , int Cols , int Options , int MaxRows , int MaxCols >
-struct same_size_impl<
-    Eigen::Matrix < Scalar , Rows , Cols , Options , MaxRows , MaxCols > ,
-    Eigen::Matrix < Scalar , Rows , Cols , Options , MaxRows , MaxCols >  >
+template< class Derived >
+struct same_size_impl< Derived , Derived ,
+                       typename boost::enable_if< typename boost::is_base_of< Eigen::MatrixBase< Derived > , Derived >::type >::type >
 {
-    static bool same_size( const Eigen::Matrix < Scalar , Rows , Cols , Options , MaxRows , MaxCols > &m1 ,
-                           const Eigen::Matrix < Scalar , Rows , Cols , Options , MaxRows , MaxCols > &m2 )
+    static bool same_size( const Eigen::MatrixBase< Derived > &m1 , const Eigen::MatrixBase< Derived > &m2 )
+
     {
-        return ((m1.innerSize () == m2.innerSize ()) && (m1.outerSize() == m2.outerSize()));
+        return ( ( m1.innerSize () == m2.innerSize () ) && ( m1.outerSize() == m2.outerSize() ) );
     }
 };
 
-template< typename Scalar , int Rows , int Cols , int Options , int MaxRows , int MaxCols >
-struct same_size_impl<
-    Eigen::Array < Scalar ,  Rows ,  Cols ,  Options , MaxRows , MaxCols > ,
-    Eigen::Array < Scalar ,  Rows ,  Cols ,  Options , MaxRows , MaxCols > >
+template< class Derived  >
+struct same_size_impl< Derived , Derived ,
+                       typename boost::enable_if< typename boost::is_base_of< Eigen::ArrayBase< Derived > , Derived >::type >::type >
 {
-    static bool same_size( const Eigen::Array < Scalar ,  Rows ,  Cols ,  Options ,  MaxRows ,  MaxCols > &v1  ,
-                           const Eigen::Array < Scalar ,  Rows ,  Cols ,  Options ,  MaxRows ,  MaxCols > &v2 )
+    static bool same_size( const Eigen::ArrayBase< Derived > &v1 , const Eigen::ArrayBase< Derived >  &v2 )
     {
-        return (v1.innerSize () == v2.innerSize ()) && (v1.outerSize() == v2.outerSize());
+        return  ( ( v1.innerSize () == v2.innerSize () ) && ( v1.outerSize() == v2.outerSize() ) );
     }
 };
 
 
 
 
-template< typename Scalar , int Rows , int Cols , int Options , int MaxRows , int MaxCols >
-struct resize_impl<
-    Eigen::Matrix < Scalar ,  Rows ,  Cols ,  Options ,  MaxRows ,  MaxCols > ,
-    Eigen::Matrix < Scalar ,  Rows ,  Cols ,  Options ,  MaxRows ,  MaxCols > >
+template< class Derived >
+struct resize_impl< Derived , Derived ,
+                    typename boost::enable_if< typename boost::is_base_of< Eigen::MatrixBase< Derived > , Derived >::type >::type >
 {
-    static void resize( Eigen::Matrix < Scalar ,  Rows ,  Cols ,  Options ,  MaxRows ,  MaxCols > &m1 ,
-                        Eigen::Matrix < Scalar ,  Rows ,  Cols ,  Options ,  MaxRows ,  MaxCols > &m2 )
+    static void resize( Eigen::MatrixBase< Derived > &m1 , const Eigen::MatrixBase< Derived > &m2 )
     {
-        m1.resizeLike(m2);
+        m1.derived().resizeLike(m2);
     }
 };
 
-template< typename Scalar , int Rows , int Cols , int Options , int MaxRows , int MaxCols >
-struct resize_impl<
-    Eigen::Array < Scalar ,  Rows ,  Cols ,  Options ,  MaxRows ,  MaxCols > ,
-    Eigen::Array < Scalar ,  Rows ,  Cols ,  Options ,  MaxRows ,  MaxCols > >
+template< class Derived >
+struct resize_impl< Derived , Derived ,
+                    typename boost::enable_if< typename boost::is_base_of< Eigen::ArrayBase< Derived > , Derived >::type >::type >
 {
-    static void resize( Eigen::Array < Scalar ,  Rows ,  Cols ,  Options ,  MaxRows ,  MaxCols > &v1  , 
-                        Eigen::Array < Scalar ,  Rows ,  Cols ,  Options ,  MaxRows ,  MaxCols > &v2 )
+    static void resize( Eigen::ArrayBase< Derived > &v1 , const Eigen::ArrayBase< Derived > &v2 )
     {
-        v1.resizeLike(v2);
+        v1.derived().resizeLike(v2);
     }
 };
 
