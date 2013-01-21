@@ -33,6 +33,14 @@ namespace odeint {
     class const_step_iterator;
 
 
+    template< class Stepper >
+    struct get_state_type
+    {
+        typedef typename odeint::remove_reference< Stepper >::type stepper_type;
+        typedef typename stepper_type::state_type type;
+    };
+
+
 
     template< class Stepper , class System >
     const_step_iterator< Stepper , System > make_const_step_iterator_begin(
