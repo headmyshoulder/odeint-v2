@@ -31,13 +31,6 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-
-    template< class Stepper , class System , class StepperTag = typename base_tag< typename Stepper::stepper_category >::type > 
-    class const_step_iterator;
-
-
-
-
     template< class Stepper >
     struct get_state_type
     {
@@ -52,22 +45,25 @@ namespace odeint {
         typedef typename stepper_type::time_type type;
     };
 
-
-
-} // namespace odeint
-} // namespace numeric
-} // namespace boost
-
-
-
-#include <boost/numeric/odeint/iterator/detail/const_step_iterator_impl.hpp>
-#include <boost/numeric/odeint/iterator/detail/const_step_iterator_dense_output_impl.hpp>
+    template< class Stepper >
+    struct get_stepper_category
+    {
+        typedef typename boost::numeric::odeint::unwrap_reference< Stepper >::type stepper_type;
+        typedef typename stepper_type::stepper_category type;
+    };
 
 
 
-namespace boost {
-namespace numeric {
-namespace odeint {
+
+
+
+    template< class Stepper , class System ,
+              class StepperTag = typename base_tag< typename get_stepper_category< Stepper >::type >::type >
+    class const_step_iterator;
+
+
+
+
 
 
     template< class Stepper , class System >
@@ -82,8 +78,6 @@ namespace odeint {
         return const_step_iterator< Stepper , System >( stepper , system , x , t , t_end , dt );
     }
 
-
-
     template< class Stepper , class System >
     const_step_iterator< Stepper , System > make_const_step_iterator_end(
         Stepper stepper ,
@@ -92,8 +86,6 @@ namespace odeint {
     {
         return const_step_iterator< Stepper , System >( stepper , system , x );
     }
-
-
 
     template< class Stepper , class System >
     std::pair< const_step_iterator< Stepper , System > , const_step_iterator< Stepper , System > >
@@ -160,6 +152,10 @@ namespace odeint {
 } // namespace odeint
 } // namespace numeric
 } // namespace boost
+
+
+#include <boost/numeric/odeint/iterator/detail/const_step_iterator_impl.hpp>
+#include <boost/numeric/odeint/iterator/detail/const_step_iterator_dense_output_impl.hpp>
 
 
 

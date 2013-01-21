@@ -58,8 +58,7 @@ namespace detail {
 
     public:
    
-        ode_iterator_base( stepper_type stepper , system_type sys , state_type &s ,
-                                  time_type t , time_type t_end , time_type dt )
+        ode_iterator_base( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type t_end , time_type dt )
             : m_stepper( stepper ) , m_system( sys ) , m_state( &s ) , m_t( t ) , m_t_end( t_end ) , m_dt( dt ) , m_first( true )
         {
             check_end();
@@ -68,6 +67,18 @@ namespace detail {
         ode_iterator_base( stepper_type stepper , system_type sys , state_type &s )
             : m_stepper( stepper ) , m_system( sys ) , m_state( &s ) , m_t() , m_t_end() , m_dt() , m_first( false )
         {
+        }
+
+        // this function is only for testing
+        bool same( const ode_iterator_base &iter ) const
+        {
+            return (
+                ( m_state == iter.m_state ) &&
+                ( m_t == iter.m_t ) && 
+                ( m_t_end == iter.m_t_end ) &&
+                ( m_dt == iter.m_dt ) &&
+                ( m_first == iter.m_first )
+                );
         }
 
 
