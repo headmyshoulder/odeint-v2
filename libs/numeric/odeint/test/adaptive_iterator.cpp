@@ -24,6 +24,7 @@
 #include <boost/numeric/odeint/config.hpp>
 #include <boost/array.hpp>
 #include <boost/range/algorithm/copy.hpp>
+#include <boost/range/algorithm/for_each.hpp>
 #include <boost/mpl/vector.hpp>
 
 #include <boost/test/unit_test.hpp>
@@ -102,40 +103,40 @@ BOOST_AUTO_TEST_CASE( controlled_stepper_iterator_factory )
 
 BOOST_AUTO_TEST_CASE( controlled_stepper_range )
 {
-    // dummy_stepper stepper;
-    // empty_system system;
-    // state_type x = {{ 1.0 }};
+    dummy_controlled_stepper stepper;
+    empty_system system;
+    state_type x = {{ 1.0 }};
 
-    // boost::for_each( make_const_step_range( stepper , boost::ref( system ) , x , 0.0 , 0.999 , 0.1 ) ,
-    //                  dummy_observer() );
+    boost::for_each( make_adaptive_range( stepper , boost::ref( system ) , x , 0.0 , 0.999 , 0.1 ) ,
+                     dummy_observer() );
 
-    // BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-14 );
+    BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-14 );
 }
 
 BOOST_AUTO_TEST_CASE( controlled_stepper_iterator_with_reference_wrapper_factory )
 {
-    // dummy_stepper stepper;
-    // empty_system system;
-    // state_type x = {{ 1.0 }};
+    dummy_controlled_stepper stepper;
+    empty_system system;
+    state_type x = {{ 1.0 }};
 
-    // std::for_each(
-    //     make_const_step_iterator_begin( boost::ref( stepper ) , boost::ref( system ) , x , 0.0 , 0.999 , 0.1 ) ,
-    //     make_const_step_iterator_end( boost::ref( stepper ) , boost::ref( system ) , x ) ,
-    //     dummy_observer() );
+    std::for_each(
+        make_adaptive_iterator_begin( boost::ref( stepper ) , boost::ref( system ) , x , 0.0 , 0.999 , 0.1 ) ,
+        make_adaptive_iterator_end( boost::ref( stepper ) , boost::ref( system ) , x ) ,
+        dummy_observer() );
 
-    // BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-14 );
+    BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-14 );
 }
 
 BOOST_AUTO_TEST_CASE( controlled_stepper_range_with_reference_wrapper )
 {
-    // dummy_stepper stepper;
-    // empty_system system;
-    // state_type x = {{ 1.0 }};
+    dummy_controlled_stepper stepper;
+    empty_system system;
+    state_type x = {{ 1.0 }};
 
-    // boost::for_each( make_const_step_range( boost::ref( stepper ) , boost::ref( system ) , x , 0.0 , 0.999 , 0.1 ) ,
-    //                  dummy_observer() );
+    boost::for_each( make_adaptive_range( boost::ref( stepper ) , boost::ref( system ) , x , 0.0 , 0.999 , 0.1 ) ,
+                     dummy_observer() );
 
-    // BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-14 );
+    BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-14 );
 }
 
 
