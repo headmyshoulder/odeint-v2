@@ -33,20 +33,13 @@
 #include <boost/numeric/odeint/iterator/const_step_iterator.hpp>
 #include "dummy_steppers.hpp"
 #include "dummy_odes.hpp"
+#include "dummy_observers.hpp"
 
 namespace mpl = boost::mpl;
 using namespace boost::numeric::odeint;
 
 typedef dummy_stepper::state_type state_type;
 typedef dummy_stepper::value_type value_type;
-
-struct dummy_observer
-{
-    template< class State >
-    void operator()( const State &s ) const
-    {
-    }
-};
 
 
 BOOST_AUTO_TEST_SUITE( const_step_iterator_test )
@@ -83,7 +76,7 @@ BOOST_AUTO_TEST_CASE( assignment_stepper_iterator )
     BOOST_CHECK( iter1.same( iter2 ) );
 }
 
-BOOST_AUTO_TEST_CASE( stepper_iterator )
+BOOST_AUTO_TEST_CASE( stepper_iterator_factory )
 {
     dummy_stepper stepper;
     empty_system system;
@@ -109,7 +102,7 @@ BOOST_AUTO_TEST_CASE( stepper_range )
     BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-14 );
 }
 
-BOOST_AUTO_TEST_CASE( stepper_iterator_with_reference_wrapper )
+BOOST_AUTO_TEST_CASE( stepper_iterator_with_reference_wrapper_factory )
 {
     dummy_stepper stepper;
     empty_system system;

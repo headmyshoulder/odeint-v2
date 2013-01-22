@@ -50,9 +50,9 @@ namespace odeint {
         typedef Stepper stepper_type;
         typedef System system_type;
         typedef typename boost::numeric::odeint::unwrap_reference< stepper_type >::type unwrapped_stepper_type;
-        typedef typename unwrapped_stepper_type::state_type state_type;
-        typedef typename unwrapped_stepper_type::time_type time_type;
-        typedef typename unwrapped_stepper_type::value_type ode_value_type;
+        typedef typename traits::state_type< stepper_type >::type state_type;
+        typedef typename traits::time_type< stepper_type >::type time_type;
+        typedef typename traits::value_type< stepper_type >::type ode_value_type;
         #ifndef DOXYGEN_SKIP
         typedef detail::ode_iterator_base<
             const_step_iterator< Stepper , System , stepper_tag > ,

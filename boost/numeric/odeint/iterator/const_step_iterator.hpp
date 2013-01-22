@@ -21,8 +21,8 @@
 
 #include <boost/numeric/odeint/iterator/detail/ode_iterator_base.hpp>
 
+#include <boost/numeric/odeint/util/stepper_traits.hpp>
 #include <boost/numeric/odeint/util/unit_helper.hpp>
-#include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
 
@@ -31,26 +31,6 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-    template< class Stepper >
-    struct get_state_type
-    {
-        typedef typename boost::numeric::odeint::unwrap_reference< Stepper >::type stepper_type;
-        typedef typename stepper_type::state_type type;
-    };
-
-    template< class Stepper >
-    struct get_time_type
-    {
-        typedef typename boost::numeric::odeint::unwrap_reference< Stepper >::type stepper_type;
-        typedef typename stepper_type::time_type type;
-    };
-
-    template< class Stepper >
-    struct get_stepper_category
-    {
-        typedef typename boost::numeric::odeint::unwrap_reference< Stepper >::type stepper_type;
-        typedef typename stepper_type::stepper_category type;
-    };
 
 
 
@@ -58,7 +38,7 @@ namespace odeint {
 
 
     template< class Stepper , class System ,
-              class StepperTag = typename base_tag< typename get_stepper_category< Stepper >::type >::type >
+              class StepperTag = typename base_tag< typename traits::stepper_category< Stepper >::type >::type >
     class const_step_iterator;
 
 
@@ -70,10 +50,10 @@ namespace odeint {
     const_step_iterator< Stepper , System > make_const_step_iterator_begin(
         Stepper stepper ,
         System system , 
-        typename get_state_type< Stepper >::type &x ,
-        typename get_time_type< Stepper >::type t ,
-        typename get_time_type< Stepper >::type t_end ,
-        typename get_time_type< Stepper >::type dt )
+        typename traits::state_type< Stepper >::type &x ,
+        typename traits::time_type< Stepper >::type t ,
+        typename traits::time_type< Stepper >::type t_end ,
+        typename traits::time_type< Stepper >::type dt )
     {
         return const_step_iterator< Stepper , System >( stepper , system , x , t , t_end , dt );
     }
@@ -82,7 +62,7 @@ namespace odeint {
     const_step_iterator< Stepper , System > make_const_step_iterator_end(
         Stepper stepper ,
         System system , 
-        typename get_state_type< Stepper >::type &x )
+        typename traits::state_type< Stepper >::type &x )
     {
         return const_step_iterator< Stepper , System >( stepper , system , x );
     }
@@ -92,10 +72,10 @@ namespace odeint {
     make_const_step_range(
         Stepper stepper ,
         System system , 
-        typename get_state_type< Stepper >::type &x ,
-        typename get_time_type< Stepper >::type t_start ,
-        typename get_time_type< Stepper >::type t_end ,
-        typename get_time_type< Stepper >::type dt )
+        typename traits::state_type< Stepper >::type &x ,
+        typename traits::time_type< Stepper >::type t_start ,
+        typename traits::time_type< Stepper >::type t_end ,
+        typename traits::time_type< Stepper >::type dt )
     {
         return std::make_pair(
             const_step_iterator< Stepper , System >( stepper , system , x , t_start , t_end , dt ) ,
