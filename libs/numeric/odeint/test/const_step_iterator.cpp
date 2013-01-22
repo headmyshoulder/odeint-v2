@@ -32,6 +32,7 @@
 
 #include <boost/numeric/odeint/iterator/const_step_iterator.hpp>
 #include "dummy_steppers.hpp"
+#include "dummy_odes.hpp"
 
 namespace mpl = boost::mpl;
 using namespace boost::numeric::odeint;
