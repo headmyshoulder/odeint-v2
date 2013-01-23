@@ -2,8 +2,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>All examples</title>
-<link rel="stylesheet" href="../.././boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.77.1">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../tutorial.html" title="Tutorial">
 <link rel="prev" href="using_opencl_via_vexcl.html" title="Using OpenCL via VexCL">
@@ -23,7 +23,7 @@
         The following table gives an overview over all examples.
       </p>
 <div class="table">
-<a name="boost_numeric_odeint.tutorial.all_examples.examples_overview"></a><p class="title"><b>Table&#160;1.5.&#160;Examples Overview</b></p>
+<a name="boost_numeric_odeint.tutorial.all_examples.examples_overview"></a><p class="title"><b>Table&#160;1.4.&#160;Examples Overview</b></p>
 <div class="table-contents"><table class="table" summary="Examples Overview">
 <colgroup>
 <col>
@@ -45,13 +45,27 @@
 <tr>
 <td>
                 <p>
-                  <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/adaptive_iterator.cpp" target="_top">adaptive_iterator.cpp</a>
+                  <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/bind_member_functions.cpp" target="_top">bind_member_functions.cpp</a>
                 </p>
               </td>
 <td>
                 <p>
-                  The adaptive iterator examples shows the usage of the adaptive
-                  iterators and how they can be used with C++11 lambdas.
+                  This examples shows how member functions can be used as system
+                  functions in odeint.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/bind_member_functions.cpp" target="_top">bind_member_functions_cpp11.cpp</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  This examples shows how member functions can be used as system
+                  functions in odeint with <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bind</span></code>
+                  in C++11.
                 </p>
               </td>
 </tr>
@@ -77,19 +91,6 @@
                 <p>
                   The chaotic system examples integrates the Lorenz system and calculates
                   the Lyapunov exponents.
-                </p>
-              </td>
-</tr>
-<tr>
-<td>
-                <p>
-                  <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/const_step_iterator.cpp" target="_top">const_step_iterator.cpp</a>
-                </p>
-              </td>
-<td>
-                <p>
-                  The adaptive iterator examples shows the usage of the const step
-                  iterators and how they can be used with C++11 lambdas.
                 </p>
               </td>
 </tr>
@@ -127,7 +128,7 @@
               </td>
 <td>
                 <p>
-                  Shows skeletal code on how to implemente own factory functions.
+                  Shows skeletal code on how to implement own factory functions.
                 </p>
               </td>
 </tr>
@@ -470,6 +471,20 @@
                   <span class="special">&gt;</span> <span class="special">&gt;</span></code>
                   can be used a state type for odeint and how a resizing mechanism
                   of this state can be implemented.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/quadmath/black_hole.cpp" target="_top">quadmath/black_hole.cpp</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  This examples shows how gcc libquadmath can be used with odeint.
+                  It provides a high precision floating point type which is adapted
+                  to odeint in this example.
                 </p>
               </td>
 </tr>

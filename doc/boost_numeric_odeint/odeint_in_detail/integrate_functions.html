@@ -2,18 +2,18 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Integrate functions</title>
-<link rel="stylesheet" href="../.././boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.77.1">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../odeint_in_detail.html" title="odeint in detail">
 <link rel="prev" href="generation_functions.html" title="Generation functions">
-<link rel="next" href="iterators_and_ranges.html" title="Iterators and Ranges">
+<link rel="next" href="state_types__algebras_and_operations.html" title="State types, algebras and operations">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr><td valign="top"><img alt="" width="" height="" src="../../logo.jpg"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="generation_functions.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../odeint_in_detail.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="iterators_and_ranges.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="generation_functions.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../odeint_in_detail.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="state_types__algebras_and_operations.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
@@ -37,7 +37,7 @@
       </p>
 <h5>
 <a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.h0"></a>
-        <span><a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.equidistant_observer_calls"></a></span><a class="link" href="integrate_functions.html#boost_numeric_odeint.odeint_in_detail.integrate_functions.equidistant_observer_calls">Equidistant
+        <span class="phrase"><a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.equidistant_observer_calls"></a></span><a class="link" href="integrate_functions.html#boost_numeric_odeint.odeint_in_detail.integrate_functions.equidistant_observer_calls">Equidistant
         observer calls</a>
       </h5>
 <p>
@@ -81,7 +81,7 @@
         steps you should prefer the <code class="computeroutput"><span class="identifier">integrate_n_steps</span></code>
         function below.
       </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
             If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a> or <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error Stepper</a>
             then <code class="computeroutput"><span class="identifier">dt</span></code> is also the step
@@ -110,7 +110,7 @@
 </ul></div>
 <h5>
 <a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.h1"></a>
-        <span><a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.integrate_a_given_number_of_steps"></a></span><a class="link" href="integrate_functions.html#boost_numeric_odeint.odeint_in_detail.integrate_functions.integrate_a_given_number_of_steps">Integrate
+        <span class="phrase"><a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.integrate_a_given_number_of_steps"></a></span><a class="link" href="integrate_functions.html#boost_numeric_odeint.odeint_in_detail.integrate_functions.integrate_a_given_number_of_steps">Integrate
         a given number of steps</a>
       </h5>
 <p>
@@ -149,7 +149,7 @@
       </p>
 <h5>
 <a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.h2"></a>
-        <span><a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_each_step"></a></span><a class="link" href="integrate_functions.html#boost_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_each_step">Observer
+        <span class="phrase"><a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_each_step"></a></span><a class="link" href="integrate_functions.html#boost_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_each_step">Observer
         calls at each step</a>
       </h5>
 <p>
@@ -190,7 +190,7 @@
         <code class="computeroutput"><span class="identifier">integrate_adaptive</span></code> returns
         the number of steps performed during the integration.
       </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
             If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a> or <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error Stepper</a>
             then <code class="computeroutput"><span class="identifier">dt</span></code> is the step size
@@ -219,7 +219,7 @@
 </ul></div>
 <h5>
 <a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.h3"></a>
-        <span><a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_given_time_points"></a></span><a class="link" href="integrate_functions.html#boost_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_given_time_points">Observer
+        <span class="phrase"><a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_given_time_points"></a></span><a class="link" href="integrate_functions.html#boost_numeric_odeint.odeint_in_detail.integrate_functions.observer_calls_at_given_time_points">Observer
         calls at given time points</a>
       </h5>
 <p>
@@ -266,7 +266,7 @@
         <code class="computeroutput"><span class="identifier">integrate_times</span></code> returns the
         number of steps performed during the integration.
       </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
             If <code class="computeroutput"><span class="identifier">stepper</span></code> is a <a class="link" href="../concepts/stepper.html" title="Stepper">Stepper</a> or <a class="link" href="../concepts/error_stepper.html" title="Error Stepper">Error Stepper</a>
             <code class="computeroutput"><span class="identifier">dt</span></code> is the step size used
@@ -293,7 +293,7 @@
 </ul></div>
 <h5>
 <a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.h4"></a>
-        <span><a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.convenience_integrate_function"></a></span><a class="link" href="integrate_functions.html#boost_numeric_odeint.odeint_in_detail.integrate_functions.convenience_integrate_function">Convenience
+        <span class="phrase"><a name="boost_numeric_odeint.odeint_in_detail.integrate_functions.convenience_integrate_function"></a></span><a class="link" href="integrate_functions.html#boost_numeric_odeint.odeint_in_detail.integrate_functions.convenience_integrate_function">Convenience
         integrate function</a>
       </h5>
 <p>
@@ -336,7 +336,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="generation_functions.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../odeint_in_detail.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="iterators_and_ranges.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="generation_functions.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../odeint_in_detail.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="state_types__algebras_and_operations.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

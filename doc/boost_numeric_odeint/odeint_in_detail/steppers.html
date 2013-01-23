@@ -2,8 +2,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Steppers</title>
-<link rel="stylesheet" href="../.././boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.77.1">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../odeint_in_detail.html" title="odeint in detail">
 <link rel="prev" href="../odeint_in_detail.html" title="odeint in detail">
@@ -190,10 +190,10 @@
         </p>
 <p>
           This method takes the derivative at time <code class="computeroutput"><span class="identifier">t</span></code>
-          and also also stores the derivative at time <span class="emphasis"><em>t+dt</em></span>.
-          Calling these functions subsequently iterating along the solution one saves
-          one function call by passing the result for dxdt into the next function
-          call. However, when using FSAL steppers without supplying derivatives:
+          and also stores the derivative at time <span class="emphasis"><em>t+dt</em></span>. Calling
+          these functions subsequently iterating along the solution one saves one
+          function call by passing the result for dxdt into the next function call.
+          However, when using FSAL steppers without supplying derivatives:
         </p>
 <p>
           <code class="computeroutput"><span class="identifier">do_step</span><span class="special">(</span>
@@ -571,7 +571,7 @@
           odeint see the table below.
         </p>
 <div class="table">
-<a name="boost_numeric_odeint.odeint_in_detail.steppers.controlled_steppers.adaptive_step_size_algorithms"></a><p class="title"><b>Table&#160;1.6.&#160;Adaptive step size algorithms</b></p>
+<a name="boost_numeric_odeint.odeint_in_detail.steppers.controlled_steppers.adaptive_step_size_algorithms"></a><p class="title"><b>Table&#160;1.5.&#160;Adaptive step size algorithms</b></p>
 <div class="table-contents"><table class="table" summary="Adaptive step size algorithms">
 <colgroup>
 <col>
@@ -895,9 +895,9 @@
           size of your system and your state you have to call <code class="computeroutput"><span class="identifier">adjust_size</span></code>
           by hand in this case. The second resizer is the <code class="computeroutput"><span class="identifier">always_resizer</span></code>
           which tries to resize the internal variables at every call of <code class="computeroutput"><span class="identifier">do_step</span></code>. Typical use cases for this kind
-          of resizer are self expanding lattices like shown in the tutorial ( <a class="link" href="../tutorial/special_topics.html#boost_numeric_odeint.tutorial.special_topics.self_expanding_lattices" title="Self expanding lattices">Self
-          expanding lattices</a>) or partial differential equations with an adaptive
-          grid. Here, no calls of <code class="computeroutput"><span class="identifier">adjust_size</span></code>
+          of resizer are self expanding lattices like shown in the tutorial ( <a class="link" href="../tutorial/self_expanding_lattices.html" title="Self expanding lattices">Self expanding
+          lattices</a>) or partial differential equations with an adaptive grid.
+          Here, no calls of <code class="computeroutput"><span class="identifier">adjust_size</span></code>
           are required, the steppers manage everything themselves. The third class
           of resizer is the <code class="computeroutput"><span class="identifier">never_resizer</span></code>
           which means that the internal variables are never adjusted automatically
@@ -923,7 +923,7 @@
           user is left with the question of which stepper fits his needs. Our personal
           recommendations are:
         </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
               <code class="computeroutput"><span class="identifier">runge_kutta_dopri5</span></code>
               is maybe the best default stepper. It has step size control as well
@@ -956,7 +956,7 @@
         overview</a>
 </h4></div></div></div>
 <div class="table">
-<a name="boost_numeric_odeint.odeint_in_detail.steppers.stepper_overview.stepper_algorithms"></a><p class="title"><b>Table&#160;1.7.&#160;Stepper Algorithms</b></p>
+<a name="boost_numeric_odeint.odeint_in_detail.steppers.stepper_overview.stepper_algorithms"></a><p class="title"><b>Table&#160;1.6.&#160;Stepper Algorithms</b></p>
 <div class="table-contents"><table class="table" summary="Stepper Algorithms">
 <colgroup>
 <col>
@@ -2099,7 +2099,7 @@
           This is all. It is quite simple and the stochastic Euler stepper implement
           here is quite general. Of course it can be enhanced, for example
         </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
               use of operations and algebras as well as the resizing mechanism for
               maximal flexibility and portability
@@ -2184,7 +2184,7 @@
 </h4></div></div></div>
 <p>
           odeint provides a C++ template meta-algorithm for constructing arbitrary
-          Runge-Kutta schemes <sup>[<a name="boost_numeric_odeint.odeint_in_detail.steppers.custom_runge_kutta_steppers.f0" href="#ftn.boost_numeric_odeint.odeint_in_detail.steppers.custom_runge_kutta_steppers.f0" class="footnote">1</a>]</sup>. Some schemes are predefined in odeint, for example the classical
+          Runge-Kutta schemes <a href="#ftn.boost_numeric_odeint.odeint_in_detail.steppers.custom_runge_kutta_steppers.f0" class="footnote"><sup class="footnote"><a name="boost_numeric_odeint.odeint_in_detail.steppers.custom_runge_kutta_steppers.f0"></a>[1]</sup></a>. Some schemes are predefined in odeint, for example the classical
           Runge-Kutta of fourth order, or the Runge-Kutta-Cash-Karp 54 and the Runge-Kutta-Fehlberg
           78 method. You can use this meta algorithm to construct you own solvers.
           This has the advantage that you can make full use of odeint's algebra and
@@ -2333,8 +2333,8 @@ c3 = 2/3, a31 =  0 , a32 = 2/3
         </p>
 </div>
 <div class="footnotes">
-<br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a name="ftn.boost_numeric_odeint.odeint_in_detail.steppers.custom_runge_kutta_steppers.f0" href="#boost_numeric_odeint.odeint_in_detail.steppers.custom_runge_kutta_steppers.f0" class="para">1</a>] </sup>
+<br><hr style="width:100; align:left;">
+<div id="ftn.boost_numeric_odeint.odeint_in_detail.steppers.custom_runge_kutta_steppers.f0" class="footnote"><p><a href="#boost_numeric_odeint.odeint_in_detail.steppers.custom_runge_kutta_steppers.f0" class="para"><sup class="para">[1] </sup></a>
             M. Mulansky, K. Ahnert, Template-Metaprogramming applied to numerical
             problems, <a href="http://arxiv.org/abs/1110.3233" target="_top">arxiv:1110.3233</a>
           </p></div>
