@@ -13,8 +13,6 @@
 [section Acknowledgments]
 
 
-[/
-
 * Steven Watanabe for managing the Boost review process.
 * All people who participated in the odeint review process on the Boost mailing list.
 * Paul Bristow for helping with the documentation.
@@ -31,7 +29,6 @@
 * Denis Demidov provided the adaption to the VexCL and Viennacl libraries.
 * Christoph Koke provided improved binders.
 * Lee Hodgkinson provided the black hole example.
-]
-
+* Michael Morin fixed several typos in the documentation and the the source code comments.
 
 [endsect]
