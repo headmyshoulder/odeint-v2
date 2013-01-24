@@ -36,7 +36,7 @@ namespace detail {
     class ode_time_iterator_base : public boost::iterator_facade
     <
         Iterator ,
-        std::pair< const typename traits::state_type< Stepper >::type& , const typename traits::time_type< Stepper >::type& > ,
+        std::pair< const typename traits::state_type< Stepper >::type , const typename traits::time_type< Stepper >::type > ,
         boost::single_pass_traversal_tag ,
         std::pair< const typename traits::state_type< Stepper >::type& , const typename traits::time_type< Stepper >::type& >
     >
