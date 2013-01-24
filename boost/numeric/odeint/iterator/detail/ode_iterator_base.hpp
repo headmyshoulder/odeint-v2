@@ -29,12 +29,6 @@ namespace numeric {
 namespace odeint {
 namespace detail {
 
-    template< class Stepper >
-    struct get_state_type
-    {
-        typedef typename boost::numeric::odeint::unwrap_reference< Stepper >::type stepper_type;  
-        typedef typename stepper_type::state_type type;
-    };
 
 
 
@@ -43,7 +37,7 @@ namespace detail {
     class ode_iterator_base : public boost::iterator_facade
     <
         Iterator ,
-        typename get_state_type< Stepper >::type const ,
+        typename traits::state_type< Stepper >::type const ,
         boost::single_pass_traversal_tag
     >
     {

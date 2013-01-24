@@ -36,29 +36,42 @@ namespace detail {
     class ode_time_iterator_base : public boost::iterator_facade
     <
         Iterator ,
-        std::pair< typename Stepper::state_type& , typename Stepper::time_type > const ,
-        boost::single_pass_traversal_tag
+        std::pair< const typename traits::state_type< Stepper >::type& , const typename traits::time_type< Stepper >::type& > ,
+        boost::single_pass_traversal_tag ,
+        std::pair< const typename traits::state_type< Stepper >::type& , const typename traits::time_type< Stepper >::type& >
     >
     {
     private:
 
         typedef Stepper stepper_type;
         typedef System system_type;
-        typedef typename stepper_type::state_type state_type;
-        typedef typename stepper_type::time_type time_type;
-        typedef typename stepper_type::value_type ode_value_type;
+        typedef typename boost::numeric::odeint::unwrap_reference< stepper_type >::type unwrapped_stepper_type;
+        typedef typename unwrapped_stepper_type::state_type state_type;
+        typedef typename unwrapped_stepper_type::time_type time_type;
+        typedef typename unwrapped_stepper_type::value_type ode_value_type;
 
     public:
    
         ode_time_iterator_base( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type t_end , time_type dt )
-            : m_stepper( stepper ) , m_system( sys ) , m_state( s , t ) , m_t_end( t_end ) , m_dt( dt ) , m_first( true )
+            : m_stepper( stepper ) , m_system( sys ) , m_state( &s ) , m_t( t ) , m_t_end( t_end ) , m_dt( dt ) , m_first( true )
         {
             check_end();
         }
 
         ode_time_iterator_base( stepper_type stepper , system_type sys , state_type &s )
-            : m_stepper( stepper ) , m_system( sys ) , m_state( s , 0.0 ) , m_t_end() , m_dt() , m_first( false )
+            : m_stepper( stepper ) , m_system( sys ) , m_state( &s ) , m_t() , m_t_end() , m_dt() , m_first( false )
         {
+        }
+
+        bool same( ode_time_iterator_base const& iter )
+        {
+            return (
+                ( m_state == iter.m_state ) &&
+                ( m_t == iter.m_t ) &&
+                ( m_t_end == iter.m_t_end ) &&
+                ( m_dt == iter.m_dt ) &&
+                ( m_first == iter.m_first )
+                );
         }
 
 
@@ -78,23 +91,24 @@ namespace detail {
             }
         }
 
-        const std::pair< state_type& , time_type >& dereference() const
+        // FUCK: not reference to temporary
+        std::pair< const state_type& , const time_type& > dereference() const
         {
-            return m_state;
+            return std::pair< const state_type & , const time_type & >( *m_state , m_t );
         }
 
         void check_end( void )
         {
             if( get_unit_value( m_dt ) > static_cast< ode_value_type >( 0.0 ) )
             {
-                if( m_state.second > m_t_end )
+                if( m_t > m_t_end )
                 {
                     m_first = false;
                 }
             }
             else
             {
-                if( m_state.second < m_t_end )
+                if( m_t < m_t_end )
                 {
                     m_first = false;
                 }
@@ -103,7 +117,8 @@ namespace detail {
 
         stepper_type m_stepper;
         system_type m_system;
-        std::pair< state_type& , time_type > m_state;
+        state_type *m_state;
+        time_type m_t;
         time_type m_t_end;
         time_type m_dt;
         bool m_first;
