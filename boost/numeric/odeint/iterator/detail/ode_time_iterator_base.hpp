@@ -32,7 +32,7 @@ namespace detail {
 
 
 
-    template< class Iterator , class Stepper , class System , class StepperTag >
+    template< class Iterator , class Stepper , class System >
     class ode_time_iterator_base : public boost::iterator_facade
     <
         Iterator ,

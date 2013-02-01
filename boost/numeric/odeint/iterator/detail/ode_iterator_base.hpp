@@ -33,12 +33,12 @@ namespace detail {
 
 
 
-    template< class Iterator , class Stepper , class System , class StepperTag >
+    template< class Iterator , class Stepper , class System >
     class ode_iterator_base : public boost::iterator_facade
     <
         Iterator ,
         typename traits::state_type< Stepper >::type const ,
-        boost::single_pass_traversal_tag
+        boost::single_pass_traversal_tag 
     >
     {
     private:

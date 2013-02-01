@@ -20,7 +20,7 @@
 
 #include <boost/numeric/odeint/util/unit_helper.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
-#include <boost/numeric/odeint/iterator/detail/ode_time_iterator_base.hpp>
+#include <boost/numeric/odeint/iterator/detail/ode_iterator_base.hpp>
 
 
 namespace boost {
@@ -47,7 +47,7 @@ namespace odeint {
     class adaptive_iterator< Stepper , System , controlled_stepper_tag > : public detail::ode_iterator_base
     <
         adaptive_iterator< Stepper , System , controlled_stepper_tag > ,
-        Stepper , System , controlled_stepper_tag 
+        Stepper , System 
     >
     {
     private:
@@ -62,7 +62,7 @@ namespace odeint {
         #ifndef DOXYGEN_SKIP
         typedef detail::ode_iterator_base<
             adaptive_iterator< Stepper , System , controlled_stepper_tag > ,
-            Stepper , System , controlled_stepper_tag 
+            Stepper , System
             > base_type;
         #endif
 

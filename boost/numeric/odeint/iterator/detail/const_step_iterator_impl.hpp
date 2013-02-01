@@ -47,7 +47,7 @@ namespace odeint {
     class const_step_iterator< Stepper , System , stepper_tag >
         : public detail::ode_iterator_base<
         const_step_iterator< Stepper , System , stepper_tag > ,
-        Stepper , System , stepper_tag >
+        Stepper , System >
     {
     private:
 
@@ -60,7 +60,7 @@ namespace odeint {
         #ifndef DOXYGEN_SKIP
         typedef detail::ode_iterator_base<
             const_step_iterator< Stepper , System , stepper_tag > ,
-            Stepper , System , stepper_tag > base_type;
+            Stepper , System > base_type;
         #endif
 
     public:

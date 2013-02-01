@@ -46,7 +46,7 @@ namespace odeint {
     class adaptive_time_iterator< Stepper , System , controlled_stepper_tag > : public detail::ode_time_iterator_base
     <
         adaptive_time_iterator< Stepper , System , controlled_stepper_tag > ,
-        Stepper , System , controlled_stepper_tag
+        Stepper , System
     >
     {
     private:
@@ -59,7 +59,7 @@ namespace odeint {
         typedef typename unwrapped_stepper_type::value_type ode_value_type;
         typedef detail::ode_time_iterator_base<
             adaptive_time_iterator< Stepper , System , controlled_stepper_tag > ,
-            Stepper , System , controlled_stepper_tag > base_type;
+            Stepper , System > base_type;
 
 
     public:

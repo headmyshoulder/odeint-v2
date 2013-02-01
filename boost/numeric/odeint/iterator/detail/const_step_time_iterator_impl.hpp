@@ -47,7 +47,7 @@ namespace odeint {
     class const_step_time_iterator< Stepper , System , stepper_tag > : public detail::ode_time_iterator_base
     <
         const_step_time_iterator< Stepper , System , stepper_tag > ,
-        Stepper , System , stepper_tag
+        Stepper , System
     >
     {
     private:
@@ -60,7 +60,7 @@ namespace odeint {
         typedef typename unwrapped_stepper_type::value_type ode_value_type;
         typedef detail::ode_time_iterator_base<
             const_step_time_iterator< Stepper , System , stepper_tag > ,
-            Stepper , System , stepper_tag > base_type;
+            Stepper , System > base_type;
 
     public:
    

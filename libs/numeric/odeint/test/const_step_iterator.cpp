@@ -46,27 +46,28 @@ BOOST_AUTO_TEST_SUITE( const_step_iterator_test )
 
 typedef mpl::vector<
     dummy_stepper
-//    , dummy_dense_output_stepper
+    , dummy_dense_output_stepper
     > dummy_steppers;
 
 
-BOOST_AUTO_TEST_CASE( copy_stepper_iterator )
+BOOST_AUTO_TEST_CASE_TEMPLATE( copy_stepper_iterator , Stepper , dummy_steppers )
 {
-    typedef const_step_iterator< dummy_stepper , empty_system > iterator_type;
+    typedef const_step_iterator< Stepper , empty_system > iterator_type;
     state_type x = {{ 1.0 }};
-    iterator_type iter1 = iterator_type( dummy_stepper() , empty_system() , x , 0.0 , 0.999 , 0.1 );
+    iterator_type iter1 = iterator_type( Stepper() , empty_system() , x , 0.0 , 0.999 , 0.1 );
     iterator_type iter2 = iter1;
     BOOST_CHECK_EQUAL( &(*iter1) , &(*iter2) );
     BOOST_CHECK_EQUAL( &(*iter1) , &x );
     BOOST_CHECK( iter1.same( iter2 ) );
 }
 
-BOOST_AUTO_TEST_CASE( assignment_stepper_iterator )
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( assignment_stepper_iterator , Stepper , dummy_steppers )
 {
-    typedef const_step_iterator< dummy_stepper , empty_system > iterator_type;
+    typedef const_step_iterator< Stepper , empty_system > iterator_type;
     state_type x1 = {{ 1.0 }} , x2 = {{ 2.0 }};
-    iterator_type iter1 = iterator_type( dummy_stepper() , empty_system() , x1 , 0.0 , 0.999 , 0.1 );
-    iterator_type iter2 = iterator_type( dummy_stepper() , empty_system() , x2 , 0.0 , 0.999 , 0.1 );
+    iterator_type iter1 = iterator_type( Stepper() , empty_system() , x1 , 0.0 , 0.999 , 0.1 );
+    iterator_type iter2 = iterator_type( Stepper() , empty_system() , x2 , 0.0 , 0.999 , 0.1 );
     BOOST_CHECK_EQUAL( &(*iter1) , &x1 );
     BOOST_CHECK_EQUAL( &(*iter2) , &x2 );
     BOOST_CHECK( !iter1.same( iter2 ) );
@@ -76,9 +77,11 @@ BOOST_AUTO_TEST_CASE( assignment_stepper_iterator )
     BOOST_CHECK( iter1.same( iter2 ) );
 }
 
-BOOST_AUTO_TEST_CASE( stepper_iterator_factory )
+
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_iterator_factory , Stepper , dummy_steppers )
 {
-    dummy_stepper stepper;
+    Stepper stepper;
     empty_system system;
     state_type x = {{ 1.0 }};
 
@@ -90,9 +93,9 @@ BOOST_AUTO_TEST_CASE( stepper_iterator_factory )
     BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-14 );
 }
 
-BOOST_AUTO_TEST_CASE( stepper_range )
+BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_range , Stepper , dummy_steppers )
 {
-    dummy_stepper stepper;
+    Stepper stepper;
     empty_system system;
     state_type x = {{ 1.0 }};
 
@@ -102,9 +105,9 @@ BOOST_AUTO_TEST_CASE( stepper_range )
     BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-14 );
 }
 
-BOOST_AUTO_TEST_CASE( stepper_iterator_with_reference_wrapper_factory )
+BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_iterator_with_reference_wrapper_factory , Stepper , dummy_steppers )
 {
-    dummy_stepper stepper;
+    Stepper stepper;
     empty_system system;
     state_type x = {{ 1.0 }};
 
@@ -116,9 +119,9 @@ BOOST_AUTO_TEST_CASE( stepper_iterator_with_reference_wrapper_factory )
     BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-14 );
 }
 
-BOOST_AUTO_TEST_CASE( stepper_range_with_reference_wrapper )
+BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_range_with_reference_wrapper , Stepper , dummy_steppers )
 {
-    dummy_stepper stepper;
+    Stepper stepper;
     empty_system system;
     state_type x = {{ 1.0 }};
 
