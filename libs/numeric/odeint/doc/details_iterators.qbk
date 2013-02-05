@@ -35,30 +35,33 @@ The factory functions are now `make_const_step_time_iterator_begin`, `make_const
 
 [import ../examples/adaptive_iterator.cpp]
 
-The other two iterator types adaptive iterators which are completely analogous to the const step iterators. Examples are
+The other two iterator types are adaptive iterators which are completely analogous to the const step iterators. Examples are
 
 [adaptive_iterator_accumulate_range]
 
 [adaptive_time_iterator_accumulate_range]
 
+Below we give some brief details about the iterators and their usage.
 
 [section const_step_iterator]
 
 * Definition: `const_step_iterator< Stepper , System >`
 * `value_type` is `Stepper::state_type`
+* `reference_type` is `Stepper::state_type const&`
 * Factory functions
   * `make_const_step_iterator_begin( stepper , system , state , t_start , t_end , dt )`
   * `make_const_step_iterator_end( stepper , system , state )`
   * `make_const_step_range( stepper , system , state , t_start , t_end , dt )`
 * This stepper works with all steppers fulfilling the Stepper concept or the DenseOutputStepper concept.
-* This stepper updates the value of `state`. The value of `state` is the current state of the ODE during the iteration.
+* The value of `state` is the current state of the ODE during the iteration.
 
 [endsect]
 
 [section const_step_time_iterator]
 
-* Definition: `const_step_iterator< Stepper , System >`
-* `value_type` is `std::pair< Stepper::state_type& , Stepper::time_type >`
+* Definition: `const_step_time_iterator< Stepper , System >`
+* `value_type` is `std::pair< Stepper::state_type , Stepper::time_type >`
+* `reference_type` is `std::pair< Stepper::state_type const& , Stepper::time_type > const&`
 * Factory functions
   * `make_const_step_time_iterator_begin( stepper , system , state , t_start , t_end , dt )`
   * `make_const_step_time_iterator_end( stepper , system , state )`
@@ -74,12 +77,13 @@ The other two iterator types adaptive iterators which are completely analogous t
 
 * Definition: `adaptive_iterator< Stepper , System >`
 * `value_type` is `Stepper::state_type`
+* `reference_type` is `Stepper::state_type const&`
 * Factory functions
   * `make_adaptive_iterator_begin( stepper , system , state , t_start , t_end , dt )`
   * `make_adaptive_iterator_end( stepper , system , state )`
   * `make_adaptive_range( stepper , system , state , t_start , t_end , dt )`
 * This stepper works with all steppers fulfilling the ControlledStepper concept or the DenseOutputStepper concept.
-* For steppers fulfilling the ControlledStepper concept `state` is modified according to the current state of the ODE. For DenseOutputStepper the state is not modified due to performance optimizations.
+* For steppers fulfilling the ControlledStepper concept `state` is modified according to the current state of the ODE. For DenseOutputStepper the state is not modified due to performance optimizations, but the steppers itself.
 
 
 [endsect]
@@ -87,13 +91,14 @@ The other two iterator types adaptive iterators which are completely analogous t
 [section adaptive_step_time_iterator]
 
 * Definition: `adaptive_iterator< Stepper , System >`
-* `value_type` is `std::pair< Stepper::state_type& , Stepper::time_type >`
+* `value_type` is `std::pair< Stepper::state_type , Stepper::time_type >`
+* `reference_type` is `std::pair< Stepper::state_type const& , Stepper::time_type > const&`
 * Factory functions
   * `make_adaptive_time_iterator_begin( stepper , system , state , t_start , t_end , dt )`
   * `make_adaptive_time_iterator_end( stepper , system , state )`
   * `make_adaptive_time_range( stepper , system , state , t_start , t_end , dt )`
 * This stepper works with all steppers fulfilling the ControlledStepper concept or the DenseOutputStepper concept.
-* This stepper updates the value of `state`. The value of `state` is the current state of the ODE during the iteration.
+* For steppers fulfilling the ControlledStepper concept `state` is modified according to the current state of the ODE. For DenseOutputStepper the state is not modified due to performance optimizations, but the stepper itself.
 
 
 [endsect]

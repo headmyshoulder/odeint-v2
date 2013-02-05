@@ -55,6 +55,7 @@ doxygen reference
 #    [ glob ../../../../boost/numeric/odeint/stepper/generation/*.hpp ]
     [ glob ../../../../boost/numeric/odeint/integrate/*.hpp : ../../../../boost/numeric/odeint/integrate/null_observer.hpp ../../../../boost/numeric/odeint/integrate/observer_collection.hpp ]
     [ glob ../../../../boost/numeric/odeint/iterator/*.hpp ]
+    [ glob ../../../../boost/numeric/odeint/iterator/impl/*.hpp ]
 #    [ glob ../../../../boost/numeric/odeint/algebra/*.hpp ]
 #    [ glob ../../../../boost/numeric/odeint/util/*.hpp ]
 #    ../../../../boost/numeric/odeint.hpp

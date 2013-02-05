@@ -91,7 +91,6 @@ namespace detail {
             }
         }
 
-        // FUCK: not reference to temporary
         std::pair< const state_type& , const time_type& > dereference() const
         {
             return std::pair< const state_type & , const time_type & >( *m_state , m_t );
