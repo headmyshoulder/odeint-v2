@@ -124,8 +124,8 @@ namespace odeint {
 } // namespace numeric
 } // namespace boost
 
-#include <boost/numeric/odeint/iterator/detail/adaptive_time_iterator_controlled_impl.hpp>
-#include <boost/numeric/odeint/iterator/detail/adaptive_time_iterator_dense_output_impl.hpp>
+#include <boost/numeric/odeint/iterator/impl/adaptive_time_iterator_controlled_impl.hpp>
+#include <boost/numeric/odeint/iterator/impl/adaptive_time_iterator_dense_output_impl.hpp>
 
 
 

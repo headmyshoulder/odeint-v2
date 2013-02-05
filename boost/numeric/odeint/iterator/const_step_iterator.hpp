@@ -132,8 +132,8 @@ namespace odeint {
 } // namespace boost
 
 
-#include <boost/numeric/odeint/iterator/detail/const_step_iterator_impl.hpp>
-#include <boost/numeric/odeint/iterator/detail/const_step_iterator_dense_output_impl.hpp>
+#include <boost/numeric/odeint/iterator/impl/const_step_iterator_impl.hpp>
+#include <boost/numeric/odeint/iterator/impl/const_step_iterator_dense_output_impl.hpp>
 
 
 
