@@ -27,6 +27,7 @@ namespace numeric {
 namespace odeint {
 
 
+// initial decalaration, defining specializations in impl/const_step_time_iterator_impl.hpp
     template< class Stepper , class System ,
               class StepperTag = typename base_tag< typename traits::stepper_category< Stepper >::type >::type > 
     class const_step_time_iterator;
