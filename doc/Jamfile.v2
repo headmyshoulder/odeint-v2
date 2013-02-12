@@ -8,6 +8,8 @@ import boostbook ;
 import doxygen ;
 import modules ;
 
+path-constant images_location : html ; # location of SVG and PNG images referenced by Quickbook.
+
 project : requirements
         <include>$(BOOST_ROOT)/tools/auto_index/include
         ;
@@ -113,7 +115,7 @@ doxygen reference
     # Yes gives the full path, but NO is more useful, only giving enough to be
     # <doxygen:param>CPP_CLI_SUPPORT=NO # unless, most unusually, you are compiled for a 'managed' CLI application.
     <doxygen:param>SHOW_USED_FILES=YES # Default YES to show a list files used to generate documention.
-    <doxygen:param>SHOW_DIRECTORIES=YES # Default NO, but useful to show directory heirarchy.
+    # <doxygen:param>SHOW_DIRECTORIES=YES # Default NO, but useful to show directory heirarchy.
     <doxygen:param>SHOW_FILES=YES # Default YES is to include a tab for a page of files listed.  Useful.
     <doxygen:param>SHOW_NAMESPACES=YES # Default YES to include tab for list of namespaces.  Useful if you have namespacess other than boost::
     <doxygen:param>FILE_PATTERNS= # Types of files to be used as input. Default includes *.c *.cc *.cxx *.cpp *.c++ *.ipp *.i++ *.inl *.h *.hh *.hxx *.hpp *.h++ *.py
@@ -122,9 +124,9 @@ doxygen reference
     <doxygen:param>RECURSIVE=YES # Search recursively down subdirectories.
     <doxygen:param>EXCLUDE= # Files or directories that should be excluded from INPUT source files.
     #  Headers and footers are actually rather attractive,
-    #     <doxygen:param>HTML_HEADER="doxygen/checks_doxygen_header.html" # A sample including a draft stamp and 'Not_Yet_In_Boost' logo.
+    #     <doxygen:param>HTML_HEADER="doxygen/odeint_doxygen_header.html" # A sample including a draft stamp and 'Not_Yet_In_Boost' logo.
     #  Take care that if you use this (recommended), you need to ensure that the html
-    #    <doxygen:param>HTML_FOOTER="doxygen/checks_doxygen_footer.html" # This is very useful to add copyright, date of revision, versioning etc.
+    #    <doxygen:param>HTML_FOOTER="doxygen/odeint_doxygen_footer.html" # This is very useful to add copyright, date of revision, versioning etc.
 
     # A custom stylesheet is also useful, as the default syntax coloring is 'unusual' ;-)
     <doxygen:param>HTML_STYLESHEET="doxygen/doxygen.css" # Placed in the doxygen directory,
@@ -220,12 +222,12 @@ boostbook standalone
     <xsl:param>admon.graphics=1
     # Set these one for PDF generation *only*:
     # In PDF format, default PNG graphics are awful, so better use SVG images (type .svg) instead.
-    <format>pdf:<xsl:param>admon.graphics.extension=".svg"  #
+    #<format>pdf:<xsl:param>admon.graphics.extension=".svg"  #
     <format>pdf:<xsl:param>use.role.for.mediaobject=1 # Use print role on next line.
     <format>pdf:<xsl:param>preferred.mediaobject.role=print # pdf role is to be printed.
     <format>pdf:<xsl:param>img.src.path=$(images_location)/ # Path of image (.svg) files. (Note trailing /) ? 
-    <format>pdf:<xsl:param>admon.graphics.path=$(nav_images)/ # path to admonition (warning, note...) image (.svg) files.
-    <format>pdf:<xsl:param>draft.mode="yes" # Yes if draft watermark wanted!
+    #<format>pdf:<xsl:param>admon.graphics.path=$(nav_images)/ # path to admonition (warning, note...) image (.svg) files.
+    #<format>pdf:<xsl:param>draft.mode="yes" # Yes if draft watermark wanted!
     #<format>pdf:<xsl:param>draft.watermark.image="draft.png" # Watermark (local copy).
     #<format>pdf:<xsl:param>draft.watermark.image=http://docbook.sourceforge.net/release/images/draft.png # Watermark.
 
@@ -267,11 +269,8 @@ boostbook standalone
 # will rename the file to the expected filename, here quick_auto_dox_index.pdf.
 # <location>. means installed in same place as this jamfile, /doc.
 
-install pdf-install : standalone : <install-type>PDF <location>. <name>checks.pdf ;
+install pdf-install : standalone : <install-type>PDF <location>. <name>odeint.pdf ;
 
 install callouts : [ glob src/images/callouts/*.png ] : <location>html/images/callouts ;
-
-
-
 
 
