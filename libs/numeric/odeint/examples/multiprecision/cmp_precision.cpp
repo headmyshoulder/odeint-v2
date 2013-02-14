@@ -1,4 +1,4 @@
-/* Boost libs/numeric/odeint/examples/multiprecision/simple1d_multiprecision.cpp
+/* Boost libs/numeric/odeint/examples/multiprecision/cmp_precision.cpp
 
  Copyright 2009-2013 Karsten Ahnert
  Copyright 2009-2013 Mario Mulansky
