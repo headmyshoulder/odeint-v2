@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Class template explicit_stepper_base</title>
 <link rel="stylesheet" href="../../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.77.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
 <link rel="home" href="../../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../../../header/boost/numeric/odeint/stepper/base/explicit_stepper_base_hpp.html" title="Header &lt;boost/numeric/odeint/stepper/base/explicit_stepper_base.hpp&gt;">
 <link rel="prev" href="../../../header/boost/numeric/odeint/stepper/base/explicit_stepper_base_hpp.html" title="Header &lt;boost/numeric/odeint/stepper/base/explicit_stepper_base.hpp&gt;">
@@ -45,69 +45,69 @@
   <span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">short</span>                              <a name="boost.numeric.odeint.explicit_stepper_base.order_type"></a><span class="identifier">order_type</span><span class="special">;</span>               
 
   <span class="comment">// <a class="link" href="explicit_stepper_base.html#boost.numeric.odeint.explicit_stepper_baseconstruct-copy-destruct">construct/copy/destruct</a></span>
-  <a class="link" href="explicit_stepper_base.html#idp20278800-bb"><span class="identifier">explicit_stepper_base</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <span class="special">=</span> <span class="identifier">algebra_type</span><span class="special">(</span><span class="special">)</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="explicit_stepper_base.html#id503079-bb"><span class="identifier">explicit_stepper_base</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <span class="special">=</span> <span class="identifier">algebra_type</span><span class="special">(</span><span class="special">)</span><span class="special">)</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="explicit_stepper_base.html#idp20221824-bb">public member functions</a></span>
-  <span class="identifier">order_type</span> <a class="link" href="explicit_stepper_base.html#idp20222224-bb"><span class="identifier">order</span></a><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="comment">// <a class="link" href="explicit_stepper_base.html#id502604-bb">public member functions</a></span>
+  <span class="identifier">order_type</span> <a class="link" href="explicit_stepper_base.html#id502608-bb"><span class="identifier">order</span></a><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
-    <span class="keyword">void</span> <a class="link" href="explicit_stepper_base.html#idp20224720-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
+    <span class="keyword">void</span> <a class="link" href="explicit_stepper_base.html#id502628-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
-    <span class="keyword">void</span> <a class="link" href="explicit_stepper_base.html#idp20232496-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
+    <span class="keyword">void</span> <a class="link" href="explicit_stepper_base.html#id502693-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">,</span> <span class="keyword">typename</span> DerivIn<span class="special">&gt;</span> 
     <span class="identifier">boost</span><span class="special">::</span><span class="identifier">disable_if</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">is_same</span><span class="special">&lt;</span> <span class="identifier">DerivIn</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&gt;</span><span class="special">,</span> <span class="keyword">void</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> 
-    <a class="link" href="explicit_stepper_base.html#idp20237984-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
+    <a class="link" href="explicit_stepper_base.html#id502739-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">,</span> <span class="keyword">typename</span> StateOut<span class="special">&gt;</span> 
-    <span class="keyword">void</span> <a class="link" href="explicit_stepper_base.html#idp20249344-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
+    <span class="keyword">void</span> <a class="link" href="explicit_stepper_base.html#id502834-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">,</span> <span class="keyword">typename</span> DerivIn<span class="special">,</span> 
            <span class="keyword">typename</span> StateOut<span class="special">&gt;</span> 
-    <span class="keyword">void</span> <a class="link" href="explicit_stepper_base.html#idp20259232-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> 
+    <span class="keyword">void</span> <a class="link" href="explicit_stepper_base.html#id502916-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> 
                  <span class="identifier">StateOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">void</span> <a class="link" href="explicit_stepper_base.html#idp20271392-bb"><span class="identifier">adjust_size</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
-  <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a class="link" href="explicit_stepper_base.html#idp20275120-bb"><span class="identifier">algebra</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a class="link" href="explicit_stepper_base.html#idp20276960-bb"><span class="identifier">algebra</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">void</span> <a class="link" href="explicit_stepper_base.html#id503017-bb"><span class="identifier">adjust_size</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a class="link" href="explicit_stepper_base.html#id503048-bb"><span class="identifier">algebra</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a class="link" href="explicit_stepper_base.html#id503064-bb"><span class="identifier">algebra</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="explicit_stepper_base.html#idp20282656-bb">private member functions</a></span>
-  <span class="identifier">stepper_type</span> <span class="special">&amp;</span> <a class="link" href="explicit_stepper_base.html#idp20283072-bb"><span class="identifier">stepper</span></a><span class="special">(</span><span class="keyword">void</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">const</span> <span class="identifier">stepper_type</span> <span class="special">&amp;</span> <a class="link" href="explicit_stepper_base.html#idp20284720-bb"><span class="identifier">stepper</span></a><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a class="link" href="explicit_stepper_base.html#idp20286368-bb"><span class="identifier">resize_impl</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="comment">// <a class="link" href="explicit_stepper_base.html#id503111-bb">private member functions</a></span>
+  <span class="identifier">stepper_type</span> <span class="special">&amp;</span> <a class="link" href="explicit_stepper_base.html#id503115-bb"><span class="identifier">stepper</span></a><span class="special">(</span><span class="keyword">void</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">const</span> <span class="identifier">stepper_type</span> <span class="special">&amp;</span> <a class="link" href="explicit_stepper_base.html#id503128-bb"><span class="identifier">stepper</span></a><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a class="link" href="explicit_stepper_base.html#id503142-bb"><span class="identifier">resize_impl</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
-    <span class="keyword">void</span> <a class="link" href="explicit_stepper_base.html#idp20288864-bb"><span class="identifier">do_step_v1</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
+    <span class="keyword">void</span> <a class="link" href="explicit_stepper_base.html#id503163-bb"><span class="identifier">do_step_v1</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
 
   <span class="comment">// public data members</span>
   <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">order_type</span> <span class="identifier">order_value</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp20640864"></a><h2>Description</h2>
+<a name="id834540"></a><h2>Description</h2>
 <p>This class serves as the base class for all explicit steppers with algebra and operations. Step size control and error estimation as well as dense output are not provided. <a class="link" href="explicit_stepper_base.html" title="Class template explicit_stepper_base">explicit_stepper_base</a> is used as the interface in a CRTP (currently recurring template pattern). In order to work correctly the parent class needs to have a method <code class="computeroutput">do_step_impl( system , in , dxdt_in , t , out , dt )</code>. This is method is used by <a class="link" href="explicit_stepper_base.html" title="Class template explicit_stepper_base">explicit_stepper_base</a>. <a class="link" href="explicit_stepper_base.html" title="Class template explicit_stepper_base">explicit_stepper_base</a> derives from <a class="link" href="algebra_stepper_base.html" title="Class template algebra_stepper_base">algebra_stepper_base</a>. An example how this class can be used is</p>
-<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">State</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Value</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Deriv</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Time</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Algebra</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Operations</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Resizer</span> <span class="special">&gt;</span>
-<span class="keyword">class</span> <span class="identifier">custom_euler</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">explicit_stepper_base</span><span class="special">&lt;</span> <span class="number">1</span> <span class="special">,</span> <span class="identifier">State</span> <span class="special">,</span> <span class="identifier">Value</span> <span class="special">,</span> <span class="identifier">Deriv</span> <span class="special">,</span> <span class="identifier">Time</span> <span class="special">,</span> <span class="identifier">Algebra</span> <span class="special">,</span> <span class="identifier">Operations</span> <span class="special">,</span> <span class="identifier">Resizer</span> <span class="special">&gt;</span>
-<span class="special">{</span>
- <span class="keyword">public</span><span class="special">:</span>
-    
-    <span class="keyword">typedef</span> <span class="identifier">explicit_stepper_base</span><span class="special">&lt;</span> <span class="number">1</span> <span class="special">,</span> <span class="identifier">State</span> <span class="special">,</span> <span class="identifier">Value</span> <span class="special">,</span> <span class="identifier">Deriv</span> <span class="special">,</span> <span class="identifier">Time</span> <span class="special">,</span> <span class="identifier">Algebra</span> <span class="special">,</span> <span class="identifier">Operations</span> <span class="special">,</span> <span class="identifier">Resizer</span> <span class="special">&gt;</span> <span class="identifier">base_type</span><span class="special">;</span>
+<pre class="programlisting"> <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">State</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Value</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Deriv</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Time</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Algebra</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Operations</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Resizer</span> <span class="special">&gt;</span>
+ <span class="keyword">class</span> <span class="identifier">custom_euler</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">explicit_stepper_base</span><span class="special">&lt;</span> <span class="number">1</span> <span class="special">,</span> <span class="identifier">State</span> <span class="special">,</span> <span class="identifier">Value</span> <span class="special">,</span> <span class="identifier">Deriv</span> <span class="special">,</span> <span class="identifier">Time</span> <span class="special">,</span> <span class="identifier">Algebra</span> <span class="special">,</span> <span class="identifier">Operations</span> <span class="special">,</span> <span class="identifier">Resizer</span> <span class="special">&gt;</span>
+ <span class="special">{</span>
+  <span class="keyword">public</span><span class="special">:</span>
+     
+     <span class="keyword">typedef</span> <span class="identifier">explicit_stepper_base</span><span class="special">&lt;</span> <span class="number">1</span> <span class="special">,</span> <span class="identifier">State</span> <span class="special">,</span> <span class="identifier">Value</span> <span class="special">,</span> <span class="identifier">Deriv</span> <span class="special">,</span> <span class="identifier">Time</span> <span class="special">,</span> <span class="identifier">Algebra</span> <span class="special">,</span> <span class="identifier">Operations</span> <span class="special">,</span> <span class="identifier">Resizer</span> <span class="special">&gt;</span> <span class="identifier">base_type</span><span class="special">;</span>
 
-    <span class="identifier">custom_euler</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">Algebra</span> <span class="special">&amp;</span><span class="identifier">algebra</span> <span class="special">=</span> <span class="identifier">Algebra</span><span class="special">(</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+     <span class="identifier">custom_euler</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">Algebra</span> <span class="special">&amp;</span><span class="identifier">algebra</span> <span class="special">=</span> <span class="identifier">Algebra</span><span class="special">(</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+ 
+     <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Sys</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">StateIn</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">DerivIn</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">StateOut</span> <span class="special">&gt;</span>
+     <span class="keyword">void</span> <span class="identifier">do_step_impl</span><span class="special">(</span> <span class="identifier">Sys</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="identifier">in</span> <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="identifier">Time</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span><span class="identifier">out</span> <span class="special">,</span> <span class="identifier">Time</span> <span class="identifier">dt</span> <span class="special">)</span>
+     <span class="special">{</span>
+         <span class="identifier">m_algebra</span><span class="special">.</span><span class="identifier">for_each3</span><span class="special">(</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">dxdt</span> <span class="special">,</span> <span class="identifier">Operations</span><span class="special">::</span><span class="identifier">scale_sum2</span><span class="special">&lt;</span> <span class="identifier">Value</span> <span class="special">,</span> <span class="identifier">Time</span> <span class="special">&gt;</span><span class="special">(</span> <span class="number">1</span><span class="special">.</span><span class="number">0</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">)</span><span class="special">;</span>
+     <span class="special">}</span>
 
-    <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Sys</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">StateIn</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">DerivIn</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">StateOut</span> <span class="special">&gt;</span>
-    <span class="keyword">void</span> <span class="identifier">do_step_impl</span><span class="special">(</span> <span class="identifier">Sys</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="identifier">in</span> <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="identifier">Time</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span><span class="identifier">out</span> <span class="special">,</span> <span class="identifier">Time</span> <span class="identifier">dt</span> <span class="special">)</span>
-    <span class="special">{</span>
-        <span class="identifier">m_algebra</span><span class="special">.</span><span class="identifier">for_each3</span><span class="special">(</span> <span class="identifier">out</span> <span class="special">,</span> <span class="identifier">in</span> <span class="special">,</span> <span class="identifier">dxdt</span> <span class="special">,</span> <span class="identifier">Operations</span><span class="special">::</span><span class="identifier">scale_sum2</span><span class="special">&lt;</span> <span class="identifier">Value</span> <span class="special">,</span> <span class="identifier">Time</span> <span class="special">&gt;</span><span class="special">(</span> <span class="number">1</span><span class="special">.</span><span class="number">0</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">)</span><span class="special">;</span>
-    <span class="special">}</span>
-
-    <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">State</span> <span class="special">&gt;</span>
-    <span class="keyword">void</span> <span class="identifier">adjust_size</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">)</span>
-    <span class="special">{</span>
-        <span class="identifier">base_type</span><span class="special">::</span><span class="identifier">adjust_size</span><span class="special">(</span> <span class="identifier">x</span> <span class="special">)</span><span class="special">;</span>
-    <span class="special">}</span>
-<span class="special">}</span><span class="special">;</span>
+     <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">State</span> <span class="special">&gt;</span>
+     <span class="keyword">void</span> <span class="identifier">adjust_size</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">)</span>
+     <span class="special">{</span>
+         <span class="identifier">base_type</span><span class="special">::</span><span class="identifier">adjust_size</span><span class="special">(</span> <span class="identifier">x</span> <span class="special">)</span><span class="special">;</span>
+     <span class="special">}</span>
+ <span class="special">}</span><span class="special">;</span>
 </pre>
 <p>For the Stepper concept only the <code class="computeroutput">do_step( sys , x , t , dt )</code> needs to be implemented. But this class provides additional <code class="computeroutput">do_step</code> variants since the stepper is explicit. These methods can be used to increase the performance in some situation, for example if one needs to analyze <code class="computeroutput">dxdt</code> during each step. In this case one can use</p>
-<pre class="programlisting"><span class="identifier">sys</span><span class="special">(</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">dxdt</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">)</span><span class="special">;</span>
-<span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">dxdt</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">)</span><span class="special">;</span>  <span class="comment">// the value of dxdt is used here</span>
-<span class="identifier">t</span> <span class="special">+=</span> <span class="identifier">dt</span><span class="special">;</span>
+<pre class="programlisting"> <span class="identifier">sys</span><span class="special">(</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">dxdt</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">)</span><span class="special">;</span>
+ <span class="identifier">stepper</span><span class="special">.</span><span class="identifier">do_step</span><span class="special">(</span> <span class="identifier">sys</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="identifier">dxdt</span> <span class="special">,</span> <span class="identifier">t</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">)</span><span class="special">;</span>  <span class="comment">// the value of dxdt is used here</span>
+ <span class="identifier">t</span> <span class="special">+=</span> <span class="identifier">dt</span><span class="special">;</span>
 </pre>
 <p>In detail <a class="link" href="explicit_stepper_base.html" title="Class template explicit_stepper_base">explicit_stepper_base</a> provides the following <code class="computeroutput">do_step</code> variants</p>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem"><p><code class="computeroutput">do_step( sys , x , t , dt )</code> - The classical <code class="computeroutput">do_step</code> method needed to fulfill the Stepper concept. The state is updated in-place. A type modelling a Boost.Range can be used for x.</p></li>
 <li class="listitem"><p><code class="computeroutput">do_step( sys , in , t , out , dt )</code> - This method updates the state out-of-place, hence the result of the step is stored in <code class="computeroutput">out</code>.</p></li>
 <li class="listitem"><p><code class="computeroutput">do_step( sys , x , dxdt , t , dt )</code> - This method updates the state in-place, but the derivative at the point <code class="computeroutput">t</code> must be explicitly passed in <code class="computeroutput">dxdt</code>. For an example see the code snippet above.</p></li>
@@ -129,7 +129,7 @@
 
 </p>
 <div class="refsect2">
-<a name="idp20798304"></a><h3>Template Parameters</h3>
+<a name="id835854"></a><h3>Template Parameters</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">typename</span> Stepper</pre>
@@ -170,25 +170,19 @@
 </ol></div>
 </div>
 <div class="refsect2">
-<a name="idp20821424"></a><h3>
+<a name="id836046"></a><h3>
 <a name="boost.numeric.odeint.explicit_stepper_baseconstruct-copy-destruct"></a><code class="computeroutput">explicit_stepper_base</code> 
         public
        construct/copy/destruct</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
-<pre class="literallayout"><a name="idp20278800-bb"></a><span class="identifier">explicit_stepper_base</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> algebra <span class="special">=</span> <span class="identifier">algebra_type</span><span class="special">(</span><span class="special">)</span><span class="special">)</span><span class="special">;</span></pre>Constructs a <code class="computeroutput"><a class="link" href="explicit_stepper_base.html" title="Class template explicit_stepper_base">explicit_stepper_base</a></code> class. This constructor can be used as a default constructor if the algebra has a default constructor. <p>
+<pre class="literallayout"><a name="id503079-bb"></a><span class="identifier">explicit_stepper_base</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> algebra <span class="special">=</span> <span class="identifier">algebra_type</span><span class="special">(</span><span class="special">)</span><span class="special">)</span><span class="special">;</span></pre>Constructs a <code class="computeroutput"><a class="link" href="explicit_stepper_base.html" title="Class template explicit_stepper_base">explicit_stepper_base</a></code> class. This constructor can be used as a default constructor if the algebra has a default constructor. <p>
 </p>
-<div class="variablelist"><table border="0" class="variablelist compact">
-<colgroup>
+<div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<col>
-</colgroup>
 <tbody><tr>
 <td><p><span class="term">Parameters:</span></p></td>
-<td><div class="variablelist"><table border="0" class="variablelist compact">
-<colgroup>
+<td><div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<col>
-</colgroup>
 <tbody><tr>
 <td><p><span class="term"><code class="computeroutput">algebra</code></span></p></td>
 <td><p>A copy of algebra is made and stored inside <code class="computeroutput"><a class="link" href="explicit_stepper_base.html" title="Class template explicit_stepper_base">explicit_stepper_base</a></code>. </p></td>
@@ -199,18 +193,15 @@
 </li></ol></div>
 </div>
 <div class="refsect2">
-<a name="idp20837888"></a><h3>
-<a name="idp20221824-bb"></a><code class="computeroutput">explicit_stepper_base</code> public member functions</h3>
+<a name="id836184"></a><h3>
+<a name="id502604-bb"></a><code class="computeroutput">explicit_stepper_base</code> public member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
-<pre class="literallayout"><span class="identifier">order_type</span> <a name="idp20222224-bb"></a><span class="identifier">order</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
+<pre class="literallayout"><span class="identifier">order_type</span> <a name="id502608-bb"></a><span class="identifier">order</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
 <p>
 </p>
-<div class="variablelist"><table border="0" class="variablelist compact">
-<colgroup>
+<div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<col>
-</colgroup>
 <tbody><tr>
 <td><p><span class="term">Returns:</span></p></td>
 <td><p>Returns the order of the stepper. </p></td>
@@ -219,20 +210,14 @@
 </li>
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
-  <span class="keyword">void</span> <a name="idp20224720-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>This method performs one step. It transforms the result in-place. <p>
+  <span class="keyword">void</span> <a name="id502628-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>This method performs one step. It transforms the result in-place. <p>
 </p>
-<div class="variablelist"><table border="0" class="variablelist compact">
-<colgroup>
+<div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<col>
-</colgroup>
 <tbody><tr>
 <td><p><span class="term">Parameters:</span></p></td>
-<td><div class="variablelist"><table border="0" class="variablelist compact">
-<colgroup>
+<td><div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<col>
-</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><code class="computeroutput">dt</code></span></p></td>
@@ -257,13 +242,13 @@
 </li>
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
-  <span class="keyword">void</span> <a name="idp20232496-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>Second version to solve the forwarding problem, can be called with Boost.Range as StateInOut. </li>
+  <span class="keyword">void</span> <a name="id502693-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>Second version to solve the forwarding problem, can be called with Boost.Range as StateInOut. </li>
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">,</span> <span class="keyword">typename</span> DerivIn<span class="special">&gt;</span> 
   <span class="identifier">boost</span><span class="special">::</span><span class="identifier">disable_if</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">is_same</span><span class="special">&lt;</span> <span class="identifier">DerivIn</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&gt;</span><span class="special">,</span> <span class="keyword">void</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> 
-  <a name="idp20237984-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span> dxdt<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> 
-          <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>The method performs one step. Additionally to the other method the derivative of x is also passed to this method. It is supposed to be used in the following way: <pre class="programlisting">sys( x , dxdt , t );
-stepper.do_step( sys , x , dxdt , t , dt );
+  <a name="id502739-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span> dxdt<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> 
+          <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>The method performs one step. Additionally to the other method the derivative of x is also passed to this method. It is supposed to be used in the following way: <pre class="programlisting"> sys( x , dxdt , t );
+ stepper.do_step( sys , x , dxdt , t , dt );
 </pre>
 <p>The result is updated in place in x. This method is disabled if Time and Deriv are of the same type. In this case the method could not be distinguished from other <code class="computeroutput">do_step</code> versions.</p>
 <div class="note"><table border="0" summary="Note">
@@ -276,18 +261,12 @@ stepper.do_step( sys , x , dxdt , t , dt );
 <p>
 
 </p>
-<div class="variablelist"><table border="0" class="variablelist compact">
-<colgroup>
+<div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<col>
-</colgroup>
 <tbody><tr>
 <td><p><span class="term">Parameters:</span></p></td>
-<td><div class="variablelist"><table border="0" class="variablelist compact">
-<colgroup>
+<td><div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<col>
-</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><code class="computeroutput">dt</code></span></p></td>
@@ -316,7 +295,7 @@ stepper.do_step( sys , x , dxdt , t , dt );
 </li>
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">,</span> <span class="keyword">typename</span> StateOut<span class="special">&gt;</span> 
-  <span class="keyword">void</span> <a name="idp20249344-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> in<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span> out<span class="special">,</span> 
+  <span class="keyword">void</span> <a name="id502834-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> in<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span> out<span class="special">,</span> 
                <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>The method performs one step. The state of the ODE is updated out-of-place. <div class="note"><table border="0" summary="Note">
 <tr>
 <td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../images/note.png"></td>
@@ -327,18 +306,12 @@ stepper.do_step( sys , x , dxdt , t , dt );
 <p>
 
 </p>
-<div class="variablelist"><table border="0" class="variablelist compact">
-<colgroup>
+<div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<col>
-</colgroup>
 <tbody><tr>
 <td><p><span class="term">Parameters:</span></p></td>
-<td><div class="variablelist"><table border="0" class="variablelist compact">
-<colgroup>
+<td><div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<col>
-</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><code class="computeroutput">dt</code></span></p></td>
@@ -368,9 +341,9 @@ stepper.do_step( sys , x , dxdt , t , dt );
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">,</span> <span class="keyword">typename</span> DerivIn<span class="special">,</span> 
          <span class="keyword">typename</span> StateOut<span class="special">&gt;</span> 
-  <span class="keyword">void</span> <a name="idp20259232-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> in<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span> dxdt<span class="special">,</span> 
-               <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span> out<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>The method performs one step. The state of the ODE is updated out-of-place. Furthermore, the derivative of x at t is passed to the stepper. It is supposed to be used in the following way: <pre class="programlisting">sys( in , dxdt , t );
-stepper.do_step( sys , in , dxdt , t , out , dt );
+  <span class="keyword">void</span> <a name="id502916-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> in<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span> dxdt<span class="special">,</span> 
+               <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span> out<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>The method performs one step. The state of the ODE is updated out-of-place. Furthermore, the derivative of x at t is passed to the stepper. It is supposed to be used in the following way: <pre class="programlisting"> sys( in , dxdt , t );
+ stepper.do_step( sys , in , dxdt , t , out , dt );
 </pre>
 <div class="note"><table border="0" summary="Note">
 <tr>
@@ -382,18 +355,12 @@ stepper.do_step( sys , in , dxdt , t , out , dt );
 <p>
 
 </p>
-<div class="variablelist"><table border="0" class="variablelist compact">
-<colgroup>
+<div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<col>
-</colgroup>
 <tbody><tr>
 <td><p><span class="term">Parameters:</span></p></td>
-<td><div class="variablelist"><table border="0" class="variablelist compact">
-<colgroup>
+<td><div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<col>
-</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><code class="computeroutput">dt</code></span></p></td>
@@ -425,20 +392,14 @@ stepper.do_step( sys , in , dxdt , t , out , dt );
 </table></div>
 </li>
 <li class="listitem">
-<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">void</span> <a name="idp20271392-bb"></a><span class="identifier">adjust_size</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre>Adjust the size of all temporaries in the stepper manually. <p>
+<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">void</span> <a name="id503017-bb"></a><span class="identifier">adjust_size</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre>Adjust the size of all temporaries in the stepper manually. <p>
 </p>
-<div class="variablelist"><table border="0" class="variablelist compact">
-<colgroup>
+<div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<col>
-</colgroup>
 <tbody><tr>
 <td><p><span class="term">Parameters:</span></p></td>
-<td><div class="variablelist"><table border="0" class="variablelist compact">
-<colgroup>
+<td><div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<col>
-</colgroup>
 <tbody><tr>
 <td><p><span class="term"><code class="computeroutput">x</code></span></p></td>
 <td><p>A state from which the size of the temporaries to be resized is deduced. </p></td>
@@ -448,14 +409,11 @@ stepper.do_step( sys , in , dxdt , t , out , dt );
 </table></div>
 </li>
 <li class="listitem">
-<pre class="literallayout"><span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a name="idp20275120-bb"></a><span class="identifier">algebra</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
+<pre class="literallayout"><span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a name="id503048-bb"></a><span class="identifier">algebra</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
 <p>
 </p>
-<div class="variablelist"><table border="0" class="variablelist compact">
-<colgroup>
+<div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<col>
-</colgroup>
 <tbody><tr>
 <td><p><span class="term">Returns:</span></p></td>
 <td><p>A reference to the algebra which is held by this class. </p></td>
@@ -463,14 +421,11 @@ stepper.do_step( sys , in , dxdt , t , out , dt );
 </table></div>
 </li>
 <li class="listitem">
-<pre class="literallayout"><span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a name="idp20276960-bb"></a><span class="identifier">algebra</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
+<pre class="literallayout"><span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a name="id503064-bb"></a><span class="identifier">algebra</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
 <p>
 </p>
-<div class="variablelist"><table border="0" class="variablelist compact">
-<colgroup>
+<div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<col>
-</colgroup>
 <tbody><tr>
 <td><p><span class="term">Returns:</span></p></td>
 <td><p>A const reference to the algebra which is held by this class. </p></td>
@@ -480,14 +435,14 @@ stepper.do_step( sys , in , dxdt , t , out , dt );
 </ol></div>
 </div>
 <div class="refsect2">
-<a name="idp21007808"></a><h3>
-<a name="idp20282656-bb"></a><code class="computeroutput">explicit_stepper_base</code> private member functions</h3>
+<a name="id837600"></a><h3>
+<a name="id503111-bb"></a><code class="computeroutput">explicit_stepper_base</code> private member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
-<li class="listitem"><pre class="literallayout"><span class="identifier">stepper_type</span> <span class="special">&amp;</span> <a name="idp20283072-bb"></a><span class="identifier">stepper</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span><span class="special">;</span></pre></li>
-<li class="listitem"><pre class="literallayout"><span class="keyword">const</span> <span class="identifier">stepper_type</span> <span class="special">&amp;</span> <a name="idp20284720-bb"></a><span class="identifier">stepper</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre></li>
-<li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a name="idp20286368-bb"></a><span class="identifier">resize_impl</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="identifier">stepper_type</span> <span class="special">&amp;</span> <a name="id503115-bb"></a><span class="identifier">stepper</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">const</span> <span class="identifier">stepper_type</span> <span class="special">&amp;</span> <a name="id503128-bb"></a><span class="identifier">stepper</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a name="id503142-bb"></a><span class="identifier">resize_impl</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre></li>
 <li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
-  <span class="keyword">void</span> <a name="idp20288864-bb"></a><span class="identifier">do_step_v1</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre></li>
+  <span class="keyword">void</span> <a name="id503163-bb"></a><span class="identifier">do_step_v1</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre></li>
 </ol></div>
 </div>
 </div>

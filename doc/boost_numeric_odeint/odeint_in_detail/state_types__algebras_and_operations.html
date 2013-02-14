@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>State types, algebras and operations</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.77.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../odeint_in_detail.html" title="odeint in detail">
 <link rel="prev" href="integrate_functions.html" title="Integrate functions">
@@ -58,7 +58,7 @@
         and maybe how to allocate memory (resizing). All in all, the following things
         have to be taken care of when odeint is used with non-standard state types:
       </p>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
             construction/destruction
           </li>
@@ -448,7 +448,7 @@
             template, the code would still compile but odeint would not adjust the
             size of temporary internal instances of my_vector and hence try to fill
             zero-sized vectors resulting in segmentation faults! The full example
-            can be found in <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/my_vector.cpp" target="_top">my_vector.cpp</a>
+            can be found in <a href="../../../../../../../libs/numeric/odeint/examples/my_vector.cpp" target="_top">my_vector.cpp</a>
           </p>
 </div>
 <div class="section">
@@ -585,7 +585,7 @@
 <p>
             With these definitions odeint knows how to resize <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span></code>s
             and so they can be used as state types. A complete example can be found
-            in <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/list_lattice.cpp" target="_top">list_lattice.cpp</a>.
+            in <a href="../../../../../../../libs/numeric/odeint/examples/list_lattice.cpp" target="_top">list_lattice.cpp</a>.
           </p>
 </div>
 </div>
@@ -615,7 +615,7 @@
           library. If your state type is not supported by <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
           there are several possibilities to tell odeint how to do algebraic operations:
         </p>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
               Implement <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">begin</span></code> and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">end</span></code>
               for your state type so it works with <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>.
@@ -649,7 +649,7 @@
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-              odeint already includes all the code presented here, see <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/boost/numeric/odeint/external/gsl/gsl_wrapper.hpp" target="_top">gsl_wrapper.hpp</a>,
+              odeint already includes all the code presented here, see <a href="../../../../../../../boost/numeric/odeint/external/gsl/gsl_wrapper.hpp" target="_top">gsl_wrapper.hpp</a>,
               so <code class="computeroutput"><span class="identifier">gsl_vector</span></code>s can
               be used straight out-of-box. The following description is just for
               educational purpose.
@@ -803,7 +803,7 @@
 <p>
             Again with similar definitions for the <code class="computeroutput"><span class="keyword">const</span></code>
             versions. This eventually makes odeint work with gsl vectors as state
-            types. The full code for these bindings is found in <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/boost/numeric/odeint/external/gsl/gsl_wrapper.hpp" target="_top">gsl_wrapper.hpp</a>.
+            types. The full code for these bindings is found in <a href="../../../../../../../boost/numeric/odeint/external/gsl/gsl_wrapper.hpp" target="_top">gsl_wrapper.hpp</a>.
             It might look rather complicated but keep in mind that gsl is a pre-compiled
             C library.
           </p>
@@ -1135,7 +1135,7 @@
 <p>
             Note again, that we haven't supported the requirements for controlled
             steppers, but only for simple Runge-Kutta methods. You can find the full
-            example in <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/ublas/lorenz_ublas.cpp" target="_top">lorenz_ublas.cpp</a>.
+            example in <a href="../../../../../../../libs/numeric/odeint/examples/ublas/lorenz_ublas.cpp" target="_top">lorenz_ublas.cpp</a>.
           </p>
 </div>
 <div class="section">
@@ -1283,7 +1283,7 @@
 <p>
           </p>
 <p>
-            The whole example can be found in <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/lorenz_point.cpp" target="_top">lorenz_point.cpp</a>
+            The whole example can be found in <a href="../../../../../../../libs/numeric/odeint/examples/lorenz_point.cpp" target="_top">lorenz_point.cpp</a>
           </p>
 </div>
 </div>
@@ -1298,7 +1298,7 @@
 <p>
           to be continued
         </p>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
               thrust
             </li>

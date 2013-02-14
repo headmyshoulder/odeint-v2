@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Class template implicit_euler</title>
 <link rel="stylesheet" href="../../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.77.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
 <link rel="home" href="../../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../../../header/boost/numeric/odeint/stepper/implicit_euler_hpp.html" title="Header &lt;boost/numeric/odeint/stepper/implicit_euler.hpp&gt;">
 <link rel="prev" href="../../../header/boost/numeric/odeint/stepper/implicit_euler_hpp.html" title="Header &lt;boost/numeric/odeint/stepper/implicit_euler.hpp&gt;">
@@ -43,41 +43,41 @@
   <span class="keyword">typedef</span> <span class="identifier">implicit_euler</span><span class="special">&lt;</span> <span class="identifier">ValueType</span><span class="special">,</span> <span class="identifier">Resizer</span> <span class="special">&gt;</span>                <a name="boost.numeric.odeint.implicit_euler.stepper_type"></a><span class="identifier">stepper_type</span><span class="special">;</span>        
 
   <span class="comment">// <a class="link" href="implicit_euler.html#boost.numeric.odeint.implicit_eulerconstruct-copy-destruct">construct/copy/destruct</a></span>
-  <a class="link" href="implicit_euler.html#idp21439312-bb"><span class="identifier">implicit_euler</span></a><span class="special">(</span><span class="identifier">value_type</span> <span class="special">=</span> <span class="number">1E</span><span class="special">-</span><span class="number">6</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="implicit_euler.html#id512677-bb"><span class="identifier">implicit_euler</span></a><span class="special">(</span><span class="identifier">value_type</span> <span class="special">=</span> <span class="number">1E</span><span class="special">-</span><span class="number">6</span><span class="special">)</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="implicit_euler.html#idp21431856-bb">public member functions</a></span>
+  <span class="comment">// <a class="link" href="implicit_euler.html#id512615-bb">public member functions</a></span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">&gt;</span> 
-    <span class="keyword">void</span> <a class="link" href="implicit_euler.html#idp21432256-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateType<span class="special">&gt;</span> <span class="keyword">void</span> <a class="link" href="implicit_euler.html#idp21436816-bb"><span class="identifier">adjust_size</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateType</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+    <span class="keyword">void</span> <a class="link" href="implicit_euler.html#id512618-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateType<span class="special">&gt;</span> <span class="keyword">void</span> <a class="link" href="implicit_euler.html#id512656-bb"><span class="identifier">adjust_size</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateType</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="implicit_euler.html#idp21440416-bb">private member functions</a></span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a class="link" href="implicit_euler.html#idp21440832-bb"><span class="identifier">resize_impl</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">void</span> <a class="link" href="implicit_euler.html#idp21443328-bb"><span class="identifier">solve</span></a><span class="special">(</span><span class="identifier">state_type</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">matrix_type</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="comment">// <a class="link" href="implicit_euler.html#id512686-bb">private member functions</a></span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a class="link" href="implicit_euler.html#id512690-bb"><span class="identifier">resize_impl</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">void</span> <a class="link" href="implicit_euler.html#id512710-bb"><span class="identifier">solve</span></a><span class="special">(</span><span class="identifier">state_type</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">matrix_type</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp27352640"></a><h2>Description</h2>
+<a name="id890638"></a><h2>Description</h2>
 <div class="refsect2">
-<a name="idp27353056"></a><h3>
+<a name="id890642"></a><h3>
 <a name="boost.numeric.odeint.implicit_eulerconstruct-copy-destruct"></a><code class="computeroutput">implicit_euler</code> 
         public
        construct/copy/destruct</h3>
-<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><pre class="literallayout"><a name="idp21439312-bb"></a><span class="identifier">implicit_euler</span><span class="special">(</span><span class="identifier">value_type</span> epsilon <span class="special">=</span> <span class="number">1E</span><span class="special">-</span><span class="number">6</span><span class="special">)</span><span class="special">;</span></pre></li></ol></div>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><pre class="literallayout"><a name="id512677-bb"></a><span class="identifier">implicit_euler</span><span class="special">(</span><span class="identifier">value_type</span> epsilon <span class="special">=</span> <span class="number">1E</span><span class="special">-</span><span class="number">6</span><span class="special">)</span><span class="special">;</span></pre></li></ol></div>
 </div>
 <div class="refsect2">
-<a name="idp27361984"></a><h3>
-<a name="idp21431856-bb"></a><code class="computeroutput">implicit_euler</code> public member functions</h3>
+<a name="id890714"></a><h3>
+<a name="id512615-bb"></a><code class="computeroutput">implicit_euler</code> public member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">&gt;</span> 
-  <span class="keyword">void</span> <a name="idp21432256-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre></li>
-<li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateType<span class="special">&gt;</span> <span class="keyword">void</span> <a name="idp21436816-bb"></a><span class="identifier">adjust_size</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateType</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre></li>
+  <span class="keyword">void</span> <a name="id512618-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateType<span class="special">&gt;</span> <span class="keyword">void</span> <a name="id512656-bb"></a><span class="identifier">adjust_size</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateType</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre></li>
 </ol></div>
 </div>
 <div class="refsect2">
-<a name="idp27385408"></a><h3>
-<a name="idp21440416-bb"></a><code class="computeroutput">implicit_euler</code> private member functions</h3>
+<a name="id890906"></a><h3>
+<a name="id512686-bb"></a><code class="computeroutput">implicit_euler</code> private member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
-<li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a name="idp21440832-bb"></a><span class="identifier">resize_impl</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre></li>
-<li class="listitem"><pre class="literallayout"><span class="keyword">void</span> <a name="idp21443328-bb"></a><span class="identifier">solve</span><span class="special">(</span><span class="identifier">state_type</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">matrix_type</span> <span class="special">&amp;</span> m<span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a name="id512690-bb"></a><span class="identifier">resize_impl</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">void</span> <a name="id512710-bb"></a><span class="identifier">solve</span><span class="special">(</span><span class="identifier">state_type</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">matrix_type</span> <span class="special">&amp;</span> m<span class="special">)</span><span class="special">;</span></pre></li>
 </ol></div>
 </div>
 </div>
