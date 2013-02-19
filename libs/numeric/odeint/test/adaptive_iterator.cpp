@@ -104,9 +104,8 @@ BOOST_AUTO_TEST_CASE( copy_dense_output_stepper_iterator_with_reference_wrapper 
     
     ++iter1;
     ++iter2;
-
+    
     BOOST_CHECK_EQUAL( & (*iter1) , & (*iter2) );
-    BOOST_CHECK( iter1.same( iter2 ) );
 }
 
 
