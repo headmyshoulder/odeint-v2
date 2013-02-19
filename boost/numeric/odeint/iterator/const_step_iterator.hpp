@@ -4,7 +4,7 @@
  boost/numeric/odeint/iterator/const_step_ode_iterator.hpp
 
  [begin_description]
- Iterator for iterating throught the solution of an ODE with constant step size.
+ Iterator for iterating through the solution of an ODE with constant step size.
  [end_description]
 
  Copyright 2009-2011 Karsten Ahnert

@@ -90,6 +90,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_iterator_factory , Stepper , dummy_steppe
         make_const_step_iterator_end( stepper , boost::ref( system ) , x ) ,
         dummy_observer() );
 
+    // dummy_steppers just add 0.25 at each step
     BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-14 );
 }
 

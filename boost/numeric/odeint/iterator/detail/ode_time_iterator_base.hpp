@@ -52,7 +52,8 @@ namespace detail {
 
     public:
    
-        ode_time_iterator_base( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type t_end , time_type dt )
+        ode_time_iterator_base( stepper_type stepper , system_type sys , state_type &s ,
+                                time_type t , time_type t_end , time_type dt )
             : m_stepper( stepper ) , m_system( sys ) , m_state( &s ) , m_t( t ) , m_t_end( t_end ) , m_dt( dt ) , m_first( true )
         {
             check_end();
