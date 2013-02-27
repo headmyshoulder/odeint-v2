@@ -92,11 +92,12 @@ BOOST_AUTO_TEST_CASE( copy_dense_output_stepper_iterator )
 
 BOOST_AUTO_TEST_CASE( copy_dense_output_stepper_iterator_with_reference_wrapper )
 {
+    // bad use case, the same stepper is iterated twice
     typedef adaptive_iterator< boost::reference_wrapper< dummy_dense_output_stepper > , empty_system > iterator_type;
 
     state_type x = {{ 1.0 }};
     dummy_dense_output_stepper stepper;
-    iterator_type iter1( boost::ref( stepper ) , empty_system() , x );
+    iterator_type iter1( boost::ref( stepper ) , empty_system() , x , 0.0 , 0.9 , 0.1 );
     iterator_type iter2( iter1 );
 
     BOOST_CHECK_EQUAL( & (*iter1) , & (*iter2) );
@@ -106,6 +107,7 @@ BOOST_AUTO_TEST_CASE( copy_dense_output_stepper_iterator_with_reference_wrapper 
     ++iter2;
     
     BOOST_CHECK_EQUAL( & (*iter1) , & (*iter2) );
+    BOOST_CHECK( !iter1.same( iter2 ) );         // they point to the same stepper, there the times will be different
 }
 
 

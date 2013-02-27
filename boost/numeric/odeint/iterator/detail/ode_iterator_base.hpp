@@ -21,8 +21,8 @@
 
 #include <boost/iterator/iterator_facade.hpp>
 
-#include <boost/numeric/odeint/util/unit_helper.hpp>
 #include <boost/numeric/odeint/util/unwrap_reference.hpp>
+#include <boost/numeric/odeint/util/detail/less_with_sign.hpp>
 
 namespace boost {
 namespace numeric {
@@ -53,13 +53,13 @@ namespace detail {
     public:
    
         ode_iterator_base( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type t_end , time_type dt )
-            : m_stepper( stepper ) , m_system( sys ) , m_state( &s ) , m_t( t ) , m_t_end( t_end ) , m_dt( dt ) , m_first( true )
+            : m_stepper( stepper ) , m_system( sys ) , m_state( &s ) , m_t( t ) , m_t_end( t_end ) , m_dt( dt ) , m_at_end( false )
         {
             check_end();
         }
 
         ode_iterator_base( stepper_type stepper , system_type sys , state_type &s )
-            : m_stepper( stepper ) , m_system( sys ) , m_state( &s ) , m_t() , m_t_end() , m_dt() , m_first( false )
+            : m_stepper( stepper ) , m_system( sys ) , m_state( &s ) , m_t() , m_t_end() , m_dt() , m_at_end( true )
         {
         }
 
@@ -71,7 +71,7 @@ namespace detail {
                 ( m_t == iter.m_t ) && 
                 ( m_t_end == iter.m_t_end ) &&
                 ( m_dt == iter.m_dt ) &&
-                ( m_first == iter.m_first )
+                ( m_at_end == iter.m_at_end )
                 );
         }
 
@@ -82,7 +82,7 @@ namespace detail {
 
         bool equal( ode_iterator_base const& other ) const
         {
-            if( m_first == other.m_first )
+            if( m_at_end == other.m_at_end )
             {
                 return true;
             }
@@ -99,20 +99,8 @@ namespace detail {
 
         void check_end( void )
         {
-            if( get_unit_value( m_dt ) > static_cast< ode_value_type >( 0.0 ) )
-            {
-                if( m_t > m_t_end )
-                {
-                    m_first = false;
-                }
-            }
-            else
-            {
-                if( m_t < m_t_end )
-                {
-                    m_first = false;
-                }
-            }
+            if( detail::less_with_sign(  m_t_end , m_t , m_dt ) )
+                m_at_end = true;
         }
 
         stepper_type m_stepper;
@@ -121,7 +109,7 @@ namespace detail {
         time_type m_t;
         time_type m_t_end;
         time_type m_dt;
-        bool m_first;
+        bool m_at_end;
     };
 
 

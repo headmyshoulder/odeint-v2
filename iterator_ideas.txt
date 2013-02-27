@@ -152,13 +152,13 @@ EXIT STATUS: 201
 
 Ein paar Kleinigkeiten hab ich noch aufgeschrieben:
 
-use less_with_sign from util/detail ?
+OK use less_with_sign from util/detail ?
 e.g. in
 ode_iterator_base.hpp:100
 ode_time_iterator_base.hpp:100
 const_step_time_iterator_dense_output_impl.hpp:95
 
-in ode_iterator_base.hpp and ode_time_iterator_base.hpp: replace m_first by 
+OK in ode_iterator_base.hpp and ode_time_iterator_base.hpp: replace m_first by 
 e.g. m_at_end for better understanding.
 
 why pointers to state_type and not references? Was this the ref to ref 

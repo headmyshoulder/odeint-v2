@@ -165,7 +165,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm , Stepper , dummy_steppers )
     BOOST_CHECK_CLOSE( res[2][0] , 1.5 , 1.0e-14 );
     BOOST_CHECK_CLOSE( res[3][0] , 1.75 , 1.0e-14 );
 
-    BOOST_CHECK_CLOSE( x[0] , 2.0 , 1.0e-14 );
+    BOOST_CHECK_CLOSE( x[0] , 2.0 , 1.0e-14 );     // the iterator has already iterated over the end
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm_negative_time_step , Stepper , dummy_steppers )
