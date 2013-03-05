@@ -1,45 +1,42 @@
 /*
+  [auto_generated]
+  boost/numeric/odeint/integrate/controller/adaptive_stop.hpp
 
-= no own stepper =
+  [begin_description]
+  tba.
+  [end_description]
 
-no own stepper, since this stepper cannot be used in the integrate routines at least not without throwing an exception!
+  Copyright 2009-2012 Karsten Ahnert
+  Copyright 2009-2012 Mario Mulansky
 
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or
+  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
-integrate_const( cond_stepper , sys , x , 0.0 , 10.0 , 0.1 ); // can not stop at t = 5.0;
+
+#ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_CONTROLLER_ADAPTIVE_STOP_HPP_DEFINED
+#define BOOST_NUMERIC_ODEINT_INTEGRATE_CONTROLLER_ADAPTIVE_STOP_HPP_DEFINED
+
+#include <boost/numeric/odeint/stepper/stepper_categories.hpp>
+#include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
+
+#include <stdexcept>
 
 
-/*
-
-= idea for conditional integrate =
-
-question: will stepper perform const step size integration?
-*/
-
-integrate_conditional( stepper , sys , x , 0.0 , controller );
+namespace boost {
+namespace numeric {
+namespace odeint {
 
 
-template< class Stepper , class Sys , class State , class Time , class Controller , class Observer >
-void integrate_conditional( Stepper stepper , Sys sys , State const &x , Time t , Time dt , Controller controller , Observer observer )
-{
-    controller.init( stepper , sys , x , t , dt );
-    while( !controller.stop( x , t ) )
-    {
-        controller.do_step( stepper , sys , x , t , dt );
-    }
-    controller.exit( sys , x , t , dt );
-}
-
-
-
-template< class Time >
-class adaptive_controller
+template< class Time = double >
+class adaptive_stop
 {
 public:
 
     typedef Time time_type;
 
-    adaptive_controller( time_type t_end ) : m_t_end( t_end ) { }
+    adaptive_stop( time_type t_end ) : m_t_end( t_end ) { }
 
     template< class Stepper , class Sys , class State >
     void init( Stepper &stepper , Sys sys , const State &s , time_type t , time_type dt )
@@ -53,10 +50,10 @@ public:
     }
 
     template< class Stepper , class Sys , class State >
-    void do_step( Stepper &stepper , Sys sys , State &x , time_type t , time_type dt )
+    void do_step( Stepper &stepper , Sys sys , State &x , time_type &t , time_type &dt )
     {
         typedef typename Stepper::stepper_category stepper_category;
-        do_step_impl( stepper , sys , x , t , dt , stepper_category() )
+        do_step_impl( stepper , sys , x , t , dt , stepper_category() );
     }
 
     template< class Stepper , class Sys , class State >
@@ -78,6 +75,7 @@ public:
     template< class Stepper , class Sys , class State >
     void do_step_impl( Stepper &stepper , Sys sys , State &x , time_type &t , time_type &dt , controlled_stepper_tag )
     {
+        size_t max_attempts = 1000;
         size_t trials = 0;
         controlled_step_result res = success;
         do
@@ -104,15 +102,9 @@ public:
 };
 
 
+} // namespace odeint
+} // namespace numeric
+} // namespace boost
 
-/*
 
- * implement integrate_conditional
- * implement adaptive_controller
- * implement const_step_controller
- * implement adaptive_touch_controller
- * implement const step touch controller
- * unit testing
- * examples
- * documentation
- */
+#endif // BOOST_NUMERIC_ODEINT_INTEGRATE_CONTROLLER_ADAPTIVE_STOP_HPP_DEFINED
