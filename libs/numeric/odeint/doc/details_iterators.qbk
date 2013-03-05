@@ -18,7 +18,7 @@ odeint supports iterators for iterating through an ordinary differential equatio
 
 [import ../examples/const_step_iterator.cpp]
 
-Four iterators are provided. They are all single pass iterators. The first one is a iterator which solves the odeint with constant step size. An example is 
+Four iterators are provided. They are all single pass iterators. The first one is a iterator which solves the ode with constant step size. An example is 
 
 [const_step_iterator_accumulate]
 
