@@ -15,6 +15,7 @@
  */
 
 #include <boost/numeric/odeint/integrate/controller/adaptive_stop.hpp>
+#include <boost/numeric/odeint/integrate/controller/adaptive_approximate.hpp>
 #include <boost/numeric/odeint/integrate/integrate_conditional.hpp>
 
 #include <boost/numeric/odeint.hpp>
@@ -46,13 +47,40 @@ int main( int argc , char *argv[] )
     using namespace odeint;
     using namespace std;
 
+    cout.precision( 14 );
+
+    auto observer = []( const state_type &x , double t ) { cout << t << " " << x[0] << " " << x[1] << " " << x[2] << "\n"; };
+
+    // stepper concept
+    if( false )
+    {
+        runge_kutta4< state_type > rk4;
+        state_type x = {{ 10.0 , 10.0 , 10.0 }};
+        integrate_conditional( rk4 , lorenz() , x , 0.0 , 0.01 ,
+                               make_adaptive_stop( []( const state_type &x , double t ) -> bool { return t > 0.995; } ) ,
+                               observer );
+    }
+
     // stepper concept
     {
         runge_kutta4< state_type > rk4;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
-        integrate_conditional( rk4 , lorenz() , x , 0.0 , 0.01 , adaptive_stop<>( 0.995 ) , []( const state_type &x , double t ) {
-                cout << t << " " << x[0] << " " << x[1] << " " << x[2] << "\n"; } );
+        integrate_conditional( rk4 , lorenz() , x , 0.0 , 0.01 ,
+                               make_adaptive_stop( []( const state_type &x , double t ) -> bool { return x[0] < -10.0; } ) ,
+                               observer );
     }
+
+
+    // stepper concept
+    {
+        runge_kutta4< state_type > rk4;
+        state_type x = {{ 10.0 , 10.0 , 10.0 }};
+        integrate_conditional( rk4 , lorenz() , x , 0.0 , 0.01 ,
+                               make_adaptive_approximate( []( const state_type &x , double t ) -> bool { return x[0] < -10.0; } , 1.0e-10 ) ,
+                               observer );
+    }
+
+
 
 
     return 0;
