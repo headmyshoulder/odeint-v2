@@ -37,12 +37,12 @@ template< class State > struct vector_space_reduce;
 template<>
 struct vector_space_reduce< double >
 {
-  template< class Op >
-  double operator()( double x , Op op , double init ) const
-  {
-      init = op( init , x );
-      return init;
-  }
+    template< class Op >
+    double operator()( double x , Op op , double init ) const
+    {
+        init = op( init , x );
+        return init;
+    }
 };
 
 

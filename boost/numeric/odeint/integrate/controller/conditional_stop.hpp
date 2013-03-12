@@ -1,6 +1,6 @@
 /*
   [auto_generated]
-  boost/numeric/odeint/integrate/controller/adaptive_approximate.hpp
+  boost/numeric/odeint/integrate/controller/conditional_stop.hpp
 
   [begin_description]
   tba.
@@ -15,12 +15,13 @@
 */
 
 
-#ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_CONTROLLER_ADAPTIVE_APPROXIMATE_HPP_DEFINED
-#define BOOST_NUMERIC_ODEINT_INTEGRATE_CONTROLLER_ADAPTIVE_APPROXIMATE_HPP_DEFINED
+#ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_CONTROLLER_CONDITIONAL_STOP_HPP_DEFINED
+#define BOOST_NUMERIC_ODEINT_INTEGRATE_CONTROLLER_CONDITIONAL_STOP_HPP_DEFINED
 
-#include <boost/numeric/odeint/util/copy.hpp>
-#include <boost/numeric/odeint/util/resize.hpp>
+#include <boost/numeric/odeint/stepper/stepper_categories.hpp>
+#include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 
+#include <stdexcept>
 
 
 namespace boost {
@@ -28,44 +29,32 @@ namespace numeric {
 namespace odeint {
 
 
-
-template< class Pred , class Time = double >
-class adaptive_approximate
+template< class Pred >
+class conditional_stop
 {
 public:
 
+    conditional_stop( Pred pred ) : m_pred( pred ) { }
 
-    adaptive_approximate( Pred pred , Time min_step )
-        : m_pred( pred ) , m_min_step( min_step ) , m_stop( false ) { }
-
-    template< class Stepper , class Sys , class State >
+    template< class Stepper , class Sys , class State , class Time >
     void init( Stepper &stepper , Sys sys , const State &s , Time t , Time dt )
     {
     }
 
-    template< class State >
+    template< class State , class Time >
     bool stop( const State &s , Time &t )
     {
-        return m_stop;
+        return m_pred( s , t );
     }
 
-    template< class Stepper , class Sys , class State >
+    template< class Stepper , class Sys , class State , class Time >
     void do_step( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt )
     {
-        typename Stepper::state_type x_old( x );
-        Time t_old = t;
         typedef typename Stepper::stepper_category stepper_category;
         do_step_impl( stepper , sys , x , t , dt , stepper_category() );
-        if( m_pred( x , t ) )
-        {
-            t = t_old;
-            boost::numeric::odeint::copy( x_old , x );
-            dt *= 0.5;
-        }
-        if( dt < m_min_step ) m_stop = true;
     }
 
-    template< class Stepper , class Sys , class State >
+    template< class Stepper , class Sys , class State , class Time >
     void exit( Stepper &stepper , Sys sys , State &x , Time t , Time dt )
     {
     }
@@ -74,14 +63,14 @@ public:
 
 
 
-    template< class Stepper , class Sys , class State >
+    template< class Stepper , class Sys , class State , class Time >
     void do_step_impl( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt , stepper_tag )
     {
         stepper.do_step( sys , x , t , dt );
         t += dt;
     }
 
-    template< class Stepper , class Sys , class State >
+    template< class Stepper , class Sys , class State , class Time >
     void do_step_impl( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt , controlled_stepper_tag )
     {
         size_t max_attempts = 1000;
@@ -97,25 +86,24 @@ public:
 
     }
 
-    template< class Stepper , class Sys , class State >
+    template< class Stepper , class Sys , class State , class Time >
     void do_step_impl( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt , dense_output_stepper_tag )
     {
         stepper.do_step( sys );
         t = stepper.current_time();
     }
 
-    Pred m_pred ;
-    Time m_min_step ;
-    bool m_stop;
+
+
+    Pred m_pred;
 };
 
 
-template< class Pred , class Time >
-adaptive_approximate< Pred , Time > make_adaptive_approximate( Pred pred , Time min_step )
+template< class Pred >
+conditional_stop< Pred > make_conditional_stop( Pred pred )
 {
-    return adaptive_approximate< Pred , Time >( pred , min_step );
+    return conditional_stop< Pred >( pred );
 }
-
 
 
 } // namespace odeint
@@ -123,4 +111,4 @@ adaptive_approximate< Pred , Time > make_adaptive_approximate( Pred pred , Time 
 } // namespace boost
 
 
-#endif // BOOST_NUMERIC_ODEINT_INTEGRATE_CONTROLLER_ADAPTIVE_APPROXIMATE_HPP_DEFINED
+#endif // BOOST_NUMERIC_ODEINT_INTEGRATE_CONTROLLER_CONDITIONAL_STOP_HPP_DEFINED

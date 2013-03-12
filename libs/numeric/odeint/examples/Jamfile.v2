@@ -37,6 +37,7 @@ exe bind_member_functions : bind_member_functions.cpp ;
 exe bind_member_functions_cpp11 : bind_member_functions_cpp11.cpp : <cxxflags>-std=c++0x ;
 
 exe integrate_conditional : integrate_conditional.cpp : <cxxflags>-std=c++0x ;
+exe integrate_conditional_bouncing_ball : integrate_conditional_bouncing_ball.cpp : <cxxflags>-std=c++0x ;
 
 # build-project mtl ;
 # build-project ublas ;

@@ -14,8 +14,8 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#include <boost/numeric/odeint/integrate/controller/adaptive_stop.hpp>
-#include <boost/numeric/odeint/integrate/controller/adaptive_approximate.hpp>
+#include <boost/numeric/odeint/integrate/controller/conditional_stop.hpp>
+#include <boost/numeric/odeint/integrate/controller/approximate.hpp>
 #include <boost/numeric/odeint/integrate/integrate_conditional.hpp>
 
 #include <boost/numeric/odeint.hpp>
@@ -57,7 +57,7 @@ int main( int argc , char *argv[] )
         runge_kutta4< state_type > rk4;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
         integrate_conditional( rk4 , lorenz() , x , 0.0 , 0.01 ,
-                               make_adaptive_stop( []( const state_type &x , double t ) -> bool { return t > 0.995; } ) ,
+                               make_conditional_stop( []( const state_type &x , double t ) -> bool { return t > 0.995; } ) ,
                                observer );
     }
 
@@ -66,7 +66,7 @@ int main( int argc , char *argv[] )
         runge_kutta4< state_type > rk4;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
         integrate_conditional( rk4 , lorenz() , x , 0.0 , 0.01 ,
-                               make_adaptive_stop( []( const state_type &x , double t ) -> bool { return x[0] < -10.0; } ) ,
+                               make_conditional_stop( []( const state_type &x , double t ) -> bool { return x[0] < -10.0; } ) ,
                                observer );
     }
 
@@ -76,7 +76,7 @@ int main( int argc , char *argv[] )
         runge_kutta4< state_type > rk4;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
         integrate_conditional( rk4 , lorenz() , x , 0.0 , 0.01 ,
-                               make_adaptive_approximate( []( const state_type &x , double t ) -> bool { return x[0] < -10.0; } , 1.0e-10 ) ,
+                               make_approximate( []( const state_type &x , double t ) -> bool { return x[0] < -10.0; } , 1.0e-10 ) ,
                                observer );
     }
 

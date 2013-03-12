@@ -1,6 +1,6 @@
 /*
   [auto_generated]
-  boost/numeric/odeint/integrate/controller/adaptive_stop.hpp
+  boost/numeric/odeint/integrate/controller/approximate.hpp
 
   [begin_description]
   tba.
@@ -15,13 +15,12 @@
 */
 
 
-#ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_CONTROLLER_ADAPTIVE_STOP_HPP_DEFINED
-#define BOOST_NUMERIC_ODEINT_INTEGRATE_CONTROLLER_ADAPTIVE_STOP_HPP_DEFINED
+#ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_CONTROLLER_APPROXIMATE_HPP_DEFINED
+#define BOOST_NUMERIC_ODEINT_INTEGRATE_CONTROLLER_APPROXIMATE_HPP_DEFINED
 
-#include <boost/numeric/odeint/stepper/stepper_categories.hpp>
-#include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
+#include <boost/numeric/odeint/util/copy.hpp>
+#include <boost/numeric/odeint/util/resize.hpp>
 
-#include <stdexcept>
 
 
 namespace boost {
@@ -29,32 +28,44 @@ namespace numeric {
 namespace odeint {
 
 
-template< class Pred >
-class adaptive_stop
+
+template< class Pred , class Time = double >
+class approximate
 {
 public:
 
-    adaptive_stop( Pred pred ) : m_pred( pred ) { }
 
-    template< class Stepper , class Sys , class State , class Time >
+    approximate( Pred pred , Time min_step )
+        : m_pred( pred ) , m_min_step( min_step ) , m_stop( false ) { }
+
+    template< class Stepper , class Sys , class State >
     void init( Stepper &stepper , Sys sys , const State &s , Time t , Time dt )
     {
     }
 
-    template< class State , class Time >
+    template< class State >
     bool stop( const State &s , Time &t )
     {
-        return m_pred( s , t );
+        return m_stop;
     }
 
-    template< class Stepper , class Sys , class State , class Time >
+    template< class Stepper , class Sys , class State >
     void do_step( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt )
     {
+        typename Stepper::state_type x_old( x );
+        Time t_old = t;
         typedef typename Stepper::stepper_category stepper_category;
         do_step_impl( stepper , sys , x , t , dt , stepper_category() );
+        if( m_pred( x , t ) )
+        {
+            t = t_old;
+            boost::numeric::odeint::copy( x_old , x );
+            dt *= 0.5;
+        }
+        if( dt < m_min_step ) m_stop = true;
     }
 
-    template< class Stepper , class Sys , class State , class Time >
+    template< class Stepper , class Sys , class State >
     void exit( Stepper &stepper , Sys sys , State &x , Time t , Time dt )
     {
     }
@@ -63,14 +74,14 @@ public:
 
 
 
-    template< class Stepper , class Sys , class State , class Time >
+    template< class Stepper , class Sys , class State >
     void do_step_impl( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt , stepper_tag )
     {
         stepper.do_step( sys , x , t , dt );
         t += dt;
     }
 
-    template< class Stepper , class Sys , class State , class Time >
+    template< class Stepper , class Sys , class State >
     void do_step_impl( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt , controlled_stepper_tag )
     {
         size_t max_attempts = 1000;
@@ -86,24 +97,25 @@ public:
 
     }
 
-    template< class Stepper , class Sys , class State , class Time >
+    template< class Stepper , class Sys , class State >
     void do_step_impl( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt , dense_output_stepper_tag )
     {
         stepper.do_step( sys );
         t = stepper.current_time();
     }
 
-
-
-    Pred m_pred;
+    Pred m_pred ;
+    Time m_min_step ;
+    bool m_stop;
 };
 
 
-template< class Pred >
-adaptive_stop< Pred > make_adaptive_stop( Pred pred )
+template< class Pred , class Time >
+approximate< Pred , Time > make_approximate( Pred pred , Time min_step )
 {
-    return adaptive_stop< Pred >( pred );
+    return approximate< Pred , Time >( pred , min_step );
 }
+
 
 
 } // namespace odeint
@@ -111,4 +123,4 @@ adaptive_stop< Pred > make_adaptive_stop( Pred pred )
 } // namespace boost
 
 
-#endif // BOOST_NUMERIC_ODEINT_INTEGRATE_CONTROLLER_ADAPTIVE_STOP_HPP_DEFINED
+#endif // BOOST_NUMERIC_ODEINT_INTEGRATE_CONTROLLER_APPROXIMATE_HPP_DEFINED
