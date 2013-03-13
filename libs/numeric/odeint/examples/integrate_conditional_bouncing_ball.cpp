@@ -34,7 +34,7 @@ struct ball
     void operator()( const State &x , State &dxdt , Time t ) const
     {
         const double acceleration = 9.81;
-        const double friction = 0.01;
+        const double friction = 0.2;
         dxdt[0] = x[1];
         dxdt[1] = -acceleration - friction * x[1] ;
     }
@@ -53,12 +53,23 @@ struct ball_controller
         return ( t > 100.0 );
     }
 
+    // template< class Stepper , class Sys , class State , class Time >
+    // void do_step( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt )
+    // {
+    //     stepper.do_step( sys , x , t , dt );
+    //     if( x[0] < 0.0 )
+    //     {
+    //         x[0] = -x[0];
+    //         x[1] = -0.8 * x[1];
+    //     }
+    //     t += dt;
+    // }
+
     template< class Stepper , class Sys , class State , class Time >
     void do_step( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt )
     {
-        stepper.do_step( sys , x , t , dt );
-        t += dt;
     }
+
 
     template< class Stepper , class Sys , class State , class Time >
     void exit( Stepper &stepper , Sys sys , State &x , Time t , Time dt )
@@ -76,11 +87,10 @@ int main( int argc , char *argv[] )
     auto observer = []( const state_type &x , double t ) { cout << t << " " << x[0] << " " << x[1] << " " << "\n"; };
 
     // stepper concept
-    if( false )
     {
         runge_kutta4< state_type > rk4;
         state_type x = {{ 10.0 , 0.0 }};
-        integrate_conditional( rk4 , ball() , x , 0.0 , 0.01 ,
+        integrate_conditional( rk4 , ball() , x , 0.0 , 0.1 ,
                                ball_controller() ,
                                observer );
     }
