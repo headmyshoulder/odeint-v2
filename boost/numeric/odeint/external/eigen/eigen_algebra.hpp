@@ -40,22 +40,9 @@ operator+(const typename Eigen::MatrixBase<D> &m,
         typename Eigen::internal::scalar_add_op<
             typename Eigen::internal::traits<D>::Scalar>,
         const D >(m.derived(),Eigen::internal::scalar_add_op<
-                      typename Eigen::internal::traits<D>::Scalar>(s));
-}
-
-template<typename D>
-inline const
-typename Eigen::CwiseUnaryOp<
-    typename Eigen::internal::scalar_add_op<
-        typename Eigen::internal::traits<D>::Scalar>,
-    const D >
-operator+(const typename Eigen::internal::traits<D>::Scalar &s,
-          const typename Eigen::MatrixBase<D> &m) {
-    return Eigen::CwiseUnaryOp<
-        typename Eigen::internal::scalar_add_op<
-            typename Eigen::internal::traits<D>::Scalar>,
-        const D >(m.derived(),Eigen::internal::scalar_add_op<
-                      typename Eigen::internal::traits<D>::Scalar>(s));
+                      traits<D>::Scalar>,
+                  const D >(m.derived(),Eigen::internal::scalar_add_op<
+                                typename Eigen::internal::traits<D>::Scalar>(s));
 }
 
 template<typename D1,typename D2>
@@ -86,9 +73,11 @@ return m.cwiseAbs();
 
 
 template<typename B,int S1,int S2,int O, int M1, int M2>
-Eigen::Matrix<B,S1,S2,O,M1,M2> abs(const Eigen::Matrix<B,S1,S2,O,M1,M2> &m) {
+Eigen::Matrix<B,S1,S2,O,M1,M2> abs(const Eigen::Matrix<B,S1,S2,O,M1,M2> &m)
+{
     return m.cwiseAbs();
 }
+
 
 } // end Eigen namespace
 

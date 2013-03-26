@@ -27,7 +27,6 @@
 #include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
 #include <boost/numeric/odeint/external/eigen/eigen_resize.hpp>
 
-
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
 
