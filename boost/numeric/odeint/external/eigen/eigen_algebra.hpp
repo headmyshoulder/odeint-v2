@@ -31,19 +31,34 @@ namespace Eigen {
 template<typename D>
 inline const
 typename Eigen::CwiseUnaryOp<
-    typename Eigen::internal::scalar_add_op<
-        typename Eigen::internal::traits<D>::Scalar>,
-    const D >
+          typename Eigen::internal::scalar_add_op<
+               typename Eigen::internal::traits<D>::Scalar>,
+          const D >
 operator+(const typename Eigen::MatrixBase<D> &m,
           const typename Eigen::internal::traits<D>::Scalar &s) {
-    return Eigen::CwiseUnaryOp<
-        typename Eigen::internal::scalar_add_op<
-            typename Eigen::internal::traits<D>::Scalar>,
-        const D >(m.derived(),Eigen::internal::scalar_add_op<
-                      traits<D>::Scalar>,
-                  const D >(m.derived(),Eigen::internal::scalar_add_op<
-                                typename Eigen::internal::traits<D>::Scalar>(s));
+     return Eigen::CwiseUnaryOp<
+          typename Eigen::internal::scalar_add_op<
+               typename Eigen::internal::traits<D>::Scalar>,
+          const D >(m.derived(),Eigen::internal::scalar_add_op<
+                    typename Eigen::internal::traits<D>::Scalar>(s));
 }
+
+template<typename D>
+inline const
+typename Eigen::CwiseUnaryOp<
+          typename Eigen::internal::scalar_add_op<
+               typename Eigen::internal::traits<D>::Scalar>,
+          const D >
+operator+(const typename Eigen::internal::traits<D>::Scalar &s,
+const typename Eigen::MatrixBase<D> &m) {
+     return Eigen::CwiseUnaryOp<
+          typename Eigen::internal::scalar_add_op<
+               typename Eigen::internal::traits<D>::Scalar>,
+          const D >(m.derived(),Eigen::internal::scalar_add_op<
+                    typename Eigen::internal::traits<D>::Scalar>(s));
+}
+
+
 
 template<typename D1,typename D2>
 inline const
