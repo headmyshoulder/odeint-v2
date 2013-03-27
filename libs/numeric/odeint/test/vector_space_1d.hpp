@@ -20,6 +20,8 @@
 #include <boost/config.hpp>
 #include <boost/operators.hpp>
 
+#include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
+
 template< class T >
 struct vector_space_1d :
     boost::additive1< vector_space_1d< T > ,

@@ -123,4 +123,17 @@ struct default_coor_func_vector_space_1d
 
 
 
+
+
+struct empty_system
+{
+    template <class State >
+    void operator()( const State &x , State &dxdt , double t ) const
+    {
+    }
+};
+
+
+
+
 #endif // LIBS_NUMERIC_ODEINT_TEST_DUMMY_ODES_HPP_DEFINED

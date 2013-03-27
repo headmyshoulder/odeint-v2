@@ -1,0 +1,174 @@
+Iterator versions:
+
+class XYZ_iterator
+{
+};
+
+
+
+
+
+
+
+
+
+
+
+* never use iterators directly, always use the generation functions
+  * state this clearly in the docs
+
+
+* const__iterator 
+  * stepper -> 
+
+* solver, system, state und zeit gehören zusammen. Wie kann das ausgedrueckt werden
+
+do_step( stepper , system , x , t , dt );
+do_step( stepper , system , in , t , out , dt );
+
+* controlled stepper: solver, system, state und zeit gehören zusammen
+
+try_step( stepper , system , x , t , dt );
+try_step( stepper , system , in , t , out , dt );
+
+* dense_output_stepper solver, system, alter state, neuer state, alte zeit, neue zeit gehören zusammen
+
+do_step( stepper , system , x_old , t_old , x_new , t_new , dt );
+
+
+* stepper, state, system 
+
+
+
+
+stepper s( sys , x , t );
+s.do_step( dt );
+do_step( s , t );
+order( s );
+state( s );
+time( s );
+initialize( sys , x , t );
+
+Problem: wie ändert man algebra?
+
+controlled_stepper s( sys , x , t , dt );
+s.try_step();
+do_step( s );
+
+dense_output_stepper s( sys , x , t );
+s.do_step( dt );
+do_step( s , dt );
+
+controlled_dense_output_stepper s( sys , x , t , dt );
+s.do_step();
+do_step( s );
+
+iterator iter( s , dt );
+
+integrate( make_xyz_stepper( stepper , sys , x , t_start ) , t_start , dt , t_end );
+
+
+
+structure:
+
+low-level
+* steppers
+* algebras
+* operations
+* utils
+
+high-level sitzt auf v2
+* stepper
+* integrate
+* iterate
+* do_step
+
+
+
+
+
+
+
+
+
+==================== MARIO: =============================
+
+On Tuesday, February 05, 2013 10:49:57 AM you wrote:
+> Hi Mario,
+>
+> die Iteratoren sind jetzt fertig, nur die Referenz in der Docu zickt
+> noch ein kleines bisschen rum. Kannst Du dir das vielleicht mal
+> anschauen und ein kleines Mini-Review machen, ich würde das danach mal
+> auf der Boost-ML posten.
+
+ich schau grad bissl rein, momentan im const_step_iterator.cpp test. Da 
+verstehe ich die konstanten nicht, zb Z 93:
+
+BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-14 );
+
+warum 3.5 als ergebnis mit empty system?
+
+und den transivity check in Z 136-148 versteh ich auch nich, warum sind die 
+iteratoren gleich? weil beim start schon end>anfang ist? funktionieren die 
+iteratoren auch mit negativem dt?
+
+Auch in Zeile 167 verstehe ich nicht warum x[0] == 2.0, waehrend res[3][0] 
+darueber 1.75 gibt?
+
+evtl kannst du da ein paar kommentare mit reinmachen, das waere hilfreich zum 
+verstehen was passiert.
+
+
+Soviel erstmal an unklarheiten, ich schau spaeter nochmal mit etwas mehr ruhe 
+
+
+gruss, mario
+
+==================== MARIO: =============================
+
+Ok im Zug ein bisschen mehr in den Code geschaut, dabei ist mir auch die 
+Funktionsweise klar geworden .
+
+Sieht alles sehr gut aus und der Code ist auch ziemlich verstaendlich, aber 
+irgendwie wirft ein test nen fehler bei mir:
+
+************************************************************
+gcc 4.7.1 test failed:
+
+testing.capture-output 
+libs/numeric/odeint/test/bin/adaptive_iterator.test/gcc-4.7/debug/link-
+static/adaptive_iterator.run
+====== BEGIN OUTPUT ======
+Running 22 test cases...
+adaptive_iterator.cpp(109): error in 
+"copy_dense_output_stepper_iterator_with_reference_wrapper": check iter1.same( 
+iter2 ) failed
+
+*** 1 failure detected in test suite "odeint_adaptive_iterator"
+
+EXIT STATUS: 201
+************************************************************
+
+
+Ein paar Kleinigkeiten hab ich noch aufgeschrieben:
+
+OK use less_with_sign from util/detail ?
+e.g. in
+ode_iterator_base.hpp:100
+ode_time_iterator_base.hpp:100
+const_step_time_iterator_dense_output_impl.hpp:95
+
+OK in ode_iterator_base.hpp and ode_time_iterator_base.hpp: replace m_first by 
+e.g. m_at_end for better understanding.
+
+why pointers to state_type and not references? Was this the ref to ref 
+problem?
+
+Ansonsten find ichs sehr gut!
+
+Bis Samstag,
+
+Mario
+
+==================== MARIO: =============================
+
