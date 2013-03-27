@@ -164,8 +164,8 @@ private:
  * See also
  * <a href="http://en.wikipedia.org/wiki/Linear_multistep_method">en.wikipedia.org/wiki/Linear_multistep_method</a>.
  * Currently, a maximum of Steps=8 is supported.
- * The method is explicit and fullfils the Stepper concept. Step size control
- * or continous output are not provided.
+ * The method is explicit and fulfills the Stepper concept. Step size control
+ * or continuous output are not provided.
  * 
  * This class derives from algebra_base and inherits its interface via
  * CRTP (current recurring template pattern). For more details see
@@ -199,7 +199,7 @@ private:
      * \fn adams_bashforth_moulton::do_step( System system , StateInOut &x , time_type t , time_type dt )
      * \brief This method performs one step. It transforms the result in-place.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ordinary differential equation. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ordinary differential equation. It must fulfill the
      *               Simple System concept.
      * \param x The state of the ODE which should be solved. After calling do_step the result is updated in x.
      * \param t The value of the time, at which the step should be performed.
@@ -211,7 +211,7 @@ private:
      * \fn adams_bashforth_moulton::do_step( System system , const StateIn &in , time_type t , const StateOut &out , time_type dt )
      * \brief The method performs one step with the stepper passed by Stepper. The state of the ODE is updated out-of-place.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param in The state of the ODE which should be solved. in is not modified in this method
      * \param t The value of the time, at which the step should be performed.
@@ -230,7 +230,7 @@ private:
      * \brief Initialized the stepper. Does Steps-1 steps with the explicit_stepper to fill the buffer.
      * \note The state x and time t are updated to the values after Steps-1 initial steps.
      * \param explicit_stepper the stepper used to fill the buffer of previous step results
-     * \param system The system function to solve, hence the r.h.s. of the ordinary differential equation. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ordinary differential equation. It must fulfill the
      *               Simple System concept.
      * \param x The initial state of the ODE which should be solved, updated after in this method.
      * \param t The initial time, updated in this method.
@@ -241,7 +241,7 @@ private:
      * \fn adams_bashforth_moulton::initialize( System system , StateIn &x , time_type &t , time_type dt )
      * \brief Initialized the stepper. Does Steps-1 steps using the standard initializing stepper 
      * of the underlying adams_bashforth stepper.
-     * \param system The system function to solve, hence the r.h.s. of the ordinary differential equation. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ordinary differential equation. It must fulfill the
      *               Simple System concept.
      * \param x The state of the ODE which should be solved. After calling do_step the result is updated in x.
      * \param t The value of the time, at which the step should be performed.

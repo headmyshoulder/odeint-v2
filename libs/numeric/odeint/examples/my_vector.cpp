@@ -68,7 +68,7 @@ private:
 };
 
 //[my_vector_resizeable
-// define my_vector as reizeable
+// define my_vector as resizeable
 
 namespace boost { namespace numeric { namespace odeint {
 

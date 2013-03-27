@@ -216,8 +216,8 @@ private:
  * The Runge-Kutta Cash-Karp method is one of the standard methods for
  * solving ordinary differential equations, see
  * <a href="http://en.wikipedia.org/wiki/Cash%E2%80%93Karp_method">en.wikipedia.org/wiki/Cash-Karp_method</a>.
- * The method is explicit and fullfils the Error Stepper concept. Step size control
- * is provided but continous output is not available for this method.
+ * The method is explicit and fulfills the Error Stepper concept. Step size control
+ * is provided but continuous output is not available for this method.
  * 
  * This class derives from explicit_error_stepper_base and inherits its interface via CRTP (current recurring
  * template pattern). This class implements the method directly, hence the generic Runge-Kutta algorithm is not used.
@@ -250,7 +250,7 @@ private:
      * `do_step_impl` should not be called directly.
 
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param in The state of the ODE which should be solved. in is not modified in this method
      * \param dxdt The derivative of x at t.
@@ -267,7 +267,7 @@ private:
      * Access to this step functionality is provided by explicit_error_stepper_base and 
      * `do_step_impl` should not be called directly.
      *
-     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fullfil the
+     * \param system The system function to solve, hence the r.h.s. of the ODE. It must fulfill the
      *               Simple System concept.
      * \param in The state of the ODE which should be solved. in is not modified in this method
      * \param dxdt The derivative of x at t.

@@ -70,7 +70,7 @@ void gram_schmidt( StateType &x , LyapType &lyap , size_t n )
         for( size_t k=0 ; k<j ; ++k )
             substract_vector( beg1 , end1 , first + k*n , tmp[k] );
 
-        // nromalize j-th vector
+        // normalize j-th vector
         norm[j] = sqrt( std::inner_product( beg1 , end1 , beg1 , 0.0 ) );
         // clog << j << " " << norm[j] << "\n";
         normalize( beg1 , end1 , norm[j] );

@@ -105,7 +105,7 @@ struct perform_integrate_const_test
         {
             //std::cout << i << std::endl;
             // check if observer was called at times 0,1,2,...
-            BOOST_CHECK_SMALL( times[i] - static_cast< value_type >(i)*dt , (i+1) * 2E-16 );
+            BOOST_CHECK_SMALL( times[i] - static_cast< value_type >(i)*dt , (i+1) * 2.0e-16 );
         }
     }
 };
@@ -126,8 +126,8 @@ struct perform_integrate_adaptive_test
 
         BOOST_CHECK_EQUAL( times.size() , steps+1 );
 
-        BOOST_CHECK_SMALL( times[0] - 0.0 , 2E-16 );
-        BOOST_CHECK_SMALL( times[times.size()-1] - t_end , times.size() * 2E-16 );
+        BOOST_CHECK_SMALL( times[0] - 0.0 , 2.0e-16 );
+        BOOST_CHECK_SMALL( times[times.size()-1] - t_end , times.size() * 3.0e-16 );
     }
 };
 
@@ -171,12 +171,12 @@ struct perform_integrate_n_steps_test
         // simple stepper
         value_type end_time = integrate_n_steps( Stepper() , std::make_pair( sys() , jacobi() ) , x , 0.0 , dt , n , push_back_time( times ) );
 
-        BOOST_CHECK_SMALL( end_time - n*dt , 2E-16 );
+        BOOST_CHECK_SMALL( end_time - n*dt , 3.0e-16 );
         BOOST_CHECK_EQUAL( static_cast<int>(times.size()) , n+1 );
 
         for( size_t i=0 ; i<times.size() ; ++i )
             // check if observer was called at times 0,1,2,...
-            BOOST_CHECK_SMALL( times[i] - static_cast< value_type >(i)*dt , (i+1) * 2E-16 );
+            BOOST_CHECK_SMALL( times[i] - static_cast< value_type >(i)*dt , (i+1) * 2.0e-16 );
     }
 };
 
