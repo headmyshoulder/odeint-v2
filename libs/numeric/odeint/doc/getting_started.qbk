@@ -15,8 +15,6 @@
 
 [section Overview]
 
-[caution Boost.Numeric.Odeint is not an official boost library!]
-
 odeint is a library for solving  initial value problems (IVP) of ordinary
 differential equations. Mathematically, these problems are formulated as
 follows: 
