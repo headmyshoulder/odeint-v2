@@ -29,7 +29,7 @@
 #include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_runge_kutta.hpp>
 
-#include <boost/numeric/odeint/external/eigen/eigen_resize.hpp>
+// #include <boost/numeric/odeint/external/eigen/eigen_resize.hpp>
 #include <boost/numeric/odeint/external/eigen/eigen_algebra.hpp>
 
 
