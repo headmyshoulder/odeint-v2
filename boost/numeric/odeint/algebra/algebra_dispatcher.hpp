@@ -62,7 +62,7 @@ struct algebra_dispatcher< std::complex<T> >
     typedef vector_space_algebra algebra_type;
 };
 
-/* think about that again....
+///* think about that again....
 // specialize for ublas vector and matrix types
 template< class T , class A >
 struct algebra_dispatcher< boost::numeric::ublas::vector< T , A > >
@@ -75,7 +75,7 @@ struct algebra_dispatcher< boost::numeric::ublas::matrix< T , L , A > >
 {
     typedef vector_space_algebra algebra_type;
 };
-*/
+//*/
 
 }
 }

@@ -499,9 +499,6 @@ struct default_operations
     };
 
 
-
-
-
     template< class Fac1 = double >
     struct rel_error_max
     {
