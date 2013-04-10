@@ -38,10 +38,11 @@
 namespace boost { namespace numeric { namespace odeint {
 
     template< typename T , typename A >
-    struct vector_space_reduce< boost::numeric::ublas::vector<T,A> >
+    struct vector_space_norm_inf< boost::numeric::ublas::vector<T,A> >
     {
-        template< class Vector >
-        T operator()( Vector x , default_operations::maximum<T> op , T init ) const
+        typedef T result_type;
+
+        result_type operator()( const boost::numeric::ublas::vector<T,A> &x ) const
         {
             return boost::numeric::ublas::norm_inf( x );
         }

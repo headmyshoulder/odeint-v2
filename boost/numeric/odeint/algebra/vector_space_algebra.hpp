@@ -27,6 +27,35 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+/*
+ * This class template has to be overload in order to call vector_space_algebra::norm_inf
+ */
+template< class State > struct vector_space_norm_inf;
+
+/*
+ * Example: instantiation for sole doubles and complex
+ */
+template<>
+struct vector_space_norm_inf< double >
+{
+    typedef double result_type;
+    double operator()( double x ) const
+    {
+        return x;
+    }
+};
+
+template< typename T >
+struct vector_space_norm_inf< std::complex<T> >
+{
+    typedef T result_type;
+    std::complex<T> operator()( std::complex<T> x ) const
+    {
+        using std::abs;
+        return abs( x );
+    }
+};
+
 
 /*
  * This class template has to be overload in order to call vector_space_algebra::reduce
@@ -149,6 +178,13 @@ struct vector_space_algebra
     static void for_each15( S1 &s1 , S2 &s2 , S3 &s3 , S4 &s4 , S5 &s5 , S6 &s6 , S7 &s7 , S8 &s8 , S9 &s9 , S10 &s10 , S11 &s11 , S12 &s12 , S13 &s13 , S14 &s14 , S15 &s15 , Op op )
     {
         op( s1 , s2 , s3 , s4 , s5 , s6 , s7 , s8 , s9 , s10 , s11 , s12 , s13 , s14 , s15 );
+    }
+
+    template< class S >
+    static typename boost::numeric::odeint::vector_space_norm_inf< S >::result_type norm_inf( const S &s )
+    {
+        boost::numeric::odeint::vector_space_norm_inf< S > n;
+        return n( s );
     }
 
     template< class Value , class S , class Red >

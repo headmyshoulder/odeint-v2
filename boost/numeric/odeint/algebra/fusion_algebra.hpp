@@ -18,6 +18,8 @@
 #ifndef BOOST_NUMERIC_ODEINT_ALGEBRA_FUSION_ALGEBRA_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_ALGEBRA_FUSION_ALGEBRA_HPP_INCLUDED
 
+#include <algorithm>
+
 #include <boost/numeric/odeint/config.hpp>
 
 #include <boost/fusion/container/vector.hpp>
@@ -30,6 +32,30 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+namespace detail {
+
+    template< class Value >
+    struct fusion_maximum
+    {
+        template< class Fac1 , class Fac2 >
+        Value operator()( Fac1 t1 , const Fac2 t2 ) const
+        {
+            using std::abs;
+            Value a1 = abs( get_unit_value( t1 ) ) , a2 = abs( get_unit_value( t2 ) );
+            return ( a1 < a2 ) ? a2 : a1 ;
+        }
+
+        typedef Value result_type;
+    };
+}
+
+/* specialize this if the fundamental numeric type in your fusion sequence is
+ * anything else but double (most likely not)
+ */
+template< typename Sequence >
+struct fusion_traits {
+    typedef double value_type;
+};
 
 struct fusion_algebra
 {
@@ -169,6 +195,15 @@ struct fusion_algebra
         Sequences sequences( s1 , s2 , s3 , s4 , s5 , s6 , s7 , s8 , s9 , s10 , s11 , s12 , s13 , s14 , s15 );
         boost::fusion::for_each( boost::fusion::zip_view< Sequences >( sequences ) , boost::fusion::make_fused( op ) );
     }
+
+    template< class S >
+    static typename fusion_traits< S >::value_type norm_inf( const S &s )
+    {
+        typedef typename fusion_traits< S >::value_type value_type;
+        return boost::fusion::accumulate( s , static_cast<value_type>(0.0) ,
+                                          detail::fusion_maximum<value_type>() );
+    }
+
 
     template< class Value , class S , class Reduction >
     static Value reduce( const S &s , Reduction red , Value init)

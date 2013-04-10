@@ -18,11 +18,24 @@
 #ifndef BOOST_NUMERIC_ODEINT_ALGEBRA_DETAIL_REDUCE_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_ALGEBRA_DETAIL_REDUCE_HPP_INCLUDED
 
+#include <algorithm>
+#include <cmath>
 
 namespace boost {
 namespace numeric {
 namespace odeint {
 namespace detail {
+
+template< typename Value , class Iterator1 >
+inline Value norm_inf( Iterator1 first1 , Iterator1 last1 , Value init )
+{
+    using std::max;
+    using std::abs;
+    for( ; first1 != last1 ; )
+        init = max( init , abs( *first1++ ) );
+    return init;
+}
+
 
 template< class ValueType , class Iterator1 , class Reduction >
 inline ValueType reduce( Iterator1 first1 , Iterator1 last1 , Reduction red, ValueType init)
