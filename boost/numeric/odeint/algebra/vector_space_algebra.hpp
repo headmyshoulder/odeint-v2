@@ -45,6 +45,20 @@ struct vector_space_reduce< double >
   }
 };
 
+/*
+ * and floats
+ */
+template<>
+struct vector_space_reduce< float >
+{
+  template< class Op >
+  float operator()( float x , Op op , float init ) const
+  {
+      init = op( init , x );
+      return init;
+  }
+};
+
 
 struct vector_space_algebra
 {
