@@ -41,7 +41,8 @@ struct vector_space_norm_inf< double >
     typedef double result_type;
     double operator()( double x ) const
     {
-        return x;
+        using std::abs;
+        return abs(x);
     }
 };
 

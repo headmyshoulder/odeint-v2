@@ -50,6 +50,47 @@ struct algebra_dispatcher< mtl::compressed2D< Value , Parameters > >
     typedef vector_space_algebra algebra_type;
 };
 
+// specialization of infinity norm calculation
+
+template<typename Value, typename Parameters>
+struct vector_space_norm_inf< mtl::dense_vector< Value , Parameters > >
+{
+    typedef Value result_type;
+    Value operator()( const mtl::dense_vector< Value , Parameters > &x ) const
+    {
+        return mtl::infinity_norm(x);
+    }
+};
+
+template<typename Value, typename Parameters>
+struct vector_space_norm_inf< mtl::dense2D< Value , Parameters > >
+{
+    typedef Value result_type;
+    Value operator()( const mtl::dense2D< Value , Parameters > &x ) const
+    {
+        return mtl::infinity_norm(x);
+    }
+};
+
+template<typename Value, typename Parameters>
+struct vector_space_norm_inf< mtl::morton_dense< Value , Parameters > >
+{
+    typedef Value result_type;
+    Value operator()( const mtl::morton_dense< Value , Parameters > &x ) const
+    {
+        return mtl::infinity_norm(x);
+    }
+};
+
+template<typename Value, typename Parameters>
+struct vector_space_norm_inf< mtl::compressed2D< Value , Parameters > >
+{
+    typedef Value result_type;
+    Value operator()( const mtl::compressed2D< Value , Parameters > &x ) const
+    {
+        return mtl::infinity_norm(x);
+    }
+};
 
 }
 }
