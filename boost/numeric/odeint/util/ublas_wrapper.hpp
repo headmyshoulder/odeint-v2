@@ -24,6 +24,7 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/lu.hpp>
 #include <boost/numeric/ublas/vector_expression.hpp>
+#include <boost/numeric/ublas/matrix_expression.hpp>
 
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
@@ -48,6 +49,17 @@ namespace boost { namespace numeric { namespace odeint {
         }
     };
 
+
+    template< class T , class L , class A >
+    struct vector_space_norm_inf< boost::numeric::ublas::matrix<T,L,A> >
+    {
+        typedef T result_type;
+
+        result_type operator()( const boost::numeric::ublas::matrix<T,L,A> &x ) const
+        {
+            return boost::numeric::ublas::norm_inf( x );
+        }
+    };
 } } }
 
 /* additional operations:
@@ -82,6 +94,14 @@ namespace boost { namespace numeric { namespace ublas {
         return expression_type (e ());
     }
 
+    // (abs m) [i] = abs (m [i])
+    template<class E>
+    BOOST_UBLAS_INLINE
+    typename matrix_unary1_traits<E, scalar_abs<typename E::value_type> >::result_type
+    abs (const matrix_expression<E> &e) {
+        typedef typename matrix_unary1_traits<E, scalar_abs<typename E::value_type> >::expression_type expression_type;
+        return expression_type (e ());
+    }
 
 
     // elementwise division (v1 / v2) [i] = v1 [i] / v2 [i]
@@ -97,6 +117,18 @@ namespace boost { namespace numeric { namespace ublas {
     }
 
 
+    // elementwise division (m1 / m2) [i] = m1 [i] / m2 [i]
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    typename matrix_binary_traits<E1, E2, scalar_divides<typename E1::value_type,
+    typename E2::value_type> >::result_type
+    operator / (const matrix_expression<E1> &e1,
+                const matrix_expression<E2> &e2) {
+        typedef typename matrix_binary_traits<E1, E2, scalar_divides<typename E1::value_type,
+                                                                     typename E2::value_type> >::expression_type expression_type;
+        return expression_type (e1 (), e2 ());
+    }
+
     // addition with scalar
     // (t + v) [i] = t + v [i]
     template<class T1, class E2>
@@ -107,6 +139,19 @@ namespace boost { namespace numeric { namespace ublas {
     operator + (const T1 &e1,
                 const vector_expression<E2> &e2) {
         typedef typename vector_binary_scalar1_traits<const T1, E2, scalar_plus<T1, typename E2::value_type> >::expression_type expression_type;
+        return expression_type (e1, e2 ());
+    }
+
+    // addition with scalar
+    // (t + m) [i] = t + m [i]
+    template<class T1, class E2>
+    BOOST_UBLAS_INLINE
+    typename enable_if< is_convertible<T1, typename E2::value_type >,
+    typename matrix_binary_scalar1_traits<const T1, E2, scalar_plus<T1, typename E2::value_type> >::result_type
+    >::type
+    operator + (const T1 &e1,
+                const matrix_expression<E2> &e2) {
+        typedef typename matrix_binary_scalar1_traits<const T1, E2, scalar_plus<T1, typename E2::value_type> >::expression_type expression_type;
         return expression_type (e1, e2 ());
     }
 
@@ -203,7 +248,8 @@ struct resize_impl< boost::numeric::ublas::matrix< T , L , A > , boost::numeric:
 // specialization for ublas::permutation_matrix
 // same size and resize specialization for matrix-vector resizing
 template< class T , class A , class T_V , class A_V >
-struct same_size_impl< boost::numeric::ublas::permutation_matrix< T , A > , boost::numeric::ublas::vector< T_V , A_V > >
+struct same_size_impl< boost::numeric::ublas::permutation_matrix< T , A > ,
+                       boost::numeric::ublas::vector< T_V , A_V > >
 {
     static bool same_size( const boost::numeric::ublas::permutation_matrix< T , A > &m ,
                            const boost::numeric::ublas::vector< T_V , A_V > &v )
@@ -213,7 +259,8 @@ struct same_size_impl< boost::numeric::ublas::permutation_matrix< T , A > , boos
 };
 
 template< class T , class A , class T_V , class A_V >
-struct resize_impl< boost::numeric::ublas::vector< T_V , A_V > , boost::numeric::ublas::permutation_matrix< T , A > >
+struct resize_impl< boost::numeric::ublas::vector< T_V , A_V > ,
+                    boost::numeric::ublas::permutation_matrix< T , A > >
 {
     static void resize( const boost::numeric::ublas::vector< T_V , A_V > &v,
                         boost::numeric::ublas::permutation_matrix< T , A > &m )

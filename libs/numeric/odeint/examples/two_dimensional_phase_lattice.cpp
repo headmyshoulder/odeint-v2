@@ -144,8 +144,13 @@ int main( int argc , char **argv )
 
     cout << "set term x11" << endl;
     cout << "set pm3d map" << endl;
-    integrate_const( runge_kutta4< state_type >() , two_dimensional_phase_lattice( 1.2 ) ,
-            x , 0.0 , 1001.0 , 0.1 , boost::ref( obs ) );
+
+    integrate_const( runge_kutta4<state_type>() , two_dimensional_phase_lattice( 1.2 ) ,
+                     x , 0.0 , 1001.0 , 0.1 , boost::ref( obs ) );
+
+    // controlled steppers work only after ublas bugfix
+    //integrate_const( make_dense_output< runge_kutta_dopri5< state_type > >( 1E-6 , 1E-6 ) , two_dimensional_phase_lattice( 1.2 ) ,
+    //        x , 0.0 , 1001.0 , 0.1 , boost::ref( obs ) );
 
 
     return 0;
