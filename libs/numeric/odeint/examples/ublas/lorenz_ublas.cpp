@@ -13,26 +13,7 @@
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 
-/* define ublas::vector<double> as resizeable 
- * this is not neccessarily required because this definition already 
- * exists in util/ublas_wrapper.hpp.
- * However, for completeness and educational purpose it is repeated here.
- */
-
-//[ ublas_resizeable
 typedef boost::numeric::ublas::vector< double > state_type;
-
-namespace boost { namespace numeric { namespace odeint {
-
-template<>
-struct is_resizeable< state_type >
-{
-    typedef boost::true_type type;
-    const static bool value = type::value;
-};
-
-} } }
-//]
 
 void lorenz( const state_type &x , state_type &dxdt , const double t )
 {
