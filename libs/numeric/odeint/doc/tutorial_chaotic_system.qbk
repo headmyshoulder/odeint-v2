@@ -143,9 +143,9 @@ range including only the first 3 components of ['x]:
 
 [integrate_transients_with_range]
 
-Note that when using __boost_range, we have to explicitly configure the
+[note Note that when using __boost_range, we have to explicitly configure the
 stepper to use the `range_algebra` as otherwise odeint would automatically
-chose the `array_algebra` because the original state_type is an `array`.
+chose the `array_algebra`, which is incompatible with the usage of __boost_range, because the original state_type is an `array`.]
 
 Having integrated a sufficient number of transients steps we are now able to calculate the Lyapunov exponents:
 
