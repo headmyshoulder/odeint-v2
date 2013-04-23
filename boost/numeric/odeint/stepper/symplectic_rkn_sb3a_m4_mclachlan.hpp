@@ -20,6 +20,7 @@
 
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
 #include <boost/numeric/odeint/algebra/algebra_dispatcher.hpp>
+#include <boost/numeric/odeint/algebra/operations_dispatcher.hpp>
 
 #include <boost/numeric/odeint/util/resizer.hpp>
 
@@ -86,7 +87,7 @@ template<
     class MomentumDeriv = Coor ,
     class Time = Value ,
     class Algebra = typename algebra_dispatcher< Coor >::algebra_type ,
-    class Operations = default_operations ,
+    class Operations = typename operations_dispatcher< Coor >::operations_type ,
     class Resizer = initially_resizer
     >
 #ifndef DOXYGEN_SKIP

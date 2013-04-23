@@ -28,9 +28,7 @@
 
 #include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
 #include <boost/numeric/odeint/integrate/integrate_const.hpp>
-#include <boost/numeric/odeint/external/thrust/thrust_algebra.hpp>
-#include <boost/numeric/odeint/external/thrust/thrust_operations.hpp>
-#include <boost/numeric/odeint/external/thrust/thrust_resize.hpp>
+#include <boost/numeric/odeint/external/thrust/thrust.hpp>
 
 using namespace std;
 
@@ -142,7 +140,7 @@ int main( int arc , char* argv[] )
     state_type omega = omega_host;
 
     // create stepper
-    runge_kutta4< state_type , value_type , state_type , value_type , thrust_algebra , thrust_operations > stepper;
+    runge_kutta4< state_type , value_type , state_type , value_type > stepper;
 
     // create phase oscillator system function
     phase_oscillators sys( omega );

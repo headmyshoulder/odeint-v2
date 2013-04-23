@@ -8,9 +8,7 @@
 #include <boost/ref.hpp>
 
 #include <boost/numeric/odeint.hpp>
-#include <boost/numeric/odeint/external/thrust/thrust_algebra.hpp>
-#include <boost/numeric/odeint/external/thrust/thrust_operations.hpp>
-#include <boost/numeric/odeint/external/thrust/thrust_resize.hpp>
+#include <boost/numeric/odeint/external/thrust/thrust.hpp>
 
 
 using namespace std;
@@ -19,7 +17,7 @@ using namespace boost::numeric::odeint;
 // change to float if your GPU does not support doubles
 typedef double value_type;
 typedef thrust::device_vector< value_type > state_type;
-typedef runge_kutta4< state_type , value_type , state_type , value_type , thrust_algebra , thrust_operations > stepper_type;
+typedef runge_kutta4< state_type , value_type , state_type , value_type > stepper_type;
 
 struct relaxation
 {

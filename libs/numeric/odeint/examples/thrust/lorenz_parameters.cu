@@ -19,9 +19,7 @@
 
 #include <boost/numeric/odeint.hpp>
 
-#include <boost/numeric/odeint/external/thrust/thrust_algebra.hpp>
-#include <boost/numeric/odeint/external/thrust/thrust_operations.hpp>
-#include <boost/numeric/odeint/external/thrust/thrust_resize.hpp>
+#include <boost/numeric/odeint/external/thrust/thrust.hpp>
 
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_real.hpp>
@@ -269,7 +267,7 @@ int main( int arc , char* argv[] )
 
 
     // create error stepper, can be used with make_controlled or make_dense_output
-    typedef runge_kutta_dopri5< state_type , value_type , state_type , value_type , thrust_algebra , thrust_operations > stepper_type;
+    typedef runge_kutta_dopri5< state_type , value_type , state_type , value_type > stepper_type;
 
 
     lorenz_system lorenz( N , beta );
