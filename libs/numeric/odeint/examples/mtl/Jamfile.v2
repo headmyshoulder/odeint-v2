@@ -4,7 +4,7 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 # set your MTL4 directory here
-MTL4_INCLUDE = /home/mario/MTL4/usr/include ;
+MTL4_INCLUDE = /home/mario/MTL4 ;
 
 project
     : requirements 

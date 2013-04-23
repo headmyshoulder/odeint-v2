@@ -38,7 +38,7 @@ struct algebra_dispatcher< mtl::dense2D< Value , Parameters > >
     typedef vector_space_algebra algebra_type;
 };
 
-template<typename Value, size_t BitMask , typename Parameters>
+template<typename Value , size_t BitMask , typename Parameters>
 struct algebra_dispatcher< mtl::morton_dense< Value , BitMask, Parameters > >
 {
     typedef vector_space_algebra algebra_type;
@@ -72,11 +72,11 @@ struct vector_space_norm_inf< mtl::dense2D< Value , Parameters > >
     }
 };
 
-template<typename Value, typename Parameters>
-struct vector_space_norm_inf< mtl::morton_dense< Value , Parameters > >
+template<typename Value , size_t BitMask , typename Parameters>
+struct vector_space_norm_inf< mtl::morton_dense< Value , BitMask , Parameters > >
 {
     typedef Value result_type;
-    Value operator()( const mtl::morton_dense< Value , Parameters > &x ) const
+    Value operator()( const mtl::morton_dense< Value , BitMask , Parameters > &x ) const
     {
         return mtl::infinity_norm(x);
     }
