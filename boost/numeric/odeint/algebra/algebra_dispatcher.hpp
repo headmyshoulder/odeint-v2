@@ -56,6 +56,12 @@ struct algebra_dispatcher< double >
     typedef vector_space_algebra algebra_type;
 };
 
+template<>
+struct algebra_dispatcher< float >
+{
+    typedef vector_space_algebra algebra_type;
+};
+
 template< typename T >
 struct algebra_dispatcher< std::complex<T> >
 {
