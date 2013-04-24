@@ -46,6 +46,17 @@ struct vector_space_norm_inf< double >
     }
 };
 
+template<>
+struct vector_space_norm_inf< float >
+{
+    typedef float result_type;
+    result_type operator()( float x ) const
+    {
+        using std::abs;
+        return abs(x);
+    }
+};
+
 template< typename T >
 struct vector_space_norm_inf< std::complex<T> >
 {
@@ -55,37 +66,6 @@ struct vector_space_norm_inf< std::complex<T> >
         using std::abs;
         return abs( x );
     }
-};
-
-
-/*
- * This class template has to be overload in order to call vector_space_algebra::reduce
- */
-template< class State > struct vector_space_reduce;
-
-/*
- * Example: instantiation for sole doubles and complex
- */
-template<>
-struct vector_space_reduce< double >
-{
-  template< class Op >
-  double operator()( double x , Op op , double init ) const
-  {
-      init = op( init , x );
-      return init;
-  }
-};
-
-template< typename T >
-struct vector_space_reduce< std::complex<T> >
-{
-  template< class Op >
-  std::complex<T> operator()( std::complex<T> x , Op op , std::complex<T> init ) const
-  {
-      init = op( init , x );
-      return init;
-  }
 };
 
 struct vector_space_algebra
@@ -186,13 +166,6 @@ struct vector_space_algebra
     {
         boost::numeric::odeint::vector_space_norm_inf< S > n;
         return n( s );
-    }
-
-    template< class Value , class S , class Red >
-    static Value reduce( const S &s , Red red , Value init )
-    {
-        boost::numeric::odeint::vector_space_reduce< S > r;
-        return r( s , red , init );
     }
 };
 

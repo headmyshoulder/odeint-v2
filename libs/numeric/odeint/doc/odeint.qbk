@@ -48,6 +48,8 @@
     [@http://www.boost.org/doc/libs/release/libs/fusion/index.html Boost.Fusion]]
 [def __boost_graph
     [@http://www.boost.org/doc/libs/1_47_0/libs/graph/doc/table_of_contents.html Boost.Graph]]
+[def __boost_multiprecision
+    [@http://www.boost.org/doc/libs/1_53_0/libs/multiprecision/doc/html/index.html Boost.Multiprecision]]
 
 [def __thrust
     [@http://code.google.com/p/thrust/ Thrust]]
@@ -145,8 +147,8 @@
 [template sub[x]'''<subscript>'''[x]'''</subscript>''']
 [template subl[x]'''<subscript>'''__space[x]'''</subscript>''']
 
-[/ [template github_link[url text]'''<ulink url="https://github.com/headmyshoulder/odeint-v2/tree/master/'''[url]'''" target="_blank">'''[text]'''</ulink>''']]
-[template github_link[url text]'''<ulink url="../../../../../'''[url]'''" target="_blank">'''[text]'''</ulink>''']
+[template github_link[url text]'''<ulink url="https://github.com/headmyshoulder/odeint-v2/tree/master/'''[url]'''" target="_blank">'''[text]'''</ulink>''']
+[/ [template github_link[url text]'''<ulink url="../../../../../'''[url]'''" target="_blank">'''[text]'''</ulink>''']]
 
 
 
