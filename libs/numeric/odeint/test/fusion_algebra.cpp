@@ -174,10 +174,10 @@ BOOST_AUTO_TEST_CASE( for_each15 )
 }
 
 
-BOOST_AUTO_TEST_CASE( reduce )
+BOOST_AUTO_TEST_CASE( norm_inf )
 {
-    double sum = algebra.reduce( fusion::make_vector( 1.0 , 2.0 , 3.0 ) , std::plus< double >() , 0.0 );
-    BOOST_CHECK_CLOSE( sum , 6.0 , 1.0e-10 );
+    double nrm = algebra.norm_inf( fusion::make_vector( 1.0 , 2.0 , 3.0 ) );
+    BOOST_CHECK_CLOSE( nrm , 3.0 , 1.0e-10 );
 }
 
 

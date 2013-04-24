@@ -61,7 +61,7 @@ template< typename T >
 struct vector_space_norm_inf< std::complex<T> >
 {
     typedef T result_type;
-    std::complex<T> operator()( std::complex<T> x ) const
+    result_type operator()( std::complex<T> x ) const
     {
         using std::abs;
         return abs( x );

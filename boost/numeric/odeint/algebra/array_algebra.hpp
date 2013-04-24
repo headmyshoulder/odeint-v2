@@ -260,14 +260,6 @@ struct array_algebra
         return init;
     }
 
-    template< class Value , class T , size_t dim , class Red >
-    static Value reduce( const boost::array< T , dim > &s , Red red , Value init)
-    {
-        for( size_t i=0 ; i<dim ; ++i )
-            init = red( init , s[i] );
-        return init;
-    }
-
 };
 
 }

@@ -200,16 +200,10 @@ struct fusion_algebra
     static typename fusion_traits< S >::value_type norm_inf( const S &s )
     {
         typedef typename fusion_traits< S >::value_type value_type;
-        return boost::fusion::accumulate( s , static_cast<value_type>(0.0) ,
+        return boost::fusion::accumulate( s , static_cast<value_type>(0) ,
                                           detail::fusion_maximum<value_type>() );
     }
 
-
-    template< class Value , class S , class Reduction >
-    static Value reduce( const S &s , Reduction red , Value init)
-    {
-        return boost::fusion::accumulate( s , init , red );
-    }
 };
 
 

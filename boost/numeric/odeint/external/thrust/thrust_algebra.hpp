@@ -198,9 +198,10 @@ struct thrust_algebra
     template< class S >
     static typename S::value_type norm_inf( const S &s )
     {
+        typedef typename S::value_type value_type;
         return thrust::reduce( boost::begin( s ) , boost::end( s ) ,
-                               static_cast<typename S::value_type>(0) ,
-                               detail::maximum<float>() );
+                               static_cast<value_type>(0) ,
+                               detail::maximum<value_type>() );
     }
 
 };
