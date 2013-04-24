@@ -102,12 +102,12 @@ struct perform_stepper_test< Stepper , vector_space_type >
     void operator()( void ) const
     {
         vector_space_type x;
-        x.m_x = 2.0;
+        x = 2.0;
         Stepper stepper;
         check_stepper_concept( stepper , constant_system_vector_space< vector_space_type , vector_space_type , double > , x );
         check_stepper_concept( stepper , boost::cref( constant_system_functor_vector_space() ) , x );
-        std::cout << x.m_x << " ?= " << result << std::endl;
-        BOOST_CHECK_SMALL( fabs( x.m_x - result ) , eps );
+        std::cout << x << " ?= " << result << std::endl;
+        BOOST_CHECK_SMALL( fabs( x - result ) , eps );
     }
 };
 
@@ -128,14 +128,14 @@ struct perform_stepper_test< Stepper , array_type >
 
 
 template< class State > class stepper_methods : public mpl::vector<
-    euler< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-    modified_midpoint< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-    runge_kutta4< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-    runge_kutta4_classic< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-    runge_kutta_cash_karp54_classic< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-    runge_kutta_cash_karp54< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-    runge_kutta_dopri5< State , double , State , double , typename algebra_dispatcher< State >::type > ,
-    runge_kutta_fehlberg78< State , double , State , double , typename algebra_dispatcher< State >::type >
+    euler< State > ,
+    modified_midpoint< State > ,
+    runge_kutta4< State > ,
+    runge_kutta4_classic< State > ,
+    runge_kutta_cash_karp54_classic< State > ,
+    runge_kutta_cash_karp54< State > ,
+    runge_kutta_dopri5< State > ,
+    runge_kutta_fehlberg78< State >
     > { };
 
 

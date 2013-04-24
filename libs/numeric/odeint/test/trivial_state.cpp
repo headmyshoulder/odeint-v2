@@ -56,14 +56,11 @@ BOOST_AUTO_TEST_SUITE( trivial_state_test )
 /* test different do_step methods of simple steppers */
 
 typedef mpl::vector<
-        euler< double , double , double , double ,
-               vector_space_algebra , default_operations , never_resizer > ,
-        runge_kutta4< double , double , double , double ,
-                      vector_space_algebra , default_operations , never_resizer >,
-        euler< float , float , float , float ,
-               vector_space_algebra , default_operations , never_resizer > ,
-        runge_kutta4< float , float , float , float ,
-                      vector_space_algebra , default_operations , never_resizer >
+        euler< double > ,
+        runge_kutta4< double > ,
+        // with floats all four parameters have to be given explicitly to override default double
+        euler< float , float , float , float > ,
+        runge_kutta4< float , float , float , float >
         >::type stepper_types;
 
 
@@ -91,14 +88,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_do_step , T, stepper_types )
 /* test integrate_adaptive with controlled steppers */
 
 typedef mpl::vector<
-    runge_kutta_cash_karp54< double , double , double , double ,
-                             vector_space_algebra , default_operations , never_resizer > ,
-    runge_kutta_dopri5< double , double , double , double ,
-                        vector_space_algebra , default_operations , never_resizer > ,
-    runge_kutta_cash_karp54< float , float , float , float ,
-                        vector_space_algebra , default_operations , never_resizer > ,
-    runge_kutta_dopri5< float , float , float , float ,
-                        vector_space_algebra , default_operations , never_resizer >
+    runge_kutta_cash_karp54< double > ,
+    runge_kutta_dopri5< double > ,
+    // with floats all four parameters have to be given explicitly to override default double
+    runge_kutta_cash_karp54< float , float , float , float > ,
+    runge_kutta_dopri5< float , float , float , float >
     > error_stepper_types;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_integrate , T , error_stepper_types )

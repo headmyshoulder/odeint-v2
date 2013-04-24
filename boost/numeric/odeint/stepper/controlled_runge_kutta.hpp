@@ -35,6 +35,7 @@
 
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
+#include <boost/numeric/odeint/algebra/algebra_dispatcher.hpp>
 
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
@@ -47,8 +48,8 @@ namespace odeint {
 template
 <
 class Value ,
-class Algebra = range_algebra ,
-class Operations = default_operations
+class Algebra ,
+class Operations
 >
 class default_error_checker
 {
@@ -80,9 +81,9 @@ public:
         algebra.for_each3( x_err , x_old , dxdt_old ,
                 typename operations_type::template rel_error< value_type >( m_eps_abs , m_eps_rel , m_a_x , m_a_dxdt * get_unit_value( dt ) ) );
 
-        value_type res = algebra.reduce( x_err ,
-                typename operations_type::template maximum< value_type >() , static_cast< value_type >( 0 ) );
-        return res;
+        // value_type res = algebra.reduce( x_err ,
+        //        typename operations_type::template maximum< value_type >() , static_cast< value_type >( 0 ) );
+        return algebra.norm_inf( x_err );
     }
 
 private:

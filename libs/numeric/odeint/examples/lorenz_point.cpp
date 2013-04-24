@@ -67,23 +67,18 @@ point3D abs( const point3D &p )
 }
 //]
 
-
-//[point3D_reduce
+//[point3D_norm
+// also only for steppers with error control
 namespace boost { namespace numeric { namespace odeint {
-// specialization of vector_space_reduce, only required for steppers with error control
 template<>
-struct vector_space_reduce< point3D >
+struct vector_space_norm_inf< point3D >
 {
-    template< class Value , class Op >
-    Value operator() ( const point3D &p , Op op , Value init )
+    typedef double result_type;
+    double operator()( const point3D &p ) const
     {
-        init = op( init , p.x );
-        //std::cout << init << " ";
-        init = op( init , p.y );
-        //std::cout << init << " ";
-        init = op( init , p.z );
-        //std::cout << init << std::endl;
-        return init;
+        using std::max;
+        using std::abs;
+        return max( max( abs( p.x ) , abs( p.y ) ) , abs( p.z ) );
     }
 };
 } } }

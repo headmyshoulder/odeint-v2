@@ -38,7 +38,13 @@ As already mentioned __vexcl supports expression templates and we will use them 
 
 [vexcl_system]
 
-It's very easy, isn't it? These three little lines do all the computations for you. There is no need to write your own OpenCL kernels. __vexcl does everything for you. Next we have to write the main application. We initialize the vector of parameters (R) and the initial state. Since __vexcl supports odeint we can already use the `vector_space_algebra` in combination with the `default_operations` for the stepper and we are done:
+It's very easy, isn't it? These three little lines do all the computations for
+you. There is no need to write your own OpenCL kernels. __vexcl does
+everything for you. Next we have to write the main application. We initialize
+the vector of parameters (R) and the initial state. Note that __vexcl requires
+the `vector_space_algebra`, but that is automatically deduced and configured
+by odeint internally, so we only have to specify the `state_type` when
+instantiating the stepper and we are done:
 
 [vexcl_main]
 
