@@ -55,7 +55,6 @@
 #include "diagnostic_state_type.hpp"
 #include "const_range.hpp"
 #include "dummy_odes.hpp"
-#include "vector_space_1d.hpp"
 #include "boost_units_helpers.hpp"
 
 
@@ -338,7 +337,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_do_step_v3 , Stepper , vector_steppers< init
 }
 
 
-typedef vector_space_1d< double > vector_space;
+typedef double vector_space;
 typedef complete_steppers< vector_space , vector_space , double , 
                            vector_space , vector_space , double , 
                            vector_space_algebra , default_operations , initially_resizer > vector_space_steppers;

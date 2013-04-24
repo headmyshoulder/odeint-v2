@@ -29,6 +29,25 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+namespace detail {
+
+    // to use in thrust::reduce
+    template< class Value >
+    struct maximum
+    {
+        template< class Fac1 , class Fac2 >
+        __host__ __device__
+        Value operator()( const Fac1 t1 , const Fac2 t2 ) const
+        {
+            return ( abs( t1 ) < abs( t2 ) ) ? t2 : t1 ;
+        }
+
+        typedef Value result_type;
+    };
+
+}
+
+
 
 
 /** ToDO extend until for_each14 for rk78 */
@@ -176,15 +195,13 @@ struct thrust_algebra
                 op);
     }
 
-
-    template< class Value , class S , class Red >
-    Value reduce( const S &s , Red red , Value init)
+    template< class S >
+    static typename S::value_type norm_inf( const S &s )
     {
-        return thrust::reduce( boost::begin( s ) , boost::end( s ) , init , red );
+        return thrust::reduce( boost::begin( s ) , boost::end( s ) ,
+                               static_cast<typename S::value_type>(0) ,
+                               detail::maximum<float>() );
     }
-
-
-
 
 };
 

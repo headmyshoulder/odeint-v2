@@ -8,9 +8,9 @@
 import testing ;
 
 use-project boost : $(BOOST_ROOT) ;
-VEXCL_INCLUDE = /home/karsten/boost/vexcl ;
-CUDA_INCLUDE = /usr/local/cuda/include ;
-
+VEXCL_INCLUDE = /home/mario/vexcl ;
+#OPENCL_INCLUDE = /usr/local/cuda/include ;
+OPENCL_INCLUDE = /usr/include ;
 
 project
     : requirements
@@ -18,7 +18,7 @@ project
       <define>BOOST_ALL_NO_LIB=1
       <include>../../../../..
       <include>$(VEXCL_INCLUDE)
-      <include>$(CUDA_INCLUDE)
+      <include>$(OPENCL_INCLUDE)
       <cxxflags>-std=c++0x
     ;
 

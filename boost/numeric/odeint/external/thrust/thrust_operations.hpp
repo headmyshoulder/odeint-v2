@@ -223,25 +223,6 @@ struct thrust_operations
     };
 
 
-    /*
-     * for usage in reduce
-     */
-
-    template< class Value >
-    struct maximum
-    {
-        template< class Fac1 , class Fac2 >
-        __host__ __device__
-        Value operator()( const Fac1 t1 , const Fac2 t2 ) const
-        {
-            using std::max;
-            return ( abs( t1 ) < abs( t2 ) ) ? t2 : t1 ;
-        }
-
-        typedef Value result_type;
-    };
-
-
 };
 
 } // odeint

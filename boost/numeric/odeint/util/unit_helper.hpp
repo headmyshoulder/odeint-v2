@@ -93,7 +93,6 @@ namespace detail {
 
 
     template<class T , class V>
-
     void set_unit_value(T &t , const V &v)
     {
         return detail::set_unit_value_impl<T , V>::set_value(t , v);

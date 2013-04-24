@@ -18,6 +18,8 @@
 #ifndef BOOST_NUMERIC_ODEINT_ALGEBRA_ARRAY_ALGEBRA_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_ALGEBRA_ARRAY_ALGEBRA_HPP_INCLUDED
 
+#include <algorithm>
+
 #include <boost/array.hpp>
 
 namespace boost {
@@ -247,6 +249,16 @@ struct array_algebra
             op( s1[i] , s2[i] , s3[i] , s4[i] , s5[i] , s6[i] , s7[i] , s8[i] , s9[i] , s10[i] , s11[i] , s12[i] , s13[i] , s14[i] , s15[i] );
     }
 
+
+    template< class T , size_t dim >
+    static T norm_inf( const boost::array< T , dim > &s )
+    {
+        using std::max;
+        T init = static_cast< T >( 0.0 );
+        for( size_t i=0 ; i<dim ; ++i )
+            init = max( init , s[i] );
+        return init;
+    }
 
     template< class Value , class T , size_t dim , class Red >
     static Value reduce( const boost::array< T , dim > &s , Red red , Value init)

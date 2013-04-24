@@ -36,19 +36,16 @@ We strongly recommend to use the first ansatz. In this case you have explicit co
 When choosing the stepper type one has to account for the "unusual" state type:
 it is a single `complex<double>` opposed to the vector types used in the
 previous examples. This means that no iterations over vector elements have to
-be performed inside the stepper algorithm. You can enforce this by supplying
-additional template arguments to the stepper including the
-`vector_space_algebra`. Details on the usage of algebras can be found in the
-section __adapt_state_types.
+be performed inside the stepper algorithm. Odeint already detects that and
+automatically uses the `vector_space_algebra` for computation.
+You can enforce this by supplying additional template arguments to the stepper
+including the `vector_space_algebra`. Details on the usage of algebras can be
+found in the section __adapt_state_types.
 
 [stuart_landau_integration]
 
 The full cpp file for the Stuart-Landau example can be found here [github_link
 libs/numeric/odeint/examples/stuart_landau.cpp stuart_landau.cpp]
-
-[note The fact that we have to configure a different algebra is solely due to
-the fact that we use a non-vector state type and not to the usage of complex
-values. So for, e.g. `vector< complex<double> >`, this would not be required.] 
 
 [endsect]
 
@@ -145,11 +142,13 @@ differential equation which is completely equivalent to the example in __tut_har
 [units_define_ode]
 
 Next, we instantiate an appropriate stepper. We must explicitly parametrize
-the stepper with the `state_type`, `deriv_type`, `time_type`. Furthermore, the
-iteration over vector elements is now done by the `fusion_algebra` which must
-also be given. For more on the state types / algebras see chapter __adapt_state_types.
+the stepper with the `state_type`, `deriv_type`, `time_type`. 
 
 [units_define_stepper]
+
+[note When using compile-time sequences, the iteration over vector elements is
+done by the `fusion_algebra`, which is automatically chosen by odeint. For
+more on the state types / algebras see chapter __adapt_state_types.]
 
 It is quite easy but the compilation time might take very long. Furthermore, the observer is defined a bit different
 

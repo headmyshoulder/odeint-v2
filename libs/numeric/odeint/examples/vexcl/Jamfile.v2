@@ -14,8 +14,9 @@ boost.use-project ;
 
 # change these lines to fit you configuration
 local HOME = [ os.environ HOME ] ;
-VEXCL_INCLUDE = $(HOME)/boost/vexcl ;
-CUDA_INCLUDE = /usr/local/cuda/include ;
+VEXCL_INCLUDE = $(HOME)/vexcl ;
+#OPENCL_INCLUDE = /usr/local/cuda/include ;
+OPENCL_INCLUDE = /usr/include ;
 
 
 lib opencl : : <name>OpenCL ;

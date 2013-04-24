@@ -102,7 +102,8 @@ void lorenz_with_lyap( const state_type &x , state_type &dxdt , double t )
 This works fine and `lorenz_with_lyap` can be used for example via
 ``
 state_type x;
-// initialize x
+// initialize x..
+
 explicit_rk4< state_type > rk4;
 integrate_n_steps( rk4 , lorenz_with_lyap , x , 0.0 , 0.01 , 1000 );
 ``
@@ -141,6 +142,10 @@ This is in principle all. Now, we only have to call `integrate_n_steps` with a
 range including only the first 3 components of ['x]:
 
 [integrate_transients_with_range]
+
+[note Note that when using __boost_range, we have to explicitly configure the
+stepper to use the `range_algebra` as otherwise odeint would automatically
+chose the `array_algebra`, which is incompatible with the usage of __boost_range, because the original state_type is an `array`.]
 
 Having integrated a sufficient number of transients steps we are now able to calculate the Lyapunov exponents:
 
