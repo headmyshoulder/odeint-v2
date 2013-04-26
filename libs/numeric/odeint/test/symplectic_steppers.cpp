@@ -198,7 +198,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_resizing , Stepper , zipped_steppers )
 
     TEST_COUNTERS( counter_state , 0 , 0 , 0 , 0 );
     TEST_COUNTERS( counter_state2 , 0 , 0 , 0 , 0 );
-    TEST_COUNTERS( counter_deriv , multiplicity , 1 , 0 , 1 );
+    // dqdt is not needed when called with mom func only, so no resizing
+    // TEST_COUNTERS( counter_deriv , multiplicity , 1 , 0 , 1 );
     TEST_COUNTERS( counter_deriv2 , multiplicity , 1 , 0 , 1 );
 }
 
@@ -238,7 +239,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_copying2 , Stepper , vector_steppers< initia
 
     TEST_COUNTERS( counter_state , 0 , 0 , 0 , 0 );
     TEST_COUNTERS( counter_state2 , 0 , 0 , 0 , 0 );
-    TEST_COUNTERS( counter_deriv , 1 , 2 , 1 , 2 );
+    // dqdt is not needed when called with mom func only, so no resizing
+    //TEST_COUNTERS( counter_deriv , 1 , 2 , 1 , 2 );
     TEST_COUNTERS( counter_deriv2 , 1 , 2 , 1 , 2 );
 }
 
