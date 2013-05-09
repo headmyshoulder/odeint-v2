@@ -82,7 +82,7 @@ struct perform_symplectic_test
 
 
 typedef mpl::vector<
-    symplectic_euler< state_type > ,
+    //    symplectic_euler< state_type > ,
     symplectic_rkn_sb3a_mclachlan< state_type >
     > symplectic_steppers;
 

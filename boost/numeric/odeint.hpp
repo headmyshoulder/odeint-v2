@@ -31,6 +31,7 @@
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_fehlberg78.hpp>
+#include <boost/numeric/odeint/stepper/extrapolation_stepper.hpp>
 
 #include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
 

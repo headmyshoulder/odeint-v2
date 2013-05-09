@@ -142,7 +142,10 @@ typedef mpl::vector<
     runge_kutta_cash_karp54_classic< state_type > ,
     runge_kutta_cash_karp54< state_type > ,
     runge_kutta_dopri5< state_type > ,
-    runge_kutta_fehlberg78< state_type >
+    runge_kutta_fehlberg78< state_type > , 
+    extrapolation_stepper< 5 , state_type > ,
+    extrapolation_stepper< 7 , state_type > ,
+    extrapolation_stepper< 9 , state_type > 
     > runge_kutta_steppers;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( runge_kutta_test , Stepper, runge_kutta_steppers )
