@@ -131,6 +131,7 @@ class extrapolation_stepper : public explicit_error_stepper_base<
     {
         m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
 
+        // ToDo: better implementation for that?
         if( &in == &out )
         {
             // special care for  in == out
@@ -139,16 +140,13 @@ class extrapolation_stepper : public explicit_error_stepper_base<
             size_t k = 0;
             m_midpoint.set_steps( m_interval_sequence[k] );
             m_midpoint.do_step( system , in , dxdt , t , m_xout.m_v , dt );
-            for( k = 1 ; k < m_k_max ; ++k )
+            for( k = 1 ; k <= m_k_max ; ++k )
             {
                 m_midpoint.set_steps( m_interval_sequence[k] );
                 m_midpoint.do_step( system , in , dxdt , t , m_table[k-1].m_v , dt );
                 extrapolate( k , m_table , m_coeff , m_xout.m_v );
             }
-            k = m_k_max;
-            m_midpoint.set_steps( m_interval_sequence[k] );
-            m_midpoint.do_step( system , in , dxdt , t , m_table[k-1].m_v , dt );
-            extrapolate( k , m_table , m_coeff , out );
+            boost::numeric::odeint::copy( m_xout.m_v , out );
         } else {
             size_t k = 0;
             m_midpoint.set_steps( m_interval_sequence[k] );
