@@ -57,9 +57,13 @@ template<
     class Operations = typename operations_dispatcher< State >::operations_type ,
     class Resizer = initially_resizer
     >
+#ifndef DOXYGEN_SKIP
 class extrapolation_stepper : public explicit_error_stepper_base<
     extrapolation_stepper< Order , State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
-    Order , Order , Order-2 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
+    Order , Order , Order-1 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
+#else
+class extrapolation_stepper : public explicit_error_stepper_base
+#endif
 {
 
  private:
@@ -81,7 +85,7 @@ class extrapolation_stepper : public explicit_error_stepper_base<
     typedef error_stepper_tag stepper_category;
 
     typedef extrapolation_stepper< Order , State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
-    typedef explicit_error_stepper_base< stepper_type , Order , Order , Order-2 , State , Value , Deriv , Time , Algebra , Operations , Resizer > base_stepper_type;
+    typedef explicit_error_stepper_base< stepper_type , Order , Order , Order-1 , State , Value , Deriv , Time , Algebra , Operations , Resizer > base_stepper_type;
     
     typedef std::vector< value_type > value_vector;
     typedef std::vector< value_vector > value_matrix;
@@ -97,8 +101,9 @@ class extrapolation_stepper : public explicit_error_stepper_base<
     
     const static size_t m_k_max = (order_value-1)/2;
     
-    extrapolation_stepper()
-        : m_midpoint() , m_interval_sequence( m_k_max+1 ) , m_coeff( m_k_max+1 ) , m_table( m_k_max )
+    extrapolation_stepper( const algebra_type &algebra = algebra_type() )
+        : base_stepper_type( algebra ) , m_midpoint() ,
+          m_interval_sequence( m_k_max+1 ) , m_coeff( m_k_max+1 ) , m_table( m_k_max )
     {
         for( unsigned short i = 0; i < m_k_max+1; i++ )
         {
@@ -119,9 +124,24 @@ class extrapolation_stepper : public explicit_error_stepper_base<
     {
         // normal step
         do_step_impl( system , in , dxdt , t , out , dt );
-        
+
+        static const value_type val1( 1.0 );
         // additionally, perform the error calculation
-        
+        m_algebra.for_each3( xerr , out , m_table[0].m_v ,
+                typename operations_type::template scale_sum2< value_type , value_type >( val1 , -val1 ) );
+    }
+
+    template< class System , class StateInOut , class DerivIn , class Err >
+    void do_step_impl_io( System system , StateInOut &inout , const DerivIn &dxdt ,
+            time_type t , time_type dt , Err &xerr )
+    {
+        // normal step
+        do_step_impl_io( system , inout , dxdt , t , dt );
+
+        static const value_type val1( 1.0 );
+        // additionally, perform the error calculation
+        m_algebra.for_each3( xerr , inout , m_table[0].m_v ,
+                typename operations_type::template scale_sum2< value_type , value_type >( val1 , -val1 ) );
     }
 
 
@@ -130,36 +150,26 @@ class extrapolation_stepper : public explicit_error_stepper_base<
                        time_type t , StateOut &out , time_type dt )
     {
         m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
-
-        // ToDo: better implementation for that?
-        if( &in == &out )
+        size_t k = 0;
+        m_midpoint.set_steps( m_interval_sequence[k] );
+        m_midpoint.do_step( system , in , dxdt , t , out , dt );
+        for( k = 1 ; k <= m_k_max ; ++k )
         {
-            // special care for  in == out
-            m_xout_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_m_xout< StateIn > , detail::ref( *this ) , detail::_1 ) );
-
-            size_t k = 0;
             m_midpoint.set_steps( m_interval_sequence[k] );
-            m_midpoint.do_step( system , in , dxdt , t , m_xout.m_v , dt );
-            for( k = 1 ; k <= m_k_max ; ++k )
-            {
-                m_midpoint.set_steps( m_interval_sequence[k] );
-                m_midpoint.do_step( system , in , dxdt , t , m_table[k-1].m_v , dt );
-                extrapolate( k , m_table , m_coeff , m_xout.m_v );
-            }
-            boost::numeric::odeint::copy( m_xout.m_v , out );
-        } else {
-            size_t k = 0;
-            m_midpoint.set_steps( m_interval_sequence[k] );
-            m_midpoint.do_step( system , in , dxdt , t , out , dt );
-            for( k = 1 ; k <= m_k_max ; ++k )
-            {
-                m_midpoint.set_steps( m_interval_sequence[k] );
-                m_midpoint.do_step( system , in , dxdt , t , m_table[k-1].m_v , dt );
-                extrapolate( k , m_table , m_coeff , out );
-            }
+            m_midpoint.do_step( system , in , dxdt , t , m_table[k-1].m_v , dt );
+            extrapolate( k , m_table , m_coeff , out );
         }
     }
 
+    template< class System , class StateInOut , class DerivIn >
+    void do_step_impl_io( System system , StateInOut &inout , const DerivIn &dxdt ,
+            time_type t , time_type dt )
+    {
+        // special care for inout
+        m_xout_resizer.adjust_size( inout , detail::bind( &stepper_type::template resize_m_xout< StateInOut > , detail::ref( *this ) , detail::_1 ) );
+        do_step_impl( system , inout , dxdt , t , m_xout.m_v , dt );
+        boost::numeric::odeint::copy( m_xout.m_v , inout );
+    }
 
     template< class StateIn >
     void adjust_size( const StateIn &x )
@@ -220,6 +230,21 @@ private:
 
 };
 
+/******** DOXYGEN *******/
+
+/**
+ * \class extrapolation_stepper
+ * \brief Extrapolation stepper with configurable order, and error estimation.
+ *
+ * The extrapolation stepper is a stepper with error estimation and configurable order. The order is given as
+ * template parameter and needs to be an _odd_ number. The stepper is based on several executions of the
+ * modified midpoint method and a Richardson extrapolation. This is essentially the same technique as for
+ * bulirsch_stoer, but without the variable order. Note, that the result of this stepper is compuated from
+ * an expansion with only odd terms, hence the numerical error of a result of one step of this method is of
+ * Order+2, opposed to Order+1 for usual algorithms.
+ *
+ * \note The Order parameter has to be an odd number.
+ */
 
 } } }
 #endif

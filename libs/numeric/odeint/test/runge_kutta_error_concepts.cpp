@@ -50,6 +50,7 @@
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_fehlberg78.hpp>
+#include <boost/numeric/odeint/stepper/extrapolation_stepper.hpp>
 
 #include "prepare_stepper_testing.hpp"
 #include "dummy_odes.hpp"
@@ -129,7 +130,9 @@ template< class State > class error_stepper_methods : public mpl::vector<
     runge_kutta_cash_karp54_classic< State > ,
     runge_kutta_cash_karp54< State > ,
     runge_kutta_dopri5< State > ,
-    runge_kutta_fehlberg78< State >
+    runge_kutta_fehlberg78< State > ,
+    extrapolation_stepper< 5 , State > ,
+    extrapolation_stepper< 7 , State >
     > { };
 
 

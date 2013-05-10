@@ -110,7 +110,12 @@ public :
 
     }
 
-
+    template< class System , class StateInOut , class DerivIn , class Err >
+    void do_step_impl_io( System system , StateInOut &inout , const DerivIn &dxdt , time_type t , time_type dt , Err &xerr )
+    {
+        // no special treatment for the case in==out required with this stepper
+        do_step_impl( system , inout , dxdt , t , inout , dt , xerr );
+    }
 
     template< class System , class StateIn , class DerivIn , class StateOut >
     void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt )
@@ -172,6 +177,12 @@ public :
         stepper_base_type::m_algebra.for_each6( out , in , dxdt , m_k3.m_v , m_k4.m_v , m_k6.m_v ,
                 typename operations_type::template scale_sum5< value_type , time_type , time_type , time_type , time_type >( 1.0 , dt*c1 , dt*c3 , dt*c4 , dt*c6 ));
 
+    }
+
+    template< class System , class StateInOut , class DerivIn >
+    void do_step_impl_io( System system , StateInOut &inout , const DerivIn &dxdt , time_type t , time_type dt )
+    {
+        do_step_impl( system , inout , dxdt , t , inout , dt );
     }
 
     /**

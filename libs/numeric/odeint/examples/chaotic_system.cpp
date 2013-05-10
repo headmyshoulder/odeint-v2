@@ -101,7 +101,6 @@ int main( int argc , char **argv )
     size_t count = 0;
     while( true )
     {
-
         t = integrate_n_steps( rk4 , lorenz_with_lyap , x , t , dt , 100 );
         gram_schmidt< num_of_lyap >( x , lyap , n );
         ++count;

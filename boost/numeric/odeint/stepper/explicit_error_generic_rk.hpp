@@ -123,6 +123,14 @@ public:
                 xerr , dxdt , m_F , detail::generic_rk_scale_sum_err< StageCount , operations_type , value_type , time_type >( m_b2 , dt) );
     }
 
+    template< class System , class StateInOut , class DerivIn , class Err >
+    void do_step_impl_io( System system , StateInOut &inout , const DerivIn &dxdt ,
+            time_type t , time_type dt , Err &xerr )
+    {
+        // this stepper can just forward to normal implementation
+        do_step_impl( system , inout , dxdt , t , inout , dt , xerr );
+    }
+
 
     template< class System , class StateIn , class DerivIn , class StateOut >
     void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt ,
@@ -132,6 +140,14 @@ public:
 
         // actual calculation done in generic_rk.hpp
         m_rk_algorithm.do_step( stepper_base_type::m_algebra , system , in , dxdt , t , out , dt , m_x_tmp.m_v , m_F );
+    }
+
+    template< class System , class StateInOut , class DerivIn >
+    inline void do_step_impl_io( System system , StateInOut &inout , const DerivIn &dxdt ,
+            time_type t , time_type dt )
+    {
+        // this stepper can just forward to normal implementation
+        do_step_impl( system , inout , dxdt , t , inout , dt );
     }
 
 
@@ -225,6 +241,12 @@ private:
      */
 
     /**
+     * \fn explicit_error_generic_rk::do_step_impl( System system , StateIn &inout , const DerivIn &dxdt , time_type t , time_type dt , Err &xerr )
+     * \brief same as explicit_error_generic_rk::do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt , Err &xerr ),
+     * but in-place, hence inout is updated to contain the result of the step.
+     */
+
+    /**
      * \fn explicit_error_generic_rk::do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt )
      * \brief This method performs one step. The derivative `dxdt` of `in` at the time `t` is passed to the method.
      * The result is updated out-of-place, hence the input is in `in` and the output in `out`.
@@ -238,6 +260,12 @@ private:
      * \param t The value of the time, at which the step should be performed.
      * \param out The result of the step is written in out.
      * \param dt The step size.
+     */
+
+    /**
+     * \fn explicit_error_generic_rk::do_step_impl( System system , StateIn &inout , const DerivIn &dxdt , time_type t , time_type dt )
+     * \brief Same as explicit_error_generic_rk::do_step_impl( System system , const StateIn &in , const DerivIn &dxdt , time_type t , StateOut &out , time_type dt ),
+     * but in-place, hence inout is updated to contain the result of the step.
      */
 
     /**

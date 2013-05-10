@@ -71,7 +71,6 @@ struct perform_runge_kutta_test
 {
     void operator()( void )
     {
-   
         Stepper stepper;
         const int o = stepper.order()+1; //order of the error is order of approximation + 1
 
@@ -94,6 +93,15 @@ struct perform_runge_kutta_test
             stepper.do_step( osc() , x0 , t , x1 , dt );
             std::cout << "Testing dt=" << dt << std::endl;
             BOOST_CHECK_LT( std::abs( sin(dt) - x1[0] ) , f*std::pow( dt , o ) );
+
+            // test inout version
+            // reset stepper which require resetting (fsal steppers)
+            resetter< typename Stepper::stepper_category >::reset( stepper );
+            x1 = x0;
+            stepper.do_step( osc() , x1 , t , dt );
+            std::cout << "Testing dt=" << dt << std::endl;
+            BOOST_CHECK_LT( std::abs( sin(dt) - x1[0] ) , f*std::pow( dt , o ) );
+
             dt *= 0.5;
         }
     }
@@ -128,6 +136,13 @@ struct perform_runge_kutta_error_test
             stepper.do_step( osc() , x0 , t , x1 , dt , x_err );
             std::cout << "Testing dt=" << dt << ": " << x_err[1] << std::endl;
             BOOST_CHECK_SMALL( std::abs( x_err[0] ) , f*std::pow( dt , o ) );
+
+            // test inout version
+            resetter< typename Stepper::stepper_category >::reset( stepper );
+            x1 = x0;
+            stepper.do_step( osc() , x1 , t , dt , x_err );
+            std::cout << "Testing dt=" << dt << ": " << x_err[1] << std::endl;
+            BOOST_CHECK_SMALL( std::abs( x_err[0] ) , f*std::pow( dt , o ) );
             dt *= 0.5;
         }
     }
@@ -159,7 +174,10 @@ typedef mpl::vector<
     runge_kutta_cash_karp54_classic< state_type > ,
     runge_kutta_cash_karp54< state_type > ,
     runge_kutta_dopri5< state_type > ,
-    runge_kutta_fehlberg78< state_type >
+    runge_kutta_fehlberg78< state_type > ,
+    extrapolation_stepper< 5 , state_type > ,
+    extrapolation_stepper< 7 , state_type > ,
+    extrapolation_stepper< 9 , state_type >
     > runge_kutta_error_steppers;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( runge_kutta_error_test , Stepper, runge_kutta_error_steppers )

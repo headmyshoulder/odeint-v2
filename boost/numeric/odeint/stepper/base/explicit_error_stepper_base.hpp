@@ -146,7 +146,7 @@ public:
     typename boost::disable_if< boost::is_same< DerivIn , time_type > , void >::type
     do_step( System system , StateInOut &x , const DerivIn &dxdt , time_type t , time_type dt )
     {
-        this->stepper().do_step_impl( system , x , dxdt , t , x , dt );
+        this->stepper().do_step_impl_io( system , x , dxdt , t , dt );
     }
 
 
@@ -217,7 +217,7 @@ public:
     typename boost::disable_if< boost::is_same< DerivIn , time_type > , void >::type
     do_step( System system , StateInOut &x , const DerivIn &dxdt , time_type t , time_type dt , Err &xerr )
     {
-        this->stepper().do_step_impl( system , x , dxdt , t , x , dt , xerr );
+        this->stepper().do_step_impl_io( system , x , dxdt , t , dt , xerr );
     }
 
 
@@ -263,7 +263,7 @@ private:
         typename odeint::unwrap_reference< System >::type &sys = system;
         m_resizer.adjust_size( x , detail::bind( &internal_stepper_base_type::template resize_impl<StateInOut> , detail::ref( *this ) , detail::_1 ) );
         sys( x , m_dxdt.m_v ,t );
-        this->stepper().do_step_impl( system , x , m_dxdt.m_v , t , x , dt );
+        this->stepper().do_step_impl_io( system , x , m_dxdt.m_v , t , dt );
     }
 
     template< class System , class StateInOut , class Err >
@@ -272,7 +272,7 @@ private:
         typename odeint::unwrap_reference< System >::type &sys = system;
         m_resizer.adjust_size( x , detail::bind( &internal_stepper_base_type::template resize_impl<StateInOut> , detail::ref( *this ) , detail::_1 ) );
         sys( x , m_dxdt.m_v ,t );
-        this->stepper().do_step_impl( system , x , m_dxdt.m_v , t , x , dt , xerr );
+        this->stepper().do_step_impl_io( system , x , m_dxdt.m_v , t , dt , xerr );
     }
 
     template< class StateIn >
