@@ -65,7 +65,6 @@ public:
 
     const static size_t num_of_stages = NumOfStages;
     typedef Coor coor_type;
-    typedef state_wrapper< coor_type> wrapped_coor_type;
     typedef Momentum momentum_type;
     typedef std::pair< coor_type , momentum_type > state_type;
     typedef CoorDeriv coor_deriv_type;
@@ -90,7 +89,7 @@ public:
 
     symplectic_nystroem_stepper_base( const coef_type &coef_a , const coef_type &coef_b , const algebra_type &algebra = algebra_type() )
         : algebra_stepper_base_type( algebra ) , m_coef_a( coef_a ) , m_coef_b( coef_b ) ,
-          m_dqdt_resizer() , m_dpdt_resizer() , m_q_resizer() , m_dqdt() , m_dpdt()
+          m_dqdt_resizer() , m_dpdt_resizer() , m_dqdt() , m_dpdt() 
     { }
 
 
@@ -259,32 +258,25 @@ private:
         // m_dqdt not required when called with momentum_func only - don't resize
         // m_dqdt_resizer.adjust_size( coor_in , detail::bind( &internal_stepper_base_type::template resize_dqdt< coor_in_type > , detail::ref( *this ) , detail::_1 ) );
         m_dpdt_resizer.adjust_size( momentum_in , detail::bind( &internal_stepper_base_type::template resize_dpdt< momentum_in_type > , detail::ref( *this ) , detail::_1 ) );
-        m_q_resizer.adjust_size( coor_in , detail::bind( &internal_stepper_base_type::template resize_q< coor_in_type > , detail::ref( *this ) , detail::_1 ) );
-        m_p_resizer.adjust_size( momentum_in , detail::bind( &internal_stepper_base_type::template resize_p< momentum_in_type > , detail::ref( *this ) , detail::_1 ) );
+
 
         // ToDo: check sizes?
 
         // step 0
-        this->m_algebra.for_each3( m_q[0].m_v  , coor_in , momentum_in ,
+        this->m_algebra.for_each3( coor_out  , coor_in , momentum_in ,
                         typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_a[0] * dt ) );
-        momentum_func( m_q[0].m_v , m_dpdt.m_v );
-        this->m_algebra.for_each3( m_p[0].m_v , momentum_in , m_dpdt.m_v ,
-                                   typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[0] * dt ) );
+        momentum_func( coor_out , m_dpdt.m_v );
+        this->m_algebra.for_each3( momentum_out , momentum_in , m_dpdt.m_v ,
+                                           typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[0] * dt ) );
 
-        for( size_t l=1 ; l<num_of_stages-1 ; ++l )
+        for( size_t l=1 ; l<num_of_stages ; ++l )
         {
-            this->m_algebra.for_each3( m_q[l].m_v , m_q[l-1].m_v , m_p[l-1].m_v ,
-                                       typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_a[l] * dt ) );
-            momentum_func( m_q[l].m_v , m_dpdt.m_v );
-            this->m_algebra.for_each3( m_p[l].m_v , m_p[l-1].m_v , m_dpdt.m_v ,
+            this->m_algebra.for_each3( coor_out , coor_out , momentum_out ,
+                        typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_a[l] * dt ) );
+            momentum_func( coor_out , m_dpdt.m_v );
+            this->m_algebra.for_each3( momentum_out , momentum_out , m_dpdt.m_v ,
                                        typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[l] * dt ) );
         }
-        // last step into coor_out
-        this->m_algebra.for_each3( coor_out , m_q[num_of_stages-2].m_v , m_p[num_of_stages-2].m_v ,
-                                       typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_a[num_of_stages-1] * dt ) );
-            momentum_func( coor_out , m_dpdt.m_v );
-            this->m_algebra.for_each3( momentum_out , m_p[num_of_stages-2].m_v , m_dpdt.m_v ,
-                                       typename operations_type::template scale_sum2< value_type , time_type >( 1.0 , m_coef_b[num_of_stages-1] * dt ) );
     }
 
     template< class StateIn >
@@ -299,36 +291,14 @@ private:
         return adjust_size_by_resizeability( m_dpdt , x , typename is_resizeable<momentum_deriv_type>::type() );
     }
 
-    template< class StateIn >
-    bool resize_q( const StateIn &x )
-    {
-        bool res( false );
-        for( size_t i=0 ; i<num_of_stages-1 ; ++i )
-            res |= adjust_size_by_resizeability( m_q[i] , x , typename is_resizeable<coor_type>::type() );
-        return res;
-    }
-
-    template< class StateIn >
-    bool resize_p( const StateIn &x )
-    {
-        bool res( false );
-        for( size_t i=0 ; i<num_of_stages-1 ; ++i )
-            res |= adjust_size_by_resizeability( m_p[i] , x , typename is_resizeable<momentum_type>::type() );
-        return res;
-    }
-
 
     const coef_type m_coef_a;
     const coef_type m_coef_b;
 
     resizer_type m_dqdt_resizer;
     resizer_type m_dpdt_resizer;
-    resizer_type m_q_resizer;
-    resizer_type m_p_resizer;
     wrapped_coor_deriv_type m_dqdt;
     wrapped_momentum_deriv_type m_dpdt;
-    wrapped_coor_type m_q[num_of_stages-1];
-    wrapped_coor_type m_p[num_of_stages-1];
 
 };
 

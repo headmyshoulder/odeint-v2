@@ -129,7 +129,7 @@ public:
 
 /**
  * \class symplectic_rkn_sb3a_mclachlan
- * \brief Implement of the symmetric B3A method of Runge-Kutta-Nystroem method of sixth order.
+ * \brief Implement of the symmetric B3A method of Runge-Kutta-Nystroem method of fourth order.
  *
  * The method is of fourth order and has six stages. It is described HERE. This method cannot be used
  * with multiprecision types since the coefficients are not defined analytically.
