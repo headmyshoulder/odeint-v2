@@ -210,6 +210,7 @@ private:
     */
     {
         static const value_type val1 = static_cast< value_type >( 1.0 );
+
         for( int j=k-1 ; j>0 ; --j )
         {
             m_algebra.for_each3( table[j-1].m_v , table[j].m_v , table[j-1].m_v ,

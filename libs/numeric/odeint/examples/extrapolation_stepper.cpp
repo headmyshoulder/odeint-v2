@@ -42,22 +42,25 @@ int main()
     double t = 0.0;
     while( dt > 1E-4 )
     {
-        state_type x_out;
         state_type x1 = {{ 0.0 , 1.0 }};
+        state_type err1;
         stepper_type4 stepper4;
-        stepper4.do_step( osc() , x1 , t , x_out , dt );
+        stepper4.do_step( osc() , x1 , t , dt , err1 );
 
         state_type x2 = {{ 0.0 , 1.0 }};
+        state_type err2;
         stepper_type6 stepper6;
-        stepper6.do_step( osc() , x2 , t , dt );
+        stepper6.do_step( osc() , x2 , t , dt , err2 );
 
         state_type x3 = {{ 0.0 , 1.0 }};
+        state_type err3;
         stepper_type8 stepper8;
-        stepper8.do_step( osc() , x3 , t , dt );
+        stepper8.do_step( osc() , x3 , t , dt , err3 );
 
-        std::cout << dt << '\t' << std::abs(x_out[0] - sin(dt)) << '\t';
-        std::cout << std::abs(x2[0] - sin(dt)) << '\t';
-        std::cout << std::abs(x3[0] - sin(dt)) << std::endl;
+        using std::abs;
+        std::cout << dt << '\t' << abs(x1[0] - sin(dt)) << '\t' << abs( err1[0] ) << '\t';
+        std::cout << abs(x2[0] - sin(dt)) << '\t' << abs( err2[0] ) << '\t';
+        std::cout << abs(x3[0] - sin(dt)) << '\t' << abs( err3[0] ) << std::endl;
         
         dt /= 1.257;
     }
