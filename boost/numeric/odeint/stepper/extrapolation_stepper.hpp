@@ -60,7 +60,7 @@ template<
 #ifndef DOXYGEN_SKIP
 class extrapolation_stepper : public explicit_error_stepper_base<
     extrapolation_stepper< Order , State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
-    Order , Order , Order-1 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
+    Order , Order , Order-2 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
 #else
 class extrapolation_stepper : public explicit_error_stepper_base
 #endif
@@ -68,25 +68,30 @@ class extrapolation_stepper : public explicit_error_stepper_base
 
  private:
     // check for Order being odd
-    BOOST_STATIC_ASSERT_MSG( (Order % 2) == 1 , "extrapolation_stepper requires odd Order" );
+    BOOST_STATIC_ASSERT_MSG( ((Order % 2) == 0) && (Order > 2) , "extrapolation_stepper requires even Order larger than 2" );
 
  public:
 
-    typedef State state_type;
-    typedef Value value_type;
-    typedef Deriv deriv_type;
-    typedef Time time_type;
-    typedef Algebra algebra_type;
-    typedef Operations operations_type;
-    typedef Resizer resizer_type;
 #ifndef DOXYGEN_SKIP
-    typedef state_wrapper< state_type > wrapped_state_type;
-    typedef state_wrapper< deriv_type > wrapped_deriv_type;
-    typedef error_stepper_tag stepper_category;
+    typedef explicit_error_stepper_base< extrapolation_stepper< Order , State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
+            Order , Order , Order-2 , State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_base_type;
+#else
+    typedef explicit_error_stepper_fsal_base< runge_kutta_dopri5< ... > , ... > stepper_base_type;
+#endif
 
-    typedef extrapolation_stepper< Order , State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
-    typedef explicit_error_stepper_base< stepper_type , Order , Order , Order-1 , State , Value , Deriv , Time , Algebra , Operations , Resizer > base_stepper_type;
-    
+    typedef typename stepper_base_type::state_type state_type;
+    typedef typename stepper_base_type::value_type value_type;
+    typedef typename stepper_base_type::deriv_type deriv_type;
+    typedef typename stepper_base_type::time_type time_type;
+    typedef typename stepper_base_type::algebra_type algebra_type;
+    typedef typename stepper_base_type::operations_type operations_type;
+    typedef typename stepper_base_type::resizer_type resizer_type;
+
+#ifndef DOXYGEN_SKIP
+    typedef typename stepper_base_type::stepper_type stepper_type;
+    typedef typename stepper_base_type::wrapped_state_type wrapped_state_type;
+    typedef typename stepper_base_type::wrapped_deriv_type wrapped_deriv_type;
+
     typedef std::vector< value_type > value_vector;
     typedef std::vector< value_vector > value_matrix;
     typedef std::vector< size_t > int_vector;
@@ -95,14 +100,14 @@ class extrapolation_stepper : public explicit_error_stepper_base
 #endif //DOXYGEN_SKIP
 
     typedef unsigned short order_type;
-    static const order_type order_value = base_stepper_type::order_value;
-    static const order_type stepper_order_value = base_stepper_type::stepper_order_value;
-    static const order_type error_order_value = base_stepper_type::error_order_value;
+    static const order_type order_value = stepper_base_type::order_value;
+    static const order_type stepper_order_value = stepper_base_type::stepper_order_value;
+    static const order_type error_order_value = stepper_base_type::error_order_value;
     
-    const static size_t m_k_max = (order_value-1)/2;
+    const static size_t m_k_max = (order_value-2)/2;
     
     extrapolation_stepper( const algebra_type &algebra = algebra_type() )
-        : base_stepper_type( algebra ) , m_midpoint() ,
+        : stepper_base_type( algebra ) , m_midpoint() ,
           m_interval_sequence( m_k_max+1 ) , m_coeff( m_k_max+1 ) , m_table( m_k_max )
     {
         for( unsigned short i = 0; i < m_k_max+1; i++ )
@@ -122,6 +127,7 @@ class extrapolation_stepper : public explicit_error_stepper_base
     void do_step_impl( System system , const StateIn &in , const DerivIn &dxdt ,
                        time_type t , StateOut &out , time_type dt , Err &xerr )
     {
+        //std::cout << "dt: " << dt << std::endl;
         // normal step
         do_step_impl( system , in , dxdt , t , out , dt );
 
@@ -239,11 +245,9 @@ private:
  * The extrapolation stepper is a stepper with error estimation and configurable order. The order is given as
  * template parameter and needs to be an _odd_ number. The stepper is based on several executions of the
  * modified midpoint method and a Richardson extrapolation. This is essentially the same technique as for
- * bulirsch_stoer, but without the variable order. Note, that the result of this stepper is compuated from
- * an expansion with only odd terms, hence the numerical error of a result of one step of this method is of
- * Order+2, opposed to Order+1 for usual algorithms.
+ * bulirsch_stoer, but without the variable order.
  *
- * \note The Order parameter has to be an odd number.
+ * \note The Order parameter has to be an even number.
  */
 
 } } }

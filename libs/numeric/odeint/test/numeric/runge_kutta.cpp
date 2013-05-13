@@ -102,7 +102,7 @@ struct perform_runge_kutta_test
             std::cout << "Testing dt=" << dt << std::endl;
             BOOST_CHECK_LT( std::abs( sin(dt) - x1[0] ) , f*std::pow( dt , o ) );
 
-            dt *= 0.5;
+            dt /= 1.259;
         }
     }
 };
@@ -143,7 +143,7 @@ struct perform_runge_kutta_error_test
             stepper.do_step( osc() , x1 , t , dt , x_err );
             std::cout << "Testing dt=" << dt << ": " << x_err[1] << std::endl;
             BOOST_CHECK_SMALL( std::abs( x_err[0] ) , f*std::pow( dt , o ) );
-            dt *= 0.5;
+            dt /= 1.259;
         }
     }
 };
@@ -158,9 +158,9 @@ typedef mpl::vector<
     runge_kutta_cash_karp54< state_type > ,
     runge_kutta_dopri5< state_type > ,
     runge_kutta_fehlberg78< state_type > , 
-    extrapolation_stepper< 5 , state_type > ,
-    extrapolation_stepper< 7 , state_type > ,
-    extrapolation_stepper< 9 , state_type > 
+    extrapolation_stepper< 4 , state_type > ,
+    extrapolation_stepper< 6 , state_type > ,
+    extrapolation_stepper< 8 , state_type >
     > runge_kutta_steppers;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( runge_kutta_test , Stepper, runge_kutta_steppers )
@@ -175,9 +175,9 @@ typedef mpl::vector<
     runge_kutta_cash_karp54< state_type > ,
     runge_kutta_dopri5< state_type > ,
     runge_kutta_fehlberg78< state_type > ,
-    extrapolation_stepper< 5 , state_type > ,
-    extrapolation_stepper< 7 , state_type > ,
-    extrapolation_stepper< 9 , state_type >
+    extrapolation_stepper< 4 , state_type > ,
+    extrapolation_stepper< 6 , state_type > ,
+    extrapolation_stepper< 8 , state_type >
     > runge_kutta_error_steppers;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( runge_kutta_error_test , Stepper, runge_kutta_error_steppers )

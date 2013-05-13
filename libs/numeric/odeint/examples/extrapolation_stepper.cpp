@@ -32,9 +32,9 @@ struct osc
     }
 };
     
-typedef extrapolation_stepper< 3 , state_type > stepper_type3;
-typedef extrapolation_stepper< 5 , state_type > stepper_type5;
-typedef extrapolation_stepper< 7 , state_type > stepper_type7;
+typedef extrapolation_stepper< 4 , state_type > stepper_type4;
+typedef extrapolation_stepper< 6 , state_type > stepper_type6;
+typedef extrapolation_stepper< 8 , state_type > stepper_type8;
 
 int main()
 {
@@ -43,21 +43,21 @@ int main()
     while( dt > 1E-4 )
     {
         state_type x_out;
+        state_type x1 = {{ 0.0 , 1.0 }};
+        stepper_type4 stepper4;
+        stepper4.do_step( osc() , x1 , t , x_out , dt );
+
+        state_type x2 = {{ 0.0 , 1.0 }};
+        stepper_type6 stepper6;
+        stepper6.do_step( osc() , x2 , t , dt );
+
         state_type x3 = {{ 0.0 , 1.0 }};
-        stepper_type3 stepper3;
-        stepper3.do_step( osc() , x3 , t , x_out , dt );
-
-        state_type x5 = {{ 0.0 , 1.0 }};
-        stepper_type5 stepper5;
-        stepper5.do_step( osc() , x5 , t , dt );
-
-        state_type x7 = {{ 0.0 , 1.0 }};
-        stepper_type7 stepper7;
-        stepper7.do_step( osc() , x7 , t , dt );
+        stepper_type8 stepper8;
+        stepper8.do_step( osc() , x3 , t , dt );
 
         std::cout << dt << '\t' << std::abs(x_out[0] - sin(dt)) << '\t';
-        std::cout << std::abs(x5[0] - sin(dt)) << '\t';
-        std::cout << std::abs(x7[0] - sin(dt)) << std::endl;
+        std::cout << std::abs(x2[0] - sin(dt)) << '\t';
+        std::cout << std::abs(x3[0] - sin(dt)) << std::endl;
         
         dt /= 1.257;
     }

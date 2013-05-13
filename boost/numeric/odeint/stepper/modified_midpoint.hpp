@@ -97,8 +97,7 @@ public :
 
         boost::numeric::odeint::copy( in , m_x0.m_v );
 
-        unsigned short i = 1;
-        while( i != m_steps )
+        for( size_t i=1 ; i<m_steps ; ++i )
         {
             // general step
             //tmp = m_x1; m_x1 = m_x0 + h2*m_dxdt; m_x0 = tmp
@@ -106,7 +105,6 @@ public :
                     typename operations_type::template scale_sum_swap2< value_type , time_type >( val1 , h2 ) );
             th += h;
             sys( m_x1.m_v , m_dxdt.m_v , th);
-            i++;
         }
 
         // last step

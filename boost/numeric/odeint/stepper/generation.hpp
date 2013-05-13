@@ -28,6 +28,7 @@
 #include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54.hpp>
 #include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_fehlberg78.hpp>
+#include <boost/numeric/odeint/stepper/generation/generation_extrapolation_stepper.hpp>
 
 
 #include <boost/numeric/odeint/stepper/generation/generation_rosenbrock4.hpp>

@@ -67,5 +67,3 @@ exe nr_rk4_phase_lattice
 exe rt_generic_rk4_phase_lattice
     : rt_generic_rk4_phase_lattice.cpp
     ;
-
-

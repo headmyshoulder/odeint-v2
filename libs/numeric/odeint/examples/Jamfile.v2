@@ -36,6 +36,8 @@ exe heun : heun.cpp ;
 exe bind_member_functions : bind_member_functions.cpp ;
 exe bind_member_functions_cpp11 : bind_member_functions_cpp11.cpp : <cxxflags>-std=c++0x ;
 exe extrapolation_stepper : extrapolation_stepper.cpp ;
+exe extrapolation_vs_dopri5 : extrapolation_vs_dopri5.cpp ;
+exe extrapolation_vs_rkf78 : extrapolation_vs_rkf78.cpp ;
 
 
 # build-project mtl ;
