@@ -15,8 +15,8 @@
 */
 
 
-#ifndef BOOST_NUMERIC_ODEINT_STEPPER_EXTRAPOLATION_STEPPER_HPP_INCLUDED
-#define BOOST_NUMERIC_ODEINT_STEPPER_EXTRAPOLATION_STEPPER_HPP_INCLUDED
+#ifndef BOOST_NUMERIC_ODEINT_PARALLEL_STEPPER_EXTRAPOLATION_STEPPER_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_PARALLEL_STEPPER_EXTRAPOLATION_STEPPER_HPP_INCLUDED
 
 
 #include <iostream>
@@ -58,11 +58,11 @@ template<
     class Resizer = initially_resizer
     >
 #ifndef DOXYGEN_SKIP
-class extrapolation_stepper : public explicit_error_stepper_base<
-    extrapolation_stepper< Order , State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
+class parallel_extrapolation_stepper : public explicit_error_stepper_base<
+    parallel_extrapolation_stepper< Order , State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
     Order , Order , Order-2 , State , Value , Deriv , Time , Algebra , Operations , Resizer >
 #else
-class extrapolation_stepper : public explicit_error_stepper_base
+class parallel_extrapolation_stepper : public explicit_error_stepper_base
 #endif
 {
 
@@ -73,10 +73,10 @@ class extrapolation_stepper : public explicit_error_stepper_base
  public:
 
 #ifndef DOXYGEN_SKIP
-    typedef explicit_error_stepper_base< extrapolation_stepper< Order , State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
+    typedef explicit_error_stepper_base< parallel_extrapolation_stepper< Order , State , Value , Deriv , Time , Algebra , Operations , Resizer > ,
             Order , Order , Order-2 , State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_base_type;
 #else
-    typedef explicit_error_stepper_fsal_base< extrapolation_stepper< ... > , ... > stepper_base_type;
+    typedef explicit_error_stepper_base< parallel_extrapolation_stepper< ... > , ... > stepper_base_type;
 #endif
 
     typedef typename stepper_base_type::state_type state_type;
@@ -107,7 +107,7 @@ class extrapolation_stepper : public explicit_error_stepper_base
     
     const static size_t m_k_max = (order_value-2)/2;
     
-    extrapolation_stepper( const algebra_type &algebra = algebra_type() )
+    parallel_extrapolation_stepper( const algebra_type &algebra = algebra_type() )
         : stepper_base_type( algebra ) , m_interval_sequence( m_k_max+1 ) ,
           m_coeff( m_k_max+1 ) , m_table( m_k_max )
     {
@@ -158,12 +158,12 @@ class extrapolation_stepper : public explicit_error_stepper_base
     {
         m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
         size_t k = 0;
-        m_midpoint.set_steps( m_interval_sequence[k] );
-        m_midpoint.do_step( system , in , dxdt , t , out , dt );
+        m_midpoint[k].set_steps( m_interval_sequence[k] );
+        m_midpoint[k].do_step( system , in , dxdt , t , out , dt );
         for( k = 1 ; k <= m_k_max ; ++k )
         {
-            m_midpoint.set_steps( m_interval_sequence[k] );
-            m_midpoint.do_step( system , in , dxdt , t , m_table[k-1].m_v , dt );
+            m_midpoint[k].set_steps( m_interval_sequence[k] );
+            m_midpoint[k].do_step( system , in , dxdt , t , m_table[k-1].m_v , dt );
             extrapolate( k , m_table , m_coeff , out );
         }
     }
@@ -223,7 +223,7 @@ private:
 
 
  private:
-    midpoint_stepper_type m_midpoint;
+    midpoint_stepper_type m_midpoint[m_k_max+1];
     
     algebra_type m_algebra;
     

@@ -26,6 +26,7 @@
 #include <boost/mpl/vector.hpp>
 
 #include <boost/numeric/odeint.hpp>
+#include <boost/numeric/odeint/stepper/parallel_extrapolation_stepper.hpp>
 
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
@@ -160,7 +161,8 @@ typedef mpl::vector<
     runge_kutta_fehlberg78< state_type > , 
     extrapolation_stepper< 4 , state_type > ,
     extrapolation_stepper< 6 , state_type > ,
-    extrapolation_stepper< 8 , state_type >
+    extrapolation_stepper< 8 , state_type > ,
+    parallel_extrapolation_stepper< 8 , state_type >
     > runge_kutta_steppers;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( runge_kutta_test , Stepper, runge_kutta_steppers )
@@ -177,7 +179,8 @@ typedef mpl::vector<
     runge_kutta_fehlberg78< state_type > ,
     extrapolation_stepper< 4 , state_type > ,
     extrapolation_stepper< 6 , state_type > ,
-    extrapolation_stepper< 8 , state_type >
+    extrapolation_stepper< 8 , state_type > ,
+    parallel_extrapolation_stepper< 8 , state_type >
     > runge_kutta_error_steppers;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( runge_kutta_error_test , Stepper, runge_kutta_error_steppers )

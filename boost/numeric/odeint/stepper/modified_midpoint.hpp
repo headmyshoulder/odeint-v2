@@ -18,6 +18,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_MODIFIED_MIDPOINT_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_STEPPER_MODIFIED_MIDPOINT_HPP_INCLUDED
 
+#include <iostream>
 #include <vector>
 
 #include <boost/numeric/odeint/stepper/base/explicit_stepper_base.hpp>
