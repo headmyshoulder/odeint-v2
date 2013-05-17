@@ -78,7 +78,7 @@ struct perform_runge_kutta_test
         const state_type x0 = {{ 0.0 , 1.0 }};
         state_type x1;
         const double t = 0.0;
-        /* do a first step with dt=0.1 to get an estimate on the prefactor of the error dx = f * dt^(order+1) */
+        /* do a first step with dt=0.5 to get an estimate on the prefactor of the error dx = f * dt^(order+1) */
         double dt = 0.5;
         stepper.do_step( osc() , x0 , t , x1 , dt );
         const double f = 2.0 * std::abs( sin(dt) - x1[0] ) / std::pow( dt , o ); // upper bound
@@ -90,7 +90,7 @@ struct perform_runge_kutta_test
         {
             // reset stepper which require resetting (fsal steppers)
             resetter< typename Stepper::stepper_category >::reset( stepper );
-            
+
             stepper.do_step( osc() , x0 , t , x1 , dt );
             std::cout << "Testing dt=" << dt << std::endl;
             BOOST_CHECK_LT( std::abs( sin(dt) - x1[0] ) , f*std::pow( dt , o ) );

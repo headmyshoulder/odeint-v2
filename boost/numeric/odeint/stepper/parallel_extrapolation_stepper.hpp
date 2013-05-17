@@ -134,7 +134,7 @@ class parallel_extrapolation_stepper : public explicit_error_stepper_base
 
         static const value_type val1( 1.0 );
         // additionally, perform the error calculation
-        m_algebra.for_each3( xerr , out , m_table[0].m_v ,
+        this->m_algebra.for_each3( xerr , out , m_table[0].m_v ,
                 typename operations_type::template scale_sum2< value_type , value_type >( val1 , -val1 ) );
     }
 
@@ -147,7 +147,7 @@ class parallel_extrapolation_stepper : public explicit_error_stepper_base
 
         static const value_type val1( 1.0 );
         // additionally, perform the error calculation
-        m_algebra.for_each3( xerr , inout , m_table[0].m_v ,
+        this->m_algebra.for_each3( xerr , inout , m_table[0].m_v ,
                 typename operations_type::template scale_sum2< value_type , value_type >( val1 , -val1 ) );
     }
 
@@ -214,18 +214,16 @@ private:
 
         for( int j=k-1 ; j>0 ; --j )
         {
-            m_algebra.for_each3( table[j-1].m_v , table[j].m_v , table[j-1].m_v ,
+            this->m_algebra.for_each3( table[j-1].m_v , table[j].m_v , table[j-1].m_v ,
                                  typename operations_type::template scale_sum2< value_type , value_type >( val1 + coeff[k][j] , -coeff[k][j] ) );
         }
-        m_algebra.for_each3( xest , table[0].m_v , xest ,
+        this->m_algebra.for_each3( xest , table[0].m_v , xest ,
                              typename operations_type::template scale_sum2< value_type , value_type >( val1 + coeff[k][0] , -coeff[k][0]) );
     }
 
 
  private:
     midpoint_stepper_type m_midpoint[m_k_max+1];
-    
-    algebra_type m_algebra;
     
     resizer_type m_resizer;
     resizer_type m_xout_resizer;

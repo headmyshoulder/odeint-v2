@@ -182,9 +182,6 @@ public:
     }
 
 
-
-
-
     /*
      * Version  5 :do_step( sys , x , t , dt , xerr )
      *
