@@ -21,7 +21,7 @@
 
 #include <algorithm>
 #include <complex>
-#include "../../../../../../boost/boost_1_53_0/boost/concept_check.hpp"
+#include <boost/concept_check.hpp>
 
 #include <boost/range.hpp>
 #include <boost/mpl/size_t.hpp>
@@ -33,24 +33,21 @@
 namespace boost {
 namespace numeric {
 namespace odeint {
-    
+
+namespace detail {
+
 template< typename S >
-struct value_type_from_complex { typedef S type; };
+struct extract_value_type { typedef S type; };
 
 template< typename T >
-struct value_type_from_complex< std::complex< T > > { typedef T type; };
+struct extract_value_type< std::complex< T > > { typedef T type; };
+
+}
 
 template< typename S >
 struct norm_inf_result {
-    typedef typename S::value_type tmp_type;
-    typedef typename value_type_from_complex< tmp_type >::type type;
+    typedef typename detail::extract_value_type< typename S::value_type >::type type;
 };
-
-template< typename T >
-struct norm_inf_result< std::vector< std::complex<T> > > {
-    typedef T type;
-};
-
 
 struct range_algebra
 {
