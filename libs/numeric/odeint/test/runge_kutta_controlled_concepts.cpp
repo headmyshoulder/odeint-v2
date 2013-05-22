@@ -105,6 +105,27 @@ struct perform_controlled_stepper_test< ControlledStepper , vector_type >
 };
 
 template< class ControlledStepper >
+struct perform_controlled_stepper_test< ControlledStepper , complex_vector_type >
+{
+    void operator()( void )
+    {
+        complex_vector_type x( 1 , 2.0 );
+        //typename ControlledStepper::stepper_type error_stepper;
+        //default_error_checker< typename ControlledStepper::value_type ,
+        //                             typename ControlledStepper::algebra_type ,
+        //                             typename ControlledStepper::operations_type > error_checker;
+        //ControlledStepper controlled_stepper( error_stepper , error_checker );
+        ControlledStepper controlled_stepper;
+        check_controlled_stepper_concept( controlled_stepper ,
+                                          constant_system_standard< complex_vector_type , complex_vector_type , double > ,
+                                          x );
+        check_controlled_stepper_concept( controlled_stepper , boost::cref( constant_system_functor_standard() ) , x );
+        BOOST_CHECK_SMALL( fabs( x[0].real() - result ) , eps );
+    }
+};
+
+
+template< class ControlledStepper >
 struct perform_controlled_stepper_test< ControlledStepper , vector_space_type >
 {
     void operator()( void ) const

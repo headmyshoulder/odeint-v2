@@ -20,6 +20,8 @@
 #define BOOST_NUMERIC_ODEINT_ALGEBRA_RANGE_ALGEBRA_HPP_INCLUDED
 
 #include <algorithm>
+#include <vector>
+#include <complex>
 
 #include <boost/range.hpp>
 #include <boost/mpl/size_t.hpp>
@@ -31,6 +33,17 @@
 namespace boost {
 namespace numeric {
 namespace odeint {
+
+template< typename S >
+struct norm_inf_result {
+    typedef typename S::value_type type;
+};
+
+template< typename T >
+struct norm_inf_result< std::vector< std::complex<T> > > {
+    typedef T type;
+};
+
 
 struct range_algebra
 {
@@ -126,10 +139,11 @@ struct range_algebra
         detail::for_each15( boost::begin( s1 ) , boost::end( s1 ) , boost::begin( s2 ) , boost::begin( s3 ) , boost::begin( s4 ) , boost::begin( s5 ) , boost::begin( s6 ) , boost::begin( s7 ) , boost::begin( s8 ) , boost::begin( s9 ) , boost::begin( s10 ) , boost::begin( s11 ) , boost::begin( s12 ) , boost::begin( s13 ) , boost::begin( s14 ) , boost::begin( s15 ) , op );
     }
 
-    template< class S >
-    static typename S::value_type norm_inf( const S &s )
+    template< typename S >
+    static typename norm_inf_result<S>::type norm_inf( const S &s )
     {
-        return detail::norm_inf( boost::begin( s ) , boost::end( s ) , static_cast< typename S::value_type>( 0.0 ) );
+        return detail::norm_inf( boost::begin( s ) , boost::end( s ) ,
+                                 static_cast< typename norm_inf_result<S>::type >( 0 ) );
     }
 
 };

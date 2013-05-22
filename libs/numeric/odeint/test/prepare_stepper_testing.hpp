@@ -19,6 +19,7 @@
 
 #include <boost/array.hpp>
 #include <vector>
+#include <complex>
 #include <boost/fusion/sequence.hpp>
 
 #include <boost/mpl/vector.hpp>
@@ -34,9 +35,10 @@ using namespace boost::numeric::odeint;
 
 /* the state types that will be tested */
 typedef std::vector< double > vector_type;
+typedef std::vector< std::complex<double> > complex_vector_type;
 typedef double vector_space_type;
 typedef boost::array< double , 1 > array_type;
 
-typedef mpl::vector< vector_type , vector_space_type , array_type >::type container_types;
+typedef mpl::vector< vector_type , complex_vector_type , vector_space_type , array_type >::type container_types;
 
 #endif /* PREPARE_STEPPER_TESTING_HPP_ */

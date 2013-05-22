@@ -250,7 +250,7 @@ struct array_algebra
     }
 
 
-    template< class T , size_t dim >
+    template< typename T , size_t dim >
     static T norm_inf( const boost::array< T , dim > &s )
     {
         using std::max;

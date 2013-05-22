@@ -92,6 +92,18 @@ struct perform_error_stepper_test< Stepper , vector_type >
     }
 };
 
+template< class Stepper >
+struct perform_error_stepper_test< Stepper , complex_vector_type >
+{
+    void operator()( void )
+    {
+        complex_vector_type x( 1 , 2.0 ) , xerr( 1 );
+        Stepper stepper;
+        check_error_stepper_concept( stepper , constant_system_standard< complex_vector_type , complex_vector_type , double > , x , xerr );
+        check_error_stepper_concept( stepper , boost::cref( constant_system_functor_standard() ) , x , xerr );
+        BOOST_CHECK_SMALL( fabs( x[0].real() - result ) , eps );
+    }
+};
 
 template< class Stepper >
 struct perform_error_stepper_test< Stepper , vector_space_type >
