@@ -21,7 +21,6 @@
 
 #include <algorithm>
 #include <complex>
-#include <boost/concept_check.hpp>
 
 #include <boost/range.hpp>
 #include <boost/mpl/size_t.hpp>

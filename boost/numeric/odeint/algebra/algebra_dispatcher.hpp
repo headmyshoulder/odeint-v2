@@ -19,6 +19,8 @@
 
 #include <complex>
 
+#include <boost/type_traits/is_floating_point.hpp>
+
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 
@@ -26,9 +28,7 @@
 #include <boost/numeric/odeint/algebra/array_algebra.hpp>
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 
-
 #include <boost/array.hpp>
-
 
 
 namespace boost {
