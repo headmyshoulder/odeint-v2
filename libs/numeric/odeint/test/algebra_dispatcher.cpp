@@ -31,7 +31,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/array.hpp>
-
+#include <boost/mpl/list.hpp>
 
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
@@ -69,6 +69,12 @@ BOOST_AUTO_TEST_CASE( fusion_algebra_with_fusion_vector2 )
     BOOST_STATIC_ASSERT(( boost::is_same< typename stepper_type::algebra_type , fusion_algebra >::value ));
 }
 
+typedef boost::mpl::list< float , double , long double , std::complex< double > , std::complex< float > > fp_types;
+BOOST_AUTO_TEST_CASE_TEMPLATE( vector_space_algebra_with_floating_point , T , fp_types )
+{
+    typedef runge_kutta_fehlberg78< T > stepper_type;
+    BOOST_STATIC_ASSERT(( boost::is_same< typename stepper_type::algebra_type , vector_space_algebra >::value ));
+}
 
 
 

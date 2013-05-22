@@ -20,8 +20,8 @@
 #define BOOST_NUMERIC_ODEINT_ALGEBRA_RANGE_ALGEBRA_HPP_INCLUDED
 
 #include <algorithm>
-#include <vector>
 #include <complex>
+#include "../../../../../../boost/boost_1_53_0/boost/concept_check.hpp"
 
 #include <boost/range.hpp>
 #include <boost/mpl/size_t.hpp>
@@ -33,10 +33,17 @@
 namespace boost {
 namespace numeric {
 namespace odeint {
+    
+template< typename S >
+struct value_type_from_complex { typedef S type; };
+
+template< typename T >
+struct value_type_from_complex< std::complex< T > > { typedef T type; };
 
 template< typename S >
 struct norm_inf_result {
-    typedef typename S::value_type type;
+    typedef typename S::value_type tmp_type;
+    typedef typename value_type_from_complex< tmp_type >::type type;
 };
 
 template< typename T >

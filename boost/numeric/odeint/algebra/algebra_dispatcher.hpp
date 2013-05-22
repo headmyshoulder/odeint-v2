@@ -50,14 +50,8 @@ struct algebra_dispatcher< boost::array< T , N > >
 };
 
 //specialize for some integral types
-template<>
-struct algebra_dispatcher< double >
-{
-    typedef vector_space_algebra algebra_type;
-};
-
-template<>
-struct algebra_dispatcher< float >
+template< typename T >
+struct algebra_dispatcher< T , typename boost::enable_if< typename boost::is_floating_point< T >::type >::type >
 {
     typedef vector_space_algebra algebra_type;
 };
