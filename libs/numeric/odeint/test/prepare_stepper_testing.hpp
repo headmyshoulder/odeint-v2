@@ -41,6 +41,7 @@ typedef boost::array< double , 1 > array_type;
 typedef boost::array< std::complex<double> , 1 > complex_array_type;
 
 typedef mpl::vector< vector_type , complex_vector_type , vector_space_type ,
-                     array_type , complex_array_type >::type container_types;
+                     array_type , complex_array_type
+                     >::type container_types;
 
 #endif /* PREPARE_STEPPER_TESTING_HPP_ */
