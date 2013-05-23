@@ -1,6 +1,6 @@
 /*
  [auto_generated]
- boost/numeric/odeint/integrate/detail/less_with_sign.hpp
+ boost/numeric/odeint/util/detail/less_with_sign.hpp
 
  [begin_description]
  Helper function to compare times taking into account the sign of dt

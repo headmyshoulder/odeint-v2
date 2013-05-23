@@ -136,6 +136,19 @@ struct perform_error_stepper_test< Stepper , array_type >
     }
 };
 
+template< class Stepper >
+struct perform_error_stepper_test< Stepper , complex_array_type >
+{
+    void operator()( void )
+    {
+        complex_array_type x , xerr;
+        x[0] = 2.0;
+        Stepper stepper;
+        check_error_stepper_concept( stepper , constant_system_standard< complex_array_type , complex_array_type , double > , x , xerr );
+        check_error_stepper_concept( stepper , boost::cref( constant_system_functor_standard() ) , x , xerr );
+        BOOST_CHECK_SMALL( fabs( x[0].real() - result ) , eps );
+    }
+};
 
 template< class State > class error_stepper_methods : public mpl::vector<
     runge_kutta_cash_karp54_classic< State > ,

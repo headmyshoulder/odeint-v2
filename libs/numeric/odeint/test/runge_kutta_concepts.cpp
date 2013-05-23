@@ -140,6 +140,21 @@ struct perform_stepper_test< Stepper , array_type >
     }
 };
 
+template< class Stepper >
+struct perform_stepper_test< Stepper , complex_array_type >
+{
+    void operator()( void )
+    {
+        complex_array_type x;
+        x[0] = 2.0;
+        Stepper stepper;
+        check_stepper_concept( stepper , constant_system_standard< complex_array_type , complex_array_type , double> , x );
+        check_stepper_concept( stepper , boost::cref( constant_system_functor_standard() ) , x );
+        std::cout << x[0] << " ?= " << result << std::endl;
+        BOOST_CHECK_SMALL( fabs( x[0].real() - result ) , eps );
+    }
+};
+
 
 template< class State > class stepper_methods : public mpl::vector<
     euler< State > ,

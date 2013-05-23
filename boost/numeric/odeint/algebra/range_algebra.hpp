@@ -28,25 +28,11 @@
 #include <boost/numeric/odeint/algebra/detail/macros.hpp>
 #include <boost/numeric/odeint/algebra/detail/for_each.hpp>
 #include <boost/numeric/odeint/algebra/detail/reduce.hpp>
+#include <boost/numeric/odeint/algebra/norm_result_type.hpp>
 
 namespace boost {
 namespace numeric {
 namespace odeint {
-
-namespace detail {
-
-template< typename S >
-struct extract_value_type { typedef S type; };
-
-template< typename T >
-struct extract_value_type< std::complex< T > > { typedef T type; };
-
-}
-
-template< typename S >
-struct norm_inf_result {
-    typedef typename detail::extract_value_type< typename S::value_type >::type type;
-};
 
 struct range_algebra
 {
@@ -143,10 +129,10 @@ struct range_algebra
     }
 
     template< typename S >
-    static typename norm_inf_result<S>::type norm_inf( const S &s )
+    static typename norm_result_type<S>::type norm_inf( const S &s )
     {
         return detail::norm_inf( boost::begin( s ) , boost::end( s ) ,
-                                 static_cast< typename norm_inf_result<S>::type >( 0 ) );
+                                 static_cast< typename norm_result_type<S>::type >( 0 ) );
     }
 
 };

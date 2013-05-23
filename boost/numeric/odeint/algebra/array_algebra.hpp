@@ -19,8 +19,9 @@
 #define BOOST_NUMERIC_ODEINT_ALGEBRA_ARRAY_ALGEBRA_HPP_INCLUDED
 
 #include <algorithm>
-
 #include <boost/array.hpp>
+
+#include <boost/numeric/odeint/algebra/norm_result_type.hpp>
 
 namespace boost {
 namespace numeric {
@@ -251,12 +252,14 @@ struct array_algebra
 
 
     template< typename T , size_t dim >
-    static T norm_inf( const boost::array< T , dim > &s )
+    static typename norm_result_type< boost::array< T , dim > >::type norm_inf( const boost::array< T , dim > &s )
     {
         using std::max;
-        T init = static_cast< T >( 0.0 );
+        using std::abs;
+        typedef typename norm_result_type< boost::array< T , dim > >::type result_type;
+        result_type init = static_cast< result_type >( 0 );
         for( size_t i=0 ; i<dim ; ++i )
-            init = max( init , s[i] );
+            init = max( init , abs(s[i]) );
         return init;
     }
 
