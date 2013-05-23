@@ -25,16 +25,8 @@ namespace odeint {
 
 template< typename S , typename Enabler = void >
 struct norm_result_type {
-    //typedef double type;
     typedef typename detail::extract_value_type< S >::type type;
 };
-
-
-//template< typename S >
-//struct norm_result_type< S , typename S::value_type > {
-//    // for anything that has value_type defined we use that
-//    typedef typename detail::extract_value_type< typename S::value_type >::type type;
-//};
 
 } } }
 

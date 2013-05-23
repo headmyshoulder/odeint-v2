@@ -20,14 +20,13 @@
 #define BOOST_NUMERIC_ODEINT_ALGEBRA_RANGE_ALGEBRA_HPP_INCLUDED
 
 #include <algorithm>
-#include <complex>
 
 #include <boost/range.hpp>
 #include <boost/mpl/size_t.hpp>
 
 #include <boost/numeric/odeint/algebra/detail/macros.hpp>
 #include <boost/numeric/odeint/algebra/detail/for_each.hpp>
-#include <boost/numeric/odeint/algebra/detail/reduce.hpp>
+#include <boost/numeric/odeint/algebra/detail/norm_inf.hpp>
 #include <boost/numeric/odeint/algebra/norm_result_type.hpp>
 
 namespace boost {
