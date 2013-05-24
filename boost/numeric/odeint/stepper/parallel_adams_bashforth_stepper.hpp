@@ -55,6 +55,8 @@
 #include <boost/numeric/odeint/util/unit_helper.hpp>
 #include <boost/numeric/odeint/util/detail/less_with_sign.hpp>
 
+#include <boost/numeric/odeint/stepper/detail/parallel_adams_bashforth_coefficients.hpp>
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -79,8 +81,9 @@ class parallel_adams_bashforth_stepper : public explicit_stepper_base
 {
 
  private:
-    // for now only k=3
-    BOOST_STATIC_ASSERT( Stages==3 );
+    // 2 < Stages < 6
+    BOOST_STATIC_ASSERT( Stages > 2 );
+    BOOST_STATIC_ASSERT( Stages < 6 );
 
  public:
 
@@ -115,9 +118,15 @@ class parallel_adams_bashforth_stepper : public explicit_stepper_base
     static const order_type order_value = stepper_base_type::order_value;
     
     parallel_adams_bashforth_stepper( const algebra_type &algebra = algebra_type() )
-        : stepper_base_type( algebra ) , m_init_stepper( algebra ) , m_init_state_count(0)
+        : stepper_base_type( algebra ) , m_init_state_count(0)
     {
-        value_type a[3] = { (16.0-sqrt(6.0))/10.0 , (16.0+sqrt(6.0))/10.0 , 1.0 };
+        // initialize steppers
+        for( size_t n=0 ; n<Stages-1 ; ++n )
+        {
+            m_init_steppers[n] = init_stepper_type( algebra );
+        }
+        // calculate coefficients from lobatto points
+        detail::parallel_adams_bashforth_coefficients< value_type , Stages > a;
         value_matrix v_a , w_b , s;
         for( size_t n=0 ; n<Stages ; ++n )
         {
@@ -131,25 +140,13 @@ class parallel_adams_bashforth_stepper : public explicit_stepper_base
                 w_b(n,j) = (j+1) * tmp;
             }
         }
-        //std::cout << v_a << std::endl;
-        //std::cout << w_b << std::endl;
 
         using boost::numeric::ublas::prod;
         value_matrix w_b_inv;
         invert_matrix( w_b , w_b_inv );
         s = prod( v_a , w_b_inv );
-        //std::cout << s << std::endl;
-        double sum1 = 0.0;
-        double sum2 = 0.0;
-        double sum3 = 0.0;
-        for( size_t n=0 ; n<Stages ; ++n )
-        {
-            sum1 += s(0,n);
-            sum2 += s(1,n);
-            sum3 += s(2,n);
-        }
-        //std::cout << sum1 << " , " << sum2 << " , " << sum3 << std::endl;
-        // write s into m_coeff
+
+
         for( size_t n=0 ; n<Stages ; ++n )
         {
             // with to generic_rk_scale_sum requires this coefficient layout
@@ -163,16 +160,6 @@ class parallel_adams_bashforth_stepper : public explicit_stepper_base
                     m_init_coeff[n] += s(n,j);
             }
         }
-//        std::cout << "Coeff: " << std::endl;
-//        for( size_t n=0 ; n<Stages ; ++n )
-//        {
-//            for( size_t j=0 ; j<Stages ; ++j )
-//                std::cout << m_coeff[n][j] << " , ";
-//            if( n<Stages-1 )
-//                std::cout << m_init_coeff[n] << std::endl;
-//            else
-//                std::cout << std::endl;
-//        }
     }
     
     
@@ -184,8 +171,8 @@ class parallel_adams_bashforth_stepper : public explicit_stepper_base
 
         while( m_init_state_count < Stages-1 )
         {
-            m_init_stepper.do_step( system , in , dxdt , t ,
-                                    m_states[m_init_state_count].m_v , m_init_coeff[m_init_state_count]*dt );
+            m_init_steppers[m_init_state_count].do_step( system , in , dxdt , t ,
+                    m_states[m_init_state_count].m_v , m_init_coeff[m_init_state_count]*dt );
             m_init_state_count++;
         }
 
@@ -248,7 +235,7 @@ private:
  private:
     resizer_type m_resizer;
     
-    init_stepper_type m_init_stepper;
+    init_stepper_type m_init_steppers[Stages-1];
 
     wrapped_state_type m_states[Stages-1];
     wrapped_deriv_type m_derivs[Stages-1];
