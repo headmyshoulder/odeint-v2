@@ -149,7 +149,7 @@ class parallel_adams_bashforth_stepper : public explicit_stepper_base
 
         for( size_t n=0 ; n<Stages ; ++n )
         {
-            // with to generic_rk_scale_sum requires this coefficient layout
+            // generic_rk_scale_sum requires this coefficient layout
             m_coeff[n][0] = s(n,Stages-1);
             if( n<Stages-1 )
                 m_init_coeff[n] = s(n,0) - 1.0;
@@ -213,6 +213,7 @@ private:
             resized |= adjust_size_by_resizeability( m_states[i] , x , typename is_resizeable<state_type>::type() );
             resized |= adjust_size_by_resizeability( m_derivs[i] , x , typename is_resizeable<state_type>::type() );
         }
+        resized |= adjust_size_by_resizeability( m_deriv , x , typename is_resizeable<state_type>::type() );
         return resized;
     }
 
@@ -231,14 +232,17 @@ private:
         lu_substitute(m, pm, inv);
     }
 
-    
+ public:
+    wrapped_state_type m_states[Stages-1];
+
  private:
     resizer_type m_resizer;
     
+    wrapped_deriv_type m_derivs[Stages-1];
+    wrapped_deriv_type m_deriv;
+
     init_stepper_type m_init_steppers[Stages-1];
 
-    wrapped_state_type m_states[Stages-1];
-    wrapped_deriv_type m_derivs[Stages-1];
     boost::array<value_type,Stages> m_coeff[Stages];
     value_type m_init_coeff[Stages-1];
 

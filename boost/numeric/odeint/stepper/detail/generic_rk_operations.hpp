@@ -50,6 +50,10 @@ struct generic_rk_scale_sum< 2 , Operations , Fac , Time > : public Operations::
 template< class Operations , class Fac , class Time >
 struct generic_rk_scale_sum< 3 , Operations , Fac , Time > : public Operations::template scale_sum4< Fac , Time >
 {
+    // default constructible for serizalization
+    generic_rk_scale_sum() : Operations::template scale_sum4< Fac , Time > ()
+        {}
+
     generic_rk_scale_sum( const boost::array<Fac,3> &a , Time dt )
                     : Operations::template scale_sum4< Fac , Time >( 1.0 , a[0]*dt , a[1]*dt , a[2]*dt )
                       { }
@@ -60,6 +64,7 @@ struct generic_rk_scale_sum< 3 , Operations , Fac , Time > : public Operations::
 template< class Operations , class Fac , class Time >
 struct generic_rk_scale_sum< 4 , Operations , Fac , Time > : public Operations::template scale_sum5< Fac , Time >
 {
+    // default constructible for serizalization
     generic_rk_scale_sum() : Operations::template scale_sum5< Fac , Time > ( 0,0,0,0,0 )
         {}
 
