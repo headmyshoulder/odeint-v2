@@ -63,7 +63,7 @@ struct thrust_algebra
     template< class StateType , class Operation >
     static void for_each1( StateType &s , Operation op )
     {
-        thrust::for_each( boost::begin(s) , boost::begin(s) , op );
+        thrust::for_each( boost::begin(s) , boost::end(s) , op );
     }
 
     template< class StateType1 , class StateType2 , class Operation >
