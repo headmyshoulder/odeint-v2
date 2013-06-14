@@ -188,7 +188,7 @@ public :
 
         m_resizer.adjust_size( x , detail::bind( &stepper_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
 
-        for( size_t i=0 ; i<steps-1 ; ++i )
+        for( size_t i=0 ; i+1<steps ; ++i )
         {
             if( i != 0 ) m_step_storage.rotate();
             sys( x , m_step_storage[0].m_v , t );
@@ -229,7 +229,7 @@ private:
             m_steps_initialized = 0;
         }
 
-        if( m_steps_initialized < steps - 1 )
+        if( m_steps_initialized + 1 < steps )
         {
             if( m_steps_initialized != 0 ) m_step_storage.rotate();
             sys( in , m_step_storage[0].m_v , t );

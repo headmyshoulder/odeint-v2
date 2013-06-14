@@ -186,10 +186,12 @@ int main(int /* argc */ , char** /* argv */ )
 
     #ifdef BOOST_NUMERIC_ODEINT_CXX11
     //[ define_const_stepper_cpp11
+    {
     runge_kutta4< state_type > stepper;
     integrate_const( stepper , []( const state_type &x , state_type &dxdt , double t ) {
             dxdt[0] = x[1]; dxdt[1] = -x[0] - gam*x[1]; }
         , x , 0.0 , 10.0 , 0.01 );
+    }
     //]
     #endif
 

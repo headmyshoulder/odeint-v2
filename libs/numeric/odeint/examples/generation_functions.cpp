@@ -82,7 +82,9 @@ int main( int argc , char **argv )
 
         //[ generation_functions_syntax_result_of
         boost::numeric::odeint::result_of::make_controlled< stepper_type >::type stepper3 = make_controlled( 1.0e-6 , 1.0e-6 , stepper_type() );
+        (void)stepper3;
         boost::numeric::odeint::result_of::make_dense_output< stepper_type >::type stepper4 = make_dense_output( 1.0e-6 , 1.0e-6 , stepper_type() );
+        (void)stepper4;
         //]
     }
 
@@ -94,6 +96,7 @@ int main( int argc , char **argv )
         */
 
         boost::numeric::odeint::result_of::make_controlled< custom_stepper >::type stepper5 = make_controlled( 1.0e-6 , 1.0e-6 , custom_stepper() );
+        (void)stepper5;
     }
     return 0;
 }
