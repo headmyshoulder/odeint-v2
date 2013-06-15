@@ -39,3 +39,4 @@ exe bind_member_functions_cpp11 : bind_member_functions_cpp11.cpp : <cxxflags>-s
 # build-project mtl ;
 # build-project ublas ;
 # build-project gmpxx ;
+build-project openmp ;
