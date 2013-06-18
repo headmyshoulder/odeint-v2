@@ -20,26 +20,27 @@
 
 #include <boost/numeric/odeint/algebra/norm_result_type.hpp>
 #include <boost/numeric/odeint/util/n_ary_helper.hpp>
+#include "openmp_state.hpp"
 
 namespace boost {
 namespace numeric {
 namespace odeint {
 
-/** \brief OpenMP-parallelized algebra.
+/** \brief Basic OpenMP-parallelized algebra.
  *
  * Requires `s.size()` and `s[n]`, i.e. a Random Access Container.
  */
-struct openmp_algebra
+struct basic_openmp_algebra
 {
 
 // FIXME: _Pragma is C++11.
-#define OPENMP_ALGEBRA(n) \
+#define BOOST_ODEINT_GEN_BODY(n) \
     const size_t len = s0.size(); \
-    _Pragma("omp parallel for") \
+    _Pragma("omp parallel for schedule(dynamic)") \
     for( size_t i = 0 ; i < len ; i++ ) \
         op( BOOST_PP_ENUM_BINARY_PARAMS(n, s, [i] BOOST_PP_INTERCEPT) );
-BOOST_ODEINT_GEN_FOR_EACH(OPENMP_ALGEBRA)
-#undef OPENMP_ALGEBRA
+BOOST_ODEINT_GEN_FOR_EACH(BOOST_ODEINT_GEN_BODY)
+#undef BOOST_ODEINT_GEN_BODY
 
 
     template< class S >
@@ -52,6 +53,41 @@ BOOST_ODEINT_GEN_FOR_EACH(OPENMP_ALGEBRA)
 #       pragma omp parallel for reduction(max: init)
         for( size_t i = 0 ; i < s.size() ; ++i )
             init = max( init , abs(s[i]) );
+        return init;
+    }
+
+};
+
+
+/** \brief OpenMP-parallelized algebra, wrapping another, non-parallelized algebra.
+ */
+template< class InnerAlgebra >
+struct openmp_algebra
+{
+
+// FIXME: _Pragma is C++11.
+#define BOOST_ODEINT_GEN_BODY(n) \
+    const size_t len = s0.size(); \
+    _Pragma("omp parallel for schedule(static,1)") \
+    for( size_t i = 0 ; i < len ; i++ ) \
+        InnerAlgebra::for_each##n( \
+            BOOST_PP_ENUM_BINARY_PARAMS(n, s, [i] BOOST_PP_INTERCEPT) , \
+            op \
+        );
+BOOST_ODEINT_GEN_FOR_EACH(BOOST_ODEINT_GEN_BODY)
+#undef BOOST_ODEINT_GEN_BODY
+
+
+    template< class InnerState >
+    static typename norm_result_type< InnerState >::type norm_inf( const openmp_state< InnerState > &s )
+    {
+        using std::max;
+        using std::abs;
+        typedef typename norm_result_type< InnerState >::type result_type;
+        result_type init = static_cast< result_type >( 0 );
+#       pragma omp parallel for reduction(max: init) schedule(static,1)
+        for( size_t i = 0 ; i < s.size() ; i++ )
+            init = max( init , InnerAlgebra::norm_inf( s[i] ) );
         return init;
     }
 

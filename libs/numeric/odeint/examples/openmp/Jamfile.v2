@@ -16,3 +16,4 @@ project
     ;
 
 exe lorenz_ensemble : lorenz_ensemble.cpp ;
+exe lorenz_ensemble_simple : lorenz_ensemble_simple.cpp ;

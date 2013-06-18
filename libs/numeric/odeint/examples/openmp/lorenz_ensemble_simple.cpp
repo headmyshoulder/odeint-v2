@@ -1,4 +1,4 @@
-/* Boost libs/numeric/odeint/examples/openmp/lorenz_ensemble.cpp
+/* Boost libs/numeric/odeint/examples/openmp/lorenz_ensemble_simple.cpp
 
  Copyright 2009-2012 Karsten Ahnert
  Copyright 2009-2012 Mario Mulansky
@@ -15,30 +15,31 @@
 #include <omp.h>
 #include <vector>
 #include <iostream>
-#include <iterator>
 #include <boost/numeric/odeint.hpp>
-#include <boost/numeric/odeint/external/openmp/openmp.hpp>
+#include <boost/numeric/odeint/external/openmp/openmp_algebra.hpp>
 #include "point_type.hpp"
 
 using namespace std;
 
+typedef vector<double> vector_type;
 typedef point<double, 3> point_type;
-typedef vector< point_type > inner_state_type;
+typedef vector<point_type> state_type;
 
 const double sigma = 10.0;
 const double b = 8.0 / 3.0;
 
-
 struct sys_func {
-    const vector<double> &R;
-    sys_func( vector<double> &R ) : R(R) {}
+    const vector_type &R;
+    sys_func( const vector_type &_R ) : R( _R ) { }
 
-    void operator()( const inner_state_type &x , inner_state_type &dxdt , double t , size_t offset ) const {
-        for(size_t i = 0 ; i < x.size() ; i++) {
+    void operator()( const state_type &x , state_type &dxdt , double t ) const {
+        const size_t n = x.size();
+#       pragma omp parallel for
+        for(size_t i = 0 ; i < n ; i++) {
             const point_type &xi = x[i];
             point_type &dxdti = dxdt[i];
             dxdti[0] = -sigma * (xi[0] - xi[1]);
-            dxdti[1] = R[offset + i] * xi[0] - xi[1] - xi[0] * xi[2];
+            dxdti[1] = R[i] * xi[0] - xi[1] - xi[0] * xi[2];
             dxdti[2] = -b * xi[2] + xi[0] * xi[1];
         }
     }
@@ -48,31 +49,30 @@ struct sys_func {
 int main() {
     using namespace boost::numeric::odeint;
 
-    typedef openmp_state<inner_state_type> state_type;
-
     const size_t n = 1024;
-    vector<double> R(n);
+    vector_type R(n);
     const double Rmin = 0.1, Rmax = 50.0;
 #   pragma omp parallel for
     for(size_t i = 0 ; i < n ; i++)
         R[i] = Rmin + (Rmax - Rmin) / (n - 1) * i;
 
-    inner_state_type inner(n, point_type(10, 10, 10));
-    state_type state(inner);
+    state_type X(n, point_type(10, 10, 10));
 
-    typedef runge_kutta4< state_type, double > stepper;
+    typedef runge_kutta4<
+        state_type, double,
+        state_type, double,
+        basic_openmp_algebra
+    > stepper;
 
     const double t_max = 10.0, dt = 0.01;
 
     integrate_const(
         stepper(),
-        openmp_wrapper_impl<inner_state_type, inner_state_type, double >( sys_func(R) ),
-        state,
+        sys_func(R), X,
         0.0, t_max, dt
     );
 
-    for(size_t i = 0 ; i < state.size() ; i++)
-        copy( state[i].begin(), state[i].end(), ostream_iterator<point_type>(cout, "\n") );
+    copy( X.begin(), X.end(), ostream_iterator<point_type>(cout, "\n") );
 
     return 0;
 }
@@ -82,3 +82,4 @@ int main() {
 int main() { return -1; }
 
 #endif
+
