@@ -85,6 +85,43 @@ public:
     }
 };
 
+template< class Value >
+class parallel_adams_bashforth_coefficients< Value , 6 > : public boost::array< Value , 6 >
+{
+public:
+    parallel_adams_bashforth_coefficients( void )
+        : boost::array< Value , 6 >()
+    {
+        (*this)[0] = static_cast< Value >(2);
+        // x = 1 + 1/42 (21+sqrt(21 (7+2 sqrt(7))))
+        (*this)[1] = static_cast< Value >(1)/static_cast< Value >(42) * ( static_cast< Value >(63)+sqrt(static_cast< Value >(21)*(static_cast< Value >(7)+static_cast< Value >(2)*sqrt(static_cast< Value >(7)))));
+        // x = 1/42 (21+sqrt(21 (7-2 sqrt(7))))
+        (*this)[2] = static_cast< Value >(1)/static_cast< Value >(42) * ( static_cast< Value >(63)+sqrt(static_cast< Value >(21)*(static_cast< Value >(7)-static_cast< Value >(2)*sqrt(static_cast< Value >(7)))));
+        (*this)[3] = static_cast< Value >(3) - (*this)[1];
+        (*this)[4] = static_cast< Value >(3) - (*this)[2];
+        (*this)[5] = static_cast< Value >(1);
+    }
+};
+
+template< class Value >
+class parallel_adams_bashforth_coefficients< Value , 7 > : public boost::array< Value , 7 >
+{
+public:
+    parallel_adams_bashforth_coefficients( void )
+        : boost::array< Value , 7 >()
+    {
+        (*this)[0] = static_cast<Value>(2);
+        // x = 1 + 1/66 (33+sqrt(495+66 sqrt(15)))
+        (*this)[1] = static_cast<Value>(1)/static_cast<Value>(66) * (static_cast<Value>(99) + sqrt(static_cast<Value>(495)+static_cast<Value>(66)*sqrt(static_cast<Value>(15))));
+        // x = 1 + 1/66 (33+sqrt(495-66 sqrt(15)))
+        (*this)[2] = static_cast<Value>(1)/static_cast<Value>(66) * (static_cast<Value>(99) + sqrt(static_cast<Value>(495)-static_cast<Value>(66)*sqrt(static_cast<Value>(15))));
+        (*this)[3] = static_cast< Value >(3)/static_cast<Value>(2);
+        (*this)[4] = static_cast< Value >(3) - (*this)[1];
+        (*this)[5] = static_cast< Value >(3) - (*this)[2];
+        (*this)[6] = static_cast< Value >(1);
+    }
+};
+
 } // detail
 } // odeint
 } // numeric

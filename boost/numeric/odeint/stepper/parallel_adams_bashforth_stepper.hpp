@@ -82,8 +82,8 @@ class parallel_adams_bashforth_stepper : public explicit_stepper_base
 
  private:
     // 2 < Stages < 6
-    BOOST_STATIC_ASSERT( Stages > 2 );
-    BOOST_STATIC_ASSERT( Stages < 6 );
+    BOOST_STATIC_ASSERT( Stages > 1 );
+    BOOST_STATIC_ASSERT( Stages < 8 );
 
  public:
 
