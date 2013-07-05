@@ -8,9 +8,9 @@
 import testing ;
 
 use-project boost : $(BOOST_ROOT) ;
-VEXCL_INCLUDE = /home/mario/vexcl ;
-#OPENCL_INCLUDE = /usr/local/cuda/include ;
-OPENCL_INCLUDE = /usr/include ;
+VEXCL_INCLUDE = /home/karsten/boost/testing/vexcl ;
+OPENCL_INCLUDE = /usr/local/cuda/include ;
+#OPENCL_INCLUDE = /usr/include ;
 
 project
     : requirements
@@ -20,6 +20,7 @@ project
       <include>$(VEXCL_INCLUDE)
       <include>$(OPENCL_INCLUDE)
       <cxxflags>-std=c++0x
+      <library>/boost//system/
     ;
 
 lib OpenCL : : <name>OpenCL <link>shared ;
@@ -27,6 +28,7 @@ lib OpenCL : : <name>OpenCL <link>shared ;
 test-suite "odeint"
     :
     [ run lorenz.cpp OpenCL ]
+    [ run norm_inf.cpp OpenCL ]
     : <testing.launcher>valgrind
     : 
     : <link>shared:<define>BOOST_TEST_DYN_LINK=1
