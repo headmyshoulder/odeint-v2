@@ -66,7 +66,7 @@ int main() {
 
     integrate_const(
         stepper(),
-        openmp_wrapper_impl<inner_state_type, inner_state_type, double >( sys_func(R) ),
+        openmp_wrapper( sys_func(R) ),
         state,
         0.0, t_max, dt
     );

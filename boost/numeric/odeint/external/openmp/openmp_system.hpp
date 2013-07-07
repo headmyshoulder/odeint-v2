@@ -27,16 +27,13 @@ namespace numeric {
 namespace odeint {
 
 
-template< class InnerState, class InnerDeriv, class Time >
+template< class System >
 struct openmp_wrapper_impl
 {
-    typedef boost::function<void(const InnerState &, InnerDeriv &, Time, size_t)> sys_fun_t;
-    typedef openmp_state< InnerState > State;
-    typedef openmp_state< InnerDeriv > Deriv;
+    const System f;
+    openmp_wrapper_impl(const System &f) : f(f) {}
 
-    const sys_fun_t &f;
-    openmp_wrapper_impl(const sys_fun_t &f) : f(f) {}
-
+    template< class State, class Deriv, class Time >
     inline void operator()(const State &s, Deriv &d, const Time &t, size_t off = 0 ) const
     {
 #       pragma omp parallel for schedule(static,1)
@@ -46,11 +43,11 @@ struct openmp_wrapper_impl
 };
 
 
-template< class InnerState, class InnerDeriv, class Time >
-inline openmp_wrapper_impl< InnerState, InnerDeriv, Time >
-openmp_wrapper( const boost::function<void(const InnerState &, InnerDeriv &, Time, size_t)> &f )
+template< class System >
+inline openmp_wrapper_impl< System >
+openmp_wrapper( System f )
 {
-    return openmp_wrapper_impl<InnerState, InnerDeriv, Time>(f);
+    return openmp_wrapper_impl<System>(f);
 }
 
 
