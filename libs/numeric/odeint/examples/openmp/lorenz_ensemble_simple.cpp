@@ -16,7 +16,7 @@
 #include <vector>
 #include <iostream>
 #include <boost/numeric/odeint.hpp>
-#include <boost/numeric/odeint/external/openmp/openmp_algebra.hpp>
+#include <boost/numeric/odeint/external/openmp/openmp.hpp>
 #include "point_type.hpp"
 
 using namespace std;
@@ -61,7 +61,7 @@ int main() {
     typedef runge_kutta4<
         state_type, double,
         state_type, double,
-        basic_openmp_algebra
+        openmp_range_algebra
     > stepper;
 
     const double t_max = 10.0, dt = 0.01;
