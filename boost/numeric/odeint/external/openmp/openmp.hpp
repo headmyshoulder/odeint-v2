@@ -18,11 +18,13 @@
 #ifndef BOOST_NUMERIC_ODEINT_EXTERNAL_OPENMP_OPENMP_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_EXTERNAL_OPENMP_OPENMP_HPP_INCLUDED
 
-#include "openmp_state.hpp"
-#include "openmp_algebra.hpp"
-#include "openmp_algebra_dispatcher.hpp"
-#include "openmp_resize.hpp"
-#include "openmp_system.hpp"
+// level 1: parallel iteration over random access container
+#include "openmp_range_algebra.hpp"
 
+// level 2: split range state
+#include "openmp_state.hpp"
+
+// level 3: process a random access container of sub-states in parallel
+#include "openmp_nested_algebra.hpp"
 
 #endif
