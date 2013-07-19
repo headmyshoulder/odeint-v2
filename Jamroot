@@ -12,9 +12,8 @@ path-constant BOOST_ROOT : [ os.environ BOOST_ROOT ] ;
 project 
    : requirements 
      <include>$(BOOST_ROOT)
-     <cxxflags>"-Werror -Wall -Wextra"
-     <toolset>gcc:<cxxflags>"-Wno-unused-parameter"
-     <toolset>clang:<cxxflags>"-Wno-unused-function -Wno-unused-parameter"
+     <toolset>gcc:<cxxflags>"-Werror -Wall -Wno-unused-parameter -Wno-unused-variable -Wno-unknown-pragmas"
+     <toolset>clang:<cxxflags>"-Werror -Wall -Wextra -Wno-unused-function -Wno-unused-parameter -Wno-unknown-pragmas"
    ;
 
 # tests, regression tests and examples
