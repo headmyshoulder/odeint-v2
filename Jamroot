@@ -22,9 +22,13 @@ build-project libs/numeric/odeint/examples ;
 
 
 # additional tests with external libraries :
+# build-project libs/numeric/odeint/test_external/eigen ;
 # build-project libs/numeric/odeint/test_external/gmp ;
-# build-project libs/numeric/odeint/test_external/mkl ;
 # build-project libs/numeric/odeint/test_external/gsl ;
+# build-project libs/numeric/odeint/test_external/mkl ;
+# build-project libs/numeric/odeint/test_external/mtl4 ;
+# build-project libs/numeric/odeint/test_external/thrust ;
+# build-project libs/numeric/odeint/test_external/vexcl ;
 
 
 # docs:
