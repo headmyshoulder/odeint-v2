@@ -19,6 +19,7 @@ project
 # tests, regression tests and examples
 build-project libs/numeric/odeint/test ;
 build-project libs/numeric/odeint/examples ;
+build-project libs/numeric/odeint/performance/openmp ;
 
 
 # additional tests with external libraries :
