@@ -55,15 +55,17 @@ struct osc_chain {
                            std::vector<double> &dpdt ) const
     {
         const size_t N = q.size();
-#       pragma omp parallel for schedule(runtime)
+        double coupling_lr = 0;
+        size_t last_i = N;
+#       pragma omp parallel for firstprivate(coupling_lr, last_i) schedule(runtime)
         for(size_t i = 0 ; i < N ; ++i)
         {
-            // can't store things between iterations
-            const double q_prev = i == 0 ? 0 : q[i - 1];
-            const double q_next = i + 1 == N ? 0 : q[i + 1];
-            const double coupling_l = signed_pow( q_prev - q[i] , m_lam-1 );
-            const double coupling_r = signed_pow( q[i] - q_next , m_lam-1 );
-            dpdt[i] = coupling_l - signed_pow( q[i] , m_kap-1 ) - coupling_r;
+            if(i > 0 && i != last_i + 1)
+                coupling_lr = signed_pow( q[i-1]-q[i] , m_lam-1 );
+            dpdt[i] = -signed_pow( q[i] , m_kap-1 ) + coupling_lr;
+            coupling_lr = signed_pow( q[i] - q[i+1] , m_lam-1 );
+            dpdt[i] -= coupling_lr;
+            last_i = i;
         }
     }
 
