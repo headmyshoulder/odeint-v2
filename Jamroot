@@ -30,6 +30,7 @@ build-project libs/numeric/odeint/performance/openmp ;
 # build-project libs/numeric/odeint/test_external/mtl4 ;
 # build-project libs/numeric/odeint/test_external/thrust ;
 # build-project libs/numeric/odeint/test_external/vexcl ;
+build-project libs/numeric/odeint/test_external/mpi ;
 
 
 # docs:
