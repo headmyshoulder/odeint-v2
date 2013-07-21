@@ -19,7 +19,7 @@ plot \
     "osc_chain_speedup-short.dat" i 0 u "block":"gcc-t-mul" w lp t "gcc (simple)", \
     "osc_chain_speedup-short.dat" i 0 u "block":"icc-s-mul" w lp t "icc (split)" , \
     "osc_chain_speedup-short.dat" i 0 u "block":"icc-t-mul" w lp t "icc (simple)", \
-    4 lc 0 lt 0 t "target"
+    (x < 4 ? x : 4) lc 0 lt 0 t "target"
 
 unset key
 
@@ -29,7 +29,7 @@ plot \
     "osc_chain_speedup-long.dat" i 0 u "block":"gcc-t-mul" w lp, \
     "osc_chain_speedup-long.dat" i 0 u "block":"icc-s-mul" w lp, \
     "osc_chain_speedup-long.dat" i 0 u "block":"icc-t-mul" w lp, \
-    4 lc 0 lt 0
+    (x < 4 ? x : 4) lc 0 lt 0
 
 set yrange [0:*]
 
