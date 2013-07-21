@@ -91,8 +91,8 @@ struct osc_chain {
                 coupling_lr = signed_pow( _q[i] - _q[i+1] , m_lam-1 );
                 _dpdt[i] -= coupling_lr;
             }
-            _dpdt[N-1] = -signed_pow( _q[N-1] , m_kap-1 ) + coupling_lr;
-            _dpdt[N-1] -= signed_pow( _q[N-1] - q_right , m_lam-1 );
+            _dpdt[M-1] = -signed_pow( _q[M-1] , m_kap-1 ) + coupling_lr;
+            _dpdt[M-1] -= signed_pow( _q[M-1] - q_right , m_lam-1 );
         }
     }
 
