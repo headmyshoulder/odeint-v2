@@ -27,10 +27,10 @@
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
 #include <boost/numeric/odeint/util/unwrap_reference.hpp>
 
-// #include <boost/numeric/odeint/util/bind.hpp>
-// #include <boost/numeric/odeint/util/copy.hpp>
+#include <boost/numeric/odeint/util/bind.hpp>
+#include <boost/numeric/odeint/util/copy.hpp>
+#include <boost/numeric/odeint/util/resizer.hpp>
 // #include <boost/numeric/odeint/util/is_pair.hpp>
-// #include <boost/numeric/odeint/util/resizer.hpp>
 // #include <boost/array.hpp>
 
 
@@ -76,10 +76,30 @@ public:
 
     static const order_type order_value = 1;
     
+    order_type order( void ) const
+    {
+        return order_value;
+    }
+
+    
+    velocity_verlet( const algebra_type &algebra = algebra_type() )
+    : algebra_stepper_base_type( algebra ) , m_first_call( true ) { }
+
     
     template< class System , class StateIn >
     void do_step( System system , StateIn &x , time_type t , time_type dt )
     {
+        typedef typename odeint::unwrap_reference< StateIn >::type state_in_type;
+        typedef typename odeint::unwrap_reference< typename state_in_type::first_type >::type coor_in_type;
+        typedef typename odeint::unwrap_reference< typename state_in_type::second_type >::type momentum_in_type;
+        const state_in_type &statein = in;
+        const coor_in_type &qinout = statein.first;
+        const momentum_in_type &pinout = statein.second;
+        
+        // alloc a
+
+        do_step( system , qinout , pinout , m_a , qinout , pinout , m_a , t , dt );
+
     }
     
     template< class System , class CoorIn , class MomentumIn , class MomentumDerivIn , class CoorOut , class MomentumOut , class MomentumDerivOut >
@@ -99,9 +119,51 @@ public:
                                               typename operations_type::template scale_sum3< value_type , time_type , time_type >( one , one_half * dt , one_half * dt ) );
     }
     
+  
+    template< class StateIn >
+    void adjust_size( const StateIn &x )
+    {
+        resize_impl( x );
+    }
+
+    void reset( void )
+    {
+        m_first_call = true;
+    }
+
+    template< class MomentumDerivIn >
+    void initialize( const MomentumDerivIn &ain )
+    {
+        boost::numeric::odeint::copy( ain , m_a.m_v );
+        m_first_call = false;
+    }
+
+    template< class System , class StateIn >
+    void initialize( System system , const CoorIn &qin , const MomentumIn &pin )
+    {
+        typename odeint::unwrap_reference< System >::type &sys = system;
+        sys( qin , pin , m_a.m_v );
+        m_first_call = false;
+    }
+
+    bool is_initialized( void ) const
+    {
+        return ! m_first_call;
+    }
+
+
 private:
     
-    wrapped_momentum_deriv_type m_dqdt;
+    template< class StateIn >
+    bool resize_impl( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_a , x , typename is_resizeable< momentum_deriv_type >::type() );
+    }
+
+
+    resizer_type m_resizer;
+    bool m_first_call;
+    wrapped_momentum_deriv_type m_a;
 };
 
 
