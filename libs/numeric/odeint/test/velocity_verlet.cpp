@@ -85,6 +85,7 @@ BOOST_AUTO_TEST_CASE( test_with_vector_pair )
 {
     vector_stepper stepper;
     std::pair< vector_type , vector_type > x;
+    x.first.resize( 2 ) ; x.second.resize( 2 );
     init_state( x.first , x.second );
     stepper.do_step( ode() , x , 0.0 , 0.01 );
 }

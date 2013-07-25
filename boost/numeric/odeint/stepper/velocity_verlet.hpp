@@ -185,8 +185,10 @@ private:
     template< class StateIn >
     bool resize_impl( const StateIn & x )
     {
-        return adjust_size_by_resizeability( m_a1 , x , typename is_resizeable< momentum_deriv_type >::type() )
-            || adjust_size_by_resizeability( m_a2 , x , typename is_resizeable< momentum_deriv_type >::type() );
+        bool resized = false;
+        resized |= adjust_size_by_resizeability( m_a1 , x , typename is_resizeable< momentum_deriv_type >::type() );
+        resized |= adjust_size_by_resizeability( m_a2 , x , typename is_resizeable< momentum_deriv_type >::type() );
+        return resized;
     }
 
     momentum_deriv_type & get_current_acc( void )
