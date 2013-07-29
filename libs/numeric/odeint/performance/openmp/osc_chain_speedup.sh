@@ -4,6 +4,7 @@ export LC_NUMERIC=en_US.UTF-8
 declare -A times
 
 export OMP_SCHEDULE=static
+export OMP_PROC_BIND=true
 repeat=2
 
 function run {
@@ -18,7 +19,7 @@ function run {
             done
         done
     done
-    for block in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 ; do
+    for block in 1 2 4 8 16 32 64; do
         printf '\n%d' $block
         for build in gcc-4.7 intel-linux ; do
             bench="bin/$build/release/osc_chain_1d"
@@ -34,4 +35,4 @@ function run {
 }
 
 run 4096 1024 | tee osc_chain_speedup-short.dat
-run 4194304 1 | tee osc_chain_speedup-long.dat
+run 524288 10 | tee osc_chain_speedup-long.dat

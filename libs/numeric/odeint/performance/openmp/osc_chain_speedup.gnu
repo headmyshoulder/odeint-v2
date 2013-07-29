@@ -7,8 +7,8 @@ set multiplot layout 2,2
 
 set key left
 
-set xrange [1:16]
-set x2range [1:16]
+set xrange [1:64]
+set x2range [1:64]
 set x2tics 8 format ""
 set grid x2tics
 set yrange [0:8]

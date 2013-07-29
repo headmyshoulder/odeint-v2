@@ -72,6 +72,8 @@ int main( int argc , char* argv[] )
             typedef symplectic_rkn_sb3a_mclachlan<
                     state_type , state_type , double
                 > stepper_type;
+
+            omp_set_num_threads(blocks);
         
             // split into blocks
             state_type p( blocks );
@@ -88,7 +90,7 @@ int main( int argc , char* argv[] )
             for(size_t n_run = 0 ; n_run != 5 ; n_run++) {
                 cpu_timer timer;
                 integrate_n_steps( stepper_type() , system ,
-                                   make_pair( ref(q) , ref(p) ) ,
+                                   make_pair( boost::ref(q) , boost::ref(p) ) ,
                                    0.0 , 0.01 , steps );
                 double run_time = static_cast<double>(timer.elapsed().wall) * 1.0e-9;
                 acc_time(run_time);
@@ -110,7 +112,7 @@ int main( int argc , char* argv[] )
             for(size_t n_run = 0 ; n_run != 5 ; n_run++) {
                 cpu_timer timer;
                 integrate_n_steps( stepper_type() , system ,
-                                   make_pair( ref(q) , ref(p) ) ,
+                                   make_pair( boost::ref(q) , boost::ref(p) ) ,
                                    0.0 , 0.01 , steps );
                 double run_time = static_cast<double>(timer.elapsed().wall) * 1.0e-9;
                 acc_time(run_time);
