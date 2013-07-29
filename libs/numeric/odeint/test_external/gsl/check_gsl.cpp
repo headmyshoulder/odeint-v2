@@ -39,6 +39,12 @@ BOOST_AUTO_TEST_CASE( gsl )
     euler< state_type > euler;
 
     state_type x = gsl_vector_alloc( 3 );
+
+    // check resizing
+    state_type y = 0;
+    boost::numeric::odeint::resize( y , x );
+    BOOST_CHECK( 0 != y );
+
     gsl_vector_set( x , 0 , 1.0);
     gsl_vector_set( x , 1 , 1.0);
     gsl_vector_set( x , 2 , 2.0);

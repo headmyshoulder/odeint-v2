@@ -184,7 +184,7 @@ struct same_size_impl< gsl_vector* , gsl_vector* >
 template <>
 struct resize_impl< gsl_vector* , gsl_vector* >
 {
-    static void resize( gsl_vector* x , const gsl_vector* y )
+    static void resize( gsl_vector* &x , const gsl_vector* y )
     {
         gsl_vector_free( x );
         x = gsl_vector_alloc( y->size );
