@@ -19,6 +19,7 @@
 #define BOOST_NUMERIC_ODEINT_EXTERNAL_VEXCL_VEXCL_RESIZE_HPP_INCLUDED
 
 #include <vexcl/vector.hpp>
+#include <vexcl/multivector.hpp>
 
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/resize.hpp>
