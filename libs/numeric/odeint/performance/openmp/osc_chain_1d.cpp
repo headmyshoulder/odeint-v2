@@ -10,6 +10,8 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
+#ifdef _OPENMP
+
 #include <iostream>
 #include <vector>
 #include <random>
@@ -126,3 +128,10 @@ int main( int argc , char* argv[] )
     return 0;
 }
 
+#else
+
+int main(int, char**) {
+    return -1;
+}
+
+#endif
