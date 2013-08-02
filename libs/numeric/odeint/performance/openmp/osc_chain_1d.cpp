@@ -14,22 +14,19 @@
 
 #include <iostream>
 #include <vector>
-#include <random>
 
 #include <omp.h>
-
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/external/openmp/openmp.hpp>
 
 #include <boost/program_options.hpp>
+#include <boost/random.hpp>
 #include <boost/timer/timer.hpp>
 #include <boost/foreach.hpp>
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics/stats.hpp>
 #include <boost/accumulators/statistics/mean.hpp>
 #include <boost/accumulators/statistics/median.hpp>
-#include <boost/accumulators/statistics/min.hpp>
-
 #include "osc_chain_1d_system.hpp"
 
 using namespace std;
@@ -41,7 +38,6 @@ using boost::timer::cpu_timer;
 
 const double p_kappa = 3.3;
 const double p_lambda = 4.7;
-const double p_beta = 1.0;
 
 int main( int argc , char* argv[] )
 {
@@ -69,74 +65,64 @@ int main( int argc , char* argv[] )
 
     accumulator_set< double, stats<tag::mean, tag::median> > acc_time;
 
-    for(size_t n_rep = 0 ; n_rep != repeat ; n_rep++)
-    {
-        osc_chain system( p_kappa , p_lambda , p_beta );
+    vector<double> p( N ), q( N, 0 );
+    boost::random::uniform_real_distribution<double> distribution;
+    boost::random::mt19937 engine( 0 );
+    generate( p.begin() , p.end() , boost::bind( distribution , engine ) );
 
-        // fully random data
-        vector<double> p_init( N ), q_init( N, 0 );
-        uniform_real_distribution<double> distribution( 0.0 );
-        mt19937 engine( 0 );
-        auto generator = bind( distribution , engine );
-        generate( p_init.begin() , p_init.end() , generator );
-
-        if(split_range) {
-            typedef openmp_state<double> state_type;
-            typedef symplectic_rkn_sb3a_mclachlan<
-                    state_type , state_type , double
+    if(split_range) {
+        typedef openmp_state<double> state_type;
+        typedef symplectic_rkn_sb3a_mclachlan<
+                  state_type , state_type , double
                 > stepper_type;
+        state_type p_split(blocks), q_split(blocks);
+        split(p, p_split);
+        split(q, q_split);
 
-            omp_set_num_threads(blocks);
-        
-            // split into blocks
-            state_type p( blocks );
-            split(p_init, p);
-
-            state_type q( blocks );
-            split(q_init, q);
-
-            clog << "split " << N << " into";
-            for(size_t i = 0 ; i != p.size() ; i++)
-                clog << ' ' << p[i].size();
-            clog << endl;
-
-            for(size_t n_run = 0 ; n_run != 5 ; n_run++) {
-                cpu_timer timer;
-                integrate_n_steps( stepper_type() , system ,
-                                   make_pair( boost::ref(q) , boost::ref(p) ) ,
-                                   0.0 , 0.01 , steps );
-                double run_time = static_cast<double>(timer.elapsed().wall) * 1.0e-9;
-                acc_time(run_time);
-                clog << "run " << n_rep << "-" << n_run << " wall[s]: " << run_time << endl;
-            }
-
-        } else {
-            typedef vector<double> state_type;
-            typedef symplectic_rkn_sb3a_mclachlan<
-                    state_type , state_type , double ,
-                    state_type , state_type , double ,
-                    openmp_range_algebra
-                > stepper_type;
-            
-            omp_set_num_threads(blocks);
-
-            state_type p(p_init), q(q_init);
-
-            for(size_t n_run = 0 ; n_run != 5 ; n_run++) {
-                cpu_timer timer;
-                integrate_n_steps( stepper_type() , system ,
-                                   make_pair( boost::ref(q) , boost::ref(p) ) ,
-                                   0.0 , 0.01 , steps );
-                double run_time = static_cast<double>(timer.elapsed().wall) * 1.0e-9;
-                acc_time(run_time);
-                clog << "run " << n_rep << "-" << n_run << " wall[s]: " << run_time << endl;
-            }
-
+        for(size_t n_run = 0 ; n_run != repeat ; n_run++) {
+            cpu_timer timer;
+            integrate_n_steps( stepper_type() , osc_chain( p_kappa , p_lambda ) ,
+                               make_pair( boost::ref(q_split) , boost::ref(p_split) ) ,
+                               0.0 , 0.01 , steps );
+            double run_time = static_cast<double>(timer.elapsed().wall) * 1.0e-9;
+            acc_time(run_time);
+            cout << N << '\t' << steps << '\t' << blocks << '\t' << run_time << endl;
         }
+
+        if(dump) {
+            unsplit(p_split, p);
+            copy(p.begin(), p.end(), ostream_iterator<double>(cerr, "\t"));
+            cerr << endl;
+        }
+
+    } else {
+        typedef vector<double> state_type;
+        typedef symplectic_rkn_sb3a_mclachlan<
+                  state_type , state_type , double ,
+                  state_type , state_type , double ,
+                  openmp_range_algebra
+                > stepper_type;
+        omp_set_num_threads(blocks);
+
+        for(size_t n_run = 0 ; n_run != repeat ; n_run++) {
+            cpu_timer timer;
+            integrate_n_steps( stepper_type() , osc_chain( p_kappa , p_lambda ) ,
+                               make_pair( boost::ref(q) , boost::ref(p) ) ,
+                               0.0 , 0.01 , steps );
+            double run_time = static_cast<double>(timer.elapsed().wall) * 1.0e-9;
+            acc_time(run_time);
+            cout << N << '\t' << steps << '\t' << blocks << '\t' << run_time << endl;
+        }
+
+        if(dump) {
+            copy(p.begin(), p.end(), ostream_iterator<double>(cerr, "\t"));
+            cerr << endl;
+        }
+
     }
 
-    cout << " mean[s]: " << mean(acc_time)
-         << " median[s]: " << median(acc_time) << endl;
+    cout << "# mean=" << mean(acc_time)
+         << " median=" << median(acc_time) << endl;
 
     return 0;
 }

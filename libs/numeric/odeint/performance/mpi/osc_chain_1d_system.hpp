@@ -20,8 +20,6 @@
 #include <boost/math/special_functions/sign.hpp>
 #include <boost/numeric/odeint/external/mpi/mpi.hpp>
 
-typedef std::vector< double > dvec;
-
 namespace checked_math {
     inline double pow( double x , double y )
     {
@@ -41,13 +39,9 @@ double signed_pow( double x , double k )
 }
 
 struct osc_chain {
-
-    const double m_kap, m_lam, m_beta;
-
-    osc_chain( const double kap , const double lam , const double beta )
-        : m_kap( kap ) , m_lam( lam ) , m_beta( beta )
-    { }
-
+    const double m_kap, m_lam;
+    osc_chain( const double kap , const double lam )
+        : m_kap( kap ) , m_lam( lam ) { }
 
     void operator()( const boost::numeric::odeint::mpi_state< std::vector<double> > &q ,
                            boost::numeric::odeint::mpi_state< std::vector<double> > &dpdt ) const
@@ -55,20 +49,27 @@ struct osc_chain {
         const std::vector<double> &_q = q.data;
         std::vector<double> &_dpdt = dpdt.data;
 
+        const bool have_left = q.world.rank() > 0;
+        const bool have_right = q.world.rank() + 1 < q.world.size();
         double q_left = 0, q_right = 0;
         boost::mpi::request r_left, r_right;
-        if(q.world.rank() > 0) { // swap left
+        if(have_left)
+        {
             q.world.isend(q.world.rank() - 1, 0, _q.front());
             r_left = q.world.irecv(q.world.rank() - 1, 0, q_left);
         }
-        if(q.world.rank() + 1 < q.world.size()) { // swap right
+        if(have_right)
+        {
             q.world.isend(q.world.rank() + 1, 0, _q.back());
             r_right = q.world.irecv(q.world.rank() + 1, 0, q_right);
         }
 
-        r_left.wait(); // need q_left next
-        double coupling_lr = signed_pow( q_left - _q[0] , m_lam-1 );
-
+        double coupling_lr = 0;
+        if(have_left)
+        {
+            r_left.wait();
+            coupling_lr = signed_pow( q_left - _q[0] , m_lam-1 );
+        }
         const size_t N = _q.size();
         for(size_t i = 0 ; i < N-1 ; ++i)
         {
@@ -76,12 +77,14 @@ struct osc_chain {
             coupling_lr = signed_pow( _q[i] - _q[i+1] , m_lam-1 );
             _dpdt[i] -= coupling_lr;
         }
-
-        r_right.wait(); // need q_right next
         _dpdt[N-1] = -signed_pow( _q[N-1] , m_kap-1 ) + coupling_lr;
-        _dpdt[N-1] -= signed_pow( _q[N-1] - q_right , m_lam-1 );
+        if(have_right)
+        {
+            r_right.wait();
+            _dpdt[N-1] -= signed_pow( _q[N-1] - q_right , m_lam-1 );
+        }
     }
-
+    //]
 };
 
 #endif
