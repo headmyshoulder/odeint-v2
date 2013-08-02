@@ -4,6 +4,7 @@ export LC_NUMERIC=en_US.UTF-8
 declare -A times
 
 export OMP_SCHEDULE=static
+export OMP_PROC_BIND=true
 repeat=2
 
 function run {
