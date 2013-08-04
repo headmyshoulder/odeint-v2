@@ -21,13 +21,44 @@
 
 #define BOOST_TEST_MODULE odeint_velocity_verlet
 
+#define BOOST_FUSION_INVOKE_MAX_ARITY 15
+#define BOOST_RESULT_OF_NUM_ARGS 15
+
+#include <boost/numeric/odeint/config.hpp>
+
 #include "resizing_test_state_type.hpp"
+#include "../../../../../../boost/boost_1_54_0/boost/concept_check.hpp"
 
 #include <boost/numeric/odeint/stepper/velocity_verlet.hpp>
+#include <boost/numeric/odeint/algebra/fusion_algebra.hpp>
 
 #include <boost/array.hpp>
 #include <boost/test/unit_test.hpp>
 
+#include <boost/units/systems/si/length.hpp>
+#include <boost/units/systems/si/time.hpp>
+#include <boost/units/systems/si/velocity.hpp>
+#include <boost/units/systems/si/acceleration.hpp>
+#include <boost/units/systems/si/io.hpp>
+
+#include <boost/fusion/include/vector.hpp>
+#include <boost/fusion/include/vector20.hpp>
+#include <boost/fusion/container.hpp>
+
+namespace fusion = boost::fusion;
+namespace units = boost::units;
+namespace si = boost::units::si;
+
+typedef double value_type;
+typedef units::quantity< si::time , value_type > time_type;
+typedef units::unit< units::derived_dimension< units::time_base_dimension , 2 >::type , si::system > time_2;
+typedef units::quantity< time_2 , value_type > time_2_type;
+typedef units::quantity< si::length , value_type > length_type;
+typedef units::quantity< si::velocity , value_type > velocity_type;
+typedef units::quantity< si::acceleration , value_type > acceleration_type;
+typedef fusion::vector< length_type , length_type > coor_vector;
+typedef fusion::vector< velocity_type , velocity_type > velocity_vector;
+typedef fusion::vector< acceleration_type , acceleration_type > accelartion_vector;
 
 
 
@@ -52,6 +83,18 @@ struct ode
     }
 };
 
+struct ode_units
+{
+    void operator()( coor_vector const &q , velocity_vector const &p , accelartion_vector &a ) const
+    {
+        const units::quantity< si::frequency , value_type > omega = 1.0 * si::hertz;
+        const units::quantity< si::frequency , value_type > friction = 0.001 * si::hertz;
+        fusion::at_c< 0 >( a ) = omega * omega * fusion::at_c< 0 >( q ) - friction * fusion::at_c< 0 >( p );
+        fusion::at_c< 1 >( a ) = omega * omega * fusion::at_c< 1 >( q ) - friction * fusion::at_c< 0 >( p );
+        ++ode_call_count;
+    }
+};
+
 template< class Q , class P >
 void init_state( Q &q , P &p )
 {
@@ -71,6 +114,7 @@ struct get_resizer_test_stepper
     typedef velocity_verlet< test_array_type , test_array_type , double , test_array_type , test_array_type , 
         double , double , range_algebra , default_operations , Resizer > type;
 };
+
 
 
 
@@ -219,12 +263,36 @@ BOOST_FIXTURE_TEST_CASE( test_adjust_size , velocity_verlet_fixture )
     BOOST_CHECK_EQUAL( ode_call_count , size_t( 4 ) );
 }
 
-BOOST_FIXTURE_TEST_CASE( test_with_unit_ref , velocity_verlet_fixture )
-{
-}
-
 BOOST_FIXTURE_TEST_CASE( test_with_unit_pair , velocity_verlet_fixture )
 {
+    typedef velocity_verlet< coor_vector , velocity_vector , value_type , velocity_vector , accelartion_vector ,
+        time_type , time_2_type , fusion_algebra , default_operations > stepper_type;
+    
+    std::pair< coor_vector , velocity_vector > x;
+    fusion::at_c< 0 >( x.first ) = 1.0 * si::meter;
+    fusion::at_c< 1 >( x.first ) = 0.5 * si::meter;
+    fusion::at_c< 0 >( x.second ) = 2.0 * si::meter_per_second;
+    fusion::at_c< 1 >( x.second ) = -1.0 * si::meter_per_second;
+    stepper_type stepper;
+    stepper.do_step( ode_units() , x , 0.0 * si::second , 0.01 * si::second );
+    BOOST_CHECK_EQUAL( ode_call_count , size_t( 2 ) );
+}
+
+
+BOOST_FIXTURE_TEST_CASE( test_with_unit_ref , velocity_verlet_fixture )
+{
+    typedef velocity_verlet< coor_vector , velocity_vector , value_type , velocity_vector , accelartion_vector ,
+        time_type , time_2_type , fusion_algebra , default_operations > stepper_type;
+    
+    coor_vector q;
+    velocity_vector p;
+    fusion::at_c< 0 >( q ) = 1.0 * si::meter;
+    fusion::at_c< 1 >( q ) = 0.5 * si::meter;
+    fusion::at_c< 0 >( p ) = 2.0 * si::meter_per_second;
+    fusion::at_c< 1 >( p ) = -1.0 * si::meter_per_second;
+    stepper_type stepper;
+    stepper.do_step( ode_units() , std::make_pair( boost::ref( q ) , boost::ref( p ) ) , 0.0 * si::second , 0.01 * si::second );
+    BOOST_CHECK_EQUAL( ode_call_count , size_t( 2 ) );
 }
 
 

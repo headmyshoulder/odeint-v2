@@ -39,12 +39,14 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+    
+    // TODO: Check types and check if momentum can be replaced by acceleration
 template <
     class Coor ,
-    class Momentum = Coor ,
+    class Velocity = Coor ,
     class Value = double ,
     class CoorDeriv = Coor ,
-    class MomentumDeriv = Coor ,
+    class VelocityDeriv = Coor ,
     class Time = Value ,
     class TimeSq = Time ,
     class Algebra = typename algebra_dispatcher< Coor >::algebra_type ,
@@ -60,10 +62,10 @@ public:
     typedef typename algebra_stepper_base_type::operations_type operations_type;
 
     typedef Coor coor_type;
-    typedef Momentum momentum_type;
-    typedef std::pair< coor_type , momentum_type > state_type;
+    typedef Velocity velocity_type;
+    typedef std::pair< coor_type , velocity_type > state_type;
     typedef CoorDeriv coor_deriv_type;
-    typedef MomentumDeriv momentum_deriv_type;
+    typedef VelocityDeriv momentum_deriv_type;
     typedef std::pair< coor_deriv_type , momentum_deriv_type > deriv_type;
     typedef state_wrapper< coor_deriv_type> wrapped_coor_deriv_type;
     typedef state_wrapper< momentum_deriv_type > wrapped_momentum_deriv_type;
