@@ -21,16 +21,25 @@
 
 #define BOOST_TEST_MODULE odeint_velocity_verlet
 
+#include "resizing_test_state_type.hpp"
+
 #include <boost/numeric/odeint/stepper/velocity_verlet.hpp>
 
 #include <boost/array.hpp>
 #include <boost/test/unit_test.hpp>
-#include "../../../../../../boost/boost_1_54_0/boost/concept_check.hpp"
+
 
 
 
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
+
+size_t ode_call_count;
+
+struct velocity_verlet_fixture
+{
+    velocity_verlet_fixture( void ) { ode_call_count = 0; adjust_size_count = 0; }
+};
 
 struct ode
 {
@@ -39,6 +48,7 @@ struct ode
     {
         a[0] = -q[0] - p[0];
         a[1] = -q[1] - p[1];
+        ++ode_call_count;
     }
 };
 
@@ -55,50 +65,165 @@ typedef std::vector< double > vector_type;
 typedef velocity_verlet< array_type > array_stepper;
 typedef velocity_verlet< vector_type > vector_stepper;
 
+template< typename Resizer >
+struct get_resizer_test_stepper
+{
+    typedef velocity_verlet< test_array_type , test_array_type , double , test_array_type , test_array_type , 
+        double , double , range_algebra , default_operations , Resizer > type;
+};
+
+
+
+
 BOOST_AUTO_TEST_SUITE( velocity_verlet_test )
 
-BOOST_AUTO_TEST_CASE( test_with_array_ref )
+BOOST_FIXTURE_TEST_CASE( test_with_array_ref , velocity_verlet_fixture )
 {
     array_stepper stepper;
     array_type q , p ;
     init_state( q , p );
     stepper.do_step( ode() , std::make_pair( boost::ref( q ) , boost::ref( p ) ) , 0.0 , 0.01 );
+    BOOST_CHECK_EQUAL( ode_call_count , size_t( 2 ) );
 }
 
-BOOST_AUTO_TEST_CASE( test_with_array_pair )
+BOOST_FIXTURE_TEST_CASE( test_with_array_pair , velocity_verlet_fixture )
 {
     array_stepper stepper;
     std::pair< array_type , array_type > xxx;
     init_state( xxx.first , xxx.second );
     stepper.do_step( ode() , xxx , 0.0 , 0.01 );
+    BOOST_CHECK_EQUAL( ode_call_count , size_t( 2 ) );
 }
 
-BOOST_AUTO_TEST_CASE( test_with_vector_ref )
+BOOST_FIXTURE_TEST_CASE( test_with_vector_ref , velocity_verlet_fixture )
 {
     vector_stepper stepper;
     vector_type q( 2 ) , p( 2 );
     init_state( q , p );
     stepper.do_step( ode() , std::make_pair( boost::ref( q ) , boost::ref( p ) ) , 0.0 , 0.01 );
+    BOOST_CHECK_EQUAL( ode_call_count , size_t( 2 ) );
 }
 
-BOOST_AUTO_TEST_CASE( test_with_vector_pair )
+BOOST_FIXTURE_TEST_CASE( test_with_vector_pair , velocity_verlet_fixture )
 {
     vector_stepper stepper;
     std::pair< vector_type , vector_type > x;
     x.first.resize( 2 ) ; x.second.resize( 2 );
     init_state( x.first , x.second );
     stepper.do_step( ode() , x , 0.0 , 0.01 );
+    BOOST_CHECK_EQUAL( ode_call_count , size_t( 2 ) );
 }
 
-BOOST_AUTO_TEST_CASE( test_reset )
+BOOST_FIXTURE_TEST_CASE( test_initial_resizer , velocity_verlet_fixture )
+{
+    typedef get_resizer_test_stepper< initially_resizer >::type stepper_type;
+    std::pair< test_array_type , test_array_type > x;
+    init_state( x.first , x.second );
+    stepper_type stepper;
+    stepper.do_step( ode() , x , 0.0 , 0.01 );
+    stepper.do_step( ode() , x , 0.0 , 0.01 );
+    BOOST_CHECK_EQUAL( adjust_size_count , size_t( 2 ) );
+    BOOST_CHECK_EQUAL( ode_call_count , size_t( 3 ) );
+}
+
+BOOST_FIXTURE_TEST_CASE( test_always_resizer , velocity_verlet_fixture )
+{
+    typedef get_resizer_test_stepper< always_resizer >::type stepper_type;
+    std::pair< test_array_type , test_array_type > x;
+    init_state( x.first , x.second );
+    stepper_type stepper;
+    stepper.do_step( ode() , x , 0.0 , 0.01 );
+    stepper.do_step( ode() , x , 0.0 , 0.01 );
+    BOOST_CHECK_EQUAL( adjust_size_count , size_t( 4 ) );
+    BOOST_CHECK_EQUAL( ode_call_count , size_t( 4 ) );    // attention: one more system call, since the size of the state has been changed
+}
+
+BOOST_FIXTURE_TEST_CASE( test_with_never_resizer , velocity_verlet_fixture )
+{
+    typedef get_resizer_test_stepper< never_resizer >::type stepper_type;
+    std::pair< test_array_type , test_array_type > x;
+    init_state( x.first , x.second );
+    stepper_type stepper;
+    stepper.do_step( ode() , x , 0.0 , 0.01 );
+    stepper.do_step( ode() , x , 0.0 , 0.01 );
+    BOOST_CHECK_EQUAL( adjust_size_count , size_t( 0 ) );
+    BOOST_CHECK_EQUAL( ode_call_count , size_t( 3 ) );
+}
+
+BOOST_FIXTURE_TEST_CASE( test_reset , velocity_verlet_fixture )
+{
+    typedef get_resizer_test_stepper< initially_resizer >::type stepper_type;
+    std::pair< test_array_type , test_array_type > x;
+    init_state( x.first , x.second );
+    stepper_type stepper;
+    stepper.do_step( ode() , x , 0.0 , 0.01 );
+    BOOST_CHECK_EQUAL( adjust_size_count , size_t( 2 ) );
+    BOOST_CHECK_EQUAL( ode_call_count , size_t( 2 ) );
+    stepper.do_step( ode() , x , 0.0 , 0.01 );
+    BOOST_CHECK_EQUAL( adjust_size_count , size_t( 2 ) );
+    BOOST_CHECK_EQUAL( ode_call_count , size_t( 3 ) );
+    stepper.reset();
+    BOOST_CHECK_EQUAL( adjust_size_count , size_t( 2 ) );
+    BOOST_CHECK_EQUAL( ode_call_count , size_t( 3 ) );
+    stepper.do_step( ode() , x , 0.0 , 0.01 );
+    BOOST_CHECK_EQUAL( adjust_size_count , size_t( 2 ) );
+    BOOST_CHECK_EQUAL( ode_call_count , size_t( 5 ) );    
+}
+
+BOOST_FIXTURE_TEST_CASE( test_initialize1 , velocity_verlet_fixture )
+{
+    typedef get_resizer_test_stepper< initially_resizer >::type stepper_type;
+    std::pair< test_array_type , test_array_type > x;
+    init_state( x.first , x.second );
+    stepper_type stepper;
+    test_array_type ain;
+    ode()( x.first , x.second , ain );
+    BOOST_CHECK_EQUAL( adjust_size_count , size_t( 0 ) );
+    stepper.initialize( ain );
+    BOOST_CHECK_EQUAL( adjust_size_count , size_t( 2 ) );
+    BOOST_CHECK_EQUAL( ode_call_count , size_t( 1 ) );
+    stepper.do_step( ode() , x , 0.0 , 0.01 );
+    BOOST_CHECK_EQUAL( adjust_size_count , size_t( 2 ) );
+    BOOST_CHECK_EQUAL( ode_call_count , size_t( 2 ) );
+}
+
+BOOST_FIXTURE_TEST_CASE( test_initialize2 , velocity_verlet_fixture )
+{
+    typedef get_resizer_test_stepper< initially_resizer >::type stepper_type;
+    std::pair< test_array_type , test_array_type > x;
+    init_state( x.first , x.second );
+    stepper_type stepper;
+    stepper.initialize( ode() , x.first , x.second );
+    BOOST_CHECK_EQUAL( adjust_size_count , size_t( 2 ) );
+    BOOST_CHECK_EQUAL( ode_call_count , size_t( 1 ) );
+    stepper.do_step( ode() , x , 0.0 , 0.01 );
+    BOOST_CHECK_EQUAL( adjust_size_count , size_t( 2 ) );
+    BOOST_CHECK_EQUAL( ode_call_count , size_t( 2 ) );
+}
+
+
+BOOST_FIXTURE_TEST_CASE( test_adjust_size , velocity_verlet_fixture )
+{
+    typedef get_resizer_test_stepper< initially_resizer >::type stepper_type;
+    std::pair< test_array_type , test_array_type > x;
+    init_state( x.first , x.second );
+    stepper_type stepper;
+    stepper.do_step( ode() , x , 0.0 , 0.01 );
+    BOOST_CHECK_EQUAL( adjust_size_count , size_t( 2 ) );
+    BOOST_CHECK_EQUAL( ode_call_count , size_t( 2 ) );
+    stepper.adjust_size( x.first );
+    BOOST_CHECK_EQUAL( adjust_size_count , size_t( 4 ) );
+    BOOST_CHECK_EQUAL( ode_call_count , size_t( 2 ) );    
+    stepper.do_step( ode() , x , 0.0 , 0.01 );    
+    BOOST_CHECK_EQUAL( adjust_size_count , size_t( 4 ) );
+    BOOST_CHECK_EQUAL( ode_call_count , size_t( 4 ) );
+}
+
+BOOST_FIXTURE_TEST_CASE( test_with_unit_ref , velocity_verlet_fixture )
 {
 }
 
-BOOST_AUTO_TEST_CASE( test_initialize )
-{
-}
-
-BOOST_AUTO_TEST_CASE( test_resize )
+BOOST_FIXTURE_TEST_CASE( test_with_unit_pair , velocity_verlet_fixture )
 {
 }
 

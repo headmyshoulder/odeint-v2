@@ -34,6 +34,7 @@
 // #include <boost/array.hpp>
 
 
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -122,7 +123,8 @@ public:
     template< class StateIn >
     void adjust_size( const StateIn & x )
     {
-        resize_impl( x );
+        if( resize_impl( x ) )
+            m_first_call = true;
     }
 
     void reset( void )
@@ -133,6 +135,10 @@ public:
     template< class MomentumDerivIn >
     void initialize( const MomentumDerivIn & ain )
     {
+        // alloc a
+        m_resizer.adjust_size( ain ,
+                               detail::bind( &velocity_verlet::template resize_impl< MomentumDerivIn > ,
+                                             detail::ref( *this ) , detail::_1 ) );
         boost::numeric::odeint::copy( ain , get_current_acc() );
         m_first_call = false;
     }
@@ -140,9 +146,10 @@ public:
     template< class System , class CoorIn , class MomentumIn >
     void initialize( System system , const CoorIn & qin , const MomentumIn & pin )
     {
-        typename odeint::unwrap_reference< System >::type & sys = system;
-        sys( qin , pin , get_current_acc() );
-        m_first_call = false;
+        m_resizer.adjust_size( qin ,
+                               detail::bind( &velocity_verlet::template resize_impl< CoorIn > ,
+                                             detail::ref( *this ) , detail::_1 ) );
+        initialize_acc( system , qin , pin );
     }
 
     bool is_initialized( void ) const
@@ -152,6 +159,14 @@ public:
 
 
 private:
+    
+    template< class System , class CoorIn , class MomentumIn >
+    void initialize_acc( System system , const CoorIn & qin , const MomentumIn & pin )
+    {
+        typename odeint::unwrap_reference< System >::type & sys = system;
+        sys( qin , pin , get_current_acc() );
+        m_first_call = false;
+    }
     
     template< class System , class StateInOut >
     void do_step_v1( System system , StateInOut & x , time_type t , time_type dt )
@@ -171,7 +186,7 @@ private:
                                                  detail::ref( *this ) , detail::_1 ) )
          || m_first_call )
         {
-            initialize( system , qinout , pinout );
+            initialize_acc( system , qinout , pinout );
         }
 
         // check first
