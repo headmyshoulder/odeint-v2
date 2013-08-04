@@ -34,24 +34,21 @@
 // #include <boost/array.hpp>
 
 
-namespace boost
-{
-namespace numeric
-{
-namespace odeint
-{
+namespace boost {
+namespace numeric {
+namespace odeint {
 
 template <
-class Coor ,
-      class Momentum = Coor ,
-      class Value = double ,
-      class CoorDeriv = Coor ,
-      class MomentumDeriv = Coor ,
-      class Time = Value ,
-      class TimeSq = Time ,
-      class Algebra = typename algebra_dispatcher< Coor >::algebra_type ,
-      class Operations = typename operations_dispatcher< Coor >::operations_type ,
-      class Resizer = initially_resizer
+    class Coor ,
+    class Momentum = Coor ,
+    class Value = double ,
+    class CoorDeriv = Coor ,
+    class MomentumDeriv = Coor ,
+    class Time = Value ,
+    class TimeSq = Time ,
+    class Algebra = typename algebra_dispatcher< Coor >::algebra_type ,
+    class Operations = typename operations_dispatcher< Coor >::operations_type ,
+    class Resizer = initially_resizer
       >
 class velocity_verlet : public algebra_stepper_base< Algebra , Operations >
 {
