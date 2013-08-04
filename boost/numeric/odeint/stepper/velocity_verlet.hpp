@@ -114,7 +114,7 @@ public:
 
         typename odeint::unwrap_reference< System >::type & sys = system;
 
-        sys( qout , pin , aout );
+        sys( qout , pin , aout , t + dt );
 
         algebra_stepper_base_type::m_algebra.for_each4(
             pout , pin , ain , aout ,
@@ -146,12 +146,12 @@ public:
     }
 
     template< class System , class CoorIn , class VelocityIn >
-    void initialize( System system , const CoorIn & qin , const VelocityIn & pin )
+    void initialize( System system , const CoorIn & qin , const VelocityIn & pin , time_type t )
     {
         m_resizer.adjust_size( qin ,
                                detail::bind( &velocity_verlet::template resize_impl< CoorIn > ,
                                              detail::ref( *this ) , detail::_1 ) );
-        initialize_acc( system , qin , pin );
+        initialize_acc( system , qin , pin , t );
     }
 
     bool is_initialized( void ) const
@@ -163,10 +163,10 @@ public:
 private:
     
     template< class System , class CoorIn , class VelocityIn >
-    void initialize_acc( System system , const CoorIn & qin , const VelocityIn & pin )
+    void initialize_acc( System system , const CoorIn & qin , const VelocityIn & pin , time_type t )
     {
         typename odeint::unwrap_reference< System >::type & sys = system;
-        sys( qin , pin , get_current_acc() );
+        sys( qin , pin , get_current_acc() , t );
         m_first_call = false;
     }
     
@@ -188,7 +188,7 @@ private:
                                                  detail::ref( *this ) , detail::_1 ) )
          || m_first_call )
         {
-            initialize_acc( system , qinout , pinout );
+            initialize_acc( system , qinout , pinout , t );
         }
 
         // check first

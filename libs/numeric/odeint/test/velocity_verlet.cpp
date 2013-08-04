@@ -74,8 +74,8 @@ struct velocity_verlet_fixture
 
 struct ode
 {
-    template< class CoorIn , class MomentumIn , class AccelerationOut >
-    void operator()( const CoorIn &q , const MomentumIn &p , AccelerationOut &a ) const
+    template< class CoorIn , class MomentumIn , class AccelerationOut , class Time >
+    void operator()( const CoorIn &q , const MomentumIn &p , AccelerationOut &a , Time t ) const
     {
         a[0] = -q[0] - p[0];
         a[1] = -q[1] - p[1];
@@ -85,7 +85,7 @@ struct ode
 
 struct ode_units
 {
-    void operator()( coor_vector const &q , velocity_vector const &p , accelartion_vector &a ) const
+    void operator()( coor_vector const &q , velocity_vector const &p , accelartion_vector &a , time_type t ) const
     {
         const units::quantity< si::frequency , value_type > omega = 1.0 * si::hertz;
         const units::quantity< si::frequency , value_type > friction = 0.001 * si::hertz;
@@ -221,7 +221,7 @@ BOOST_FIXTURE_TEST_CASE( test_initialize1 , velocity_verlet_fixture )
     init_state( x.first , x.second );
     stepper_type stepper;
     test_array_type ain;
-    ode()( x.first , x.second , ain );
+    ode()( x.first , x.second , ain , 0.0 );
     BOOST_CHECK_EQUAL( adjust_size_count , size_t( 0 ) );
     stepper.initialize( ain );
     BOOST_CHECK_EQUAL( adjust_size_count , size_t( 2 ) );
@@ -237,7 +237,7 @@ BOOST_FIXTURE_TEST_CASE( test_initialize2 , velocity_verlet_fixture )
     std::pair< test_array_type , test_array_type > x;
     init_state( x.first , x.second );
     stepper_type stepper;
-    stepper.initialize( ode() , x.first , x.second );
+    stepper.initialize( ode() , x.first , x.second , 0.0 );
     BOOST_CHECK_EQUAL( adjust_size_count , size_t( 2 ) );
     BOOST_CHECK_EQUAL( ode_call_count , size_t( 1 ) );
     stepper.do_step( ode() , x , 0.0 , 0.01 );
