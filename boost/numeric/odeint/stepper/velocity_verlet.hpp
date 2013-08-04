@@ -39,14 +39,14 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-    
-    // TODO: Check types and check if momentum can be replaced by acceleration
+
+
+// TODO: Check types and check if momentum can be replaced by acceleration
 template <
     class Coor ,
     class Velocity = Coor ,
     class Value = double ,
-    class CoorDeriv = Coor ,
-    class VelocityDeriv = Coor ,
+    class Acceleration = Coor ,
     class Time = Value ,
     class TimeSq = Time ,
     class Algebra = typename algebra_dispatcher< Coor >::algebra_type ,
@@ -63,12 +63,10 @@ public:
 
     typedef Coor coor_type;
     typedef Velocity velocity_type;
+    typedef Acceleration acceleration_type;
     typedef std::pair< coor_type , velocity_type > state_type;
-    typedef CoorDeriv coor_deriv_type;
-    typedef VelocityDeriv momentum_deriv_type;
-    typedef std::pair< coor_deriv_type , momentum_deriv_type > deriv_type;
-    typedef state_wrapper< coor_deriv_type> wrapped_coor_deriv_type;
-    typedef state_wrapper< momentum_deriv_type > wrapped_momentum_deriv_type;
+    typedef std::pair< velocity_type , acceleration_type > deriv_type;
+    typedef state_wrapper< acceleration_type > wrapped_acceleration_type;
     typedef Value value_type;
     typedef Time time_type;
     typedef TimeSq time_square_type;
@@ -79,7 +77,8 @@ public:
 
     static const order_type order_value = 1;
 
-    order_type order( void ) const {
+    order_type order( void ) const
+    {
         return order_value;
     }
 
@@ -101,9 +100,10 @@ public:
         do_step_v1( system , x , t , dt );
     }
 
-    template< class System , class CoorIn , class MomentumIn , class MomentumDerivIn , class CoorOut , class MomentumOut , class MomentumDerivOut >
-    void do_step( System system , CoorIn const & qin , MomentumIn const & pin , MomentumDerivIn const & ain ,
-                  CoorOut & qout , MomentumOut & pout , MomentumDerivOut & aout , time_type t , time_type dt )
+    template< class System , class CoorIn , class VelocityIn , class AccelerationIn ,
+                             class CoorOut , class VelocityOut , class AccelerationOut >
+    void do_step( System system , CoorIn const & qin , VelocityIn const & pin , AccelerationIn const & ain ,
+                  CoorOut & qout , VelocityOut & pout , AccelerationOut & aout , time_type t , time_type dt )
     {
         const value_type one = static_cast< value_type >( 1.0 );
         const value_type one_half = static_cast< value_type >( 0.5 );
@@ -134,19 +134,19 @@ public:
         m_first_call = true;
     }
 
-    template< class MomentumDerivIn >
-    void initialize( const MomentumDerivIn & ain )
+    template< class AccelerationIn >
+    void initialize( const AccelerationIn & ain )
     {
         // alloc a
         m_resizer.adjust_size( ain ,
-                               detail::bind( &velocity_verlet::template resize_impl< MomentumDerivIn > ,
+                               detail::bind( &velocity_verlet::template resize_impl< AccelerationIn > ,
                                              detail::ref( *this ) , detail::_1 ) );
         boost::numeric::odeint::copy( ain , get_current_acc() );
         m_first_call = false;
     }
 
-    template< class System , class CoorIn , class MomentumIn >
-    void initialize( System system , const CoorIn & qin , const MomentumIn & pin )
+    template< class System , class CoorIn , class VelocityIn >
+    void initialize( System system , const CoorIn & qin , const VelocityIn & pin )
     {
         m_resizer.adjust_size( qin ,
                                detail::bind( &velocity_verlet::template resize_impl< CoorIn > ,
@@ -162,8 +162,8 @@ public:
 
 private:
     
-    template< class System , class CoorIn , class MomentumIn >
-    void initialize_acc( System system , const CoorIn & qin , const MomentumIn & pin )
+    template< class System , class CoorIn , class VelocityIn >
+    void initialize_acc( System system , const CoorIn & qin , const VelocityIn & pin )
     {
         typename odeint::unwrap_reference< System >::type & sys = system;
         sys( qin , pin , get_current_acc() );
@@ -200,38 +200,39 @@ private:
     bool resize_impl( const StateIn & x )
     {
         bool resized = false;
-        resized |= adjust_size_by_resizeability( m_a1 , x , typename is_resizeable< momentum_deriv_type >::type() );
-        resized |= adjust_size_by_resizeability( m_a2 , x , typename is_resizeable< momentum_deriv_type >::type() );
+        resized |= adjust_size_by_resizeability( m_a1 , x , typename is_resizeable< acceleration_type >::type() );
+        resized |= adjust_size_by_resizeability( m_a2 , x , typename is_resizeable< acceleration_type >::type() );
         return resized;
     }
 
-    momentum_deriv_type & get_current_acc( void )
+    acceleration_type & get_current_acc( void )
     {
         return m_current_a1 ? m_a1.m_v : m_a2.m_v ;
     }
 
-    const momentum_deriv_type & get_current_acc( void ) const
+    const acceleration_type & get_current_acc( void ) const
     {
         return m_current_a1 ? m_a1.m_v : m_a2.m_v ;
     }
 
-    momentum_deriv_type & get_old_acc( void )
+    acceleration_type & get_old_acc( void )
     {
         return m_current_a1 ? m_a2.m_v : m_a1.m_v ;
     }
 
-    const momentum_deriv_type & get_old_acc( void ) const
+    const acceleration_type & get_old_acc( void ) const
     {
         return m_current_a1 ? m_a2.m_v : m_a1.m_v ;
     }
 
-    void toggle_current_acc( void ) {
+    void toggle_current_acc( void )
+    {
         m_current_a1 = ! m_current_a1;
     }
 
     resizer_type m_resizer;
     bool m_first_call;
-    wrapped_momentum_deriv_type m_a1 , m_a2;
+    wrapped_acceleration_type m_a1 , m_a2;
     bool m_current_a1;
 };
 

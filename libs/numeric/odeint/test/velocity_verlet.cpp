@@ -111,7 +111,7 @@ typedef velocity_verlet< vector_type > vector_stepper;
 template< typename Resizer >
 struct get_resizer_test_stepper
 {
-    typedef velocity_verlet< test_array_type , test_array_type , double , test_array_type , test_array_type , 
+    typedef velocity_verlet< test_array_type , test_array_type , double , test_array_type , 
         double , double , range_algebra , default_operations , Resizer > type;
 };
 
@@ -265,7 +265,7 @@ BOOST_FIXTURE_TEST_CASE( test_adjust_size , velocity_verlet_fixture )
 
 BOOST_FIXTURE_TEST_CASE( test_with_unit_pair , velocity_verlet_fixture )
 {
-    typedef velocity_verlet< coor_vector , velocity_vector , value_type , velocity_vector , accelartion_vector ,
+    typedef velocity_verlet< coor_vector , velocity_vector , value_type , accelartion_vector ,
         time_type , time_2_type , fusion_algebra , default_operations > stepper_type;
     
     std::pair< coor_vector , velocity_vector > x;
@@ -281,7 +281,7 @@ BOOST_FIXTURE_TEST_CASE( test_with_unit_pair , velocity_verlet_fixture )
 
 BOOST_FIXTURE_TEST_CASE( test_with_unit_ref , velocity_verlet_fixture )
 {
-    typedef velocity_verlet< coor_vector , velocity_vector , value_type , velocity_vector , accelartion_vector ,
+    typedef velocity_verlet< coor_vector , velocity_vector , value_type , accelartion_vector ,
         time_type , time_2_type , fusion_algebra , default_operations > stepper_type;
     
     coor_vector q;
