@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Chaotic systems and Lyapunov exponents</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../tutorial.html" title="Tutorial">
 <link rel="prev" href="solar_system.html" title="Solar system">
@@ -137,7 +137,8 @@
         can be used for example via
 </p>
 <pre class="programlisting"><span class="identifier">state_type</span> <span class="identifier">x</span><span class="special">;</span>
-<span class="comment">// initialize x</span>
+<span class="comment">// initialize x..</span>
+
 <span class="identifier">explicit_rk4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">rk4</span><span class="special">;</span>
 <span class="identifier">integrate_n_steps</span><span class="special">(</span> <span class="identifier">rk4</span> <span class="special">,</span> <span class="identifier">lorenz_with_lyap</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">,</span> <span class="number">1000</span> <span class="special">);</span>
 </pre>
@@ -206,11 +207,27 @@
       </p>
 <p>
 </p>
-<pre class="programlisting"><span class="comment">// perform 10000 transient steps</span>
+<pre class="programlisting"><span class="comment">// explicitly choose range_algebra to override default choice of array_algebra</span>
+<span class="identifier">runge_kutta4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">range_algebra</span> <span class="special">&gt;</span> <span class="identifier">rk4</span><span class="special">;</span>
+
+<span class="comment">// perform 10000 transient steps</span>
 <span class="identifier">integrate_n_steps</span><span class="special">(</span> <span class="identifier">rk4</span> <span class="special">,</span> <span class="identifier">lorenz</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">n</span> <span class="special">)</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">,</span> <span class="number">10000</span> <span class="special">);</span>
 </pre>
 <p>
       </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          Note that when using <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>,
+          we have to explicitly configure the stepper to use the <code class="computeroutput"><span class="identifier">range_algebra</span></code>
+          as otherwise odeint would automatically chose the <code class="computeroutput"><span class="identifier">array_algebra</span></code>,
+          which is incompatible with the usage of <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>,
+          because the original state_type is an <code class="computeroutput"><span class="identifier">array</span></code>.
+        </p></td></tr>
+</table></div>
 <p>
         Having integrated a sufficient number of transients steps we are now able
         to calculate the Lyapunov exponents:

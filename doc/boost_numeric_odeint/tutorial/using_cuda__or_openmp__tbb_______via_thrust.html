@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Using CUDA (or OpenMP, TBB, ...) via Thrust</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../tutorial.html" title="Tutorial">
 <link rel="prev" href="self_expanding_lattices.html" title="Self expanding lattices">
@@ -273,22 +273,35 @@
           and <code class="computeroutput"><span class="identifier">thrust</span><span class="special">::</span><span class="identifier">zip_iterator</span></code> play together.
         </p>
 <p>
-          Now, we are ready to put everything together. All we have to do for making
-          odeint ready for using the GPU is to parametrize the stepper with the appropriate
-          thrust algebra/operations:
+          Now we are ready to put everything together. All we have to do for making
+          odeint ready for using the GPU is to parametrize the stepper with the
+          <code class="computeroutput"><span class="identifier">state_type</span></code> and <code class="computeroutput"><span class="identifier">value_type</span></code>:
         </p>
 <p>
 </p>
-<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">runge_kutta4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">value_type</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">value_type</span> <span class="special">,</span> <span class="identifier">thrust_algebra</span> <span class="special">,</span> <span class="identifier">thrust_operations</span> <span class="special">&gt;</span> <span class="identifier">stepper_type</span><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">runge_kutta4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">value_type</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">value_type</span> <span class="special">&gt;</span> <span class="identifier">stepper_type</span><span class="special">;</span>
 </pre>
 <p>
         </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            We have specifically define four template parameters because we have
+            to override the default parameter value <code class="computeroutput"><span class="keyword">double</span></code>
+            with <code class="computeroutput"><span class="identifier">value_type</span></code> to ensure
+            our programs runs properly if we use <code class="computeroutput"><span class="keyword">float</span></code>
+            as fundamental data type.
+          </p></td></tr>
+</table></div>
 <p>
           You can also use a controlled or dense output stepper, e.g.
         </p>
 <p>
 </p>
-<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">value_type</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">value_type</span> <span class="special">,</span> <span class="identifier">thrust_algebra</span> <span class="special">,</span> <span class="identifier">thrust_operations</span> <span class="special">&gt;</span> <span class="identifier">stepper_type</span><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">value_type</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">value_type</span> <span class="special">&gt;</span> <span class="identifier">stepper_type</span><span class="special">;</span>
 </pre>
 <p>
         </p>
@@ -447,7 +460,7 @@
 <span class="identifier">state_type</span> <span class="identifier">omega</span> <span class="special">=</span> <span class="identifier">omega_host</span><span class="special">;</span>
 
 <span class="comment">// create stepper</span>
-<span class="identifier">runge_kutta4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">value_type</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">value_type</span> <span class="special">,</span> <span class="identifier">thrust_algebra</span> <span class="special">,</span> <span class="identifier">thrust_operations</span> <span class="special">&gt;</span> <span class="identifier">stepper</span><span class="special">;</span>
+<span class="identifier">runge_kutta4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">value_type</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">value_type</span> <span class="special">&gt;</span> <span class="identifier">stepper</span><span class="special">;</span>
 
 <span class="comment">// create phase oscillator system function</span>
 <span class="identifier">phase_oscillators</span> <span class="identifier">sys</span><span class="special">(</span> <span class="identifier">omega</span> <span class="special">);</span>
@@ -645,7 +658,7 @@
 
 
 <span class="comment">// create error stepper, can be used with make_controlled or make_dense_output</span>
-<span class="keyword">typedef</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">value_type</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">value_type</span> <span class="special">,</span> <span class="identifier">thrust_algebra</span> <span class="special">,</span> <span class="identifier">thrust_operations</span> <span class="special">&gt;</span> <span class="identifier">stepper_type</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">runge_kutta_dopri5</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">value_type</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="identifier">value_type</span> <span class="special">&gt;</span> <span class="identifier">stepper_type</span><span class="special">;</span>
 
 
 <span class="identifier">lorenz_system</span> <span class="identifier">lorenz</span><span class="special">(</span> <span class="identifier">N</span> <span class="special">,</span> <span class="identifier">beta</span> <span class="special">);</span>

@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Class template runge_kutta4_classic</title>
 <link rel="stylesheet" href="../../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="../../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../../../header/boost/numeric/odeint/stepper/runge_kutta4_classic_hpp.html" title="Header &lt;boost/numeric/odeint/stepper/runge_kutta4_classic.hpp&gt;">
 <link rel="prev" href="../../../header/boost/numeric/odeint/stepper/runge_kutta4_classic_hpp.html" title="Header &lt;boost/numeric/odeint/stepper/runge_kutta4_classic.hpp&gt;">
@@ -25,8 +25,9 @@
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../../../header/boost/numeric/odeint/stepper/runge_kutta4_classic_hpp.html" title="Header &lt;boost/numeric/odeint/stepper/runge_kutta4_classic.hpp&gt;">boost/numeric/odeint/stepper/runge_kutta4_classic.hpp</a>&gt;
 
 </span><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> State<span class="special">,</span> <span class="keyword">typename</span> Value <span class="special">=</span> <span class="keyword">double</span><span class="special">,</span> <span class="keyword">typename</span> Deriv <span class="special">=</span> <span class="identifier">State</span><span class="special">,</span> 
-         <span class="keyword">typename</span> Time <span class="special">=</span> <span class="identifier">Value</span><span class="special">,</span> <span class="keyword">typename</span> Algebra <span class="special">=</span> <span class="identifier">range_algebra</span><span class="special">,</span> 
-         <span class="keyword">typename</span> Operations <span class="special">=</span> <span class="identifier">default_operations</span><span class="special">,</span> 
+         <span class="keyword">typename</span> Time <span class="special">=</span> <span class="identifier">Value</span><span class="special">,</span> 
+         <span class="keyword">typename</span> Algebra <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">algebra_dispatcher</span><span class="special">&lt;</span> <span class="identifier">State</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">algebra_type</span><span class="special">,</span> 
+         <span class="keyword">typename</span> Operations <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">operations_dispatcher</span><span class="special">&lt;</span> <span class="identifier">State</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">operations_type</span><span class="special">,</span> 
          <span class="keyword">typename</span> Resizer <span class="special">=</span> <span class="identifier">initially_resizer</span><span class="special">&gt;</span> 
 <span class="keyword">class</span> <a class="link" href="runge_kutta4_classic.html" title="Class template runge_kutta4_classic">runge_kutta4_classic</a> <span class="special">:</span> <span class="keyword">public</span> boost::numeric::odeint::explicit_stepper_base&lt; Stepper, Order, State, Value, Deriv, Time, Algebra, Operations, Resizer &gt;
 <span class="special">{</span>
@@ -42,43 +43,43 @@
   <span class="keyword">typedef</span> <span class="identifier">stepper_base_type</span><span class="special">::</span><span class="identifier">resizer_type</span>                          <a name="boost.numeric.odeint.runge_kutta4_classic.resizer_type"></a><span class="identifier">resizer_type</span><span class="special">;</span>     
 
   <span class="comment">// <a class="link" href="runge_kutta4_classic.html#boost.numeric.odeint.runge_kutta4_classicconstruct-copy-destruct">construct/copy/destruct</a></span>
-  <a class="link" href="runge_kutta4_classic.html#id420748-bb"><span class="identifier">runge_kutta4_classic</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <span class="special">=</span> <span class="identifier">algebra_type</span><span class="special">(</span><span class="special">)</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="runge_kutta4_classic.html#idp22790288-bb"><span class="identifier">runge_kutta4_classic</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <span class="special">=</span> <span class="identifier">algebra_type</span><span class="special">(</span><span class="special">)</span><span class="special">)</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="runge_kutta4_classic.html#id420120-bb">public member functions</a></span>
+  <span class="comment">// <a class="link" href="runge_kutta4_classic.html#idp22714944-bb">public member functions</a></span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">,</span> <span class="keyword">typename</span> DerivIn<span class="special">,</span> 
            <span class="keyword">typename</span> StateOut<span class="special">&gt;</span> 
-    <span class="keyword">void</span> <a class="link" href="runge_kutta4_classic.html#id420123-bb"><span class="identifier">do_step_impl</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> 
+    <span class="keyword">void</span> <a class="link" href="runge_kutta4_classic.html#idp22715344-bb"><span class="identifier">do_step_impl</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> 
                       <span class="identifier">StateOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateType<span class="special">&gt;</span> <span class="keyword">void</span> <a class="link" href="runge_kutta4_classic.html#id420245-bb"><span class="identifier">adjust_size</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateType</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
-  <span class="identifier">order_type</span> <a class="link" href="runge_kutta4_classic.html#id420276-bb"><span class="identifier">order</span></a><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateType<span class="special">&gt;</span> <span class="keyword">void</span> <a class="link" href="runge_kutta4_classic.html#idp22729984-bb"><span class="identifier">adjust_size</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateType</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">order_type</span> <a class="link" href="runge_kutta4_classic.html#idp22733712-bb"><span class="identifier">order</span></a><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
-    <span class="keyword">void</span> <a class="link" href="runge_kutta4_classic.html#id420297-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
+    <span class="keyword">void</span> <a class="link" href="runge_kutta4_classic.html#idp22736208-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
-    <span class="keyword">void</span> <a class="link" href="runge_kutta4_classic.html#id420362-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
+    <span class="keyword">void</span> <a class="link" href="runge_kutta4_classic.html#idp22743984-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">,</span> <span class="keyword">typename</span> DerivIn<span class="special">&gt;</span> 
     <span class="identifier">boost</span><span class="special">::</span><span class="identifier">disable_if</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">is_same</span><span class="special">&lt;</span> <span class="identifier">DerivIn</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&gt;</span><span class="special">,</span> <span class="keyword">void</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> 
-    <a class="link" href="runge_kutta4_classic.html#id420408-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
+    <a class="link" href="runge_kutta4_classic.html#idp22749472-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">,</span> <span class="keyword">typename</span> StateOut<span class="special">&gt;</span> 
-    <span class="keyword">void</span> <a class="link" href="runge_kutta4_classic.html#id420502-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
+    <span class="keyword">void</span> <a class="link" href="runge_kutta4_classic.html#idp22760832-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">,</span> <span class="keyword">typename</span> DerivIn<span class="special">,</span> 
            <span class="keyword">typename</span> StateOut<span class="special">&gt;</span> 
-    <span class="keyword">void</span> <a class="link" href="runge_kutta4_classic.html#id420585-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> 
+    <span class="keyword">void</span> <a class="link" href="runge_kutta4_classic.html#idp22770720-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> 
                  <span class="identifier">StateOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">void</span> <a class="link" href="runge_kutta4_classic.html#id420686-bb"><span class="identifier">adjust_size</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
-  <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a class="link" href="runge_kutta4_classic.html#id420717-bb"><span class="identifier">algebra</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a class="link" href="runge_kutta4_classic.html#id420732-bb"><span class="identifier">algebra</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">void</span> <a class="link" href="runge_kutta4_classic.html#idp22782880-bb"><span class="identifier">adjust_size</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a class="link" href="runge_kutta4_classic.html#idp22786608-bb"><span class="identifier">algebra</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a class="link" href="runge_kutta4_classic.html#idp22788448-bb"><span class="identifier">algebra</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="runge_kutta4_classic.html#id420780-bb">private member functions</a></span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a class="link" href="runge_kutta4_classic.html#id420783-bb"><span class="identifier">resize_impl</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="comment">// <a class="link" href="runge_kutta4_classic.html#idp22794144-bb">private member functions</a></span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a class="link" href="runge_kutta4_classic.html#idp22794560-bb"><span class="identifier">resize_impl</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="id900464"></a><h2>Description</h2>
+<a name="idp32197376"></a><h2>Description</h2>
 <p>The Runge-Kutta method of fourth order is one standard method for solving ordinary differential equations and is widely used, see also <a href="http://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods" target="_top">en.wikipedia.org/wiki/Runge-Kutta_methods</a> The method is explicit and fulfills the Stepper concept. Step size control or continuous output are not provided. This class implements the method directly, hence the generic Runge-Kutta algorithm is not used.</p>
 <p>This class derives from <a class="link" href="explicit_stepper_base.html" title="Class template explicit_stepper_base">explicit_stepper_base</a> and inherits its interface via CRTP (current recurring template pattern). For more details see <a class="link" href="explicit_stepper_base.html" title="Class template explicit_stepper_base">explicit_stepper_base</a>.</p>
 <p>
 </p>
 <div class="refsect2">
-<a name="id900500"></a><h3>Template Parameters</h3>
+<a name="idp32201648"></a><h3>Template Parameters</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">typename</span> State</pre>
@@ -97,11 +98,11 @@
 <p>The time representing the independent variable - the time. </p>
 </li>
 <li class="listitem">
-<pre class="literallayout"><span class="keyword">typename</span> Algebra <span class="special">=</span> <span class="identifier">range_algebra</span></pre>
+<pre class="literallayout"><span class="keyword">typename</span> Algebra <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">algebra_dispatcher</span><span class="special">&lt;</span> <span class="identifier">State</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">algebra_type</span></pre>
 <p>The algebra type. </p>
 </li>
 <li class="listitem">
-<pre class="literallayout"><span class="keyword">typename</span> Operations <span class="special">=</span> <span class="identifier">default_operations</span></pre>
+<pre class="literallayout"><span class="keyword">typename</span> Operations <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">operations_dispatcher</span><span class="special">&lt;</span> <span class="identifier">State</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">operations_type</span></pre>
 <p>The operations type. </p>
 </li>
 <li class="listitem">
@@ -111,12 +112,12 @@
 </ol></div>
 </div>
 <div class="refsect2">
-<a name="id900691"></a><h3>
+<a name="idp32232016"></a><h3>
 <a name="boost.numeric.odeint.runge_kutta4_classicconstruct-copy-destruct"></a><code class="computeroutput">runge_kutta4_classic</code> 
         public
        construct/copy/destruct</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
-<pre class="literallayout"><a name="id420748-bb"></a><span class="identifier">runge_kutta4_classic</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> algebra <span class="special">=</span> <span class="identifier">algebra_type</span><span class="special">(</span><span class="special">)</span><span class="special">)</span><span class="special">;</span></pre>Constructs the <code class="computeroutput"><a class="link" href="runge_kutta4_classic.html" title="Class template runge_kutta4_classic">runge_kutta4_classic</a></code> class. This constructor can be used as a default constructor if the algebra has a default constructor. <p>
+<pre class="literallayout"><a name="idp22790288-bb"></a><span class="identifier">runge_kutta4_classic</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> algebra <span class="special">=</span> <span class="identifier">algebra_type</span><span class="special">(</span><span class="special">)</span><span class="special">)</span><span class="special">;</span></pre>Constructs the <code class="computeroutput"><a class="link" href="runge_kutta4_classic.html" title="Class template runge_kutta4_classic">runge_kutta4_classic</a></code> class. This constructor can be used as a default constructor if the algebra has a default constructor. <p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -134,13 +135,13 @@
 </li></ol></div>
 </div>
 <div class="refsect2">
-<a name="id900828"></a><h3>
-<a name="id420120-bb"></a><code class="computeroutput">runge_kutta4_classic</code> public member functions</h3>
+<a name="idp32248480"></a><h3>
+<a name="idp22714944-bb"></a><code class="computeroutput">runge_kutta4_classic</code> public member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">,</span> <span class="keyword">typename</span> DerivIn<span class="special">,</span> 
          <span class="keyword">typename</span> StateOut<span class="special">&gt;</span> 
-  <span class="keyword">void</span> <a name="id420123-bb"></a><span class="identifier">do_step_impl</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> in<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span> dxdt<span class="special">,</span> 
+  <span class="keyword">void</span> <a name="idp22715344-bb"></a><span class="identifier">do_step_impl</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> in<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span> dxdt<span class="special">,</span> 
                     <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span> out<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>This method performs one step. The derivative <code class="computeroutput">dxdt</code> of <code class="computeroutput">in</code> at the time <code class="computeroutput">t</code> is passed to the method. The result is updated out of place, hence the input is in <code class="computeroutput">in</code> and the output in <code class="computeroutput">out</code>. Access to this step functionality is provided by <code class="computeroutput"><a class="link" href="explicit_stepper_base.html" title="Class template explicit_stepper_base">explicit_stepper_base</a></code> and <code class="computeroutput">do_step_impl</code> should not be called directly. <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -180,7 +181,7 @@
 </table></div>
 </li>
 <li class="listitem">
-<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateType<span class="special">&gt;</span> <span class="keyword">void</span> <a name="id420245-bb"></a><span class="identifier">adjust_size</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateType</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre>Adjust the size of all temporaries in the stepper manually. <p>
+<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateType<span class="special">&gt;</span> <span class="keyword">void</span> <a name="idp22729984-bb"></a><span class="identifier">adjust_size</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateType</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre>Adjust the size of all temporaries in the stepper manually. <p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -197,7 +198,7 @@
 </table></div>
 </li>
 <li class="listitem">
-<pre class="literallayout"><span class="identifier">order_type</span> <a name="id420276-bb"></a><span class="identifier">order</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
+<pre class="literallayout"><span class="identifier">order_type</span> <a name="idp22733712-bb"></a><span class="identifier">order</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -210,7 +211,7 @@
 </li>
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
-  <span class="keyword">void</span> <a name="id420297-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>This method performs one step. It transforms the result in-place. <p>
+  <span class="keyword">void</span> <a name="idp22736208-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>This method performs one step. It transforms the result in-place. <p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -242,13 +243,13 @@
 </li>
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
-  <span class="keyword">void</span> <a name="id420362-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>Second version to solve the forwarding problem, can be called with Boost.Range as StateInOut. </li>
+  <span class="keyword">void</span> <a name="idp22743984-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>Second version to solve the forwarding problem, can be called with Boost.Range as StateInOut. </li>
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">,</span> <span class="keyword">typename</span> DerivIn<span class="special">&gt;</span> 
   <span class="identifier">boost</span><span class="special">::</span><span class="identifier">disable_if</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">is_same</span><span class="special">&lt;</span> <span class="identifier">DerivIn</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&gt;</span><span class="special">,</span> <span class="keyword">void</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> 
-  <a name="id420408-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span> dxdt<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> 
-          <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>The method performs one step. Additionally to the other method the derivative of x is also passed to this method. It is supposed to be used in the following way: <pre class="programlisting"> sys( x , dxdt , t );
- stepper.do_step( sys , x , dxdt , t , dt );
+  <a name="idp22749472-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span> dxdt<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> 
+          <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>The method performs one step. Additionally to the other method the derivative of x is also passed to this method. It is supposed to be used in the following way: <pre class="programlisting">sys( x , dxdt , t );
+stepper.do_step( sys , x , dxdt , t , dt );
 </pre>
 <p>The result is updated in place in x. This method is disabled if Time and Deriv are of the same type. In this case the method could not be distinguished from other <code class="computeroutput">do_step</code> versions.</p>
 <div class="note"><table border="0" summary="Note">
@@ -295,7 +296,7 @@
 </li>
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">,</span> <span class="keyword">typename</span> StateOut<span class="special">&gt;</span> 
-  <span class="keyword">void</span> <a name="id420502-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> in<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span> out<span class="special">,</span> 
+  <span class="keyword">void</span> <a name="idp22760832-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> in<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span> out<span class="special">,</span> 
                <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>The method performs one step. The state of the ODE is updated out-of-place. <div class="note"><table border="0" summary="Note">
 <tr>
 <td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../images/note.png"></td>
@@ -341,9 +342,9 @@
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">,</span> <span class="keyword">typename</span> DerivIn<span class="special">,</span> 
          <span class="keyword">typename</span> StateOut<span class="special">&gt;</span> 
-  <span class="keyword">void</span> <a name="id420585-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> in<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span> dxdt<span class="special">,</span> 
-               <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span> out<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>The method performs one step. The state of the ODE is updated out-of-place. Furthermore, the derivative of x at t is passed to the stepper. It is supposed to be used in the following way: <pre class="programlisting"> sys( in , dxdt , t );
- stepper.do_step( sys , in , dxdt , t , out , dt );
+  <span class="keyword">void</span> <a name="idp22770720-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> in<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span> dxdt<span class="special">,</span> 
+               <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span> out<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>The method performs one step. The state of the ODE is updated out-of-place. Furthermore, the derivative of x at t is passed to the stepper. It is supposed to be used in the following way: <pre class="programlisting">sys( in , dxdt , t );
+stepper.do_step( sys , in , dxdt , t , out , dt );
 </pre>
 <div class="note"><table border="0" summary="Note">
 <tr>
@@ -392,7 +393,7 @@
 </table></div>
 </li>
 <li class="listitem">
-<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">void</span> <a name="id420686-bb"></a><span class="identifier">adjust_size</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre>Adjust the size of all temporaries in the stepper manually. <p>
+<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">void</span> <a name="idp22782880-bb"></a><span class="identifier">adjust_size</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre>Adjust the size of all temporaries in the stepper manually. <p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -409,7 +410,7 @@
 </table></div>
 </li>
 <li class="listitem">
-<pre class="literallayout"><span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a name="id420717-bb"></a><span class="identifier">algebra</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
+<pre class="literallayout"><span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a name="idp22786608-bb"></a><span class="identifier">algebra</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -421,7 +422,7 @@
 </table></div>
 </li>
 <li class="listitem">
-<pre class="literallayout"><span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a name="id420732-bb"></a><span class="identifier">algebra</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
+<pre class="literallayout"><span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> <a name="idp22788448-bb"></a><span class="identifier">algebra</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -435,9 +436,9 @@
 </ol></div>
 </div>
 <div class="refsect2">
-<a name="id902658"></a><h3>
-<a name="id420780-bb"></a><code class="computeroutput">runge_kutta4_classic</code> private member functions</h3>
-<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a name="id420783-bb"></a><span class="identifier">resize_impl</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre></li></ol></div>
+<a name="idp32468016"></a><h3>
+<a name="idp22794144-bb"></a><code class="computeroutput">runge_kutta4_classic</code> private member functions</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a name="idp22794560-bb"></a><span class="identifier">resize_impl</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre></li></ol></div>
 </div>
 </div>
 </div>

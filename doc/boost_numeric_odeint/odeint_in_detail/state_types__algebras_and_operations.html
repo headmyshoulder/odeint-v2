@@ -3,17 +3,17 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>State types, algebras and operations</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../odeint_in_detail.html" title="odeint in detail">
-<link rel="prev" href="integrate_functions.html" title="Integrate functions">
+<link rel="prev" href="iterators_and_ranges.html" title="Iterators and Ranges">
 <link rel="next" href="using_boost__ref.html" title="Using boost::ref">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr><td valign="top"><img alt="" width="" height="" src="../../logo.jpg"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="integrate_functions.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../odeint_in_detail.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="using_boost__ref.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="iterators_and_ranges.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../odeint_in_detail.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="using_boost__ref.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
@@ -599,7 +599,6 @@
           Vector</a></span></dt>
 <dt><span class="section"><a href="state_types__algebras_and_operations.html#boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations.algebras_and_operations.vector_space_algebra">Vector
           Space Algebra</a></span></dt>
-<dt><span class="section"><a href="state_types__algebras_and_operations.html#boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations.algebras_and_operations.boost_ublas">Boost.Ublas</a></span></dt>
 <dt><span class="section"><a href="state_types__algebras_and_operations.html#boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations.algebras_and_operations.point_type">Point
           type</a></span></dt>
 </dl></div>
@@ -1086,60 +1085,6 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations.algebras_and_operations.boost_ublas"></a><a class="link" href="state_types__algebras_and_operations.html#boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations.algebras_and_operations.boost_ublas" title="Boost.Ublas">Boost.Ublas</a>
-</h5></div></div></div>
-<p>
-            As an example for the employment of the <code class="computeroutput"><span class="identifier">vector_space_algebra</span></code>
-            we will adopt <code class="computeroutput"><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">vector</span></code> from <a href="http://www.boost.org/doc/libs/release/libs/numeric/ublas/index.html" target="_top">Boost.uBLAS</a>
-            to work as a state type in odeint. This is particularly easy because
-            <code class="computeroutput"><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">vector</span></code> supports vector-vector addition
-            and scalar-vector multiplication described above as well as <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">size</span></code>. It also has a resize member function
-            so all that has to be done in this case is to declare resizability:
-          </p>
-<p>
-</p>
-<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">ublas</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">double</span> <span class="special">&gt;</span> <span class="identifier">state_type</span><span class="special">;</span>
-
-<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">numeric</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">odeint</span> <span class="special">{</span>
-
-<span class="keyword">template</span><span class="special">&lt;&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">is_resizeable</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span>
-<span class="special">{</span>
-    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">true_type</span> <span class="identifier">type</span><span class="special">;</span>
-    <span class="keyword">const</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="identifier">type</span><span class="special">::</span><span class="identifier">value</span><span class="special">;</span>
-<span class="special">};</span>
-
-<span class="special">}</span> <span class="special">}</span> <span class="special">}</span>
-</pre>
-<p>
-          </p>
-<p>
-            Now ublas::vector can be used as state type for simple Runge-Kutta steppers
-            in odeint by specifying the <code class="computeroutput"><span class="identifier">vector_space_algebra</span></code>
-            as algebra in the template parameter list of the stepper. The following
-            code shows the corresponding definitions:
-          </p>
-<p>
-</p>
-<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
-<span class="special">{</span>
-    <span class="identifier">state_type</span> <span class="identifier">x</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>
-    <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">10.0</span><span class="special">;</span> <span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">5.0</span> <span class="special">;</span> <span class="identifier">x</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">runge_kutta4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">,</span> <span class="keyword">double</span> <span class="special">,</span> <span class="identifier">vector_space_algebra</span> <span class="special">&gt;</span> <span class="identifier">stepper</span><span class="special">;</span>
-    <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">stepper</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">lorenz</span> <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span>
-                     <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.1</span> <span class="special">);</span>
-<span class="special">}</span>
-</pre>
-<p>
-          </p>
-<p>
-            Note again, that we haven't supported the requirements for controlled
-            steppers, but only for simple Runge-Kutta methods. You can find the full
-            example in <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/ublas/lorenz_ublas.cpp" target="_top">lorenz_ublas.cpp</a>.
-          </p>
-</div>
-<div class="section">
-<div class="titlepage"><div><div><h5 class="title">
 <a name="boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations.algebras_and_operations.point_type"></a><a class="link" href="state_types__algebras_and_operations.html#boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations.algebras_and_operations.point_type" title="Point type">Point
           type</a>
 </h5></div></div></div>
@@ -1219,26 +1164,22 @@
 <p>
           </p>
 <p>
-            Finally, we have to add a specialization for <code class="computeroutput"><span class="identifier">reduce</span></code>
-            implementing a reduction over the state type:
+            Finally, we have to provide a specialization to calculate the infintity
+            norm of a state:
           </p>
 <p>
 </p>
-<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">numeric</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">odeint</span> <span class="special">{</span>
-<span class="comment">// specialization of vector_space_reduce, only required for steppers with error control</span>
+<pre class="programlisting"><span class="comment">// also only for steppers with error control</span>
+<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">numeric</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">odeint</span> <span class="special">{</span>
 <span class="keyword">template</span><span class="special">&lt;&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">vector_space_reduce</span><span class="special">&lt;</span> <span class="identifier">point3D</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">vector_space_norm_inf</span><span class="special">&lt;</span> <span class="identifier">point3D</span> <span class="special">&gt;</span>
 <span class="special">{</span>
-    <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Value</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Op</span> <span class="special">&gt;</span>
-    <span class="identifier">Value</span> <span class="keyword">operator</span><span class="special">()</span> <span class="special">(</span> <span class="keyword">const</span> <span class="identifier">point3D</span> <span class="special">&amp;</span><span class="identifier">p</span> <span class="special">,</span> <span class="identifier">Op</span> <span class="identifier">op</span> <span class="special">,</span> <span class="identifier">Value</span> <span class="identifier">init</span> <span class="special">)</span>
+    <span class="keyword">typedef</span> <span class="keyword">double</span> <span class="identifier">result_type</span><span class="special">;</span>
+    <span class="keyword">double</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">point3D</span> <span class="special">&amp;</span><span class="identifier">p</span> <span class="special">)</span> <span class="keyword">const</span>
     <span class="special">{</span>
-        <span class="identifier">init</span> <span class="special">=</span> <span class="identifier">op</span><span class="special">(</span> <span class="identifier">init</span> <span class="special">,</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">x</span> <span class="special">);</span>
-        <span class="comment">//std::cout &lt;&lt; init &lt;&lt; " ";</span>
-        <span class="identifier">init</span> <span class="special">=</span> <span class="identifier">op</span><span class="special">(</span> <span class="identifier">init</span> <span class="special">,</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">y</span> <span class="special">);</span>
-        <span class="comment">//std::cout &lt;&lt; init &lt;&lt; " ";</span>
-        <span class="identifier">init</span> <span class="special">=</span> <span class="identifier">op</span><span class="special">(</span> <span class="identifier">init</span> <span class="special">,</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">z</span> <span class="special">);</span>
-        <span class="comment">//std::cout &lt;&lt; init &lt;&lt; std::endl;</span>
-        <span class="keyword">return</span> <span class="identifier">init</span><span class="special">;</span>
+        <span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">max</span><span class="special">;</span>
+        <span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">abs</span><span class="special">;</span>
+        <span class="keyword">return</span> <span class="identifier">max</span><span class="special">(</span> <span class="identifier">max</span><span class="special">(</span> <span class="identifier">abs</span><span class="special">(</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">x</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">abs</span><span class="special">(</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">y</span> <span class="special">)</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">abs</span><span class="special">(</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">z</span> <span class="special">)</span> <span class="special">);</span>
     <span class="special">}</span>
 <span class="special">};</span>
 <span class="special">}</span> <span class="special">}</span> <span class="special">}</span>
@@ -1250,7 +1191,9 @@
             use controlled steppers. For simple steppers definition of the simple
             <code class="computeroutput"><span class="special">+=</span></code> and <code class="computeroutput"><span class="special">*=</span></code>
             operators are sufficient. Having defined such a point type, we can easily
-            perform the integration on a Lorenz system by using the <code class="computeroutput"><span class="identifier">vector_space_algebra</span></code> again:
+            perform the integration on a Lorenz system by explicitely configuring
+            the <code class="computeroutput"><span class="identifier">vector_space_algebra</span></code>
+            in the stepper's template argument list:
           </p>
 <p>
 </p>
@@ -1285,6 +1228,22 @@
 <p>
             The whole example can be found in <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/lorenz_point.cpp" target="_top">lorenz_point.cpp</a>
           </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              For the most <code class="computeroutput"><span class="identifier">state_types</span></code>,
+              odeint is able to automatically determine the correct algebra and operations.
+              But if you want to use your own <code class="computeroutput"><span class="identifier">state_type</span></code>,
+              as in this example with <code class="computeroutput"><span class="identifier">point3D</span></code>,
+              you have to manually configure the right algebra/operations, unless
+              your <code class="computeroutput"><span class="identifier">state_type</span></code> works
+              with the default choice of <code class="computeroutput"><span class="identifier">range_algebra</span></code>
+              and <code class="computeroutput"><span class="identifier">default_operations</span></code>.
+            </p></td></tr>
+</table></div>
 </div>
 </div>
 <p>
@@ -1322,7 +1281,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="integrate_functions.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../odeint_in_detail.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="using_boost__ref.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="iterators_and_ranges.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../odeint_in_detail.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="using_boost__ref.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

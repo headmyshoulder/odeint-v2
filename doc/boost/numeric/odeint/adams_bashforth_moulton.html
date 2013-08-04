@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Class template adams_bashforth_moulton</title>
 <link rel="stylesheet" href="../../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="../../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../../../header/boost/numeric/odeint/stepper/adams_bashforth_moulton_hpp.html" title="Header &lt;boost/numeric/odeint/stepper/adams_bashforth_moulton.hpp&gt;">
 <link rel="prev" href="../../../header/boost/numeric/odeint/stepper/adams_bashforth_moulton_hpp.html" title="Header &lt;boost/numeric/odeint/stepper/adams_bashforth_moulton.hpp&gt;">
@@ -26,8 +26,8 @@
 
 </span><span class="keyword">template</span><span class="special">&lt;</span><span class="identifier">size_t</span> Steps<span class="special">,</span> <span class="keyword">typename</span> State<span class="special">,</span> <span class="keyword">typename</span> Value <span class="special">=</span> <span class="keyword">double</span><span class="special">,</span> 
          <span class="keyword">typename</span> Deriv <span class="special">=</span> <span class="identifier">State</span><span class="special">,</span> <span class="keyword">typename</span> Time <span class="special">=</span> <span class="identifier">Value</span><span class="special">,</span> 
-         <span class="keyword">typename</span> Algebra <span class="special">=</span> <span class="identifier">range_algebra</span><span class="special">,</span> 
-         <span class="keyword">typename</span> Operations <span class="special">=</span> <span class="identifier">default_operations</span><span class="special">,</span> 
+         <span class="keyword">typename</span> Algebra <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">algebra_dispatcher</span><span class="special">&lt;</span> <span class="identifier">State</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">algebra_type</span><span class="special">,</span> 
+         <span class="keyword">typename</span> Operations <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">operations_dispatcher</span><span class="special">&lt;</span> <span class="identifier">State</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">operations_type</span><span class="special">,</span> 
          <span class="keyword">typename</span> Resizer <span class="special">=</span> <span class="identifier">initially_resizer</span><span class="special">&gt;</span> 
 <span class="keyword">class</span> <a class="link" href="adams_bashforth_moulton.html" title="Class template adams_bashforth_moulton">adams_bashforth_moulton</a> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
@@ -45,39 +45,39 @@
   <span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">short</span>              <a name="boost.numeric.odeint.adams_bashforth_moulton.order_type"></a><span class="identifier">order_type</span><span class="special">;</span>        
 
   <span class="comment">// <a class="link" href="adams_bashforth_moulton.html#boost.numeric.odeint.adams_bashforth_moultonconstruct-copy-destruct">construct/copy/destruct</a></span>
-  <a class="link" href="adams_bashforth_moulton.html#id402056-bb"><span class="identifier">adams_bashforth_moulton</span></a><span class="special">(</span><span class="keyword">void</span><span class="special">)</span><span class="special">;</span>
-  <a class="link" href="adams_bashforth_moulton.html#id402072-bb"><span class="identifier">adams_bashforth_moulton</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="adams_bashforth_moulton.html#idp20541520-bb"><span class="identifier">adams_bashforth_moulton</span></a><span class="special">(</span><span class="keyword">void</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="adams_bashforth_moulton.html#idp20543360-bb"><span class="identifier">adams_bashforth_moulton</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="adams_bashforth_moulton.html#id401598-bb">public member functions</a></span>
-  <span class="identifier">order_type</span> <a class="link" href="adams_bashforth_moulton.html#id401602-bb"><span class="identifier">order</span></a><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="comment">// <a class="link" href="adams_bashforth_moulton.html#idp20486576-bb">public member functions</a></span>
+  <span class="identifier">order_type</span> <a class="link" href="adams_bashforth_moulton.html#idp20486976-bb"><span class="identifier">order</span></a><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
-    <span class="keyword">void</span> <a class="link" href="adams_bashforth_moulton.html#id401625-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
+    <span class="keyword">void</span> <a class="link" href="adams_bashforth_moulton.html#idp20489808-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
-    <span class="keyword">void</span> <a class="link" href="adams_bashforth_moulton.html#id401690-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
+    <span class="keyword">void</span> <a class="link" href="adams_bashforth_moulton.html#idp20497584-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">,</span> <span class="keyword">typename</span> StateOut<span class="special">&gt;</span> 
-    <span class="keyword">void</span> <a class="link" href="adams_bashforth_moulton.html#id401736-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span><span class="special">,</span> 
+    <span class="keyword">void</span> <a class="link" href="adams_bashforth_moulton.html#idp20503072-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span><span class="special">,</span> 
                  <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">,</span> <span class="keyword">typename</span> StateOut<span class="special">&gt;</span> 
-    <span class="keyword">void</span> <a class="link" href="adams_bashforth_moulton.html#id401815-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateType<span class="special">&gt;</span> <span class="keyword">void</span> <a class="link" href="adams_bashforth_moulton.html#id401871-bb"><span class="identifier">adjust_size</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateType</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+    <span class="keyword">void</span> <a class="link" href="adams_bashforth_moulton.html#idp20512544-bb"><span class="identifier">do_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateType<span class="special">&gt;</span> <span class="keyword">void</span> <a class="link" href="adams_bashforth_moulton.html#idp20519280-bb"><span class="identifier">adjust_size</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateType</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> ExplicitStepper<span class="special">,</span> <span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">&gt;</span> 
-    <span class="keyword">void</span> <a class="link" href="adams_bashforth_moulton.html#id401902-bb"><span class="identifier">initialize</span></a><span class="special">(</span><span class="identifier">ExplicitStepper</span><span class="special">,</span> <span class="identifier">System</span><span class="special">,</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">,</span> 
+    <span class="keyword">void</span> <a class="link" href="adams_bashforth_moulton.html#idp20523008-bb"><span class="identifier">initialize</span></a><span class="special">(</span><span class="identifier">ExplicitStepper</span><span class="special">,</span> <span class="identifier">System</span><span class="special">,</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">,</span> 
                     <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">&gt;</span> 
-    <span class="keyword">void</span> <a class="link" href="adams_bashforth_moulton.html#id401985-bb"><span class="identifier">initialize</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
+    <span class="keyword">void</span> <a class="link" href="adams_bashforth_moulton.html#idp20532976-bb"><span class="identifier">initialize</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
 
   <span class="comment">// public data members</span>
   <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">steps</span><span class="special">;</span>
   <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">order_type</span> <span class="identifier">order_value</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="id798708"></a><h2>Description</h2>
+<a name="idp19730592"></a><h2>Description</h2>
 <p>The Adams-Bashforth method is a multi-step predictor-corrector algorithm with configurable step number. The step number is specified as template parameter Steps and it then uses the result from the previous Steps steps. See also <a href="http://en.wikipedia.org/wiki/Linear_multistep_method" target="_top">en.wikipedia.org/wiki/Linear_multistep_method</a>. Currently, a maximum of Steps=8 is supported. The method is explicit and fulfills the Stepper concept. Step size control or continuous output are not provided.</p>
 <p>This class derives from algebra_base and inherits its interface via CRTP (current recurring template pattern). For more details see <a class="link" href="algebra_stepper_base.html" title="Class template algebra_stepper_base">algebra_stepper_base</a>.</p>
 <p>
 </p>
 <div class="refsect2">
-<a name="id798736"></a><h3>Template Parameters</h3>
+<a name="idp19734016"></a><h3>Template Parameters</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
 <pre class="literallayout"><span class="identifier">size_t</span> Steps</pre>
@@ -100,11 +100,11 @@
 <p>The time representing the independent variable - the time. </p>
 </li>
 <li class="listitem">
-<pre class="literallayout"><span class="keyword">typename</span> Algebra <span class="special">=</span> <span class="identifier">range_algebra</span></pre>
+<pre class="literallayout"><span class="keyword">typename</span> Algebra <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">algebra_dispatcher</span><span class="special">&lt;</span> <span class="identifier">State</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">algebra_type</span></pre>
 <p>The algebra type. </p>
 </li>
 <li class="listitem">
-<pre class="literallayout"><span class="keyword">typename</span> Operations <span class="special">=</span> <span class="identifier">default_operations</span></pre>
+<pre class="literallayout"><span class="keyword">typename</span> Operations <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">operations_dispatcher</span><span class="special">&lt;</span> <span class="identifier">State</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">operations_type</span></pre>
 <p>The operations type. </p>
 </li>
 <li class="listitem">
@@ -114,15 +114,15 @@
 </ol></div>
 </div>
 <div class="refsect2">
-<a name="id798945"></a><h3>
+<a name="idp19766464"></a><h3>
 <a name="boost.numeric.odeint.adams_bashforth_moultonconstruct-copy-destruct"></a><code class="computeroutput">adams_bashforth_moulton</code> 
         public
        construct/copy/destruct</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
-<pre class="literallayout"><a name="id402056-bb"></a><span class="identifier">adams_bashforth_moulton</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span><span class="special">;</span></pre>Constructs the <code class="computeroutput"><a class="link" href="adams_bashforth.html" title="Class template adams_bashforth">adams_bashforth</a></code> class. </li>
+<pre class="literallayout"><a name="idp20541520-bb"></a><span class="identifier">adams_bashforth_moulton</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span><span class="special">;</span></pre>Constructs the <code class="computeroutput"><a class="link" href="adams_bashforth.html" title="Class template adams_bashforth">adams_bashforth</a></code> class. </li>
 <li class="listitem">
-<pre class="literallayout"><a name="id402072-bb"></a><span class="identifier">adams_bashforth_moulton</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> algebra<span class="special">)</span><span class="special">;</span></pre>Constructs the <code class="computeroutput"><a class="link" href="adams_bashforth.html" title="Class template adams_bashforth">adams_bashforth</a></code> class. This constructor can be used as a default constructor if the algebra has a default constructor. <p>
+<pre class="literallayout"><a name="idp20543360-bb"></a><span class="identifier">adams_bashforth_moulton</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">algebra_type</span> <span class="special">&amp;</span> algebra<span class="special">)</span><span class="special">;</span></pre>Constructs the <code class="computeroutput"><a class="link" href="adams_bashforth.html" title="Class template adams_bashforth">adams_bashforth</a></code> class. This constructor can be used as a default constructor if the algebra has a default constructor. <p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -141,11 +141,11 @@
 </ol></div>
 </div>
 <div class="refsect2">
-<a name="id799097"></a><h3>
-<a name="id401598-bb"></a><code class="computeroutput">adams_bashforth_moulton</code> public member functions</h3>
+<a name="idp19784768"></a><h3>
+<a name="idp20486576-bb"></a><code class="computeroutput">adams_bashforth_moulton</code> public member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
-<pre class="literallayout"><span class="identifier">order_type</span> <a name="id401602-bb"></a><span class="identifier">order</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Returns the order of the algorithm, which is equal to the number of steps+1. <p>
+<pre class="literallayout"><span class="identifier">order_type</span> <a name="idp20486976-bb"></a><span class="identifier">order</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Returns the order of the algorithm, which is equal to the number of steps+1. <p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -157,7 +157,7 @@
 </li>
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
-  <span class="keyword">void</span> <a name="id401625-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>This method performs one step. It transforms the result in-place. <p>
+  <span class="keyword">void</span> <a name="idp20489808-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>This method performs one step. It transforms the result in-place. <p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -189,10 +189,10 @@
 </li>
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
-  <span class="keyword">void</span> <a name="id401690-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>Second version to solve the forwarding problem, can be called with Boost.Range as StateInOut. </li>
+  <span class="keyword">void</span> <a name="idp20497584-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>Second version to solve the forwarding problem, can be called with Boost.Range as StateInOut. </li>
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">,</span> <span class="keyword">typename</span> StateOut<span class="special">&gt;</span> 
-  <span class="keyword">void</span> <a name="id401736-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> in<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> 
+  <span class="keyword">void</span> <a name="idp20503072-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> in<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> 
                <span class="keyword">const</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span> out<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>The method performs one step with the stepper passed by Stepper. The state of the ODE is updated out-of-place. <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -229,10 +229,10 @@
 </li>
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">,</span> <span class="keyword">typename</span> StateOut<span class="special">&gt;</span> 
-  <span class="keyword">void</span> <a name="id401815-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> in<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span> out<span class="special">,</span> 
+  <span class="keyword">void</span> <a name="idp20512544-bb"></a><span class="identifier">do_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> in<span class="special">,</span> <span class="identifier">time_type</span> t<span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span> out<span class="special">,</span> 
                <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>Second version to solve the forwarding problem, can be called with Boost.Range as StateOut. </li>
 <li class="listitem">
-<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateType<span class="special">&gt;</span> <span class="keyword">void</span> <a name="id401871-bb"></a><span class="identifier">adjust_size</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateType</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre>Adjust the size of all temporaries in the stepper manually. <p>
+<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateType<span class="special">&gt;</span> <span class="keyword">void</span> <a name="idp20519280-bb"></a><span class="identifier">adjust_size</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateType</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre>Adjust the size of all temporaries in the stepper manually. <p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -250,7 +250,7 @@
 </li>
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> ExplicitStepper<span class="special">,</span> <span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">&gt;</span> 
-  <span class="keyword">void</span> <a name="id401902-bb"></a><span class="identifier">initialize</span><span class="special">(</span><span class="identifier">ExplicitStepper</span> explicit_stepper<span class="special">,</span> <span class="identifier">System</span> system<span class="special">,</span> 
+  <span class="keyword">void</span> <a name="idp20523008-bb"></a><span class="identifier">initialize</span><span class="special">(</span><span class="identifier">ExplicitStepper</span> explicit_stepper<span class="special">,</span> <span class="identifier">System</span> system<span class="special">,</span> 
                   <span class="identifier">StateIn</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span> t<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>Initialized the stepper. Does Steps-1 steps with the explicit_stepper to fill the buffer. <div class="note"><table border="0" summary="Note">
 <tr>
 <td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../images/note.png"></td>
@@ -295,7 +295,7 @@
 </li>
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">&gt;</span> 
-  <span class="keyword">void</span> <a name="id401985-bb"></a><span class="identifier">initialize</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span> t<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>Initialized the stepper. Does Steps-1 steps using the standard initializing stepper of the underlying <code class="computeroutput"><a class="link" href="adams_bashforth.html" title="Class template adams_bashforth">adams_bashforth</a></code> stepper. <p>
+  <span class="keyword">void</span> <a name="idp20532976-bb"></a><span class="identifier">initialize</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span> t<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre>Initialized the stepper. Does Steps-1 steps using the standard initializing stepper of the underlying <code class="computeroutput"><a class="link" href="adams_bashforth.html" title="Class template adams_bashforth">adams_bashforth</a></code> stepper. <p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
