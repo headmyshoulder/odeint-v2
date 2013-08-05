@@ -50,6 +50,7 @@ test-suite "odeint"
     [ run is_resizeable.cpp ]
     [ run resize.cpp ]
     [ run same_size.cpp ]
+    [ run split.cpp ]
     [ run symplectic_steppers.cpp ]
     [ compile algebra_dispatcher.cpp ]
     : <testing.launcher>valgrind
