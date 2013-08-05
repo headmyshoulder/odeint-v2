@@ -191,7 +191,18 @@ int main(int /* argc */ , char** /* argv */ )
             dxdt[0] = x[1]; dxdt[1] = -x[0] - gam*x[1]; }
         , x , 0.0 , 10.0 , 0.01 );
     //]
+    
+    
+    
+    //[ harm_iterator_const_step]
+    std::for_each( make_const_step_begin_iterator( stepper , x , 0.0 , 0.1 , 10.0 ) ,
+                   make_const_step_end_iterator( stepper , x ) ,
+                   []( const state_type &x , double t ) {
+                       cout << t << " " << x[0] << " " << x[1] << "\n"; } );
+    //]
     #endif
+    
+    
 
 
 }
