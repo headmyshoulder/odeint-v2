@@ -40,13 +40,11 @@ BOOST_AUTO_TEST_CASE( split_test )
     }
 
     // copy back to master
+    if(world.rank() == 0) out_data.resize(in_data.size());
     copy( state, out_data );
 
-    if(world.rank() == 0) {
+    if(world.rank() == 0)
         BOOST_REQUIRE_EQUAL_COLLECTIONS(in_data.begin(), in_data.end(), out_data.begin(), out_data.end());
-    } else {
-        BOOST_REQUIRE(out_data.size() == 0);
-    }
 }
 
 
