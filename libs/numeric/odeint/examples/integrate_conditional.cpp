@@ -54,30 +54,36 @@ int main( int argc , char *argv[] )
     // stepper concept
     if( false )
     {
+        cout << "conditional stop" << endl;
         runge_kutta4< state_type > rk4;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
         integrate_conditional( rk4 , lorenz() , x , 0.0 , 0.01 ,
                                make_conditional_stop( []( const state_type &x , double t ) -> bool { return t > 0.995; } ) ,
                                observer );
+        cout << "finished conditional stop" << endl << endl;
     }
 
     // stepper concept
     {
+        cout << "conditional stop" << endl;
         runge_kutta4< state_type > rk4;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
         integrate_conditional( rk4 , lorenz() , x , 0.0 , 0.01 ,
                                make_conditional_stop( []( const state_type &x , double t ) -> bool { return x[0] < -10.0; } ) ,
                                observer );
+        cout << "finished conditional stop" << endl << endl;
     }
 
 
     // stepper concept
     {
+        cout << "approximate" << endl;
         runge_kutta4< state_type > rk4;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
         integrate_conditional( rk4 , lorenz() , x , 0.0 , 0.01 ,
                                make_approximate( []( const state_type &x , double t ) -> bool { return x[0] < -10.0; } , 1.0e-10 ) ,
                                observer );
+        cout << "finished approximate" << endl << endl;
     }
 
 
