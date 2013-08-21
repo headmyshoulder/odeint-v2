@@ -41,7 +41,29 @@ namespace odeint {
 
 
 
-// TODO: Check types and check if momentum can be replaced by acceleration
+/**
+ * \class velocity_verlet
+ * \brief The Velocity-Verlet algorithm.
+ *
+ * The Adams-Bashforth method is a multi-step algorithm with configurable step
+ * number. The step number is specified as template parameter Steps and it 
+ * then uses the result from the previous Steps steps. See also
+ * <a href="http://en.wikipedia.org/wiki/Linear_multistep_method">en.wikipedia.org/wiki/Linear_multistep_method</a>.
+ * Currently, a maximum of Steps=8 is supported.
+ * The method is explicit and fulfills the Stepper concept. Step size control
+ * or continuous output are not provided.
+ * 
+ * \tparam Steps The number of steps (maximal 8).
+ * \tparam State The state type.
+ * \tparam Value The value type.
+ * \tparam Deriv The type representing the time derivative of the state.
+ * \tparam Time The time representing the independent variable - the time.
+ * \tparam Algebra The algebra type.
+ * \tparam Operations The operations type.
+ * \tparam Resizer The resizer policy type.
+ * \tparam InitializingStepper The stepper for the first two steps.
+ */
+
 template <
     class Coor ,
     class Velocity = Coor ,
@@ -83,6 +105,12 @@ public:
     }
 
 
+    /**
+     * \fn velocity_verlet::velocity_verlet( const algebra_type &algebra )
+     * \brief Constructs the velocity_verlet class. This constructor can be used as a default
+     * constructor if the algebra has a default constructor. 
+     * \param algebra A copy of algebra is made and stored.
+     */
     velocity_verlet( const algebra_type & algebra = algebra_type() )
         : algebra_stepper_base_type( algebra ) , m_first_call( true )
         , m_a1() , m_a2() , m_current_a1( true ) { }
