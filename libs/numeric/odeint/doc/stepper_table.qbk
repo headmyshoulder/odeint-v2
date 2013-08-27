@@ -38,5 +38,5 @@
   [[Symplectic RKN McLachlan] [`symplectic_rkn_sb3a_mclachlan`] [__stepper] [__symplectic_system __simple_symplectic_system] [4] [No] [No] [No] [Symplectic solver for separable Hamiltonian system with 6 stages and order 4.]]
   [[Symplectic RKN McLachlan] [`symplectic_rkn_sb3a_m4_mclachlan`] [__stepper] [__symplectic_system __simple_symplectic_system] [4] [No] [No] [No] [Symplectic solver with 5 stages and order 4, can be used with arbitrary precision types.]]
   
-  [[Velocity Verlet] [`velocity_verlet`] [__stepper] [__second_order_system] [1] [No] [No] [Yes] [tba]]
+  [[Velocity Verlet] [`velocity_verlet`] [__stepper] [__second_order_system] [1] [No] [No] [Yes] [Velocity verlet method suitable for molecular dynamics simulation.]]
 ]

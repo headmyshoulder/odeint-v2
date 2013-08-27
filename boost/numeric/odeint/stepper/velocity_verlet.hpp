@@ -41,29 +41,6 @@ namespace odeint {
 
 
 
-/**
- * \class velocity_verlet
- * \brief The Velocity-Verlet algorithm.
- *
- * The Adams-Bashforth method is a multi-step algorithm with configurable step
- * number. The step number is specified as template parameter Steps and it 
- * then uses the result from the previous Steps steps. See also
- * <a href="http://en.wikipedia.org/wiki/Linear_multistep_method">en.wikipedia.org/wiki/Linear_multistep_method</a>.
- * Currently, a maximum of Steps=8 is supported.
- * The method is explicit and fulfills the Stepper concept. Step size control
- * or continuous output are not provided.
- * 
- * \tparam Steps The number of steps (maximal 8).
- * \tparam State The state type.
- * \tparam Value The value type.
- * \tparam Deriv The type representing the time derivative of the state.
- * \tparam Time The time representing the independent variable - the time.
- * \tparam Algebra The algebra type.
- * \tparam Operations The operations type.
- * \tparam Resizer The resizer policy type.
- * \tparam InitializingStepper The stepper for the first two steps.
- */
-
 template <
     class Coor ,
     class Velocity = Coor ,
@@ -99,18 +76,15 @@ public:
 
     static const order_type order_value = 1;
 
+    /**
+     * \return Returns the order of the stepper.
+     */
     order_type order( void ) const
     {
         return order_value;
     }
 
 
-    /**
-     * \fn velocity_verlet::velocity_verlet( const algebra_type &algebra )
-     * \brief Constructs the velocity_verlet class. This constructor can be used as a default
-     * constructor if the algebra has a default constructor. 
-     * \param algebra A copy of algebra is made and stored.
-     */
     velocity_verlet( const algebra_type & algebra = algebra_type() )
         : algebra_stepper_base_type( algebra ) , m_first_call( true )
         , m_a1() , m_a2() , m_current_a1( true ) { }
@@ -121,6 +95,7 @@ public:
     {
         do_step_v1( system , x , t , dt );
     }
+
     
     template< class System , class StateInOut >
     void do_step( System system , const StateInOut & x , time_type t , time_type dt )
@@ -128,6 +103,7 @@ public:
         do_step_v1( system , x , t , dt );
     }
 
+    
     template< class System , class CoorIn , class VelocityIn , class AccelerationIn ,
                              class CoorOut , class VelocityOut , class AccelerationOut >
     void do_step( System system , CoorIn const & qin , VelocityIn const & pin , AccelerationIn const & ain ,
@@ -162,6 +138,13 @@ public:
         m_first_call = true;
     }
 
+    
+    /**
+     * \fn velocity_verlet::initialize( const AccelerationIn &qin )
+     * \brief Initializes the internal state of the stepper.
+     * \param deriv The acceleration of x. The next call of `do_step` expects that the acceleration of `x` passed to `do_step`
+     *              has the value of `qin`.
+     */
     template< class AccelerationIn >
     void initialize( const AccelerationIn & ain )
     {
@@ -172,6 +155,7 @@ public:
         boost::numeric::odeint::copy( ain , get_current_acc() );
         m_first_call = false;
     }
+
 
     template< class System , class CoorIn , class VelocityIn >
     void initialize( System system , const CoorIn & qin , const VelocityIn & pin , time_type t )
@@ -264,9 +248,131 @@ private:
     bool m_current_a1;
 };
 
+/**
+ * \class velocity_verlet
+ * \brief The Velocity-Verlet algorithm.
+ *
+ * <a href="http://en.wikipedia.org/wiki/Verlet_integration" >The Velocity-Verlet algorithm</a> is a method for simulation of molecular dynamics systems. It solves the ODE
+ * a=f(r,v',t)  where r are the coordinates, v are the velocities and a are the accelerations, hence v = dr/dt, a=dv/dt.
+ * 
+ * \tparam Coor The type representing the coordinates.
+ * \tparam Velocity The type representing the velocities.
+ * \tparam Value The type value type.
+ * \tparam Acceleration The type representing the acceleration.
+ * \tparam Time The time representing the independent variable - the time.
+ * \tparam TimeSq The time representing the square of the time.
+ * \tparam Algebra The algebra.
+ * \tparam Operations The operations type.
+ * \tparam Resizer The resizer policy type.
+ */
 
 
+    /**
+     * \fn velocity_verlet::velocity_verlet( const algebra_type &algebra )
+     * \brief Constructs the velocity_verlet class. This constructor can be used as a default
+     * constructor if the algebra has a default constructor. 
+     * \param algebra A copy of algebra is made and stored.
+     */
 
+    
+    /**
+     * \fn velocity_verlet::do_step( System system , StateInOut &x , time_type t , time_type dt )
+     * \brief This method performs one step. It transforms the result in-place.
+     * 
+     * It can be used like
+     * \code
+     * pair< coordinates , velocities > state;
+     * stepper.do_step( sys , x , t , dt );
+     * \endcode
+     *
+     * \param system The system function to solve, hence the r.h.s. of the ordinary differential equation. It must fulfill the
+     *               Second Order System concept.
+     * \param x The state of the ODE which should be solved. The state is pair of Coor and Velocity.
+     * \param t The value of the time, at which the step should be performed.
+     * \param dt The step size.
+     */
+
+    /**
+     * \fn velocity_verlet::do_step( System system , const StateInOut &x , time_type t , time_type dt )
+     * \brief This method performs one step. It transforms the result in-place.
+     * 
+     * It can be used like
+     * \code
+     * pair< coordinates , velocities > state;
+     * stepper.do_step( sys , x , t , dt );
+     * \endcode
+     *
+     * \param system The system function to solve, hence the r.h.s. of the ordinary differential equation. It must fulfill the
+     *               Second Order System concept.
+     * \param x The state of the ODE which should be solved. The state is pair of Coor and Velocity.
+     * \param t The value of the time, at which the step should be performed.
+     * \param dt The step size.
+     */    
+
+    
+
+    /**
+     * \fn velocity_verlet::do_step( System system , CoorIn const & qin , VelocityIn const & pin , AccelerationIn const & ain , CoorOut & qout , VelocityOut & pout , AccelerationOut & aout , time_type t , time_type dt )
+     * \brief This method performs one step. It transforms the result in-place. Additionally to the other methods
+     * the coordinates, velocities and accelerations are passed directly to do_step and they are transformed out-of-place.
+     * 
+     * It can be used like
+     * \code
+     * coordinates qin , qout;
+     * velocities pin , pout;
+     * accelerations ain, aout;
+     * stepper.do_step( sys , qin , pin , ain , qout , pout , aout , t , dt );
+     * \endcode
+     *
+     * \param system The system function to solve, hence the r.h.s. of the ordinary differential equation. It must fulfill the
+     *               Second Order System concept.
+     * \param x The state of the ODE which should be solved. The state is pair of Coor and Velocity.
+     * \param t The value of the time, at which the step should be performed.
+     * \param dt The step size.
+     */
+
+    
+    /**
+     * \fn void velocity_verlet::adjust_size( const StateIn &x )
+     * \brief Adjust the size of all temporaries in the stepper manually.
+     * \param x A state from which the size of the temporaries to be resized is deduced.
+     */
+
+
+    /**
+     * \fn velocity_verlet::reset( void )
+     * \brief Resets the internal state of this stepper. After calling this method it is safe to use all
+     * `do_step` method without explicitly initializing the stepper.
+     */
+
+    
+
+    /**
+     * \fn velocity_verlet::initialize( System system , const CoorIn &qin , const VelocityIn &pin , time_type t )
+     * \brief Initializes the internal state of the stepper.
+     *
+     * This method is equivalent to 
+     * \code
+     * Acceleration a;
+     * system( qin , pin , a , t );
+     * stepper.initialize( a );
+     * \endcode
+     *
+     * \param system The system function for the next calls of `do_step`.
+     * \param qin The current coordinates of the ODE.
+     * \param pin The current velocities of the ODE.
+     * \param t The current time of the ODE.
+     */
+    
+    
+    /**
+     * \fn velocity_verlet::is_initialized()
+     * \returns Returns if the stepper is initialized.
+    */
+    
+    
+    
+    
 } // namespace odeint
 } // namespace numeric
 } // namespace boost
