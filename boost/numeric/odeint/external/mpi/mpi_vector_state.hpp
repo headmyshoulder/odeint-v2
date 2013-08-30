@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <boost/mpi.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
+#include <boost/numeric/odeint/util/split_adaptor.hpp>
 #include <boost/numeric/odeint/algebra/algebra_dispatcher.hpp>
 #include "mpi_state.hpp"
 
@@ -31,29 +32,23 @@ namespace odeint {
 
 
 /** \brief Copy data from some container on node 0 to the slaves.
- * SourceContainer must support `s::value_type`, `s::const_iterator`, `s.begin()`, `s.end()` and `s.size()`,
- * with Random Access Iterators; i.e. it must be a Random Access Container. */
-template< class SourceContainer >
-struct copy_impl< SourceContainer, mpi_state< std::vector< typename SourceContainer::value_type > > >
+ * Source must be a model of Random Access Range. */
+template< class Source , class InnerState >
+struct copy_impl< Source, mpi_state< InnerState >,
+    typename boost::enable_if< boost::has_range_const_iterator<Source> >::type >
 {
-    static void copy( const SourceContainer &from, mpi_state< std::vector< typename SourceContainer::value_type > > &to )
+    typedef typename boost::range_iterator<const Source>::type iterator;
+
+    static void copy( const Source &from, mpi_state< InnerState > &to )
     {
-        typedef typename SourceContainer::const_iterator it_t;
-        typedef typename SourceContainer::value_type T;
-        std::vector< std::vector<T> > pieces;
+        std::vector< InnerState > pieces;
         if(to.world.rank() == 0) {
-            // split as evenly as possible; length difference is at most 1.
             const size_t num = static_cast<size_t>(to.world.size());
-            const size_t part = from.size() / num;
-            const size_t mod = from.size() % num;
-            it_t begin = from.begin(), end = begin;
             pieces.resize(num);
             for(size_t i = 0 ; i < num ; i++) {
-                const size_t offset = i < mod ? 1 : 0;
-                end = begin + (part + offset);
-                pieces[i].resize(end - begin);
-                std::copy(begin, end, pieces[i].begin());
-                begin = end;
+                iterator_range<iterator> part = detail::make_split_range(from, i, num);
+                boost::numeric::odeint::resize(pieces[i], part);
+                boost::numeric::odeint::copy(part, pieces[i]);
             }
         }
         // send to nodes
@@ -62,31 +57,31 @@ struct copy_impl< SourceContainer, mpi_state< std::vector< typename SourceContai
 };
 
 /** \brief Copy data from an mpi_state to some container on node 0.
- * TargetContainer must support `s::value_type`, `s::iterator`, `s.begin()` and `s.resize(n)`,
- * i.e. it must be a `std::vector`. */
-template< class TargetContainer >
-struct copy_impl< mpi_state< std::vector< typename TargetContainer::value_type > >, TargetContainer >
+ * Target must be a model Single Pass Range. */
+template< class Target, class InnerState >
+struct copy_impl< mpi_state< InnerState >, Target,
+    typename boost::enable_if< boost::has_range_iterator<Target> >::type >
 {
-    static void copy( const mpi_state< std::vector< typename TargetContainer::value_type > > &from , TargetContainer &to )
+    typedef typename boost::range_iterator<Target>::type iterator;
+
+    static void copy( const mpi_state< InnerState > &from , Target &to )
     {
-        typedef typename TargetContainer::value_type T;
-        std::vector< std::vector<T> > pieces;
+        std::vector< InnerState > pieces;
         // send data to root
         boost::mpi::gather(from.world, from.data, pieces, 0);
         if(from.world.rank() == 0) {
-            // resize target
+            // check target size
             size_t total_size = 0;
             for(size_t i = 0 ; i < pieces.size() ; i++)
-                total_size += pieces[i].size();
-            to.resize( total_size );
+                total_size += boost::size(pieces[i]);
+            BOOST_ASSERT( total_size <= boost::size(to) );
             // copy parts
-            typename TargetContainer::iterator out = to.begin();
+            iterator out = boost::begin(to);
             for(size_t i = 0 ; i < pieces.size() ; i++)
-                out = std::copy(pieces[i].begin(), pieces[i].end(), out);
+                out = boost::copy(pieces[i], out);
         }
     }
 };
-
 
 
 }

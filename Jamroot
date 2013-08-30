@@ -14,6 +14,7 @@ project
      <include>$(BOOST_ROOT)
      <toolset>gcc:<cxxflags>"-Werror -Wall -Wno-unused-parameter -Wno-unused-variable -Wno-unknown-pragmas"
      <toolset>clang:<cxxflags>"-Werror -Wall -Wextra -Wno-unused-function -Wno-unused-parameter -Wno-unknown-pragmas"
+     <toolset>intel:<cxxflags>"-ipo"
    ;
 
 # tests, regression tests and examples

@@ -55,10 +55,10 @@ struct is_resizeable< mpi_state< InnerState > >
      : is_resizeable< InnerState > { };
 
 
-template< class InnerState >
-struct same_size_impl< mpi_state< InnerState > , mpi_state< InnerState > >
+template< class InnerState1 , class InnerState2 >
+struct same_size_impl< mpi_state< InnerState1 > , mpi_state< InnerState2 > >
 {
-    static bool same_size( const mpi_state< InnerState > &x , const mpi_state< InnerState > &y )
+    static bool same_size( const mpi_state< InnerState1 > &x , const mpi_state< InnerState2 > &y )
     {
         const bool local = boost::numeric::odeint::same_size(x.data, y.data);
         return boost::mpi::all_reduce(x.world, local, mpi::bitwise_and<bool>());
@@ -66,10 +66,10 @@ struct same_size_impl< mpi_state< InnerState > , mpi_state< InnerState > >
 };
 
 
-template< class InnerState >
-struct resize_impl< mpi_state< InnerState > , mpi_state< InnerState > >
+template< class InnerState1 , class InnerState2 >
+struct resize_impl< mpi_state< InnerState1 > , mpi_state< InnerState2 > >
 {
-    static void resize( mpi_state< InnerState > &x , const mpi_state< InnerState > &y )
+    static void resize( mpi_state< InnerState1 > &x , const mpi_state< InnerState2 > &y )
     {
         // resize local parts on each node.
         boost::numeric::odeint::resize(x.data, y.data);
@@ -78,10 +78,10 @@ struct resize_impl< mpi_state< InnerState > , mpi_state< InnerState > >
 
 
 /** \brief Copy data between mpi_states of same size. */
-template< class InnerState >
-struct copy_impl< mpi_state< InnerState >, mpi_state< InnerState > >
+template< class InnerState1 , class InnerState2 >
+struct copy_impl< mpi_state< InnerState1 > , mpi_state< InnerState2 > >
 {
-    static void copy( const mpi_state< InnerState > &from, mpi_state< InnerState > &to )
+    static void copy( const mpi_state< InnerState1 > &from , mpi_state< InnerState2 > &to )
     {
         // copy local parts on each node.
         boost::numeric::odeint::copy(from.data, to.data);
