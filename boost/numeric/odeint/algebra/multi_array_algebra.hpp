@@ -135,6 +135,11 @@ struct multi_array_algebra
 //     typedef array_algebra algebra_type;
 // };
 
+
+
+
+
+
 } // namespace odeint
 } // namespace numeric
 } // namespace boost
