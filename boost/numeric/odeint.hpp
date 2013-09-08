@@ -56,6 +56,8 @@
 #include <boost/numeric/odeint/stepper/rosenbrock4_dense_output.hpp>
 
 #include <boost/numeric/odeint/algebra/algebra_dispatcher.hpp>
+#include <boost/numeric/odeint/algebra/multi_array_algebra.hpp>
+#include <boost/numeric/odeint/util/multi_array_adaption.hpp>
 /*
  * Including this algebra slows down the compilation time
  */
