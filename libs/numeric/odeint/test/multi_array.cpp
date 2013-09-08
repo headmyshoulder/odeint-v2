@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE( test_same_size_vector3 )
 {
     vector_type v1( boost::extents[12] );
     vector_type v2( boost::extents[vector_type::extent_range(-1,11)] );
-    BOOST_CHECK( same_size( v1 , v2 ) );
+    BOOST_CHECK( !same_size( v1 , v2 ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_same_size_vector4 )
@@ -71,6 +71,14 @@ BOOST_AUTO_TEST_CASE( test_same_size_vector4 )
     vector_type v2( boost::extents[vector_type::extent_range(-1,10)] );
     BOOST_CHECK( !same_size( v1 , v2 ) );
 }
+
+BOOST_AUTO_TEST_CASE( test_same_size_vector5 )
+{
+    vector_type v1( boost::extents[vector_type::extent_range(-1,10)] );
+    vector_type v2( boost::extents[vector_type::extent_range(-1,10)] );
+    BOOST_CHECK( same_size( v1 , v2 ) );
+}
+
 
 
 BOOST_AUTO_TEST_CASE( test_same_size_matrix1 )
@@ -91,7 +99,7 @@ BOOST_AUTO_TEST_CASE( test_same_size_matrix3 )
 {
     matrix_type m1( boost::extents[12][matrix_type::extent_range(-1,2)] );
     matrix_type m2( boost::extents[12][3] );
-    BOOST_CHECK( same_size( m1 , m2 ) );
+    BOOST_CHECK( !same_size( m1 , m2 ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_same_size_matrix4 )
@@ -109,8 +117,20 @@ BOOST_AUTO_TEST_CASE( test_same_size_tensor1 )
     tensor_type t2( boost::extents[ tensor_type::extent_range( 2 , 13 ) ]
                                   [ tensor_type::extent_range( -1 , 5 ) ]
                                   [ tensor_type::extent_range( 1 , 4 ) ] );
+    BOOST_CHECK( !same_size( t1 , t2 ) );    
+}
+
+BOOST_AUTO_TEST_CASE( test_same_size_tensor2 )
+{
+    tensor_type t1( boost::extents[ tensor_type::extent_range( -2 , 9 ) ]
+                                  [ tensor_type::extent_range( 5 , 11 ) ]
+                                  [ tensor_type::extent_range( -1 , 2 ) ] );
+    tensor_type t2( boost::extents[ tensor_type::extent_range( -2 , 9 ) ]
+                                  [ tensor_type::extent_range( 5 , 11 ) ]
+                                  [ tensor_type::extent_range( -1 , 2 ) ] );
     BOOST_CHECK( same_size( t1 , t2 ) );    
 }
+
 
 // Tests for tensor_type
 
@@ -156,6 +176,15 @@ BOOST_AUTO_TEST_CASE( test_for_each2_vector )
     multi_array_algebra::for_each2( v2 , v1 , mult4() );
     for( int i=2 ; i<13 ; ++i )
         BOOST_CHECK_EQUAL( v2[i] , v1[i-4]*4.0 );
+}
+
+
+
+
+BOOST_AUTO_TEST_CASE( test_shape_and_stride )
+{
+    vector_type v1( boost::extents[ vector_type::extent_range( -2 , 9 ) ] );
+    vector_type v2( boost::extents[ vector_type::extent_range( 2 , 13 ) ] );
 }
 
 

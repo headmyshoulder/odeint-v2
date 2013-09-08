@@ -92,6 +92,7 @@ struct same_size_impl< T1 , T2 ,
         for( size_t i=0 ; i<T1::dimensionality ; ++i )
         {
             if( x1.shape()[i] != x2.shape()[i] ) return false;
+            if( x1.index_bases()[i] != x2.index_bases()[i] ) return false;
         }
         return true;
     }
@@ -113,6 +114,9 @@ struct resize_impl< T1 , T2 ,
         boost::array< int , T1::dimensionality > extents;
         for( size_t i=0 ; i<T1::dimensionality ; ++i ) extents[i] = x2.shape()[i];
         x1.resize( extents );
+        boost::array< int , T1::dimensionality > origins;
+        for( size_t i=0 ; i<T1::dimensionality ; ++i ) origins[i] = x2.index_bases()[i];
+        x1.reindex( origins );
     }
 };
                             
