@@ -116,10 +116,46 @@ BOOST_AUTO_TEST_CASE( test_same_size_tensor1 )
 
 BOOST_AUTO_TEST_CASE( test_resize_vector1 )
 {
-//     vector_type v1( boost::extents[4] );
-//     vector_type v2;
-//     resize( v2 , v1 );
-//     BOOST_CHECK( same_size( v1 , v2 ) );
+    vector_type v1( boost::extents[4] );
+    vector_type v2;
+    resize( v2 , v1 );
+    BOOST_CHECK( same_size( v1 , v2 ) );
+}
+
+BOOST_AUTO_TEST_CASE( test_resize_vector2 )
+{
+    vector_type v1( boost::extents[ vector_type::extent_range( -2 , 9 ) ] );
+    vector_type v2;
+    resize( v2 , v1 );
+    BOOST_CHECK( same_size( v1 , v2 ) );
+}
+
+BOOST_AUTO_TEST_CASE( test_resize_vector3 )
+{
+    vector_type v1( boost::extents[ vector_type::extent_range( -2 , 9 ) ] );
+    vector_type v2( boost::extents[ vector_type::extent_range( 2 , 9 ) ] );
+    BOOST_CHECK( !same_size( v1 , v2 ) );
+    resize( v2 , v1 );
+    BOOST_CHECK( same_size( v1 , v2 ) );
+}
+
+struct mult4
+{
+    void operator()( double &a , double const &b ) const
+    {
+        a = b * 4.0;
+    }
+};
+
+BOOST_AUTO_TEST_CASE( test_for_each2_vector )
+{
+    vector_type v1( boost::extents[ vector_type::extent_range( -2 , 9 ) ] );
+    vector_type v2( boost::extents[ vector_type::extent_range( 2 , 13 ) ] );
+    for( int i=-2 ; i<9 ; ++i )
+        v1[i] = i * 2;
+    multi_array_algebra::for_each2( v2 , v1 , mult4() );
+    for( int i=2 ; i<13 ; ++i )
+        BOOST_CHECK_EQUAL( v2[i] , v1[i-4]*4.0 );
 }
 
 

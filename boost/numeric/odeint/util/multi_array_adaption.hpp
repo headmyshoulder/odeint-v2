@@ -110,7 +110,9 @@ struct resize_impl< T1 , T2 ,
 {
     static void resize( T1 &x1 , const T2 &x2 )
     {
-        // x1.resize( x2.shape() ); ???
+        boost::array< int , T1::dimensionality > extents;
+        for( size_t i=0 ; i<T1::dimensionality ; ++i ) extents[i] = x2.shape()[i];
+        x1.resize( extents );
     }
 };
                             
