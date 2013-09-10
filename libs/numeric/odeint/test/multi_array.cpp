@@ -25,7 +25,8 @@
 
 #include <boost/numeric/odeint/algebra/multi_array_algebra.hpp>
 #include <boost/numeric/odeint/util/multi_array_adaption.hpp>
-
+#include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
+#include <boost/numeric/odeint/integrate/integrate_const.hpp>
 
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
@@ -178,14 +179,25 @@ BOOST_AUTO_TEST_CASE( test_for_each2_vector )
         BOOST_CHECK_EQUAL( v2[i] , v1[i-4]*4.0 );
 }
 
-
-
-
-BOOST_AUTO_TEST_CASE( test_shape_and_stride )
+struct vector_ode
 {
-    vector_type v1( boost::extents[ vector_type::extent_range( -2 , 9 ) ] );
-    vector_type v2( boost::extents[ vector_type::extent_range( 2 , 13 ) ] );
+    const static size_t n = 128;
+    void operator()( const vector_type &x , vector_type &dxdt , double t ) const
+    {
+        dxdt[-1] = x[n] - 2.0 * x[-1] + x[0];
+        for( size_t i=0 ; i<n ; ++i )
+            dxdt[i] = x[i-1] - 2.0 * x[i] + x[i+1];
+        dxdt[n] = x[-1] - 2.0 * x[n] + x[n-1];
+    }
+};
+
+
+BOOST_AUTO_TEST_CASE( test_rk41_vector )
+{
+    vector_type v1( boost::extents[ vector_type::extent_range( -1 , vector_ode::n+1 ) ] );
+    integrate_const( runge_kutta4< vector_type >() , vector_ode() , v1 , 0.0 , 1.0 , 0.01 );
 }
+
 
 
 BOOST_AUTO_TEST_SUITE_END()
