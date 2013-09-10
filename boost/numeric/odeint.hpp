@@ -47,6 +47,7 @@
 
 #include <boost/numeric/odeint/stepper/symplectic_euler.hpp>
 #include <boost/numeric/odeint/stepper/symplectic_rkn_sb3a_mclachlan.hpp>
+#include <boost/numeric/odeint/stepper/velocity_verlet.hpp>
 
 #include <boost/numeric/odeint/stepper/adams_bashforth_moulton.hpp>
 

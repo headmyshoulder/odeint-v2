@@ -27,7 +27,6 @@
 #include <boost/numeric/odeint/config.hpp>
 
 #include "resizing_test_state_type.hpp"
-#include "../../../../../../boost/boost_1_54_0/boost/concept_check.hpp"
 
 #include <boost/numeric/odeint/stepper/velocity_verlet.hpp>
 #include <boost/numeric/odeint/algebra/fusion_algebra.hpp>
