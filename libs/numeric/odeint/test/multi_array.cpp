@@ -27,6 +27,8 @@
 #include <boost/numeric/odeint/util/multi_array_adaption.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
 #include <boost/numeric/odeint/integrate/integrate_const.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
+#include <boost/numeric/odeint/stepper/generation.hpp>
 
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
@@ -192,10 +194,16 @@ struct vector_ode
 };
 
 
-BOOST_AUTO_TEST_CASE( test_rk41_vector )
+BOOST_AUTO_TEST_CASE( test_rk4_vector )
 {
     vector_type v1( boost::extents[ vector_type::extent_range( -1 , vector_ode::n+1 ) ] );
     integrate_const( runge_kutta4< vector_type >() , vector_ode() , v1 , 0.0 , 1.0 , 0.01 );
+}
+
+BOOST_AUTO_TEST_CASE( test_dopri5_vector )
+{
+    vector_type v1( boost::extents[ vector_type::extent_range( -1 , vector_ode::n+1 ) ] );
+    integrate_const( make_dense_output( 1.0e-6 , 1.0e-6 , runge_kutta_dopri5< vector_type >() ) , vector_ode() , v1 , 0.0 , 1.0 , 0.01 );
 }
 
 
