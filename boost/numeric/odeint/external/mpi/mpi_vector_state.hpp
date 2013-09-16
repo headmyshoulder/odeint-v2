@@ -52,7 +52,7 @@ struct split_impl< Source, mpi_state< InnerState >,
             }
         }
         // send to nodes
-        boost::mpi::scatter(to.world, pieces, to.data, 0);
+        boost::mpi::scatter(to.world, pieces, to(), 0);
     }
 };
 
@@ -68,7 +68,7 @@ struct unsplit_impl< mpi_state< InnerState >, Target,
     {
         std::vector< InnerState > pieces;
         // send data to root
-        boost::mpi::gather(from.world, from.data, pieces, 0);
+        boost::mpi::gather(from.world, from(), pieces, 0);
         if(from.world.rank() == 0) {
             // check target size
             size_t total_size = 0;

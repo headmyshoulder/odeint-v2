@@ -40,12 +40,15 @@ struct mpi_state
     typedef InnerState value_type;
 
     // the node's local data.
-    InnerState data;
+    InnerState m_data;
 
     boost::mpi::communicator world;
 
     mpi_state() {}
     mpi_state(boost::mpi::communicator comm) : world(comm) {}
+
+    inline InnerState &operator()() { return m_data; }
+    inline const InnerState &operator()() const { return m_data; }
 };
 
 
@@ -61,7 +64,7 @@ struct same_size_impl< mpi_state< InnerState1 > , mpi_state< InnerState2 > >
 {
     static bool same_size( const mpi_state< InnerState1 > &x , const mpi_state< InnerState2 > &y )
     {
-        const bool local = boost::numeric::odeint::same_size(x.data, y.data);
+        const bool local = boost::numeric::odeint::same_size(x(), y());
         return boost::mpi::all_reduce(x.world, local, mpi::bitwise_and<bool>());
     }
 };
@@ -73,7 +76,7 @@ struct resize_impl< mpi_state< InnerState1 > , mpi_state< InnerState2 > >
     static void resize( mpi_state< InnerState1 > &x , const mpi_state< InnerState2 > &y )
     {
         // resize local parts on each node.
-        boost::numeric::odeint::resize(x.data, y.data);
+        boost::numeric::odeint::resize(x(), y());
     }
 };
 
@@ -85,7 +88,7 @@ struct copy_impl< mpi_state< InnerState1 > , mpi_state< InnerState2 > >
     static void copy( const mpi_state< InnerState1 > &from , mpi_state< InnerState2 > &to )
     {
         // copy local parts on each node.
-        boost::numeric::odeint::copy(from.data, to.data);
+        boost::numeric::odeint::copy(from(), to());
     }
 };
 

@@ -34,7 +34,7 @@ struct mpi_nested_algebra
 // execute the InnerAlgebra on each node's local data.
 #define BOOST_ODEINT_GEN_BODY(n) \
     InnerAlgebra::for_each##n( \
-        BOOST_PP_ENUM_BINARY_PARAMS(n, s, .data BOOST_PP_INTERCEPT) , \
+        BOOST_PP_ENUM_BINARY_PARAMS(n, s, () BOOST_PP_INTERCEPT) , \
         op \
     );
 BOOST_ODEINT_GEN_FOR_EACH(BOOST_ODEINT_GEN_BODY)
@@ -46,7 +46,7 @@ BOOST_ODEINT_GEN_FOR_EACH(BOOST_ODEINT_GEN_BODY)
     {
         typedef typename norm_result_type< typename NestedState::value_type >::type result_type;
         // local maximum
-        result_type value = InnerAlgebra::norm_inf( s.data );
+        result_type value = InnerAlgebra::norm_inf( s() );
         // global maximum
         return boost::mpi::all_reduce(s.world, value, boost::mpi::maximum<result_type>());
     }

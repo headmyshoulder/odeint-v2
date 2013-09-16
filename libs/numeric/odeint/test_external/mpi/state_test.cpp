@@ -34,8 +34,8 @@ BOOST_AUTO_TEST_CASE( state_test )
     {
         std::ostringstream ss;
         ss << "state[" << world.rank() << "] {"
-           << state1.data.size() << ", "
-           << state2.data.size() << "}\n";
+           << state1().size() << ", "
+           << state2().size() << "}\n";
         std::clog << ss.str() << std::flush;
     }
 
@@ -48,8 +48,8 @@ BOOST_AUTO_TEST_CASE( state_test )
     {
         std::ostringstream ss;
         ss << "state[" << world.rank() << "] 1:"
-           << state1.data.size() << " 2:"
-           << state2.data.size() << "\n";
+           << state1().size() << " 2:"
+           << state2().size() << "\n";
         std::clog << ss.str() << std::flush;
     }
 
@@ -59,8 +59,8 @@ BOOST_AUTO_TEST_CASE( state_test )
     // copy state2 to state1
     copy( state2, state1 );
 
-    BOOST_REQUIRE_EQUAL_COLLECTIONS(state1.data.begin(), state1.data.end(),
-        state2.data.begin(), state2.data.end());
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(state1().begin(), state1().end(),
+        state2().begin(), state2().end());
 }
 
 

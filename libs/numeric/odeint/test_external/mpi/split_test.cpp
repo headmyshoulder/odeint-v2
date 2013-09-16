@@ -28,13 +28,13 @@ BOOST_AUTO_TEST_CASE( split_test )
     // copy to nodes
     split( in_data, state );
 
-    BOOST_REQUIRE((state.data.size() == total_size / world.size())
-               || (state.data.size() == total_size / world.size() + 1));
+    BOOST_REQUIRE((state().size() == total_size / world.size())
+               || (state().size() == total_size / world.size() + 1));
 
     {
         std::ostringstream ss;
         ss << "state[" << world.rank() << "].data = {";
-        std::copy(state.data.begin(), state.data.end(), std::ostream_iterator<size_t>(ss, ", "));
+        std::copy(state().begin(), state().end(), std::ostream_iterator<size_t>(ss, ", "));
         ss << "}\n";
         std::clog << ss.str() << std::flush;
     }

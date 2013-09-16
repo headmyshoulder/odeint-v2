@@ -46,21 +46,18 @@ struct osc_chain {
     void operator()( const boost::numeric::odeint::mpi_state< std::vector<double> > &q ,
                            boost::numeric::odeint::mpi_state< std::vector<double> > &dpdt ) const
     {
-        const std::vector<double> &_q = q.data;
-        std::vector<double> &_dpdt = dpdt.data;
-
         const bool have_left = q.world.rank() > 0;
         const bool have_right = q.world.rank() + 1 < q.world.size();
         double q_left = 0, q_right = 0;
         boost::mpi::request r_left, r_right;
         if(have_left)
         {
-            q.world.isend(q.world.rank() - 1, 0, _q.front());
+            q.world.isend(q.world.rank() - 1, 0, q().front());
             r_left = q.world.irecv(q.world.rank() - 1, 0, q_left);
         }
         if(have_right)
         {
-            q.world.isend(q.world.rank() + 1, 0, _q.back());
+            q.world.isend(q.world.rank() + 1, 0, q().back());
             r_right = q.world.irecv(q.world.rank() + 1, 0, q_right);
         }
 
@@ -68,20 +65,20 @@ struct osc_chain {
         if(have_left)
         {
             r_left.wait();
-            coupling_lr = signed_pow( q_left - _q[0] , m_lam-1 );
+            coupling_lr = signed_pow( q_left - q()[0] , m_lam-1 );
         }
-        const size_t N = _q.size();
+        const size_t N = q().size();
         for(size_t i = 0 ; i < N-1 ; ++i)
         {
-            _dpdt[i] = -signed_pow( _q[i] , m_kap-1 ) + coupling_lr;
-            coupling_lr = signed_pow( _q[i] - _q[i+1] , m_lam-1 );
-            _dpdt[i] -= coupling_lr;
+            dpdt()[i] = -signed_pow( q()[i] , m_kap-1 ) + coupling_lr;
+            coupling_lr = signed_pow( q()[i] - q()[i+1] , m_lam-1 );
+            dpdt()[i] -= coupling_lr;
         }
-        _dpdt[N-1] = -signed_pow( _q[N-1] , m_kap-1 ) + coupling_lr;
+        dpdt()[N-1] = -signed_pow( q()[N-1] , m_kap-1 ) + coupling_lr;
         if(have_right)
         {
             r_right.wait();
-            _dpdt[N-1] -= signed_pow( _q[N-1] - q_right , m_lam-1 );
+            dpdt()[N-1] -= signed_pow( q()[N-1] - q_right , m_lam-1 );
         }
     }
     //]

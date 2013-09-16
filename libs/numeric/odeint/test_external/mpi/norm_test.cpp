@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE( norm_test )
     {
         std::ostringstream ss;
         ss << "state[" << world.rank() << "]"
-           << " local:" << range_algebra::norm_inf( state.data )
+           << " local:" << range_algebra::norm_inf( state() )
            << " global:" << value
            << " ref:" << ref_value << "\n";
         std::clog << ss.str() << std::flush;
