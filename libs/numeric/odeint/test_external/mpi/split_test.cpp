@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_CASE( split_test )
         for(size_t i = 0 ; i < total_size ; i++) in_data.push_back(i);
 
     // copy to nodes
-    copy( in_data, state );
+    split( in_data, state );
 
     BOOST_REQUIRE((state.data.size() == total_size / world.size())
                || (state.data.size() == total_size / world.size() + 1));
@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE( split_test )
 
     // copy back to master
     if(world.rank() == 0) out_data.resize(in_data.size());
-    copy( state, out_data );
+    unsplit( state, out_data );
 
     if(world.rank() == 0)
         BOOST_REQUIRE_EQUAL_COLLECTIONS(in_data.begin(), in_data.end(), out_data.begin(), out_data.end());

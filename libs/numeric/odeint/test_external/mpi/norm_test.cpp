@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_CASE( norm_test )
     boost::mpi::broadcast(world, ref_value, 0);
 
     // copy to nodes
-    copy( in_data, state );
+    split( in_data, state );
 
     int value = mpi_nested_algebra< range_algebra >::norm_inf( state );
 

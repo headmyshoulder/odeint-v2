@@ -74,8 +74,8 @@ int main( int argc , char* argv[] )
 
         // send to nodes
         state_type p( world ), q( world );
-        boost::numeric::odeint::copy(p_init, p);
-        boost::numeric::odeint::copy(q_init, q);
+        split(p_init, p);
+        split(q_init, q);
 
         for(size_t n_run = 0 ; n_run != 5 ; n_run++) {
             cpu_timer timer;

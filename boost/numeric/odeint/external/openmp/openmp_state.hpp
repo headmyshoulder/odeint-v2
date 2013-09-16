@@ -23,6 +23,7 @@
 #include <algorithm>
 #include <boost/range/adaptor/sliced.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
+#include <boost/numeric/odeint/util/split.hpp>
 #include <boost/numeric/odeint/util/resize.hpp>
 #include "openmp_nested_algebra.hpp"
 
@@ -103,9 +104,9 @@ struct copy_impl< openmp_state< T >, openmp_state< T > >
  * SourceContainer must support `s::value_type`, `s::const_iterator`, `s.begin()`, `s.end()` and `s.size()`,
  * with Random Access Iterators; i.e. it must be a Random Access Container. */
 template< class SourceContainer >
-struct copy_impl< SourceContainer, openmp_state< typename SourceContainer::value_type > >
+struct split_impl< SourceContainer, openmp_state< typename SourceContainer::value_type > >
 {
-    static void copy( const SourceContainer &from, openmp_state< typename SourceContainer::value_type > &to )
+    static void split( const SourceContainer &from, openmp_state< typename SourceContainer::value_type > &to )
     {
         if(to.size() == 0) to.resize( omp_get_max_threads() );
         const size_t part = from.size() / to.size();
@@ -126,9 +127,9 @@ struct copy_impl< SourceContainer, openmp_state< typename SourceContainer::value
  * TargetContainer must support `s::value_type`, `s::iterator`, `s.begin()` and `s.resize(n)`,
  * i.e. it must be a `std::vector`. */
 template< class TargetContainer >
-struct copy_impl< openmp_state< typename TargetContainer::value_type >, TargetContainer >
+struct unsplit_impl< openmp_state< typename TargetContainer::value_type >, TargetContainer >
 {
-    static void copy( const openmp_state< typename TargetContainer::value_type > &from , TargetContainer &to )
+    static void unsplit( const openmp_state< typename TargetContainer::value_type > &from , TargetContainer &to )
     {
         // resize target
         size_t total_size = 0;

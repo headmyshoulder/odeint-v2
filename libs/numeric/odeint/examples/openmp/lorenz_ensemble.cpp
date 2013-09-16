@@ -67,7 +67,7 @@ int main(int argc, char **argv) {
 
     vector<point_type> inner(n, point_type(10, 10, 10));
     state_type state;
-    boost::numeric::odeint::copy(inner, state);
+    split(inner, state);
 
     cerr << "openmp_state split " << n << " into";
     for(size_t i = 0 ; i != state.size() ; i++)
@@ -85,7 +85,7 @@ int main(int argc, char **argv) {
         0.0, t_max, dt
     );
 
-    boost::numeric::odeint::copy(state, inner);
+    unsplit(state, inner);
     std::copy( inner.begin(), inner.end(), ostream_iterator<point_type>(cout, "\n") );
 
     return 0;

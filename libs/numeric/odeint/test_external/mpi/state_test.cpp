@@ -28,8 +28,8 @@ BOOST_AUTO_TEST_CASE( state_test )
     }
 
     // copy to nodes
-    copy( in_data1, state1 );
-    copy( in_data2, state2 );
+    split( in_data1, state1 );
+    split( in_data2, state2 );
 
     {
         std::ostringstream ss;

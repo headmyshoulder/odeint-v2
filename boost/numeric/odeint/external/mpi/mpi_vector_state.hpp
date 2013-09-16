@@ -31,15 +31,15 @@ namespace numeric {
 namespace odeint {
 
 
-/** \brief Copy data from some container on node 0 to the slaves.
+/** \brief Split data from some container on node 0 to the slaves.
  * Source must be a model of Random Access Range. */
 template< class Source , class InnerState >
-struct copy_impl< Source, mpi_state< InnerState >,
+struct split_impl< Source, mpi_state< InnerState >,
     typename boost::enable_if< boost::has_range_const_iterator<Source> >::type >
 {
     typedef typename boost::range_iterator<const Source>::type iterator;
 
-    static void copy( const Source &from, mpi_state< InnerState > &to )
+    static void split( const Source &from, mpi_state< InnerState > &to )
     {
         std::vector< InnerState > pieces;
         if(to.world.rank() == 0) {
@@ -56,15 +56,15 @@ struct copy_impl< Source, mpi_state< InnerState >,
     }
 };
 
-/** \brief Copy data from an mpi_state to some container on node 0.
+/** \brief Merge data from an mpi_state to some container on node 0.
  * Target must be a model Single Pass Range. */
 template< class Target, class InnerState >
-struct copy_impl< mpi_state< InnerState >, Target,
+struct unsplit_impl< mpi_state< InnerState >, Target,
     typename boost::enable_if< boost::has_range_iterator<Target> >::type >
 {
     typedef typename boost::range_iterator<Target>::type iterator;
 
-    static void copy( const mpi_state< InnerState > &from , Target &to )
+    static void unsplit( const mpi_state< InnerState > &from , Target &to )
     {
         std::vector< InnerState > pieces;
         // send data to root

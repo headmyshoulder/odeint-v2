@@ -79,10 +79,10 @@ int main( int argc , char* argv[] )
         
             // split into blocks
             state_type p( blocks );
-            boost::numeric::odeint::copy(p_init, p);
+            split(p_init, p);
 
             state_type q( blocks );
-            boost::numeric::odeint::copy(q_init, q);
+            split(q_init, q);
 
             clog << "split " << N << " into";
             for(size_t i = 0 ; i != p.size() ; i++)
