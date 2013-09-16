@@ -1,0 +1,198 @@
+[/============================================================================
+  Boost.odeint
+
+  Copyright (c) 2009-2012 Karsten Ahnert
+  Copyright (c) 2009-2012 Mario Mulansky
+
+  Use, modification and distribution is subject to the Boost Software License,
+  Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt)
+=============================================================================/]
+
+
+[section Parallel computation with OpenMP and MPI]
+
+The example used here is a large, one-dimensional nearest-neighbor coupled chain oscillator:
+
+['d__phi[subl i] / dt = ( __omega[subl i-1] - __omega[subl i] )[supl __lambda-1] - ( __omega[subl i] )[supl __kappa-1] - ( __omega[subl i] - __omega[subl i+1] )[supl __lambda-1] ]
+
+A single-threaded implementation of this system could look like this, the coupling term ['( __omega[subl i] - __omega[subl i+1])[supl __lambda-1]] is reused for two iterations each and assumed 0 for the boundary cases:
+```
+struct osc_chain {
+    const double m_kap, m_lam;
+    osc_chain( const double kap , const double lam )
+        : m_kap( kap ) , m_lam( lam ) { }
+
+    void operator()( const std::vector<double> &q ,
+                           std::vector<double> &dpdt ) const
+    {
+        const size_t N = q.size();
+        double coupling_lr = 0;
+        for(size_t i = 0 ; i < N-1 ; ++i)
+        {
+            dpdt[i] = -signed_pow( q[i] , m_kap-1 ) + coupling_lr;
+            coupling_lr = signed_pow( q[i] - q[i+1] , m_lam-1 );
+            dpdt[i] -= coupling_lr;
+        }
+        dpdt[N-1] = -signed_pow( q[N-1] , m_kap-1 ) + coupling_lr;
+    }
+}
+```
+Since the ['d__phi[subl i] / dt] are independent they can be calculated in parallel.
+
+[section OpenMP]
+
+[import ../performance/openmp/osc_chain_1d.cpp]
+[import ../performance/openmp/osc_chain_1d_system.hpp]
+
+Using OpenMP `osc_chain::operator()` can be implemented while re-using `coupling_lr` as in the single-threaded version by tracking the thread boundaries using `last_i`. For ['t] threads this only adds ['t-1] recomputations of `coupling_lr` on top of OpenMP's parallelisation overhead.
+[parallel_chain_openmp_ns_system]
+
+For this example, we fill a vector with random data
+[parallel_chain_openmp_data]
+
+odeint's OpenMP support is implemented as an external backend, which needs to be manually included. Depending on the compiler some additional flags may be needed, i.e. `-fopenmp` for GCC.
+[parallel_chain_openmp_header]
+
+For optimal speedup, odeint's linear computations need to be parallelised too. By default using a `vector<T>` state type selects the single-threaded `range_algebra`, we must manually override this and select the `openmp_range_algebra` which uses a `#pragma omp parallel for` loop and requires the state type to be a model of Random Access Range.
+[parallel_chain_openmp_ns_state]
+
+Start the integration in the master thread, OpenMP will take care of distributing the work among the threads and join them automatically.
+[parallel_chain_openmp_ns_run]
+
+OpenMP took care of the caches, the data can be accessed immediately and processed further.
+[parallel_chain_openmp_ns_fin]
+
+For odd-sized data where OpenMP's thread boundaries don't match cache lines and hurt performance it might be advisable to copy the data from the continuous `vector<T>` into separate, individually aligned, vectors. For this, odeint provides the `openmp_state<T>` type, essentially an alias for `vector<vector<T>>`.
+
+The `osc_chain::operator()` iterates through the ['M] chunks (ideally one per thread), processing each chunk as in the single-threaded implementation, the only difference is that since the ['j=0] and ['j=N-1] boundaries might not be the full chain's boundaries we need to read data ["owned] by another thread.
+[parallel_chain_openmp_sp_system]
+
+Using the `openmp_state<T>` state type automatically selects `openmp_algebra` which executes odeint's internal computations on parallel chunks. We need to use `split(input, output)` to copy equal-sized chunks (sizes differ by 1 at most) of the source data to each thread.
+[parallel_chain_openmp_sp_state]
+
+[note
+You don't actually need to use `openmp_state<T>` for advanced use cases, `openmp_algebra` is simply an alias for `openmp_nested_algebra<range_algebra>` and supports any model of Random Access Range as the outer, parallel state type, and will use the given algebra on its elements.]
+
+Run the integration using the split data.
+[parallel_chain_openmp_sp_run]
+
+Use `unsplit(input, output)` to merge the chunks into one continuous vector and print the result in the master thread.
+[parallel_chain_openmp_sp_fin]
+
+
+[endsect]
+
+[section MPI]
+
+[import ../performance/mpi/osc_chain_1d.cpp]
+[import ../performance/mpi/osc_chain_1d_system.hpp]
+
+To expand the parallel computation across multiple machines we can use MPI.
+
+The `osc_chain::operator()` implementation is similar to the OpenMP variant with split data, the main difference being that while OpenMP uses a spawn/join model where everything not explicitly parallelised is only executed in the main thread, in MPI's prefork model each node enters the `main()` method independently, diverging based on its rank and synchronising through message-passing and explicit barriers.
+
+Instead of reading another thread's data, we asynchronously send and receive the relevant data from neighboring nodes, performing some computation in the interim.
+[parallel_chain_mpi_system]
+
+odeint's MPI support is implemented as an external backend, too. Depending on the MPI implementation the code might need to be compiled with i.e. `mpic++`.
+[parallel_chain_mpi_header]
+
+In the main program we construct a `communicator` which tells us the current node's `rank()` and total `size()` of the cluster.
+[parallel_chain_mpi_init]
+
+We generate the input data on the master node only, avoiding unnecessary work on the other nodes.
+[parallel_chain_mpi_data]
+
+Analogous to `openmp_state<T>` we use `mpi_state<InnerState<T>>`, which automatically selects `mpi_nested_algebra` and the appropriate MPI-oblivious inner algebra.
+Instead of simply copying chunks, `split` here sends the data from master to each slave and receives data from master on slaves. The input argument is ignored on the slaves, but the master node receives a chunk of data in its output and will participate in the communication.
+[parallel_chain_mpi_state]
+
+Now that `q_split` contains (only) the local chunk for each node, we enter the computation. Be aware that `mpi_nested_algebra::for_each`[~N] doesn't use any MPI constructs, it simply calls the inner algebra on the local chunk, the system function is not guarded by any barriers either, if you don't manually place any (for example in parameter studies cases where the elements are completely independent) you might see the nodes diverging, returning from this call at different times.
+[parallel_chain_mpi_run]
+
+To print the result on the master node, we send the processed data back using `unsplit`.
+[parallel_chain_mpi_fin]
+
+
+[endsect]
+
+[section Concepts]
+
+[section MPI State]
+As used by `mpi_nested_algebra`.
+[heading Notation]
+[variablelist
+    [[`InnerState`] [The inner state type]]
+    [[`State`] [The MPI-state type]]
+    [[`state`] [Object of type `State`]]
+    [[`world`] [Object of type `boost::mpi::communicator`]]
+]
+[heading Valid Expressions]
+[table
+    [[Name] [Expression] [Type] [Semantics]]
+    [[Construct a state with a communicator] [`State(world)`] [`State`] [Constructs the State.]]
+    [[Construct a state with the default communicator] [`State()`] [`State`] [Constructs the State.]]
+    [[Get the current node's inner state] [`state()`] [`InnerState`] [Returns a (const) reference.]]
+    [[Get the communicator] [`state.world`] [`boost::mpi::communicator`] [See __boost_mpi.]]
+]
+[heading Models]
+* `mpi_state<InnerState>`
+
+[endsect]
+
+[section OpenMP Split State]
+As used by `openmp_nested_algebra`, essentially a Random Access Container with `ValueType = InnerState`.
+[heading Notation]
+[variablelist
+    [[`InnerState`] [The inner state type]]
+    [[`State`] [The split state type]]
+    [[`state`] [Object of type `State`]]
+]
+[heading Valid Expressions]
+[table
+    [[Name] [Expression] [Type] [Semantics]]
+    [[Construct a state for `n` chunks] [`State(n)`] [`State`] [Constructs underlying `vector`.]]
+    [[Get a chunk] [`state[i]`] [`InnerState`] [Accesses underlying `vector`.]]
+    [[Get the number of chunks] [`state.size()`] [`size_type`] [Returns size of underlying `vector`.]]
+]
+[heading Models]
+* `openmp_state<ValueType>` with `InnerState = vector<ValueType>`
+
+[endsect]
+
+[section Splitter]
+[heading Notation]
+[variablelist
+    [[`Container1`] [The continuous-data container type]]
+    [[`x`] [Object of type `Container1`]]
+    [[`Container2`] [The chunked-data container type]]
+    [[`y`] [Object of type `Container2`]]
+]
+[heading Valid Expressions]
+[table
+    [[Name] [Expression] [Type] [Semantics]]
+    [[Copy chunks of input to output elements] [`split(x, y)`] [`void`] [Calls `split_impl<Container1, Container2>::split(x, y)`, splits `x` into `y.size()` chunks.]]
+    [[Join chunks of input elements to output] [`unsplit(y, x)`] [`void`] [Calls `unsplit_impl<Container2, Container1>::unsplit(y, x)`, assumes `x` is of the correct size ['__sigma `y[i].size()`], does not resize `x`.]]
+]
+[heading Models]
+* defined for `Container1` = __boost_range and `Container2 = openmp_state`
+* and `Container2 = mpi_state`.
+
+To implement splitters for non-__boost_range-based containers, specialise the `split_impl` and `unsplit_impl` types:
+```
+template< class Container1, class Container2 , class Enabler = void >
+struct split_impl {
+    static void split( const Container1 &from , Container2 &to );
+};
+
+template< class Container2, class Container1 , class Enabler = void >
+struct unsplit_impl {
+    static void unsplit( const Container2 &from , Container1 &to );
+};
+```
+[endsect]
+
+[endsect]
+
+[endsect]

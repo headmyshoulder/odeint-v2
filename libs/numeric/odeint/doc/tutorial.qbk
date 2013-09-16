@@ -27,6 +27,7 @@
 
 [include tutorial_vexcl_opencl.qbk]
 
+[include tutorial_parallel.qbk]
 
 [section All examples]
 
