@@ -8,7 +8,6 @@ project
       <include>../../../../..
       <include>..
       <define>BOOST_ALL_NO_LIB=1
-      <cxxflags>--std=c++11
       <toolset>gcc:<cxxflags>-fopenmp
       <toolset>gcc:<linkflags>-fopenmp
       <toolset>intel:<cxxflags>-openmp
