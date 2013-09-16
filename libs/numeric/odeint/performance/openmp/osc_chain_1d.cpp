@@ -15,9 +15,11 @@
 #include <iostream>
 #include <vector>
 
+//[parallel_chain_openmp_header
 #include <omp.h>
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/external/openmp/openmp.hpp>
+//]
 
 #include <boost/program_options.hpp>
 #include <boost/random.hpp>
@@ -65,12 +67,15 @@ int main( int argc , char* argv[] )
 
     accumulator_set< double, stats<tag::mean, tag::median> > acc_time;
 
+    //[parallel_chain_openmp_data
     vector<double> p( N ), q( N, 0 );
     boost::random::uniform_real_distribution<double> distribution;
     boost::random::mt19937 engine( 0 );
     generate( p.begin() , p.end() , boost::bind( distribution , engine ) );
+    //]
 
     if(split_range) {
+        //[parallel_chain_openmp_sp_state
         typedef openmp_state<double> state_type;
         typedef symplectic_rkn_sb3a_mclachlan<
                   state_type , state_type , double
@@ -78,45 +83,56 @@ int main( int argc , char* argv[] )
         state_type p_split(blocks), q_split(blocks);
         split(p, p_split);
         split(q, q_split);
+        //]
 
         for(size_t n_run = 0 ; n_run != repeat ; n_run++) {
             cpu_timer timer;
+            //[parallel_chain_openmp_sp_run
             integrate_n_steps( stepper_type() , osc_chain( p_kappa , p_lambda ) ,
                                make_pair( boost::ref(q_split) , boost::ref(p_split) ) ,
                                0.0 , 0.01 , steps );
+            //]
             double run_time = static_cast<double>(timer.elapsed().wall) * 1.0e-9;
             acc_time(run_time);
             cout << N << '\t' << steps << '\t' << blocks << '\t' << run_time << endl;
         }
 
         if(dump) {
+            //[parallel_chain_openmp_sp_fin
             unsplit(p_split, p);
             copy(p.begin(), p.end(), ostream_iterator<double>(cerr, "\t"));
             cerr << endl;
+            //]
         }
 
     } else {
+        //[parallel_chain_openmp_ns_state
         typedef vector<double> state_type;
         typedef symplectic_rkn_sb3a_mclachlan<
                   state_type , state_type , double ,
                   state_type , state_type , double ,
                   openmp_range_algebra
                 > stepper_type;
+        //]
         omp_set_num_threads(blocks);
 
         for(size_t n_run = 0 ; n_run != repeat ; n_run++) {
             cpu_timer timer;
+            //[parallel_chain_openmp_ns_run
             integrate_n_steps( stepper_type() , osc_chain( p_kappa , p_lambda ) ,
                                make_pair( boost::ref(q) , boost::ref(p) ) ,
                                0.0 , 0.01 , steps );
+            //]
             double run_time = static_cast<double>(timer.elapsed().wall) * 1.0e-9;
             acc_time(run_time);
             cout << N << '\t' << steps << '\t' << blocks << '\t' << run_time << endl;
         }
 
         if(dump) {
+            //[parallel_chain_openmp_ns_fin
             copy(p.begin(), p.end(), ostream_iterator<double>(cerr, "\t"));
             cerr << endl;
+            //]
         }
 
     }

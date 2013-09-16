@@ -43,6 +43,7 @@ struct osc_chain {
     osc_chain( const double kap , const double lam )
         : m_kap( kap ) , m_lam( lam ) { }
 
+    //[parallel_chain_mpi_system
     void operator()( const boost::numeric::odeint::mpi_state< std::vector<double> > &q ,
                            boost::numeric::odeint::mpi_state< std::vector<double> > &dpdt ) const
     {
