@@ -171,6 +171,7 @@
 
 
 [template super[x]'''<superscript>'''[x]'''</superscript>''']
+[template supl[x]'''<superscript>'''__space[x]'''</superscript>''']
 [template sub[x]'''<subscript>'''[x]'''</subscript>''']
 [template subl[x]'''<subscript>'''__space[x]'''</subscript>''']
 
