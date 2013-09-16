@@ -21,6 +21,7 @@
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/external/openmp/openmp.hpp>
 
+#include <boost/program_options.hpp>
 #include <boost/timer/timer.hpp>
 #include <boost/foreach.hpp>
 #include <boost/accumulators/accumulators.hpp>
@@ -34,6 +35,7 @@
 using namespace std;
 using namespace boost::numeric::odeint;
 using namespace boost::accumulators;
+using namespace boost::program_options;
 
 using boost::timer::cpu_timer;
 
@@ -43,18 +45,27 @@ const double p_beta = 1.0;
 
 int main( int argc , char* argv[] )
 {
-    size_t N = 1024;
-    size_t blocks = omp_get_max_threads();
-    size_t steps = 100;
-    size_t repeat = 5;
-    bool split_range = true;
-    if( argc > 1 ) N = boost::lexical_cast<size_t>( argv[1] );
-    if( argc > 2 ) blocks = boost::lexical_cast<size_t>( argv[2] );
-    if( argc > 3 ) steps = boost::lexical_cast<size_t>( argv[3] );
-    if( argc > 4 ) repeat = boost::lexical_cast<size_t>( argv[4] );
-    if( argc > 5 ) split_range = boost::lexical_cast<bool>( argv[5] );
-
-    cout << "Size: " << N << " with " << blocks << " blocks and " << steps << " steps." << endl;
+    size_t N, blocks, steps, repeat;
+    bool split_range, dump;
+    options_description desc("Options");
+    desc.add_options()
+        ("help,h", "show this help")
+        ("length", value(&N)->default_value(1024), "length of chain")
+        ("steps", value(&steps)->default_value(100), "simulation steps")
+        ("blocks", value(&blocks)->default_value(omp_get_max_threads()), "number of blocks (split) or threads (non-split)")
+        ("split", bool_switch(&split_range), "split range")
+        ("repeat", value(&repeat)->default_value(25), "repeat runs")
+        ("dump", bool_switch(&dump), "dump final state to stderr")
+        ;
+    variables_map vm;
+    store(command_line_parser(argc, argv).options(desc).run(), vm);
+    notify(vm);
+    if(vm.count("help"))
+    {
+        cerr << desc << endl;
+        return EXIT_FAILURE;
+    }
+    cout << "length\tsteps\tthreads\ttime" << endl;
 
     accumulator_set< double, stats<tag::mean, tag::median> > acc_time;
 

@@ -11,6 +11,7 @@ project
       <include>..
       <define>BOOST_ALL_NO_LIB=1
       <library>/boost//timer
+      <library>/boost//program_options
       <toolset>gcc:<cxxflags>-fopenmp
       <toolset>gcc:<linkflags>-fopenmp
       <toolset>intel:<cxxflags>"-openmp -ipo"

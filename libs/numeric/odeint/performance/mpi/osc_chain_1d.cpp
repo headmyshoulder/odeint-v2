@@ -16,6 +16,7 @@
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/external/mpi/mpi.hpp>
 
+#include <boost/program_options.hpp>
 #include <boost/random.hpp>
 #include <boost/timer/timer.hpp>
 #include <boost/foreach.hpp>
@@ -29,6 +30,7 @@ using namespace std;
 using namespace boost::numeric::odeint;
 using namespace boost::accumulators;
 using namespace boost::random;
+using namespace boost::program_options;
 
 using boost::timer::cpu_timer;
 
@@ -48,15 +50,26 @@ int main( int argc , char* argv[] )
     boost::mpi::environment env(argc, argv);
     boost::mpi::communicator world;
 
-    size_t N = 1024;
-    size_t steps = 100;
-    size_t repeat = 5;
-    if( argc > 1 ) N = boost::lexical_cast<size_t>( argv[1] );
-    if( argc > 2 ) steps = boost::lexical_cast<size_t>( argv[2] );
-    if( argc > 3 ) repeat = boost::lexical_cast<size_t>( argv[3] );
-
-    if(world.rank() == 0)
-        cout << "Size: " << N << " with " << world.size() << " nodes and " << steps << " steps." << endl;
+    size_t N, steps, repeat;
+    bool dump;
+    options_description desc("Options");
+    desc.add_options()
+        ("help,h", "show this help")
+        ("length", value(&N)->default_value(1024), "length of chain")
+        ("steps", value(&steps)->default_value(100), "simulation steps")
+        ("repeat", value(&repeat)->default_value(25), "repeat runs")
+        ("dump", bool_switch(&dump), "dump final state to stderr (on node 0)")
+        ;
+    variables_map vm;
+    store(command_line_parser(argc, argv).options(desc).run(), vm);
+    notify(vm);
+    if(vm.count("help"))
+    {
+        if(world.rank() == 0)
+            cerr << desc << endl;
+        return EXIT_FAILURE;
+    }
+    cout << "length\tsteps\tthreads\ttime" << endl;
 
     accumulator_set< double, stats<tag::mean, tag::median> > acc_time;
 

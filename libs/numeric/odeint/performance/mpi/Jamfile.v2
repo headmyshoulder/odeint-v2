@@ -12,6 +12,7 @@ project
       <define>BOOST_ALL_NO_LIB=1
       <library>/boost//timer
       <library>/boost//mpi
+      <library>/boost//program_options
     ;
 
 exe osc_chain_1d : osc_chain_1d.cpp ;
