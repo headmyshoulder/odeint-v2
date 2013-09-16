@@ -3,9 +3,9 @@
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 
-import quickbook ;
-import boostbook ;
-import doxygen ;
+using quickbook ;
+using boostbook ;
+using doxygen ;
 import modules ;
 
 project : requirements
