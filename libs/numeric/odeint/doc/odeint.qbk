@@ -50,6 +50,8 @@
     [@http://www.boost.org/doc/libs/1_47_0/libs/graph/doc/table_of_contents.html Boost.Graph]]
 [def __boost_multiprecision
     [@http://www.boost.org/doc/libs/1_53_0/libs/multiprecision/doc/html/index.html Boost.Multiprecision]]
+[def __boost_mpi
+    [@http://www.boost.org/doc/libs/release/libs/mpi/ Boost.MPI]]
 
 [def __thrust
     [@http://code.google.com/p/thrust/ Thrust]]
