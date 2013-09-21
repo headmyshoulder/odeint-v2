@@ -3,11 +3,14 @@
 # accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
+use-project /boost : $(BOOST_ROOT) ;
+
 project
     : requirements
       <include>../../../../..
       <include>..
       <define>BOOST_ALL_NO_LIB=1
+      <library>/boost//timer
       <toolset>gcc:<cxxflags>-fopenmp
       <toolset>gcc:<linkflags>-fopenmp
       <toolset>intel:<cxxflags>-openmp
@@ -17,3 +20,5 @@ project
 exe lorenz_ensemble : lorenz_ensemble.cpp ;
 exe lorenz_ensemble_simple : lorenz_ensemble_simple.cpp ;
 exe lorenz_ensemble_nested : lorenz_ensemble_nested.cpp ;
+exe phase_chain : phase_chain.cpp ;
+exe phase_chain_omp_state : phase_chain_omp_state.cpp ;

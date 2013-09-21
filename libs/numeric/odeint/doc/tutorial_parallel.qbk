@@ -12,74 +12,87 @@
 
 [section Parallel computation with OpenMP and MPI]
 
-The example used here is a large, one-dimensional nearest-neighbor coupled chain oscillator:
-
-['d__phi[subl i] / dt = ( __omega[subl i-1] - __omega[subl i] )[supl __lambda-1] - ( __omega[subl i] )[supl __kappa-1] - ( __omega[subl i] - __omega[subl i+1] )[supl __lambda-1] ]
-
-A single-threaded implementation of this system could look like this, the coupling term ['( __omega[subl i] - __omega[subl i+1])[supl __lambda-1]] is reused for two iterations each and assumed 0 for the boundary cases:
-```
-struct osc_chain {
-    const double m_kap, m_lam;
-    osc_chain( const double kap , const double lam )
-        : m_kap( kap ) , m_lam( lam ) { }
-
-    void operator()( const std::vector<double> &q ,
-                           std::vector<double> &dpdt ) const
-    {
-        const size_t N = q.size();
-        double coupling_lr = 0;
-        for(size_t i = 0 ; i < N-1 ; ++i)
-        {
-            dpdt[i] = -signed_pow( q[i] , m_kap-1 ) + coupling_lr;
-            coupling_lr = signed_pow( q[i] - q[i+1] , m_lam-1 );
-            dpdt[i] -= coupling_lr;
-        }
-        dpdt[N-1] = -signed_pow( q[N-1] , m_kap-1 ) + coupling_lr;
-    }
-}
-```
-Since the ['d__phi[subl i] / dt] are independent they can be calculated in parallel.
+Paralleliaztion is a key feature for modern numerical libraries due to the
+vast availability of many cores nowadays even on Laptops.
+odeint currently supports parallelization with OpenMP and MPI, as described in
+the following sections.
+However, it should be made clear from the beginning that the difficulty of
+efficiently distributing ODE integration on many cores/machines lies in the
+parallelization of the rhs function, which is still the user's
+responsibility.
+Simply using parallel odeint backend without parallelizing the rhs function
+will bring you almost no performance gains.
 
 [section OpenMP]
 
-[import ../performance/openmp/osc_chain_1d.cpp]
-[import ../performance/openmp/osc_chain_1d_system.hpp]
-
-Using OpenMP `osc_chain::operator()` can be implemented while re-using `coupling_lr` as in the single-threaded version by tracking the thread boundaries using `last_i`. For ['t] threads this only adds ['t-1] recomputations of `coupling_lr` on top of OpenMP's parallelisation overhead.
-[parallel_chain_openmp_ns_system]
-
-For this example, we fill a vector with random data
-[parallel_chain_openmp_data]
+[import ../examples/openmp/phase_chain.cpp]
 
 odeint's OpenMP support is implemented as an external backend, which needs to be manually included. Depending on the compiler some additional flags may be needed, i.e. `-fopenmp` for GCC.
-[parallel_chain_openmp_header]
+[phase_chain_openmp_header]
 
-For optimal speedup, odeint's linear computations need to be parallelised too. By default using a `vector<T>` state type selects the single-threaded `range_algebra`, we must manually override this and select the `openmp_range_algebra` which uses a `#pragma omp parallel for` loop and requires the state type to be a model of Random Access Range.
-[parallel_chain_openmp_ns_state]
+In the easiest parallelization approach with OpenMP we use a usual `vector` as
+state type:
+```typedef std::vector< double > state_type;```
+We initialize the state with some random data:
+[phase_chain_init]
+Now we have to configure the stepper to use the OpenMP backend.
+This is done by explicitely providing the `openmp_range_algebra` as template parameter
+to the stepper.
+This algebra requires the state type to be a model of Random Access Range.
+[phase_chain_stepper]
 
-Start the integration in the master thread, OpenMP will take care of distributing the work among the threads and join them automatically.
-[parallel_chain_openmp_ns_run]
+Additionally to providing the stepper with OpenMP parallelization we also have
+to provide a parallelized rhs function.
+Here this is shown for a simple one-dimensional chain of phase oscillators
+with nearest neighbor coupling:
+[phase_chain_rhs]
 
-OpenMP took care of the caches, the data can be accessed immediately and processed further.
-[parallel_chain_openmp_ns_fin]
+Finally, we perform the integration by using an integrate function from
+odeint.
+As you can see, the parallelization is completely hidden in the stepper and
+the rhs function.
+OpenMP will take care of distributing the work among the threads and join them automatically.
+[phase_chain_integrate]
 
-For odd-sized data where OpenMP's thread boundaries don't match cache lines and hurt performance it might be advisable to copy the data from the continuous `vector<T>` into separate, individually aligned, vectors. For this, odeint provides the `openmp_state<T>` type, essentially an alias for `vector<vector<T>>`.
+OpenMP took care of all the parallelization details and the data can be
+accessed immediately and be processed further.
+Note, that you can specify the OpenMP scheduling by calling `omp_set_schedule`
+in the beginning of your program:
+[phase_chain_scheduling]
 
-The `osc_chain::operator()` iterates through the ['M] chunks (ideally one per thread), processing each chunk as in the single-threaded implementation, the only difference is that since the ['j=0] and ['j=N-1] boundaries might not be the full chain's boundaries we need to read data ["owned] by another thread.
-[parallel_chain_openmp_sp_system]
+[import ../examples/openmp/phase_chain_omp_state.cpp]
 
-Using the `openmp_state<T>` state type automatically selects `openmp_algebra` which executes odeint's internal computations on parallel chunks. We need to use `split(input, output)` to copy equal-sized chunks (sizes differ by 1 at most) of the source data to each thread.
-[parallel_chain_openmp_sp_state]
+For advanced cases odeint offers another approach to use OpenMP 
+that allows for a more exact control of the parallelization.
+For example, for odd-sized data where OpenMP's thread boundaries don't match
+cache lines and hurt performance it might be advisable to copy the data from
+the continuous `vector<T>` into separate, individually aligned, vectors. 
+For this, odeint provides the `openmp_state<T>` type, essentially an alias for
+`vector<vector<T>>`.
+
+Here, the initialization is done using a usual `vector<double>`, but then we
+use odeint's `split` function to generate an `openmp_state`.
+The splitting is done such the sizes of the individual regions differ at most
+by 1 to make the computation as uniform as possible.
+
+[phase_chain_state_init]
+
+Of course, also the rhs function has to be changed so that it can deal with
+the `openmp_state`.
+Note, that each sub-regions of the state is computed in a single task, but at
+the borders access to the neighboring regions is required.
+
+[phase_chain_state_rhs]
+
+Using the `openmp_state<T>` state type automatically selects `openmp_algebra`
+which executes odeint's internal computations on parallel chunks.
+Hence, no manual configuration of the stepper is neccessary.
+At the end of the integration, we use `unsplit` to merge the sub-region back
+together into a single vector.
+[phase_chain_state_integrate]
 
 [note
 You don't actually need to use `openmp_state<T>` for advanced use cases, `openmp_algebra` is simply an alias for `openmp_nested_algebra<range_algebra>` and supports any model of Random Access Range as the outer, parallel state type, and will use the given algebra on its elements.]
-
-Run the integration using the split data.
-[parallel_chain_openmp_sp_run]
-
-Use `unsplit(input, output)` to merge the chunks into one continuous vector and print the result in the master thread.
-[parallel_chain_openmp_sp_fin]
-
 
 [endsect]
 
