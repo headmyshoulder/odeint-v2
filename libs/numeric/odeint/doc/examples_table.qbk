@@ -115,5 +115,8 @@
 
   [[[github_link libs/numeric/odeint/examples/quadmath/black_hole.cpp quadmath/black_hole.cpp]]
   [This examples shows how gcc libquadmath can be used with odeint. It provides a high precision floating point type which is adapted to odeint in this example.]]
+  
+  [[[github_link libs/numeric/odeint/examples/molecular_dynamics.cpp molecular_dynamics.cpp]]
+  [A very basic molecular dynamics simulation with the Velocity-Verlet method.]]
 
 ]
