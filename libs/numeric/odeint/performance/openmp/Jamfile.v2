@@ -4,6 +4,7 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 use-project /boost : $(BOOST_ROOT) ;
+import openmp : * ;
 
 project
     : requirements
@@ -12,10 +13,7 @@ project
       <define>BOOST_ALL_NO_LIB=1
       <library>/boost//timer
       <library>/boost//program_options
-      <toolset>gcc:<cxxflags>-fopenmp
-      <toolset>gcc:<linkflags>-fopenmp
-      <toolset>intel:<cxxflags>"-openmp -ipo"
-      <toolset>intel:<linkflags>"-openmp -ipo"
+      [ openmp ]
     ;
 
 exe osc_chain_1d : osc_chain_1d.cpp ;

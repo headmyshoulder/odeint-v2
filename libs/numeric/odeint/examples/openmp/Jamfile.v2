@@ -4,6 +4,7 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 use-project /boost : $(BOOST_ROOT) ;
+import openmp : * ;
 
 project
     : requirements
@@ -11,10 +12,7 @@ project
       <include>..
       <define>BOOST_ALL_NO_LIB=1
       <library>/boost//timer
-      <toolset>gcc:<cxxflags>-fopenmp
-      <toolset>gcc:<linkflags>-fopenmp
-      <toolset>intel:<cxxflags>-openmp
-      <toolset>intel:<linkflags>-openmp
+      [ openmp ]
     ;
 
 exe lorenz_ensemble : lorenz_ensemble.cpp ;

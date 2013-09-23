@@ -10,8 +10,6 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifdef _OPENMP
-
 #include <omp.h>
 #include <vector>
 #include <iostream>
@@ -76,10 +74,3 @@ int main() {
 
     return 0;
 }
-
-#else
-
-int main() { return -1; }
-
-#endif
-
