@@ -49,7 +49,6 @@ struct osc_chain {
     { }
 
     // Simple case with openmp_range_algebra
-    //[parallel_chain_openmp_ns_system
     void operator()( const std::vector<double> &q ,
                            std::vector<double> &dpdt ) const
     {
@@ -68,10 +67,8 @@ struct osc_chain {
         }
         dpdt[N-1] = -signed_pow( q[N-1] , m_kap-1 ) + coupling_lr;
     }
-    //]
 
     // Split case with openmp_algebra
-    //[parallel_chain_openmp_sp_system
     void operator()( const boost::numeric::odeint::openmp_state<double> &q ,
                            boost::numeric::odeint::openmp_state<double> &dpdt ) const
     {
@@ -94,7 +91,6 @@ struct osc_chain {
             if(i + 1 < M) _dpdt[N-1] -= signed_pow( _q[N-1] - q[i+1].front() , m_lam-1 );
         }
     }
-    //]
 
 };
 

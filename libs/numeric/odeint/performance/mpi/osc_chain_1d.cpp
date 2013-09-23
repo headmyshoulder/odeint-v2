@@ -13,10 +13,8 @@
 #include <iostream>
 #include <vector>
 
-//[parallel_chain_mpi_header
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/external/mpi/mpi.hpp>
-//]
 
 #include <boost/program_options.hpp>
 #include <boost/random.hpp>
@@ -40,10 +38,8 @@ const double p_lambda = 4.7;
 
 int main( int argc , char* argv[] )
 {
-    //[parallel_chain_mpi_init
     boost::mpi::environment env(argc, argv);
     boost::mpi::communicator world;
-    //]
 
     size_t N, steps, repeat;
     bool dump;
@@ -68,16 +64,13 @@ int main( int argc , char* argv[] )
 
     accumulator_set< double, stats<tag::mean, tag::median> > acc_time;
 
-    //[parallel_chain_mpi_data
     vector<double> p( N ), q( N, 0 );
     if(world.rank() == 0) {
         boost::random::uniform_real_distribution<double> distribution;
         boost::random::mt19937 engine( 0 );
         generate( p.begin() , p.end() , boost::bind( distribution , engine ) );
     }
-    //]
 
-    //[parallel_chain_mpi_state
     typedef vector<double> inner_state_type;
     typedef mpi_state< inner_state_type > state_type;
     typedef symplectic_rkn_sb3a_mclachlan<
@@ -86,16 +79,13 @@ int main( int argc , char* argv[] )
     state_type p_split( world ), q_split( world );
     split(p, p_split);
     split(q, q_split);
-    //]
 
     for(size_t n_run = 0 ; n_run != repeat ; n_run++) {
         cpu_timer timer;
         world.barrier();
-        //[parallel_chain_mpi_run
         integrate_n_steps( stepper_type() , osc_chain( p_kappa , p_lambda ) ,
                            make_pair( boost::ref(q_split) , boost::ref(p_split) ) ,
                            0.0 , 0.01 , steps );
-        //]
         world.barrier();
         if(world.rank() == 0) {
             double run_time = static_cast<double>(timer.elapsed().wall) * 1.0e-9;
@@ -105,13 +95,11 @@ int main( int argc , char* argv[] )
     }
 
     if(dump) {
-        //[parallel_chain_mpi_fin
         unsplit(p_split, p);
         if(world.rank() == 0) {
             copy(p.begin(), p.end(), ostream_iterator<double>(cerr, "\t"));
             cerr << endl;
         }
-        //]
     }
 
     if(world.rank() == 0)
