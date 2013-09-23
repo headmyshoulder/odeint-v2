@@ -47,12 +47,12 @@ struct phase_chain_omp_state
             dxdt[n][0] = coupling_func( x[n][1] - x[n][0] );
             if( n > 0 )
             {
-                dxdt[n][0] += coupling_func( x[n-1][M-1] - x[n][0] );
+                dxdt[n][0] += coupling_func( x[n-1].back() - x[n].front() );
             }
             dxdt[n][M-1] = coupling_func( x[n][M-2] - x[n][M-1] );
             if( n < N-1 )
             {
-                dxdt[n][M-1] = coupling_func( x[n+1][0] - x[n][M-1] );
+                dxdt[n][M-1] += coupling_func( x[n+1].front() - x[n].back() );
             }
         }
     }
@@ -70,13 +70,12 @@ struct phase_chain_omp_state
 int main( int argc , char **argv )
 {
     //[phase_chain_state_init
-    size_t N = 131072;
+    const size_t N = 131101;
     vector<double> x( N );
     boost::random::uniform_real_distribution<double> distribution( 0.0 , 2.0*pi );
     boost::random::mt19937 engine( 0 );
     generate( x.begin() , x.end() , boost::bind( distribution , engine ) );
-
-    const size_t blocks = 4;
+    const size_t blocks = omp_get_max_threads();
     state_type x_split( blocks );
     split( x , x_split );
     //]
@@ -90,8 +89,8 @@ int main( int argc , char **argv )
     //]
 
     double run_time = static_cast<double>(timer.elapsed().wall) * 1.0e-9;
-    std::cout << run_time << "s" << std::endl;
-    //copy(x.begin(), x.end(), ostream_iterator<double>(cout, "\t"));
+    std::cerr << run_time << "s" << std::endl;
+    // copy(x.begin(), x.end(), ostream_iterator<double>(cout, "\n"));
 
     return 0;
 }

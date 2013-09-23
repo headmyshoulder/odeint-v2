@@ -19,14 +19,14 @@
 #include <boost/numeric/odeint/external/openmp/openmp.hpp>
 //]
 
-#include <boost/numeric/odeint.hpp>
-
 using namespace std;
 using namespace boost::numeric::odeint;
 using boost::timer::cpu_timer;
 using boost::math::double_constants::pi;
 
+//[phase_chain_vector_state
 typedef std::vector< double > state_type;
+//]
 
 //[phase_chain_rhs
 struct phase_chain
@@ -43,7 +43,7 @@ struct phase_chain
             dxdt[i] = coupling_func( x[i+1] - x[i] ) +
                       coupling_func( x[i-1] - x[i] );
         }
-        dxdt[0] = coupling_func( x[1] - x[0] );
+        dxdt[0  ] = coupling_func( x[1  ] - x[0  ] );
         dxdt[N-1] = coupling_func( x[N-2] - x[N-1] );
     }
 
@@ -60,7 +60,7 @@ struct phase_chain
 int main( int argc , char **argv )
 {
     //[phase_chain_init
-    size_t N = 131072;
+    size_t N = 131101;
     state_type x( N );
     boost::random::uniform_real_distribution<double> distribution( 0.0 , 2.0*pi );
     boost::random::mt19937 engine( 0 );
@@ -76,7 +76,7 @@ int main( int argc , char **argv )
     //]
 
     //[phase_chain_scheduling
-    int chunk_size = N/16;
+    int chunk_size = N/omp_get_max_threads();
     omp_set_schedule( omp_sched_static , chunk_size );
     //]
 
@@ -86,8 +86,8 @@ int main( int argc , char **argv )
                        x , 0.0 , 0.01 , 100 );
     //]
     double run_time = static_cast<double>(timer.elapsed().wall) * 1.0e-9;
-    std::cout << run_time << "s" << std::endl;
-    //copy(x.begin(), x.end(), ostream_iterator<double>(cout, "\t"));
+    std::cerr << run_time << "s" << std::endl;
+    // copy(x.begin(), x.end(), ostream_iterator<double>(cout, "\n"));
 
     return 0;
 }
