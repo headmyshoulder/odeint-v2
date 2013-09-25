@@ -1,7 +1,8 @@
 /* Boost libs/numeric/odeint/performance/openmp/osc_chain_1d.cpp
 
- Copyright 2009-2012 Karsten Ahnert
- Copyright 2009-2012 Mario Mulansky
+ Copyright 2013 Karsten Ahnert
+ Copyright 2013 Mario Mulansky
+ Copyright 2013 Pascal Germroth
 
  stronlgy nonlinear hamiltonian lattice in 2d
 

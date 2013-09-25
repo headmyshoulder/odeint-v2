@@ -1,7 +1,7 @@
 /* Boost libs/numeric/odeint/examples/simple1d.cpp
 
- Copyright 2009-2012 Karsten Ahnert
- Copyright 2009-2012 Mario Mulansky
+ Copyright 2012-2013 Mario Mulansky
+ Copyright 2012 Karsten Ahnert
 
  example for a simple one-dimensional 1st order ODE
 

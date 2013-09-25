@@ -1,7 +1,8 @@
 /* Boost libs/numeric/odeint/examples/openmp/lorenz_ensemble_simple.cpp
 
- Copyright 2009-2012 Karsten Ahnert
- Copyright 2009-2012 Mario Mulansky
+ Copyright 2013 Karsten Ahnert
+ Copyright 2013 Mario Mulansky
+ Copyright 2013 Pascal Germroth
 
  Parallelized Lorenz ensembles
 

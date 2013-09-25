@@ -1,8 +1,9 @@
 /*
  libs/numeric/odeint/examples/stochastic_euler.hpp
 
- Copyright 2009 Karsten Ahnert
- Copyright 2009 Mario Mulansky
+ Copyright 2012 Karsten Ahnert
+ Copyright 2012-2013 Mario Mulansky
+ Copyright 2013 Pascal Germroth
 
  Stochastic euler stepper example and Ornstein-Uhlenbeck process
 

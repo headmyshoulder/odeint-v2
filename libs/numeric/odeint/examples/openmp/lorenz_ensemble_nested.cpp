@@ -1,7 +1,8 @@
 /* Boost libs/numeric/odeint/examples/openmp/lorenz_ensemble_nested.cpp
 
- Copyright 2009-2013 Karsten Ahnert
- Copyright 2009-2013 Mario Mulansky
+ Copyright 2013 Karsten Ahnert
+ Copyright 2013 Pascal Germroth
+ Copyright 2013 Mario Mulansky
 
  Parallelized Lorenz ensembles using nested omp algebra
 
