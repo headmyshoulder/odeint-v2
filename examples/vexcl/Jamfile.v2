@@ -21,7 +21,7 @@ CUDA_INCLUDE = /usr/local/cuda/include ;
 lib opencl : : <name>OpenCL ;
 
 project : requirements
-        <implicit-dependency>/boost//headers
+        <library>/boost//headers
         <include>../../../../..
         <include>$(VEXCL_INCLUDE)
         <include>$(CUDA_INCLUDE)
