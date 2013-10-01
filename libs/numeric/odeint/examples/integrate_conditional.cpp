@@ -54,27 +54,49 @@ int main( int argc , char *argv[] )
     // stepper concept
     if( false )
     {
-        cout << "conditional stop" << endl;
+        cout << "conditional stop stepper" << endl;
         runge_kutta4< state_type > rk4;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
         integrate_conditional( rk4 , lorenz() , x , 0.0 , 0.01 ,
                                make_conditional_stop( []( const state_type &x , double t ) -> bool { return t > 0.995; } ) ,
                                observer );
-        cout << "finished conditional stop" << endl << endl;
+        cout << "finished conditional stop stepper" << endl << endl;
     }
 
     // stepper concept
     {
-        cout << "conditional stop" << endl;
+        cout << "conditional stop stepper" << endl;
         runge_kutta4< state_type > rk4;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
         integrate_conditional( rk4 , lorenz() , x , 0.0 , 0.01 ,
                                make_conditional_stop( []( const state_type &x , double t ) -> bool { return x[0] < -10.0; } ) ,
                                observer );
-        cout << "finished conditional stop" << endl << endl;
+        cout << "finished conditional stop stepper" << endl << endl;
+    }
+    
+    // controlled stepper concept
+    {
+        cout << "conditional stop controlled stepper" << endl;
+        auto stepper = make_controlled( runge_kutta_cash_karp54< state_type >() , 1.0e-6 , 1.0e-6 );
+        state_type x = {{ 10.0 , 10.0 , 10.0 }};
+        integrate_conditional( rk4 , lorenz() , x , 0.0 , 0.01 ,
+                               make_conditional_stop( []( const state_type &x , double t ) -> bool { return x[0] < -10.0; } ) ,
+                               observer );
+
+        cout << "finished conditional stop controlled stepper" << endl;
+    }
+    
+    // dense output stepper concept
+    {
+        cout << "conditional stop dense output " << endl;
+        // TBD
+        cout << "finished conditional stop dense output" << endl;
     }
 
 
+
+    
+    
     // stepper concept
     {
         cout << "approximate" << endl;
