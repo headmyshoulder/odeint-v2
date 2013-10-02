@@ -28,11 +28,13 @@
 
 #include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54.hpp>
 #include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
 #include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
 #include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_runge_kutta.hpp>
 #include <boost/numeric/odeint/integrate/integrate_times.hpp>
+#include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
 
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
@@ -43,6 +45,8 @@ typedef std::vector< value_type > state_type;
 
 void lorenz( const state_type &x , state_type &dxdt , const value_type t )
 {
+    BOOST_CHECK( t >= 0.0 );
+
     const value_type sigma( 10.0 );
     const value_type R( 28.0 );
     const value_type b( value_type( 8.0 ) / value_type( 3.0 ) );
@@ -181,6 +185,40 @@ BOOST_AUTO_TEST_CASE( test_integrate_times_ranges )
 
 }
 
+BOOST_AUTO_TEST_CASE( test_integrate_times_overshoot )
+{
+    state_type x( 3 );
+    x[0] = x[1] = x[2] = 10.0;
+    double dt = -0.1;
 
+    std::vector<double> times( 10 );
+    for( int i=0 ; i<10 ; ++i )
+            times[i] = 1.0-i*1.0/9.0;
+
+    // simple stepper
+    std::vector<double> obs_times;
+    int steps = integrate_times( runge_kutta4< state_type >() , lorenz , x ,
+                                 times.begin() , times.end() ,
+                                 dt , push_back_time( obs_times ) );
+    BOOST_CHECK_EQUAL( steps , 18 ); // two steps required for each observation interval
+    for( int i=0 ; i<10 ; ++i )
+        BOOST_CHECK_EQUAL( times[i] , obs_times[i] );
+
+    // controlled stepper
+    obs_times.clear();
+    integrate_times( controlled_runge_kutta< runge_kutta_cash_karp54< state_type > >() , lorenz , x ,
+                     times.begin() , times.end() ,
+                     dt , push_back_time( obs_times ) );
+    for( int i=0 ; i<10 ; ++i )
+        BOOST_CHECK_EQUAL( times[i] , obs_times[i] );
+
+    // controlled stepper
+    obs_times.clear();
+    integrate_times( dense_output_runge_kutta< controlled_runge_kutta< runge_kutta_dopri5< state_type > > >() , lorenz , x ,
+                     times.begin() , times.end() ,
+                     dt , push_back_time( obs_times ) );
+    for( int i=0 ; i<10 ; ++i )
+        BOOST_CHECK_EQUAL( times[i] , obs_times[i] );
+}
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -48,6 +48,16 @@ bool less_eq_with_sign( T1 t1 , T2 t2 , T3 dt )
         return t1 >= t2;
 }
 
+template< typename T >
+T min_abs( T t1 , T t2 )
+{
+    BOOST_USING_STD_MIN();
+    if( t1>0 )
+        return min BOOST_PREVENT_MACRO_SUBSTITUTION ( t1 , t2 );
+    else
+        return -min BOOST_PREVENT_MACRO_SUBSTITUTION ( -t1 , -t2 );
+}
+
 } } } }
 
 #endif
