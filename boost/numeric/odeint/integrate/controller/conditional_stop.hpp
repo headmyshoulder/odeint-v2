@@ -37,25 +37,27 @@ public:
     conditional_stop( Pred pred ) : m_pred( pred ) { }
 
     template< class Stepper , class Sys , class State , class Time >
-    void init( Stepper &stepper , Sys sys , const State &s , Time t , Time dt )
+    void init( Stepper &stepper , Sys sys , const State &s , Time t , Time dt ) const
     {
+        typedef typename Stepper::stepper_category stepper_category;
+        init_impl( stepper , sys , s , t , dt , stepper_category() );
     }
 
     template< class State , class Time >
-    bool stop( const State &s , Time &t )
+    bool stop( const State &s , Time &t ) const
     {
         return m_pred( s , t );
     }
 
     template< class Stepper , class Sys , class State , class Time >
-    void do_step( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt )
+    void do_step( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt ) const
     {
         typedef typename Stepper::stepper_category stepper_category;
         do_step_impl( stepper , sys , x , t , dt , stepper_category() );
     }
 
     template< class Stepper , class Sys , class State , class Time >
-    void exit( Stepper &stepper , Sys sys , State &x , Time t , Time dt )
+    void exit( Stepper &stepper , Sys sys , State &x , Time t , Time dt ) const
     {
     }
 
@@ -64,14 +66,14 @@ public:
 
 
     template< class Stepper , class Sys , class State , class Time >
-    void do_step_impl( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt , stepper_tag )
+    void do_step_impl( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt , stepper_tag ) const
     {
         stepper.do_step( sys , x , t , dt );
         t += dt;
     }
 
     template< class Stepper , class Sys , class State , class Time >
-    void do_step_impl( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt , controlled_stepper_tag )
+    void do_step_impl( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt , controlled_stepper_tag ) const
     {
         size_t max_attempts = 1000;
         size_t trials = 0;
@@ -87,10 +89,26 @@ public:
     }
 
     template< class Stepper , class Sys , class State , class Time >
-    void do_step_impl( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt , dense_output_stepper_tag )
+    void do_step_impl( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt , dense_output_stepper_tag ) const
     {
         stepper.do_step( sys );
         t = stepper.current_time();
+    }
+    
+    template< class Stepper , class Sys , class State , class Time >
+    void init_impl( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt , stepper_tag ) const
+    {
+    }
+    
+    template< class Stepper , class Sys , class State , class Time >
+    void init_impl( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt , controlled_stepper_tag ) const
+    {
+    }
+    
+    template< class Stepper , class Sys , class State , class Time >
+    void init_impl( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt , dense_output_stepper_tag ) const
+    {
+        stepper.initialize( x , t , dt );
     }
 
 
