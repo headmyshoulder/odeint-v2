@@ -39,8 +39,6 @@ public:
     template< class Stepper , class Sys , class State , class Time >
     void init( Stepper &stepper , Sys sys , const State &s , Time t , Time dt ) const
     {
-        typedef typename Stepper::stepper_category stepper_category;
-        init_impl( stepper , sys , s , t , dt , stepper_category() );
     }
 
     template< class State , class Time >
@@ -87,31 +85,7 @@ public:
         if( trials == max_attempts ) throw std::overflow_error( "adaptive_controller::do_step_impl : too much iterations" );
 
     }
-
-    template< class Stepper , class Sys , class State , class Time >
-    void do_step_impl( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt , dense_output_stepper_tag ) const
-    {
-        stepper.do_step( sys );
-        t = stepper.current_time();
-    }
     
-    template< class Stepper , class Sys , class State , class Time >
-    void init_impl( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt , stepper_tag ) const
-    {
-    }
-    
-    template< class Stepper , class Sys , class State , class Time >
-    void init_impl( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt , controlled_stepper_tag ) const
-    {
-    }
-    
-    template< class Stepper , class Sys , class State , class Time >
-    void init_impl( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt , dense_output_stepper_tag ) const
-    {
-        stepper.initialize( x , t , dt );
-    }
-
-
 
     Pred m_pred;
 };

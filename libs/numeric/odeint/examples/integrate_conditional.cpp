@@ -76,16 +76,6 @@ int main( int argc , char *argv[] )
         cout << "finished conditional stop controlled stepper" << endl;
     }
     
-    // conditional stop - dense output stepper concept
-    {
-        cout << "conditional stop dense output " << endl;
-        auto stepper = make_dense_output( 1.0e-6 , 1.0e-6 , runge_kutta_dopri5< state_type >() );
-        state_type x = {{ 10.0 , 10.0 , 10.0 }};
-        integrate_conditional( stepper , lorenz() , x , 0.0 , 0.01 ,
-                               make_conditional_stop( []( const state_type &x , double t ) -> bool { return x[0] < -18.0; } ) ,
-                               observer );
-        cout << "finished conditional stop dense output" << endl;
-    }
 
 
 
@@ -98,6 +88,18 @@ int main( int argc , char *argv[] )
         runge_kutta4< state_type > rk4;
         state_type x = {{ 10.0 , 10.0 , 10.0 }};
         integrate_conditional( rk4 , lorenz() , x , 0.0 , 0.01 ,
+                               make_approximate( []( const state_type &x , double t ) -> bool { return x[0] < -10.0; } , 1.0e-10 ) ,
+                               observer );
+        cout << "finished approximate" << endl << endl;
+    }
+
+    // approximate - controlled stepper concept
+//    if( false )
+    {
+        cout << "approximate" << endl;
+        auto stepper = make_controlled( 1.0e-6 , 1.0e-6 , runge_kutta_cash_karp54< state_type >() );
+        state_type x = {{ 10.0 , 10.0 , 10.0 }};
+        integrate_conditional( stepper , lorenz() , x , 0.0 , 0.01 ,
                                make_approximate( []( const state_type &x , double t ) -> bool { return x[0] < -10.0; } , 1.0e-10 ) ,
                                observer );
         cout << "finished approximate" << endl << endl;

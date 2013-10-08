@@ -97,12 +97,6 @@ public:
 
     }
 
-    template< class Stepper , class Sys , class State >
-    void do_step_impl( Stepper &stepper , Sys sys , State &x , Time &t , Time &dt , dense_output_stepper_tag )
-    {
-        stepper.do_step( sys );
-        t = stepper.current_time();
-    }
 
     Pred m_pred ;
     Time m_min_step ;
