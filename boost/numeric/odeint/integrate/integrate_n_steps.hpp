@@ -40,11 +40,11 @@ Time integrate_n_steps(
         Time start_time , Time dt , size_t num_of_steps ,
         Observer observer )
 {
-
+    typedef typename odeint::unwrap_reference< Stepper >::type::stepper_category stepper_category;
     return detail::integrate_n_steps(
                 stepper , system , start_state ,
                 start_time , dt , num_of_steps ,
-                observer , typename Stepper::stepper_category() );
+                observer , stepper_category() );
 }
 
 /**
@@ -56,10 +56,11 @@ Time integrate_n_steps(
         Time start_time , Time dt , size_t num_of_steps ,
         Observer observer )
 {
+    typedef typename odeint::unwrap_reference< Stepper >::type::stepper_category stepper_category;
     return detail::integrate_n_steps(
                  stepper , system , start_state ,
                  start_time , dt , num_of_steps ,
-                 observer , typename Stepper::stepper_category() );
+                 observer , stepper_category() );
 }
 
 

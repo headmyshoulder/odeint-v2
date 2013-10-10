@@ -38,10 +38,11 @@ size_t integrate_adaptive(
         Time start_time , Time end_time , Time dt ,
         Observer observer )
 {
+    typedef typename odeint::unwrap_reference< Stepper >::type::stepper_category stepper_category;
     return detail::integrate_adaptive(
             stepper , system , start_state ,
             start_time , end_time , dt ,
-            observer , typename Stepper::stepper_category() );
+            observer , stepper_category() );
 
     /*
      * Suggestion for a new extendable version:
@@ -61,10 +62,11 @@ size_t integrate_adaptive(
         Time start_time , Time end_time , Time dt ,
         Observer observer )
 {
+    typedef typename odeint::unwrap_reference< Stepper >::type::stepper_category stepper_category;
     return detail::integrate_adaptive(
             stepper , system , start_state ,
             start_time , end_time , dt ,
-            observer , typename Stepper::stepper_category() );
+            observer , stepper_category() );
 }
 
 

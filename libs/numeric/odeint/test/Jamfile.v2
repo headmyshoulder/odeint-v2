@@ -52,5 +52,6 @@ test-suite "odeint"
     [ run same_size.cpp ]
     [ run symplectic_steppers.cpp ]
     [ compile algebra_dispatcher.cpp ]
+    [ run integrate_stepper_refs.cpp ]
     : <testing.launcher>valgrind
     ;

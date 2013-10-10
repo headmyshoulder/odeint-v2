@@ -46,6 +46,7 @@ size_t integrate_const(
 )
 {
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
+    typename odeint::unwrap_reference< Stepper >::type &st = stepper;
     
     Time time = start_time;
     int step = 0;
@@ -53,7 +54,7 @@ size_t integrate_const(
     while( less_eq_with_sign( time+dt , end_time , dt ) )
     {
         obs( start_state , time );
-        stepper.do_step( system , start_state , time , dt );
+        st.do_step( system , start_state , time , dt );
         // direct computation of the time avoids error propagation happening when using time += dt
         // we need clumsy type analysis to get boost units working here
         ++step;
@@ -103,10 +104,11 @@ size_t integrate_const(
 )
 {
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
+    typename odeint::unwrap_reference< Stepper >::type &st = stepper;
     
     Time time = start_time;
     
-    stepper.initialize( start_state , time , dt );
+    st.initialize( start_state , time , dt );
     obs( start_state , time );
     time += dt;
 
@@ -115,9 +117,9 @@ size_t integrate_const(
     
     while( less_with_sign( time+dt , end_time , dt ) )
     {
-        while( less_eq_with_sign( time , stepper.current_time() , dt ) )
+        while( less_eq_with_sign( time , st.current_time() , dt ) )
         {
-            stepper.calc_state( time , start_state );
+            st.calc_state( time , start_state );
             obs( start_state , time );
             ++obs_step;
             // direct computation of the time avoids error propagation happening when using time += dt
@@ -125,20 +127,20 @@ size_t integrate_const(
             time = start_time + static_cast< typename unit_value_type<Time>::type >(obs_step) * dt;
         }
         // we have not reached the end, do another real step
-        if( less_with_sign( stepper.current_time()+stepper.current_time_step() ,
+        if( less_with_sign( st.current_time()+st.current_time_step() ,
                             end_time ,
-                            stepper.current_time_step() ) )
+                            st.current_time_step() ) )
         {
-            while( less_eq_with_sign( stepper.current_time() , time , dt ) )
+            while( less_eq_with_sign( st.current_time() , time , dt ) )
             {
-                stepper.do_step( system );
+                st.do_step( system );
                 ++real_step;
             }
         }
-        else if( less_with_sign( stepper.current_time() , end_time , stepper.current_time_step() ) )
+        else if( less_with_sign( st.current_time() , end_time , st.current_time_step() ) )
         { // do the last step ending exactly on the end point
-            stepper.initialize( stepper.current_state() , stepper.current_time() , end_time - stepper.current_time() );
-            stepper.do_step( system );
+            st.initialize( st.current_state() , st.current_time() , end_time - st.current_time() );
+            st.do_step( system );
             ++real_step;
         }
         
@@ -146,7 +148,7 @@ size_t integrate_const(
     // last observation, if we are still in observation interval
     if( less_eq_with_sign( time , end_time , dt ) )
     {
-        stepper.calc_state( time , start_state );
+        st.calc_state( time , start_state );
         obs( start_state , time );
     }
     

@@ -130,7 +130,7 @@ struct perform_integrate_adaptive_test
 
         std::vector< value_type > times;
 
-        size_t steps = integrate_adaptive( Stepper() , *lorenz , x , 0.0 , t_end ,
+        size_t steps = integrate_adaptive( Stepper() , lorenz , x , 0.0 , t_end ,
                                         dt , push_back_time( times , x_end ) );
 
 //        std::cout << t_end << " , " << steps << " , " << times.size() << " , " << 10.0+dt*steps << "=" << x_end[0] << std::endl;
@@ -161,8 +161,8 @@ struct perform_integrate_times_test
         std::vector< double > times;
 
         std::vector< double > obs_times( abs(n) );
-        for( int i=0 ; boost::numeric::odeint::detail::less_with_sign( i ,
-                       static_cast<int>(obs_times.size()) ,
+        for( int i=0 ; boost::numeric::odeint::detail::less_with_sign( static_cast<double>(i) ,
+                       static_cast<double>(obs_times.size()) ,
                        dt ) ; i+=dn )
         {
             obs_times[i] = i;

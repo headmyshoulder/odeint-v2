@@ -40,10 +40,11 @@ size_t integrate_times(
         TimeIterator times_start , TimeIterator times_end , Time dt ,
         Observer observer )
 {
+    typedef typename odeint::unwrap_reference< Stepper >::type::stepper_category stepper_category;
     return detail::integrate_times(
             stepper , system , start_state ,
             times_start , times_end , dt ,
-            observer , typename Stepper::stepper_category() );
+            observer , stepper_category() );
 }
 
 /**
@@ -55,10 +56,11 @@ size_t integrate_times(
         TimeIterator times_start , TimeIterator times_end , Time dt ,
         Observer observer )
 {
+    typedef typename odeint::unwrap_reference< Stepper >::type::stepper_category stepper_category;
     return detail::integrate_times(
             stepper , system , start_state ,
             times_start , times_end , dt ,
-            observer , typename Stepper::stepper_category() );
+            observer , stepper_category() );
 }
 
 /**

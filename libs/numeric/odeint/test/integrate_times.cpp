@@ -90,6 +90,8 @@ BOOST_AUTO_TEST_CASE( test_integrate_times )
         BOOST_CHECK_EQUAL( times[i] , static_cast<double>(i) );
     times.clear();
 
+    std::cout << "test dopri5 stepper" << std::endl;
+
     // controlled stepper
     integrate_times( controlled_runge_kutta< runge_kutta_dopri5< state_type > >() , lorenz , x ,
                 boost::counting_iterator<int>(0) , boost::counting_iterator<int>(10) ,
@@ -99,6 +101,8 @@ BOOST_AUTO_TEST_CASE( test_integrate_times )
         // check if observer was called at times 0,1,2,...
         BOOST_CHECK_EQUAL( times[i] , static_cast<double>(i) );
     times.clear();
+
+    std::cout << "test BS stepper" << std::endl;
 
     //another controlled stepper
     integrate_times( bulirsch_stoer< state_type >() , lorenz , x ,
@@ -110,6 +114,7 @@ BOOST_AUTO_TEST_CASE( test_integrate_times )
         BOOST_CHECK_EQUAL( times[i] , static_cast<double>(i) );
     times.clear();
 
+    std::cout << "test dense_out stepper" << std::endl;
 
     // dense output stepper
     integrate_times( dense_output_runge_kutta< controlled_runge_kutta< runge_kutta_dopri5< state_type > > >() ,
@@ -121,6 +126,7 @@ BOOST_AUTO_TEST_CASE( test_integrate_times )
         // check if observer was called at times 0,1,2,...
         BOOST_CHECK_EQUAL( times[i] , static_cast<double>(i) );
 
+    std::cout << "test BS_do stepper" << std::endl;
 
     integrate_times( bulirsch_stoer_dense_out< state_type >() , lorenz , x ,
                 boost::counting_iterator<int>(0) , boost::counting_iterator<int>(10) ,

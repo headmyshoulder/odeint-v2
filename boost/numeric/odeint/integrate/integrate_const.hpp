@@ -44,19 +44,20 @@ size_t integrate_const(
         Observer observer
 )
 {
+    typedef typename odeint::unwrap_reference< Stepper >::type::stepper_category stepper_category;
     // we want to get as fast as possible to the end
     if( boost::is_same< null_observer , Observer >::value )
     {
         return detail::integrate_adaptive(
                 stepper , system , start_state ,
                 start_time , end_time  , dt ,
-                observer , typename Stepper::stepper_category() );
+                observer , stepper_category() );
     }
     else
     {
         return detail::integrate_const( stepper , system , start_state , 
                                         start_time , end_time , dt ,
-                                        observer , typename Stepper::stepper_category() );
+                                        observer , stepper_category() );
       }
 }
 
@@ -71,19 +72,20 @@ size_t integrate_const(
         Observer observer
 )
 {
+    typedef typename odeint::unwrap_reference< Stepper >::type::stepper_category stepper_category;
     // we want to get as fast as possible to the end
     if( boost::is_same< null_observer , Observer >::value )
     {
         return detail::integrate_adaptive(
                 stepper , system , start_state ,
                 start_time , end_time  , dt ,
-                observer , typename Stepper::stepper_category() );
+                observer , stepper_category() );
     }
     else
     {
         return detail::integrate_const( stepper , system , start_state , 
                                         start_time , end_time , dt ,
-                                        observer , typename Stepper::stepper_category() );
+                                        observer , stepper_category() );
     }
 }
 

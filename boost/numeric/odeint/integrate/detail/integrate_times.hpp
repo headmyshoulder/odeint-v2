@@ -44,6 +44,8 @@ size_t integrate_times(
 )
 {
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
+    typename odeint::unwrap_reference< Stepper >::type &st = stepper;
+    typedef typename unit_value_type<Time>::type time_type;
 
     size_t steps = 0;
     Time current_dt = dt;
@@ -53,10 +55,10 @@ size_t integrate_times(
         obs( start_state , current_time );
         if( start_time == end_time )
             break;
-        while( less_with_sign( current_time , *start_time , current_dt ) )
+        while( less_with_sign( current_time , static_cast<time_type>(*start_time) , current_dt ) )
         {
             current_dt = min_abs( dt , *start_time - current_time );
-            stepper.do_step( system , start_state , current_time , current_dt );
+            st.do_step( system , start_state , current_time , current_dt );
             current_time += current_dt;
             steps++;
         }
@@ -75,6 +77,8 @@ size_t integrate_times(
 )
 {
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
+    typename odeint::unwrap_reference< Stepper >::type &st = stepper;
+    typedef typename unit_value_type<Time>::type time_type;
 
     const size_t max_attempts = 1000;
     const char *error_string = "Integrate adaptive : Maximal number of iterations reached. A step size could not be found.";
@@ -86,16 +90,20 @@ size_t integrate_times(
         obs( start_state , current_time );
         if( start_time == end_time )
             break;
-        while( less_with_sign( current_time , *start_time , dt ) )
+        while( less_with_sign( current_time , static_cast<time_type>(*start_time) , dt ) )
         {
-            dt = min_abs( dt , *start_time - current_time );
-            if( stepper.try_step( system , start_state , current_time , dt ) == success )
+            // adjust stepsize to end up exactly at the observation point
+            double current_dt = min_abs( dt , *start_time - current_time );
+            if( st.try_step( system , start_state , current_time , current_dt ) == success )
             {
                 ++steps;
+                // continue with the original step size if dt was reduced due to observation
+                dt = max_abs( dt , current_dt );
             }
             else
             {
                 ++fail_steps;
+                dt = current_dt;
             }
             if( fail_steps == max_attempts ) throw std::overflow_error( error_string );
         }
@@ -114,38 +122,39 @@ size_t integrate_times(
 )
 {
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
-
+    typename odeint::unwrap_reference< Stepper >::type &st = stepper;
+    typedef typename unit_value_type<Time>::type time_type;
 
     if( start_time == end_time )
         return 0;
 
-    Time last_time_point = *(end_time-1);
+    Time last_time_point = static_cast<time_type>(*(end_time-1));
 
-    stepper.initialize( start_state , *start_time , dt );
+    st.initialize( start_state , *start_time , dt );
     obs( start_state , *start_time++ );
 
     size_t count = 0;
     while( start_time != end_time )
     {
-        while( ( start_time != end_time ) && less_eq_with_sign( *start_time , stepper.current_time() , stepper.current_time_step() ) )
+        while( ( start_time != end_time ) && less_eq_with_sign( static_cast<time_type>(*start_time) , st.current_time() , st.current_time_step() ) )
         {
-            stepper.calc_state( *start_time , start_state );
+            st.calc_state( *start_time , start_state );
             obs( start_state , *start_time );
             start_time++;
         }
 
         // we have not reached the end, do another real step
-        if( less_eq_with_sign( stepper.current_time() + stepper.current_time_step() ,
+        if( less_eq_with_sign( st.current_time() + st.current_time_step() ,
                                last_time_point ,
-                               stepper.current_time_step() ) )
+                               st.current_time_step() ) )
         {
-            stepper.do_step( system );
+            st.do_step( system );
             ++count;
         }
         else if( start_time != end_time )
         { // do the last step ending exactly on the end point
-            stepper.initialize( stepper.current_state() , stepper.current_time() , last_time_point - stepper.current_time() );
-            stepper.do_step( system );
+            st.initialize( st.current_state() , st.current_time() , last_time_point - st.current_time() );
+            st.do_step( system );
             ++count;
         }
     }
