@@ -328,6 +328,8 @@ using namespace boost::numeric::odeint;
 
 int main( int argc , char *argv[] )
 {
+    const size_t n1 = 32;
+    const size_t n2 = 32;
     const size_t n = n1 * n2;
     auto sys = make_md_system_bs( n , local_force() , make_conservative_interaction( lennard_jones() ) , 100.0 , 100.0 , 2.0 );
     typedef decltype( sys ) system_type;
