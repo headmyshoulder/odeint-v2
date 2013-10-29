@@ -36,8 +36,8 @@ struct algebra_dispatcher< vex::vector< T > >
 };
 
 // specialization for vexcl multivector
-template< typename T , size_t N, bool own >
-struct algebra_dispatcher< vex::multivector< T , N , own > >
+template< typename T , size_t N >
+struct algebra_dispatcher< vex::multivector< T , N > >
 {
     typedef vector_space_algebra algebra_type;
 };

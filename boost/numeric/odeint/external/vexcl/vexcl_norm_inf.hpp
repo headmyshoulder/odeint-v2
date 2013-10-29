@@ -76,11 +76,11 @@ struct vector_space_norm_inf< vex::vector<T> > {
 };
 
 // specialization for vexcl multivector
-template <typename T, size_t N, bool own>
-struct vector_space_norm_inf< vex::multivector<T, N, own> > {
+template <typename T, size_t N>
+struct vector_space_norm_inf< vex::multivector<T, N> > {
     typedef T result_type;
 
-    T operator()( const vex::multivector<T, N, own> &x ) const {
+    T operator()( const vex::multivector<T, N> &x ) const {
         auto max = detail::vexcl_reductor<T>(x.queue_list());
 
         // Reducing a multivector results in std::array<T, N>:
