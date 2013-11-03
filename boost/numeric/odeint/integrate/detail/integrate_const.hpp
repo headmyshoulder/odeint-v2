@@ -50,8 +50,8 @@ size_t integrate_const(
     
     Time time = start_time;
     int step = 0;
-    
-    while( less_eq_with_sign( time+dt , end_time , dt ) )
+    // cast time+dt explicitely in case of expression templates (e.g. multiprecision)
+    while( less_eq_with_sign( static_cast<Time>(time+dt) , end_time , dt ) )
     {
         obs( start_state , time );
         st.do_step( system , start_state , time , dt );
@@ -80,7 +80,7 @@ size_t integrate_const(
     const Time time_step = dt;
     int step = 0;
     
-    while( less_eq_with_sign( time+time_step , end_time , dt ) )
+    while( less_eq_with_sign( static_cast<Time>(time+time_step) , end_time , dt ) )
     {
         obs( start_state , time );
         detail::integrate_adaptive( stepper , system , start_state , time , time+time_step , dt ,
@@ -115,7 +115,7 @@ size_t integrate_const(
     int obs_step( 1 );
     int real_step( 0 );
     
-    while( less_with_sign( time+dt , end_time , dt ) )
+    while( less_with_sign( static_cast<Time>(time+dt) , end_time , dt ) )
     {
         while( less_eq_with_sign( time , st.current_time() , dt ) )
         {
@@ -127,7 +127,7 @@ size_t integrate_const(
             time = start_time + static_cast< typename unit_value_type<Time>::type >(obs_step) * dt;
         }
         // we have not reached the end, do another real step
-        if( less_with_sign( st.current_time()+st.current_time_step() ,
+        if( less_with_sign( static_cast<Time>(st.current_time()+st.current_time_step()) ,
                             end_time ,
                             st.current_time_step() ) )
         {

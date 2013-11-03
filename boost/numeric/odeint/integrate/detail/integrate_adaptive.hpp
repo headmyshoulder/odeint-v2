@@ -130,7 +130,7 @@ size_t integrate_adaptive(
 
     while( less_with_sign( st.current_time() , end_time , st.current_time_step() ) )
     {
-        while( less_eq_with_sign( st.current_time() + st.current_time_step() ,
+        while( less_eq_with_sign( static_cast<Time>(st.current_time() + st.current_time_step()) ,
                end_time ,
                st.current_time_step() ) )
         {   //make sure we don't go beyond the end_time

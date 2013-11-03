@@ -79,7 +79,7 @@ Time integrate_n_steps(
     for( size_t step = 0; step < num_of_steps ; ++step )
     {
         obs( start_state , time );
-        detail::integrate_adaptive( stepper , system , start_state , time , time+time_step , dt ,
+        detail::integrate_adaptive( stepper , system , start_state , time , static_cast<Time>(time+time_step) , dt ,
                 null_observer() , controlled_stepper_tag() );
         // direct computation of the time avoids error propagation happening when using time += dt
         // we need clumsy type analysis to get boost units working here
@@ -121,7 +121,7 @@ Time integrate_n_steps(
         }
 
         // we have not reached the end, do another real step
-        if( less_with_sign( st.current_time()+st.current_time_step() ,
+        if( less_with_sign( static_cast<Time>(st.current_time()+st.current_time_step()) ,
                             end_time ,
                             st.current_time_step() ) )
         {
@@ -129,7 +129,7 @@ Time integrate_n_steps(
         }
         else if( less_with_sign( st.current_time() , end_time , st.current_time_step() ) )
         { // do the last step ending exactly on the end point
-            st.initialize( st.current_state() , st.current_time() , end_time - st.current_time() );
+            st.initialize( st.current_state() , st.current_time() , static_cast<Time>(end_time - st.current_time()) );
             st.do_step( system );
         }
     }
@@ -137,9 +137,9 @@ Time integrate_n_steps(
     while( st.current_time() < end_time )
     {
         if( less_with_sign( end_time ,
-                            st.current_time()+st.current_time_step() ,
+                            static_cast<Time>(st.current_time()+st.current_time_step()) ,
                             st.current_time_step() ) )
-            st.initialize( st.current_state() , st.current_time() , end_time - st.current_time() );
+            st.initialize( st.current_state() , st.current_time() , static_cast<Time>(end_time - st.current_time()) );
         st.do_step( system );
     }
 

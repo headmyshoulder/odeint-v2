@@ -36,6 +36,7 @@ exe heun : heun.cpp ;
 exe bind_member_functions : bind_member_functions.cpp ;
 exe bind_member_functions_cpp11 : bind_member_functions_cpp11.cpp : <cxxflags>-std=c++0x ;
 
+build-project multiprecision ;
 # build-project mtl ;
 # build-project ublas ;
 # build-project gmpxx ;
