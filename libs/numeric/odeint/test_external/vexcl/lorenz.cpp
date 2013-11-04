@@ -19,10 +19,12 @@
 
 #include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
+#include <boost/numeric/odeint/stepper/dense_output_runge_kutta.hpp>
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 #include <boost/numeric/odeint/integrate/integrate_const.hpp>
-#include <boost/numeric/odeint/external/vexcl/vexcl_resize.hpp>
+#include <boost/numeric/odeint/external/vexcl/vexcl.hpp>
 
 #include <boost/test/unit_test.hpp>
 
@@ -84,7 +86,7 @@ BOOST_AUTO_TEST_CASE( integrate_const_rk4 )
     std::cout << res[0] << std::endl;
 }
 
-BOOST_AUTO_TEST_CASE( integrate_const_adaptive_rk54 )
+BOOST_AUTO_TEST_CASE( integrate_const_controlled_rk54 )
 {
     vex::Context ctx( vex::Filter::Type(CL_DEVICE_TYPE_GPU) );
 
@@ -110,8 +112,36 @@ BOOST_AUTO_TEST_CASE( integrate_const_adaptive_rk54 )
     std::vector< double > res( 3 * n );
     vex::copy( X(0) , res );
     std::cout << res[0] << std::endl;
-
-
-
 }
+
+BOOST_AUTO_TEST_CASE( integrate_const_dense_output_dopri5 )
+{
+    vex::Context ctx( vex::Filter::Type(CL_DEVICE_TYPE_GPU) );
+
+    double Rmin = 0.1 , Rmax = 50.0 , dR = ( Rmax - Rmin ) / double( n - 1 );
+    std::vector<double> x( n * 3 ) , r( n );
+    for( size_t i=0 ; i<n ; ++i ) r[i] = Rmin + dR * double( i );
+
+    state_type X( ctx.queue() , n );
+    X(0) = 10.0;
+    X(1) = 10.0;
+    X(2) = 10.0;
+
+    vector_type R( ctx.queue() , r );
+
+    typedef odeint::runge_kutta_dopri5<
+        state_type , double , state_type , double ,
+        odeint::vector_space_algebra , odeint::default_operations
+        > stepper_type;
+    typedef odeint::controlled_runge_kutta< stepper_type > controlled_stepper_type;
+    typedef odeint::dense_output_runge_kutta< controlled_stepper_type > dense_output_stepper_type;
+
+    odeint::integrate_const( dense_output_stepper_type() , sys_func( R ) , X , 0.0 , t_max , dt );
+
+    std::vector< double > res( 3 * n );
+    vex::copy( X(0) , res );
+    std::cout << res[0] << std::endl;
+}
+
+
 
