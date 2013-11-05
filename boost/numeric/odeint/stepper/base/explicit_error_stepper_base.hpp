@@ -262,7 +262,7 @@ private:
     {
         typename odeint::unwrap_reference< System >::type &sys = system;
         m_resizer.adjust_size( x , detail::bind( &internal_stepper_base_type::template resize_impl<StateInOut> , detail::ref( *this ) , detail::_1 ) );
-        sys( x , m_dxdt.m_v ,t );
+        sys( x , m_dxdt.m_v , t );
         this->stepper().do_step_impl( system , x , m_dxdt.m_v , t , x , dt );
     }
 

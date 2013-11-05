@@ -72,12 +72,30 @@ void check_error_stepper_concept( Stepper &stepper , System system , typename St
     typedef typename stepper_type::order_type order_type;
     typedef typename stepper_type::time_type time_type;
 
-    stepper.do_step( system , typename boost::add_reference< container_type>::type( x ), 0.0 , 0.1 );
-    stepper.do_step( system , typename boost::add_reference< container_type>::type( x ), 0.0 , 0.1 ,  typename boost::add_reference< container_type>::type( xerr ) );
-
+    stepper.do_step( system , x , static_cast<time_type>(0.0) , static_cast<time_type>(0.1) );
+    stepper.do_step( system , x , static_cast<time_type>(0.0) , static_cast<time_type>(0.1) , xerr );
 }
 
-template< class Stepper , class State > struct perform_error_stepper_test;
+// default case is used for vector space types like plain double
+template< class Stepper , typename T >
+struct perform_error_stepper_test
+{
+    typedef T vector_space_type;
+    void operator()( void ) const
+    {
+        using std::abs;
+        vector_space_type x , xerr;
+        x = 2.0;
+        Stepper stepper;
+        check_error_stepper_concept( stepper ,
+                                     constant_system_vector_space< vector_space_type , vector_space_type , typename Stepper::time_type > ,
+                                     x ,
+                                     xerr );
+        check_error_stepper_concept( stepper , boost::cref( constant_system_functor_vector_space() ) , x , xerr );
+
+        BOOST_CHECK_MESSAGE( (abs( x - result )) < eps , x );
+    }
+};
 
 template< class Stepper , typename T >
 struct perform_error_stepper_test< Stepper , std::vector<T> >
@@ -88,29 +106,12 @@ struct perform_error_stepper_test< Stepper , std::vector<T> >
         using std::abs;
         vector_type x( 1 , 2.0 ) , xerr( 1 );
         Stepper stepper;
-        check_error_stepper_concept( stepper , constant_system_standard< vector_type , vector_type , double > , x , xerr );
+        check_error_stepper_concept( stepper , constant_system_standard< vector_type , vector_type , typename Stepper::time_type > , x , xerr );
         check_error_stepper_concept( stepper , boost::cref( constant_system_functor_standard() ) , x , xerr );
-        BOOST_CHECK_SMALL( abs( x[0] - result ) , eps );
+        BOOST_CHECK( (abs( x[0] - result )) < eps );
     }
 };
 
-template< class Stepper >
-struct perform_error_stepper_test< Stepper , vector_space_type >
-{
-    void operator()( void ) const
-    {
-        using std::abs;
-        vector_space_type x , xerr;
-        x = 2.0;
-        Stepper stepper;
-        check_error_stepper_concept( stepper , 
-                                     constant_system_vector_space< vector_space_type , vector_space_type , double > , 
-                                     x , 
-                                     xerr );
-        check_error_stepper_concept( stepper , boost::cref( constant_system_functor_vector_space() ) , x , xerr );
-        BOOST_CHECK_SMALL( abs( x - result ) , eps );
-    }
-};
 
 template< class Stepper , typename T >
 struct perform_error_stepper_test< Stepper , boost::array<T,1> >
@@ -122,17 +123,17 @@ struct perform_error_stepper_test< Stepper , boost::array<T,1> >
         array_type x , xerr;
         x[0] = 2.0;
         Stepper stepper;
-        check_error_stepper_concept( stepper , constant_system_standard< array_type , array_type , double > , x , xerr );
+        check_error_stepper_concept( stepper , constant_system_standard< array_type , array_type , typename Stepper::time_type > , x , xerr );
         check_error_stepper_concept( stepper , boost::cref( constant_system_functor_standard() ) , x , xerr );
-        BOOST_CHECK_SMALL( abs( x[0] - result ) , eps );
+        BOOST_CHECK( (abs( x[0] - result )) < eps );
     }
 };
 
 template< class State > class error_stepper_methods : public mpl::vector<
-    runge_kutta_cash_karp54_classic< State > ,
-    runge_kutta_cash_karp54< State > ,
-    runge_kutta_dopri5< State > ,
-    runge_kutta_fehlberg78< State >
+    runge_kutta_cash_karp54_classic< State , typename detail::extract_value_type<State>::type > ,
+    runge_kutta_cash_karp54< State , typename detail::extract_value_type<State>::type > ,
+    runge_kutta_dopri5< State , typename detail::extract_value_type<State>::type > ,
+    runge_kutta_fehlberg78< State , typename detail::extract_value_type<State>::type >
     > { };
 
 

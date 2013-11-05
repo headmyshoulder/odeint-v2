@@ -55,6 +55,8 @@
 #include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_fehlberg78.hpp>
 
+#include <boost/numeric/odeint/algebra/detail/extract_value_type.hpp>
+
 #include "prepare_stepper_testing.hpp"
 #include "dummy_odes.hpp"
 
@@ -69,17 +71,32 @@ const double result = 2.2;
 const double eps = 1.0e-14;
 
 template< class Stepper , class System >
-void check_stepper_concept( Stepper &stepper , System system , typename Stepper::deriv_type &x )
+void check_stepper_concept( Stepper &stepper , System system , typename Stepper::state_type &x )
 {
     typedef Stepper stepper_type;
     typedef typename stepper_type::deriv_type container_type;
     typedef typename stepper_type::order_type order_type;
     typedef typename stepper_type::time_type time_type;
 
-    stepper.do_step( system , x , 0.0 , 0.1 );
+    stepper.do_step( system , x , static_cast<time_type>(0.0) , static_cast<time_type>(0.1) );
 }
 
-template< class Stepper , class State > struct perform_stepper_test;
+// default case is used for vector space types like plain double
+template< class Stepper , typename T >
+struct perform_stepper_test
+{
+    typedef T vector_space_type;
+    void operator()( void ) const
+    {
+        vector_space_type x;
+        x = 2.0;
+        Stepper stepper;
+        check_stepper_concept( stepper , constant_system_vector_space< vector_space_type , vector_space_type , typename Stepper::time_type > , x );
+        check_stepper_concept( stepper , boost::cref( constant_system_functor_vector_space() ) , x );
+        std::cout << x << " ?= " << result << std::endl;
+        BOOST_CHECK( (abs( x - result )) < eps );
+    }
+};
 
 template< class Stepper , typename T >
 struct perform_stepper_test< Stepper , std::vector<T> >
@@ -88,27 +105,12 @@ struct perform_stepper_test< Stepper , std::vector<T> >
     void operator()( void )
     {
         using std::abs;
-        vector_type x( 1 , 2.0 );
+        vector_type x( 1 , static_cast<T>(2.0) );
         Stepper stepper;
-        check_stepper_concept( stepper , constant_system_standard< vector_type , vector_type , double > , x );
+        check_stepper_concept( stepper , constant_system_standard< vector_type , vector_type , typename Stepper::time_type > , x );
         check_stepper_concept( stepper , boost::cref( constant_system_functor_standard() ) , x );
         std::cout << x[0] << " ?= " << result << std::endl;
-        BOOST_CHECK_SMALL( abs( x[0] - result ) , eps );
-    }
-};
-
-template< class Stepper >
-struct perform_stepper_test< Stepper , vector_space_type >
-{
-    void operator()( void ) const
-    {
-        vector_space_type x;
-        x = 2.0;
-        Stepper stepper;
-        check_stepper_concept( stepper , constant_system_vector_space< vector_space_type , vector_space_type , double > , x );
-        check_stepper_concept( stepper , boost::cref( constant_system_functor_vector_space() ) , x );
-        std::cout << x << " ?= " << result << std::endl;
-        BOOST_CHECK_SMALL( fabs( x - result ) , eps );
+        BOOST_CHECK( (abs( x[0] - result )) < eps );
     }
 };
 
@@ -120,24 +122,25 @@ struct perform_stepper_test< Stepper , boost::array<T,1> >
     {
         using std::abs;
         array_type x;
-        x[0] = 2.0;
+        x[0] = static_cast<T>(2.0);
         Stepper stepper;
-        check_stepper_concept( stepper , constant_system_standard< array_type , array_type , double> , x );
+        check_stepper_concept( stepper , constant_system_standard< array_type , array_type , typename Stepper::time_type > , x );
         check_stepper_concept( stepper , boost::cref( constant_system_functor_standard() ) , x );
         std::cout << x[0] << " ?= " << result << std::endl;
-        BOOST_CHECK_SMALL( abs( x[0] - result ) , eps );
+        BOOST_CHECK( (abs( x[0] - result )) < eps );
     }
 };
 
-template< class State > class stepper_methods : public mpl::vector<
-    euler< State > ,
-    modified_midpoint< State > ,
-    runge_kutta4< State > ,
-    runge_kutta4_classic< State > ,
-    runge_kutta_cash_karp54_classic< State > ,
-    runge_kutta_cash_karp54< State > ,
-    runge_kutta_dopri5< State > ,
-    runge_kutta_fehlberg78< State >
+template< class State >
+class stepper_methods : public mpl::vector<
+    euler< State , typename detail::extract_value_type<State>::type > ,
+    modified_midpoint< State , typename detail::extract_value_type<State>::type > ,
+    runge_kutta4< State , typename detail::extract_value_type<State>::type > ,
+    runge_kutta4_classic< State , typename detail::extract_value_type<State>::type > ,
+    runge_kutta_cash_karp54_classic< State , typename detail::extract_value_type<State>::type > ,
+    runge_kutta_cash_karp54< State , typename detail::extract_value_type<State>::type > ,
+    runge_kutta_dopri5< State , typename detail::extract_value_type<State>::type > ,
+    runge_kutta_fehlberg78< State , typename detail::extract_value_type<State>::type >
     > { };
 
 

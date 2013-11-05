@@ -81,7 +81,22 @@ void check_controlled_stepper_concept( Stepper &stepper , System system , typena
 }
 
 
-template< class ControlledStepper , class State > struct perform_controlled_stepper_test;
+template< class ControlledStepper , typename T >
+struct perform_controlled_stepper_test
+{
+    typedef T vector_space_type;
+    void operator()( void ) const
+    {
+        vector_space_type x;
+        x = 2.0;
+        ControlledStepper controlled_stepper;
+        check_controlled_stepper_concept( controlled_stepper ,
+                                          constant_system_vector_space< vector_space_type , vector_space_type , typename ControlledStepper::time_type >
+                                          , x );
+        check_controlled_stepper_concept( controlled_stepper , boost::cref( constant_system_functor_vector_space() ) , x );
+        BOOST_CHECK( (abs( x - result )) < eps );
+    }
+};
 
 template< class ControlledStepper , typename T >
 struct perform_controlled_stepper_test< ControlledStepper , std::vector<T> >
@@ -93,10 +108,10 @@ struct perform_controlled_stepper_test< ControlledStepper , std::vector<T> >
         vector_type x( 1 , 2.0 );
         ControlledStepper controlled_stepper;
         check_controlled_stepper_concept( controlled_stepper ,
-                                          constant_system_standard< vector_type , vector_type , double > ,
+                                          constant_system_standard< vector_type , vector_type , typename ControlledStepper::time_type > ,
                                           x );
         check_controlled_stepper_concept( controlled_stepper , boost::cref( constant_system_functor_standard() ) , x );
-        BOOST_CHECK_SMALL( abs( x[0] - result ) , eps );
+        BOOST_CHECK( (abs( x[0] - result )) < eps );
     }
 };
 
@@ -110,10 +125,10 @@ struct perform_controlled_stepper_test< ControlledStepper , vector_space_type >
         x = 2.0;
         ControlledStepper controlled_stepper;
         check_controlled_stepper_concept( controlled_stepper , 
-                                          constant_system_vector_space< vector_space_type , vector_space_type , double >
+                                          constant_system_vector_space< vector_space_type , vector_space_type , typename ControlledStepper::time_type >
                                           , x );
         check_controlled_stepper_concept( controlled_stepper , boost::cref( constant_system_functor_vector_space() ) , x );
-        BOOST_CHECK_SMALL( fabs( x - result ) , eps );
+        BOOST_CHECK( (abs( x - result )) < eps );
     }
 };
 
@@ -127,18 +142,18 @@ struct perform_controlled_stepper_test< ControlledStepper , boost::array<T,1> >
         array_type x;
         x[0] = 2.0;
         ControlledStepper controlled_stepper;
-        check_controlled_stepper_concept( controlled_stepper , constant_system_standard< array_type , array_type , double > , x );
+        check_controlled_stepper_concept( controlled_stepper , constant_system_standard< array_type , array_type , typename ControlledStepper::time_type > , x );
         check_controlled_stepper_concept( controlled_stepper , boost::cref( constant_system_functor_standard() ) , x );
-        BOOST_CHECK_SMALL( abs( x[0] - result ) , eps );
+        BOOST_CHECK( (abs( x[0] - result )) < eps );
     }
 };
 
 
 template< class State > class controlled_stepper_methods : public mpl::vector<
-    controlled_runge_kutta< runge_kutta_cash_karp54_classic< State > > ,
-    controlled_runge_kutta< runge_kutta_dopri5< State > > ,
-    controlled_runge_kutta< runge_kutta_fehlberg78< State > > ,
-    bulirsch_stoer< State >
+    controlled_runge_kutta< runge_kutta_cash_karp54_classic< State , typename detail::extract_value_type<State>::type > > ,
+    controlled_runge_kutta< runge_kutta_dopri5< State , typename detail::extract_value_type<State>::type > > ,
+    controlled_runge_kutta< runge_kutta_fehlberg78< State , typename detail::extract_value_type<State>::type > > ,
+    bulirsch_stoer< State , typename detail::extract_value_type<State>::type >
     > { };
 
 typedef mpl::copy
