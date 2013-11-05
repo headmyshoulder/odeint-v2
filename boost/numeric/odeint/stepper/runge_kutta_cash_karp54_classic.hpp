@@ -42,7 +42,7 @@ template<
 class State ,
 class Value = double ,
 class Deriv = State ,
-class Time = double ,
+class Time = Value ,
 class Algebra = typename algebra_dispatcher< State >::algebra_type ,
 class Operations = typename operations_dispatcher< State >::operations_type ,
 class Resizer = initially_resizer
