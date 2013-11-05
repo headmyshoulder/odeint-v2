@@ -79,34 +79,21 @@ void check_stepper_concept( Stepper &stepper , System system , typename Stepper:
     stepper.do_step( system , x , 0.0 , 0.1 );
 }
 
-
 template< class Stepper , class State > struct perform_stepper_test;
 
-template< class Stepper >
-struct perform_stepper_test< Stepper , vector_type >
+template< class Stepper , typename T >
+struct perform_stepper_test< Stepper , std::vector<T> >
 {
+    typedef std::vector<T> vector_type;
     void operator()( void )
     {
+        using std::abs;
         vector_type x( 1 , 2.0 );
         Stepper stepper;
         check_stepper_concept( stepper , constant_system_standard< vector_type , vector_type , double > , x );
         check_stepper_concept( stepper , boost::cref( constant_system_functor_standard() ) , x );
         std::cout << x[0] << " ?= " << result << std::endl;
-        BOOST_CHECK_SMALL( fabs( x[0] - result ) , eps );
-    }
-};
-
-template< class Stepper >
-struct perform_stepper_test< Stepper , complex_vector_type >
-{
-    void operator()( void )
-    {
-        complex_vector_type x( 1 , 2.0 );
-        Stepper stepper;
-        check_stepper_concept( stepper , constant_system_standard< complex_vector_type , complex_vector_type , double > , x );
-        check_stepper_concept( stepper , boost::cref( constant_system_functor_standard() ) , x );
-        std::cout << x[0] << " ?= " << result << std::endl;
-        BOOST_CHECK_SMALL( fabs( x[0].real() - result ) , eps );
+        BOOST_CHECK_SMALL( abs( x[0] - result ) , eps );
     }
 };
 
@@ -125,36 +112,22 @@ struct perform_stepper_test< Stepper , vector_space_type >
     }
 };
 
-template< class Stepper >
-struct perform_stepper_test< Stepper , array_type >
+template< class Stepper , typename T >
+struct perform_stepper_test< Stepper , boost::array<T,1> >
 {
+    typedef boost::array<T,1> array_type;
     void operator()( void )
     {
+        using std::abs;
         array_type x;
         x[0] = 2.0;
         Stepper stepper;
         check_stepper_concept( stepper , constant_system_standard< array_type , array_type , double> , x );
         check_stepper_concept( stepper , boost::cref( constant_system_functor_standard() ) , x );
         std::cout << x[0] << " ?= " << result << std::endl;
-        BOOST_CHECK_SMALL( fabs( x[0] - result ) , eps );
+        BOOST_CHECK_SMALL( abs( x[0] - result ) , eps );
     }
 };
-
-template< class Stepper >
-struct perform_stepper_test< Stepper , complex_array_type >
-{
-    void operator()( void )
-    {
-        complex_array_type x;
-        x[0] = 2.0;
-        Stepper stepper;
-        check_stepper_concept( stepper , constant_system_standard< complex_array_type , complex_array_type , double> , x );
-        check_stepper_concept( stepper , boost::cref( constant_system_functor_standard() ) , x );
-        std::cout << x[0] << " ?= " << result << std::endl;
-        BOOST_CHECK_SMALL( fabs( x[0].real() - result ) , eps );
-    }
-};
-
 
 template< class State > class stepper_methods : public mpl::vector<
     euler< State > ,
