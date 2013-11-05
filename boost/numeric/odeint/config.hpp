@@ -17,10 +17,12 @@
 #ifndef BOOST_NUMERIC_ODEINT_CONFIG_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_CONFIG_HPP_INCLUDED
 
+
 //increase macro variable to allow rk78 scheme
 #ifndef FUSION_MAX_VECTOR_SIZE
 #define FUSION_MAX_VECTOR_SIZE 15
 #endif
+
 
 /*
  * the following definitions are only required if fusion vectors are used as state types
@@ -34,14 +36,9 @@
 #ifndef BOOST_RESULT_OF_NUM_ARGS
 #define BOOST_RESULT_OF_NUM_ARGS 15
 #endif
-/*
- */
 
-#include <boost/config.hpp>
 
-#if __cplusplus >= 201103L
-#define BOOST_NUMERIC_ODEINT_CXX11 1
-#endif
+
 
 
 #endif // BOOST_NUMERIC_ODEINT_CONFIG_HPP_INCLUDED

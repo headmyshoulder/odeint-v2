@@ -17,33 +17,35 @@
 #define BOOST_NUMERIC_ODEINT_UTIL_BIND_HPP_INCLUDED
 
 
-#include <boost/numeric/odeint/config.hpp>
+#include <boost/config.hpp>
 
 
-#if BOOST_NUMERIC_ODEINT_CXX11 
-#include <type_traits>
-#else
+#ifdef BOOST_NO_CXX11_HDR_FUNCTIONAL
 #include <boost/bind.hpp>
+#else
+#include <functional>
 #endif
+
 
 namespace boost {
 namespace numeric {
 namespace odeint {
 namespace detail {
 
-#if BOOST_NUMERIC_ODEINT_CXX11 
-
-using ::std::bind;
-using namespace ::std::placeholders;
-
-
-#else
+    
+#ifdef BOOST_NO_CXX11_HDR_FUNCTIONAL
 
 using ::boost::bind;
 using ::_1;
 using ::_2;
 
+#else
+
+using ::std::bind;
+using namespace ::std::placeholders;
+
 #endif
+
 
 }
 }

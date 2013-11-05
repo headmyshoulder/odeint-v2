@@ -182,11 +182,11 @@ int main( int argc , char **argv )
     //[ integration_solar_system
     typedef symplectic_rkn_sb3a_mclachlan< container_type > stepper_type;
     const double dt = 100.0;
-
+    
     integrate_const(
             stepper_type() ,
             make_pair( solar_system_coor( masses ) , solar_system_momentum( masses ) ) ,
-            make_pair( boost::ref( q ) , boost::ref( p ) ) ,
+            make_pair( std::ref( q ) , std::ref( p ) ) ,
             0.0 , 200000.0 , dt , streaming_observer( cout ) );
     //]
 
