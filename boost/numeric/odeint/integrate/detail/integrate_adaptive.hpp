@@ -89,7 +89,7 @@ size_t integrate_adaptive(
     while( less_with_sign( start_time , end_time , dt ) )
     {
         obs( start_state , start_time );
-        if( less_with_sign( end_time , start_time + dt , dt ) )
+        if( less_with_sign( end_time , static_cast<Time>(start_time + dt) , dt ) )
         {
             dt = end_time - start_time;
         }
@@ -139,7 +139,7 @@ size_t integrate_adaptive(
             ++count;
         }
         // calculate time step to arrive exactly at end time
-        st.initialize( st.current_state() , st.current_time() , end_time - st.current_time() );
+        st.initialize( st.current_state() , st.current_time() , static_cast<Time>(end_time - st.current_time()) );
     }
     obs( st.current_state() , st.current_time() );
     // overwrite start_state with the final point

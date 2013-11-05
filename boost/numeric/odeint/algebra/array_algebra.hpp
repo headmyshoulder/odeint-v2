@@ -254,12 +254,12 @@ struct array_algebra
     template< typename T , size_t dim >
     static typename norm_result_type< boost::array< T , dim > >::type norm_inf( const boost::array< T , dim > &s )
     {
-        using std::max;
+        BOOST_USING_STD_MAX();
         using std::abs;
         typedef typename norm_result_type< boost::array< T , dim > >::type result_type;
         result_type init = static_cast< result_type >( 0 );
         for( size_t i=0 ; i<dim ; ++i )
-            init = max( init , abs(s[i]) );
+            init = max BOOST_PREVENT_MACRO_SUBSTITUTION ( init , static_cast< result_type >(abs(s[i])) );
         return init;
     }
 
