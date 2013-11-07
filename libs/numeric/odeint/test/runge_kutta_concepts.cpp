@@ -131,12 +131,16 @@ struct perform_stepper_test< Stepper , boost::array<T,1> >
     }
 };
 
-template< class State >
-class stepper_methods : public mpl::vector<
+// split stepper methods to ensure the final vector has less than 30(?) elements
+// (stepper_methods*container_types) < 30(?)
+template< class State > class stepper_methods1 : public mpl::vector<
     euler< State , typename detail::extract_value_type<State>::type > ,
     modified_midpoint< State , typename detail::extract_value_type<State>::type > ,
     runge_kutta4< State , typename detail::extract_value_type<State>::type > ,
-    runge_kutta4_classic< State , typename detail::extract_value_type<State>::type > ,
+    runge_kutta4_classic< State , typename detail::extract_value_type<State>::type >
+    > { };
+
+template< class State > class stepper_methods2 : public mpl::vector<
     runge_kutta_cash_karp54_classic< State , typename detail::extract_value_type<State>::type > ,
     runge_kutta_cash_karp54< State , typename detail::extract_value_type<State>::type > ,
     runge_kutta_dopri5< State , typename detail::extract_value_type<State>::type > ,
@@ -155,16 +159,36 @@ typedef mpl::copy
     <
       mpl::_1 ,
       mpl::end< mpl::_1 > ,
-      stepper_methods< mpl::_2 >
+      stepper_methods1< mpl::_2 >
     >
   >
->::type all_stepper_methods;
+>::type stepper_combinations1;
 
+typedef mpl::copy
+<
+  container_types ,
+  mpl::inserter
+  <
+    mpl::vector0<> ,
+    mpl::insert_range
+    <
+      mpl::_1 ,
+      mpl::end< mpl::_1 > ,
+      stepper_methods2< mpl::_2 >
+    >
+  >
+>::type stepper_combinations2;
 
 
 BOOST_AUTO_TEST_SUITE( runge_kutta_concept_test )
 
-BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_test , Stepper, all_stepper_methods )
+BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_test1 , Stepper, stepper_combinations1 )
+{
+    perform_stepper_test< Stepper , typename Stepper::deriv_type > tester;
+    tester();
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_test2 , Stepper, stepper_combinations2 )
 {
     perform_stepper_test< Stepper , typename Stepper::deriv_type > tester;
     tester();
