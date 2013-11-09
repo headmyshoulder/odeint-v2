@@ -186,7 +186,7 @@ int main( int argc , char **argv )
     integrate_const(
             stepper_type() ,
             make_pair( solar_system_coor( masses ) , solar_system_momentum( masses ) ) ,
-            make_pair( std::ref( q ) , std::ref( p ) ) ,
+            make_pair( boost::ref( q ) , boost::ref( p ) ) ,
             0.0 , 200000.0 , dt , streaming_observer( cout ) );
     //]
 
