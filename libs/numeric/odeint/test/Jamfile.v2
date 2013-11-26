@@ -52,6 +52,7 @@ test-suite "odeint"
     [ run resize.cpp ]
     [ run same_size.cpp ]
     [ run symplectic_steppers.cpp ]
+    [ run integrators_symplectic.cpp ]
     [ compile algebra_dispatcher.cpp ]
     [ run integrate_stepper_refs.cpp ]
     [ compile unwrap_boost_reference.cpp ]
