@@ -19,6 +19,47 @@
 
 #include <boost/config.hpp>
 
+#if __cplusplus >= 201103L
+#define BOOST_NUMERIC_ODEINT_CXX11 1
+#endif
+
+#if BOOST_NUMERIC_ODEINT_CXX11 
+    #include <functional>
+#else
+#include <boost/bind.hpp>
+#endif
+
+namespace boost {
+namespace numeric {
+namespace odeint {
+namespace detail {
+
+#if BOOST_NUMERIC_ODEINT_CXX11 
+
+using ::std::bind;
+using namespace ::std::placeholders;
+
+
+#else
+
+using ::boost::bind;
+using ::_1;
+using ::_2;
+
+#endif
+
+}
+}
+}
+}
+
+
+
+
+
+/*
+
+// the following is the suggested way. Unfortunately it does not work with all compilers.
 
 #ifdef BOOST_NO_CXX11_HDR_FUNCTIONAL
 #include <boost/bind.hpp>
@@ -50,6 +91,6 @@ using namespace ::std::placeholders;
 }
 }
 }
-}
+}*/
 
 #endif // BOOST_NUMERIC_ODEINT_UTIL_BIND_HPP_INCLUDED
