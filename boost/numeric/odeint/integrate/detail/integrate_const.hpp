@@ -17,11 +17,14 @@
 #ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_DETAIL_INTEGRATE_CONST_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_INTEGRATE_DETAIL_INTEGRATE_CONST_HPP_INCLUDED
 
+#include <boost/range/algorithm/for_each.hpp>
+
 #include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/util/unit_helper.hpp>
+#include <boost/numeric/odeint/iterator/const_step_time_iterator.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_adaptive.hpp>
-
+#include <boost/numeric/odeint/integrate/detail/functors.hpp>
 #include <boost/numeric/odeint/util/detail/less_with_sign.hpp>
 
 namespace boost {
@@ -45,24 +48,18 @@ size_t integrate_const(
         Observer observer , stepper_tag 
 )
 {
-    typename odeint::unwrap_reference< Observer >::type &obs = observer;
-    typename odeint::unwrap_reference< Stepper >::type &st = stepper;
+    typedef typename odeint::unwrap_reference< Observer >::type observer_type;
+    observer_type &obs = observer;
     
-    Time time = start_time;
-    int step = 0;
-    // cast time+dt explicitely in case of expression templates (e.g. multiprecision)
-    while( less_eq_with_sign( static_cast<Time>(time+dt) , end_time , dt ) )
-    {
-        obs( start_state , time );
-        st.do_step( system , start_state , time , dt );
-        // direct computation of the time avoids error propagation happening when using time += dt
-        // we need clumsy type analysis to get boost units working here
-        ++step;
-        time = start_time + static_cast< typename unit_value_type<Time>::type >(step) * dt;
-    }
-    obs( start_state , time );
+    size_t step = 0;
 
-    return step;
+    boost::for_each( make_const_step_time_range( stepper , system , start_state ,
+                                                 start_time , end_time , dt ) ,
+                     // should we use traits<Stepper>::state_type here instead of State?
+                     obs_caller< State , Time , observer_type >( step , obs ) );
+
+    // step integration steps give step+1 observer calls
+    return step-1;
 }
 
 

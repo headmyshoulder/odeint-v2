@@ -96,9 +96,13 @@ namespace odeint {
         {
             unwrapped_stepper_type &stepper = this->m_stepper;
             stepper.do_step( this->m_system , *( this->m_state ) , this->m_t , this->m_dt );
-            this->m_t += this->m_dt;
+            this->m_step++;
+            this->m_t = this->m_step*this->m_dt;
             this->check_end();
         }
+
+    private:
+        size_t m_step;
     };
 
 

@@ -96,12 +96,10 @@ struct perform_integrate_const_test
 
         std::vector< value_type > times;
 
-        integrate_const( Stepper() , lorenz , x , 0.0 , t_end ,
-                                        dt , push_back_time( times , x_end ) );
+        size_t steps = integrate_const( Stepper() , lorenz , x , 0.0 , t_end ,
+                         dt , push_back_time( times , x_end ) );
 
-        // int steps = times.size()-1;
-
-        //std::cout << t_end << " (" << dt << "), " << steps << " , " << times.size() << " , " << 10.0+dt*steps << "=" << x_end[0] << std::endl;
+        std::cout << t_end << " (" << dt << "), " << steps << " , " << times.size() << " , " << 10.0+dt*steps << "=" << x_end[0] << std::endl;
 
         BOOST_CHECK_EQUAL( static_cast<int>(times.size()) , static_cast<int>(floor(t_end/dt))+1 );
 
@@ -133,7 +131,7 @@ struct perform_integrate_adaptive_test
         size_t steps = integrate_adaptive( Stepper() , lorenz , x , 0.0 , t_end ,
                                         dt , push_back_time( times , x_end ) );
 
-//        std::cout << t_end << " , " << steps << " , " << times.size() << " , " << 10.0+dt*steps << "=" << x_end[0] << std::endl;
+        std::cout << t_end << " , " << steps << " , " << times.size() << " , " << dt << " , " << 10.0+t_end << "=" << x_end[0] << std::endl;
 
         BOOST_CHECK_EQUAL( times.size() , steps+1 );
 

@@ -22,7 +22,6 @@
 #include <boost/numeric/odeint/iterator/detail/ode_time_iterator_base.hpp>
 
 
-
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -44,7 +43,7 @@ namespace odeint {
      * \tparam System The type of the system function (ODE) which should be solved.
      */
     template< class Stepper , class System >
-    class const_step_time_iterator< Stepper , System , stepper_tag > : public detail::ode_time_iterator_base
+    class const_step_time_iterator< Stepper , System , stepper_tag > : public detail::ode_time_iterator_base2
     <
         const_step_time_iterator< Stepper , System , stepper_tag > ,
         Stepper , System
@@ -58,7 +57,7 @@ namespace odeint {
         typedef typename unwrapped_stepper_type::state_type state_type;
         typedef typename unwrapped_stepper_type::time_type time_type;
         typedef typename unwrapped_stepper_type::value_type ode_value_type;
-        typedef detail::ode_time_iterator_base<
+        typedef detail::ode_time_iterator_base2<
             const_step_time_iterator< Stepper , System , stepper_tag > ,
             Stepper , System > base_type;
 
@@ -76,7 +75,12 @@ namespace odeint {
          */
         const_step_time_iterator( stepper_type stepper , system_type sys , state_type &s ,
                                   time_type t , time_type t_end , time_type dt )
-            : base_type( stepper , sys , s , t , t_end , dt ) {}
+            : base_type( stepper , sys , s , t , dt ) ,
+              m_t_start( t ) , m_t_end( t_end ) , m_step(0)
+        {
+            if( !detail::less_with_sign( this->m_t+this->m_dt , this->m_t_end , this->m_dt ) )
+                this->m_at_end = true;
+        }
 
         /**
          * \brief Constructs a const_step_time_iterator. This constructor should be used to construct the end iterator.
@@ -86,7 +90,8 @@ namespace odeint {
          * \param s The initial state. const_step_time_iterator stores a reference of s and changes its value during the iteration.
          */
         const_step_time_iterator( stepper_type stepper , system_type sys , state_type &s )
-            : base_type( stepper , sys , s ) {}
+            : base_type( stepper , sys , s ) , m_t_start() , m_t_end() , m_step()
+        {}
 
     protected:
 
@@ -94,12 +99,23 @@ namespace odeint {
 
         void increment()
         {
-            unwrapped_stepper_type &stepper = this->m_stepper;
-            stepper.do_step( this->m_system , *this->m_state , this->m_t , this->m_dt );
-            this->m_t += this->m_dt;
-            this->check_end();
+            if( detail::less_eq_with_sign( static_cast<time_type>(this->m_t+this->m_dt) ,
+                                        this->m_t_end , this->m_dt ) )
+            {
+                unwrapped_stepper_type &stepper = this->m_stepper;
+                stepper.do_step( this->m_system , *this->m_state , this->m_t , this->m_dt );
+                // use integer to compute current time to reduce roundoff errors
+                this->m_step++;
+                this->m_t = this->m_t_start + static_cast< typename unit_value_type<time_type>::type >(this->m_step)*this->m_dt;
+            } else {
+                this->m_at_end = true;
+            }
         }
 
+    private:
+        time_type m_t_start;
+        time_type m_t_end;
+        size_t m_step;
     };
 
 
