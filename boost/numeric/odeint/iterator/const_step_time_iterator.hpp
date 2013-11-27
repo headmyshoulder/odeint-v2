@@ -28,48 +28,46 @@ namespace odeint {
 
 
 // initial decalaration, defining specializations in impl/const_step_time_iterator_impl.hpp
-    template< class Stepper , class System ,
+    template< class Stepper , class System , class State ,
               class StepperTag = typename base_tag< typename traits::stepper_category< Stepper >::type >::type > 
     class const_step_time_iterator;
 
-
-    template< class Stepper , class System >
-    const_step_time_iterator< Stepper , System > make_const_step_time_iterator_begin(
+    template< class Stepper , class System , class State >
+    const_step_time_iterator< Stepper , System , State > make_const_step_time_iterator_begin(
         Stepper stepper ,
         System system , 
-        typename traits::state_type< Stepper >::type &x ,
+        State &x ,
         typename traits::time_type< Stepper >::type t ,
         typename traits::time_type< Stepper >::type t_end ,
         typename traits::time_type< Stepper >::type dt )
     {
-        return const_step_time_iterator< Stepper , System >( stepper , system , x , t , t_end , dt );
+        return const_step_time_iterator< Stepper , System , State >( stepper , system , x , t , t_end , dt );
     }
 
-    template< class Stepper , class System >
-    const_step_time_iterator< Stepper , System > make_const_step_time_iterator_end(
+    template< class Stepper , class System , class State >
+    const_step_time_iterator< Stepper , System , State > make_const_step_time_iterator_end(
         Stepper stepper ,
         System system , 
-        typename traits::state_type< Stepper >::type &x )
+        State &x )
     {
-        return const_step_time_iterator< Stepper , System >( stepper , system , x );
+        return const_step_time_iterator< Stepper , System , State >( stepper , system , x );
     }
 
 
-    template< class Stepper , class System >
-    std::pair< const_step_time_iterator< Stepper , System > , const_step_time_iterator< Stepper , System > >
+    template< class Stepper , class System , class State >
+    std::pair< const_step_time_iterator< Stepper , System , State > , const_step_time_iterator< Stepper , System , State > >
     make_const_step_time_range(
         Stepper stepper ,
         System system , 
-        typename traits::state_type< Stepper >::type &x ,
+        State &x ,
         typename traits::time_type< Stepper >::type t_start ,
         typename traits::time_type< Stepper >::type t_end ,
         typename traits::time_type< Stepper >::type dt )
     {
         return std::make_pair(
-            const_step_time_iterator< Stepper , System >( stepper , system , x , t_start , t_end , dt ) ,
-            const_step_time_iterator< Stepper , System >( stepper , system , x ) );
+            const_step_time_iterator< Stepper , System , State >( stepper , system , x , t_start , t_end , dt ) ,
+            const_step_time_iterator< Stepper , System , State >( stepper , system , x ) );
     }
-
 
 
     /**

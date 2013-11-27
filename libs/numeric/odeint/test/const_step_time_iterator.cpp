@@ -54,9 +54,9 @@ typedef mpl::vector<
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( copy_stepper_iterator , Stepper , dummy_steppers )
 {
-    typedef const_step_time_iterator< Stepper , empty_system > iterator_type;
+    typedef const_step_time_iterator< Stepper , empty_system , state_type > iterator_type;
     state_type x = {{ 1.0 }};
-    iterator_type iter1 = iterator_type( Stepper() , empty_system() , x , 0.0 , 0.999 , 0.1 );
+    iterator_type iter1 = iterator_type( Stepper() , empty_system() , x , 0.0 , 1.0 , 0.1 );
     iterator_type iter2 = iter1;
     BOOST_CHECK_EQUAL( &( iter1->first ) , &( iter2->first ) );
     BOOST_CHECK_EQUAL( &( iter1->first ) , &x );
@@ -65,10 +65,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( copy_stepper_iterator , Stepper , dummy_steppers 
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( assignment_stepper_iterator , Stepper , dummy_steppers )
 {
-    typedef const_step_time_iterator< Stepper , empty_system > iterator_type;
+    typedef const_step_time_iterator< Stepper , empty_system , state_type > iterator_type;
     state_type x1 = {{ 1.0 }} , x2 = {{ 2.0 }};
-    iterator_type iter1 = iterator_type( Stepper() , empty_system() , x1 , 0.0 , 0.999 , 0.1 );
-    iterator_type iter2 = iterator_type( Stepper() , empty_system() , x2 , 0.0 , 0.999 , 0.1 );
+    iterator_type iter1 = iterator_type( Stepper() , empty_system() , x1 , 0.0 , 1.0 , 0.1 );
+    iterator_type iter2 = iterator_type( Stepper() , empty_system() , x2 , 0.0 , 1.0 , 0.1 );
     BOOST_CHECK_EQUAL( &( iter1->first ) , &x1 );
     BOOST_CHECK_EQUAL( &( iter2->first ) , &x2 );
     BOOST_CHECK( !iter1.same( iter2 ) );
@@ -85,7 +85,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_iterator_factory , Stepper , dummy_steppe
     state_type x = {{ 1.0 }};
 
     std::for_each(
-        make_const_step_time_iterator_begin( stepper , boost::ref( system ) , x , 0.0 , 0.999 , 0.1 ) ,
+        make_const_step_time_iterator_begin( stepper , boost::ref( system ) , x , 0.0 , 1.0 , 0.1 ) ,
         make_const_step_time_iterator_end( stepper , boost::ref( system ) , x ) ,
         dummy_observer() );
 
@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_range , Stepper , dummy_steppers )
     empty_system system;
     state_type x = {{ 1.0 }};
 
-    boost::for_each( make_const_step_time_range( stepper , boost::ref( system ) , x , 0.0 , 0.999 , 0.1 ) ,
+    boost::for_each( make_const_step_time_range( stepper , boost::ref( system ) , x , 0.0 , 1.0 , 0.1 ) ,
                      dummy_observer() );
 
     BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-14 );
@@ -111,7 +111,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_iterator_with_reference_wrapper_factory ,
     state_type x = {{ 1.0 }};
 
     std::for_each(
-        make_const_step_time_iterator_begin( boost::ref( stepper ) , boost::ref( system ) , x , 0.0 , 0.999 , 0.1 ) ,
+        make_const_step_time_iterator_begin( boost::ref( stepper ) , boost::ref( system ) , x , 0.0 , 1.0 , 0.1 ) ,
         make_const_step_time_iterator_end( boost::ref( stepper ) , boost::ref( system ) , x ) ,
         dummy_observer() );
 
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_range_with_reference_wrapper , Stepper , 
     empty_system system;
     state_type x = {{ 1.0 }};
 
-    boost::for_each( make_const_step_time_range( boost::ref( stepper ) , boost::ref( system ) , x , 0.0 , 0.999 , 0.1 ) ,
+    boost::for_each( make_const_step_time_range( boost::ref( stepper ) , boost::ref( system ) , x , 0.0 , 1.0 , 0.1 ) ,
                      dummy_observer() );
 
     BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-14 );
@@ -134,7 +134,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_range_with_reference_wrapper , Stepper , 
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( transitivity1 , Stepper , dummy_steppers )
 {
-    typedef const_step_time_iterator< Stepper , empty_system > stepper_iterator;
+    typedef const_step_time_iterator< Stepper , empty_system , state_type > stepper_iterator;
 
     state_type x = {{ 1.0 }};
     stepper_iterator first1( Stepper() , empty_system() , x , 1.5 , 1.0 , 0.1 );
@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( transitivity1 , Stepper , dummy_steppers )
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm , Stepper , dummy_steppers )
 {
-    typedef const_step_time_iterator< Stepper , empty_system > stepper_iterator;
+    typedef const_step_time_iterator< Stepper , empty_system , state_type > stepper_iterator;
     state_type x = {{ 1.0 }};
     result_vector res;
     stepper_iterator first( Stepper() , empty_system() , x , 0.0 , 0.35 , 0.1 );
@@ -165,7 +165,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm , Stepper , dummy_steppers )
     BOOST_CHECK_CLOSE( res[2].second , 0.2 , 1.0e-13 );
     BOOST_CHECK_CLOSE( res[3].first[0] , 1.75 , 1.0e-13 );
     BOOST_CHECK_CLOSE( res[3].second , 0.3 , 1.0e-13 );
-    BOOST_CHECK_CLOSE( x[0] , 2.0 , 1.0e-13 );
+    BOOST_CHECK_CLOSE( x[0] , 1.75 , 1.0e-13 );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm_with_factory , Stepper , dummy_steppers )
@@ -185,7 +185,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm_with_factory , Stepper , dummy_ste
     BOOST_CHECK_CLOSE( res[2].second , 0.2 , 1.0e-13 );
     BOOST_CHECK_CLOSE( res[3].first[0] , 1.75 , 1.0e-13 );
     BOOST_CHECK_CLOSE( res[3].second , 0.3 , 1.0e-13 );
-    BOOST_CHECK_CLOSE( x[0] , 2.0 , 1.0e-13 );
+    BOOST_CHECK_CLOSE( x[0] , 1.75 , 1.0e-13 );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm_with_range_factory , Stepper , dummy_steppers )
@@ -204,7 +204,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm_with_range_factory , Stepper , dum
     BOOST_CHECK_CLOSE( res[2].second , 0.2 , 1.0e-13 );
     BOOST_CHECK_CLOSE( res[3].first[0] , 1.75 , 1.0e-13 );
     BOOST_CHECK_CLOSE( res[3].second , 0.3 , 1.0e-13 );
-    BOOST_CHECK_CLOSE( x[0] , 2.0 , 1.0e-13 );
+    BOOST_CHECK_CLOSE( x[0] , 1.75 , 1.0e-13 );
 }
 
 

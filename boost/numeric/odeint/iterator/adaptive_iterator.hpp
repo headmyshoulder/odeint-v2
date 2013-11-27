@@ -29,7 +29,7 @@ namespace numeric {
 namespace odeint {
 
 
-    template< class Stepper , class System ,
+    template< class Stepper , class System , class State ,
               class StepperTag = typename base_tag< typename traits::stepper_category< Stepper >::type >::type > 
     class adaptive_iterator;
 
@@ -37,42 +37,42 @@ namespace odeint {
 
 
 
-    template< class Stepper , class System >
-    adaptive_iterator< Stepper , System > make_adaptive_iterator_begin(
+    template< class Stepper , class System , class State >
+    adaptive_iterator< Stepper , System , State > make_adaptive_iterator_begin(
         Stepper stepper ,
         System system , 
-        typename traits::state_type< Stepper >::type &x ,
+        State &x ,
         typename traits::time_type< Stepper >::type t ,
         typename traits::time_type< Stepper >::type t_end ,
         typename traits::time_type< Stepper >::type dt )
     {
-        return adaptive_iterator< Stepper , System >( stepper , system , x , t , t_end , dt );
+        return adaptive_iterator< Stepper , System , State >( stepper , system , x , t , t_end , dt );
     }
 
 
-    template< class Stepper , class System >
-    adaptive_iterator< Stepper , System > make_adaptive_iterator_end(
+    template< class Stepper , class System , class State >
+    adaptive_iterator< Stepper , System , State > make_adaptive_iterator_end(
         Stepper stepper ,
         System system , 
-        typename traits::state_type< Stepper >::type &x )
+        State &x )
     {
-        return adaptive_iterator< Stepper , System >( stepper , system , x );
+        return adaptive_iterator< Stepper , System , State >( stepper , system , x );
     }
 
 
-    template< class Stepper , class System >
-    std::pair< adaptive_iterator< Stepper , System > , adaptive_iterator< Stepper , System > >
+    template< class Stepper , class System , class State >
+    std::pair< adaptive_iterator< Stepper , System , State > , adaptive_iterator< Stepper , System , State > >
     make_adaptive_range(
         Stepper stepper ,
         System system , 
-        typename traits::state_type< Stepper >::type &x ,
+        State &x ,
         typename traits::time_type< Stepper >::type t_start ,
         typename traits::time_type< Stepper >::type t_end ,
         typename traits::time_type< Stepper >::type dt )
     {
         return std::make_pair(
-            adaptive_iterator< Stepper , System >( stepper , system , x , t_start , t_end , dt ) ,
-            adaptive_iterator< Stepper , System >( stepper , system , x )
+            adaptive_iterator< Stepper , System , State >( stepper , system , x , t_start , t_end , dt ) ,
+            adaptive_iterator< Stepper , System , State >( stepper , system , x )
             );
     }
 

@@ -42,11 +42,11 @@ namespace odeint {
      * \tparam Stepper The stepper type which should be used during the iteration.
      * \tparam System The type of the system function (ODE) which should be solved.
      */
-    template< class Stepper , class System >
-    class adaptive_time_iterator< Stepper , System , controlled_stepper_tag > : public detail::ode_time_iterator_base
+    template< class Stepper , class System , class State >
+    class adaptive_time_iterator< Stepper , System , State , controlled_stepper_tag > : public detail::ode_time_iterator_base
     <
-        adaptive_time_iterator< Stepper , System , controlled_stepper_tag > ,
-        Stepper , System
+        adaptive_time_iterator< Stepper , System , State , controlled_stepper_tag > ,
+        Stepper , System , State
     >
     {
     private:
@@ -54,12 +54,12 @@ namespace odeint {
         typedef Stepper stepper_type;
         typedef System system_type;
         typedef typename boost::numeric::odeint::unwrap_reference< stepper_type >::type unwrapped_stepper_type;
-        typedef typename unwrapped_stepper_type::state_type state_type;
+        typedef State state_type;
         typedef typename unwrapped_stepper_type::time_type time_type;
         typedef typename unwrapped_stepper_type::value_type ode_value_type;
         typedef detail::ode_time_iterator_base<
-            adaptive_time_iterator< Stepper , System , controlled_stepper_tag > ,
-            Stepper , System > base_type;
+            adaptive_time_iterator< Stepper , System , State , controlled_stepper_tag > ,
+            Stepper , System , State > base_type;
 
 
     public:
@@ -75,7 +75,7 @@ namespace odeint {
          * \param dt The initial time step.
          */
         adaptive_time_iterator( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type t_end , time_type dt )
-            : base_type( stepper , sys , s , t , t_end , dt ) {}
+            : base_type( stepper , sys , s , t , dt ) , m_t_end( t_end ) {}
 
         /**
          * \brief Constructs an adaptive_time_iterator. This constructor should be used to construct the end iterator.
@@ -109,6 +109,9 @@ namespace odeint {
             }
             this->check_end();
         }
+
+    private:
+        time_type m_t_end;
     };
 
 

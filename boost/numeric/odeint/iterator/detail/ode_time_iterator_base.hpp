@@ -29,9 +29,7 @@ namespace numeric {
 namespace odeint {
 namespace detail {
 
-
-
-
+/*
     template< class Iterator , class Stepper , class System >
     class ode_time_iterator_base : public boost::iterator_facade
     <
@@ -112,17 +110,16 @@ namespace detail {
         bool m_at_end;
 
     };
+*/
 
 
-
-
-    template< class Iterator , class Stepper , class System >
-    class ode_time_iterator_base2 : public boost::iterator_facade
+    template< class Iterator , class Stepper , class System , class State >
+    class ode_time_iterator_base : public boost::iterator_facade
     <
         Iterator ,
-        std::pair< const typename traits::state_type< Stepper >::type , const typename traits::time_type< Stepper >::type > ,
+        std::pair< const State , const typename traits::time_type< Stepper >::type > ,
         boost::single_pass_traversal_tag ,
-        std::pair< const typename traits::state_type< Stepper >::type& , const typename traits::time_type< Stepper >::type& >
+        std::pair< const State& , const typename traits::time_type< Stepper >::type& >
     >
     {
     private:
@@ -130,25 +127,25 @@ namespace detail {
         typedef Stepper stepper_type;
         typedef System system_type;
         typedef typename boost::numeric::odeint::unwrap_reference< stepper_type >::type unwrapped_stepper_type;
-        typedef typename unwrapped_stepper_type::state_type state_type;
+        typedef State state_type;
         typedef typename unwrapped_stepper_type::time_type time_type;
         typedef typename unwrapped_stepper_type::value_type ode_value_type;
 
     public:
 
-        ode_time_iterator_base2( stepper_type stepper , system_type sys ,
+        ode_time_iterator_base( stepper_type stepper , system_type sys ,
                                  state_type &s , time_type t , time_type dt )
             : m_stepper( stepper ) , m_system( sys ) , m_state( &s ) ,
               m_t( t ) , m_dt( dt ) , m_at_end( false )
         { }
 
-        ode_time_iterator_base2( stepper_type stepper , system_type sys ,
+        ode_time_iterator_base( stepper_type stepper , system_type sys ,
                                  state_type &s )
             : m_stepper( stepper ) , m_system( sys ) , m_state( &s ) ,
               m_at_end( true )
         { }
 
-        bool same( ode_time_iterator_base2 const& iter )
+        bool same( ode_time_iterator_base const& iter )
         {
             return (
                 ( m_state == iter.m_state ) &&
@@ -163,7 +160,7 @@ namespace detail {
 
         friend class boost::iterator_core_access;
 
-        bool equal( ode_time_iterator_base2 const& other ) const
+        bool equal( ode_time_iterator_base const& other ) const
         {
             if( m_at_end == other.m_at_end )
             {
@@ -188,7 +185,6 @@ namespace detail {
         bool m_at_end;
 
     };
-
 
 
 } // namespace detail

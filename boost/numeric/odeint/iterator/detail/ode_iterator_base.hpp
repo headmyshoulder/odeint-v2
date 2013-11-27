@@ -33,7 +33,7 @@ namespace detail {
 
 
 
-    template< class Iterator , class Stepper , class System >
+    template< class Iterator , class Stepper , class System , class State >
     class ode_iterator_base : public boost::iterator_facade
     <
         Iterator ,
@@ -46,22 +46,21 @@ namespace detail {
         typedef Stepper stepper_type;
         typedef System system_type;
         typedef typename boost::numeric::odeint::unwrap_reference< stepper_type >::type unwrapped_stepper_type;
-        typedef typename unwrapped_stepper_type::state_type state_type;
+        typedef State state_type;
         typedef typename unwrapped_stepper_type::time_type time_type;
         typedef typename unwrapped_stepper_type::value_type ode_value_type;
 
     public:
    
-        ode_iterator_base( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type t_end , time_type dt )
-            : m_stepper( stepper ) , m_system( sys ) , m_state( &s ) , m_t( t ) , m_t_end( t_end ) , m_dt( dt ) , m_at_end( false )
-        {
-            check_end();
-        }
+        ode_iterator_base( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type dt )
+            : m_stepper( stepper ) , m_system( sys ) , m_state( &s ) ,
+              m_t( t ) , m_dt( dt ) , m_at_end( false )
+        { }
 
         ode_iterator_base( stepper_type stepper , system_type sys , state_type &s )
-            : m_stepper( stepper ) , m_system( sys ) , m_state( &s ) , m_t() , m_t_end() , m_dt() , m_at_end( true )
-        {
-        }
+            : m_stepper( stepper ) , m_system( sys ) , m_state( &s ) ,
+              m_t() , m_dt() , m_at_end( true )
+        { }
 
         // this function is only for testing
         bool same( const ode_iterator_base &iter ) const
@@ -69,7 +68,6 @@ namespace detail {
             return (
                 ( m_state == iter.m_state ) &&
                 ( m_t == iter.m_t ) && 
-                ( m_t_end == iter.m_t_end ) &&
                 ( m_dt == iter.m_dt ) &&
                 ( m_at_end == iter.m_at_end )
                 );
@@ -97,17 +95,10 @@ namespace detail {
             return *m_state;
         }
 
-        void check_end( void )
-        {
-            if( detail::less_with_sign(  m_t_end , m_t , m_dt ) )
-                m_at_end = true;
-        }
-
         stepper_type m_stepper;
         system_type m_system;
         state_type *m_state;
         time_type m_t;
-        time_type m_t_end;
         time_type m_dt;
         bool m_at_end;
     };
