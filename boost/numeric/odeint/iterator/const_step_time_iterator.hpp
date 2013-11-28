@@ -21,16 +21,33 @@
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/util/stepper_traits.hpp>
+#include <boost/numeric/odeint/iterator/detail/ode_iterator_base.hpp>
+#include <boost/numeric/odeint/iterator/impl/const_step_iterator_impl.hpp>
 
 namespace boost {
 namespace numeric {
 namespace odeint {
 
 
-// initial decalaration, defining specializations in impl/const_step_time_iterator_impl.hpp
     template< class Stepper , class System , class State ,
-              class StepperTag = typename base_tag< typename traits::stepper_category< Stepper >::type >::type > 
-    class const_step_time_iterator;
+              class StepperTag = typename base_tag< typename traits::stepper_category< Stepper >::type >::type >
+    class const_step_time_iterator : public const_step_iterator_impl<
+            const_step_time_iterator< Stepper , System , State , StepperTag > ,
+            Stepper , System , State , detail::ode_state_time_iterator_tag , StepperTag
+        >
+    {
+        typedef typename traits::time_type< Stepper >::type time_type;
+        typedef const_step_time_iterator< Stepper , System , State , StepperTag > iterator_type;
+
+    public:
+        const_step_time_iterator( Stepper stepper , System sys , State &s , time_type t , time_type t_end , time_type dt )
+            : const_step_iterator_impl< iterator_type , Stepper , System , State , detail::ode_state_time_iterator_tag , StepperTag >( stepper , sys , s , t , t_end , dt )
+        {}
+
+        const_step_time_iterator( Stepper stepper , System sys , State &s )
+            : const_step_iterator_impl< iterator_type , Stepper , System , State , detail::ode_state_time_iterator_tag , StepperTag >( stepper , sys , s )
+        {}
+    };
 
     template< class Stepper , class System , class State >
     const_step_time_iterator< Stepper , System , State > make_const_step_time_iterator_begin(
@@ -119,11 +136,6 @@ namespace odeint {
 } // namespace odeint
 } // namespace numeric
 } // namespace boost
-
-
-#include <boost/numeric/odeint/iterator/impl/const_step_time_iterator_impl.hpp>
-#include <boost/numeric/odeint/iterator/impl/const_step_time_iterator_dense_output_impl.hpp>
-
 
 
 #endif // BOOST_NUMERIC_ODEINT_ITERATOR_CONST_STEP_TIME_ITERATOR_HPP_INCLUDED

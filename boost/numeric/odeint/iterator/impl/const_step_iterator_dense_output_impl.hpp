@@ -41,11 +41,9 @@ namespace odeint {
      * \tparam Stepper The stepper type which should be used during the iteration.
      * \tparam System The type of the system function (ODE) which should be solved.
      */
-    template< class Stepper , class System , class State >
-    class const_step_iterator< Stepper , System , State , dense_output_stepper_tag >
-        : public detail::ode_iterator_base<
-            const_step_iterator< Stepper , System , State , dense_output_stepper_tag > ,
-        Stepper , System , State >
+    template< class Iterator , class Stepper , class System , class State , typename Tag >
+    class const_step_iterator_impl< Iterator , Stepper , System , State , Tag , dense_output_stepper_tag >
+        : public detail::ode_iterator_base< Iterator , Stepper , System , State , detail::ode_state_iterator_tag >
     {
     private:
 
@@ -56,9 +54,7 @@ namespace odeint {
         typedef typename traits::time_type< stepper_type >::type time_type;
         typedef typename traits::value_type< stepper_type >::type ode_value_type;
         #ifndef DOXYGEN_SKIP
-        typedef detail::ode_iterator_base<
-            const_step_iterator< Stepper , System , State , dense_output_stepper_tag > ,
-            Stepper , System , State > base_type;
+        typedef detail::ode_iterator_base< Iterator , Stepper , System , State , detail::ode_state_iterator_tag > base_type;
         #endif
 
     public:
@@ -73,7 +69,7 @@ namespace odeint {
          * \param t_end The end time, at which the iteration should stop.
          * \param dt The initial time step.
          */
-        const_step_iterator( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type t_end , time_type dt )
+        const_step_iterator_impl( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type t_end , time_type dt )
             : base_type( stepper , sys , s , t , dt ) , m_t_end( t_end )
         {
             if( detail::less_eq_with_sign( this->m_t , this->m_t_end , this->m_dt ) )
@@ -92,7 +88,7 @@ namespace odeint {
          * \param sys The system function (ODE) to solve.
          * \param s The initial state. const_step_iterator stores a reference of s and changes its value during the iteration.
          */
-        const_step_iterator( stepper_type stepper , system_type sys , state_type &s )
+        const_step_iterator_impl( stepper_type stepper , system_type sys , state_type &s )
             : base_type( stepper , sys , s )
         {
         }
@@ -111,15 +107,10 @@ namespace odeint {
                 unwrapped_stepper_type &stepper = this->m_stepper;
 
                 this->m_t += this->m_dt;
-                if( get_unit_value( this->m_dt ) > static_cast< ode_value_type >( 0.0 ) )
+                while( detail::less_with_sign( stepper.current_time() , this->m_t ,
+                       stepper.current_time_step() ) )
                 {
-                    while( stepper.current_time() < this->m_t )
-                        stepper.do_step( this->m_system );
-                }
-                else
-                {
-                    while( stepper.current_time() > this->m_t )
-                        stepper.do_step( this->m_system );
+                    stepper.do_step( this->m_system );
                 }
                 stepper.calc_state( this->m_t , *( this->m_state ) );
             } else {

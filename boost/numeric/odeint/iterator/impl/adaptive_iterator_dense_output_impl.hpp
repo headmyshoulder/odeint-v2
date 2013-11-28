@@ -47,7 +47,7 @@ namespace odeint {
     class adaptive_iterator< Stepper , System , State , dense_output_stepper_tag > : public detail::ode_iterator_base
     <
         adaptive_iterator< Stepper , System , State , dense_output_stepper_tag > ,
-        Stepper , System , State
+        Stepper , System , State , detail::ode_state_iterator_tag
     >
     {
     private:
@@ -62,7 +62,7 @@ namespace odeint {
         #ifndef DOXYGEN_SKIP
         typedef detail::ode_iterator_base<
             adaptive_iterator< Stepper , System , State , dense_output_stepper_tag > ,
-            Stepper , System , State
+            Stepper , System , State , detail::ode_state_iterator_tag
             > base_type;
         #endif
 
