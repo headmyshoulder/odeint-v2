@@ -79,7 +79,11 @@ namespace odeint {
          * \param dt The initial time step.
          */
         adaptive_iterator( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type t_end , time_type dt )
-            : base_type( stepper , sys , s , t , dt ) , m_t_end( t_end ) { }
+            : base_type( stepper , sys , s , t , dt ) , m_t_end( t_end )
+        {
+            if( detail::less_with_sign( this->m_t_end , this->m_t , this->m_dt ) )
+                this->m_at_end = true;
+        }
 
         /**
          * \brief Constructs an adaptive_iterator. This constructor should be used to construct the end iterator.
@@ -97,21 +101,31 @@ namespace odeint {
 
         void increment()
         {
-            unwrapped_stepper_type &stepper = this->m_stepper;
-            const size_t max_attempts = 1000;
-            size_t trials = 0;
-            controlled_step_result res = success;
-            do
+            if( detail::less_with_sign( this->m_t , this->m_t_end , this->m_dt) )
             {
-                res = stepper.try_step( this->m_system , *( this->m_state ) , this->m_t , this->m_dt );
-                ++trials;
+                if( detail::less_with_sign( this->m_t_end ,
+                                            static_cast<time_type>(this->m_t + this->m_dt) ,
+                                            this->m_dt ) )
+                {
+                    this->m_dt = this->m_t_end - this->m_t;
+                }
+                unwrapped_stepper_type &stepper = this->m_stepper;
+                const size_t max_attempts = 1000;
+                size_t trials = 0;
+                controlled_step_result res = success;
+                do
+                {
+                    res = stepper.try_step( this->m_system , *( this->m_state ) , this->m_t , this->m_dt );
+                    ++trials;
+                }
+                while( ( res == fail ) && ( trials < max_attempts ) );
+                if( trials == max_attempts )
+                {
+                    throw std::overflow_error( "Adaptive iterator : Maximal number of iterations reached. A step size could not be found." );
+                }
+            } else {
+                this->m_at_end = true;
             }
-            while( ( res == fail ) && ( trials < max_attempts ) );
-            if( trials == max_attempts )
-            {
-                throw std::overflow_error( "Adaptive iterator : Maximal number of iterations reached. A step size could not be found." );
-            }
-            this->check_end();
         }
 
     private:

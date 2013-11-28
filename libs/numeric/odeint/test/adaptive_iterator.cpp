@@ -51,11 +51,11 @@ typedef mpl::vector<
 
 BOOST_AUTO_TEST_CASE( copy_controlled_stepper_iterator )
 {
-    typedef adaptive_iterator< dummy_controlled_stepper , empty_system > iterator_type;
+    typedef adaptive_iterator< dummy_controlled_stepper , empty_system , state_type > iterator_type;
 
     state_type x = {{ 1.0 }};
-    adaptive_iterator< dummy_controlled_stepper , empty_system > iter1( dummy_controlled_stepper() , empty_system() , x );
-    adaptive_iterator< dummy_controlled_stepper , empty_system > iter2( iter1 );
+    iterator_type iter1( dummy_controlled_stepper() , empty_system() , x );
+    iterator_type iter2( iter1 );
 
     BOOST_CHECK_EQUAL( &( *iter1 ) , &x );
     BOOST_CHECK_EQUAL( &( *iter2 ) , &x );
@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_CASE( copy_controlled_stepper_iterator )
 
 BOOST_AUTO_TEST_CASE( copy_dense_output_stepper_iterator )
 {
-    typedef adaptive_iterator< dummy_dense_output_stepper , empty_system > iterator_type;
+    typedef adaptive_iterator< dummy_dense_output_stepper , empty_system , state_type > iterator_type;
 
     state_type x = {{ 1.0 }};
     iterator_type iter1( dummy_dense_output_stepper() , empty_system() , x );
@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE( copy_dense_output_stepper_iterator )
 BOOST_AUTO_TEST_CASE( copy_dense_output_stepper_iterator_with_reference_wrapper )
 {
     // bad use case, the same stepper is iterated twice
-    typedef adaptive_iterator< boost::reference_wrapper< dummy_dense_output_stepper > , empty_system > iterator_type;
+    typedef adaptive_iterator< boost::reference_wrapper< dummy_dense_output_stepper > , empty_system , state_type > iterator_type;
 
     state_type x = {{ 1.0 }};
     dummy_dense_output_stepper stepper;
@@ -114,10 +114,10 @@ BOOST_AUTO_TEST_CASE( copy_dense_output_stepper_iterator_with_reference_wrapper 
 
 BOOST_AUTO_TEST_CASE( assignment_controlled_stepper_iterator )
 {
-    typedef adaptive_iterator< dummy_controlled_stepper , empty_system > iterator_type;
+    typedef adaptive_iterator< dummy_controlled_stepper , empty_system , state_type > iterator_type;
     state_type x1 = {{ 1.0 }} , x2 = {{ 2.0 }};
-    iterator_type iter1 = iterator_type( dummy_controlled_stepper() , empty_system() , x1 , 0.0 , 0.999 , 0.1 );
-    iterator_type iter2 = iterator_type( dummy_controlled_stepper() , empty_system() , x2 , 0.0 , 0.999 , 0.1 );
+    iterator_type iter1 = iterator_type( dummy_controlled_stepper() , empty_system() , x1 , 0.0 , 1.0 , 0.1 );
+    iterator_type iter2 = iterator_type( dummy_controlled_stepper() , empty_system() , x2 , 0.0 , 1.0 , 0.1 );
     BOOST_CHECK_EQUAL( &(*iter1) , &x1 );
     BOOST_CHECK_EQUAL( &(*iter2) , &x2 );
     BOOST_CHECK( !iter1.same( iter2 ) );
@@ -131,10 +131,10 @@ BOOST_AUTO_TEST_CASE( assignment_controlled_stepper_iterator )
 
 BOOST_AUTO_TEST_CASE( assignment_dense_output_stepper_iterator )
 {
-    typedef adaptive_iterator< dummy_dense_output_stepper , empty_system > iterator_type;
+    typedef adaptive_iterator< dummy_dense_output_stepper , empty_system , state_type > iterator_type;
     state_type x1 = {{ 1.0 }} , x2 = {{ 2.0 }};
-    iterator_type iter1 = iterator_type( dummy_dense_output_stepper() , empty_system() , x1 , 0.0 , 0.999 , 0.1 );
-    iterator_type iter2 = iterator_type( dummy_dense_output_stepper() , empty_system() , x2 , 0.0 , 0.999 , 0.1 );
+    iterator_type iter1 = iterator_type( dummy_dense_output_stepper() , empty_system() , x1 , 0.0 , 1.0 , 0.1 );
+    iterator_type iter2 = iterator_type( dummy_dense_output_stepper() , empty_system() , x2 , 0.0 , 1.0 , 0.1 );
 
     BOOST_CHECK_NE( & (*iter1) , & (*iter2) );
     BOOST_CHECK( !iter1.same( iter2 ) );
@@ -147,12 +147,12 @@ BOOST_AUTO_TEST_CASE( assignment_dense_output_stepper_iterator )
 
 BOOST_AUTO_TEST_CASE( assignment_dense_output_stepper_iterator_with_reference_wrapper )
 {
-    typedef adaptive_iterator< boost::reference_wrapper< dummy_dense_output_stepper > , empty_system > iterator_type;
+    typedef adaptive_iterator< boost::reference_wrapper< dummy_dense_output_stepper > , empty_system , state_type > iterator_type;
     state_type x1 = {{ 1.0 }} , x2 = {{ 2.0 }};
 
     dummy_dense_output_stepper stepper;
-    iterator_type iter1 = iterator_type( boost::ref( stepper )  , empty_system() , x1 , 0.0 , 0.999 , 0.1 );
-    iterator_type iter2 = iterator_type( boost::ref( stepper ) , empty_system() , x2 , 0.0 , 0.999 , 0.1 );
+    iterator_type iter1 = iterator_type( boost::ref( stepper )  , empty_system() , x1 , 0.0 , 1.0 , 0.1 );
+    iterator_type iter2 = iterator_type( boost::ref( stepper ) , empty_system() , x2 , 0.0 , 1.0 , 0.1 );
 
     BOOST_CHECK_EQUAL( & (*iter1) , & (*iter2) );
     BOOST_CHECK( !iter1.same( iter2 ) );
@@ -172,7 +172,7 @@ BOOST_AUTO_TEST_CASE( controlled_stepper_iterator_factory )
     state_type x = {{ 1.0 }};
 
     std::for_each(
-         make_adaptive_iterator_begin( stepper , boost::ref( system ) , x , 0.0 , 0.999 , 0.1 ) ,
+         make_adaptive_iterator_begin( stepper , boost::ref( system ) , x , 0.0 , 1.0 , 0.1 ) ,
          make_adaptive_iterator_end( stepper , boost::ref( system ) , x ) ,
          dummy_observer() );
 
@@ -187,7 +187,7 @@ BOOST_AUTO_TEST_CASE( dense_output_stepper_iterator_factory )
     state_type x = {{ 1.0 }};
 
     std::for_each(
-         make_adaptive_iterator_begin( stepper , boost::ref( system ) , x , 0.0 , 0.999 , 0.1 ) ,
+         make_adaptive_iterator_begin( stepper , boost::ref( system ) , x , 0.0 , 1.0 , 0.1 ) ,
          make_adaptive_iterator_end( stepper , boost::ref( system ) , x ) ,
          dummy_observer() );
 }
@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_CASE( controlled_stepper_range )
     empty_system system;
     state_type x = {{ 1.0 }};
 
-    boost::for_each( make_adaptive_range( stepper , boost::ref( system ) , x , 0.0 , 0.999 , 0.1 ) ,
+    boost::for_each( make_adaptive_range( stepper , boost::ref( system ) , x , 0.0 , 1.0 , 0.1 ) ,
                      dummy_observer() );
 
     BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-14 );
@@ -213,7 +213,7 @@ BOOST_AUTO_TEST_CASE( dense_output_stepper_range )
     empty_system system;
     state_type x = {{ 1.0 }};
 
-    boost::for_each( make_adaptive_range( stepper , boost::ref( system ) , x , 0.0 , 0.999 , 0.1 ) ,
+    boost::for_each( make_adaptive_range( stepper , boost::ref( system ) , x , 0.0 , 1.0 , 0.1 ) ,
                      dummy_observer() );
 }
 
@@ -225,7 +225,7 @@ BOOST_AUTO_TEST_CASE( controlled_stepper_iterator_with_reference_wrapper_factory
     state_type x = {{ 1.0 }};
 
     std::for_each(
-        make_adaptive_iterator_begin( boost::ref( stepper ) , boost::ref( system ) , x , 0.0 , 0.999 , 0.1 ) ,
+        make_adaptive_iterator_begin( boost::ref( stepper ) , boost::ref( system ) , x , 0.0 , 1.0 , 0.1 ) ,
         make_adaptive_iterator_end( boost::ref( stepper ) , boost::ref( system ) , x ) ,
         dummy_observer() );
 
@@ -240,7 +240,7 @@ BOOST_AUTO_TEST_CASE( dense_output_stepper_iterator_with_reference_wrapper_facto
     state_type x = {{ 1.0 }};
 
     std::for_each(
-        make_adaptive_iterator_begin( boost::ref( stepper ) , boost::ref( system ) , x , 0.0 , 0.999 , 0.1 ) ,
+        make_adaptive_iterator_begin( boost::ref( stepper ) , boost::ref( system ) , x , 0.0 , 1.0 , 0.1 ) ,
         make_adaptive_iterator_end( boost::ref( stepper ) , boost::ref( system ) , x ) ,
         dummy_observer() );
 }
@@ -251,7 +251,7 @@ BOOST_AUTO_TEST_CASE( controlled_stepper_range_with_reference_wrapper )
     empty_system system;
     state_type x = {{ 1.0 }};
 
-    boost::for_each( make_adaptive_range( boost::ref( stepper ) , boost::ref( system ) , x , 0.0 , 0.999 , 0.1 ) ,
+    boost::for_each( make_adaptive_range( boost::ref( stepper ) , boost::ref( system ) , x , 0.0 , 1.0 , 0.1 ) ,
                      dummy_observer() );
 
     BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-14 );
@@ -264,7 +264,7 @@ BOOST_AUTO_TEST_CASE( dense_output_stepper_range_with_reference_wrapper )
     empty_system system;
     state_type x = {{ 1.0 }};
 
-    boost::for_each( make_adaptive_range( boost::ref( stepper ) , boost::ref( system ) , x , 0.0 , 0.999 , 0.1 ) ,
+    boost::for_each( make_adaptive_range( boost::ref( stepper ) , boost::ref( system ) , x , 0.0 , 1.0 , 0.1 ) ,
                      dummy_observer() );
 }
 
@@ -272,7 +272,7 @@ BOOST_AUTO_TEST_CASE( dense_output_stepper_range_with_reference_wrapper )
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( transitivity1 , Stepper , dummy_steppers )
 {
-    typedef adaptive_iterator< Stepper , empty_system > stepper_iterator;
+    typedef adaptive_iterator< Stepper , empty_system , state_type > stepper_iterator;
 
     state_type x = {{ 1.0 }};
     stepper_iterator first1( Stepper() , empty_system() , x , 2.5 , 2.0 , 0.1 );
@@ -288,7 +288,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( transitivity1 , Stepper , dummy_steppers )
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm , Stepper , dummy_steppers )
 {
-    typedef adaptive_iterator< Stepper , empty_system > stepper_iterator;
+    typedef adaptive_iterator< Stepper , empty_system , state_type > stepper_iterator;
     state_type x = {{ 1.0 }};
     std::vector< state_type > res;
     stepper_iterator first( Stepper() , empty_system() , x , 0.0 , 0.35 , 0.1 );
@@ -296,11 +296,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm , Stepper , dummy_steppers )
 
     std::copy( first , last , std::back_insert_iterator< std::vector< state_type > >( res ) );
 
-    BOOST_CHECK_EQUAL( res.size() , size_t( 4 ) );
+    BOOST_CHECK_EQUAL( res.size() , size_t( 5 ) );
     BOOST_CHECK_CLOSE( res[0][0] , 1.0 , 1.0e-14 );
     BOOST_CHECK_CLOSE( res[1][0] , 1.25 , 1.0e-14 );
     BOOST_CHECK_CLOSE( res[2][0] , 1.5 , 1.0e-14 );
     BOOST_CHECK_CLOSE( res[3][0] , 1.75 , 1.0e-14 );
+    BOOST_CHECK_CLOSE( res[4][0] , 2.0 , 1.0e-14 );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm_with_factory , Stepper , dummy_steppers )
@@ -311,11 +312,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm_with_factory , Stepper , dummy_ste
                make_adaptive_iterator_end( Stepper() , empty_system() , x ) ,
                std::back_insert_iterator< std::vector< state_type > >( res ) );
 
-    BOOST_CHECK_EQUAL( res.size() , size_t( 4 ) );
+    BOOST_CHECK_EQUAL( res.size() , size_t( 5 ) );
     BOOST_CHECK_CLOSE( res[0][0] , 1.0 , 1.0e-14 );
     BOOST_CHECK_CLOSE( res[1][0] , 1.25 , 1.0e-14 );
     BOOST_CHECK_CLOSE( res[2][0] , 1.5 , 1.0e-14 );
     BOOST_CHECK_CLOSE( res[3][0] , 1.75 , 1.0e-14 );
+    BOOST_CHECK_CLOSE( res[4][0] , 2.0 , 1.0e-14 );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm_with_range_factory , Stepper , dummy_steppers )
@@ -325,11 +327,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm_with_range_factory , Stepper , dum
     boost::range::copy( make_adaptive_range( Stepper() , empty_system() , x , 0.0 , 0.35 , 0.1 ) ,
                         std::back_insert_iterator< std::vector< state_type > >( res ) );
 
-    BOOST_CHECK_EQUAL( res.size() , size_t( 4 ) );
+    BOOST_CHECK_EQUAL( res.size() , size_t( 5 ) );
     BOOST_CHECK_CLOSE( res[0][0] , 1.0 , 1.0e-14 );
     BOOST_CHECK_CLOSE( res[1][0] , 1.25 , 1.0e-14 );
     BOOST_CHECK_CLOSE( res[2][0] , 1.5 , 1.0e-14 );
     BOOST_CHECK_CLOSE( res[3][0] , 1.75 , 1.0e-14 );
+    BOOST_CHECK_CLOSE( res[4][0] , 2.0 , 1.0e-14 );
 }
 
 

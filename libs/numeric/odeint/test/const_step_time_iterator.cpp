@@ -144,6 +144,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( transitivity1 , Stepper , dummy_steppers )
     BOOST_CHECK( first1 == last1 );
     BOOST_CHECK( first1 == last2 );
     BOOST_CHECK( last1 == last2 );
+
+    first1 = stepper_iterator( Stepper() , empty_system() , x , 2.0 , 2.0 , 0.1 );
+    last1 = stepper_iterator( Stepper() , empty_system() , x );
+    BOOST_CHECK( first1 != last1 );
+    BOOST_CHECK( ++first1 == last1 );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( copy_algorithm , Stepper , dummy_steppers )

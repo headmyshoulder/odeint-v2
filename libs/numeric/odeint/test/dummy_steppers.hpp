@@ -84,6 +84,11 @@ struct dummy_dense_output_stepper
         return m_x;
     }
 
+    const time_type& current_time_step( void ) const
+    {
+        return m_dt;
+    }
+
     state_type m_x;
     time_type m_t;
     time_type m_dt;

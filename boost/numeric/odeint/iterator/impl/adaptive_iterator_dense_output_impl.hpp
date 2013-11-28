@@ -83,8 +83,13 @@ namespace odeint {
         adaptive_iterator( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type t_end , time_type dt )
             : base_type( stepper , sys , s , t , dt ) , m_t_end( t_end )
         {
-            unwrapped_stepper_type &st = this->m_stepper;
-            st.initialize( *( this->m_state ) , this->m_t , this->m_dt );
+            if( detail::less_eq_with_sign( this->m_t , this->m_t_end , this->m_dt ) )
+            {
+                unwrapped_stepper_type &st = this->m_stepper;
+                st.initialize( *( this->m_state ) , this->m_t , this->m_dt );
+            } else {
+                this->m_at_end = true;
+            }
         }
 
         /**
@@ -104,9 +109,23 @@ namespace odeint {
         void increment()
         {
             unwrapped_stepper_type &stepper = this->m_stepper;
-            stepper.do_step( this->m_system );
-            this->m_t = stepper.current_time();
-            this->check_end();
+            if( detail::less_with_sign( this->m_t ,
+                                        this->m_t_end ,
+                                        stepper.current_time_step() ) )
+            {
+                if( detail::less_with_sign( this->m_t_end ,
+                                            static_cast<time_type>(this->m_t + stepper.current_time_step()) ,
+                                            stepper.current_time_step() ) )
+                {
+                    // make stpper to end exactly at t_end
+                    stepper.initialize( stepper.current_state() , stepper.current_time() ,
+                                        static_cast<time_type>(this->m_t_end-this->m_t) );
+                }
+                stepper.do_step( this->m_system );
+                this->m_t = stepper.current_time();
+            } else { // we have reached t_end
+                this->m_at_end = true;
+            }
         }
 
         // overwrite dereference from ode_iterator_base
