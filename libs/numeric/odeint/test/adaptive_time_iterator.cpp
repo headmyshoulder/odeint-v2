@@ -70,8 +70,10 @@ BOOST_AUTO_TEST_CASE( copy_dense_output_stepper_iterator )
     state_type x = {{ 1.0 }};
     iterator_type iter1 = iterator_type( dummy_dense_output_stepper() , empty_system() , x , 0.0 , 1.0 , 0.1 );
     iterator_type iter2 = iter1;
-    BOOST_CHECK_NE( &( iter1->first ) , &( iter2->first ) );
-    BOOST_CHECK_NE( &( iter1->first ) , &x );
+    // fix by mario: iterator dereference now always gives internal state also for dense output, consistent with other iterator implementations
+    BOOST_CHECK_EQUAL( &( iter1->first ) , &( iter2->first ) );
+    // the internal state is a x
+    BOOST_CHECK_EQUAL( &( iter1->first ) , &x );
     BOOST_CHECK( iter1.same( iter2 ) );
 }
 
@@ -83,7 +85,7 @@ BOOST_AUTO_TEST_CASE( copy_dense_output_stepper_iterator_with_reference_wrapper 
     iterator_type iter1 = iterator_type( boost::ref( stepper ) , empty_system() , x , 0.0 , 1.0 , 0.1 );
     iterator_type iter2 = iter1;
     BOOST_CHECK_EQUAL( &( iter1->first ) , &( iter2->first ) );
-    BOOST_CHECK_NE( &( iter1->first ) , &x );
+    BOOST_CHECK_EQUAL( &( iter1->first ) , &x );
     BOOST_CHECK( iter1.same( iter2 ) );
 }
 
@@ -109,12 +111,12 @@ BOOST_AUTO_TEST_CASE( assignment_dense_output_stepper_iterator )
     state_type x1 = {{ 1.0 }} , x2 = {{ 2.0 }};
     iterator_type iter1 = iterator_type( dummy_dense_output_stepper() , empty_system() , x1 , 0.0 , 1.0 , 0.1 );
     iterator_type iter2 = iterator_type( dummy_dense_output_stepper() , empty_system() , x2 , 0.0 , 1.0 , 0.1 );
-    BOOST_CHECK_NE( &( iter1->first ) , &x1 );
-    BOOST_CHECK_NE( &( iter2->first ) , &x2 );
+    BOOST_CHECK_EQUAL( &( iter1->first ) , &x1 );
+    BOOST_CHECK_EQUAL( &( iter2->first ) , &x2 );
     BOOST_CHECK( !iter1.same( iter2 ) );
     iter2 = iter1;
-    BOOST_CHECK_NE( &( iter1->first ) , &x1 );
-    BOOST_CHECK_NE( &( iter2->first ) , &x1 );
+    BOOST_CHECK_EQUAL( &( iter1->first ) , &x1 );
+    BOOST_CHECK_EQUAL( &( iter2->first ) , &x1 );
     BOOST_CHECK( iter1.same( iter2 ) );
     BOOST_CHECK_EQUAL( (iter1->first)[0] , (iter1->first)[0] );
 }
@@ -127,13 +129,13 @@ BOOST_AUTO_TEST_CASE( assignment_dense_output_stepper_iterator_with_reference_wr
     iterator_type iter1 = iterator_type( boost::ref( stepper ) , empty_system() , x1 , 0.0 , 1.0 , 0.1 );
     iterator_type iter2 = iterator_type( boost::ref( stepper ) , empty_system() , x2 , 0.0 , 1.0 , 0.1 );
 
-    BOOST_CHECK_NE( &( iter1->first ) , &x1 );
-    BOOST_CHECK_NE( &( iter2->first ) , &x2 );
-    BOOST_CHECK_EQUAL( &( iter1->first ) , &( iter2->first ) );
+    BOOST_CHECK_EQUAL( &( iter1->first ) , &x1 );
+    BOOST_CHECK_EQUAL( &( iter2->first ) , &x2 );
+    BOOST_CHECK_NE( &( iter1->first ) , &( iter2->first ) );
     BOOST_CHECK( !iter1.same( iter2 ) );
     iter2 = iter1;
-    BOOST_CHECK_NE( &( iter1->first ) , &x1 );
-    BOOST_CHECK_NE( &( iter2->first ) , &x1 );
+    BOOST_CHECK_EQUAL( &( iter1->first ) , &x1 );
+    BOOST_CHECK_EQUAL( &( iter2->first ) , &x1 );
     BOOST_CHECK( iter1.same( iter2 ) );
     BOOST_CHECK_EQUAL( &( iter1->first ) , &( iter2->first ) );
 }

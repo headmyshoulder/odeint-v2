@@ -23,6 +23,7 @@
 #include <boost/numeric/odeint/util/unit_helper.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
+#include <boost/numeric/odeint/iterator/impl/adaptive_iterator_impl.hpp>
 
 namespace boost {
 namespace numeric {
@@ -30,9 +31,24 @@ namespace odeint {
 
 
     template< class Stepper , class System , class State ,
-              class StepperTag = typename base_tag< typename traits::stepper_category< Stepper >::type >::type > 
-    class adaptive_iterator;
+              class StepperTag = typename base_tag< typename traits::stepper_category< Stepper >::type >::type >
+    class adaptive_iterator : public adaptive_iterator_impl<
+            adaptive_iterator< Stepper , System , State , StepperTag > ,
+            Stepper , System , State , detail::ode_state_iterator_tag , StepperTag
+        >
+    {
+        typedef typename traits::time_type< Stepper >::type time_type;
+        typedef adaptive_iterator< Stepper , System , State , StepperTag > iterator_type;
 
+    public:
+        adaptive_iterator( Stepper stepper , System sys , State &s , time_type t , time_type t_end , time_type dt )
+            : adaptive_iterator_impl< iterator_type , Stepper , System , State , detail::ode_state_iterator_tag , StepperTag >( stepper , sys , s , t , t_end , dt )
+        {}
+
+        adaptive_iterator( Stepper stepper , System sys , State &s )
+            : adaptive_iterator_impl< iterator_type , Stepper , System , State , detail::ode_state_iterator_tag , StepperTag >( stepper , sys , s )
+        {}
+    };
 
 
 
@@ -131,8 +147,6 @@ namespace odeint {
 } // namespace numeric
 } // namespace boost
 
-#include <boost/numeric/odeint/iterator/impl/adaptive_iterator_controlled_impl.hpp>
-#include <boost/numeric/odeint/iterator/impl/adaptive_iterator_dense_output_impl.hpp>
 
 
 #endif // BOOST_NUMERIC_ODEINT_ITERATOR_ADAPTIVE_ITERATOR_HPP_INCLUDED

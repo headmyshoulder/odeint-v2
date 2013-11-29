@@ -137,6 +137,10 @@ public:
     template< class StateOut >
     void calc_state( time_type t , StateOut &x ) const
     {
+        if( t == current_time() )
+        {
+            boost::numeric::odeint::copy( get_current_state() , x );
+        }
         m_stepper.calc_state( x , t , get_old_state() , m_t_old , get_current_state() , m_t );
     }
 

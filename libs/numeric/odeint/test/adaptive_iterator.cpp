@@ -77,16 +77,18 @@ BOOST_AUTO_TEST_CASE( copy_dense_output_stepper_iterator )
     typedef adaptive_iterator< dummy_dense_output_stepper , empty_system , state_type > iterator_type;
 
     state_type x = {{ 1.0 }};
-    iterator_type iter1( dummy_dense_output_stepper() , empty_system() , x );
+    // fix by mario: do not dereference iterators at the end - made iter1 start iterator
+    iterator_type iter1( dummy_dense_output_stepper() , empty_system() , x , 0.0 , 1.0 , 0.1 );
     iterator_type iter2( iter1 );
 
-    BOOST_CHECK_NE( & (*iter1) , & (*iter2) );
+    // fix by mario: iterator dereference now always gives internal state also for dense output, consisten with other iterator implementations
+    BOOST_CHECK_EQUAL( & (*iter1) , & (*iter2) );
     BOOST_CHECK( iter1.same( iter2 ) );
 
     ++iter1;
     ++iter2;
 
-    BOOST_CHECK_NE( & (*iter1) , & (*iter2) );
+    BOOST_CHECK_EQUAL( & (*iter1) , & (*iter2) );
     BOOST_CHECK( iter1.same( iter2 ) );
 }
 
@@ -140,8 +142,8 @@ BOOST_AUTO_TEST_CASE( assignment_dense_output_stepper_iterator )
     BOOST_CHECK( !iter1.same( iter2 ) );
 
     iter2 = iter1;
-
-    BOOST_CHECK_NE( & (*iter1) , & (*iter2) );
+    // fix by mario: iterator dereference now always gives internal state also for dense output, consisten with other iterator implementations
+    BOOST_CHECK_EQUAL( & (*iter1) , & (*iter2) );
     BOOST_CHECK( iter1.same( iter2 ) );
 }
 
@@ -153,8 +155,8 @@ BOOST_AUTO_TEST_CASE( assignment_dense_output_stepper_iterator_with_reference_wr
     dummy_dense_output_stepper stepper;
     iterator_type iter1 = iterator_type( boost::ref( stepper )  , empty_system() , x1 , 0.0 , 1.0 , 0.1 );
     iterator_type iter2 = iterator_type( boost::ref( stepper ) , empty_system() , x2 , 0.0 , 1.0 , 0.1 );
-
-    BOOST_CHECK_EQUAL( & (*iter1) , & (*iter2) );
+    // fix by mario: different iterators have different internal states, even if the stepper is the same (reference), consistent with other iterator implementations
+    BOOST_CHECK_NE( & (*iter1) , & (*iter2) );
     BOOST_CHECK( !iter1.same( iter2 ) );
 
     iter2 = iter1;
