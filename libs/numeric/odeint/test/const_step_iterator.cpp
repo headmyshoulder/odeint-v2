@@ -66,8 +66,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( assignment_stepper_iterator , Stepper , dummy_ste
 {
     typedef const_step_iterator< Stepper , empty_system , state_type > iterator_type;
     state_type x1 = {{ 1.0 }} , x2 = {{ 2.0 }};
-    iterator_type iter1 = iterator_type( Stepper() , empty_system() , x1 , 0.0 , 0.999 , 0.1 );
-    iterator_type iter2 = iterator_type( Stepper() , empty_system() , x2 , 0.0 , 0.999 , 0.1 );
+    iterator_type iter1 = iterator_type( Stepper() , empty_system() , x1 , 0.0 , 1.0 , 0.1 );
+    iterator_type iter2 = iterator_type( Stepper() , empty_system() , x2 , 0.0 , 1.0 , 0.1 );
     BOOST_CHECK_EQUAL( &(*iter1) , &x1 );
     BOOST_CHECK_EQUAL( &(*iter2) , &x2 );
     BOOST_CHECK( !iter1.same( iter2 ) );
@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_iterator_factory , Stepper , dummy_steppe
         dummy_observer() );
 
     // dummy_steppers just add 0.25 at each step, the above for_each leads to 10 do_step calls so x should be 3.5
-    BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-14 );
+    BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-13 );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_range , Stepper , dummy_steppers )

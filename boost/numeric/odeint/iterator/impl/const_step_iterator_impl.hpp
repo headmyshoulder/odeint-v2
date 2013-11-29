@@ -163,7 +163,7 @@ namespace odeint {
          * \param dt The initial time step.
          */
         const_step_iterator_impl( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type t_end , time_type dt )
-            : base_type( stepper , sys , s , t , dt ) , m_t_end( t_end )
+            : base_type( stepper , sys , s , t , dt ) , m_t_start( t ) , m_t_end( t_end ) , m_step( 0 )
         {
             if( detail::less_eq_with_sign( this->m_t , this->m_t_end , this->m_dt ) )
             {
@@ -198,8 +198,9 @@ namespace odeint {
                                            this->m_t_end , this->m_dt ) )
             {
                 unwrapped_stepper_type &stepper = this->m_stepper;
-
-                this->m_t += this->m_dt;
+                // use integer to compute current time to reduce roundoff errors
+                this->m_step++;
+                this->m_t = this->m_t_start + static_cast< typename unit_value_type<time_type>::type >(this->m_step)*this->m_dt;
                 while( detail::less_with_sign( stepper.current_time() , this->m_t ,
                        stepper.current_time_step() ) )
                 {
@@ -212,7 +213,9 @@ namespace odeint {
         }
 
     private:
+        time_type m_t_start;
         time_type m_t_end;
+        size_t m_step;
     };
 
 } // namespace odeint

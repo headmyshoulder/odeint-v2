@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_iterator_factory , Stepper , dummy_steppe
         make_const_step_time_iterator_end( stepper , boost::ref( system ) , x ) ,
         dummy_observer() );
 
-    BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-14 );
+    BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-13 );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_range , Stepper , dummy_steppers )
@@ -101,7 +101,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_range , Stepper , dummy_steppers )
     boost::for_each( make_const_step_time_range( stepper , boost::ref( system ) , x , 0.0 , 1.0 , 0.1 ) ,
                      dummy_observer() );
 
-    BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-14 );
+    BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-13 );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_iterator_with_reference_wrapper_factory , Stepper , dummy_steppers )
@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_iterator_with_reference_wrapper_factory ,
         make_const_step_time_iterator_end( boost::ref( stepper ) , boost::ref( system ) , x ) ,
         dummy_observer() );
 
-    BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-14 );
+    BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-13 );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_range_with_reference_wrapper , Stepper , dummy_steppers )
@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( stepper_range_with_reference_wrapper , Stepper , 
     boost::for_each( make_const_step_time_range( boost::ref( stepper ) , boost::ref( system ) , x , 0.0 , 1.0 , 0.1 ) ,
                      dummy_observer() );
 
-    BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-14 );
+    BOOST_CHECK_CLOSE( x[0] , 3.5 , 1.0e-13 );
 }
 
 
