@@ -109,56 +109,6 @@ size_t integrate_const(
                                                  start_time , end_time , dt ) ,
                      obs_caller< State , Time , observer_type >( obs_calls , obs ) );
 
-    /*
-    // step integration steps gives step+1 observer calls
-    return step-1;
-
-    Time time = start_time;
-    
-    st.initialize( start_state , time , dt );
-    obs( start_state , time );
-    time += dt;
-
-    int obs_step( 1 );
-    int real_step( 0 );
-    
-    while( less_with_sign( static_cast<Time>(time+dt) , end_time , dt ) )
-    {
-        while( less_eq_with_sign( time , st.current_time() , dt ) )
-        {
-            st.calc_state( time , start_state );
-            obs( start_state , time );
-            ++obs_step;
-            // direct computation of the time avoids error propagation happening when using time += dt
-            // we need clumsy type analysis to get boost units working here
-            time = start_time + static_cast< typename unit_value_type<Time>::type >(obs_step) * dt;
-        }
-        // we have not reached the end, do another real step
-        if( less_with_sign( static_cast<Time>(st.current_time()+st.current_time_step()) ,
-                            end_time ,
-                            st.current_time_step() ) )
-        {
-            while( less_eq_with_sign( st.current_time() , time , dt ) )
-            {
-                st.do_step( system );
-                ++real_step;
-            }
-        }
-        else if( less_with_sign( st.current_time() , end_time , st.current_time_step() ) )
-        { // do the last step ending exactly on the end point
-            st.initialize( st.current_state() , st.current_time() , end_time - st.current_time() );
-            st.do_step( system );
-            ++real_step;
-        }
-        
-    }
-    // last observation, if we are still in observation interval
-    if( less_eq_with_sign( time , end_time , dt ) )
-    {
-        st.calc_state( time , start_state );
-        obs( start_state , time );
-    }
-    */
     return obs_calls-1;
 }
 

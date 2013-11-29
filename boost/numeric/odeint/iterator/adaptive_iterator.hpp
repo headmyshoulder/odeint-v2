@@ -29,7 +29,7 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-
+    /* use the adaptive_iterator_impl with the right tags */
     template< class Stepper , class System , class State ,
               class StepperTag = typename base_tag< typename traits::stepper_category< Stepper >::type >::type >
     class adaptive_iterator : public adaptive_iterator_impl<

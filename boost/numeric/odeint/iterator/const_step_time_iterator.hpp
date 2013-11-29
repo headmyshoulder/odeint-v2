@@ -28,7 +28,7 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-
+    /* use the const_step_iterator_impl with the right tags */
     template< class Stepper , class System , class State ,
               class StepperTag = typename base_tag< typename traits::stepper_category< Stepper >::type >::type >
     class const_step_time_iterator : public const_step_iterator_impl<
