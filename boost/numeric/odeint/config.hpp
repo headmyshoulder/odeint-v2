@@ -41,4 +41,13 @@
 
 
 
+#include <boost/config.hpp>
+
+#if __cplusplus >= 201103L
+#define BOOST_NUMERIC_ODEINT_CXX11 1
+#endif
+
+
+
+
 #endif // BOOST_NUMERIC_ODEINT_CONFIG_HPP_INCLUDED

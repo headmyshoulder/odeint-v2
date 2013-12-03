@@ -17,11 +17,8 @@
 #define BOOST_NUMERIC_ODEINT_UTIL_BIND_HPP_INCLUDED
 
 
-#include <boost/config.hpp>
+#include <boost/numeric/odeint/config.hpp>
 
-#if __cplusplus >= 201103L
-#define BOOST_NUMERIC_ODEINT_CXX11 1
-#endif
 
 #if BOOST_NUMERIC_ODEINT_CXX11 
     #include <functional>
