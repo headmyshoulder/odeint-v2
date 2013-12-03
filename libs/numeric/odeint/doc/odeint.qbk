@@ -72,6 +72,8 @@
     [link boost_numeric_odeint.concepts.simple_symplectic_system Simple Symplectic System]]
 [def __implicit_system
     [link boost_numeric_odeint.concepts.implicit_system Implicit System]]
+[def __second_order_system
+    [link boost_numeric_odeint.concepts.second_order_system Second Order System]]
 [def __stepper
     [link boost_numeric_odeint.concepts.stepper Stepper]]
 [def __error_stepper
