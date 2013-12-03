@@ -19,8 +19,6 @@
 #ifndef BOOST_NUMERIC_ODEINT_ALGEBRA_RANGE_ALGEBRA_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_ALGEBRA_RANGE_ALGEBRA_HPP_INCLUDED
 
-#include <algorithm>
-
 #include <boost/range.hpp>
 #include <boost/mpl/size_t.hpp>
 

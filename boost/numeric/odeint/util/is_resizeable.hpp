@@ -75,6 +75,9 @@ struct is_resizeable< FusionSequence , typename boost::enable_if< typename boost
 
 
 
+
+
+
 } // namespace odeint
 } // namespace numeric
 } // namespace boost
