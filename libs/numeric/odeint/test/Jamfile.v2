@@ -59,6 +59,8 @@ test-suite "odeint"
     [ run const_step_time_iterator.cpp ]
     [ run adaptive_iterator.cpp ]
     [ run adaptive_time_iterator.cpp ]
+    [ run n_step_iterator.cpp ]
+    [ run n_step_time_iterator.cpp ]
     [ compile unwrap_boost_reference.cpp ]
     [ compile-fail unwrap_reference.cpp ]
     : <testing.launcher>valgrind

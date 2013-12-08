@@ -1,7 +1,7 @@
 
 /*
  [auto_generated]
- boost/numeric/odeint/iterator/const_step_ode_iterator.hpp
+ boost/numeric/odeint/iterator/const_step_iterator.hpp
 
  [begin_description]
  Iterator for iterating through the solution of an ODE with constant step size.
