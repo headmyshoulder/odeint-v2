@@ -20,6 +20,8 @@
 #include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_adaptive.hpp>
+#include <boost/numeric/odeint/integrate/detail/functors.hpp>
+#include <boost/numeric/odeint/iterator/n_step_time_iterator.hpp>
 #include <boost/numeric/odeint/util/unit_helper.hpp>
 
 #include <boost/numeric/odeint/util/detail/less_with_sign.hpp>
@@ -45,22 +47,14 @@ Time integrate_n_steps(
         Time start_time , Time dt , size_t num_of_steps ,
         Observer observer , stepper_tag )
 {
-    typename odeint::unwrap_reference< Observer >::type &obs = observer;
-    typename odeint::unwrap_reference< Stepper >::type &st = stepper;
+    typedef typename odeint::unwrap_reference< Observer >::type observer_type;
+    observer_type &obs = observer;
 
-    Time time = start_time;
-
-    for( size_t step = 0; step < num_of_steps ; ++step )
-    {
-        obs( start_state , time );
-        st.do_step( system , start_state , time , dt );
-        // direct computation of the time avoids error propagation happening when using time += dt
-        // we need clumsy type analysis to get boost units working here
-        time = start_time + static_cast< typename unit_value_type<Time>::type >( step+1 ) * dt;
-    }
-    obs( start_state , time );
-
-    return time;
+    Time t;
+    boost::for_each( make_n_step_time_range( stepper , system , start_state ,
+                                             start_time , dt , num_of_steps ) ,
+                     obs_caller_time< State , Time , observer_type >( t , obs ) );
+    return t;
 }
 
 
@@ -98,55 +92,15 @@ Time integrate_n_steps(
         Time start_time , Time dt , size_t num_of_steps ,
         Observer observer , dense_output_stepper_tag )
 {
-    typename odeint::unwrap_reference< Observer >::type &obs = observer;
-    typename odeint::unwrap_reference< Stepper >::type &st = stepper;
+    typedef typename odeint::unwrap_reference< Observer >::type observer_type;
+    observer_type &obs = observer;
 
-    Time time = start_time;
-    const Time end_time = start_time + static_cast< typename unit_value_type<Time>::type >(num_of_steps) * dt;
+    Time t;
+    boost::for_each( make_n_step_time_range( stepper , system , start_state ,
+                                             start_time , dt , num_of_steps ) ,
+                     obs_caller_time< State , Time , observer_type >( t , obs ) );
+    return t;
 
-    st.initialize( start_state , time , dt );
-
-    size_t step = 0;
-
-    while( step < num_of_steps )
-    {
-        while( less_with_sign( time , st.current_time() , st.current_time_step() ) )
-        {
-            st.calc_state( time , start_state );
-            obs( start_state , time );
-            ++step;
-            // direct computation of the time avoids error propagation happening when using time += dt
-            // we need clumsy type analysis to get boost units working here
-            time = start_time + static_cast< typename unit_value_type<Time>::type >(step) * dt;
-        }
-
-        // we have not reached the end, do another real step
-        if( less_with_sign( static_cast<Time>(st.current_time()+st.current_time_step()) ,
-                            end_time ,
-                            st.current_time_step() ) )
-        {
-            st.do_step( system );
-        }
-        else if( less_with_sign( st.current_time() , end_time , st.current_time_step() ) )
-        { // do the last step ending exactly on the end point
-            st.initialize( st.current_state() , st.current_time() , static_cast<Time>(end_time - st.current_time()) );
-            st.do_step( system );
-        }
-    }
-
-    while( st.current_time() < end_time )
-    {
-        if( less_with_sign( end_time ,
-                            static_cast<Time>(st.current_time()+st.current_time_step()) ,
-                            st.current_time_step() ) )
-            st.initialize( st.current_state() , st.current_time() , static_cast<Time>(end_time - st.current_time()) );
-        st.do_step( system );
-    }
-
-    // observation at end point, only if we ended exactly on the end-point (or above due to finite precision)
-    obs( st.current_state() , end_time );
-
-    return time;
 }
 
 

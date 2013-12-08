@@ -55,6 +55,21 @@ struct obs_caller {
     }
 };
 
+template< class State , class Time , class Observer >
+struct obs_caller_time {
+
+    Time &m_t;
+    Observer &m_obs;
+
+    obs_caller_time( Time &t , Observer &obs ) : m_t(t) , m_obs( obs ) {}
+
+    void operator()( std::pair< const State & , const Time & > x )
+    {
+        m_obs( x.first , x.second );
+        m_t = x.second;
+    }
+};
+
 } // namespace detail
 } // namespace odeint
 } // namespace numeric
