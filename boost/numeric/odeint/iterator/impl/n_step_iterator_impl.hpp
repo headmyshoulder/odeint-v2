@@ -39,7 +39,7 @@ namespace odeint {
      * \brief ODE Iterator performing exactly n steps with constant step size. The value type of this iterator is the state type of the stepper.
      *
      * Implements an ODE iterator solving the ODE with constant step size. Uses steppers fulfilling the Stepper concept.
-     * const_step_iterator is a model of single-pass iterator.
+     * n_step_iterator is a model of single-pass iterator.
      *
      * The value type of this iterator is the state type of the stepper. Hence one can only access the state and not the current time.
      *
@@ -124,10 +124,10 @@ namespace odeint {
      * Specilization for dense output stepper
      */
     /**
-     * \brief ODE Iterator with constant step size. The value type of this iterator is the state type of the stepper.
+     * \brief ODE Iterator with step-size control and dense output.
      *
      * Implements an ODE iterator solving the ODE with constant steps. Uses dense-output steppers.
-     * const_step_iterator is a model of single-pass iterator.
+     * n_step_iterator is a model of single-pass iterator.
      *
      * The value type of this iterator is the state type of the stepper. Hence one can only access the state and not the current time.
      *

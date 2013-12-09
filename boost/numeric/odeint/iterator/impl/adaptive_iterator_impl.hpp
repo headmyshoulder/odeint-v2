@@ -1,6 +1,6 @@
 /*
  [auto_generated]
-  boost/numeric/odeint/iterator/detail/adaptive_iterator_controlled_impl.hpp
+  boost/numeric/odeint/iterator/detail/adaptive_iterator_impl.hpp
 
   [begin_description]
   tba.

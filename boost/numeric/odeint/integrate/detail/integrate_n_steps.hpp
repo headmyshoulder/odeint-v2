@@ -95,12 +95,12 @@ Time integrate_n_steps(
     typedef typename odeint::unwrap_reference< Observer >::type observer_type;
     observer_type &obs = observer;
 
+    // ToDo: is there a better way to extract the final time?
     Time t;
     boost::for_each( make_n_step_time_range( stepper , system , start_state ,
                                              start_time , dt , num_of_steps ) ,
                      obs_caller_time< State , Time , observer_type >( t , obs ) );
     return t;
-
 }
 
 
