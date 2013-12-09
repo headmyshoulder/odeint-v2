@@ -46,23 +46,6 @@ struct osc
     }
 };
 
-/* reset dispatcher */
-template< class StepperCategory >
-struct resetter
-{
-    template< class Stepper >
-    static void reset( Stepper &stepper ) { }
-};
-
-template< >
-struct resetter< explicit_error_stepper_fsal_tag >
-{
-    template< class Stepper >
-    static void reset( Stepper &stepper ) 
-    { stepper.reset(); }
-};
-
-
 BOOST_AUTO_TEST_SUITE( numeric_adams_bashforth_test )
 
 
