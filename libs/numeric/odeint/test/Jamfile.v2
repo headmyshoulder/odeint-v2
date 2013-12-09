@@ -61,3 +61,6 @@ test-suite "odeint"
     [ compile-fail unwrap_reference.cpp ]
     : <testing.launcher>valgrind
     ;
+
+# also run numeric tests
+build-project numeric ;
