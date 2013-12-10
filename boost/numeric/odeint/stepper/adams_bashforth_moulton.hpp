@@ -34,6 +34,8 @@
 #include <boost/numeric/odeint/stepper/adams_moulton.hpp>
 
 
+
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -110,7 +112,7 @@ public :
     void do_step( System system , const StateIn &in , time_type t , const StateOut &out , time_type dt )
     {
         m_adams_bashforth.do_step( system , in , t , out , dt );
-        m_adams_moulton.do_step( system , out , t , dt , m_adams_bashforth.step_storage() );
+        m_adams_moulton.do_step( system , in , t , out , dt , m_adams_bashforth.step_storage() );
     }
 
     /**
@@ -120,7 +122,7 @@ public :
     void do_step( System system , const StateIn &in , time_type t , StateOut &out , time_type dt )
     {
         m_adams_bashforth.do_step( system , in , t , out , dt );
-        m_adams_moulton.do_step( system , out , t , dt , m_adams_bashforth.step_storage() );
+        m_adams_moulton.do_step( system , in , t , out , dt , m_adams_bashforth.step_storage() );
     }
 
 

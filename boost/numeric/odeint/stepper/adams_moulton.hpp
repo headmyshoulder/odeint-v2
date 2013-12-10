@@ -39,7 +39,8 @@
 #include <boost/numeric/odeint/stepper/detail/rotating_buffer.hpp>
 
 
-
+#include <iostream>
+using namespace std;
 
 
 
@@ -139,6 +140,7 @@ public :
         typename odeint::unwrap_reference< System >::type &sys = system;
         m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
         sys( in , m_dxdt.m_v , t );
+        cout << in[0] << " " << in[1] << " " << m_dxdt.m_v[0] << " " << m_dxdt.m_v[1] << "\n";
         detail::adams_moulton_call_algebra< steps , algebra_type , operations_type >()( m_algebra , in , out , m_dxdt.m_v , buf , m_coefficients , dt );
     }
 

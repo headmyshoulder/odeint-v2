@@ -42,7 +42,8 @@
 #include <boost/numeric/odeint/stepper/detail/adams_bashforth_call_algebra.hpp>
 #include <boost/numeric/odeint/stepper/detail/rotating_buffer.hpp>
 
-
+#include <iostream>
+using namespace std;
 
 namespace boost {
 namespace numeric {
@@ -235,12 +236,14 @@ private:
             sys( in , m_step_storage[0].m_v , t );
             m_initializing_stepper.do_step( system , in , m_step_storage[0].m_v , t , out , dt );
             m_steps_initialized++;
+            cout << "hehe " << m_steps_initialized << endl;
         }
         else
         {
             m_step_storage.rotate();
             sys( in , m_step_storage[0].m_v , t );
             detail::adams_bashforth_call_algebra< steps , algebra_type , operations_type >()( m_algebra , in , out , m_step_storage , m_coefficients , dt );
+            cout << "hoho" << endl;
         }
     }
 
