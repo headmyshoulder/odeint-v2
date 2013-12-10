@@ -33,6 +33,8 @@
 #include <boost/numeric/odeint/stepper/adams_bashforth.hpp>
 #include <boost/numeric/odeint/stepper/adams_moulton.hpp>
 
+#include <iostream>
+using namespace std;
 
 namespace boost {
 namespace numeric {
@@ -74,6 +76,7 @@ public :
 #ifndef DOXYGEN_SKIP
     typedef adams_bashforth< steps , state_type , value_type , deriv_type , time_type , algebra_type , operations_type , resizer_type > adams_bashforth_type;
     typedef adams_moulton< steps , state_type , value_type , deriv_type , time_type , algebra_type , operations_type , resizer_type > adams_moulton_type;
+    typedef adams_bashforth_moulton< steps , state_type , value_type , deriv_type , time_type , algebra_type , operations_type , resizer_type > stepper_type;
 #endif //DOXYGEN_SKIP
     typedef unsigned short order_type;
     static const order_type order_value = steps + 1;
@@ -81,10 +84,12 @@ public :
     /** \brief Constructs the adams_bashforth class. */
     adams_bashforth_moulton( void )
     : m_adams_bashforth() , m_adams_moulton( m_adams_bashforth.algebra() )
+    , m_x() , m_resizer()
     { }
 
     adams_bashforth_moulton( const algebra_type &algebra )
     : m_adams_bashforth( algebra ) , m_adams_moulton( m_adams_bashforth.algebra() )
+    , m_x() , m_resizer()    
     { }
 
     order_type order( void ) const { return order_value; }
@@ -92,8 +97,7 @@ public :
     template< class System , class StateInOut >
     void do_step( System system , StateInOut &x , time_type t , time_type dt )
     {
-        m_adams_bashforth.do_step( system , x , t , dt );
-        m_adams_moulton.do_step( system , x , t , dt , m_adams_bashforth.step_storage() );
+        do_step_impl1( system , x , t , dt );
     }
 
     /**
@@ -102,15 +106,13 @@ public :
     template< class System , class StateInOut >
     void do_step( System system , const StateInOut &x , time_type t , time_type dt )
     {
-        m_adams_bashforth.do_step( system , x , t , dt );
-        m_adams_moulton.do_step( system , x , t , dt , m_adams_bashforth.step_storage() );
+        do_step_impl1( system , x , t , dt );
     }
 
     template< class System , class StateIn , class StateOut >
     void do_step( System system , const StateIn &in , time_type t , const StateOut &out , time_type dt )
     {
-        m_adams_bashforth.do_step( system , in , t , out , dt );
-        m_adams_moulton.do_step( system , out , t , dt , m_adams_bashforth.step_storage() );
+        do_step_impl2( system , in , t , out , dt );
     }
 
     /**
@@ -129,6 +131,7 @@ public :
     {
         m_adams_bashforth.adjust_size( x );
         m_adams_moulton.adjust_size( x );
+        resize_impl( x );
     }
 
 
@@ -148,9 +151,36 @@ public :
 
 
 private:
+    
+    template< typename System , typename StateInOut >
+    void do_step_impl1( System system , StateInOut &x , time_type t , time_type dt )
+    {
+        cout << "abm1" << endl;
+        m_resizer.adjust_size( x , detail::bind( &stepper_type::template resize_impl< StateInOut > , detail::ref( *this ) , detail::_1 ) );
+        m_adams_bashforth.do_step( system , x , t , m_x.m_v , dt );
+        m_adams_moulton.do_step( system , m_x.m_v , t , x , dt , m_adams_bashforth.step_storage() );
+    }
+    
+    template< typename System , typename StateIn , typename StateInOut >
+    void do_step_impl2( System system , StateIn const &in , time_type t , StateInOut & out , time_type dt )
+    {
+        cout << "abm2" << endl;
+        m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl< StateInOut > , detail::ref( *this ) , detail::_1 ) );        
+        m_adams_bashforth.do_step( system , in , t , m_x.m_v , dt );
+        m_adams_moulton.do_step( system , m_x.m_v , t , out , dt , m_adams_bashforth.step_storage() );
+    }
+
+    
+    template< class StateIn >
+    bool resize_impl( const StateIn &x )
+    {
+        return adjust_size_by_resizeability( m_x , x , typename is_resizeable< state_type >::type() );
+    }
 
     adams_bashforth_type m_adams_bashforth;
     adams_moulton_type m_adams_moulton;
+    wrapped_state_type m_x;
+    resizer_type m_resizer;
 };
 
 
