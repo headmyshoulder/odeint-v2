@@ -66,6 +66,12 @@ struct perform_adams_bashforth_moulton_test
         // initialization, does a number of steps already to fill internal buffer, t is increased
         // we use the rk78 as initializing stepper
         stepper.initialize( boost::ref(init_stepper) , osc() , x1 , t , dt );
+        // do a number of steps to fill the buffer with results from adams bashforth
+        for( size_t n=0 ; n < stepper.steps ; ++n )
+        {
+            stepper.do_step( osc() , x1 , t , dt );
+            t += dt;
+        }
         double A = std::sqrt( x1[0]*x1[0] + x1[1]*x1[1] );
         double phi = std::asin(x1[0]/A) - t;
         // now we do the actual step

@@ -62,12 +62,18 @@ struct perform_adams_bashforth_test
         const state_type x0 = {{ 0.0 , 1.0 }};
         state_type x1 = x0;
         double t = 0.0;
-        double dt = 0.25;
+        double dt = 0.2;
         // initialization, does a number of steps already to fill internal buffer, t is increased
         // we use the rk78 as initializing stepper
         stepper.initialize( boost::ref(init_stepper) , osc() , x1 , t , dt );
         double A = std::sqrt( x1[0]*x1[0] + x1[1]*x1[1] );
         double phi = std::asin(x1[0]/A) - t;
+        // do a number of steps to fill the buffer with results from adams bashforth
+        for( size_t n=0 ; n < stepper.steps ; ++n )
+        {
+            stepper.do_step( osc() , x1 , t , dt );
+            t += dt;
+        }
         // now we do the actual step
         stepper.do_step( osc() , x1 , t , dt );
         // only examine the error of the adams-bashforth step, not the initialization
