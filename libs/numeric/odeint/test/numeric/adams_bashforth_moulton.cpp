@@ -105,9 +105,9 @@ typedef mpl::vector<
     adams_bashforth_moulton< 3 , state_type > ,
     adams_bashforth_moulton< 4 , state_type > ,
     adams_bashforth_moulton< 5 , state_type > ,
-    adams_bashforth_moulton< 6 , state_type >
-    //adams_bashforth_moulton< 7 , state_type > ,
-    //adams_bashforth_moulton< 8 , state_type >
+    adams_bashforth_moulton< 6 , state_type > ,
+    adams_bashforth_moulton< 7 , state_type > ,
+    adams_bashforth_moulton< 8 , state_type >
     > adams_bashforth_moulton_steppers;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( adams_bashforth_moulton_test , Stepper, adams_bashforth_moulton_steppers )
