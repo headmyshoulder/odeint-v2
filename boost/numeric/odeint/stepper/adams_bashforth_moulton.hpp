@@ -33,9 +33,6 @@
 #include <boost/numeric/odeint/stepper/adams_bashforth.hpp>
 #include <boost/numeric/odeint/stepper/adams_moulton.hpp>
 
-#include <iostream>
-using namespace std;
-
 
 
 namespace boost {
@@ -81,7 +78,7 @@ public :
     typedef adams_bashforth_moulton< steps , state_type , value_type , deriv_type , time_type , algebra_type , operations_type , resizer_type > stepper_type;
 #endif //DOXYGEN_SKIP
     typedef unsigned short order_type;
-    static const order_type order_value = steps + 1;
+    static const order_type order_value = steps;
 
     /** \brief Constructs the adams_bashforth class. */
     adams_bashforth_moulton( void )
@@ -156,19 +153,31 @@ private:
     template< typename System , typename StateInOut >
     void do_step_impl1( System system , StateInOut &x , time_type t , time_type dt )
     {
-        m_resizer.adjust_size( x , detail::bind( &stepper_type::template resize_impl< StateInOut > , detail::ref( *this ) , detail::_1 ) );
-        m_adams_bashforth.do_step( system , x , t , m_x.m_v , dt );
-        cout << "abm1 " << x[0] << " " << x[1] << " " << m_x.m_v[0] << " " << m_x.m_v[1] << "\n";
-        m_adams_moulton.do_step( system , m_x.m_v , t , x , dt , m_adams_bashforth.step_storage() );
+        if( m_adams_bashforth.is_initialized() )
+        {
+            m_resizer.adjust_size( x , detail::bind( &stepper_type::template resize_impl< StateInOut > , detail::ref( *this ) , detail::_1 ) );
+            m_adams_bashforth.do_step( system , x , t , m_x.m_v , dt );
+            m_adams_moulton.do_step( system , x , m_x.m_v , t , x , dt , m_adams_bashforth.step_storage() );
+        }
+        else
+        {
+            m_adams_bashforth.do_step( system , x , t , dt );
+        }
     }
     
     template< typename System , typename StateIn , typename StateInOut >
     void do_step_impl2( System system , StateIn const &in , time_type t , StateInOut & out , time_type dt )
     {
-        cout << "abm2" << endl;
-        m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl< StateInOut > , detail::ref( *this ) , detail::_1 ) );        
-        m_adams_bashforth.do_step( system , in , t , m_x.m_v , dt );
-        m_adams_moulton.do_step( system , m_x.m_v , t , out , dt , m_adams_bashforth.step_storage() );
+        if( m_adams_bashforth.is_initialized() )
+        {
+            m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl< StateInOut > , detail::ref( *this ) , detail::_1 ) );        
+            m_adams_bashforth.do_step( system , in , t , m_x.m_v , dt );
+            m_adams_moulton.do_step( system , in , m_x.m_v , t , out , dt , m_adams_bashforth.step_storage() );
+        }
+        else
+        {
+            m_adams_bashforth.do_step( system , in , t , out , dt );
+        }
     }
 
     

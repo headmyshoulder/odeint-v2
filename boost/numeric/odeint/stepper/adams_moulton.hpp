@@ -39,9 +39,6 @@
 #include <boost/numeric/odeint/stepper/detail/rotating_buffer.hpp>
 
 
-#include <iostream>
-using namespace std;
-
 
 
 namespace boost {
@@ -115,16 +112,16 @@ public :
      *
      * solves the forwarding problem
      */
-    template< class System , class StateInOut , class ABBuf >
-    void do_step( System system , StateInOut &in , time_type t , time_type dt , const ABBuf &buf )
+    template< class System , class StateInOut , class StateIn , class ABBuf >
+    void do_step( System system , StateInOut &x , StateIn const & pred , time_type t , time_type dt , const ABBuf &buf )
     {
-        do_step( system , in , t , in , dt , buf );
+        do_step( system , x , pred , t , x , dt , buf );
     }
 
-    template< class System , class StateInOut , class ABBuf >
-    void do_step( System system , const StateInOut &in , time_type t , time_type dt , const ABBuf &buf )
+    template< class System , class StateInOut , class StateIn , class ABBuf >
+    void do_step( System system , const StateInOut &x , StateIn const & pred , time_type t , time_type dt , const ABBuf &buf )
     {
-        do_step( system , in , t , in , dt , buf );
+        do_step( system , x , pred , t , x , dt , buf );
     }
 
 
@@ -134,23 +131,16 @@ public :
      *
      * solves the forwarding problem
      */
-    template< class System , class StateIn , class StateOut , class ABBuf >
-    void do_step( System system , const StateIn &in , time_type t , StateOut &out , time_type dt , const ABBuf &buf )
+    template< class System , class StateIn , class PredIn , class StateOut , class ABBuf >
+    void do_step( System system , const StateIn &in , const PredIn &pred , time_type t , StateOut &out , time_type dt , const ABBuf &buf )
     {
-        typename odeint::unwrap_reference< System >::type &sys = system;
-        m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
-        sys( in , m_dxdt.m_v , t );
-        cout << in[0] << " " << in[1] << " " << m_dxdt.m_v[0] << " " << m_dxdt.m_v[1] << "\n";
-        detail::adams_moulton_call_algebra< steps , algebra_type , operations_type >()( m_algebra , in , out , m_dxdt.m_v , buf , m_coefficients , dt );
+        do_step_impl( system , in , pred , t , out , dt , buf );
     }
 
-    template< class System , class StateIn , class StateOut , class ABBuf >
-    void do_step( System system , const StateIn &in , time_type t , const StateOut &out , time_type dt , const ABBuf &buf )
+    template< class System , class StateIn , class PredIn , class StateOut , class ABBuf >
+    void do_step( System system , const StateIn &in , const PredIn &pred , time_type t , const StateOut &out , time_type dt , const ABBuf &buf )
     {
-        typename odeint::unwrap_reference< System >::type &sys = system;
-        m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
-        sys( in , m_dxdt.m_v , t );
-        detail::adams_moulton_call_algebra< steps , algebra_type , operations_type >()( m_algebra , in , out , m_dxdt.m_v , buf , m_coefficients , dt );
+        do_step_impl( system , in , pred , t , out , dt , buf );
     }
 
 
@@ -169,6 +159,17 @@ public :
 
 
 private:
+
+
+    template< class System , class StateIn , class PredIn , class StateOut , class ABBuf >
+    void do_step_impl( System system , const StateIn &in , const PredIn &pred , time_type t , StateOut &out , time_type dt , const ABBuf &buf )
+    {
+        typename odeint::unwrap_reference< System >::type &sys = system;
+        m_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
+        sys( pred , m_dxdt.m_v , t );
+        detail::adams_moulton_call_algebra< steps , algebra_type , operations_type >()( m_algebra , in , out , m_dxdt.m_v , buf , m_coefficients , dt );
+    }
+
 
     template< class StateIn >
     bool resize_impl( const StateIn &x )
