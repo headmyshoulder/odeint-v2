@@ -156,9 +156,9 @@ private:
     template< typename System , typename StateInOut >
     void do_step_impl1( System system , StateInOut &x , time_type t , time_type dt )
     {
-        cout << "abm1" << endl;
         m_resizer.adjust_size( x , detail::bind( &stepper_type::template resize_impl< StateInOut > , detail::ref( *this ) , detail::_1 ) );
         m_adams_bashforth.do_step( system , x , t , m_x.m_v , dt );
+        cout << "abm1 " << x[0] << " " << x[1] << " " << m_x.m_v[0] << " " << m_x.m_v[1] << "\n";
         m_adams_moulton.do_step( system , m_x.m_v , t , x , dt , m_adams_bashforth.step_storage() );
     }
     
