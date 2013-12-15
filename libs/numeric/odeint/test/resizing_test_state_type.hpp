@@ -26,8 +26,9 @@
 
 
 
-
-class test_array_type : public boost::array< double , 1 > { };
+// Mario: velocity verlet tests need arrays of size 2
+// some ugly detailed dependency, maybe this can be improved?
+class test_array_type : public boost::array< double , 2 > { };
 
 size_t adjust_size_count;
 
