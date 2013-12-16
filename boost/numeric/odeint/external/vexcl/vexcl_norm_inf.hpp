@@ -31,45 +31,13 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
-namespace detail {
-
-// norm_inf specializations for vexcl types need an instance of
-// vex::Reductor<T> to be available. This function returns reference
-// to such an instance:
-template <typename T>
-const vex::Reductor<T, vex::MAX>&
-vexcl_reductor(const std::vector<cl::CommandQueue> &queue)
-{
-    // We will hold one static reductor per set of queues (or, rather, contexts):
-    static std::map< std::vector<cl_context>, vex::Reductor<T, vex::MAX> > cache;
-
-    // Extract OpenCL context handles from command queues:
-    std::vector<cl_context> ctx;
-    ctx.reserve(queue.size());
-    for(auto q = queue.begin(); q != queue.end(); ++q)
-        ctx.push_back( vex::qctx(*q)() );
-
-    // See if there is suitable instance of reductor already:
-    auto r = cache.find(ctx);
-
-    // If not, create new instance and move it to the cache.
-    if (r == cache.end())
-        r = cache.insert( std::make_pair(
-                    std::move(ctx), vex::Reductor<T, vex::MAX>(queue)
-                    ) ).first;
-
-    return r->second;
-}
-
-} // namespace detail
-
 // specialization for vexcl vector
 template <typename T>
 struct vector_space_norm_inf< vex::vector<T> > {
     typedef T result_type;
 
     T operator()( const vex::vector<T> &x ) const {
-        auto max = detail::vexcl_reductor<T>(x.queue_list());
+        const auto &max = vex::get_reductor<T, vex::MAX>(x.queue_list());
 
         return max( fabs(x) );
     }
@@ -81,7 +49,7 @@ struct vector_space_norm_inf< vex::multivector<T, N> > {
     typedef T result_type;
 
     T operator()( const vex::multivector<T, N> &x ) const {
-        auto max = detail::vexcl_reductor<T>(x.queue_list());
+        const auto &max = vex::get_reductor<T, vex::MAX>(x.queue_list());
 
         // Reducing a multivector results in std::array<T, N>:
         auto m = max( fabs(x) );
