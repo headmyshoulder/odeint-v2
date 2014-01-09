@@ -107,11 +107,11 @@ namespace odeint {
             unwrapped_stepper_type &stepper = this->m_stepper;
             if( ++m_t_start != m_t_end )
             {
-                while( detail::less_with_sign( this->m_t , *m_t_start , this->m_dt ) )
+                while( detail::less_with_sign( this->m_t , static_cast<time_type>(*m_t_start) , this->m_dt ) )
                 {
-                    const time_type current_dt = detail::min_abs( this->m_dt , *m_t_start - this->m_t );
+                    const time_type current_dt = detail::min_abs( this->m_dt , static_cast<time_type>(*m_t_start) - this->m_t );
                     stepper.do_step( this->m_system , *( this->m_state ) , this->m_t , current_dt );
-                    this->m_t += this->m_dt;
+                    this->m_t += current_dt;
                 }
 
             } else {
@@ -197,26 +197,39 @@ namespace odeint {
             unwrapped_stepper_type &stepper = this->m_stepper;
             if( ++m_t_start != m_t_end )
             {
-                while( detail::less_with_sign( this->m_t , *m_t_start , this->m_dt ) )
+                while( detail::less_with_sign( this->m_t , static_cast<time_type>(*m_t_start) , this->m_dt ) )
                 {
-                    const time_type current_dt = detail::min_abs( this->m_dt , *m_t_start - this->m_t );
-                    const size_t max_attempts = 1000;
-                    size_t trials = 0;
-                    controlled_step_result res = success;
-                    do
+                    if( detail::less_with_sign( static_cast<time_type>(*m_t_start) - this->m_t , this->m_dt , this->m_dt ) )
                     {
-                        res = stepper.try_step( this->m_system , *( this->m_state ) , this->m_t , this->m_dt );
-                        ++trials;
-                    }
-                    while( ( res == fail ) && ( trials < max_attempts ) );
-                    if( trials == max_attempts )
-                    {
-                        throw std::overflow_error( "Adaptive iterator : Maximal number of iterations reached. A step size could not be found." );
+                        // we want to end exactly at the time point
+                        time_type current_dt = static_cast<time_type>(*m_t_start) - this->m_t;
+                        step_loop( current_dt );
+                    } else {
+                        step_loop( this->m_dt );
                     }
                 }
 
             } else {
                 this->m_at_end = true;
+            }
+        }
+
+    private:
+        void step_loop( time_type &dt )
+        {
+            unwrapped_stepper_type &stepper = this->m_stepper;
+            const size_t max_attempts = 1000;
+            size_t trials = 0;
+            controlled_step_result res = success;
+            do
+            {
+                res = stepper.try_step( this->m_system , *( this->m_state ) , this->m_t , dt );
+                ++trials;
+            }
+            while( ( res == fail ) && ( trials < max_attempts ) );
+            if( trials == max_attempts )
+            {
+                throw std::overflow_error( "Adaptive iterator : Maximal number of iterations reached. A step size could not be found." );
             }
         }
 
@@ -271,7 +284,7 @@ namespace odeint {
          */
         times_iterator_impl( stepper_type stepper , system_type sys , state_type &s ,
                              time_iterator_type t_start , time_iterator_type t_end , time_type dt )
-            : base_type( stepper , sys , s , *t_start , dt ) , m_t_start( t_start ) , m_t_end( t_end )
+            : base_type( stepper , sys , s , *t_start , dt ) , m_t_start( t_start ) , m_t_end( t_end ) , m_final_time( *(t_end-1) )
         {
             if( t_start != t_end )
             {
@@ -298,16 +311,20 @@ namespace odeint {
 
         void increment()
         {
-            unwrapped_stepper_type &stepper = this->m_stepper;
+            unwrapped_stepper_type &st = this->m_stepper;
             if( ++m_t_start != m_t_end )
             {
-                this->m_t = *m_t_start;
-                while( detail::less_with_sign( stepper.current_time() , this->m_t , this->m_dt ) )
+                this->m_t = static_cast<time_type>(*m_t_start);
+                while( detail::less_with_sign( st.current_time() , this->m_t , this->m_dt ) )
                 {
-                    // ToDo: make sure we do not integrate beyond the last time point
-                    stepper.do_step( this->m_system );
+                    // make sure we don't go beyond the last point
+                    if( detail::less_with_sign( m_final_time-st.current_time() , st.current_time_step() , st.current_time_step() ) )
+                    {
+                        st.initialize( st.current_state() , st.current_time() , m_final_time-st.current_time() );
+                    }
+                    st.do_step( this->m_system );
                 }
-                stepper.calc_state( this->m_t , *( this->m_state ) );
+                st.calc_state( this->m_t , *( this->m_state ) );
             } else {
                 this->m_at_end = true;
             }
@@ -316,6 +333,7 @@ namespace odeint {
     private:
         time_iterator_type m_t_start;
         time_iterator_type m_t_end;
+        time_type m_final_time;
     };
 
 } // namespace odeint

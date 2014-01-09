@@ -81,6 +81,8 @@ BOOST_AUTO_TEST_CASE( test_integrate_times )
 
     std::vector< double > times;
 
+    std::cout << "test rk4 stepper" << std::endl;
+
     // simple stepper
     integrate_times( runge_kutta4< state_type >() , lorenz , x , boost::counting_iterator<int>(0) , boost::counting_iterator<int>(10) ,
                 dt , push_back_time( times ) );
@@ -201,15 +203,17 @@ BOOST_AUTO_TEST_CASE( test_integrate_times_overshoot )
     for( int i=0 ; i<10 ; ++i )
             times[i] = 1.0-i*1.0/9.0;
 
+    std::cout << "test rk4 stepper" << std::endl;
     // simple stepper
     std::vector<double> obs_times;
     int steps = integrate_times( runge_kutta4< state_type >() , lorenz , x ,
                                  times.begin() , times.end() ,
                                  dt , push_back_time( obs_times ) );
-    BOOST_CHECK_EQUAL( steps , 18 ); // two steps required for each observation interval
+    BOOST_CHECK_EQUAL( steps , 9 ); // integrate returns the number of iterations steps
     for( int i=0 ; i<10 ; ++i )
         BOOST_CHECK_EQUAL( times[i] , obs_times[i] );
 
+    std::cout << "test rk_ck stepper" << std::endl;
     // controlled stepper
     obs_times.clear();
     integrate_times( controlled_runge_kutta< runge_kutta_cash_karp54< state_type > >() , lorenz , x ,
@@ -218,6 +222,7 @@ BOOST_AUTO_TEST_CASE( test_integrate_times_overshoot )
     for( int i=0 ; i<10 ; ++i )
         BOOST_CHECK_EQUAL( times[i] , obs_times[i] );
 
+    std::cout << "test dopri5 stepper" << std::endl;
     // controlled stepper
     obs_times.clear();
     integrate_times( dense_output_runge_kutta< controlled_runge_kutta< runge_kutta_dopri5< state_type > > >() , lorenz , x ,

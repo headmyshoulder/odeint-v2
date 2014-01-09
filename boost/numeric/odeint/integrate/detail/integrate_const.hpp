@@ -108,7 +108,6 @@ size_t integrate_const(
     boost::for_each( make_const_step_time_range( stepper , system , start_state ,
                                                  start_time , end_time , dt ) ,
                      obs_caller< State , Time , observer_type >( obs_calls , obs ) );
-
     return obs_calls-1;
 }
 

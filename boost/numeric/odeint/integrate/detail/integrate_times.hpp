@@ -21,10 +21,13 @@
 #include <stdexcept>
 
 #include <boost/config.hpp>
+#include <boost/range/algorithm/for_each.hpp>
+
 #include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/util/detail/less_with_sign.hpp>
-
+#include <boost/numeric/odeint/iterator/times_time_iterator.hpp>
+#include <boost/numeric/odeint/integrate/detail/functors.hpp>
 
 namespace boost {
 namespace numeric {
@@ -36,39 +39,32 @@ namespace detail {
 /*
  * integrate_times for simple stepper
  */
-template< class Stepper , class System , class State , class TimeIterator , class Time , class Observer >
+template< class Stepper , class System , class State , class TimeIterator , class Time , class Observer , class StepperTag >
 size_t integrate_times(
         Stepper stepper , System system , State &start_state ,
         TimeIterator start_time , TimeIterator end_time , Time dt ,
-        Observer observer , stepper_tag
+        Observer observer , StepperTag
 )
 {
-    typename odeint::unwrap_reference< Observer >::type &obs = observer;
-    typename odeint::unwrap_reference< Stepper >::type &st = stepper;
-    typedef typename unit_value_type<Time>::type time_type;
+    typedef typename odeint::unwrap_reference< Observer >::type observer_type;
+    observer_type &obs = observer;
+    //typename odeint::unwrap_reference< Stepper >::type &st = stepper;
+    //typedef typename unit_value_type<Time>::type time_type;
 
-    size_t steps = 0;
-    Time current_dt = dt;
-    while( true )
-    {
-        Time current_time = *start_time++;
-        obs( start_state , current_time );
-        if( start_time == end_time )
-            break;
-        while( less_with_sign( current_time , static_cast<time_type>(*start_time) , current_dt ) )
-        {
-            current_dt = min_abs( dt , *start_time - current_time );
-            st.do_step( system , start_state , current_time , current_dt );
-            current_time += current_dt;
-            steps++;
-        }
-    }
-    return steps;
+    size_t obs_calls = 0;
+
+    boost::for_each( make_times_time_range( stepper , system , start_state ,
+                                            start_time , end_time , dt ) ,
+                         // should we use traits<Stepper>::state_type here instead of State? NO!
+                     obs_caller< State , Time , observer_type >( obs_calls , obs ) );
+
+        // step integration steps gives step+1 observer calls
+    return obs_calls-1;
 }
 
 /*
  * integrate_times for controlled stepper
- */
+ *
 template< class Stepper , class System , class State , class TimeIterator , class Time , class Observer >
 size_t integrate_times(
         Stepper stepper , System system , State &start_state ,
@@ -113,7 +109,7 @@ size_t integrate_times(
 
 /*
  * integrate_times for dense output stepper
- */
+ *
 template< class Stepper , class System , class State , class TimeIterator , class Time , class Observer >
 size_t integrate_times(
         Stepper stepper , System system , State &start_state ,
@@ -160,7 +156,7 @@ size_t integrate_times(
     }
     return count;
 }
-
+*/
 
 } // namespace detail
 } // namespace odeint
