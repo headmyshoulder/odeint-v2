@@ -194,7 +194,6 @@ namespace odeint {
 
         void increment()
         {
-            unwrapped_stepper_type &stepper = this->m_stepper;
             if( ++m_t_start != m_t_end )
             {
                 while( detail::less_with_sign( this->m_t , static_cast<time_type>(*m_t_start) , this->m_dt ) )

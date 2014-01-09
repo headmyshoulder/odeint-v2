@@ -119,7 +119,6 @@ namespace odeint {
 
 
 
-
     /*
      * Specilization for dense output stepper
      */
