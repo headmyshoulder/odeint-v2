@@ -82,7 +82,8 @@ namespace odeint {
          */
         times_iterator_impl( stepper_type stepper , system_type sys , state_type &s ,
                              time_iterator_type t_start , time_iterator_type t_end , time_type dt )
-            : base_type( stepper , sys , s , *t_start , dt ) , m_t_start( t_start ) , m_t_end( t_end )
+            : base_type( stepper , sys , *t_start , dt ) ,
+              m_t_start( t_start ) , m_t_end( t_end ) , m_state( &s )
         {
             if( t_start == t_end )
                 this->m_at_end = true;
@@ -96,7 +97,7 @@ namespace odeint {
          * \param s The initial state. adaptive_iterator store a reference of s and changes its value during the iteration.
          */
         times_iterator_impl( stepper_type stepper , system_type sys , state_type &s )
-            : base_type( stepper , sys , s ) { } 
+            : base_type( stepper , sys ) , m_state( &s ) { }
 
     protected:
 
@@ -119,9 +120,16 @@ namespace odeint {
             }
          }
 
+    public:
+        const state_type& get_state() const
+        {
+            return *m_state;
+        }
+
     private:
         time_iterator_type m_t_start;
         time_iterator_type m_t_end;
+        state_type* m_state;
     };
 
 
@@ -172,7 +180,8 @@ namespace odeint {
          */
         times_iterator_impl( stepper_type stepper , system_type sys , state_type &s ,
                              time_iterator_type t_start , time_iterator_type t_end , time_type dt )
-            : base_type( stepper , sys , s , *t_start , dt ) , m_t_start( t_start ) , m_t_end( t_end )
+            : base_type( stepper , sys , *t_start , dt ) ,
+              m_t_start( t_start ) , m_t_end( t_end ) , m_state( &s )
         {
             if( t_start == t_end )
                 this->m_at_end = true;
@@ -186,7 +195,7 @@ namespace odeint {
          * \param s The initial state. adaptive_iterator store a reference of s and changes its value during the iteration.
          */
         times_iterator_impl( stepper_type stepper , system_type sys , state_type &s )
-            : base_type( stepper , sys , s ) { }
+            : base_type( stepper , sys ) , m_state( &s ) { }
 
     protected:
 
@@ -232,9 +241,17 @@ namespace odeint {
             }
         }
 
+    public:
+        const state_type& get_state() const
+        {
+            return *m_state;
+        }
+
+
     private:
         time_iterator_type m_t_start;
         time_iterator_type m_t_end;
+        state_type* m_state;
     };
 
 
@@ -283,7 +300,9 @@ namespace odeint {
          */
         times_iterator_impl( stepper_type stepper , system_type sys , state_type &s ,
                              time_iterator_type t_start , time_iterator_type t_end , time_type dt )
-            : base_type( stepper , sys , s , *t_start , dt ) , m_t_start( t_start ) , m_t_end( t_end ) , m_final_time( *(t_end-1) )
+            : base_type( stepper , sys , *t_start , dt ) ,
+              m_t_start( t_start ) , m_t_end( t_end ) , m_final_time( *(t_end-1) ) ,
+              m_state( &s )
         {
             if( t_start != t_end )
             {
@@ -302,7 +321,7 @@ namespace odeint {
          * \param s The initial state.
          */
         times_iterator_impl( stepper_type stepper , system_type sys , state_type &s )
-            : base_type( stepper , sys , s ) { }
+            : base_type( stepper , sys ) , m_state( &s ) { }
 
     protected:
 
@@ -329,10 +348,18 @@ namespace odeint {
             }
         }
 
+    public:
+        const state_type& get_state() const
+        {
+            return *m_state;
+        }
+
+
     private:
         time_iterator_type m_t_start;
         time_iterator_type m_t_end;
         time_type m_final_time;
+        state_type* m_state;
     };
 
 } // namespace odeint

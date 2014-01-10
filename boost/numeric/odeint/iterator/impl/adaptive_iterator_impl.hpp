@@ -79,7 +79,7 @@ namespace odeint {
          * \param dt The initial time step.
          */
         adaptive_iterator_impl( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type t_end , time_type dt )
-            : base_type( stepper , sys , s , t , dt ) , m_t_end( t_end )
+            : base_type( stepper , sys , t , dt ) , m_t_end( t_end ) , m_state( &s )
         {
             if( detail::less_with_sign( this->m_t_end , this->m_t , this->m_dt ) )
                 this->m_at_end = true;
@@ -93,7 +93,7 @@ namespace odeint {
          * \param s The initial state. adaptive_iterator store a reference of s and changes its value during the iteration.
          */
         adaptive_iterator_impl( stepper_type stepper , system_type sys , state_type &s )
-            : base_type( stepper , sys , s ) { } 
+            : base_type( stepper , sys ) , m_state( &s ) { }
 
     protected:
 
@@ -127,9 +127,15 @@ namespace odeint {
                 this->m_at_end = true;
             }
         }
+    public:
+        const state_type& get_state() const
+        {
+            return *this->m_state;
+        }
 
     private:
         time_type m_t_end;
+        state_type* m_state;
     };
 
 
@@ -180,12 +186,12 @@ namespace odeint {
          * \param dt The initial time step.
          */
         adaptive_iterator_impl( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type t_end , time_type dt )
-            : base_type( stepper , sys , s , t , dt ) , m_t_end( t_end )
+            : base_type( stepper , sys , t , dt ) , m_t_end( t_end )
         {
             if( detail::less_eq_with_sign( this->m_t , this->m_t_end , this->m_dt ) )
             {
                 unwrapped_stepper_type &st = this->m_stepper;
-                st.initialize( *( this->m_state ) , this->m_t , this->m_dt );
+                st.initialize( s , this->m_t , this->m_dt );
             } else {
                 this->m_at_end = true;
             }
@@ -199,7 +205,7 @@ namespace odeint {
          * \param s The initial state.
          */
         adaptive_iterator_impl( stepper_type stepper , system_type sys , state_type &s )
-            : base_type( stepper , sys , s ) { }
+            : base_type( stepper , sys ) { }
 
     protected:
 
@@ -222,14 +228,16 @@ namespace odeint {
                 }
                 stepper.do_step( this->m_system );
                 this->m_t = stepper.current_time();
-                // copy the state into the iterator
-                // ToDo: can this copy be avoided?
-                boost::numeric::odeint::copy( stepper.current_state() , *( this->m_state ) );
-                // avoid the copy by just repointing - doesnt work because m_state is not const
-                //this->m_state = &stepper.current_state();
             } else { // we have reached t_end
                 this->m_at_end = true;
             }
+        }
+
+    public:
+        const state_type& get_state() const
+        {
+            const unwrapped_stepper_type &stepper = this->m_stepper;
+            return stepper.current_state();
         }
 
     private:

@@ -76,8 +76,8 @@ namespace odeint {
          */
         n_step_iterator_impl( stepper_type stepper , system_type sys , state_type &s ,
                               time_type t , time_type dt , size_t num_of_steps )
-            : base_type( stepper , sys , s , t , dt ) ,
-              m_t_start( t ) , m_steps(num_of_steps) , m_step( 0 )
+            : base_type( stepper , sys , t , dt ) , m_t_start( t ) , m_state( &s ) ,
+              m_steps(num_of_steps) , m_step( 0 )
         { }
 
         /**
@@ -88,7 +88,7 @@ namespace odeint {
          * \param s The initial state. const_step_iterator stores a reference of s and changes its value during the iteration.
          */
         n_step_iterator_impl( stepper_type stepper , system_type sys , state_type &s )
-            : base_type( stepper , sys , s ) { }
+            : base_type( stepper , sys ) , m_state( &s ) { }
 
     protected:
 
@@ -109,9 +109,17 @@ namespace odeint {
             }
         }
 
+    public:
+        const state_type& get_state() const
+        {
+            return *m_state;
+        }
+
+
     private:
         time_type m_t_start;
         time_type m_t_end;
+        state_type* m_state;
         size_t m_steps;
         size_t m_step;
 
@@ -164,8 +172,8 @@ namespace odeint {
          */
         n_step_iterator_impl( stepper_type stepper , system_type sys , state_type &s ,
                               time_type t , time_type dt , size_t num_of_steps )
-            : base_type( stepper , sys , s , t , dt ) ,
-              m_t_start( t ) , m_steps( num_of_steps ) , m_step( 0 )
+            : base_type( stepper , sys , t , dt ) , m_t_start( t ) , m_state( &s ) ,
+              m_steps( num_of_steps ) , m_step( 0 )
         {
             unwrapped_stepper_type &st = this->m_stepper;
             st.initialize( * ( this->m_state ) , this->m_t , this->m_dt );
@@ -179,7 +187,7 @@ namespace odeint {
          * \param s The initial state. const_step_iterator stores a reference of s and changes its value during the iteration.
          */
         n_step_iterator_impl( stepper_type stepper , system_type sys , state_type &s )
-            : base_type( stepper , sys , s )
+            : base_type( stepper , sys ) , m_state( &s )
         {
         }
 
@@ -208,9 +216,17 @@ namespace odeint {
             }
         }
 
+    public:
+        const state_type& get_state() const
+        {
+            return *m_state;
+        }
+
+
     private:
         time_type m_t_start;
         time_type m_t_end;
+        state_type* m_state;
         size_t m_steps;
         size_t m_step;
     };

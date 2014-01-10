@@ -122,13 +122,13 @@ public :
         x = m_x;
     }
 
-    state_type current_state()
+    const state_type& current_state() const
     { return m_x; }
 
-    time_type current_time()
+    time_type current_time() const
     { return m_t; }
 
-    time_type current_time_step()
+    time_type current_time_step() const
     { return m_dt; }
 
 

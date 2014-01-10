@@ -57,13 +57,13 @@ namespace detail {
 
     public:
    
-        ode_iterator_base( stepper_type stepper , system_type sys , state_type &s , time_type t , time_type dt )
-            : m_stepper( stepper ) , m_system( sys ) , m_state( &s ) ,
+        ode_iterator_base( stepper_type stepper , system_type sys , time_type t , time_type dt )
+            : m_stepper( stepper ) , m_system( sys ) ,
               m_t( t ) , m_dt( dt ) , m_at_end( false )
         { }
 
-        ode_iterator_base( stepper_type stepper , system_type sys , state_type &s )
-            : m_stepper( stepper ) , m_system( sys ) , m_state( &s ) ,
+        ode_iterator_base( stepper_type stepper , system_type sys )
+            : m_stepper( stepper ) , m_system( sys ) ,
               m_t() , m_dt() , m_at_end( true )
         { }
 
@@ -71,7 +71,8 @@ namespace detail {
         bool same( const ode_iterator_base &iter ) const
         {
             return (
-                ( m_state == iter.m_state ) &&
+                //( static_cast<Iterator>(*this).get_state() ==
+                //  static_cast<Iterator>(iter).get_state ) &&
                 ( m_t == iter.m_t ) && 
                 ( m_dt == iter.m_dt ) &&
                 ( m_at_end == iter.m_at_end )
@@ -97,12 +98,13 @@ namespace detail {
 
         const state_type& dereference() const
         {
-            return *m_state;
+            return static_cast<const Iterator*>(this)->get_state();
         }
+
+    protected:
 
         stepper_type m_stepper;
         system_type m_system;
-        state_type *m_state;
         time_type m_t;
         time_type m_dt;
         bool m_at_end;
@@ -134,21 +136,20 @@ namespace detail {
     public:
 
         ode_iterator_base( stepper_type stepper , system_type sys ,
-                                 state_type &s , time_type t , time_type dt )
-            : m_stepper( stepper ) , m_system( sys ) , m_state( &s ) ,
+                           time_type t , time_type dt )
+            : m_stepper( stepper ) , m_system( sys ) ,
               m_t( t ) , m_dt( dt ) , m_at_end( false )
         { }
 
-        ode_iterator_base( stepper_type stepper , system_type sys ,
-                                 state_type &s )
-            : m_stepper( stepper ) , m_system( sys ) , m_state( &s ) ,
-              m_at_end( true )
+        ode_iterator_base( stepper_type stepper , system_type sys )
+            : m_stepper( stepper ) , m_system( sys ) , m_at_end( true )
         { }
 
         bool same( ode_iterator_base const& iter )
         {
             return (
-                ( m_state == iter.m_state ) &&
+                //( static_cast<Iterator>(*this).get_state() ==
+                //  static_cast<Iterator>(iter).get_state ) &&
                 ( m_t == iter.m_t ) &&
                 ( m_dt == iter.m_dt ) &&
                 ( m_at_end == iter.m_at_end )
@@ -174,12 +175,12 @@ namespace detail {
 
         std::pair< const state_type& , const time_type& > dereference() const
         {
-            return std::pair< const state_type & , const time_type & >( *m_state , m_t );
+            return std::pair< const state_type & , const time_type & >(
+                    static_cast<const Iterator*>(this)->get_state() , m_t );
         }
 
         stepper_type m_stepper;
         system_type m_system;
-        state_type *m_state;
         time_type m_t;
         time_type m_dt;
         bool m_at_end;

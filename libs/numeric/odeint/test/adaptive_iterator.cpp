@@ -81,14 +81,15 @@ BOOST_AUTO_TEST_CASE( copy_dense_output_stepper_iterator )
     iterator_type iter1( dummy_dense_output_stepper() , empty_system() , x , 0.0 , 1.0 , 0.1 );
     iterator_type iter2( iter1 );
 
-    // fix by mario: iterator dereference now always gives internal state also for dense output, consisten with other iterator implementations
-    BOOST_CHECK_EQUAL( & (*iter1) , & (*iter2) );
+    // fix by mario: iterator dereference now always gives internal state also for dense output, consistent with other iterator implementations
+    // changed: iterators with dense output stepper do not have an internal state now to avoid a copy
+    BOOST_CHECK_NE( & (*iter1) , & (*iter2) );
     BOOST_CHECK( iter1.same( iter2 ) );
 
     ++iter1;
     ++iter2;
 
-    BOOST_CHECK_EQUAL( & (*iter1) , & (*iter2) );
+    BOOST_CHECK_NE( & (*iter1) , & (*iter2) );
     BOOST_CHECK( iter1.same( iter2 ) );
 }
 
@@ -119,9 +120,10 @@ BOOST_AUTO_TEST_CASE( assignment_controlled_stepper_iterator )
     typedef adaptive_iterator< dummy_controlled_stepper , empty_system , state_type > iterator_type;
     state_type x1 = {{ 1.0 }} , x2 = {{ 2.0 }};
     iterator_type iter1 = iterator_type( dummy_controlled_stepper() , empty_system() , x1 , 0.0 , 1.0 , 0.1 );
-    iterator_type iter2 = iterator_type( dummy_controlled_stepper() , empty_system() , x2 , 0.0 , 1.0 , 0.1 );
+    iterator_type iter2 = iterator_type( dummy_controlled_stepper() , empty_system() , x2 , 0.0 , 1.0 , 0.2 );
     BOOST_CHECK_EQUAL( &(*iter1) , &x1 );
     BOOST_CHECK_EQUAL( &(*iter2) , &x2 );
+    // the iterators are indeed the same as this only checks the time values
     BOOST_CHECK( !iter1.same( iter2 ) );
     iter2 = iter1;
     BOOST_CHECK_EQUAL( &(*iter1) , &x1 );
@@ -134,29 +136,30 @@ BOOST_AUTO_TEST_CASE( assignment_controlled_stepper_iterator )
 BOOST_AUTO_TEST_CASE( assignment_dense_output_stepper_iterator )
 {
     typedef adaptive_iterator< dummy_dense_output_stepper , empty_system , state_type > iterator_type;
-    state_type x1 = {{ 1.0 }} , x2 = {{ 2.0 }};
+    state_type x1 = {{ 1.0 }};
     iterator_type iter1 = iterator_type( dummy_dense_output_stepper() , empty_system() , x1 , 0.0 , 1.0 , 0.1 );
-    iterator_type iter2 = iterator_type( dummy_dense_output_stepper() , empty_system() , x2 , 0.0 , 1.0 , 0.1 );
+    iterator_type iter2 = iterator_type( dummy_dense_output_stepper() , empty_system() , x1 , 0.0 , 1.0 , 0.2 );
 
     BOOST_CHECK_NE( & (*iter1) , & (*iter2) );
     BOOST_CHECK( !iter1.same( iter2 ) );
 
     iter2 = iter1;
-    // fix by mario: iterator dereference now always gives internal state also for dense output, consisten with other iterator implementations
-    BOOST_CHECK_EQUAL( & (*iter1) , & (*iter2) );
+    // fix by mario: iterator dereference now always gives internal state also for dense output, consistent with other iterator implementations
+    // changed: iterators with dense output stepper do not have an internal state now to avoid a copy
+    BOOST_CHECK_NE( & (*iter1) , & (*iter2) );
     BOOST_CHECK( iter1.same( iter2 ) );
 }
 
 BOOST_AUTO_TEST_CASE( assignment_dense_output_stepper_iterator_with_reference_wrapper )
 {
     typedef adaptive_iterator< boost::reference_wrapper< dummy_dense_output_stepper > , empty_system , state_type > iterator_type;
-    state_type x1 = {{ 1.0 }} , x2 = {{ 2.0 }};
+    state_type x1 = {{ 1.0 }};
 
     dummy_dense_output_stepper stepper;
     iterator_type iter1 = iterator_type( boost::ref( stepper )  , empty_system() , x1 , 0.0 , 1.0 , 0.1 );
-    iterator_type iter2 = iterator_type( boost::ref( stepper ) , empty_system() , x2 , 0.0 , 1.0 , 0.1 );
-    // fix by mario: different iterators have different internal states, even if the stepper is the same (reference), consistent with other iterator implementations
-    BOOST_CHECK_NE( & (*iter1) , & (*iter2) );
+    iterator_type iter2 = iterator_type( boost::ref( stepper ) , empty_system() , x1 , 0.0 , 1.0 , 0.2 );
+
+    BOOST_CHECK_EQUAL( & (*iter1) , & (*iter2) );
     BOOST_CHECK( !iter1.same( iter2 ) );
 
     iter2 = iter1;

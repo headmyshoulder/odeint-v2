@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( assignment_stepper_iterator , Stepper , dummy_ste
     typedef times_time_iterator< Stepper , empty_system , state_type , time_iterator_type> iterator_type;
     state_type x1 = {{ 1.0 }} , x2 = {{ 2.0 }};
     iterator_type iter1 = iterator_type( Stepper() , empty_system() , x1 , times.begin() , times.end() , 0.1 );
-    iterator_type iter2 = iterator_type( Stepper() , empty_system() , x2 , times.begin() , times.end() , 0.1 );
+    iterator_type iter2 = iterator_type( Stepper() , empty_system() , x2 , times.begin() , times.end() , 0.2 );
     BOOST_CHECK_EQUAL( &(iter1->first) , &x1 );
     BOOST_CHECK_EQUAL( &(iter2->first) , &x2 );
     BOOST_CHECK( !iter1.same( iter2 ) );
