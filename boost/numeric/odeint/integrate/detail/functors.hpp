@@ -25,6 +25,7 @@ namespace numeric {
 namespace odeint {
 namespace detail {
 
+
 template< class Observer >
 struct obs_caller {
 
