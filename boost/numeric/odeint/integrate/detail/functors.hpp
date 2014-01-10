@@ -25,20 +25,6 @@ namespace numeric {
 namespace odeint {
 namespace detail {
 
-template< class State >
-struct counter {
-
-    size_t m_n;
-
-    counter() : m_n(0) {}
-
-    void operator()( State & )
-    {
-        m_n++;
-    }
-
-    size_t count() const { return m_n; }
-};
 
 template< class State , class Time , class Observer >
 struct obs_caller {
