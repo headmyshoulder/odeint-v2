@@ -47,14 +47,11 @@ Time integrate_n_steps(
         Time start_time , Time dt , size_t num_of_steps ,
         Observer observer , stepper_tag )
 {
-    typedef typename odeint::unwrap_reference< Observer >::type observer_type;
-    observer_type &obs = observer;
-
     // ToDo: is there a better way to extract the final time?
     Time t;
     boost::for_each( make_n_step_time_range( stepper , system , start_state ,
                                              start_time , dt , num_of_steps ) ,
-                     obs_caller_time< State , Time , observer_type >( t , obs ) );
+                     obs_caller_time< Observer , Time >( t , observer ) );
     return t;
 }
 
@@ -93,14 +90,11 @@ Time integrate_n_steps(
         Time start_time , Time dt , size_t num_of_steps ,
         Observer observer , dense_output_stepper_tag )
 {
-    typedef typename odeint::unwrap_reference< Observer >::type observer_type;
-    observer_type &obs = observer;
-
     // ToDo: is there a better way to extract the final time?
     Time t;
     boost::for_each( make_n_step_time_range( stepper , system , start_state ,
                                              start_time , dt , num_of_steps ) ,
-                     obs_caller_time< State , Time , observer_type >( t , obs ) );
+                     obs_caller_time< Observer , Time >( t , observer ) );
     return t;
 }
 

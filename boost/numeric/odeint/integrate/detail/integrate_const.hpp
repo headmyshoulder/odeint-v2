@@ -48,15 +48,12 @@ size_t integrate_const(
         Observer observer , stepper_tag 
 )
 {
-    typedef typename odeint::unwrap_reference< Observer >::type observer_type;
-    observer_type &obs = observer;
-    
     size_t obs_calls = 0;
 
     boost::for_each( make_const_step_time_range( stepper , system , start_state ,
                                                  start_time , end_time , dt ) ,
                      // should we use traits<Stepper>::state_type here instead of State? NO!
-                     obs_caller< State , Time , observer_type >( obs_calls , obs ) );
+                     obs_caller< Observer >( obs_calls , observer ) );
 
     // step integration steps gives step+1 observer calls
     return obs_calls-1;
@@ -100,14 +97,11 @@ size_t integrate_const(
         Observer observer , dense_output_stepper_tag 
 )
 {
-    typedef typename odeint::unwrap_reference< Observer >::type observer_type;
-    observer_type &obs = observer;
-
     size_t obs_calls = 0;
 
     boost::for_each( make_const_step_time_range( stepper , system , start_state ,
                                                  start_time , end_time , dt ) ,
-                     obs_caller< State , Time , observer_type >( obs_calls , obs ) );
+                     obs_caller< Observer >( obs_calls , observer ) );
     return obs_calls-1;
 }
 

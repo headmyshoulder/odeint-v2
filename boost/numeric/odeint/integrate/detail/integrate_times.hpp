@@ -37,7 +37,7 @@ namespace detail {
 
 
 /*
- * integrate_times for simple stepper
+ * integrate_times for all steppers
  */
 template< class Stepper , class System , class State , class TimeIterator , class Time , class Observer , class StepperTag >
 size_t integrate_times(
@@ -46,17 +46,12 @@ size_t integrate_times(
         Observer observer , StepperTag
 )
 {
-    typedef typename odeint::unwrap_reference< Observer >::type observer_type;
-    observer_type &obs = observer;
-    //typename odeint::unwrap_reference< Stepper >::type &st = stepper;
-    //typedef typename unit_value_type<Time>::type time_type;
-
     size_t obs_calls = 0;
 
     boost::for_each( make_times_time_range( stepper , system , start_state ,
                                             start_time , end_time , dt ) ,
                          // should we use traits<Stepper>::state_type here instead of State? NO!
-                     obs_caller< State , Time , observer_type >( obs_calls , obs ) );
+                     obs_caller< Observer >( obs_calls , observer ) );
 
         // step integration steps gives step+1 observer calls
     return obs_calls-1;
