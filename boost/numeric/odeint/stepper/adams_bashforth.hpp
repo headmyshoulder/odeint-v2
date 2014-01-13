@@ -80,8 +80,9 @@ public :
 
     typedef InitializingStepper initializing_stepper_type;
 
-    typedef typename algebra_stepper_base< Algebra , Operations >::algebra_type algebra_type;
-    typedef typename algebra_stepper_base< Algebra , Operations >::operations_type operations_type;
+    typedef algebra_stepper_base< Algebra , Operations > algebra_stepper_base_type;
+    typedef typename algebra_stepper_base_type::algebra_type algebra_type;
+    typedef typename algebra_stepper_base_type::operations_type operations_type;
 #ifndef DOXYGEN_SKIP
     typedef adams_bashforth< Steps , State , Value , Deriv , Time , Algebra , Operations , Resizer , InitializingStepper > stepper_type;
 #endif
@@ -99,24 +100,11 @@ public :
     order_type order( void ) const { return order_value; }
 
     adams_bashforth( const algebra_type &algebra = algebra_type() )
-    : m_step_storage() , m_resizer() , m_coefficients() ,
-      m_steps_initialized( 0 ) , m_initializing_stepper() ,
-      m_algebra( algebra )
+    : algebra_stepper_base_type( algebra ) ,
+      m_step_storage() , m_resizer() , m_coefficients() ,
+      m_steps_initialized( 0 ) , m_initializing_stepper()
     { }
 
-    adams_bashforth( const adams_bashforth &stepper )
-    : m_step_storage( stepper.m_step_storage ) , m_resizer( stepper.m_resizer ) , m_coefficients() ,
-      m_steps_initialized( stepper.m_steps_initialized ) , m_initializing_stepper( stepper.m_initializing_stepper ) ,
-      m_algebra( stepper.m_algebra )
-    { }
-
-    adams_bashforth& operator=( const adams_bashforth &stepper )
-    {
-        m_resizer = stepper.m_resizer;
-        m_step_storage = stepper.m_step_storage;
-        m_algebra = stepper.m_algebra;
-        return *this;
-    }
 
 
     /*
@@ -239,7 +227,7 @@ private:
         {
             m_step_storage.rotate();
             sys( in , m_step_storage[0].m_v , t );
-            detail::adams_bashforth_call_algebra< steps , algebra_type , operations_type >()( m_algebra , in , out , m_step_storage , m_coefficients , dt );
+            detail::adams_bashforth_call_algebra< steps , algebra_type , operations_type >()( this->m_algebra , in , out , m_step_storage , m_coefficients , dt );
         }
     }
 
@@ -257,19 +245,10 @@ private:
 
     step_storage_type m_step_storage;
     resizer_type m_resizer;
-    const detail::adams_bashforth_coefficients< value_type , steps > m_coefficients;
+    detail::adams_bashforth_coefficients< value_type , steps > m_coefficients;
     size_t m_steps_initialized;
     initializing_stepper_type m_initializing_stepper;
 
-
-
-
-
-
-
-protected:
-
-    algebra_type m_algebra;
 };
 
 
