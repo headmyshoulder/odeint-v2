@@ -19,6 +19,7 @@
 #define BOOST_NUMERIC_ODEINT_EXTERNAL_VEXCL_VEXCL_ALGEBRA_DISPATCHER_HPP_DEFINED
 
 #include <vexcl/vector.hpp>
+#include <vexcl/multivector.hpp>
 
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 #include <boost/numeric/odeint/algebra/algebra_dispatcher.hpp>
