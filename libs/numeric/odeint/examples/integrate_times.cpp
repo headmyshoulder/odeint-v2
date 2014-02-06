@@ -40,9 +40,9 @@ const double dt = 0.1;
 int main()
 {
     // create a vector with observation time points
-    std::vector<double> times( 100 );
+    std::vector<double> times( 91 );
     for( size_t i=0 ; i<times.size() ; ++i )
-        times[i] = dt*(i+1);
+        times[i] = 1.0 + dt*i;
 
     double x = 0.0; //initial value x(1) = 0
     // we can provide the observation time as a boost range (i.e. the vector)
