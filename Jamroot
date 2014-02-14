@@ -14,16 +14,17 @@ path-constant BOOST_ROOT : [ os.environ BOOST_ROOT ] ;
 project 
    : requirements 
      <include>$(BOOST_ROOT)
-     <toolset>gcc:<cxxflags>"-Werror -Wall -Wno-unused-parameter -Wno-unused-variable -Wno-unknown-pragmas"
-     <toolset>clang:<cxxflags>"-Werror -Wall -Wextra -Wno-unused-function -Wno-unused-parameter -Wno-unknown-pragmas"
+     <toolset>gcc:<cxxflags>"-Wall -Wno-unused-parameter -Wno-unused-variable -Wno-unknown-pragmas"
+     <toolset>clang:<cxxflags>"-Wall -Wextra -Wno-unused-function -Wno-unused-parameter -Wno-unknown-pragmas"
      <toolset>intel:<cxxflags>"-ipo"
    ;
 
 # tests, regression tests and examples
 build-project libs/numeric/odeint/test ;
 build-project libs/numeric/odeint/examples ;
-build-project libs/numeric/odeint/performance/openmp ;
-build-project libs/numeric/odeint/performance/mpi ;
+build-project libs/numeric/odeint/performance ;
+# build-project libs/numeric/odeint/performance/openmp ;
+# build-project libs/numeric/odeint/performance/mpi ;
 
 
 # additional tests with external libraries :
@@ -34,7 +35,7 @@ build-project libs/numeric/odeint/performance/mpi ;
 # build-project libs/numeric/odeint/test_external/mtl4 ;
 # build-project libs/numeric/odeint/test_external/thrust ;
 # build-project libs/numeric/odeint/test_external/vexcl ;
-build-project libs/numeric/odeint/test_external/mpi ;
+# build-project libs/numeric/odeint/test_external/mpi ;
 
 
 # docs:
