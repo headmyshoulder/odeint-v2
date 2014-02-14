@@ -1,8 +1,10 @@
 /*
- * phase_osc_chain.cu
- *
- *  Created on: Apr 1, 2011
- *      Author: mario
+ Copyright 2011-2013 Mario Mulansky
+ Copyright 2011 Karsten Ahnert
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
 /*

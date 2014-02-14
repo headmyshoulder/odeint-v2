@@ -1,7 +1,7 @@
 /* Boost libs/numeric/odeint/examples/multiprecision/cmp_precision.cpp
 
- Copyright 2009-2013 Karsten Ahnert
- Copyright 2009-2013 Mario Mulansky
+ Copyright 2013 Karsten Ahnert
+ Copyright 2013 Mario Mulansky
 
  example comparing double to multiprecision using Boost.Multiprecision
 

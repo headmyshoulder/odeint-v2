@@ -1,7 +1,7 @@
 /* Boost check_gmp.cpp test file
 
- Copyright 2009 Karsten Ahnert
- Copyright 2009 Mario Mulansky
+ Copyright 2010-2012 Mario Mulansky
+ Copyright 2011-2012 Karsten Ahnert
 
  This file tests the odeint library with the gmp arbitrary precision types
 

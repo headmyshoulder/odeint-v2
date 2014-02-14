@@ -6,7 +6,8 @@
   tba.
   [end_description]
 
-  Copyright 2012 Christian Shelton
+  Copyright 2013 Christian Shelton
+  Copyright 2013 Karsten Ahnert
 
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or

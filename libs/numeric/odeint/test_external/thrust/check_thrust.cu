@@ -1,7 +1,7 @@
 /* Boost check_thrust.cu test file
  
- Copyright 2009 Karsten Ahnert
- Copyright 2009 Mario Mulansky
+ Copyright 2010-2013 Mario Mulansky
+ Copyright 2010-2011 Karsten Ahnert
  
  This file tests the use of the euler stepper
   

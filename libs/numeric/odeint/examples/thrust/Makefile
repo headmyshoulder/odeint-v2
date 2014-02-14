@@ -1,5 +1,5 @@
-# Copyright 2009-2012 Karsten Ahnert
-# Copyright 2009-2012 Mario Mulansky
+# Copyright 2011-2013 Mario Mulansky
+# Copyright 2011-2012 Karsten Ahnert
 #
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or

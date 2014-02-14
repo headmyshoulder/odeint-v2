@@ -1,7 +1,7 @@
 /* Boost libs/numeric/odeint/examples/solar_system.cpp
 
- Copyright 2009-2012 Karsten Ahnert
- Copyright 2009-2012 Mario Mulansky
+ Copyright 2010-2012 Karsten Ahnert
+ Copyright 2011 Mario Mulansky
 
  Solar system example for Hamiltonian stepper
 

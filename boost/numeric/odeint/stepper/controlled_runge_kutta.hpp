@@ -5,8 +5,9 @@
  The default controlled stepper which can be used with all explicit Runge-Kutta error steppers.
  [end_description]
 
- Copyright 2009-2011 Karsten Ahnert
- Copyright 2009-2011 Mario Mulansky
+ Copyright 2010-2013 Karsten Ahnert
+ Copyright 2010-2013 Mario Mulansky
+ Copyright 2012 Christoph Koke
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or

@@ -1,11 +1,14 @@
-# (C) Copyright 2009 - 2012 : Karsten Ahnert, Mario Mulansky
+# Copyright 2009-2013 Karsten Ahnert
+# Copyright 2011-2012 Mario Mulansky
+# Copyright 2012 Daniel James
+# Copyright 2013 Pascal Germroth
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 
-import quickbook ;
-import boostbook ;
-import doxygen ;
+using quickbook ;
+using boostbook ;
+using doxygen ;
 import modules ;
 
 project : requirements

@@ -1,4 +1,6 @@
-# Copyright 2009 Karsten Ahnert and Mario Mulansky.
+# Copyright 2009-2012 Karsten Ahnert
+# Copyright 2010-2013 Mario Mulansky
+# Copyright 2013 Pascal Germroth
 # Distributed under the Boost Software License, Version 1.0. (See
 # accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
@@ -12,19 +14,29 @@ path-constant BOOST_ROOT : [ os.environ BOOST_ROOT ] ;
 project 
    : requirements 
      <include>$(BOOST_ROOT)
-     <toolset>clang:<cxxflags>-Wno-unused-variable
+     <toolset>gcc:<cxxflags>"-Wall -Wno-unused-parameter -Wno-unused-variable -Wno-unknown-pragmas"
+     <toolset>clang:<cxxflags>"-Wall -Wextra -Wno-unused-function -Wno-unused-parameter -Wno-unknown-pragmas"
+     <toolset>intel:<cxxflags>"-ipo"
    ;
 
 # tests, regression tests and examples
 build-project libs/numeric/odeint/test ;
 # build-project libs/numeric/odeint/test/numeric ; #included in /test
 build-project libs/numeric/odeint/examples ;
+build-project libs/numeric/odeint/performance ;
+# build-project libs/numeric/odeint/performance/openmp ;
+# build-project libs/numeric/odeint/performance/mpi ;
 
 
 # additional tests with external libraries :
+# build-project libs/numeric/odeint/test_external/eigen ;
 # build-project libs/numeric/odeint/test_external/gmp ;
-# build-project libs/numeric/odeint/test_external/mkl ;
 # build-project libs/numeric/odeint/test_external/gsl ;
+# build-project libs/numeric/odeint/test_external/mkl ;
+# build-project libs/numeric/odeint/test_external/mtl4 ;
+# build-project libs/numeric/odeint/test_external/thrust ;
+# build-project libs/numeric/odeint/test_external/vexcl ;
+# build-project libs/numeric/odeint/test_external/mpi ;
 
 
 # docs:

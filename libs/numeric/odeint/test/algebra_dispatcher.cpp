@@ -6,8 +6,9 @@
  tba.
  [end_description]
 
- Copyright 2009-2012 Karsten Ahnert
- Copyright 2009-2012 Mario Mulansky
+ Copyright 2013 Karsten Ahnert
+ Copyright 2013 Mario Mulansky
+ Copyright 2013 Pascal Germroth
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
@@ -42,31 +43,31 @@ BOOST_AUTO_TEST_SUITE( algebra_dispatcher_test )
 BOOST_AUTO_TEST_CASE( range_algebra_with_vector )
 {
     typedef runge_kutta4< std::vector< double > > stepper_type;
-    BOOST_STATIC_ASSERT(( boost::is_same< typename stepper_type::algebra_type , range_algebra >::value ));
+    BOOST_STATIC_ASSERT(( boost::is_same< stepper_type::algebra_type , range_algebra >::value ));
 }
 
 BOOST_AUTO_TEST_CASE( array_algebra_with_array )
 {
     typedef runge_kutta4< boost::array< double , 2 > > stepper_type;
-    BOOST_STATIC_ASSERT(( boost::is_same< typename stepper_type::algebra_type , array_algebra >::value ));
+    BOOST_STATIC_ASSERT(( boost::is_same< stepper_type::algebra_type , array_algebra >::value ));
 }
 
 BOOST_AUTO_TEST_CASE( range_algebra_with_array )
 {
     typedef runge_kutta4< boost::array< double , 2 > , double , boost::array< double , 2 > , double , range_algebra > stepper_type;
-    BOOST_STATIC_ASSERT(( boost::is_same< typename stepper_type::algebra_type , range_algebra >::value ));
+    BOOST_STATIC_ASSERT(( boost::is_same< stepper_type::algebra_type , range_algebra >::value ));
 }
 
 BOOST_AUTO_TEST_CASE( fusion_algebra_with_fusion_vector )
 {
     typedef runge_kutta4< boost::fusion::vector< double > > stepper_type;
-    BOOST_STATIC_ASSERT(( boost::is_same< typename stepper_type::algebra_type , fusion_algebra >::value ));
+    BOOST_STATIC_ASSERT(( boost::is_same< stepper_type::algebra_type , fusion_algebra >::value ));
 }
 
 BOOST_AUTO_TEST_CASE( fusion_algebra_with_fusion_vector2 )
 {
     typedef runge_kutta_fehlberg78< boost::fusion::vector< double > > stepper_type;
-    BOOST_STATIC_ASSERT(( boost::is_same< typename stepper_type::algebra_type , fusion_algebra >::value ));
+    BOOST_STATIC_ASSERT(( boost::is_same< stepper_type::algebra_type , fusion_algebra >::value ));
 }
 
 typedef boost::mpl::list< float , double , long double , std::complex< double > , std::complex< float > > fp_types;

@@ -1,4 +1,6 @@
-# (C) Copyright 2010 : Karsten Ahnert, Mario Mulansky
+# Copyright 2012-2013 Karsten Ahnert
+# Copyright 2012-2013 Mario Mulansky
+# Copyright 2013 Pascal Germroth
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
@@ -23,7 +25,7 @@ project
 test-suite "odeint"
     :
     [ run euler_stepper.cpp ]
-    [ run runge_kutta_concepts.cpp ]
+#    [ run runge_kutta_concepts.cpp ]
     [ run runge_kutta_error_concepts.cpp ]
     [ run runge_kutta_controlled_concepts.cpp ]
     [ run resizing.cpp ]
@@ -40,17 +42,18 @@ test-suite "odeint"
     [ run adams_bashforth.cpp ]
     [ run adams_moulton.cpp ]
     [ run adams_bashforth_moulton.cpp ]
-    [ run generic_stepper.cpp ]
+#    [ run generic_stepper.cpp ]
     [ run generic_error_stepper.cpp ]
     [ run bulirsch_stoer.cpp ]
     [ run integrate_times.cpp ]
     [ run integrate.cpp ]
     [ run integrate_implicit.cpp ]
     [ run generation.cpp ]
-    [ run trivial_state.cpp ]
+#    [ run trivial_state.cpp ]
     [ run is_resizeable.cpp ]
     [ run resize.cpp ]
     [ run same_size.cpp ]
+    [ run split.cpp ]
     [ run symplectic_steppers.cpp ]
     [ run integrators_symplectic.cpp ]
     [ run velocity_verlet.cpp ]
