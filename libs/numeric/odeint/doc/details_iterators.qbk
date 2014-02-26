@@ -18,7 +18,7 @@ odeint supports iterators that iterate along an approximate solution of an ordin
 
 [import ../examples/const_step_iterator.cpp]
 
-Four iterator types are provided. They are all single pass iterators. The first one is an iterator which solves the ode with constant step size. An example is 
+Several iterator types are provided, in consistence with the integrate routines. They are all single pass iterators. The first one is an iterator which solves the ode with constant step size. An example is 
 
 [const_step_iterator_accumulate]
 

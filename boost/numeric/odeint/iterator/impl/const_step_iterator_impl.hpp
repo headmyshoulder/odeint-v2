@@ -35,17 +35,6 @@ namespace odeint {
     /*
      * Specilization for steppers and error steppers
      */
-    /**
-     * \brief ODE Iterator with constant step size. The value type of this iterator is the state type of the stepper.
-     *
-     * Implements an ODE iterator solving the ODE with constant steps. Uses steppers fulfilling the Stepper concept.
-     * const_step_iterator is a model of single-pass iterator.
-     *
-     * The value type of this iterator is the state type of the stepper. Hence one can only access the state and not the current time.
-     *
-     * \tparam Stepper The stepper type which should be used during the iteration.
-     * \tparam System The type of the system function (ODE) which should be solved.
-     */
     template< class Iterator , class Stepper , class System , class State , typename Tag >
     class const_step_iterator_impl< Iterator , Stepper , System , State , Tag , stepper_tag >
         : public detail::ode_iterator_base< Iterator , Stepper , System , State , Tag >

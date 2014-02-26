@@ -32,8 +32,11 @@ namespace odeint {
 
 
     /* use the times_iterator_impl with the right tags */
-    template< class Stepper , class System , class State , class TimeIterator ,
-              class StepperTag = typename base_tag< typename traits::stepper_category< Stepper >::type >::type >
+    template< class Stepper , class System , class State , class TimeIterator
+#ifndef DOXYGEN_SKIP
+        , class StepperTag = typename base_tag< typename traits::stepper_category< Stepper >::type >::type
+#endif
+    >
     class times_iterator : public times_iterator_impl<
             times_iterator< Stepper , System , State , TimeIterator , StepperTag > ,
             Stepper , System , State , TimeIterator , detail::ode_state_iterator_tag , StepperTag
@@ -96,48 +99,86 @@ namespace odeint {
     }
 
 
-
-
-
-    /** ToDo: correct docs
-     * \fn make_n_step_iterator_begin( Stepper stepper , System system , typename Stepper::state_type &x , typename Stepper::time_type t , typename Stepper::time_type dt , size_t num_of_steps )
+    /**
+     * \class times_iterator
      *
-     * \brief Factory function for n_step_iterator. Constructs a begin iterator.
+     * \brief ODE Iterator with given evaluation points. The value type of this iterator is the state type of the stepper.
+     *
+     * Implements an iterator representing the solution of an ODE from *t_start
+     * to *t_end evaluated at time points given by the sequence t_start to t_end.
+     * t_start and t_end are iterators representing a sequence of time points
+     * where the solution of the ODE should be evaluated.
+     * After each iteration the iterator dereferences to the state x at the next
+     * time *t_start++ until t_end is reached.
+     * This iterator can be used with Steppers, ControlledSteppers and
+     * DenseOutputSteppers and it always makes use of the all the given steppers
+     * capabilities. A for_each over such an iterator range behaves similar to
+     * the integrate_times routine.
+     *
+     * times_iterator is a model of single-pass iterator.
+     *
+     * The value type of this iterator is the state type of the stepper. Hence one can only access the state and not the current time.
+     *
+     * \tparam Stepper The stepper type which should be used during the iteration.
+     * \tparam System The type of the system function (ODE) which should be solved.
+     * \tparam State The state type of the ODE.
+     * \tparam TimeIterator The iterator type for the sequence of time points.
+     */
+
+
+
+    /**
+     * \fn make_times_iterator_begin( Stepper stepper ,
+        System system ,
+        State &x ,
+        TimeIterator t_start ,
+        TimeIterator t_end ,
+        typename traits::time_type< Stepper >::type dt )
+     *
+     * \brief Factory function for times_iterator. Constructs a begin iterator.
      *
      * \param stepper The stepper to use during the iteration.
      * \param system The system function (ODE) to solve.
      * \param x The initial state. const_step_iterator stores a reference of s and changes its value during the iteration.
-     * \param t The initial time.
+     * \param t_start Begin iterator of the sequence of evaluation time points.
+     * \param t_end End iterator of the sequence of evaluation time points.
      * \param dt The initial time step.
-     * \param num_of_steps The number of steps to be executed.
-     * \returns The n-step iterator.
+     * \returns The times iterator.
      */
 
 
     /**
-     * \fn make_n_step_iterator_end( Stepper stepper , System system , typename Stepper::state_type &x )
-     * \brief Factory function for n_step_iterator. Constructs an end iterator.
+     * \fn make_times_iterator_end( Stepper stepper , System system , State &x )
+     * \brief Factory function for times_iterator. Constructs an end iterator.
+     *
+     * \tparam TimesIterator The iterator type of the time sequence, must be specifically provided.
      *
      * \param stepper The stepper to use during the iteration.
      * \param system The system function (ODE) to solve.
      * \param x The initial state. const_step_iterator stores a reference of s and changes its value during the iteration.
-     * \returns The const_step_iterator.
+     * \returns The times iterator.
+     *
+     * This function needs the TimeIterator type specifically defined as a
+     * template parameter.
      */
 
 
     /**
-     * \fn make_n_step_range( Stepper stepper , System system , typename Stepper::state_type &x , typename Stepper::time_type t_start , typename Stepper::time_type dt , size_t num_of_steps )
+     * \fn make_times_range( Stepper stepper , System system , State &x ,
+        TimeIterator t_start ,
+        TimeIterator t_end ,
+        typename traits::time_type< Stepper >::type dt )
      *
-     * \brief Factory function to construct a single pass range of n-step iterators. A range is here a pair
-     * of n_step_iterator.
+     * \brief Factory function to construct a single pass range of times iterators. A range is here a pair
+     * of times_iterator.
      *
      * \param stepper The stepper to use during the iteration.
      * \param system The system function (ODE) to solve.
      * \param x The initial state. const_step_iterator store a reference of s and changes its value during the iteration.
-     * \param t The initial time.
+     * \param t_start Begin iterator of the sequence of evaluation time points.
+     * \param t_end End iterator of the sequence of evaluation time points.
      * \param dt The initial time step.
-     * \param num_of_steps The number of steps to be executed.
-     * \returns The n-step range.
+     * \returns The times iterator range.
      */
 
 

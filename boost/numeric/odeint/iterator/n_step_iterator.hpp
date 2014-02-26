@@ -32,8 +32,11 @@ namespace odeint {
 
 
     /* use the n_step_iterator_impl with the right tags */
-    template< class Stepper , class System , class State ,
-              class StepperTag = typename base_tag< typename traits::stepper_category< Stepper >::type >::type >
+    template< class Stepper , class System , class State
+#ifndef DOXYGEN_SKIP
+     , class StepperTag = typename base_tag< typename traits::stepper_category< Stepper >::type >::type
+#endif
+     >
     class n_step_iterator : public n_step_iterator_impl<
             n_step_iterator< Stepper , System , State , StepperTag > ,
             Stepper , System , State , detail::ode_state_iterator_tag , StepperTag
@@ -81,22 +84,43 @@ namespace odeint {
         Stepper stepper ,
         System system , 
         State &x ,
-        typename traits::time_type< Stepper >::type t_start ,
+        typename traits::time_type< Stepper >::type t ,
         typename traits::time_type< Stepper >::type dt ,
         size_t num_of_steps )
     {
         return std::make_pair(
-            n_step_iterator< Stepper , System , State >( stepper , system , x , t_start , dt , num_of_steps ) ,
+            n_step_iterator< Stepper , System , State >( stepper , system , x , t , dt , num_of_steps ) ,
             n_step_iterator< Stepper , System , State >( stepper , system , x )
             );
     }
 
 
-
+    /**
+     * \class n_step_iterator
+     *
+     * \brief ODE Iterator with constant step size. The value type of this iterator is the state type of the stepper.
+     *
+     * Implements an iterator representing the solution of an ODE starting from t
+     * with n steps and a constant step size dt.
+     * After each iteration the iterator dereferences to the state x at the next
+     * time t+dt.
+     * This iterator can be used with Steppers, ControlledSteppers and
+     * DenseOutputSteppers and it always makes use of the all the given steppers
+     * capabilities. A for_each over such an iterator range behaves similar to
+     * the integrate_n_steps routine.
+     *
+     * n_step_iterator is a model of single-pass iterator.
+     *
+     * The value type of this iterator is the state type of the stepper. Hence one can only access the state and not the current time.
+     *
+     * \tparam Stepper The stepper type which should be used during the iteration.
+     * \tparam System The type of the system function (ODE) which should be solved.
+     * \tparam State The state type of the ODE.
+     */
 
 
     /**
-     * \fn make_n_step_iterator_begin( Stepper stepper , System system , typename Stepper::state_type &x , typename Stepper::time_type t , typename Stepper::time_type dt , size_t num_of_steps )
+     * \fn make_n_step_iterator_begin( Stepper stepper , System system , State &x , typename traits::time_type< Stepper >::type t , typename traits::time_type< Stepper >::type dt , size_t num_of_steps )
      *
      * \brief Factory function for n_step_iterator. Constructs a begin iterator.
      *
@@ -111,7 +135,7 @@ namespace odeint {
 
 
     /**
-     * \fn make_n_step_iterator_end( Stepper stepper , System system , typename Stepper::state_type &x )
+     * \fn make_n_step_iterator_end( Stepper stepper , System system , State &x )
      * \brief Factory function for n_step_iterator. Constructs an end iterator.
      *
      * \param stepper The stepper to use during the iteration.
@@ -122,7 +146,7 @@ namespace odeint {
 
 
     /**
-     * \fn make_n_step_range( Stepper stepper , System system , typename Stepper::state_type &x , typename Stepper::time_type t_start , typename Stepper::time_type dt , size_t num_of_steps )
+     * \fn make_n_step_range( Stepper stepper , System system , State &x , typename traits::time_type< Stepper >::type t , typename traits::time_type< Stepper >::type dt , , size_t num_of_steps )
      *
      * \brief Factory function to construct a single pass range of n-step iterators. A range is here a pair
      * of n_step_iterator.
