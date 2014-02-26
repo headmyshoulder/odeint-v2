@@ -98,7 +98,7 @@ namespace odeint {
      * to t_end evaluated at steps with constant step size dt.
      * After each iteration the iterator dereferences to a pair containing
      * state and time at the next time point t+dt..
-     * This iterator can be used with Steppers, ControlledSteppers and
+     * This iterator can be used with Steppers and
      * DenseOutputSteppers and it always makes use of the all the given steppers
      * capabilities. A for_each over such an iterator range behaves similar to
      * the integrate_const routine.
