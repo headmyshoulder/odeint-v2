@@ -25,7 +25,13 @@
 #include <boost/ref.hpp>
 #include <boost/iterator/counting_iterator.hpp>
 
-
+#ifndef ODEINT_INTEGRATE_ITERATOR
+#include <boost/numeric/odeint/integrate/integrate_times.hpp>
+#include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
+#else
+#include <boost/numeric/odeint/iterator/integrate/integrate_times.hpp>
+#include <boost/numeric/odeint/iterator/integrate/integrate_adaptive.hpp>
+#endif
 #include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54.hpp>
@@ -33,8 +39,6 @@
 #include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
 #include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_runge_kutta.hpp>
-#include <boost/numeric/odeint/integrate/integrate_times.hpp>
-#include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
 
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
