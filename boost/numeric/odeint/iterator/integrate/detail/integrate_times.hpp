@@ -27,7 +27,7 @@
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/util/detail/less_with_sign.hpp>
 #include <boost/numeric/odeint/iterator/times_time_iterator.hpp>
-#include <boost/numeric/odeint/integrate/detail/functors.hpp>
+#include <boost/numeric/odeint/iterator/integrate/detail/functors.hpp>
 
 namespace boost {
 namespace numeric {

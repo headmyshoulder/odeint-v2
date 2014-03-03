@@ -6,8 +6,9 @@
  integrate const implementation
  [end_description]
 
- Copyright 2009-2012 Karsten Ahnert
- Copyright 2009-2012 Mario Mulansky
+ Copyright 2012 Mario Mulansky
+ Copyright 2012 Christoph Koke
+ Copyright 2012 Karsten Ahnert
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
@@ -17,14 +18,11 @@
 #ifndef BOOST_NUMERIC_ODEINT_INTEGRATE_DETAIL_INTEGRATE_CONST_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_INTEGRATE_DETAIL_INTEGRATE_CONST_HPP_INCLUDED
 
-#include <boost/range/algorithm/for_each.hpp>
-
 #include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/util/unit_helper.hpp>
-#include <boost/numeric/odeint/iterator/const_step_time_iterator.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_adaptive.hpp>
-#include <boost/numeric/odeint/integrate/detail/functors.hpp>
+
 #include <boost/numeric/odeint/util/detail/less_with_sign.hpp>
 
 namespace boost {
@@ -48,15 +46,24 @@ size_t integrate_const(
         Observer observer , stepper_tag 
 )
 {
-    size_t obs_calls = 0;
+    typename odeint::unwrap_reference< Observer >::type &obs = observer;
+    typename odeint::unwrap_reference< Stepper >::type &st = stepper;
+    
+    Time time = start_time;
+    int step = 0;
+    // cast time+dt explicitely in case of expression templates (e.g. multiprecision)
+    while( less_eq_with_sign( static_cast<Time>(time+dt) , end_time , dt ) )
+    {
+        obs( start_state , time );
+        st.do_step( system , start_state , time , dt );
+        // direct computation of the time avoids error propagation happening when using time += dt
+        // we need clumsy type analysis to get boost units working here
+        ++step;
+        time = start_time + static_cast< typename unit_value_type<Time>::type >(step) * dt;
+    }
+    obs( start_state , time );
 
-    boost::for_each( make_const_step_time_range( stepper , system , start_state ,
-                                                 start_time , end_time , dt ) ,
-                     // should we use traits<Stepper>::state_type here instead of State? NO!
-                     obs_caller< Observer >( obs_calls , observer ) );
-
-    // step integration steps gives step+1 observer calls
-    return obs_calls-1;
+    return step;
 }
 
 
@@ -97,12 +104,56 @@ size_t integrate_const(
         Observer observer , dense_output_stepper_tag 
 )
 {
-    size_t obs_calls = 0;
+    typename odeint::unwrap_reference< Observer >::type &obs = observer;
+    typename odeint::unwrap_reference< Stepper >::type &st = stepper;
+    
+    Time time = start_time;
+    
+    st.initialize( start_state , time , dt );
+    obs( start_state , time );
+    time += dt;
 
-    boost::for_each( make_const_step_time_range( stepper , system , start_state ,
-                                                 start_time , end_time , dt ) ,
-                     obs_caller< Observer >( obs_calls , observer ) );
-    return obs_calls-1;
+    int obs_step( 1 );
+    int real_step( 0 );
+    
+    while( less_with_sign( static_cast<Time>(time+dt) , end_time , dt ) )
+    {
+        while( less_eq_with_sign( time , st.current_time() , dt ) )
+        {
+            st.calc_state( time , start_state );
+            obs( start_state , time );
+            ++obs_step;
+            // direct computation of the time avoids error propagation happening when using time += dt
+            // we need clumsy type analysis to get boost units working here
+            time = start_time + static_cast< typename unit_value_type<Time>::type >(obs_step) * dt;
+        }
+        // we have not reached the end, do another real step
+        if( less_with_sign( static_cast<Time>(st.current_time()+st.current_time_step()) ,
+                            end_time ,
+                            st.current_time_step() ) )
+        {
+            while( less_eq_with_sign( st.current_time() , time , dt ) )
+            {
+                st.do_step( system );
+                ++real_step;
+            }
+        }
+        else if( less_with_sign( st.current_time() , end_time , st.current_time_step() ) )
+        { // do the last step ending exactly on the end point
+            st.initialize( st.current_state() , st.current_time() , end_time - st.current_time() );
+            st.do_step( system );
+            ++real_step;
+        }
+        
+    }
+    // last observation, if we are still in observation interval
+    if( less_eq_with_sign( time , end_time , dt ) )
+    {
+        st.calc_state( time , start_state );
+        obs( start_state , time );
+    }
+    
+    return real_step;
 }
 
 

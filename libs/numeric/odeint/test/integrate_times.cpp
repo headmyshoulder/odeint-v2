@@ -213,7 +213,15 @@ BOOST_AUTO_TEST_CASE( test_integrate_times_overshoot )
     int steps = integrate_times( runge_kutta4< state_type >() , lorenz , x ,
                                  times.begin() , times.end() ,
                                  dt , push_back_time( obs_times ) );
-    BOOST_CHECK_EQUAL( steps , 9 ); // integrate returns the number of iterations steps
+// different behavior for the iterator based integrate implementaton
+#ifndef ODEINT_INTEGRATE_ITERATOR
+    BOOST_CHECK_EQUAL( steps , 18 ); // we really need 18 steps because dt and
+                                     // the difference of the observation times
+                                     // are so out of sync
+#else
+    // iterator based implementation can only return the number of iteration steps
+    BOOST_CHECK_EQUAL( steps , 9 );
+#endif
     for( int i=0 ; i<10 ; ++i )
         BOOST_CHECK_EQUAL( times[i] , obs_times[i] );
 

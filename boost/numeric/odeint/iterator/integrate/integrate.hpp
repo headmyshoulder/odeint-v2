@@ -22,8 +22,8 @@
 
 #include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
-#include <boost/numeric/odeint/integrate/null_observer.hpp>
-#include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
+#include <boost/numeric/odeint/iterator/integrate/null_observer.hpp>
+#include <boost/numeric/odeint/iterator/integrate/integrate_adaptive.hpp>
 
 // for has_value_type trait
 #include <boost/numeric/odeint/algebra/detail/extract_value_type.hpp>

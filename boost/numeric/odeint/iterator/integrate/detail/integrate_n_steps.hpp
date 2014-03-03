@@ -19,8 +19,8 @@
 
 #include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
-#include <boost/numeric/odeint/integrate/detail/integrate_adaptive.hpp>
-#include <boost/numeric/odeint/integrate/detail/functors.hpp>
+#include <boost/numeric/odeint/iterator/integrate/detail/integrate_adaptive.hpp>
+#include <boost/numeric/odeint/iterator/integrate/detail/functors.hpp>
 #include <boost/numeric/odeint/iterator/n_step_time_iterator.hpp>
 #include <boost/numeric/odeint/util/unit_helper.hpp>
 

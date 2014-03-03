@@ -23,8 +23,8 @@
 #include <boost/range.hpp>
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
-#include <boost/numeric/odeint/integrate/null_observer.hpp>
-#include <boost/numeric/odeint/integrate/detail/integrate_times.hpp>
+#include <boost/numeric/odeint/iterator/integrate/null_observer.hpp>
+#include <boost/numeric/odeint/iterator/integrate/detail/integrate_times.hpp>
 
 namespace boost {
 namespace numeric {

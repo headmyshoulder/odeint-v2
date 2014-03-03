@@ -21,8 +21,8 @@
 #include <boost/type_traits/is_same.hpp>
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
-#include <boost/numeric/odeint/integrate/null_observer.hpp>
-#include <boost/numeric/odeint/integrate/detail/integrate_n_steps.hpp>
+#include <boost/numeric/odeint/iterator/integrate/null_observer.hpp>
+#include <boost/numeric/odeint/iterator/integrate/detail/integrate_n_steps.hpp>
 
 namespace boost {
 namespace numeric {

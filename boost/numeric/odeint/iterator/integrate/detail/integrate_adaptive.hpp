@@ -22,9 +22,9 @@
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
-#include <boost/numeric/odeint/integrate/detail/integrate_const.hpp>
+#include <boost/numeric/odeint/iterator/integrate/detail/integrate_const.hpp>
 #include <boost/numeric/odeint/iterator/adaptive_time_iterator.hpp>
-#include <boost/numeric/odeint/integrate/detail/functors.hpp>
+#include <boost/numeric/odeint/iterator/integrate/detail/functors.hpp>
 #include <boost/numeric/odeint/util/bind.hpp>
 #include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
