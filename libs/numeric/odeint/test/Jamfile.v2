@@ -46,8 +46,11 @@ test-suite "odeint"
     [ run generic_error_stepper.cpp ]
     [ run bulirsch_stoer.cpp ]
     [ run integrate_times.cpp ]
+    [ run integrate_times.cpp : : : <define>ODEINT_INTEGRATE_ITERATOR : integrate_times_iterator ]
     [ run integrate.cpp ]
+    [ run integrate.cpp : : : <define>ODEINT_INTEGRATE_ITERATOR : integrate_iterator ]
     [ run integrate_implicit.cpp ]
+    [ run integrate_implicit.cpp : : : <define>ODEINT_INTEGRATE_ITERATOR : integrate_implicit_iterator ]
     [ run generation.cpp ]
 #    [ run trivial_state.cpp ]
     [ run is_resizeable.cpp ]
@@ -56,14 +59,32 @@ test-suite "odeint"
     [ run split.cpp ]
     [ run symplectic_steppers.cpp ]
     [ run integrators_symplectic.cpp ]
+    [ run integrators_symplectic.cpp : : : <define>ODEINT_INTEGRATE_ITERATOR : integrators_symplectic_iterator ]
     [ run velocity_verlet.cpp ]
     [ run multi_array.cpp ]
     [ compile algebra_dispatcher.cpp ]
     [ run integrate_stepper_refs.cpp ]
+    [ run const_step_iterator.cpp ]
+    [ run const_step_time_iterator.cpp ]
+    [ run adaptive_iterator.cpp ]
+    [ run adaptive_time_iterator.cpp ]
+    [ run n_step_iterator.cpp ]
+    [ run n_step_time_iterator.cpp ]
+    [ run times_iterator.cpp ]
+    [ run times_time_iterator.cpp ]
     [ compile unwrap_boost_reference.cpp ]
     [ compile-fail unwrap_reference.cpp ]
     : <testing.launcher>valgrind
     ;
 
+<<<<<<< HEAD
 # also run numeric tests
 build-project numeric ;
+=======
+# test-suite "odeint-iterator_integrate"
+#    :
+#    [ run integrate.cpp : : : : integrate_iterator ]
+#    : <testing.launcher>valgrind
+#      <define>ODEINT_ITERATOR_INTEGRATE
+#    ;
+>>>>>>> iterator_integrate

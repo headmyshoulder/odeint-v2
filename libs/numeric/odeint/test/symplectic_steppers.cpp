@@ -51,6 +51,7 @@
 #include <boost/numeric/odeint/stepper/symplectic_euler.hpp>
 #include <boost/numeric/odeint/stepper/symplectic_rkn_sb3a_mclachlan.hpp>
 #include <boost/numeric/odeint/stepper/symplectic_rkn_sb3a_m4_mclachlan.hpp>
+#include <boost/numeric/odeint/integrate/integrate_const.hpp>
 
 #include "diagnostic_state_type.hpp"
 #include "const_range.hpp"
@@ -385,9 +386,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_with_boost_units , Stepper , boost_unit_step
     BOOST_CHECK_CLOSE( ( fusion::at_c< 0 >( p  ).value() ) , ( fusion::at_c< 0 >( p1 ).value() ) , 1.0e-14 );
     BOOST_CHECK_CLOSE( ( fusion::at_c< 0 >( p1 ).value() ) , ( fusion::at_c< 0 >( p2 ).value() ) , 1.0e-14 );
 }
-
-
-
 
 
 BOOST_AUTO_TEST_SUITE_END()

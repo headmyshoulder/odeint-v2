@@ -47,29 +47,31 @@ template< typename T >
 bool less_eq_with_sign( T t1 , T t2 , T dt )
 {
     if( get_unit_value(dt) > 0 )
-        return t2-t1 > -std::numeric_limits<T>::epsilon();
+        return t1-t2 < std::numeric_limits<T>::epsilon();
     else
-        return t1-t2 > -std::numeric_limits<T>::epsilon();
+        return t2-t1 < std::numeric_limits<T>::epsilon();
 }
 
 template< typename T >
 T min_abs( T t1 , T t2 )
 {
     BOOST_USING_STD_MIN();
+    BOOST_USING_STD_MAX();
     if( t1>0 )
         return min BOOST_PREVENT_MACRO_SUBSTITUTION ( t1 , t2 );
     else
-        return -min BOOST_PREVENT_MACRO_SUBSTITUTION ( -t1 , -t2 );
+        return max BOOST_PREVENT_MACRO_SUBSTITUTION ( t1 , t2 );
 }
 
 template< typename T >
 T max_abs( T t1 , T t2 )
 {
+    BOOST_USING_STD_MIN();
     BOOST_USING_STD_MAX();
     if( t1>0 )
         return max BOOST_PREVENT_MACRO_SUBSTITUTION ( t1 , t2 );
     else
-        return -max BOOST_PREVENT_MACRO_SUBSTITUTION ( -t1 , -t2 );
+        return min BOOST_PREVENT_MACRO_SUBSTITUTION ( t1 , t2 );
 }
 } } } }
 

@@ -25,7 +25,13 @@
 #include <boost/ref.hpp>
 #include <boost/iterator/counting_iterator.hpp>
 
-
+#ifndef ODEINT_INTEGRATE_ITERATOR
+#include <boost/numeric/odeint/integrate/integrate_times.hpp>
+#include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
+#else
+#include <boost/numeric/odeint/iterator/integrate/integrate_times.hpp>
+#include <boost/numeric/odeint/iterator/integrate/integrate_adaptive.hpp>
+#endif
 #include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54.hpp>
@@ -33,8 +39,6 @@
 #include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
 #include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_runge_kutta.hpp>
-#include <boost/numeric/odeint/integrate/integrate_times.hpp>
-#include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
 
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
@@ -80,6 +84,8 @@ BOOST_AUTO_TEST_CASE( test_integrate_times )
     const value_type dt = 0.03;
 
     std::vector< double > times;
+
+    std::cout << "test rk4 stepper" << std::endl;
 
     // simple stepper
     integrate_times( runge_kutta4< state_type >() , lorenz , x , boost::counting_iterator<int>(0) , boost::counting_iterator<int>(10) ,
@@ -201,15 +207,25 @@ BOOST_AUTO_TEST_CASE( test_integrate_times_overshoot )
     for( int i=0 ; i<10 ; ++i )
             times[i] = 1.0-i*1.0/9.0;
 
+    std::cout << "test rk4 stepper" << std::endl;
     // simple stepper
     std::vector<double> obs_times;
     int steps = integrate_times( runge_kutta4< state_type >() , lorenz , x ,
                                  times.begin() , times.end() ,
                                  dt , push_back_time( obs_times ) );
-    BOOST_CHECK_EQUAL( steps , 18 ); // two steps required for each observation interval
+// different behavior for the iterator based integrate implementaton
+#ifndef ODEINT_INTEGRATE_ITERATOR
+    BOOST_CHECK_EQUAL( steps , 18 ); // we really need 18 steps because dt and
+                                     // the difference of the observation times
+                                     // are so out of sync
+#else
+    // iterator based implementation can only return the number of iteration steps
+    BOOST_CHECK_EQUAL( steps , 9 );
+#endif
     for( int i=0 ; i<10 ; ++i )
         BOOST_CHECK_EQUAL( times[i] , obs_times[i] );
 
+    std::cout << "test rk_ck stepper" << std::endl;
     // controlled stepper
     obs_times.clear();
     integrate_times( controlled_runge_kutta< runge_kutta_cash_karp54< state_type > >() , lorenz , x ,
@@ -218,6 +234,7 @@ BOOST_AUTO_TEST_CASE( test_integrate_times_overshoot )
     for( int i=0 ; i<10 ; ++i )
         BOOST_CHECK_EQUAL( times[i] , obs_times[i] );
 
+    std::cout << "test dopri5 stepper" << std::endl;
     // controlled stepper
     obs_times.clear();
     integrate_times( dense_output_runge_kutta< controlled_runge_kutta< runge_kutta_dopri5< state_type > > >() , lorenz , x ,

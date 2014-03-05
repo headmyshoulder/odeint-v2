@@ -32,10 +32,17 @@
 
 #include <boost/mpl/vector.hpp>
 
+#ifndef ODEINT_INTEGRATE_ITERATOR
 #include <boost/numeric/odeint/integrate/integrate_const.hpp>
 #include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
 #include <boost/numeric/odeint/integrate/integrate_times.hpp>
 #include <boost/numeric/odeint/integrate/integrate_n_steps.hpp>
+#else
+#include <boost/numeric/odeint/iterator/integrate/integrate_const.hpp>
+#include <boost/numeric/odeint/iterator/integrate/integrate_adaptive.hpp>
+#include <boost/numeric/odeint/iterator/integrate/integrate_times.hpp>
+#include <boost/numeric/odeint/iterator/integrate/integrate_n_steps.hpp>
+#endif
 #include <boost/numeric/odeint/stepper/rosenbrock4.hpp>
 #include <boost/numeric/odeint/stepper/rosenbrock4_controller.hpp>
 #include <boost/numeric/odeint/stepper/rosenbrock4_dense_output.hpp>

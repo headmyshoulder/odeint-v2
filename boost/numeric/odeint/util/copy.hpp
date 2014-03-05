@@ -60,6 +60,7 @@ struct copy_impl
     }
 };
 
+// ToDo: allow also to copy INTO a range, not only from a range! Needs "const Container2 &to"
 template< class Container1 , class Container2 >
 void copy( const Container1 &from , Container2 &to )
 {
