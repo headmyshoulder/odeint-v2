@@ -89,7 +89,7 @@
   <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">order_type</span> <span class="identifier">order_value</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp23363296"></a><h2>Description</h2>
+<a name="idp52372880"></a><h2>Description</h2>
 <p>This class is the base class for the symplectic Runge-Kutta-Nystroem steppers. Symplectic steppers are usually used to solve Hamiltonian systems and they conserve the phase space volume, see <a href="http://en.wikipedia.org/wiki/Symplectic_integrator" target="_top">en.wikipedia.org/wiki/Symplectic_integrator</a>. Furthermore, the energy is conserved in average. In detail this class of steppers can be used to solve separable Hamiltonian systems which can be written in the form H(q,p) = H1(p) + H2(q). q is usually called the coordinate, while p is the momentum. The equations of motion are dq/dt = dH1/dp, dp/dt = -dH2/dq.</p>
 <p>ToDo : add formula for solver and explanation of the coefficients</p>
 <p><a class="link" href="symplectic_nys_idp21147264.html" title="Class template symplectic_nystroem_stepper_base">symplectic_nystroem_stepper_base</a> uses odeints algebra and operation system. Step size and error estimation are not provided for this class of solvers. It derives from <a class="link" href="algebra_stepper_base.html" title="Class template algebra_stepper_base">algebra_stepper_base</a>. Several <code class="computeroutput">do_step</code> variants are provided:</p>
@@ -103,7 +103,7 @@
 <p>
 </p>
 <div class="refsect2">
-<a name="idp23375344"></a><h3>Template Parameters</h3>
+<a name="idp52384928"></a><h3>Template Parameters</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
 <pre class="literallayout"><span class="identifier">size_t</span> NumOfStages</pre>
@@ -149,7 +149,7 @@
 </ol></div>
 </div>
 <div class="refsect2">
-<a name="idp23399616"></a><h3>
+<a name="idp52409200"></a><h3>
 <a name="boost.numeric.odeint.symplectic_nys_idp21147264construct-copy-destruct"></a><code class="computeroutput">symplectic_nystroem_stepper_base</code> 
         public
        construct/copy/destruct</h3>
@@ -184,7 +184,7 @@
 </li></ol></div>
 </div>
 <div class="refsect2">
-<a name="idp23424144"></a><h3>
+<a name="idp52433728"></a><h3>
 <a name="idp21183552-bb"></a><code class="computeroutput">symplectic_nystroem_stepper_base</code> public member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
@@ -394,7 +394,7 @@
 </ol></div>
 </div>
 <div class="refsect2">
-<a name="idp23586752"></a><h3>
+<a name="idp52596272"></a><h3>
 <a name="idp21247696-bb"></a><code class="computeroutput">symplectic_nystroem_stepper_base</code> private member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">,</span> <span class="keyword">typename</span> StateOut<span class="special">&gt;</span> 

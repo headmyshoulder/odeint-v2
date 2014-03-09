@@ -187,10 +187,12 @@
           </p>
 <p>
 </p>
-<pre class="programlisting"><span class="identifier">runge_kutta4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">stepper</span><span class="special">;</span>
+<pre class="programlisting"><span class="special">{</span>
+<span class="identifier">runge_kutta4</span><span class="special">&lt;</span> <span class="identifier">state_type</span> <span class="special">&gt;</span> <span class="identifier">stepper</span><span class="special">;</span>
 <span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">stepper</span> <span class="special">,</span> <span class="special">[](</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">t</span> <span class="special">)</span> <span class="special">{</span>
         <span class="identifier">dxdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">];</span> <span class="identifier">dxdt</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="special">-</span><span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">-</span> <span class="identifier">gam</span><span class="special">*</span><span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">];</span> <span class="special">}</span>
     <span class="special">,</span> <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="number">0.01</span> <span class="special">);</span>
+<span class="special">}</span>
 </pre>
 <p>
           </p>

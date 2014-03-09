@@ -31,7 +31,7 @@
                          <span class="identifier">Time</span> start_time<span class="special">,</span> <span class="identifier">Time</span> end_time<span class="special">,</span> <span class="identifier">Time</span> dt<span class="special">,</span> 
                          <span class="identifier">Observer</span> observer<span class="special">)</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp17135264"></a><h2>Description</h2>
+<a name="idp46144480"></a><h2>Description</h2>
 <p>Integrates the ODE defined by system using the given stepper. This method ensures that the observer is called at constant intervals dt. If the Stepper is a normal stepper without step size control, dt is also used for the numerical scheme. If a ControlledStepper is provided, the algorithm might reduce the step size to meet the error bounds, but it is ensured that the observer is always called at equidistant time points t0 + n*dt. If a DenseOutputStepper is used, the step size also may vary and the dense output is used to call the observer at equidistant time points.</p>
 <p>
 

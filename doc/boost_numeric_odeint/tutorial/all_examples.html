@@ -6,14 +6,14 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../tutorial.html" title="Tutorial">
-<link rel="prev" href="using_opencl_via_vexcl.html" title="Using OpenCL via VexCL">
+<link rel="prev" href="parallel_computation_with_openmp_and_mpi.html" title="Parallel computation with OpenMP and MPI">
 <link rel="next" href="../odeint_in_detail.html" title="odeint in detail">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr><td valign="top"><img alt="" width="" height="" src="../../logo.jpg"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="using_opencl_via_vexcl.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="../odeint_in_detail.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="parallel_computation_with_openmp_and_mpi.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="../odeint_in_detail.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
@@ -153,7 +153,7 @@
               </td>
 <td>
                 <p>
-                  This examples shows how <a href="http://www.boost.org/doc/libs/release/libs/units/index.html" target="_top">Boost.Units</a>
+                  This examples shows how <a href="http://www.boost.org/doc/libs/release/libs/units/" target="_top">Boost.Units</a>
                   can be used with odeint.
                 </p>
               </td>
@@ -462,6 +462,78 @@
 <tr>
 <td>
                 <p>
+                  <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/openmp/lorenz_ensemble_simple.cpp" target="_top">openmp/lorenz_ensemble_simple.cpp</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  OpenMP Lorenz attractor parameter study with continuous data.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/openmp/lorenz_ensemble.cpp" target="_top">openmp/lorenz_ensemble.cpp</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  OpenMP Lorenz attractor parameter study with split data.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/openmp/lorenz_ensemble.cpp" target="_top">openmp/lorenz_ensemble_nested.cpp</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  OpenMP Lorenz attractor parameter study with nested <code class="computeroutput"><span class="identifier">vector_space_algebra</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/openmp/phase_chain.cpp" target="_top">openmp/phase_chain.cpp</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  OpenMP nearest neighbour coupled phase chain with continuous state.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/openmp/phase_chain_omp_state.cpp" target="_top">openmp/phase_chain_omp_state.cpp</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  OpenMP nearest neighbour coupled phase chain with split state.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/mpi/phase_chain.cpp" target="_top">mpi/phase_chain.cpp</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  MPI nearest neighbour coupled phase chain.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
                   <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/2d_lattice/spreading.cpp" target="_top">2d_lattice/spreading.cpp</a>
                 </p>
               </td>
@@ -488,6 +560,19 @@
                 </p>
               </td>
 </tr>
+<tr>
+<td>
+                <p>
+                  <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/examples/molecular_dynamics.cpp" target="_top">molecular_dynamics.cpp</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A very basic molecular dynamics simulation with the Velocity-Verlet
+                  method.
+                </p>
+              </td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -504,7 +589,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="using_opencl_via_vexcl.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="../odeint_in_detail.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="parallel_computation_with_openmp_and_mpi.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="../odeint_in_detail.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

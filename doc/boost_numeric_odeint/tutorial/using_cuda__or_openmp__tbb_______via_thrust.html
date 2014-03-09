@@ -577,7 +577,7 @@
 <p>
         </p>
 <p>
-          As <code class="computeroutput"><span class="identifier">state_type</span></code> a <code class="computeroutput"><span class="identifier">thrust</span><span class="special">::</span><span class="identifier">device_vector</span></code> or a <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
+          As <code class="computeroutput"><span class="identifier">state_type</span></code> a <code class="computeroutput"><span class="identifier">thrust</span><span class="special">::</span><span class="identifier">device_vector</span></code> or a <a href="http://www.boost.org/doc/libs/release/libs/range/" target="_top">Boost.Range</a>
           of a <code class="computeroutput"><span class="identifier">device_vector</span></code> is used.
           The length of the state is <span class="emphasis"><em>3N</em></span> where <span class="emphasis"><em>N</em></span>
           is the number of systems. The system is encoded into this vector such that
@@ -637,7 +637,7 @@
           Runge-Kutta Dormand-Prince 5 stepper. We start with some integration to
           overcome the transient behavior. For this, we do not involve the perturbation
           and run the algorithm only on the state <span class="emphasis"><em>x,y,z</em></span> without
-          any observer. Note, how <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
+          any observer. Note, how <a href="http://www.boost.org/doc/libs/release/libs/range/" target="_top">Boost.Range</a>
           is used for partial integration of the state vector without perturbations
           (the first half of the whole state). After the transient, the full system
           with perturbations is integrated and the Lyapunov exponents are calculated

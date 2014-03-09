@@ -104,7 +104,7 @@
   <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">order_type</span> <span class="identifier">error_order_value</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp21790368"></a><h2>Description</h2>
+<a name="idp50799984"></a><h2>Description</h2>
 <p>This class serves as the base class for all explicit steppers with algebra and operations and which fulfill the FSAL property. In contrast to <a class="link" href="explicit_stepper_base.html" title="Class template explicit_stepper_base">explicit_stepper_base</a> it also estimates the error and can be used in a controlled stepper to provide step size control.</p>
 <p>The FSAL property means that the derivative of the system at t+dt is already used in the current step going from t to t +dt. Therefore, some more do_steps method can be introduced and the controlled steppers can explicitly make use of this property.</p>
 <div class="note"><table border="0" summary="Note">
@@ -150,7 +150,7 @@
 
 </p>
 <div class="refsect2">
-<a name="idp21854864"></a><h3>Template Parameters</h3>
+<a name="idp50864480"></a><h3>Template Parameters</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">typename</span> Stepper</pre>
@@ -199,7 +199,7 @@
 </ol></div>
 </div>
 <div class="refsect2">
-<a name="idp21883696"></a><h3>
+<a name="idp50893312"></a><h3>
 <a name="boost.numeric.odeint.explicit_error_idp20813312construct-copy-destruct"></a><code class="computeroutput">explicit_error_stepper_fsal_base</code> 
         public
        construct/copy/destruct</h3>
@@ -222,7 +222,7 @@
 </li></ol></div>
 </div>
 <div class="refsect2">
-<a name="idp21898992"></a><h3>
+<a name="idp50908544"></a><h3>
 <a name="idp20864896-bb"></a><code class="computeroutput">explicit_error_stepper_fsal_base</code> public member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
@@ -797,7 +797,7 @@ stepper.initialize( dxdt );
 </ol></div>
 </div>
 <div class="refsect2">
-<a name="idp22312064"></a><h3>
+<a name="idp51321680"></a><h3>
 <a name="idp21012560-bb"></a><code class="computeroutput">explicit_error_stepper_fsal_base</code> private member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 

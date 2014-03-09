@@ -226,7 +226,7 @@
         If the observer should be called at some user given time points the <code class="computeroutput"><span class="identifier">integrate_times</span></code> function should be used.
         The times for observer calls are provided as a sequence of time values. The
         sequence is either defined via two iterators pointing to begin and end of
-        the sequence or in terms of a <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
+        the sequence or in terms of a <a href="http://www.boost.org/doc/libs/release/libs/range/" target="_top">Boost.Range</a>
         object.
       </p>
 <p>
@@ -257,7 +257,7 @@
         solution at the end point of integration. This function requires an observer
         which is invoked at the subsequent times <code class="computeroutput"><span class="special">*</span><span class="identifier">times_start</span><span class="special">++</span></code>
         until <code class="computeroutput"><span class="identifier">times_start</span> <span class="special">==</span>
-        <span class="identifier">times_end</span></code>. If called with a <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
+        <span class="identifier">times_end</span></code>. If called with a <a href="http://www.boost.org/doc/libs/release/libs/range/" target="_top">Boost.Range</a>
         <code class="computeroutput"><span class="identifier">time_range</span></code> the function behaves
         the same with <code class="computeroutput"><span class="identifier">times_start</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">begin</span><span class="special">(</span> <span class="identifier">time_range</span>
         <span class="special">)</span></code> and <code class="computeroutput"><span class="identifier">times_end</span>

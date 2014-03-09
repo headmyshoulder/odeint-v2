@@ -21,7 +21,7 @@
       boost::units</a>
 </h3></div></div></div>
 <p>
-        odeint also works well with <a href="http://www.boost.org/doc/libs/release/libs/units/index.html" target="_top">Boost.Units</a>
+        odeint also works well with <a href="http://www.boost.org/doc/libs/release/libs/units/" target="_top">Boost.Units</a>
         - a library for compile time unit and dimension analysis. It works by decoding
         unit information into the types of values. For a one-dimensional unit you
         can just use the Boost.Unit types as state type, deriv type and time type
@@ -43,11 +43,11 @@
         If you want to solve more-dimensional problems the individual entries typically
         have different units. That means that the <code class="computeroutput"><span class="identifier">state_type</span></code>
         is now possibly heterogeneous, meaning that every entry might have a different
-        type. To solve this problem, compile-time sequences from <a href="http://www.boost.org/doc/libs/release/libs/fusion/index.html" target="_top">Boost.Fusion</a>
+        type. To solve this problem, compile-time sequences from <a href="http://www.boost.org/doc/libs/release/libs/fusion/" target="_top">Boost.Fusion</a>
         can be used.
       </p>
 <p>
-        To illustrate how odeint works with <a href="http://www.boost.org/doc/libs/release/libs/units/index.html" target="_top">Boost.Units</a>
+        To illustrate how odeint works with <a href="http://www.boost.org/doc/libs/release/libs/units/" target="_top">Boost.Units</a>
         we use the harmonic oscillator as primary example. We start with defining
         all quantities
       </p>
@@ -178,9 +178,9 @@
 <th align="left">Caution</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-          Using <a href="http://www.boost.org/doc/libs/release/libs/units/index.html" target="_top">Boost.Units</a>
+          Using <a href="http://www.boost.org/doc/libs/release/libs/units/" target="_top">Boost.Units</a>
           works nicely but compilation can be very time and memory consuming. For
-          example the unit test for the usage of <a href="http://www.boost.org/doc/libs/release/libs/units/index.html" target="_top">Boost.Units</a>
+          example the unit test for the usage of <a href="http://www.boost.org/doc/libs/release/libs/units/" target="_top">Boost.Units</a>
           in odeint take up to 4 GB of memory at compilation.
         </p></td></tr>
 </table></div>

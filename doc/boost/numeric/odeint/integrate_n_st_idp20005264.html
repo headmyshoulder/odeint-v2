@@ -31,7 +31,7 @@
                          <span class="identifier">Time</span> start_time<span class="special">,</span> <span class="identifier">Time</span> dt<span class="special">,</span> <span class="identifier">size_t</span> num_of_steps<span class="special">,</span> 
                          <span class="identifier">Observer</span> observer<span class="special">)</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp17265904"></a><h2>Description</h2>
+<a name="idp46275056"></a><h2>Description</h2>
 <p>This function is similar to integrate_const. The observer is called at equidistant time intervals t0 + n*dt. If the Stepper is a normal stepper without step size control, dt is also used for the numerical scheme. If a ControlledStepper is provided, the algorithm might reduce the step size to meet the error bounds, but it is ensured that the observer is always called at equidistant time points t0 + n*dt. If a DenseOutputStepper is used, the step size also may vary and the dense output is used to call the observer at equidistant time points. The final integration time is always t0 + num_of_steps*dt.</p>
 <p>
 

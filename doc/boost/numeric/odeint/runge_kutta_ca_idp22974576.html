@@ -96,13 +96,13 @@
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a class="link" href="runge_kutta_ca_idp22974576.html#idp23148832-bb"><span class="identifier">resize_impl</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp33799488"></a><h2>Description</h2>
+<a name="idp62809120"></a><h2>Description</h2>
 <p>The Runge-Kutta Cash-Karp method is one of the standard methods for solving ordinary differential equations, see <a href="http://en.wikipedia.org/wiki/Cash%E2%80%93Karp_method" target="_top">en.wikipedia.org/wiki/Cash-Karp_method</a>. The method is explicit and fulfills the Error Stepper concept. Step size control is provided but continuous output is not available for this method.</p>
 <p>This class derives from <a class="link" href="explicit_error_idp20622192.html" title="Class template explicit_error_stepper_base">explicit_error_stepper_base</a> and inherits its interface via CRTP (current recurring template pattern). This class implements the method directly, hence the generic Runge-Kutta algorithm is not used.</p>
 <p>
 </p>
 <div class="refsect2">
-<a name="idp33802880"></a><h3>Template Parameters</h3>
+<a name="idp62812512"></a><h3>Template Parameters</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">typename</span> State</pre>
@@ -135,7 +135,7 @@
 </ol></div>
 </div>
 <div class="refsect2">
-<a name="idp33833248"></a><h3>
+<a name="idp62842880"></a><h3>
 <a name="boost.numeric.odeint.runge_kutta_ca_idp22974576construct-copy-destruct"></a><code class="computeroutput">runge_kutta_cash_karp54_classic</code> 
         public
        construct/copy/destruct</h3>
@@ -158,7 +158,7 @@
 </li></ol></div>
 </div>
 <div class="refsect2">
-<a name="idp33849760"></a><h3>
+<a name="idp62859392"></a><h3>
 <a name="idp22994416-bb"></a><code class="computeroutput">runge_kutta_cash_karp54_classic</code> public member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
@@ -718,7 +718,7 @@ stepper.do_step( sys , in , dxdt , t , out , dt );
 </ol></div>
 </div>
 <div class="refsect2">
-<a name="idp34362752"></a><h3>
+<a name="idp63300480"></a><h3>
 <a name="idp23148416-bb"></a><code class="computeroutput">runge_kutta_cash_karp54_classic</code> private member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a name="idp23148832-bb"></a><span class="identifier">resize_impl</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre></li></ol></div>
 </div>

@@ -209,7 +209,7 @@
           </p></td></tr>
 </table></div>
 <p>
-          So fixed sized arrays supported by <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
+          So fixed sized arrays supported by <a href="http://www.boost.org/doc/libs/release/libs/range/" target="_top">Boost.Range</a>
           immediately work with odeint. For dynamically sized arrays one has to additionally
           supply the resize functionality. First, the state has to be tagged as resizeable
           by specializing the struct <code class="computeroutput"><span class="identifier">is_resizeable</span></code>
@@ -388,7 +388,7 @@
 <p>
             As a first example we take the most simple case and implement our own
             vector <code class="computeroutput"><span class="identifier">my_vector</span></code> which
-            will provide a container interface. This makes <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
+            will provide a container interface. This makes <a href="http://www.boost.org/doc/libs/release/libs/range/" target="_top">Boost.Range</a>
             working out-of-box. We add a little functionality to our vector which
             makes it allocate some default capacity by construction. This is helpful
             when using resizing as then a resize can be assured to not require a
@@ -456,7 +456,7 @@
 <a name="boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations.construction_resizing.std__list"></a><a class="link" href="state_types__algebras_and_operations.html#boost_numeric_odeint.odeint_in_detail.state_types__algebras_and_operations.construction_resizing.std__list" title="std::list">std::list</a>
 </h5></div></div></div>
 <p>
-            If your state type does work with <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>,
+            If your state type does work with <a href="http://www.boost.org/doc/libs/release/libs/range/" target="_top">Boost.Range</a>,
             but handles resizing differently you are required to specialize two implementations
             used by odeint to check a state's size and to resize:
           </p>
@@ -610,14 +610,14 @@
           in two concepts: <span class="underline">Algebra</span> and <span class="underline">Operations</span>. The standard way how this works
           is by the range algebra which provides functions that apply a specific
           operation to each of the individual elements of a container based on the
-          <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
-          library. If your state type is not supported by <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
+          <a href="http://www.boost.org/doc/libs/release/libs/range/" target="_top">Boost.Range</a>
+          library. If your state type is not supported by <a href="http://www.boost.org/doc/libs/release/libs/range/" target="_top">Boost.Range</a>
           there are several possibilities to tell odeint how to do algebraic operations:
         </p>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
               Implement <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">begin</span></code> and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">end</span></code>
-              for your state type so it works with <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>.
+              for your state type so it works with <a href="http://www.boost.org/doc/libs/release/libs/range/" target="_top">Boost.Range</a>.
             </li>
 <li class="listitem">
               Implement vector-vector addition operator <code class="computeroutput"><span class="special">+</span></code>
@@ -638,7 +638,7 @@
             type from <a href="http://www.gsl.org" target="_top">GSL</a> (GNU Scientific
             Library) as state type in odeint. We will realize this by implementing
             a wrapper around the gsl_vector that takes care of construction/destruction.
-            Also, <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
+            Also, <a href="http://www.boost.org/doc/libs/release/libs/range/" target="_top">Boost.Range</a>
             is extended such that it works with <code class="computeroutput"><span class="identifier">gsl_vector</span></code>s
             as well which required also the implementation of a new <code class="computeroutput"><span class="identifier">gsl_iterator</span></code>.
           </p>
@@ -784,7 +784,7 @@
 <p>
           </p>
 <p>
-            Finally, the bindings for <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
+            Finally, the bindings for <a href="http://www.boost.org/doc/libs/release/libs/range/" target="_top">Boost.Range</a>
             are added:
 </p>
 <pre class="programlisting"><span class="comment">// template&lt;&gt;</span>
@@ -817,7 +817,7 @@
             container-like state types in odeint is to iterate through the elements
             of the container and perform the operations element-wise on the underlying
             value type. This is realized by means of the <code class="computeroutput"><span class="identifier">range_algebra</span></code>
-            that uses <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>
+            that uses <a href="http://www.boost.org/doc/libs/release/libs/range/" target="_top">Boost.Range</a>
             for obtaining iterators of the state types. However, there are other
             ways to implement the algebraic operations on containers, one of which
             is defining the addition/multiplication operators for the containers
@@ -1092,7 +1092,7 @@
             Here we show how to implement the required operators on a state type.
             As example we define a new class <code class="computeroutput"><span class="identifier">point3D</span></code>
             representing a three-dimensional vector with components x,y,z and define
-            addition and scalar multiplication operators for it. We use <a href="http://www.boost.org/doc/libs/release/doc/html/operators.html" target="_top">Boost.Operators</a>
+            addition and scalar multiplication operators for it. We use <a href="http://www.boost.org/doc/libs/release/libs/utility/operators.htm" target="_top">Boost.Operators</a>
             to reduce the amount of code to be written. The class for the point type
             looks as follows:
           </p>
@@ -1136,7 +1136,7 @@
 <p>
           </p>
 <p>
-            By deriving from <a href="http://www.boost.org/doc/libs/release/doc/html/operators.html" target="_top">Boost.Operators</a>
+            By deriving from <a href="http://www.boost.org/doc/libs/release/libs/utility/operators.htm" target="_top">Boost.Operators</a>
             classes we don't have to define outer class operators like <code class="computeroutput"><span class="keyword">operator</span><span class="special">+(</span> <span class="identifier">point3D</span> <span class="special">,</span>
             <span class="identifier">point3D</span> <span class="special">)</span></code>
             because that is taken care of by the operators library. Note that for

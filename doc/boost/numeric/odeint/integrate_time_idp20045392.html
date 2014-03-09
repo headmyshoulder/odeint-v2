@@ -31,7 +31,7 @@
                          <span class="identifier">TimeIterator</span> times_start<span class="special">,</span> <span class="identifier">TimeIterator</span> times_end<span class="special">,</span> 
                          <span class="identifier">Time</span> dt<span class="special">,</span> <span class="identifier">Observer</span> observer<span class="special">)</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp17408832"></a><h2>Description</h2>
+<a name="idp46417952"></a><h2>Description</h2>
 <p>Integrates the ODE given by system using the given stepper. This function does observer calls at the subsequent time points given by the range times_start, times_end. If the stepper has not step size control, the step size might be reduced occasionally to ensure observer calls exactly at the time points from the given sequence. If the stepper is a ControlledStepper, the step size is adjusted to meet the error bounds, but also might be reduced occasionally to ensure correct observer calls. If a DenseOutputStepper is provided, the dense output functionality is used to call the observer at the given times. The end time of the integration is always *(end_time-1).</p>
 <p>
 
