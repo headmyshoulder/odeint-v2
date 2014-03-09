@@ -6,8 +6,8 @@
  tba.
  [end_description]
 
- Copyright 2009-2012 Karsten Ahnert
- Copyright 2009-2012 Mario Mulansky
+ Copyright 2012 Karsten Ahnert
+ Copyright 2013 Mario Mulansky
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
@@ -51,6 +51,7 @@
 #include <boost/numeric/odeint/stepper/symplectic_euler.hpp>
 #include <boost/numeric/odeint/stepper/symplectic_rkn_sb3a_mclachlan.hpp>
 #include <boost/numeric/odeint/stepper/symplectic_rkn_sb3a_m4_mclachlan.hpp>
+#include <boost/numeric/odeint/integrate/integrate_const.hpp>
 
 #include "diagnostic_state_type.hpp"
 #include "const_range.hpp"
@@ -385,9 +386,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_with_boost_units , Stepper , boost_unit_step
     BOOST_CHECK_CLOSE( ( fusion::at_c< 0 >( p  ).value() ) , ( fusion::at_c< 0 >( p1 ).value() ) , 1.0e-14 );
     BOOST_CHECK_CLOSE( ( fusion::at_c< 0 >( p1 ).value() ) , ( fusion::at_c< 0 >( p2 ).value() ) , 1.0e-14 );
 }
-
-
-
 
 
 BOOST_AUTO_TEST_SUITE_END()

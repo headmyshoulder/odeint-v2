@@ -1,4 +1,6 @@
-# Copyright 2009 Karsten Ahnert and Mario Mulansky.
+# Copyright 2009-2013 Karsten Ahnert
+# Copyright 2010-2013 Mario Mulansky
+# Copyright 2013 Pascal Germroth
 # Distributed under the Boost Software License, Version 1.0. (See
 # accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
@@ -38,9 +40,12 @@ exe bind_member_functions : bind_member_functions.cpp ;
 exe bind_member_functions_cpp11 : bind_member_functions_cpp11.cpp : <cxxflags>-std=c++0x ;
 exe molecular_dynamics : molecular_dynamics.cpp : <cxxflags>-std=c++0x ;
 exe molecular_dynamics_cells : molecular_dynamics_cells.cpp : <cxxflags>-std=c++0x ;
-exe abm_precision : abm_precision.cpp ; 
+exe abm_precision : abm_precision.cpp ;
+exe integrate_times : integrate_times.cpp ;  
 
 build-project multiprecision ;
 # build-project mtl ;
 # build-project ublas ;
 # build-project gmpxx ;
+# build-project openmp ;
+# build-project mpi ;

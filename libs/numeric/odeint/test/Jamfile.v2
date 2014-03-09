@@ -1,4 +1,6 @@
-# (C) Copyright 2010 : Karsten Ahnert, Mario Mulansky
+# Copyright 2012-2013 Karsten Ahnert
+# Copyright 2012-2013 Mario Mulansky
+# Copyright 2013 Pascal Germroth
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
@@ -23,7 +25,7 @@ project
 test-suite "odeint"
     :
     [ run euler_stepper.cpp ]
-    [ run runge_kutta_concepts.cpp ]
+#    [ run runge_kutta_concepts.cpp ]
     [ run runge_kutta_error_concepts.cpp ]
     [ run runge_kutta_controlled_concepts.cpp ]
     [ run resizing.cpp ]
@@ -40,27 +42,49 @@ test-suite "odeint"
     [ run adams_bashforth.cpp ]
     [ run adams_moulton.cpp ]
     [ run adams_bashforth_moulton.cpp ]
-    [ run generic_stepper.cpp ]
+#    [ run generic_stepper.cpp ]
     [ run generic_error_stepper.cpp ]
     [ run bulirsch_stoer.cpp ]
     [ run integrate_times.cpp ]
+    [ run integrate_times.cpp : : : <define>ODEINT_INTEGRATE_ITERATOR : integrate_times_iterator ]
     [ run integrate.cpp ]
+    [ run integrate.cpp : : : <define>ODEINT_INTEGRATE_ITERATOR : integrate_iterator ]
     [ run integrate_implicit.cpp ]
+    [ run integrate_implicit.cpp : : : <define>ODEINT_INTEGRATE_ITERATOR : integrate_implicit_iterator ]
     [ run generation.cpp ]
-    [ run trivial_state.cpp ]
+#    [ run trivial_state.cpp ]
     [ run is_resizeable.cpp ]
     [ run resize.cpp ]
     [ run same_size.cpp ]
+    [ run split.cpp ]
     [ run symplectic_steppers.cpp ]
     [ run integrators_symplectic.cpp ]
+    [ run integrators_symplectic.cpp : : : <define>ODEINT_INTEGRATE_ITERATOR : integrators_symplectic_iterator ]
     [ run velocity_verlet.cpp ]
     [ run multi_array.cpp ]
     [ compile algebra_dispatcher.cpp ]
     [ run integrate_stepper_refs.cpp ]
+    [ run const_step_iterator.cpp ]
+    [ run const_step_time_iterator.cpp ]
+    [ run adaptive_iterator.cpp ]
+    [ run adaptive_time_iterator.cpp ]
+    [ run n_step_iterator.cpp ]
+    [ run n_step_time_iterator.cpp ]
+    [ run times_iterator.cpp ]
+    [ run times_time_iterator.cpp ]
     [ compile unwrap_boost_reference.cpp ]
     [ compile-fail unwrap_reference.cpp ]
     : <testing.launcher>valgrind
     ;
 
+<<<<<<< HEAD
 # also run numeric tests
 build-project numeric ;
+=======
+# test-suite "odeint-iterator_integrate"
+#    :
+#    [ run integrate.cpp : : : : integrate_iterator ]
+#    : <testing.launcher>valgrind
+#      <define>ODEINT_ITERATOR_INTEGRATE
+#    ;
+>>>>>>> iterator_integrate

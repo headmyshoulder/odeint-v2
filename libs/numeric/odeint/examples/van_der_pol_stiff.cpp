@@ -3,7 +3,9 @@
  *  
  * Created on: Dec 12, 2011
  *
- * Copyright 2011 Rajeev Singh
+ * Copyright 2012 Karsten Ahnert
+ * Copyright 2012-2013 Rajeev Singh
+ * Copyright 2012-2013 Mario Mulansky
  *
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or

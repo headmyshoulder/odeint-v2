@@ -6,8 +6,9 @@
  Implementation of the generic Runge-Kutta method.
  [end_description]
 
- Copyright 2009-2011 Karsten Ahnert
- Copyright 2009-2011 Mario Mulansky
+ Copyright 2011-2013 Mario Mulansky
+ Copyright 2011-2012 Karsten Ahnert
+ Copyright 2012 Christoph Koke
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or

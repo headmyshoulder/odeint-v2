@@ -7,8 +7,9 @@
  not computes the result but serves as an interface.
  [end_description]
 
- Copyright 2009-2011 Karsten Ahnert
- Copyright 2009-2011 Mario Mulansky
+ Copyright 2011-2013 Karsten Ahnert
+ Copyright 2011-2012 Mario Mulansky
+ Copyright 2012 Christoph Koke
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
@@ -137,6 +138,10 @@ public:
     template< class StateOut >
     void calc_state( time_type t , StateOut &x ) const
     {
+        if( t == current_time() )
+        {
+            boost::numeric::odeint::copy( get_current_state() , x );
+        }
         m_stepper.calc_state( x , t , get_old_state() , m_t_old , get_current_state() , m_t );
     }
 

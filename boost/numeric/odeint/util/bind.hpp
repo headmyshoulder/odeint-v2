@@ -7,6 +7,7 @@
  *     [end_description]
  *        
  *     Copyright 2012 Christoph Koke
+ *     Copyright 2012 Karsten Ahnert
  *           
  *     Distributed under the Boost Software License, Version 1.0.
  *     (See accompanying file LICENSE_1_0.txt or

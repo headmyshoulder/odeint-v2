@@ -6,8 +6,8 @@
  Copy abstraction for the usage in the steppers.
  [end_description]
 
- Copyright 2009-2011 Karsten Ahnert
- Copyright 2009-2011 Mario Mulansky
+ Copyright 2011-2012 Karsten Ahnert
+ Copyright 2011-2012 Mario Mulansky
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
@@ -60,6 +60,7 @@ struct copy_impl
     }
 };
 
+// ToDo: allow also to copy INTO a range, not only from a range! Needs "const Container2 &to"
 template< class Container1 , class Container2 >
 void copy( const Container1 &from , Container2 &to )
 {

@@ -6,8 +6,8 @@
  This file tests the integrate function and its variants with the implicit steppers.
  [end_description]
 
- Copyright 2009-2012 Karsten Ahnert
- Copyright 2009-2012 Mario Mulansky
+ Copyright 2011 Mario Mulansky
+ Copyright 2011-2013 Karsten Ahnert
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
@@ -32,10 +32,17 @@
 
 #include <boost/mpl/vector.hpp>
 
+#ifndef ODEINT_INTEGRATE_ITERATOR
 #include <boost/numeric/odeint/integrate/integrate_const.hpp>
 #include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
 #include <boost/numeric/odeint/integrate/integrate_times.hpp>
 #include <boost/numeric/odeint/integrate/integrate_n_steps.hpp>
+#else
+#include <boost/numeric/odeint/iterator/integrate/integrate_const.hpp>
+#include <boost/numeric/odeint/iterator/integrate/integrate_adaptive.hpp>
+#include <boost/numeric/odeint/iterator/integrate/integrate_times.hpp>
+#include <boost/numeric/odeint/iterator/integrate/integrate_n_steps.hpp>
+#endif
 #include <boost/numeric/odeint/stepper/rosenbrock4.hpp>
 #include <boost/numeric/odeint/stepper/rosenbrock4_controller.hpp>
 #include <boost/numeric/odeint/stepper/rosenbrock4_dense_output.hpp>

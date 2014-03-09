@@ -1,4 +1,14 @@
 /*
+ Copyright 2011-2012 Karsten Ahnert
+ Copyright 2013 Mario Mulansky
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
+
+/*
  * Solves many relaxation equations dxdt = - a * x in parallel and for different values of a.
  * The relaxation equations are completely uncoupled.
  */

@@ -82,6 +82,7 @@ public :
     template< class System  >
     controlled_step_result try_step( System system , state_type &in , time_type &t , time_type &dt )
     {
+        std::cout << "dense out stepper: " << t << " , " << dt << std::endl;
         t += dt;
         return success;
     }
@@ -121,13 +122,13 @@ public :
         x = m_x;
     }
 
-    state_type current_state()
+    const state_type& current_state() const
     { return m_x; }
 
-    time_type current_time()
+    time_type current_time() const
     { return m_t; }
 
-    time_type current_time_step()
+    time_type current_time_step() const
     { return m_dt; }
 
 
@@ -240,6 +241,7 @@ BOOST_AUTO_TEST_SUITE( integrate_stepper_refs )
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_const_test_case , Stepper, stepper_methods )
 {
+    std::cout << "integrate const" << std::endl;
     perform_integrate_const_test< Stepper > tester;
     tester();
 }
@@ -247,18 +249,21 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_const_test_case , Stepper, stepper_meth
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_adaptive_test_case , Stepper, stepper_methods )
 {
+    std::cout << "integrate adaptive" << std::endl;
     perform_integrate_adaptive_test< Stepper > tester;
     tester();
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_n_steps_test_case , Stepper, stepper_methods )
 {
+    std::cout << "integrate n steps" << std::endl;
     perform_integrate_n_steps_test< Stepper > tester;
     tester();
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_times_test_case , Stepper, stepper_methods )
 {
+    std::cout << "integrate times" << std::endl;
     perform_integrate_times_test< Stepper > tester;
     tester();
 }

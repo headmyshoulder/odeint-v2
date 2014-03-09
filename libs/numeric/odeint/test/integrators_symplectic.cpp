@@ -29,10 +29,14 @@
 
 #include <boost/test/unit_test.hpp>
 
+#ifndef ODEINT_INTEGRATE_ITERATOR
+#include <boost/numeric/odeint/integrate/integrate_const.hpp>
+#else
+#include <boost/numeric/odeint/iterator/integrate/integrate_const.hpp>
+#endif
 #include <boost/numeric/odeint/stepper/symplectic_euler.hpp>
 #include <boost/numeric/odeint/stepper/symplectic_rkn_sb3a_mclachlan.hpp>
 #include <boost/numeric/odeint/stepper/symplectic_rkn_sb3a_m4_mclachlan.hpp>
-#include <boost/numeric/odeint/integrate/integrate_const.hpp>
 
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
