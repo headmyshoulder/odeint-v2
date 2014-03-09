@@ -17,6 +17,8 @@
 
 #define BOOST_TEST_MODULE odeint_split
 
+#include <iostream>
+
 #include <boost/test/unit_test.hpp>
 #include <boost/numeric/odeint/util/split_adaptor.hpp>
 #include <boost/range/irange.hpp>

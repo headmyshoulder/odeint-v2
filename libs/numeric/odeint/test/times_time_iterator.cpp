@@ -20,6 +20,7 @@
 #include <iterator>
 #include <algorithm>
 #include <vector>
+#include <iostream>
 
 #include <boost/numeric/odeint/config.hpp>
 #include <boost/array.hpp>
