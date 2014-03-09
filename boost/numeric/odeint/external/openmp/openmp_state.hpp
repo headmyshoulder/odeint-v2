@@ -26,7 +26,7 @@
 #include <boost/numeric/odeint/util/copy.hpp>
 #include <boost/numeric/odeint/util/split.hpp>
 #include <boost/numeric/odeint/util/resize.hpp>
-#include "openmp_nested_algebra.hpp"
+#include <boost/numeric/odeint/external/openmp/openmp_nested_algebra.hpp>
 
 namespace boost {
 namespace numeric {
