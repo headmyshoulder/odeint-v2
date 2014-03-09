@@ -27,7 +27,7 @@
 #include <boost/numeric/odeint/util/resize.hpp>
 #include <boost/numeric/odeint/util/same_size.hpp>
 #include <boost/numeric/odeint/algebra/algebra_dispatcher.hpp>
-#include "mpi_nested_algebra.hpp"
+#include <boost/numeric/odeint/external/mpi/mpi_nested_algebra.hpp>
 
 namespace boost {
 namespace numeric {

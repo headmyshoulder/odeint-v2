@@ -19,7 +19,7 @@
 #ifndef BOOST_NUMERIC_ODEINT_EXTERNAL_MPI_MPI_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_EXTERNAL_MPI_MPI_HPP_INCLUDED
 
-#include "mpi_vector_state.hpp"
-#include "mpi_nested_algebra.hpp"
+#include <boost/numeric/odeint/external/mpi/mpi_vector_state.hpp>
+#include <boost/numeric/odeint/external/mpi/mpi_nested_algebra.hpp>
 
 #endif
