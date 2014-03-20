@@ -94,7 +94,7 @@ size_t integrate_times(
         while( less_with_sign( current_time , static_cast<time_type>(*start_time) , dt ) )
         {
             // adjust stepsize to end up exactly at the observation point
-            double current_dt = min_abs( dt , *start_time - current_time );
+            Time current_dt = min_abs( dt , *start_time - current_time );
             if( st.try_step( system , start_state , current_time , current_dt ) == success )
             {
                 ++steps;
