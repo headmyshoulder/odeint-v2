@@ -20,26 +20,26 @@ project
    ;
 
 # tests, regression tests and examples
-build-project libs/numeric/odeint/test ;
-build-project libs/numeric/odeint/examples ;
-# build-project libs/numeric/odeint/performance ;
-# build-project libs/numeric/odeint/performance/openmp ;
-# build-project libs/numeric/odeint/performance/mpi ;
+build-project test ;
+# build-project examples ;
+# build-project performance ;
+# build-project openmp ;
+# build-project performance/mpi ;
 
 
 # additional tests with external libraries :
-# build-project libs/numeric/odeint/test_external/eigen ;
-# build-project libs/numeric/odeint/test_external/gmp ;
-# build-project libs/numeric/odeint/test_external/gsl ;
-# build-project libs/numeric/odeint/test_external/mkl ;
-# build-project libs/numeric/odeint/test_external/mtl4 ;
-# build-project libs/numeric/odeint/test_external/thrust ;
-# build-project libs/numeric/odeint/test_external/vexcl ;
-# build-project libs/numeric/odeint/test_external/mpi ;
+# build-project test_external/eigen ;
+# build-project test_external/gmp ;
+# build-project test_external/gsl ;
+# build-project test_external/mkl ;
+# build-project test_external/mtl4 ;
+# build-project test_external/thrust ;
+# build-project test_external/vexcl ;
+# build-project test_external/mpi ;
 
 
 # docs:
-# build-project libs/numeric/odeint/doc ;
+# build-project doc ;
 
 
 
