@@ -13,7 +13,7 @@ path-constant BOOST_ROOT : [ os.environ BOOST_ROOT ] ;
 
 project 
    : requirements 
-     <include>$(BOOST_ROOT)
+     <include>include&&$(BOOST_ROOT)
      <toolset>gcc:<cxxflags>"-Wall -Wno-unused-parameter -Wno-unused-variable -Wno-unknown-pragmas"
      <toolset>clang:<cxxflags>"-Wall -Wextra -Wno-unused-function -Wno-unused-parameter -Wno-unknown-pragmas"
      <toolset>intel:<cxxflags>"-ipo"
