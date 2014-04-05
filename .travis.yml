@@ -1,11 +1,8 @@
 language: cpp
 compiler:
   - gcc
-  - clang
-# Change this to your needs
-
-#before_script:
-#  - sudo apt-get -qq install valgrind boost-build
+# clang build takes too long - i dont know why
+#  - clang
 
 before_install:
  - wget http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2/download -O /tmp/boost.tar.bz2
@@ -19,5 +16,4 @@ before_install:
 
 
 script:
-# we build in release mode to speed up the built process
  - $BOOST_ROOT/b2 toolset=$CC$GCCVER

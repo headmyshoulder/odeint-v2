@@ -33,8 +33,8 @@ test-suite "odeint"
     [ run range_algebra.cpp ]
     [ run implicit_euler.cpp ]
 # disable in clang - travis build takes too long otherwise
-    [ run fusion_algebra.cpp : : : <toolset>clang:<build>no ]
-    [ run stepper_with_units.cpp : : : <toolset>clang:<build>no ]
+    [ run fusion_algebra.cpp ]
+    [ run stepper_with_units.cpp ]
     [ run stepper_copying.cpp ]
     [ run stepper_with_ranges.cpp ]
     [ run rosenbrock4.cpp ]
