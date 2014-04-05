@@ -93,7 +93,7 @@ size_t integrate_const(
         time = start_time + static_cast< typename unit_value_type<Time>::type >(step) * time_step;
     }
     obs( start_state , time );
-    
+
     return real_steps;
 }
 
