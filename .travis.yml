@@ -13,8 +13,8 @@ before_install:
  - mv boost_1_55_0 $HOME/boost-trunk
  - BOOST_ROOT="$HOME/boost-trunk"
 
- - cd $BOOST
+ - cd $BOOST_ROOT
  - ./bootstrap.sh
 
 script:
- - $BOOST/b2
+ - $BOOST_ROOT/b2
