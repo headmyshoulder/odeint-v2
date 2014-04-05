@@ -4,10 +4,13 @@ compiler:
   - clang
 # Change this to your needs
 
-before_install:
- - wget http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2/download
- - tar jxf download
- - mv boost_1_55_0 $HOME/boost-trunk
- - BOOST_ROOT="$HOME/boost-trunk"
+before_script:
+  - sudo apt-get -qq install valgrind boost-build
+
+#before_install:
+# - wget http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2/download
+# - tar jxf download
+# - mv boost_1_55_0 $HOME/boost-trunk
+# - BOOST_ROOT="$HOME/boost-trunk"
 
 script: ./bjam
