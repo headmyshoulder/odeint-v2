@@ -8,8 +8,7 @@ compiler:
 #  - sudo apt-get -qq install valgrind boost-build
 
 before_install:
- - wget
- http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2/download -O /tmp/boost.tar.bz2
+ - wget http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2/download -O /tmp/boost.tar.bz2
  - tar jxf /tmp/boost.tar.bz2
  - mv boost_1_55_0 $PWD/boost-trunk
  - export BOOST_ROOT="$PWD/boost-trunk"
