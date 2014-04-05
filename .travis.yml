@@ -19,4 +19,5 @@ before_install:
 
 
 script:
- - $BOOST_ROOT/b2 toolset=$CC$GCCVER
+# we build in release mode to speed up the built process
+ - $BOOST_ROOT/b2 release toolset=$CC$GCCVER
