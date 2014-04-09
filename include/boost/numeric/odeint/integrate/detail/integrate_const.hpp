@@ -79,21 +79,22 @@ size_t integrate_const(
     
     Time time = start_time;
     const Time time_step = dt;
+    int real_steps = 0;
     int step = 0;
     
     while( less_eq_with_sign( static_cast<Time>(time+time_step) , end_time , dt ) )
     {
         obs( start_state , time );
-        detail::integrate_adaptive( stepper , system , start_state , time , time+time_step , dt ,
+        real_steps += detail::integrate_adaptive( stepper , system , start_state , time , time+time_step , dt ,
                                     null_observer() , controlled_stepper_tag() );
         // direct computation of the time avoids error propagation happening when using time += dt
         // we need clumsy type analysis to get boost units working here
-        ++step;
+        step++;
         time = start_time + static_cast< typename unit_value_type<Time>::type >(step) * time_step;
     }
     obs( start_state , time );
-    
-    return step;
+
+    return real_steps;
 }
 
 

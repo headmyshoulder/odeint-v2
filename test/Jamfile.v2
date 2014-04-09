@@ -30,6 +30,7 @@ test-suite "odeint"
     [ run default_operations.cpp ]
     [ run range_algebra.cpp ]
     [ run implicit_euler.cpp ]
+# disable in clang - travis build takes too long otherwise
     [ run fusion_algebra.cpp ]
     [ run stepper_with_units.cpp ]
     [ run stepper_copying.cpp ]
