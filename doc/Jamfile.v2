@@ -52,16 +52,16 @@ else
 
 doxygen reference 
     :
-#    [ glob ../../../../boost/numeric/odeint/*.hpp ] 
-    [ glob ../../../../boost/numeric/odeint/stepper/*.hpp ]
-    [ glob ../../../../boost/numeric/odeint/stepper/base/*.hpp ]
-#    [ glob ../../../../boost/numeric/odeint/stepper/generation/*.hpp ]
-    [ glob ../../../../boost/numeric/odeint/integrate/*.hpp : ../../../../boost/numeric/odeint/integrate/null_observer.hpp ../../../../boost/numeric/odeint/integrate/observer_collection.hpp ]
-    [ glob ../../../../boost/numeric/odeint/iterator/*.hpp ]
-#    [ glob ../../../../boost/numeric/odeint/iterator/impl/*.hpp ]
-#    [ glob ../../../../boost/numeric/odeint/algebra/*.hpp ]
-#    [ glob ../../../../boost/numeric/odeint/util/*.hpp ]
-#    ../../../../boost/numeric/odeint.hpp
+#    [ glob ../include/boost/numeric/odeint/*.hpp ] 
+    [ glob ../include/boost/numeric/odeint/stepper/*.hpp ]
+    [ glob ../incude/boost/numeric/odeint/stepper/base/*.hpp ]
+#    [ glob ../include/boost/numeric/odeint/stepper/generation/*.hpp ]
+    [ glob ../include/boost/numeric/odeint/integrate/*.hpp : ../include/boost/numeric/odeint/integrate/null_observer.hpp ../include/boost/numeric/odeint/integrate/observer_collection.hpp ]
+    [ glob ../include/boost/numeric/odeint/iterator/*.hpp ]
+#    [ glob ../include/boost/numeric/odeint/iterator/impl/*.hpp ]
+#    [ glob ../include/boost/numeric/odeint/algebra/*.hpp ]
+#    [ glob ../include/boost/numeric/odeint/util/*.hpp ]
+#    ../include/boost/numeric/odeint.hpp
     : 
 
     # Lots of parameters passed to Doxygen. You can see these in the doxygen docs, or the Wizard Expert tab displays them.
