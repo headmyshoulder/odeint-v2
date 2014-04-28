@@ -73,6 +73,7 @@ test-suite "odeint"
     [ run times_time_iterator.cpp ]
     [ compile unwrap_boost_reference.cpp ]
     [ compile-fail unwrap_reference.cpp ]
+    [ run const_step_range.cpp ]
     : <testing.launcher>valgrind
     ;
 
