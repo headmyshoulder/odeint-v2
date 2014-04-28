@@ -8,6 +8,8 @@ before_install:
  - wget http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2/download -O /tmp/boost.tar.bz2
  - tar jxf /tmp/boost.tar.bz2
  - mv boost_1_55_0 $PWD/boost-trunk
+# patch the boost build system
+ - patch $PWD/boost-trunk/tools/build/v2/build/toolset.jam toolset.jam.patch
  - export BOOST_ROOT="$PWD/boost-trunk"
 
  - cd $BOOST_ROOT
