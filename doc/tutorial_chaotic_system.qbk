@@ -135,7 +135,7 @@ int system_length = 3;
 rk4( x , system_length , t , dt , lorenz );
 ``
 
-But odeint supports a similar and much more sophisticated concept:  __boost_range. To make the steppers and the system ready to work with __boost_range the system has to by changed:
+But odeint supports a similar and much more sophisticated concept:  __boost_range. To make the steppers and the system ready to work with __boost_range the system has to be changed:
 
 [system_function_without_perturbations]
 
