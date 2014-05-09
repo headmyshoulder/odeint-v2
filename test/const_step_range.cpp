@@ -19,6 +19,7 @@
 #include "dummy_odes.hpp"
 
 #include <boost/range/algorithm/for_each.hpp>
+#include <boost/range.hpp>
 
 #include <boost/config.hpp>
 #ifdef BOOST_MSVC
@@ -39,7 +40,7 @@ struct observer
     template< typename State >
     void operator()( State const& x ) const
     {
-        std::cout << x << std::endl;
+        std::cout << x[0] << std::endl;
     }
 };
 
@@ -57,11 +58,12 @@ BOOST_AUTO_TEST_CASE( test_case1 )
     stepper_type stepper;
     state_type state;
     system_type system;
-    range_type r( stepper , state , system , 0.0 , 10.0 , 0.01 );
     
+    
+    // range_type r( stepper , state , system , 0.0 , 10.0 , 0.01 );
+    
+    auto r = make_const_step_range( stepper , state , system , 0.0 , 10.0 , 0.01 );
     boost::for_each( r , observer() );
-    
-    
     
     BOOST_CHECK_EQUAL( 1 , 1 );
 }
