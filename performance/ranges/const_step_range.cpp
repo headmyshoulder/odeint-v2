@@ -184,16 +184,31 @@ struct test
 int main( int argc , char *argv[] )
 {
     std::cout.precision( 14 );
+    test< 3 >::run();
+    test< 4 >::run();
+    test< 5 >::run();
+    test< 6 >::run();
     test< 8 >::run();
+    test< 10 >::run();
+    test< 12 >::run();
+    test< 14 >::run();
     test< 16 >::run();
+    test< 20 >::run();
+    test< 24 >::run();
+    test< 28 >::run();
     test< 32 >::run();
+    test< 48 >::run();
     test< 64 >::run();
+    test< 96 >::run();
     test< 128 >::run();
+    test< 192 >::run();
     test< 256 >::run();
+    test< 384 >::run();
     test< 512 >::run();
     test< 1024 >::run();
     test< 2048 >::run();
     test< 4096 >::run();
+    test< 8192 >::run();
     
     return 0;
 }

@@ -223,6 +223,11 @@ int main( int argc , char *argv[] )
     test< 16384 >::run();
     test< 32768 >::run();
     test< 65536 >::run();
+    test< 131072 >::run();
+    test< 262144 >::run();
+    test< 524288 >::run();
+    test< 1048576 >::run();
+    test< 2097152 >::run();
     
     return 0;
 }
