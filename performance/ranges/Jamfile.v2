@@ -1,0 +1,15 @@
+# Copyright 2014 Mario Mulansky
+# Copyright 2014 Karsten Ahnert
+# Distributed under the Boost Software License, Version 1.0. (See
+# accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+
+project
+    : requirements
+      <include>../../../../../include
+      <include>..
+    ;
+
+exe const_step_range : const_step_range.cpp : <cxxflags>-std=c++11  ;
+exe integrate_test : integrate_test.cpp : <cxxflags>-std=c++11 ;

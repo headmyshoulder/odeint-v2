@@ -22,7 +22,7 @@ struct phase_lattice
 
     phase_lattice() : m_epsilon( 6.0/(N*N) ) // should be < 8/N^2 to see phase locking
     {
-        for( size_t i=1 ; i<N-1 ; ++i )
+        for( size_t i=0 ; i<N ; ++i )
             m_omega[i] = m_epsilon*(N-i);
     }
 
@@ -33,11 +33,11 @@ struct phase_lattice
         for( size_t i=0 ; i<N-1 ; ++i )
         {
             dxdt[i] = m_omega[i] + c;
-            c = ( x[i+1] - x[i] );
+            c = x[i+1] - x[i];
             dxdt[i] += c;
         }
 
-        //dxdt[N-1] = m_omega[N-1] + sin( x[N-1] - x[N-2] );
+        dxdt[N-1] = m_omega[N-1] + x[N-1] - x[N-2];
     }
 
 };
