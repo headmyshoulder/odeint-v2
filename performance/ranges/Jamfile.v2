@@ -11,5 +11,6 @@ project
       <include>..
     ;
 
-exe const_step_range : const_step_range.cpp : <cxxflags>-std=c++11  ;
+exe const_step_range : const_step_range.cpp : <cxxflags>-std=c++11 ;
+exe const_step_range_vector : const_step_range_vector.cpp : <cxxflags>-std=c++11 ;
 exe integrate_test : integrate_test.cpp : <cxxflags>-std=c++11 ;
