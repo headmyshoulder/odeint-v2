@@ -75,7 +75,7 @@ struct test_range
     {
         state_type x( N );
         ic( x );
-        boost::for_each( odeint::make_const_step_range(
+        boost::for_each( odeint::range::make_const_step_range(
             odeint::runge_kutta4< state_type > {} ,
             x ,
             phase_lattice { N } , 

@@ -49,7 +49,7 @@ struct test_range
 
         state_type x;
         ic( x );
-        boost::for_each( odeint::make_const_step_range(
+        boost::for_each( odeint::range::make_const_step_range(
             odeint::runge_kutta4< state_type > {} ,
             x ,
             phase_lattice< N > {} , 
@@ -159,8 +159,29 @@ struct test_integrate
                                  x , 0.0 , 100.0 , 0.01 , empty_observer {} );
         return x[0];
     }
-
 };
+
+template< size_t N >
+struct test_range_reference_wrapper
+{
+    static double run( void )
+    {
+        typedef phase_lattice< N > system_type;
+        typedef typename system_type::state_type state_type;
+
+        state_type x;
+        ic( x );
+        odeint::runge_kutta4< state_type > stepper {};
+        phase_lattice< N > sys {};
+        boost::for_each( odeint::range::make_const_step_range(
+            boost::ref( stepper ) ,
+            x ,
+            boost::ref( sys ), 
+            0.0 , 100.0 , 0.01 ) , empty_observer {} );
+        return x[0];
+    }
+};
+
 
 template< size_t N >
 struct test
@@ -173,9 +194,10 @@ struct test
         auto res3 = tester( test_raw< N > {} , 10 );
         auto res4 = tester( test_integrate< N > {} , 10 );
         auto res5 = tester( test_n_step_iterator_range< N > {} , 10 );
+        auto res6 = tester( test_range_reference_wrapper< N > {} , 10 );
         std::cout << N << " "
-                  << res0.first << " " << res1.first << " " << res2.first << " " << res3.first << " " << res4.first << " " << res5.first << " "
-                  << res0.second << " " << res1.second << " " << res2.second << " " << res3.second << " " << res4.second << " " << res5.second
+                  << res0.first << " " << res1.first << " " << res2.first << " " << res3.first << " " << res4.first << " " << res5.first << " " << res6.first << " "
+                  << res0.second << " " << res1.second << " " << res2.second << " " << res3.second << " " << res4.second << " " << res5.second << " " << res6.second
                   << std::endl;
     }
 };

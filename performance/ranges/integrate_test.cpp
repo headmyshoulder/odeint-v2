@@ -74,7 +74,7 @@ struct test_range
         state_type x;
         ic( x );
         std::ofstream fout( "dat/range.dat" );
-        boost::for_each( odeint::make_const_step_range(
+        boost::for_each( odeint::range::make_const_step_range(
             odeint::runge_kutta4< state_type > {} ,
             x ,
             phase_lattice< N > {} , 

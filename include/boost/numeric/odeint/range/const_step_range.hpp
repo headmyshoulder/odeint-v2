@@ -28,7 +28,7 @@
 namespace boost {
 namespace numeric {
 namespace odeint {
-    
+namespace range {    
     
 template< typename Stepper , typename State , typename System , typename Time >
 class const_step_range
@@ -139,7 +139,7 @@ make_const_step_range( Stepper stepper , State &x , System system , Time start_t
 
 
 
-
+} // namespace range
 } // namespace odeint
 } // namespace numeric
 } // namespace boost
@@ -208,7 +208,6 @@ range_end( const_step_range< Stepper , State , System , Time > const& x )
     typedef typename range_type::const_step_iterator iterator;
     return iterator( x , false );
 }
-
 
 } // namespace odeint
 } // namespace numeric
