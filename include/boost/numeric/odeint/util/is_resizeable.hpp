@@ -29,14 +29,16 @@
 #include <boost/mpl/find_if.hpp>
 #include <boost/mpl/end.hpp>
 #include <boost/mpl/placeholders.hpp>
-// #include <boost/mpl/not.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_same.hpp>
 
 namespace boost {
 namespace numeric {
 namespace odeint {
-    
+   
+/*
+ * by default any type is not resizable
+ */
 template< typename Container , typename Enabler = void >
 struct is_resizeable_sfinae : boost::false_type {};
 
@@ -44,31 +46,16 @@ template< typename Container >
 struct is_resizeable : is_resizeable_sfinae< Container > {};
 
 
-// /*
-//  * by default any type is not resizable
-//  */
-// template< class Container , class Enabler = void >
-// struct is_resizeable
-// {
-//     //struct type : public boost::false_type { };
-//     typedef boost::false_type type;
-//     const static bool value = type::value;
-// };
 
 /*
  * specialization for std::vector
  */
 template< class V, class A >
 struct is_resizeable< std::vector< V , A  > > : boost::true_type {};
-// {
-//     //struct type : public boost::true_type { };
-//     typedef boost::true_type type;
-//     const static bool value = type::value;
-// };
 
 
 /*
- * specialization for fusion sequences
+ * sfinae specialization for fusion sequences
  */
 template< typename FusionSequence >
 struct is_resizeable_sfinae<
