@@ -16,21 +16,22 @@ use-project boost : $(BOOST_ROOT) ;
 local NT2_ROOT = [ os.environ NT2_ROOT ] ;
 
 project
-    : requirements
-      <library>/boost/test/boost_unit_test_framework
-      <define>BOOST_ALL_NO_LIB=1
-      <include>../../../../..
-      <include>$(NT2_ROOT)/include/
-      <link>static
-      <cxxflags>-DBOOST_SIMD_NO_STRICT_ALIASING
-      <cxxflags>-fno-strict-aliasing
-    ;
+  : requirements
+    <library>$(BOOST_ROOT)/boost/test/included/unit_test_framework.hpp
+    <define>BOOST_ALL_NO_LIB=1
+    <include>../../../../..
+    <include>$(NT2_ROOT)/include/
+    <link>static
+    <cxxflags>-DBOOST_SIMD_NO_STRICT_ALIASING
+    <cxxflags>-fno-strict-aliasing
+  ;
 
 test-suite "odeint"
-    :
+  :
     [ compile copy.cpp ]
     [ compile norm_inf.cpp ]
     [ compile resize.cpp ]
+    [ compile is_resizeable.cpp ]
     [ compile algebra_dispatcher.cpp ]
     : <testing.launcher>valgrind
-    ;
+  ;
