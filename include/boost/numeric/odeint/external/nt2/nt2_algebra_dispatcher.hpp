@@ -12,6 +12,9 @@
 
 #include <nt2/table.hpp>
 
+#include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
+#include <boost/numeric/odeint/algebra/algebra_dispatcher.hpp>
+
 namespace boost { namespace numeric { namespace odeint {
 template<typename T, typename S>
 struct algebra_dispatcher<nt2::container::table<T,S> >
