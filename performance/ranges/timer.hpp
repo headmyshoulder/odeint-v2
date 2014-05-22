@@ -30,7 +30,7 @@ class timer
     template< class T >
     static inline double get_seconds( T t )
     {
-        return double( std::chrono::duration_cast< std::chrono::nanoseconds >( t ).count() ) * 1.0e-6;
+        return double( std::chrono::duration_cast< std::chrono::nanoseconds >( t ).count() ) * 1.0e-9;
     }
 
 public:
