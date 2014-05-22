@@ -11,6 +11,12 @@ use-project boost : $(BOOST_ROOT) ;
 
 import os ;
 
+# This must be built using an NT2 installation.
+# NT2_ROOT should point to the build directory.
+# Currently, cxxflags needs to be set to the required architecture
+# if using avx/avx2.
+# If using sse2/3/4 in 64 bits, this is set automatically.
+
 local NT2_ROOT = [ os.environ NT2_ROOT ] ;
 
 project
@@ -21,7 +27,7 @@ project
     <link>static
     <cxxflags>-DBOOST_SIMD_NO_STRICT_ALIASING
     <cxxflags>-fno-strict-aliasing
-    #<cxxflags>-mavx2 need to find a way to detect hardware
+    #<cxxflags>-mavx2
   ;
 
 exe phase_oscillator_ensemble : phase_oscillator_ensemble.cpp ;
