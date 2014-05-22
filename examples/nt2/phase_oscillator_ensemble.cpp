@@ -1,15 +1,13 @@
-/*
- * phase_oscillator_ensemble.cpp
- *
- * Demonstrates the phase transition from an unsynchronized to an synchronized state.
- *
- * Copyright 2011-2012 Karsten Ahnert
- * Copyright 2011-2012 Mario Mulansky
- * Distributed under the Boost Software License, Version 1.0. (See
- * accompanying file LICENSE_1_0.txt or copy at
- * http://www.boost.org/LICENSE_1_0.txt)
- *
- */
+//==============================================================================
+//         Copyright 2011-2014     Karsten Ahnert
+//         Copyright 2011-2014     Mario Mulansky
+//         Copyright 2014          LRI    UMR 8623 CNRS/Univ Paris Sud XI
+//         Copyright 2014          NumScale SAS
+//
+//          Distributed under the Boost Software License, Version 1.0.
+//                 See accompanying file LICENSE.txt or copy at
+//                     http://www.boost.org/LICENSE_1_0.txt
+//==============================================================================
 
 #include <iostream>
 #include <utility>
@@ -124,7 +122,7 @@ struct test_ode_table
 
   void operator()()
   {
-    for( T epsilon = 0.0 ; epsilon < 0.5 ; epsilon += 0.1 )
+    for( T epsilon = 0.0 ; epsilon < 5.0 ; epsilon += 0.1 )
     {
       ensemble.set_epsilon( epsilon );
       obs.reset();
