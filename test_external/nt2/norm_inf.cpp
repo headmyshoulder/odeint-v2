@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_SUITE( nt2_norm_inf )
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_norm_inf, T, fp_types )
 {
-  nt2::table<T> x = nt2::ones(10, nt2::meta::as_<T>() );
+  nt2::table<T> x = nt2::ones(1,10, nt2::meta::as_<T>() );
   x(4) = 55;
 
   nt2::table<T> y = nt2::zeros(8,8, nt2::meta::as_<T>() );
