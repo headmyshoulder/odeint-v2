@@ -1,6 +1,6 @@
 //==============================================================================
 //         Copyright 2014          LRI    UMR 8623 CNRS/Univ Paris Sud XI
-//         Copyright 2014          NUmScale SAS
+//         Copyright 2014          NumScale SAS
 //
 //          Distributed under the Boost Software License, Version 1.0.
 //                 See accompanying file LICENSE.txt or copy at
@@ -9,7 +9,9 @@
 #ifndef BOOST_NUMERIC_ODEINT_EXTERNAL_NT2_NT2_RESIZE_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_EXTERNAL_NT2_NT2_RESIZE_HPP_INCLUDED
 
-#include <nt2/table.hpp>
+#include <nt2/core/container/table/table.hpp>
+
+#include <boost/numeric/odeint/util/same_size.hpp>
 
 namespace boost { namespace numeric { namespace odeint {
 
@@ -21,22 +23,28 @@ struct is_resizeable< nt2::container::table<T,S> >
 };
 
 template<typename T, typename S>
-struct same_size_impl< nt2::container::table<T,S> , nt2::container::table<T,S> >
+struct same_size_impl< nt2::container::table<T,S>
+                     , nt2::container::table<T,S>
+                     >
 {
-  static bool same_size( const nt2::container::table<T,S> &v1 ,
-                         const nt2::container::table<T,S> &v2 )
+  static bool same_size ( const nt2::container::table<T,S> &v1
+                        , const nt2::container::table<T,S> &v2
+                        )
   {
-    return v1.size() == v2.size();
+    return v1.extent() == v2.extent();
   }
 };
 
 template<typename T, typename S>
-struct resize_impl< nt2::container::table<T,S> , nt2::container::table<T,S> >
+struct resize_impl< nt2::container::table<T,S>
+                  , nt2::container::table<T,S>
+                  >
 {
-  static void resize( nt2::container::table<T,S> &v1 ,
-                      const nt2::container::table<T,S> &v2 )
+  static void resize ( nt2::container::table<T,S> &v1
+                     , const nt2::container::table<T,S> &v2
+                     )
   {
-    v1.resize( nt2::of_size(v2.size() ));
+    v1.resize( v2.extent() );
   }
 };
 } } }

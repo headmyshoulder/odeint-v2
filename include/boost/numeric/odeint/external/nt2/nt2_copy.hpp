@@ -10,14 +10,20 @@
 #ifndef BOOST_NUMERIC_ODEINT_EXTERNAL_NT2_NT2_COPY_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_EXTERNAL_NT2_NT2_COPY_HPP_INCLUDED
 
-#include <nt2/table.hpp>
+#include <nt2/core/container/table/table.hpp>
+
+#include <boost/numeric/odeint/util/copy.hpp>
 
 namespace boost { namespace numeric { namespace odeint {
 
 template<typename T, typename S>
-struct copy_impl<nt2::container::table<T,S> , nt2::container::table<T,S> >
+struct copy_impl< nt2::container::table<T,S>
+                , nt2::container::table<T,S>
+                >
 {
-  static void copy(const nt2::container::table<T,S> &v1, nt2::container::table<T,S> &v2)
+  static void copy ( const nt2::container::table<T,S> &v1
+                   , nt2::container::table<T,S> &v2
+                   )
   {
     v2 = v1;
   }
