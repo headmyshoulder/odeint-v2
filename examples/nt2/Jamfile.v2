@@ -14,10 +14,12 @@ import os ;
 # This must be built using an NT2 installation.
 # NT2_ROOT should point to the build directory.
 # Currently, cxxflags needs to be set to the required architecture
-# if using avx/avx2.
+# if using avx/avx2, set the environemnt variable NT2_SIMD_FLAGS to the
+# required value for your compiler (i.e. -mavx2 on g++)
 # If using sse2/3/4 in 64 bits, this is set automatically.
 
 local NT2_ROOT = [ os.environ NT2_ROOT ] ;
+local NT2_SIMD_FLAGS = [ os.environ NT2_SIMD_FLAGS ] ;
 
 project
   : requirements
@@ -25,9 +27,9 @@ project
     <include>../../../../..
     <include>$(NT2_ROOT)/include/
     <link>static
-    <cxxflags>-DBOOST_SIMD_NO_STRICT_ALIASING
-    <cxxflags>-fno-strict-aliasing
-    #<cxxflags>-mavx2
+    <toolset>gcc:<cxxflags>-DBOOST_SIMD_NO_STRICT_ALIASING
+    <toolset>gcc:<cxxflags>-fno-strict-aliasing
+    <cxxflags>${NT2_SIMD_FLAGS}
   ;
 
 exe phase_oscillator_ensemble : phase_oscillator_ensemble.cpp ;
