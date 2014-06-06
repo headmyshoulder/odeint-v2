@@ -1,7 +1,6 @@
 //==============================================================================
-//         Copyright 2014          LASMEA UMR 6602 CNRS/Univ. Clermont II
 //         Copyright 2014          LRI    UMR 8623 CNRS/Univ Paris Sud XI
-//         Copyright 2014          MetaScale SAS
+//         Copyright 2014          NumScale SAS
 //
 //          Distributed under the Boost Software License, Version 1.0.
 //                 See accompanying file LICENSE.txt or copy at
@@ -12,20 +11,31 @@
 
 #include <nt2/core/container/table/table.hpp>
 #include <nt2/include/functions/globalmax.hpp>
+#include <nt2/include/functions/isvector.hpp>
+#include <nt2/include/functions/asum1.hpp>
 #include <nt2/include/functions/abs.hpp>
 
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 
-namespace boost { namespace numeric { namespace odeint {
-template<typename T, typename S>
-struct vector_space_norm_inf<nt2::container::table<T,S> >
+namespace boost { namespace numeric { namespace odeint
 {
-  typedef T result_type;
-  result_type operator()(const nt2::container::table<T,S> &v1) const
+  template<typename T, typename S>
+  struct vector_space_norm_inf<nt2::container::table<T,S> >
   {
-    return nt2::globalmax(nt2::abs(v1));
-  }
-};
+    //typedef T result_type;
+    typedef T result_type;
+    result_type operator()(const nt2::container::table<T,S> &v1) const
+    {
+      if (isvector(v1))
+      {
+        return nt2::globalmax(nt2::abs(v1));
+      }
+      else
+      {
+        return nt2::globalmax(nt2::asum1(v1, 2));
+      }
+    }
+  };
 } } }
 
 #endif
