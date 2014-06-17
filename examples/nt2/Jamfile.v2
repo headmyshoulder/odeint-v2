@@ -29,7 +29,7 @@ project
     <link>static
     <toolset>gcc:<cxxflags>-DBOOST_SIMD_NO_STRICT_ALIASING
     <toolset>gcc:<cxxflags>-fno-strict-aliasing
-    <cxxflags>${NT2_SIMD_FLAGS}
+    <cxxflags>$(NT2_SIMD_FLAGS)
   ;
 
 exe phase_oscillator_ensemble : phase_oscillator_ensemble.cpp ;
