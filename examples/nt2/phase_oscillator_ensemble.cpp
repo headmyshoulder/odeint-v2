@@ -29,6 +29,7 @@
 #include <nt2/include/functions/sum.hpp>
 #include <nt2/include/functions/mean.hpp>
 #include <nt2/arithmetic/include/functions/hypot.hpp>
+#include <nt2/include/functions/tie.hpp>
 
 #include <boost/numeric/odeint/external/nt2/nt2_algebra_dispatcher.hpp>
 
@@ -39,10 +40,10 @@ using namespace boost::numeric::odeint;
 template <typename container_type, typename T>
 pair< T, T > calc_mean_field( const container_type &x )
 
-{ T cos_sum = 0.0 , sin_sum = 0.0;
+{
+  T cos_sum = 0.0 , sin_sum = 0.0;
 
-  cos_sum = nt2::mean( nt2::cos(x) );
-  sin_sum = nt2::mean( nt2::sin(x) );
+  nt2::tie(cos_sum,sin_sum) = nt2::tie(nt2::mean( nt2::cos(x) ), nt2::mean( nt2::sin(x) ));
 
   T K = nt2::hypot(sin_sum,cos_sum);
   T Theta = nt2::atan2( sin_sum , cos_sum );
