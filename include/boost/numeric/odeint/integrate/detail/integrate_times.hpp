@@ -22,6 +22,7 @@
 #include <stdexcept>
 
 #include <boost/config.hpp>
+#include <boost/throw_exception.hpp>
 #include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/util/detail/less_with_sign.hpp>
@@ -106,7 +107,7 @@ size_t integrate_times(
                 ++fail_steps;
                 dt = current_dt;
             }
-            if( fail_steps == max_attempts ) throw std::overflow_error( error_string );
+            if( fail_steps == max_attempts ) BOOST_THROW_EXCEPTION( std::overflow_error( error_string ));
         }
     }
     return steps;
