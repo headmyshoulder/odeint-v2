@@ -39,12 +39,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_norm_inf, T, fp_types )
   nt2::table<T> y = nt2::zeros(8,8, nt2::meta::as_<T>() );
   y(6,4) = -42;
 
-  nt2::table<T> z = nt2::ones(1,10, nt2::meta::as_<T>() );
-  z(4) = 55;
-
   BOOST_CHECK_SMALL(vector_space_norm_inf<nt2::table<T> >()(x) - T(55), T(1e-10));
   BOOST_CHECK_SMALL(vector_space_norm_inf<nt2::table<T> >()(y) - T(42), T(1e-10));
-  BOOST_CHECK_SMALL(vector_space_norm_inf<nt2::table<T> >()(z) - T(64), T(1e-10));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

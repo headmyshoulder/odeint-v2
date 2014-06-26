@@ -10,7 +10,8 @@
 #define BOOST_NUMERIC_ODEINT_EXTERNAL_NT2_NT2_NORM_INF_HPP_INCLUDED
 
 #include <nt2/core/container/table/table.hpp>
-#include <nt2/include/functions/mnorminf.hpp>
+#include <nt2/include/functions/globalmax.hpp>
+#include <nt2/include/functions/abs.hpp>
 
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 
@@ -22,7 +23,7 @@ namespace boost { namespace numeric { namespace odeint
     typedef T result_type;
     result_type operator()(const nt2::container::table<T,S> &v1) const
     {
-      return mnorminf(v1);
+      return nt2::globalmax(nt2::abs(v1));
     }
   };
 } } }
