@@ -34,13 +34,16 @@
 namespace boost {
 namespace numeric {
 namespace odeint {
-
+    
 template< class StateType , class Enabler = void >
-struct algebra_dispatcher
+struct algebra_dispatcher_sfinae
 {
-    //  range_algebra is the standard algebra
+    //  range_algebra is the standard algebra^
     typedef range_algebra algebra_type;
 };
+
+template< class StateType >
+struct algebra_dispatcher : algebra_dispatcher_sfinae< StateType > { };
 
 //specialize for array
 template< class T , size_t N >
@@ -51,7 +54,7 @@ struct algebra_dispatcher< boost::array< T , N > >
 
 //specialize for some integral types
 template< typename T >
-struct algebra_dispatcher< T , typename boost::enable_if< typename boost::is_floating_point< T >::type >::type >
+struct algebra_dispatcher_sfinae< T , typename boost::enable_if< typename boost::is_floating_point< T >::type >::type >
 {
     typedef vector_space_algebra algebra_type;
 };
