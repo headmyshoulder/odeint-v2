@@ -67,7 +67,7 @@ struct is_resizeable_multi_array< boost::multi_array< V , Dim , A > >
 
 
 template< typename T  >
-struct is_resizeable_sfinae< T , typename boost::enable_if< typename is_resizeable_multi_array< T >::type >::type >
+struct is_resizeable< T , typename boost::enable_if< typename is_resizeable_multi_array< T >::type >::type >
 {
     typedef boost::true_type type;
     const static bool value = type::value;
@@ -78,7 +78,7 @@ struct is_resizeable_sfinae< T , typename boost::enable_if< typename is_resizeab
 
 
 template< typename T1 , typename T2  >
-struct same_size_impl_sfinae< T1 , T2 ,
+struct same_size_impl< T1 , T2 ,
                        typename boost::enable_if<
                            typename boost::mpl::and_< 
                                is_multi_array< T1 > ,
@@ -100,7 +100,7 @@ struct same_size_impl_sfinae< T1 , T2 ,
 
 
 template< typename T1 , typename T2 >
-struct resize_impl_sfinae< T1 , T2 ,
+struct resize_impl< T1 , T2 ,
                     typename boost::enable_if<
                         typename boost::mpl::and_<
                             is_resizeable_multi_array< T1 > ,

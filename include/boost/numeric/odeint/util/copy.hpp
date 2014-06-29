@@ -46,28 +46,17 @@ namespace detail {
 } // namespace detail
 
 
-
 /*
  * Default implementation of the copy operation used the assign operator
  * gsl_vector must copied differently
  */
-template< class Container1 , class Container2 , class Enabler = void >
-struct copy_impl_sfinae
+template< class Container1, class Container2 , class Enabler = void >
+struct copy_impl
 {
     static void copy( const Container1 &from , Container2 &to )
     {
         typedef typename boost::numeric::odeint::detail::is_range< Container1 >::type is_range_type;
         detail::do_copying( from , to , is_range_type() );
-    }
-
-};
-
-template< class Container1, class Container2 >
-struct copy_impl
-{
-    static void copy( const Container1 &from , Container2 &to )
-    {
-        copy_impl_sfinae< Container1 , Container2 >::copy( from , to );
     }
 };
 

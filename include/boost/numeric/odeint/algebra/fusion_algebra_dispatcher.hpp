@@ -32,7 +32,7 @@ namespace odeint {
 
 // specialization for fusion sequences
 template< class FusionSequence >
-struct algebra_dispatcher_sfinae< FusionSequence ,
+struct algebra_dispatcher< FusionSequence ,
                            typename boost::enable_if<
                                typename boost::fusion::traits::is_sequence< FusionSequence >::type >::type >
 {

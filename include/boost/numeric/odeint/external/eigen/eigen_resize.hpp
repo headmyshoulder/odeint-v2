@@ -35,7 +35,7 @@ namespace odeint {
 
 
 template< class Derived >
-struct is_resizeable_sfinae< Derived ,
+struct is_resizeable< Derived ,
                       typename boost::enable_if< typename boost::is_base_of< Eigen::MatrixBase< Derived > , Derived >::type >::type >
 { 
     typedef boost::true_type type;
@@ -44,7 +44,7 @@ struct is_resizeable_sfinae< Derived ,
 
 
 template < class Derived  >
-struct is_resizeable_sfinae< Derived ,
+struct is_resizeable< Derived ,
                       typename boost::enable_if< typename boost::is_base_of< Eigen::ArrayBase< Derived > , Derived >::type >::type >
 { 
     typedef boost::true_type type;
@@ -54,7 +54,7 @@ struct is_resizeable_sfinae< Derived ,
 
 
 template< class Derived >
-struct same_size_impl_sfinae< Derived , Derived ,
+struct same_size_impl< Derived , Derived ,
                        typename boost::enable_if< typename boost::is_base_of< Eigen::MatrixBase< Derived > , Derived >::type >::type >
 {
     static bool same_size( const Eigen::MatrixBase< Derived > &m1 , const Eigen::MatrixBase< Derived > &m2 )
@@ -65,7 +65,7 @@ struct same_size_impl_sfinae< Derived , Derived ,
 };
 
 template< class Derived  >
-struct same_size_impl_sfinae< Derived , Derived ,
+struct same_size_impl< Derived , Derived ,
                        typename boost::enable_if< typename boost::is_base_of< Eigen::ArrayBase< Derived > , Derived >::type >::type >
 {
     static bool same_size( const Eigen::ArrayBase< Derived > &v1 , const Eigen::ArrayBase< Derived >  &v2 )
@@ -78,7 +78,7 @@ struct same_size_impl_sfinae< Derived , Derived ,
 
 
 template< class Derived >
-struct resize_impl_sfinae< Derived , Derived ,
+struct resize_impl< Derived , Derived ,
                     typename boost::enable_if< typename boost::is_base_of< Eigen::MatrixBase< Derived > , Derived >::type >::type >
 {
     static void resize( Eigen::MatrixBase< Derived > &m1 , const Eigen::MatrixBase< Derived > &m2 )
@@ -88,7 +88,7 @@ struct resize_impl_sfinae< Derived , Derived ,
 };
 
 template< class Derived >
-struct resize_impl_sfinae< Derived , Derived ,
+struct resize_impl< Derived , Derived ,
                     typename boost::enable_if< typename boost::is_base_of< Eigen::ArrayBase< Derived > , Derived >::type >::type >
 {
     static void resize( Eigen::ArrayBase< Derived > &v1 , const Eigen::ArrayBase< Derived > &v2 )

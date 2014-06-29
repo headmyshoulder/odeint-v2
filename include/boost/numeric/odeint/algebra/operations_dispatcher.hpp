@@ -22,15 +22,13 @@
 namespace boost {
 namespace numeric {
 namespace odeint {
-    
+
 template< class StateType , class Enabler = void >
-struct operations_dispatcher_sfinae
+struct operations_dispatcher
 {
+    //  default_operations are the standard operations
     typedef default_operations operations_type;
 };
-
-template< class StateType >
-struct operations_dispatcher : operations_dispatcher_sfinae< StateType > {};
 
 // no further specializations required
 
