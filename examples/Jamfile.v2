@@ -43,6 +43,8 @@ exe molecular_dynamics_cells : molecular_dynamics_cells.cpp : <cxxflags>-std=c++
 exe abm_precision : abm_precision.cpp ;
 exe integrate_times : integrate_times.cpp ;  
 
+exe const_step_forward_range : const_step_forward_range.cpp : <cxxflags>-std=c++11 ;
+
 build-project multiprecision ;
 # build-project mtl ;
 # build-project ublas ;
