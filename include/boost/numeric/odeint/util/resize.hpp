@@ -33,15 +33,25 @@
 namespace boost {
 namespace numeric {
 namespace odeint {
-
-// resize function
-// standard implementation relies on boost.range and resize member function
+    
+    
 template< class StateOut , class StateIn , class Enabler = void >
-struct resize_impl
+struct resize_impl_sfinae
 {
     static void resize( StateOut &x1 , const StateIn &x2 )
     {
         x1.resize( boost::size( x2 ) );
+    }
+};
+
+// resize function
+// standard implementation relies on boost.range and resize member function
+template< class StateOut , class StateIn >
+struct resize_impl
+{
+    static void resize( StateOut &x1 , const StateIn &x2 )
+    {
+        resize_impl_sfinae< StateOut , StateIn >::resize( x1 , x2 );
     }
 };
 
@@ -85,7 +95,8 @@ namespace detail {
  * specialization for fusion sequences
  */
 template< class FusionSeq >
-struct resize_impl< FusionSeq , FusionSeq , typename boost::enable_if< typename boost::fusion::traits::is_sequence< FusionSeq >::type >::type >
+struct resize_impl_sfinae< FusionSeq , FusionSeq ,
+    typename boost::enable_if< typename boost::fusion::traits::is_sequence< FusionSeq >::type >::type >
 {
     static void resize( FusionSeq &x1 , const FusionSeq &x2 )
     {
