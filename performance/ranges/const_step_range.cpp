@@ -182,6 +182,29 @@ struct test_range_reference_wrapper
     }
 };
 
+template< size_t N >
+struct test_raw_reference_wrapper
+{
+    static double run( void )
+    {
+        typedef phase_lattice< N > system_type;
+        typedef typename system_type::state_type state_type;
+
+        state_type x;
+        ic( x );
+        double t = 0.0;
+        odeint::runge_kutta4< state_type > stepper;
+        phase_lattice< N > sys {};
+        while( t < 100.0 )
+        {
+            stepper.do_step( boost::ref( sys ) , x , t , 0.01 );
+            t += 0.01;
+        }
+        return x[0];
+    }
+};
+
+
 
 template< size_t N >
 struct test
@@ -195,9 +218,10 @@ struct test
         auto res4 = tester( test_integrate< N > {} , 10 );
         auto res5 = tester( test_n_step_iterator_range< N > {} , 10 );
         auto res6 = tester( test_range_reference_wrapper< N > {} , 10 );
+        auto res7 = tester( test_raw_reference_wrapper< N > {} , 10 );
         std::cout << N << " "
-                  << res0.first << " " << res1.first << " " << res2.first << " " << res3.first << " " << res4.first << " " << res5.first << " " << res6.first << " "
-                  << res0.second << " " << res1.second << " " << res2.second << " " << res3.second << " " << res4.second << " " << res5.second << " " << res6.second
+                  << res0.first << " " << res1.first << " " << res2.first << " " << res3.first << " " << res4.first << " " << res5.first << " " << res6.first << " " << res7.first << " " 
+                  << res0.second << " " << res1.second << " " << res2.second << " " << res3.second << " " << res4.second << " " << res5.second << " " << res6.second << " " << res7.second
                   << std::endl;
     }
 };
