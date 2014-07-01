@@ -21,6 +21,8 @@
 
 #include <stdexcept>
 
+#include <boost/throw_exception.hpp>
+
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_const.hpp>
@@ -103,7 +105,7 @@ size_t integrate_adaptive(
             ++trials;
         }
         while( ( res == fail ) && ( trials < max_attempts ) );
-        if( trials == max_attempts ) throw std::overflow_error( error_string );
+        if( trials == max_attempts ) BOOST_THROW_EXCEPTION( std::overflow_error( error_string ) );
 
         ++count;
     }
