@@ -20,6 +20,7 @@
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_same.hpp>
+#include <boost/throw_exception.hpp>
 
 #include <boost/numeric/odeint/util/unit_helper.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
@@ -121,7 +122,7 @@ namespace odeint {
                 while( ( res == fail ) && ( trials < max_attempts ) );
                 if( trials == max_attempts )
                 {
-                    throw std::overflow_error( "Adaptive iterator : Maximal number of iterations reached. A step size could not be found." );
+                    BOOST_THROW_EXCEPTION( std::overflow_error( "Adaptive iterator : Maximal number of iterations reached. A step size could not be found." ));
                 }
             } else {
                 this->m_at_end = true;
