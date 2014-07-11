@@ -1,7 +1,6 @@
 language: cpp
 compiler:
   - gcc
-# clang build takes too long - i dont know why
   - clang
 
 before_install:
@@ -19,5 +18,5 @@ before_install:
 
 script:
  - travis_wait $BOOST_ROOT/b2 toolset=$CC$GCCVER
-# build in c++11 mode
- - travis_wait $BOOST_ROOT/b2 -a toolset=$CC$GCCVER cxxflags="-std=c++0x"
+# build in c++11 mode only with gcc
+ - if [ "$CXX" = "g++" ]; then travis_wait $BOOST_ROOT/b2 -a toolset=$CC$GCCVER cxxflags="-std=c++0x"; fi
