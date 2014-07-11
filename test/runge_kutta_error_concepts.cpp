@@ -87,11 +87,17 @@ struct perform_error_stepper_test
         vector_space_type x , xerr;
         x = 2.0;
         Stepper stepper;
+        constant_system_functor_vector_space sys;
+#ifndef _MSC_VER
+        // dont run this for MSVC due to compiler bug 697006
         check_error_stepper_concept( stepper ,
                                      constant_system_vector_space< vector_space_type , vector_space_type , typename Stepper::time_type > ,
                                      x ,
                                      xerr );
-        check_error_stepper_concept( stepper , boost::cref( constant_system_functor_vector_space() ) , x , xerr );
+#else
+        check_error_stepper_concept( stepper , boost::cref( sys ) , x , xerr );
+#endif
+        check_error_stepper_concept( stepper , boost::cref( sys ) , x , xerr );
 
         BOOST_CHECK_MESSAGE( (abs( x - result )) < eps , x );
     }
@@ -106,8 +112,14 @@ struct perform_error_stepper_test< Stepper , std::vector<T> >
         using std::abs;
         vector_type x( 1 , 2.0 ) , xerr( 1 );
         Stepper stepper;
+        constant_system_functor_standard sys;
+#ifndef _MSC_VER
+        // dont run this for MSVC due to compiler bug 697006
         check_error_stepper_concept( stepper , constant_system_standard< vector_type , vector_type , typename Stepper::time_type > , x , xerr );
-        check_error_stepper_concept( stepper , boost::cref( constant_system_functor_standard() ) , x , xerr );
+#else
+        check_error_stepper_concept( stepper , boost::cref( sys ) , x , xerr );
+#endif
+        check_error_stepper_concept( stepper , boost::cref( sys ) , x , xerr );
         BOOST_CHECK( (abs( x[0] - result )) < eps );
     }
 };
@@ -123,8 +135,14 @@ struct perform_error_stepper_test< Stepper , boost::array<T,1> >
         array_type x , xerr;
         x[0] = 2.0;
         Stepper stepper;
+        constant_system_functor_standard sys;
+#ifndef _MSC_VER
+        // dont run this for MSVC due to compiler bug 697006
         check_error_stepper_concept( stepper , constant_system_standard< array_type , array_type , typename Stepper::time_type > , x , xerr );
-        check_error_stepper_concept( stepper , boost::cref( constant_system_functor_standard() ) , x , xerr );
+#else
+        check_error_stepper_concept( stepper , boost::cref( sys ) , x , xerr );
+#endif
+        check_error_stepper_concept( stepper , boost::cref( sys ) , x , xerr );
         BOOST_CHECK( (abs( x[0] - result )) < eps );
     }
 };

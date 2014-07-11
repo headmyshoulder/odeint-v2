@@ -30,9 +30,9 @@ test-suite "odeint"
     [ run default_operations.cpp ]
     [ run range_algebra.cpp ]
     [ run implicit_euler.cpp ]
-# disable in clang - travis build takes too long otherwise
-    [ run fusion_algebra.cpp ]
-    [ run stepper_with_units.cpp ]
+# disable in clang
+    [ run fusion_algebra.cpp : : : <toolset>clang:<build>no ]
+    [ run stepper_with_units.cpp : : : <toolset>clang:<build>no ]
     [ run stepper_copying.cpp ]
     [ run stepper_with_ranges.cpp ]
     [ run rosenbrock4.cpp ]
@@ -72,10 +72,11 @@ test-suite "odeint"
     [ run times_iterator.cpp ]
     [ run times_time_iterator.cpp ]
     [ compile unwrap_boost_reference.cpp ]
-    [ compile-fail unwrap_reference.cpp ]
+    [ compile unwrap_reference.cpp : <cxxflags>-std=c++0x : unwrap_reference_C++11 ]
+    [ compile-fail unwrap_reference.cpp : <cxxflags>-std=c++98 : unwrap_reference_C++98 ]
     : <testing.launcher>valgrind
     ;
-
+    
 # also run numeric tests
 build-project numeric ;
 
