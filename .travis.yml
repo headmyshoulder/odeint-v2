@@ -1,0 +1,27 @@
+language: cpp
+
+compiler:
+  - gcc
+  - clang
+
+env:
+  - CXXSTD=''
+  - CXXSTD='cxxflags="-std=c++0x"'
+
+before_install:
+ - wget http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2/download -O /tmp/boost.tar.bz2
+ - tar jxf /tmp/boost.tar.bz2
+ - mv boost_1_55_0 $PWD/boost-trunk
+# patch the boost build system
+ - patch $PWD/boost-trunk/tools/build/v2/build/toolset.jam toolset.jam.patch
+ - export BOOST_ROOT="$PWD/boost-trunk"
+
+ - cd $BOOST_ROOT
+ - ./bootstrap.sh
+ - cd $TRAVIS_BUILD_DIR
+
+
+script:
+ - $BOOST_ROOT/b2 toolset=$CC$GCCVER $CXXSTD
+# build in c++11 mode only with gcc
+# - if [ "$CXX" = "g++" ]; then $BOOST_ROOT/b2 -a toolset=$CC$GCCVER cxxflags="-std=c++0x"; fi
