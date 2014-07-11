@@ -91,8 +91,14 @@ struct perform_stepper_test
         vector_space_type x;
         x = 2.0;
         Stepper stepper;
+        constant_system_functor_vector_space sys;
+#ifndef _MSC_VER
+        // dont run this for MSVC due to compiler bug 697006
         check_stepper_concept( stepper , constant_system_vector_space< vector_space_type , vector_space_type , typename Stepper::time_type > , x );
-        check_stepper_concept( stepper , boost::cref( constant_system_functor_vector_space() ) , x );
+#else
+        check_stepper_concept( stepper , boost::cref( sys ) , x );
+#endif
+        check_stepper_concept( stepper , boost::cref( sys ) , x );
         std::cout << x << " ?= " << result << std::endl;
         BOOST_CHECK( (abs( x - result )) < eps );
     }
@@ -107,8 +113,14 @@ struct perform_stepper_test< Stepper , std::vector<T> >
         using std::abs;
         vector_type x( 1 , static_cast<T>(2.0) );
         Stepper stepper;
+        constant_system_functor_standard sys;
+#ifndef _MSC_VER
+        // dont run this for MSVC due to compiler bug 697006
         check_stepper_concept( stepper , constant_system_standard< vector_type , vector_type , typename Stepper::time_type > , x );
-        check_stepper_concept( stepper , boost::cref( constant_system_functor_standard() ) , x );
+#else
+        check_stepper_concept( stepper , boost::cref( sys ) , x );
+#endif
+        check_stepper_concept( stepper , boost::cref( sys ) , x );
         std::cout << x[0] << " ?= " << result << std::endl;
         BOOST_CHECK( (abs( x[0] - result )) < eps );
     }
@@ -124,8 +136,14 @@ struct perform_stepper_test< Stepper , boost::array<T,1> >
         array_type x;
         x[0] = static_cast<T>(2.0);
         Stepper stepper;
+        constant_system_functor_standard sys;
+#ifndef _MSC_VER
+        // dont run this for MSVC due to compiler bug 697006
         check_stepper_concept( stepper , constant_system_standard< array_type , array_type , typename Stepper::time_type > , x );
-        check_stepper_concept( stepper , boost::cref( constant_system_functor_standard() ) , x );
+#else
+        check_stepper_concept( stepper , boost::cref( sys ) , x );
+#endif
+        check_stepper_concept( stepper , boost::cref( sys ) , x );
         std::cout << x[0] << " ?= " << result << std::endl;
         BOOST_CHECK( (abs( x[0] - result )) < eps );
     }

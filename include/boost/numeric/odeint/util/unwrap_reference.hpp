@@ -43,20 +43,23 @@ namespace odeint {
 #if BOOST_NUMERIC_ODEINT_CXX11
 
 template<typename T>
-struct unwrap_reference
+class unwrap_reference
 {
+public:
     typedef typename std::remove_reference<T>::type type;
 };
 
 template<typename T>
-struct unwrap_reference< std::reference_wrapper<T> >
+class unwrap_reference< std::reference_wrapper<T> >
 {
+public:
     typedef typename std::remove_reference<T>::type type;
 };
 
 template<typename T>
-struct unwrap_reference< boost::reference_wrapper<T> >
+class unwrap_reference< boost::reference_wrapper<T> >
 {
+public:
         typedef typename boost::unwrap_reference<T>::type type;
 };
 
