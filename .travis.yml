@@ -20,4 +20,4 @@ before_install:
 script:
  - $BOOST_ROOT/b2 toolset=$CC$GCCVER
 # build in c++11 mode
- - $BOOST_ROOT/b2 -a toolset=$CC$GCCVER cxxflags="-std=c++11"
+ - $BOOST_ROOT/b2 -a toolset=$CC$GCCVER cxxflags="-std=c++0x"

@@ -72,7 +72,7 @@ test-suite "odeint"
     [ run times_iterator.cpp ]
     [ run times_time_iterator.cpp ]
     [ compile unwrap_boost_reference.cpp ]
-    [ compile unwrap_reference.cpp : <cxxflags>-std=c++11 : unwrap_reference_C++11 ]
+    [ compile unwrap_reference.cpp : <cxxflags>-std=c++0x : unwrap_reference_C++11 ]
     [ compile-fail unwrap_reference.cpp : <cxxflags>-std=c++98 : unwrap_reference_C++98 ]
     : <testing.launcher>valgrind
     ;
