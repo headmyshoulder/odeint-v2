@@ -20,7 +20,7 @@ exe chaotic_system : chaotic_system.cpp ;
 exe stiff_system : stiff_system.cpp ;
 exe fpu : fpu.cpp ;
 exe phase_oscillator_ensemble : phase_oscillator_ensemble.cpp ;
-exe harmonic_oscillator_units : harmonic_oscillator_units.cpp ;
+exe harmonic_oscillator_units : harmonic_oscillator_units.cpp : <toolset>clang:<build>no ;
 exe stuart_landau : stuart_landau.cpp ;
 exe two_dimensional_phase_lattice : two_dimensional_phase_lattice.cpp ;
 exe bulirsch_stoer : bulirsch_stoer.cpp ;
