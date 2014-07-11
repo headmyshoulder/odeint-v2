@@ -2,7 +2,7 @@ language: cpp
 compiler:
   - gcc
 # clang build takes too long - i dont know why
-#  - clang
+  - clang
 
 before_install:
  - wget http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2/download -O /tmp/boost.tar.bz2
@@ -18,6 +18,6 @@ before_install:
 
 
 script:
- - $BOOST_ROOT/b2 toolset=$CC$GCCVER
+ - travis_wait $BOOST_ROOT/b2 toolset=$CC$GCCVER
 # build in c++11 mode
- - $BOOST_ROOT/b2 -a toolset=$CC$GCCVER cxxflags="-std=c++0x"
+ - travis_wait $BOOST_ROOT/b2 -a toolset=$CC$GCCVER cxxflags="-std=c++0x"
