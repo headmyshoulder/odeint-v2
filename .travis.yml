@@ -27,5 +27,5 @@ script:
 # - if [ "$CXX" = "g++" ]; then $BOOST_ROOT/b2 -a toolset=$CC$GCCVER cxxflags="-std=c++0x"; fi
 
 os:
-  - linux
+#   - linux
   - osx
