@@ -1,5 +1,5 @@
 language: cpp
-
+os: osx
 compiler:
   - gcc
   - clang
@@ -26,6 +26,3 @@ script:
 # build in c++11 mode only with gcc
 # - if [ "$CXX" = "g++" ]; then $BOOST_ROOT/b2 -a toolset=$CC$GCCVER cxxflags="-std=c++0x"; fi
 
-os:
-#   - linux
-  - osx
