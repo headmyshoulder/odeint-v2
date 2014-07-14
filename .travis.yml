@@ -21,10 +21,11 @@ before_install:
  - cd $BOOST_ROOT
  - ./bootstrap.sh
  - cd $TRAVIS_BUILD_DIR
- - $CXX --version
+ - if [ "$TRAVIS_OS_NAME" = "osx" ] && [ "$CC" = "gcc" ]; then export CC=gcc-4.8; fi
+ - $CC --version
 
 script:
- - $BOOST_ROOT/b2 toolset=$CC$GCCVER $CXXSTD
+ - $BOOST_ROOT/b2 toolset=$CC $CXXSTD
 # build in c++11 mode only with gcc
 # - if [ "$CXX" = "g++" ]; then $BOOST_ROOT/b2 -a toolset=$CC$GCCVER cxxflags="-std=c++0x"; fi
 
