@@ -23,7 +23,7 @@
 #include <thrust/host_vector.h>
 
 #include <boost/numeric/odeint/util/resize.hpp>
-#include <boost/numeric/odeint/util/resize.hpp>
+#include <boost/numeric/odeint/util/same_size.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
 
 namespace boost {
