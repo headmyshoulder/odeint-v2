@@ -16,7 +16,7 @@ CXX = g++
 NVCC = $(CUDA_ROOT)/bin/nvcc
 # NVCC = g++
 
-INCLUDES += -I$(BOOST_ROOT) -I$(THRUST_ROOT) -I$(CUDA_ROOT)/include -I../../../../..
+INCLUDES += -I../../include/ -I$(BOOST_ROOT) -I$(CUDA_ROOT)/include
 
 NVCCFLAGS = -O3 $(INCLUDES) -arch $(ARCH) --compiler-bindir=/opt/gcc4.6.2/bin/  -Xcompiler -fopenmp -DTHRUST_DEVICE_BACKEND=THRUST_DEVICE_BACKEND_OMP
 # NVCCFLAGS = -O3 $(INCLUDES) -arch $(ARCH) --compiler-bindir=/usr/bin/g++-4.3 -Xcompiler -fopenmp -DTHRUST_DEVICE_BACKEND=THRUST_DEVICE_BACKEND_OMP 

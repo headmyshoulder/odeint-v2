@@ -13,7 +13,7 @@ CC = gcc
 CXX = gcc
 NVCC = $(CUDA_ROOT)/bin/nvcc
 
-INCLUDES += -I$(BOOST_ROOT) -I$(THRUST_ROOT) -I$(CUDA_ROOT)/include -I../../../../..
+INCLUDES += -I../../include/ -I$(BOOST_ROOT) -I$(THRUST_ROOT) -I$(CUDA_ROOT)/include
 
 NVCCFLAGS = -O3 $(INCLUDES) --compiler-bindir=/opt/gcc4.6.2/bin/
 
