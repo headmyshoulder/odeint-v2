@@ -109,5 +109,42 @@ ODEINT_THRUST_COPY_IMPL( thrust::host_vector )
 } // numeric
 } // boost
 
+#include <thrust/version.h>
+#if THRUST_VERSION >= 100600
+#  include <thrust/system/cpp/vector.h>
+   namespace boost { namespace numeric { namespace odeint {
+     ODEINT_THRUST_VECTOR_IS_RESIZEABLE( thrust::cpp::vector )
+     ODEINT_TRHUST_VECTOR_RESIZE_IMPL( thrust::cpp::vector )
+     ODEINT_THRUST_SAME_SIZE_IMPL( thrust::cpp::vector )
+     ODEINT_THRUST_COPY_IMPL( thrust::cpp::vector )
+   };};};
+#  if defined(_OPENMP)
+#    include <thrust/system/omp/vector.h>
+     namespace boost { namespace numeric { namespace odeint {
+       ODEINT_THRUST_VECTOR_IS_RESIZEABLE( thrust::omp::vector )
+       ODEINT_TRHUST_VECTOR_RESIZE_IMPL( thrust::omp::vector )
+       ODEINT_THRUST_SAME_SIZE_IMPL( thrust::omp::vector )
+       ODEINT_THRUST_COPY_IMPL( thrust::omp::vector )
+     };};};
+#  endif
+#  if defined(TBB_VERSION_MAJOR)
+#    include <thrust/system/tbb/vector.h>
+     namespace boost { namespace numeric { namespace odeint {
+       ODEINT_THRUST_VECTOR_IS_RESIZEABLE( thrust::tbb::vector )
+       ODEINT_TRHUST_VECTOR_RESIZE_IMPL( thrust::tbb::vector )
+       ODEINT_THRUST_SAME_SIZE_IMPL( thrust::tbb::vector )
+       ODEINT_THRUST_COPY_IMPL( thrust::tbb::vector )
+     };};};
+#  endif
+#  if defined(__CUDACC__)
+#    include <thrust/system/cuda/vector.h>
+     namespace boost { namespace numeric { namespace odeint {
+       ODEINT_THRUST_VECTOR_IS_RESIZEABLE( thrust::cuda::vector )
+       ODEINT_TRHUST_VECTOR_RESIZE_IMPL( thrust::cuda::vector )
+       ODEINT_THRUST_SAME_SIZE_IMPL( thrust::cuda::vector )
+       ODEINT_THRUST_COPY_IMPL( thrust::cuda::vector )
+     };};};
+#  endif
+#endif
 
 #endif // BOOST_NUMERIC_ODEINT_EXTERNAL_THRUST_THRUST_RESIZE_HPP_INCLUDED
