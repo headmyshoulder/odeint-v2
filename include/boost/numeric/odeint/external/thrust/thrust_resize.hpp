@@ -30,6 +30,8 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+// some macros that define the necessary utilities
+
 #define ODEINT_THRUST_VECTOR_IS_RESIZEABLE( THRUST_VECTOR ) \
 template< class T , class A >                               \
 struct is_resizeable< THRUST_VECTOR<T,A> >                  \
@@ -92,6 +94,7 @@ struct copy_impl< THRUST_VECTOR<T,A> , THRUST_VECTOR<T,A> >             \
     }                                                                   \
 };                                                                      \
 
+// add support for the standard thrust containers
 
 ODEINT_THRUST_VECTOR_IS_RESIZEABLE( thrust::device_vector )
 ODEINT_TRHUST_VECTOR_RESIZE_IMPL( thrust::device_vector )
@@ -109,5 +112,50 @@ ODEINT_THRUST_COPY_IMPL( thrust::host_vector )
 } // numeric
 } // boost
 
+// add support for thrust backend vectors, if available
+
+#include <thrust/version.h>
+
+#if THRUST_VERSION >= 100600
+
+#include <thrust/system/cpp/vector.h>
+namespace boost { namespace numeric { namespace odeint {
+    ODEINT_THRUST_VECTOR_IS_RESIZEABLE( thrust::cpp::vector )
+    ODEINT_TRHUST_VECTOR_RESIZE_IMPL( thrust::cpp::vector )
+    ODEINT_THRUST_SAME_SIZE_IMPL( thrust::cpp::vector )
+    ODEINT_THRUST_COPY_IMPL( thrust::cpp::vector )
+} } }
+
+#ifdef _OPENMP
+#include <thrust/system/omp/vector.h>
+namespace boost { namespace numeric { namespace odeint {
+    ODEINT_THRUST_VECTOR_IS_RESIZEABLE( thrust::omp::vector )
+    ODEINT_TRHUST_VECTOR_RESIZE_IMPL( thrust::omp::vector )
+    ODEINT_THRUST_SAME_SIZE_IMPL( thrust::omp::vector )
+    ODEINT_THRUST_COPY_IMPL( thrust::omp::vector )
+} } }
+#endif // _OPENMP
+
+#ifdef TBB_VERSION_MAJOR
+#include <thrust/system/tbb/vector.h>
+namespace boost { namespace numeric { namespace odeint {
+    ODEINT_THRUST_VECTOR_IS_RESIZEABLE( thrust::tbb::vector )
+    ODEINT_TRHUST_VECTOR_RESIZE_IMPL( thrust::tbb::vector )
+    ODEINT_THRUST_SAME_SIZE_IMPL( thrust::tbb::vector )
+    ODEINT_THRUST_COPY_IMPL( thrust::tbb::vector )
+} } }
+#endif // TBB_VERSION_MAJOR
+
+#ifdef __CUDACC__
+#include <thrust/system/cuda/vector.h>
+namespace boost { namespace numeric { namespace odeint {
+    ODEINT_THRUST_VECTOR_IS_RESIZEABLE( thrust::cuda::vector )
+    ODEINT_TRHUST_VECTOR_RESIZE_IMPL( thrust::cuda::vector )
+    ODEINT_THRUST_SAME_SIZE_IMPL( thrust::cuda::vector )
+    ODEINT_THRUST_COPY_IMPL( thrust::cuda::vector )
+} } }
+#endif // __CUDACC__
+
+#endif // THRUST_VERSION >= 100600
 
 #endif // BOOST_NUMERIC_ODEINT_EXTERNAL_THRUST_THRUST_RESIZE_HPP_INCLUDED
