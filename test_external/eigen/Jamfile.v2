@@ -17,10 +17,8 @@ project
     : requirements
       <library>/boost/test//boost_unit_test_framework
       <define>BOOST_ALL_NO_LIB=1
-      <include>../../../../..
       <include>$(EIGEN_ROOT)
       <link>static
-      <toolset>clang:<cxxflags>-Wno-unused-variable
       # <cxxflags>-D_SCL_SECURE_NO_WARNINGS
     ;
 

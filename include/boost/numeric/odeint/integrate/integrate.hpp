@@ -48,6 +48,15 @@ integrate( System system , State &start_state , Time start_time , Time end_time 
     return integrate_adaptive( stepper_type() , system , start_state , start_time , end_time , dt , observer );
 }
 
+template< class System , class State , class Time , class Observer , class Value >
+size_t 
+integrate( System system , State &start_state , Time start_time , Time end_time , Time dt , Observer observer )
+{
+    typedef controlled_runge_kutta< runge_kutta_dopri5< State , Value , State , Time > > stepper_type;
+    return integrate_adaptive( stepper_type() , system , start_state , start_time , end_time , dt , observer );
+}
+
+
 
 
 /*
