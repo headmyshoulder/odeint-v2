@@ -48,7 +48,7 @@ integrate( System system , State &start_state , Time start_time , Time end_time 
     return integrate_adaptive( stepper_type() , system , start_state , start_time , end_time , dt , observer );
 }
 
-template< class System , class State , class Time , class Observer , class Value >
+template< class Value , class System , class State , class Time , class Observer >
 size_t 
 integrate( System system , State &start_state , Time start_time , Time end_time , Time dt , Observer observer )
 {
@@ -67,6 +67,13 @@ size_t integrate( System system , State &start_state , Time start_time , Time en
 {
     return integrate( system , start_state , start_time , end_time , dt , null_observer() );
 }
+
+template< class Value , class System , class State , class Time >
+size_t integrate( System system , State &start_state , Time start_time , Time end_time , Time dt )
+{
+    return integrate< Value >( system , start_state , start_time , end_time , dt , null_observer() );
+}
+
 
 
 /**
