@@ -86,6 +86,9 @@ size_t integrate( System system , State &start_state , Time start_time , Time en
  * integration with step size control, thus dt changes during the integration.
  * This method uses standard error bounds of 1E-6.
  * After each step, the observer is called.
+ * 
+ * \attention A second version of this function template exists which explicitly
+ * expects the value type as template parameter, i.e. integrate< double >( sys , x , t0 , t1 , dt , obs );
  *
  * \param system The system function to solve, hence the r.h.s. of the 
  * ordinary differential equation.
@@ -108,6 +111,9 @@ size_t integrate( System system , State &start_state , Time start_time , Time en
  * integration with step size control, thus dt changes during the integration.
  * This method uses standard error bounds of 1E-6.
  * No observer is called.
+ * 
+ * \attention A second version of this function template exists which explicitly
+ * expects the value type as template parameter, i.e. integrate< double >( sys , x , t0 , t1 , dt );
  *
  * \param system The system function to solve, hence the r.h.s. of the 
  * ordinary differential equation.
