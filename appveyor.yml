@@ -1,0 +1,17 @@
+clone_depth: 5
+#shallow_clone: true
+clone_folder: c:\projects\odeint-v2
+
+branches:
+    only:
+        - master
+
+configuration: Release
+
+environment:
+    BOOST_ROOT: c:\Libraries\boost
+    BOOST_LIBRARYDIR: c:\Libraries\boost\stage\lib
+    BUILD_TYPE: Release
+
+test_script:
+    - $BOOST_ROOT\b2
