@@ -6,7 +6,7 @@
  Enable resizing for thrusts device and host_vector.
  [end_description]
 
- Copyright 2010-2012 Mario Mulansky
+ Copyright 2010-2014 Mario Mulansky
  Copyright 2010-2011 Karsten Ahnert
 
  Distributed under the Boost Software License, Version 1.0.
@@ -18,9 +18,11 @@
 #ifndef BOOST_NUMERIC_ODEINT_EXTERNAL_THRUST_THRUST_RESIZE_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_EXTERNAL_THRUST_THRUST_RESIZE_HPP_INCLUDED
 
+#include <boost/range.hpp>
 
 #include <thrust/device_vector.h>
 #include <thrust/host_vector.h>
+#include <thrust/distance.h>
 
 #include <boost/numeric/odeint/util/resize.hpp>
 #include <boost/numeric/odeint/util/same_size.hpp>
@@ -50,6 +52,17 @@ struct resize_impl< THRUST_VECTOR<T,A> , THRUST_VECTOR<T,A> > \
         x.resize( y.size() );                                 \
     }                                                         \
 };                                                            \
+template< class T, class A, typename Range >                  \
+struct resize_impl< THRUST_VECTOR<T,A> , Range >              \
+{                                                             \
+    static void resize( THRUST_VECTOR<T,A> &x ,               \
+                        const Range &y )                      \
+    {                                                         \
+        x.resize( thrust::distance(boost::begin(y),           \
+                                   boost::end(y)));           \
+    }                                                         \
+};                                                            \
+
 
 #define ODEINT_THRUST_SAME_SIZE_IMPL( THRUST_VECTOR )            \
 template< class T , class A >                                    \
@@ -60,7 +73,18 @@ struct same_size_impl< THRUST_VECTOR<T,A> , THRUST_VECTOR<T,A> > \
     {                                                            \
         return x.size() == y.size();                             \
     }                                                            \
-};
+};                                                               \
+template< class T , class A, typename Range >                    \
+struct same_size_impl< THRUST_VECTOR<T,A> , Range >              \
+{                                                                \
+    static bool same_size( const THRUST_VECTOR<T,A> &x ,         \
+                           const Range &y )                      \
+    {                                                            \
+        return x.size() == thrust::distance(boost::begin(y),     \
+                                            boost::end(y));      \
+    }                                                            \
+};                                                               \
+
 
 #define ODEINT_THRUST_COPY_IMPL( THRUST_VECTOR )                        \
 template< class Container1 , class T , class A >                        \
