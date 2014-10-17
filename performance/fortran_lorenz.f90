@@ -13,6 +13,7 @@ program main
     integer :: time_end
     integer :: count_rate
     real(dp) :: time
+    real(dp) :: min_time = 100.0
 
     do k = 1, nb_loops
         x = [ 8.5_dp, 3.1_dp, 1.2_dp ]
@@ -20,8 +21,10 @@ program main
         call rk4sys(n, t, x, h, nstep)
         call system_clock(time_end, count_rate)
         time = real(time_end - time_begin, dp) / real(count_rate, dp)
+        min_time = min(time, min_time)
         write (*,*) time, x(1)
     end do
+    write (*,*) "Minimal Runtime:", min_time
 contains
     subroutine xpsys(x,f)
         real(dp), dimension(1:3), intent(in) :: x

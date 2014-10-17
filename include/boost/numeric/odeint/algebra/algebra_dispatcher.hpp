@@ -38,14 +38,14 @@ namespace odeint {
 template< class StateType , class Enabler = void >
 struct algebra_dispatcher_sfinae
 {
-    //  range_algebra is the standard algebra^
+    // range_algebra is the standard algebra
     typedef range_algebra algebra_type;
 };
 
 template< class StateType >
 struct algebra_dispatcher : algebra_dispatcher_sfinae< StateType > { };
 
-//specialize for array
+// specialize for array
 template< class T , size_t N >
 struct algebra_dispatcher< boost::array< T , N > >
 {

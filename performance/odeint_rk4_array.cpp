@@ -1,5 +1,5 @@
 /*
- * odeint_rk4_lorenz_def_alg.cpp
+ * odeint_rk4_array
  *
  * Copyright 2011 Mario Mulansky
  * Copyright 2012 Karsten Ahnert
@@ -9,6 +9,7 @@
  * copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
+#include <iostream>
 
 #include <boost/timer.hpp>
 #include <boost/array.hpp>
@@ -24,9 +25,14 @@ typedef boost::timer timer_type;
 typedef boost::array< double , 3 > state_type;
 
 using namespace boost::numeric::odeint;
+
 //typedef boost::numeric::odeint::runge_kutta4_classic< state_type > rk4_odeint_type;
+
+// use the never resizer explicitely for optimal performance with gcc, 
+// for the intel compiler this doesnt matter and the above definition
+// gives the same performance
 typedef runge_kutta4_classic< state_type , double , state_type , double ,
-                              range_algebra, default_operations, never_resizer > rk4_odeint_type;
+                              array_algebra, default_operations, never_resizer > rk4_odeint_type;
 
 
 const int loops = 21;
@@ -38,6 +44,8 @@ int main()
 {
     double min_time = 1E6; // something big
     rk4_odeint_type stepper;
+    std::clog.precision(16);
+    std::cout.precision(16);
     for( int n=0; n<loops; n++ )
     {
         state_type x = {{ 8.5, 3.1, 1.2 }};
