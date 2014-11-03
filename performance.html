@@ -12,27 +12,20 @@ title: odeint - Performance
 </center></p>
 <p>
 Altough <strong>odeint</strong> is focused on high applicability it still shows
-reasonable performance, as you can see in the performance graph above.
-There, <strong>odeint</strong> is compared against several other
-implementations: <a href="http://www.nr.com/">Numerical Recipes</a>
-(nr), <a href="http://www.gnu.org/software/gsl/">GNU Scientific Library</a>
-(gsl) and a straight forward Fortran implementation.
+very good performance, as you can see in the performance graph above.
+There, <strong>odeint</strong> is compared with a straight forward C implementation as well as a Fortran version.
 All sources can be found in
-the <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/performance">performance
-    directory</a>. 
+the <a href="https://github.com/headmyshoulder/odeint-v2/tree/master/libs/numeric/odeint/performance">performance directory</a>. 
 The performance test is realized by integrating
 the <a href="http://en.wikipedia.org/wiki/Lorenz_system">Lorenz system</a> for
-20000000 Runge-Kutta4 steps. 
-The graph shows the run-time in seconds on a single core of a Intel Core i& 870 (3GHz) using
-two different compilers: gcc/gfortran (4.5) and icc/ifort (12.0) using full optimizations
-(-O3, -fast).
+20000000 steps using the Runge-Kutta4 scheme. 
+The graph shows the run-time in seconds on a single core on three different machines: A Core i5 with 3GHz, a Xeon E5 with 3.8GHz and an Opteron 8431 with 2.4GHz.
+For odeint, we show the performance obtained with the gcc-4.9 compiler as well as the intel compiler (v 14.2), both with full optimizations.
 </p>
 <p>
-As seen from these results, <strong>odeint</strong> is remarkably fast, beating
-the competitors in this test when compiled with gcc-4.5.
-We note that even the Fortran version compiled with ifort 12.0, usually
-considered as being the fastest choice for numerical simulations, is beaten by
-odeint on gcc-4.5.
+As seen from these results, <strong>odeint</strong> is certainly competive on both Intel and AMD CPUs and for both the gcc and the Intel compiler.
+Despite odeint's high flexibility due to its generic implementation, there are virtually no runtime costs.
+If you use odeint you obtain as fast code as using plain C or Fortran code.
 </p>
 <p>
 However, these results should be taken with care.
