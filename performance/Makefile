@@ -40,4 +40,4 @@ bin/intel/c_lorenz: c_lorenz.c bin/intel
 bin/gfort/fortran_lorenz: fortran_lorenz.f90 bin/gfort
 	gfortran ${GFORTFLAGS} fortran_lorenz.f90 -o bin/gfort/fortran_lorenz
 
-all: bin/gcc/odeint_rk4_array bin/intel/odeint_rk4_array bin/gfort/fortran_lorenz
+all: bin/gcc/odeint_rk4_array bin/intel/odeint_rk4_array bin/gcc/c_lorenz bin/intel/c_lorenz bin/gfort/fortran_lorenz

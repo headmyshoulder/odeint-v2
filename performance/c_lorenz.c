@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <time.h>
+#include <math.h>
 
 void lorenz(const double *x, double *restrict y) {
     y[0] = 10.0 * (x[1] - x[0]);
@@ -18,12 +20,15 @@ int main(int argc, const char *argv[])
     double f2[3];
     double f3[3];
     double f4[3];
-
+    double min_time = 1E6;
+    clock_t begin, end;
+    double time_spent;
     
     for (int j = 0; j < nb_loops; j++) {
         x[0] = 8.5;
         x[1] = 3.1;
         x[2] = 1.2;
+        begin = clock();
         for (int k = 0; k < nb_steps; k++) {
             lorenz(x, f1);
             for (int i = 0; i < 3; i++) {
@@ -42,8 +47,11 @@ int main(int argc, const char *argv[])
                 x[i] = x[i] + h * (f1[i] + 2 * (f2[i] + f3[i]) + f4[i]) / 6.0;
             }
         }
-        printf("Result: %f\n", x[0]);
+        end = clock();
+        min_time = fmin(min_time, (double)(end-begin)/CLOCKS_PER_SEC);
+        printf("Result: %f\t runtime: %f\n", x[0], (double)(end-begin)/CLOCKS_PER_SEC);
     }
+    printf("Minimal Runtime: %f\n", min_time);
     
     return 0;
 }
