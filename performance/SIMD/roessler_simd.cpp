@@ -47,9 +47,15 @@ struct roessler_system {
 
     void operator()(const state_type &x, state_type &dxdt, const double t) const
     {
+        // std::clog << "rhs: " << dxdt.size() << std::endl;
         dxdt[0] = -1.0*x[1] - x[2];
+        // std::clog << "rhs: " << dxdt[0] << std::endl;
         dxdt[1] = x[0] + m_a * x[1];
+        // std::clog << "rhs: " << dxdt[1] << std::endl;
+        //simd_pack tmp = boost::simd::splat<simd_pack>(m_b) + x[2] * (x[0] - boost::simd::splat<simd_pack>(m_c));
+        // std::clog << "rhs: " << tmp << std::endl;
         dxdt[2] = m_b + x[2] * (x[0] - m_c);
+        // std::clog << "rhs: " << dxdt[2] << std::endl;
     }
 };
 
@@ -91,9 +97,11 @@ for(size_t i=0; i<n/pack_size; ++i)
     }
 }
 
-
 std::cout << "Systems: " << n << std::endl;
+std::cout << "Steps: " << steps << std::endl;
 std::cout << "SIMD pack size: " << pack_size << std::endl;
+
+std::cout << state[0][0] << std::endl;
 
 // Stepper type
 odeint::runge_kutta4_classic<state_type, double, state_type, double,
@@ -114,6 +122,8 @@ for(int step = 0; step < steps; step++)
     }
     t += dt;
 }
+
+std::cout.precision(16);
 
 std::cout << "Integration finished, runtime for " << steps << " steps: ";
 std::cout << timer.elapsed() << " s" << std::endl;

@@ -78,7 +78,12 @@ for(size_t i=0; i<n; ++i)
     state[i][2] = z[i];
 }
 
+std::cout.precision(16);
+
 std::cout << "# n: " << n << std::endl;
+
+std::cout << x[0] << std::endl;
+
 
 // Stepper type - use never_resizer for slight performance improvement
 odeint::runge_kutta4_classic<state_type, double, state_type, double,
@@ -111,7 +116,7 @@ for(size_t i = 0; i < n; ++i)
     s += state[i][0];
 }
 
-std::cout << x[0] << std::endl;
+std::cout << state[0][0] << std::endl;
 std::cout << s/n << std::endl;
 
 }

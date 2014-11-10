@@ -11,4 +11,9 @@
 # SIMD_INCLUDE = /path/to/simd/include
 
 INCLUDES += -I../../include/ -I$(BOOST_ROOT) -I${SIMD_INCLUDE}
-CXXFLAGS = -O3 -mtune=native -march=native -ffast-math -std=c++11 -DNDEBUG ${INCLUDES}
+#CXXFLAGS = -O3 -ffast-math -march=core-avx-i -std=c++0x -DNDEBUG -I${ODEINT_ROOT} -I${BOOST_ROOT} -I${SIMD_INCLUDE}
+# -mtune=native -march=native
+
+CXXFLAGS = -Ofast -xHost -fno-alias -ip -inline-forceinline -std=c++0x -DNDEBUG ${INCLUDES}
+CXX = icpc
+CC = icpc
