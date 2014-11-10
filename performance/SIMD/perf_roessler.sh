@@ -1,4 +1,4 @@
-git #!/bin/bash
+#!/bin/bash
 echo "Running on ${HOSTNAME}"
 
 out_dir=perf_${HOSTNAME}
