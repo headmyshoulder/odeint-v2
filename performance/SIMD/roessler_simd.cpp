@@ -47,15 +47,9 @@ struct roessler_system {
 
     void operator()(const state_type &x, state_type &dxdt, const double t) const
     {
-        // std::clog << "rhs: " << dxdt.size() << std::endl;
         dxdt[0] = -1.0*x[1] - x[2];
-        // std::clog << "rhs: " << dxdt[0] << std::endl;
         dxdt[1] = x[0] + m_a * x[1];
-        // std::clog << "rhs: " << dxdt[1] << std::endl;
-        //simd_pack tmp = boost::simd::splat<simd_pack>(m_b) + x[2] * (x[0] - boost::simd::splat<simd_pack>(m_c));
-        // std::clog << "rhs: " << tmp << std::endl;
         dxdt[2] = m_b + x[2] * (x[0] - m_c);
-        // std::clog << "rhs: " << dxdt[2] << std::endl;
     }
 };
 

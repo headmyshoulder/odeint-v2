@@ -1,8 +1,6 @@
 #!/bin/bash
 echo "Running on ${HOSTNAME}"
 
-#make -B roessler roessler_simd
-
 out_dir=perf_${HOSTNAME}
 mkdir -p ${out_dir}
 
