@@ -16,7 +16,7 @@ do
         done
         for perf_ctr in "FLOPS_DP" "FLOPS_AVX" "L2" "L3" "MEM"
         do
-            likwid-perfctr -CS0:0 -g ${perf_ctr} ./${exe} ${N} ${steps} > ${out_dir}/${exe}_${N}_${perf_ctr}.perf
+            likwid-perfctr -CS0:0 -g ${perf_ctr} ./${exe} ${N} ${steps} > ${out_dir}/${exe}_N${N}_${perf_ctr}.perf
         done
     done
 done
