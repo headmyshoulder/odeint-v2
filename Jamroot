@@ -21,6 +21,7 @@ project
 
 # tests, regression tests and examples
 build-project test ;
+build-project test/numeric ;
 build-project examples ;
 # build-project performance ;
 # build-project openmp ;
