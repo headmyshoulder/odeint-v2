@@ -13,6 +13,9 @@ use-project boost : $(BOOST_ROOT) ;
 
 project
     : requirements
+# explicitely include ../include directory first to make sure local odeint 
+# is found first
+      <include>../include&&$(BOOST_ROOT)
       <library>/boost/test//boost_unit_test_framework
       <define>BOOST_ALL_NO_LIB=1
       <link>static
@@ -74,6 +77,7 @@ test-suite "odeint"
     [ compile unwrap_boost_reference.cpp ]
     [ compile unwrap_reference.cpp : <cxxflags>-std=c++0x : unwrap_reference_C++11 ]
     [ compile-fail unwrap_reference.cpp : <cxxflags>-std=c++98 : unwrap_reference_C++98 ]
+    [ compile std_array.cpp : <cxxflags>-std=c++0x ]
     : <testing.launcher>valgrind
     ;
     
