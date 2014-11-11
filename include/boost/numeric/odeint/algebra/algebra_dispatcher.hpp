@@ -19,6 +19,7 @@
 
 #include <complex>
 
+#include <boost/config.hpp>
 #include <boost/type_traits/is_floating_point.hpp>
 
 #include <boost/numeric/ublas/vector.hpp>
@@ -83,5 +84,27 @@ struct algebra_dispatcher< boost::numeric::ublas::matrix< T , L , A > >
 }
 }
 }
+
+#ifndef BOOST_NO_CXX11_HDR_ARRAY
+
+// Specialization for std::array if available
+
+#include <array>
+
+namespace boost {
+namespace numeric {
+namespace odeint {
+    
+// specialize for std::array
+template< class T , size_t N >
+struct algebra_dispatcher< std::array< T , N > >
+{
+    typedef array_algebra algebra_type;
+};
+
+} } }
+
+#endif
+
 
 #endif
