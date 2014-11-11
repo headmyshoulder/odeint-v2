@@ -26,6 +26,7 @@ before_install:
 
  - cd $BOOST_ROOT
  - ./bootstrap.sh
+ - ./bjam
  - cd $TRAVIS_BUILD_DIR
  - if [ "$TRAVIS_OS_NAME" = "osx" ] && [ "$CC" = "gcc" ]; then export CC=gcc-4.8; fi
  - $CC --version

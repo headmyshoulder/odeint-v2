@@ -9,11 +9,13 @@
 
 import testing ;
 
+# disable project boost to make sure the local odeint is included first
 # use-project boost : $(BOOST_ROOT) ;
 
 project
     : requirements
       <define>BOOST_ALL_NO_LIB=1
+# use test library
       <library>$(BOOST_ROOT)/stage/lib/libboost_unit_test_framework.a
       <link>static
       <toolset>clang:<cxxflags>-Wno-unused-variable
