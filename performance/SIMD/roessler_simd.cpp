@@ -21,19 +21,23 @@
 #include <boost/numeric/odeint.hpp>
 #include <boost/simd/sdk/simd/pack.hpp>
 #include <boost/simd/sdk/simd/io.hpp>
+#include <boost/simd/memory/allocator.hpp>
 #include <boost/simd/include/functions/splat.hpp>
 #include <boost/simd/include/functions/plus.hpp>
 #include <boost/simd/include/functions/multiplies.hpp>
 
+
 namespace odeint = boost::numeric::odeint;
+namespace simd = boost::simd;
 
 typedef boost::timer timer_type;
 
 static const size_t dim = 3;  // roessler is 3D
 
-typedef boost::simd::pack<double> simd_pack;
+typedef simd::pack<double> simd_pack;
 typedef boost::array<simd_pack, dim> state_type;
-typedef std::vector<state_type> state_vec;
+// use the simd allocator to get properly aligned memory
+typedef std::vector< state_type, simd::allocator< state_type > > state_vec;
 
 static const size_t pack_size = simd_pack::static_size;
 
