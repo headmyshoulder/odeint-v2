@@ -3,7 +3,11 @@
  boost/numeric/odeint/algebra/array_algebra.hpp
 
  [begin_description]
- Algebra for boost::array. Highly specialized for odeint. Const arguments are introduce to work with odeint.
+ Algebra for Arrays. Highly specialized for odeint. Const arguments are
+ introduce to work with odeint.
+ The Array algebra can be used for Array structures with two template
+ parameters: 
+ Array<T, N>
  [end_description]
 
  Copyright 2011-2013 Mario Mulansky

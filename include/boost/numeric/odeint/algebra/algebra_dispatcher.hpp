@@ -17,9 +17,9 @@
 #ifndef BOOST_NUMERIC_ODEINT_ALGEBRA_ALGEBRA_DISPATCHER_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_ALGEBRA_ALGEBRA_DISPATCHER_HPP_INCLUDED
 
-#include <complex>
+#include <boost/numeric/odeint/config.hpp>
 
-#include <boost/config.hpp>
+#include <complex>
 #include <boost/type_traits/is_floating_point.hpp>
 
 #include <boost/numeric/ublas/vector.hpp>
@@ -85,9 +85,9 @@ struct algebra_dispatcher< boost::numeric::ublas::matrix< T , L , A > >
 }
 }
 
-#ifndef BOOST_NO_CXX11_HDR_ARRAY
+#ifdef BOOST_NUMERIC_ODEINT_CXX11
 
-// Specialization for std::array if available
+// c++11 mode: specialization for std::array if available
 
 #include <array>
 
