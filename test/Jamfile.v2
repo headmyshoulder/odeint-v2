@@ -8,17 +8,19 @@
 
 import testing ;
 
+# make sure you are using a new version of boost.build, otherwise the local
+# odeint will not be included properly
+# you can fix older boost.build versions by applying the patch provided in
+# odeint's root, e.g.:
+# cd ~/odeint-v2
+# sudo patch /usr/share/boost-build/build/toolset.jam toolset.jam.patch
+
 use-project boost : $(BOOST_ROOT) ;
 
 project
     : requirements
       <define>BOOST_ALL_NO_LIB=1
-# we have to add this include manually to make sure local odeint is found
-# before boost when bjam is run from top level odeint-v2 directory 
-# it seems that use-project boost and the test library linking puts the boost
-# include dir first so we have to get before that
-      <cxxflags>-I"include"
-    # use test library
+      # use test library
       <library>/boost//unit_test_framework
       <link>static
       <toolset>clang:<cxxflags>-Wno-unused-variable
