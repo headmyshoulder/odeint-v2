@@ -34,7 +34,10 @@ typedef boost::timer timer_type;
 
 static const size_t dim = 3;  // roessler is 3D
 
-typedef simd::pack<double> simd_pack;
+typedef double fp_type;
+//typedef float fp_type;
+ 
+typedef simd::pack<fp_type> simd_pack;
 typedef boost::array<simd_pack, dim> state_type;
 // use the simd allocator to get properly aligned memory
 typedef std::vector< state_type, simd::allocator< state_type > > state_vec;
@@ -43,13 +46,13 @@ static const size_t pack_size = simd_pack::static_size;
 
 //---------------------------------------------------------------------------
 struct roessler_system {
-    const double m_a, m_b, m_c;
+    const fp_type m_a, m_b, m_c;
 
-    roessler_system(const double a, const double b, const double c)
+    roessler_system(const fp_type a, const fp_type b, const fp_type c)
         : m_a(a), m_b(b), m_c(c)
     {}
 
-    void operator()(const state_type &x, state_type &dxdt, const double t) const
+    void operator()(const state_type &x, state_type &dxdt, const fp_type t) const
     {
         dxdt[0] = -1.0*x[1] - x[2];
         dxdt[1] = x[0] + m_a * x[1];
@@ -67,17 +70,17 @@ if(argc<3)
 const size_t n = atoi(argv[1]);
 const size_t steps = atoi(argv[2]);
 
-const double dt = 0.01;
+const fp_type dt = 0.01;
 
-const double a = 0.2;
-const double b = 1.0;
-const double c = 9.0;
+const fp_type a = 0.2;
+const fp_type b = 1.0;
+const fp_type c = 9.0;
 
 // random initial conditions on the device
-std::vector<double> x(n), y(n), z(n);
+std::vector<fp_type> x(n), y(n), z(n);
 std::default_random_engine generator;
-std::uniform_real_distribution<double> distribution_xy(-8.0, 8.0);
-std::uniform_real_distribution<double> distribution_z(0.0, 20.0);
+std::uniform_real_distribution<fp_type> distribution_xy(-8.0, 8.0);
+std::uniform_real_distribution<fp_type> distribution_z(0.0, 20.0);
 auto rand_xy = std::bind(distribution_xy, std::ref(generator));
 auto rand_z = std::bind(distribution_z, std::ref(generator));
 std::generate(x.begin(), x.end(), rand_xy);
@@ -102,7 +105,7 @@ std::cout << "SIMD pack size: " << pack_size << std::endl;
 std::cout << state[0][0] << std::endl;
 
 // Stepper type
-odeint::runge_kutta4_classic<state_type, double, state_type, double,
+odeint::runge_kutta4_classic<state_type, fp_type, state_type, fp_type,
                              odeint::array_algebra, odeint::default_operations,
                              odeint::never_resizer> stepper;
 
@@ -110,7 +113,7 @@ roessler_system sys(a, b, c);
 
 timer_type timer;
 
-double t = 0.0;
+fp_type t = 0.0;
 
 for(int step = 0; step < steps; step++)
 {
@@ -133,7 +136,7 @@ for(size_t i = 0; i < n/pack_size; ++i)
     s_pack += state[i][0];
 }
 
-double s = 0.0;
+fp_type s = 0.0;
 for(size_t p=0; p<pack_size; ++p)
 {
     s += s_pack[p];

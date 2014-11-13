@@ -10,7 +10,7 @@
 # you also need NT2s SIMD libary available set the include path here:
 # SIMD_INCLUDE = /path/to/simd/include
 
-INCLUDES += -I$(BOOST_ROOT) -I${SIMD_INCLUDE}
+INCLUDES = -I$(BOOST_ROOT) -I${SIMD_INCLUDE}
 
 # INTEL COMPILER
 # change this if you want to cross-compile
@@ -20,8 +20,8 @@ ARCH = Host
 
 CXX = icpc
 CC = icpc
-CXXFLAGS = -Ofast -x${ARCH} -fno-alias -ip -inline-forceinline -std=c++0x -DNDEBUG ${INCLUDES}
-
+CXXFLAGS = -O3 -x${ARCH} -std=c++0x -fno-alias -inline-forceinline -DNDEBUG ${INCLUDES}
+# -ip
 
 # GCC COMPILER
 # change this if you want to cross-compile
@@ -30,4 +30,4 @@ CXXFLAGS = -Ofast -x${ARCH} -fno-alias -ip -inline-forceinline -std=c++0x -DNDEB
 
 # CXX = g++
 # CC = g++
-# CXXFLAGS = -O3 -ffast-math -mtune=${ARCH} -march=${ARCH} -std=c++0x ${INCLUDES}
+# CXXFLAGS = -O3 -ffast-math -mtune=${ARCH} -march=${ARCH} -std=c++0x -DNDEBUG ${INCLUDES}
