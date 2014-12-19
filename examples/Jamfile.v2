@@ -5,10 +5,15 @@
 # accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
+import os ;
+
+
+path-constant RANGE_ROOT : [ os.environ RANGE_ROOT ] ; 
 
 project
     : requirements 
       <include>../../../..
+      <include>$(RANGE_ROOT)/include
       <define>BOOST_ALL_NO_LIB=1
     : 
     ;
@@ -42,6 +47,8 @@ exe molecular_dynamics : molecular_dynamics.cpp : <cxxflags>-std=c++0x ;
 exe molecular_dynamics_cells : molecular_dynamics_cells.cpp : <cxxflags>-std=c++0x ;
 exe abm_precision : abm_precision.cpp ;
 exe integrate_times : integrate_times.cpp ;  
+
+exe const_step_range : const_step_range.cpp : <cxxflags>-std=c++1y ;
 
 build-project multiprecision ;
 # build-project mtl ;
