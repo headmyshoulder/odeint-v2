@@ -19,6 +19,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <string>
 
 #include <boost/array.hpp>
 
@@ -38,34 +39,104 @@ typedef boost::array< double , 1 > state_type;
 BOOST_AUTO_TEST_SUITE( order_of_convergence_test )
 
 int p;
+double tolerance = 1.0e-13;
 
 /* generic test for all steppers that support integrate_const */
 template< class Stepper >
 struct integrate_const_test
 {
+    double error;
     void operator()( int nSteps = 1 )
     {
-	double tolerance = 1.0e-13;
-
-	state_type x;
-        Stepper stepper;
-	const int o = stepper.order()+1; 
-	for ( p = 0; p < o-1; p++ )
-	    {
-		Stepper stepper1;
-		x[0] = 1.0;
-		integrate_const( stepper1, rhs, x, 0.0, 1.0, 1.0/nSteps );
-		BOOST_CHECK_LT( fabs( x[0]-1.0/(1.0+p) - 1.0 ), tolerance  );
-		std::cout << fabs( x[0]-1.0/(1.0+p)-1.0 ) << std::endl;
-	    }	
-        std::cout << std::endl;
+	Stepper stepper;
+	std::cout << boost::format( "%-20i%-20i%-20E\n" )
+	    % estimatedOrder() %  definedOrder() % error;
+	BOOST_REQUIRE( estimatedOrder() == definedOrder() );
     }
+
+    const int definedOrder(){
+	const Stepper stepper;
+	return stepper.order();
+    }
+
+    const int estimatedOrder( int nSteps = 1 )
+    {
+	state_type x;
+	double t;
+	for ( p = 0; p < 20; p++ )
+	    {
+		Stepper stepper;
+		x[0] = 1.0;
+		t = 0;
+		for ( int i = 0; i < nSteps; i++ ){
+		    stepper.do_step( rhs, x, t, 1.0/nSteps );
+		    t += 1.0/nSteps;
+		    error = fabs( x[0] - pow( t, (1.0+p) )/(1.0 + p) - 1.0 );
+		    if ( error >tolerance )
+			return p;
+		}
+	    }
+	return p;
+    }
+
+
+private:
+    static void rhs( const state_type &x , state_type &dxdt , const double t )
+    {
+	dxdt[0] = pow( t, p );
+    }
+};
+
+
+template< class Stepper >
+struct integrate_const_test_initialize
+{
+    double error;
+    void operator()( int nSteps = 16 )
+    {
+	std::cout << boost::format( "%-20i%-20i%-20E" ) % estimatedOrder()
+	    %  definedOrder() % error << std::endl;
+	BOOST_REQUIRE( estimatedOrder() == definedOrder() );
+    }
+
+    const int definedOrder(){
+	const Stepper stepper;
+	return stepper.order();
+    }
+
+    const int estimatedOrder( int nSteps = 16 )
+    {
+	state_type x;
+	double t;
+	for ( p = 0; p < 10; p++ )
+	    {
+		Stepper stepper;
+		x[0] = 1.0;
+		t = 0;
+		// use a high order method to initialize.
+		stepper.initialize( runge_kutta_fehlberg78< state_type >(),
+					 rhs, x, t, 1.0/nSteps );
+		while ( t < 1 ){
+		    stepper.do_step( rhs, x, t, 1.0/nSteps );
+		    t += 1.0/nSteps;
+		    error = fabs( x[0]-pow( t, 1.0 + p)/(1.0+p) - 1.0 );
+		    if (error > tolerance )
+			return p;
+		}
+	    }	
+	return p;
+    }
+
+
 private:
     static void rhs( const state_type &x , state_type &dxdt , const double t )
     { 
 	dxdt[0] = pow( t, p );
     }
 };
+
+
+
 
 typedef mpl::vector<
     euler< state_type > ,
@@ -79,21 +150,27 @@ typedef mpl::vector<
     > runge_kutta_steppers;
 
 typedef mpl::vector<
-    adams_bashforth< 2, state_type >,
-    adams_bashforth< 3, state_type >,
-    adams_bashforth< 4, state_type >,
-    adams_bashforth_moulton< 2, state_type >,
-    adams_bashforth_moulton< 3, state_type >,
-    adams_bashforth_moulton< 4, state_type >
-    // \TODO: write tests for order bigger than 4. 
-    //        initialize with fehlberg
+    adams_bashforth< 2, state_type > ,
+    adams_bashforth< 3, state_type > ,
+    adams_bashforth< 4, state_type > ,
+    adams_bashforth< 5, state_type > ,
+    adams_bashforth< 6, state_type > ,
+    adams_bashforth< 7, state_type > ,
+    adams_bashforth< 8, state_type > ,
+    adams_bashforth_moulton< 2, state_type > ,
+    adams_bashforth_moulton< 3, state_type > ,
+    adams_bashforth_moulton< 4, state_type > ,
+    adams_bashforth_moulton< 5, state_type > ,
+    adams_bashforth_moulton< 6, state_type > ,
+    adams_bashforth_moulton< 7, state_type > ,
+    adams_bashforth_moulton< 8, state_type >
     > adams_steppers;
 
-typedef mpl::vector<
-    symplectic_euler< state_type > ,
-    symplectic_rkn_sb3a_mclachlan< state_type >
-    > symplectic_steppers;
-
+BOOST_AUTO_TEST_CASE( print_header )
+{
+    std::cout << boost::format( "%-20s%-20s%-20s\n" )
+	% "Estimated order" % "defined order" % "first significant error";
+}
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( runge_kutta_test , Stepper, runge_kutta_steppers )
 {
@@ -103,10 +180,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( runge_kutta_test , Stepper, runge_kutta_steppers 
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( adams_moultion_test , Stepper, adams_steppers )
 {
-    integrate_const_test< Stepper > tester;
-    tester( 16 );
+    integrate_const_test_initialize< Stepper > tester;
+    tester();
 }
-
-// \TODO: add symplectic tests
 
 BOOST_AUTO_TEST_SUITE_END()
