@@ -1,4 +1,4 @@
-/* Boost numeric test for orders of convergence file
+/* Boost numeric test for ordersof quadrature formulas test file
 
  Copyright 2012 Mario Mulansky
  Copyright 2012 Karsten Ahnert
@@ -10,18 +10,15 @@
 
 // disable checked iterator warning for msvc
 #include <boost/config.hpp>
-
+/*
 #ifdef BOOST_MSVC
     #pragma warning(disable:4996)
 #endif
-
+*/
 #define BOOST_TEST_MODULE order_of_convergence
 
 #include <iostream>
 #include <cmath>
-#include <string>
-
-#include <boost/array.hpp>
 
 #include <boost/test/unit_test.hpp>
 
@@ -29,51 +26,65 @@
 
 #include <boost/numeric/odeint.hpp>
 
+#include <boost/numeric/ublas/vector.hpp>
+
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
 namespace mpl = boost::mpl;
 
 typedef double value_type;
-typedef boost::array< double , 1 > state_type;
+typedef value_type time_type;
+typedef boost::numeric::ublas::vector< double > state_type;
 
 BOOST_AUTO_TEST_SUITE( order_of_convergence_test )
 
 int p;
-double tolerance = 1.0e-13;
+value_type tolerance = 1.0e-13;
 
 /* generic test for all steppers that support integrate_const */
 template< class Stepper >
 struct integrate_const_test
 {
     double error;
+    double maxError;
     void operator()( int nSteps = 1 )
     {
 	Stepper stepper;
-	std::cout << boost::format( "%-20i%-20i%-20E\n" )
-	    % estimatedOrder() %  definedOrder() % error;
-	BOOST_REQUIRE( estimatedOrder() == definedOrder() );
+	std::cout << boost::format( "%-20i%-20i%-30E%-20E\n" )
+	    % estimatedOrder( nSteps ) %  definedOrder() % error % maxError;
+
+	BOOST_REQUIRE_EQUAL( estimatedOrder( nSteps ), definedOrder() );
     }
 
     const int definedOrder(){
 	const Stepper stepper;
 	return stepper.order();
     }
-
+    /*
+    the order of the stepper is estimated by trying to solve the ODE
+    x'(t) = t^p
+    until the errors are too big to be justified by finite precision.
+    the first value p for which the problem is *not* solved with
+    precision `tolerance` is the estimate for the order of the scheme.
+     */
     const int estimatedOrder( int nSteps = 1 )
     {
-	state_type x;
+	state_type x(1);
 	double t;
+	maxError = 0;
 	for ( p = 0; p < 20; p++ )
 	    {
 		Stepper stepper;
-		x[0] = 1.0;
+		x[0] = 0.0;
 		t = 0;
 		for ( int i = 0; i < nSteps; i++ ){
 		    stepper.do_step( rhs, x, t, 1.0/nSteps );
 		    t += 1.0/nSteps;
-		    error = fabs( x[0] - pow( t, (1.0+p) )/(1.0 + p) - 1.0 );
-		    if ( error >tolerance )
+		    error = fabs( x[0] - pow( t, ( 1.0 + p ) )/( 1.0 + p ) );
+		    if ( error > tolerance )
 			return p;
+		    else if ( error > maxError )
+			maxError = error;
 		}
 	    }
 	return p;
@@ -81,7 +92,7 @@ struct integrate_const_test
 
 
 private:
-    static void rhs( const state_type &x , state_type &dxdt , const double t )
+    static void rhs( const state_type &x , state_type &dxdt , const time_type t )
     {
 	dxdt[0] = pow( t, p );
     }
@@ -91,27 +102,37 @@ private:
 template< class Stepper >
 struct integrate_const_test_initialize
 {
-    double error;
+    value_type error;
+    value_type maxError;
+
     void operator()( int nSteps = 16 )
     {
-	std::cout << boost::format( "%-20i%-20i%-20E" ) % estimatedOrder()
-	    %  definedOrder() % error << std::endl;
-	BOOST_REQUIRE( estimatedOrder() == definedOrder() );
+	std::cout << boost::format( "%-20i%-20i%-30E%-20E\n" )
+	    % estimatedOrder( nSteps ) %  definedOrder() % error % maxError;
+
+	BOOST_REQUIRE_EQUAL( estimatedOrder( nSteps ), definedOrder() );
     }
 
     const int definedOrder(){
 	const Stepper stepper;
 	return stepper.order();
     }
+    /*
+    just like the other version of estimatedOrder(), but with
+    initization performed by the fehlberg stepper ( order 8 )
 
+    if the default initialization ( runge kutta 4 ) is used,
+    estimatedOrder will never return an order greater than 4.
+    */
     const int estimatedOrder( int nSteps = 16 )
     {
-	state_type x;
-	double t;
+	state_type x(1);
+	value_type t;
+	maxError = -1.0;
 	for ( p = 0; p < 10; p++ )
 	    {
 		Stepper stepper;
-		x[0] = 1.0;
+		x[0] = 0.0;
 		t = 0;
 		// use a high order method to initialize.
 		stepper.initialize( runge_kutta_fehlberg78< state_type >(),
@@ -119,23 +140,23 @@ struct integrate_const_test_initialize
 		while ( t < 1 ){
 		    stepper.do_step( rhs, x, t, 1.0/nSteps );
 		    t += 1.0/nSteps;
-		    error = fabs( x[0]-pow( t, 1.0 + p)/(1.0+p) - 1.0 );
-		    if (error > tolerance )
+		    error = fabs( x[0]-pow( t, 1.0 + p)/(1.0+p) );
+		    if ( error > tolerance )
 			return p;
+		    else if ( error > maxError )
+			maxError = error;
 		}
-	    }	
+	    }
 	return p;
     }
 
 
 private:
-    static void rhs( const state_type &x , state_type &dxdt , const double t )
-    { 
+    static void rhs( const state_type &x , state_type &dxdt , const time_type t )
+    {
 	dxdt[0] = pow( t, p );
     }
 };
-
-
 
 
 typedef mpl::vector<
@@ -168,8 +189,9 @@ typedef mpl::vector<
 
 BOOST_AUTO_TEST_CASE( print_header )
 {
-    std::cout << boost::format( "%-20s%-20s%-20s\n" )
-	% "Estimated order" % "defined order" % "first significant error";
+    std::cout << boost::format( "%-20s%-20s%-30s%-20s\n" )
+	% "Estimated order" % "defined order"
+	% "first significant error" % "biggest insignificant error";
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( runge_kutta_test , Stepper, runge_kutta_steppers )
