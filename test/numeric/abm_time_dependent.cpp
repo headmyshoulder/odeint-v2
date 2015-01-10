@@ -35,7 +35,7 @@ typedef value_type state_type;
 typedef runge_kutta_fehlberg78<state_type> initializing_stepper;
 
 
-// simple time-dependent rhs, analytic solution x[0] = 0.5*x^2
+// simple time-dependent rhs, analytic solution x = 0.5*t^2
 struct simple_rhs
 {
     void operator()( const state_type& x , state_type &dxdt , const double t ) const
