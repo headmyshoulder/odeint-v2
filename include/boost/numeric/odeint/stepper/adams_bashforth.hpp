@@ -181,7 +181,7 @@ public :
         {
             if( i != 0 ) m_step_storage.rotate();
             sys( x , m_step_storage[0].m_v , t );
-            stepper.do_step( system , x , m_step_storage[0].m_v , t , dt );
+            stepper.do_step_dxdt( system , x , m_step_storage[0].m_v , t , dt );
             t += dt;
         }
         m_steps_initialized = steps;
@@ -222,7 +222,7 @@ private:
         {
             if( m_steps_initialized != 0 ) m_step_storage.rotate();
             sys( in , m_step_storage[0].m_v , t );
-            m_initializing_stepper.do_step( system , in , m_step_storage[0].m_v , t , out , dt );
+            m_initializing_stepper.do_step_dxdt( system , in , m_step_storage[0].m_v , t , out , dt );
             ++m_steps_initialized;
         }
         else

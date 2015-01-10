@@ -89,6 +89,8 @@ test-suite "odeint"
 # also run numeric tests
 build-project numeric ;
 
+build-project regression ;
+
 # test-suite "odeint-iterator_integrate"
 #    :
 #    [ run integrate.cpp : : : : integrate_iterator ]
