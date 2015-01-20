@@ -10,11 +10,11 @@
 
 // disable checked iterator warning for msvc
 #include <boost/config.hpp>
-/*
+
 #ifdef BOOST_MSVC
     #pragma warning(disable:4996)
 #endif
-*/
+
 #define BOOST_TEST_MODULE order_quadrature_formula
 
 #include <iostream>
