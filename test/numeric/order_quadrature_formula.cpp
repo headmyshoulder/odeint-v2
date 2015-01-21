@@ -129,6 +129,9 @@ typedef mpl::vector<
                      initially_resizer, runge_kutta_fehlberg78< state_type > >,
     adams_bashforth< 7, state_type, double, state_type, double,
                      vector_space_algebra, default_operations,
+                     initially_resizer, runge_kutta_fehlberg78< state_type > >,
+    adams_bashforth< 8, state_type, double, state_type, double,
+                     vector_space_algebra, default_operations,
                      initially_resizer, runge_kutta_fehlberg78< state_type > >
     > ab_steppers;
 
