@@ -1,6 +1,7 @@
 /* Boost numeric test for orders of quadrature formulas test file
 
  Copyright 2015 Gregor de Cillia
+ Copyright 2015 Mario Mulansky <mario.mulansky@gmx.net>
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
@@ -37,129 +38,64 @@ typedef value_type state_type;
 
 BOOST_AUTO_TEST_SUITE( order_of_convergence_test )
 
-value_type tolerance = 1.0e-13;
-
-struct monome
+/* defines the simple monomial f(t) = (p+1) * t^p.*/
+struct monomial
 {
-    int exponent;
-    monome() : exponent( 0 ){};
-    void operator()( const state_type &x , state_type &dxdt , const time_type t ){
-	dxdt = ( 1.0 + exponent )*pow( t, exponent );
+    int power;
+
+    monomial(int p = 0) : power( p ){};
+
+    void operator()( const state_type &x , state_type &dxdt , const time_type t )
+    {
+        dxdt = ( 1.0 + power ) * pow( t, power );
     }
 };
 
-monome rhs;
 
 /* generic test for all steppers that support integrate_const */
 template< class Stepper >
-struct integrate_const_test
+struct stepper_order_test
 {
-    double maxError;
-    int estimatedOrder;
-    void operator()( int nSteps = 1 )
+    void operator()( int steps = 1 )
     {
-	estimateOrder();
-	std::cout << boost::format( "%-20i%-20i%-20E\n" )
-	    % estimatedOrder %  definedOrder() % maxError;
+        const int estimated_order = estimate_order( steps );
+        const int defined_order = Stepper::order_value;
 
-	BOOST_REQUIRE_EQUAL( estimatedOrder, definedOrder() );
+        std::cout << boost::format( "%-20i%-20i\n" )
+	    % estimated_order %  defined_order;
+
+        BOOST_REQUIRE_EQUAL( estimated_order, defined_order );
     }
 
-    const int definedOrder(){
-	const Stepper stepper;
-	return stepper.order();
-    }
     /*
     the order of the stepper is estimated by trying to solve the ODE
-    x'(t) = t^p
+    x'(t) = (p+1) * t^p
     until the errors are too big to be justified by finite precision.
-    the first value p for which the problem is *not* solved with
-    precision `tolerance` is the estimate for the order of the scheme.
+    the first value p for which the problem is *not* solved within the
+    finite precision tolerance is the estimate for the order of the scheme.
      */
-    void estimateOrder( int nSteps = 1 )
+    int estimate_order( int steps )
     {
-	state_type x;
-	double t;
-	maxError = 0;
-	rhs.exponent = -1;
-	do{
-	    // begin with x'(t) = ( t^0 )/1 = 1
-	    //         => x (t) =   t
-	    // then use   x'(t) = ( t^1 )/2 = t/2
-	    //         => x (t) =   t^2
-	    // ...
-	    rhs.exponent++;
-	    Stepper stepper;
-	    x = 0.0;
-	    t = 0;
-	    for ( int i = 0; i < nSteps; i++ ){
-		stepper.do_step( rhs, x, t, 1.0/nSteps );
-		t += 1.0/nSteps;
-		// compute the error using the exact solution x(t)=t^(1+p)
-		value_type error = fabs( x - pow( t, ( 1.0 + rhs.exponent ) ) );
-		maxError = fmax( error, maxError );
-	    }
-	}
-	while ( maxError < tolerance );
-	// return the first exponent for which the test failed
-	estimatedOrder = rhs.exponent;
-    }
-};
+        const double dt = 1.0/steps;
+        const double tolerance = steps*1E-15;
+        int p;
+        for( p = 0; true; p++ )
+        {
+            // begin with x'(t) = t^0 = 1
+            //         => x (t) = t
+            // then use   x'(t) = 2*t^1
+            //         => x (t) = t^2
+            // ...
+            state_type x = 0.0;
 
-
-template< class Stepper >
-struct integrate_const_test_initialize
-{
-    int estimatedOrder;
-    value_type maxError;
-
-    void operator()( int nSteps = 16 )
-    {
-	estimateOrder( nSteps );
-	std::cout << boost::format( "%-20i%-20i%-30E\n" )
-	    % estimatedOrder %  definedOrder() %  maxError;
-
-	BOOST_REQUIRE_EQUAL( estimatedOrder, definedOrder() );
-    }
-
-    const int definedOrder(){
-	const Stepper stepper;
-	return stepper.order();
-    }
-    /*
-    just like the other version of estimateOrder(), but with
-    initization performed by the fehlberg stepper ( order 8 )
-
-    if the default initialization ( runge kutta 4 ) is used,
-    the estimated order will never be greater than 4.
-    */
-    void estimateOrder( int nSteps = 16 )
-    {
-	state_type x;
-	time_type t;
-	const time_type dt = 1.0/nSteps;
-	maxError = 0.0;
-	rhs.exponent = -1;
-	do{
-	    rhs.exponent++;
-	    // construct the stepper inside the for loop to reset the
-	    // step storage
-	    Stepper stepper;
-	    x = 0.0;
-	    t = 0.0;
-	    // use a high order method to initialize.
-	    stepper.initialize( runge_kutta_fehlberg78< state_type >(),
-				rhs, x, t, dt );
-	    while ( t < 1 ){
-		stepper.do_step( rhs, x, t, 1.0/nSteps );
-		t += 1.0/nSteps;
-		// compute the error using the exact solution x(t)=t^(1+p)
-		value_type error = fabs( x - pow( t, 1.0 + rhs.exponent) );
-		maxError = fmax( error, maxError );
-	    }
-	} while( maxError < tolerance );
-	// return the first exponent for which the test failed
-	estimatedOrder = rhs.exponent;
+            double t = integrate_n_steps( Stepper(), monomial( p ), x, 0.0, dt,
+                                          steps );
+            if( fabs( x - pow( t, ( 1.0 + p ) ) ) > tolerance )
+                break;
+        }
+        // the smallest power p for which the test failed is the estimated order,
+        // as the solution for this power is x(t) = t^{p+1}
+        return p;
     }
 };
 
@@ -176,47 +112,77 @@ typedef mpl::vector<
     > runge_kutta_steppers;
 
 typedef mpl::vector<
-    adams_bashforth< 2, state_type > ,
-    adams_bashforth< 3, state_type > ,
-    adams_bashforth< 4, state_type > ,
-    adams_bashforth< 5, state_type > ,
-    adams_bashforth< 6, state_type > ,
-    adams_bashforth< 7, state_type > ,
-    adams_bashforth< 8, state_type > ,
-    adams_bashforth_moulton< 2, state_type > ,
-    adams_bashforth_moulton< 3, state_type > ,
-    adams_bashforth_moulton< 4, state_type > ,
-    adams_bashforth_moulton< 5, state_type > ,
-    adams_bashforth_moulton< 6, state_type > ,
-    adams_bashforth_moulton< 7, state_type > ,
-    adams_bashforth_moulton< 8, state_type >
-    > adams_steppers;
+    adams_bashforth< 2, state_type, double, state_type, double,
+                     vector_space_algebra, default_operations,
+                     initially_resizer, runge_kutta_fehlberg78< state_type > >,
+    adams_bashforth< 3, state_type, double, state_type, double,
+                     vector_space_algebra, default_operations,
+                     initially_resizer, runge_kutta_fehlberg78< state_type > >,
+    adams_bashforth< 4, state_type, double, state_type, double,
+                     vector_space_algebra, default_operations,
+                     initially_resizer, runge_kutta_fehlberg78< state_type > >,
+    adams_bashforth< 5, state_type, double, state_type, double,
+                     vector_space_algebra, default_operations,
+                     initially_resizer, runge_kutta_fehlberg78< state_type > >,
+    adams_bashforth< 6, state_type, double, state_type, double,
+                     vector_space_algebra, default_operations,
+                     initially_resizer, runge_kutta_fehlberg78< state_type > >,
+    adams_bashforth< 7, state_type, double, state_type, double,
+                     vector_space_algebra, default_operations,
+                     initially_resizer, runge_kutta_fehlberg78< state_type > >
+    > ab_steppers;
 
-BOOST_AUTO_TEST_CASE( print_header )
-{
-    std::cout << boost::format( "%-20s%-20s%-30s\n" )
-	% "Estimated order" % "defined order"
-	% "maxError";
-}
+
+typedef mpl::vector<
+    adams_bashforth_moulton< 2, state_type, double, state_type, double,
+                             vector_space_algebra, default_operations,
+                             initially_resizer,
+                             runge_kutta_fehlberg78< state_type > >,
+    adams_bashforth_moulton< 3, state_type, double, state_type, double,
+                             vector_space_algebra, default_operations,
+                             initially_resizer,
+                             runge_kutta_fehlberg78< state_type > >,
+    adams_bashforth_moulton< 4, state_type, double, state_type, double,
+                             vector_space_algebra, default_operations,
+                             initially_resizer,
+                             runge_kutta_fehlberg78< state_type > >,
+    adams_bashforth_moulton< 5, state_type, double, state_type, double,
+                             vector_space_algebra, default_operations,
+                             initially_resizer,
+                             runge_kutta_fehlberg78< state_type > >,
+    adams_bashforth_moulton< 6, state_type, double, state_type, double,
+                             vector_space_algebra, default_operations,
+                             initially_resizer,
+                             runge_kutta_fehlberg78< state_type > >,
+    adams_bashforth_moulton< 7, state_type, double, state_type, double,
+                             vector_space_algebra, default_operations,
+                             initially_resizer,
+                             runge_kutta_fehlberg78< state_type > >,
+    adams_bashforth_moulton< 8, state_type, double, state_type, double,
+                             vector_space_algebra, default_operations,
+                             initially_resizer,
+                             runge_kutta_fehlberg78< state_type > >
+    > abm_steppers;
+
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( runge_kutta_test , Stepper, runge_kutta_steppers )
 {
-    integrate_const_test< Stepper > tester;
-    tester();
+    stepper_order_test< Stepper > tester;
+    tester(10);
 }
 
-BOOST_AUTO_TEST_CASE( print_seperator )
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( adams_bashforth_test , Stepper, ab_steppers )
 {
-    std::cout << "-------------------"
-	      << " ABM STEPPERS "
-	      << "-------------------"
-	      << std::endl;
+    stepper_order_test< Stepper > tester;
+    tester(16);
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE( adams_moultion_test , Stepper, adams_steppers )
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( adams_bashforth_moultion_test , Stepper, abm_steppers )
 {
-    integrate_const_test_initialize< Stepper > tester;
-    tester();
+    stepper_order_test< Stepper > tester;
+    tester(16);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
