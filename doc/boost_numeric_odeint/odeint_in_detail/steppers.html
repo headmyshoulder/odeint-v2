@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Steppers</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../odeint_in_detail.html" title="odeint in detail">
 <link rel="prev" href="../odeint_in_detail.html" title="odeint in detail">
@@ -19,7 +19,7 @@
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_numeric_odeint.odeint_in_detail.steppers"></a><a class="link" href="steppers.html" title="Steppers">Steppers</a>
 </h3></div></div></div>
-<div class="toc"><dl>
+<div class="toc"><dl class="toc">
 <dt><span class="section"><a href="steppers.html#boost_numeric_odeint.odeint_in_detail.steppers.explicit_steppers">Explicit
         steppers</a></span></dt>
 <dt><span class="section"><a href="steppers.html#boost_numeric_odeint.odeint_in_detail.steppers.symplectic_solvers">Symplectic
@@ -925,7 +925,7 @@
           user is left with the question of which stepper fits his needs. Our personal
           recommendations are:
         </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
               <code class="computeroutput"><span class="identifier">runge_kutta_dopri5</span></code>
               is maybe the best default stepper. It has step size control as well
@@ -2149,7 +2149,7 @@
           This is all. It is quite simple and the stochastic Euler stepper implement
           here is quite general. Of course it can be enhanced, for example
         </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
               use of operations and algebras as well as the resizing mechanism for
               maximal flexibility and portability
@@ -2194,10 +2194,10 @@
 
 <span class="keyword">struct</span> <span class="identifier">ornstein_stoch</span>
 <span class="special">{</span>
-    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mt19937</span> <span class="identifier">m_rng</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mt19937</span> <span class="special">&amp;</span><span class="identifier">m_rng</span><span class="special">;</span>
     <span class="identifier">boost</span><span class="special">::</span><span class="identifier">normal_distribution</span><span class="special">&lt;&gt;</span> <span class="identifier">m_dist</span><span class="special">;</span>
 
-    <span class="identifier">ornstein_stoch</span><span class="special">(</span> <span class="keyword">double</span> <span class="identifier">sigma</span> <span class="special">)</span> <span class="special">:</span> <span class="identifier">m_rng</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">m_dist</span><span class="special">(</span> <span class="number">0.0</span> <span class="special">,</span> <span class="identifier">sigma</span> <span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+  <span class="identifier">ornstein_stoch</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mt19937</span> <span class="special">&amp;</span><span class="identifier">rng</span> <span class="special">,</span> <span class="keyword">double</span> <span class="identifier">sigma</span> <span class="special">)</span> <span class="special">:</span> <span class="identifier">m_rng</span><span class="special">(</span> <span class="identifier">rng</span> <span class="special">)</span> <span class="special">,</span> <span class="identifier">m_dist</span><span class="special">(</span> <span class="number">0.0</span> <span class="special">,</span> <span class="identifier">sigma</span> <span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
 
     <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">x</span> <span class="special">,</span> <span class="identifier">state_type</span> <span class="special">&amp;</span><span class="identifier">dxdt</span> <span class="special">)</span>
     <span class="special">{</span>
@@ -2215,9 +2215,10 @@
         </p>
 <p>
 </p>
-<pre class="programlisting"><span class="keyword">double</span> <span class="identifier">dt</span> <span class="special">=</span> <span class="number">0.1</span><span class="special">;</span>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mt19937</span> <span class="identifier">rng</span><span class="special">;</span>
+<span class="keyword">double</span> <span class="identifier">dt</span> <span class="special">=</span> <span class="number">0.1</span><span class="special">;</span>
 <span class="identifier">state_type</span> <span class="identifier">x</span> <span class="special">=</span> <span class="special">{{</span> <span class="number">1.0</span> <span class="special">}};</span>
-<span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">stochastic_euler</span><span class="special">&lt;</span> <span class="identifier">N</span> <span class="special">&gt;()</span> <span class="special">,</span> <span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">ornstein_det</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">ornstein_stoch</span><span class="special">(</span> <span class="number">1.0</span> <span class="special">)</span> <span class="special">)</span> <span class="special">,</span>
+<span class="identifier">integrate_const</span><span class="special">(</span> <span class="identifier">stochastic_euler</span><span class="special">&lt;</span> <span class="identifier">N</span> <span class="special">&gt;()</span> <span class="special">,</span> <span class="identifier">make_pair</span><span class="special">(</span> <span class="identifier">ornstein_det</span><span class="special">()</span> <span class="special">,</span> <span class="identifier">ornstein_stoch</span><span class="special">(</span> <span class="identifier">rng</span> <span class="special">,</span> <span class="number">1.0</span> <span class="special">)</span> <span class="special">),</span>
         <span class="identifier">x</span> <span class="special">,</span> <span class="number">0.0</span> <span class="special">,</span> <span class="number">10.0</span> <span class="special">,</span> <span class="identifier">dt</span> <span class="special">,</span> <span class="identifier">streaming_observer</span><span class="special">()</span> <span class="special">);</span>
 </pre>
 <p>
@@ -2234,7 +2235,7 @@
 </h4></div></div></div>
 <p>
           odeint provides a C++ template meta-algorithm for constructing arbitrary
-          Runge-Kutta schemes <sup>[<a name="boost_numeric_odeint.odeint_in_detail.steppers.custom_runge_kutta_steppers.f0" href="#ftn.boost_numeric_odeint.odeint_in_detail.steppers.custom_runge_kutta_steppers.f0" class="footnote">1</a>]</sup>. Some schemes are predefined in odeint, for example the classical
+          Runge-Kutta schemes <a href="#ftn.boost_numeric_odeint.odeint_in_detail.steppers.custom_runge_kutta_steppers.f0" class="footnote" name="boost_numeric_odeint.odeint_in_detail.steppers.custom_runge_kutta_steppers.f0"><sup class="footnote">[1]</sup></a>. Some schemes are predefined in odeint, for example the classical
           Runge-Kutta of fourth order, or the Runge-Kutta-Cash-Karp 54 and the Runge-Kutta-Fehlberg
           78 method. You can use this meta algorithm to construct you own solvers.
           This has the advantage that you can make full use of odeint's algebra and
@@ -2383,8 +2384,8 @@ c3 = 2/3, a31 =  0 , a32 = 2/3
         </p>
 </div>
 <div class="footnotes">
-<br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a id="ftn.boost_numeric_odeint.odeint_in_detail.steppers.custom_runge_kutta_steppers.f0" href="#boost_numeric_odeint.odeint_in_detail.steppers.custom_runge_kutta_steppers.f0" class="para">1</a>] </sup>
+<br><hr style="width:100; text-align:left;margin-left: 0">
+<div id="ftn.boost_numeric_odeint.odeint_in_detail.steppers.custom_runge_kutta_steppers.f0" class="footnote"><p><a href="#boost_numeric_odeint.odeint_in_detail.steppers.custom_runge_kutta_steppers.f0" class="para"><sup class="para">[1] </sup></a>
             M. Mulansky, K. Ahnert, Template-Metaprogramming applied to numerical
             problems, <a href="http://arxiv.org/abs/1110.3233" target="_top">arxiv:1110.3233</a>
           </p></div>

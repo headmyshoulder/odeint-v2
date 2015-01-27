@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Class template times_iterator</title>
 <link rel="stylesheet" href="../../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="../../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../../../header/boost/numeric/odeint/iterator/times_iterator_hpp.html" title="Header &lt;boost/numeric/odeint/iterator/times_iterator.hpp&gt;">
 <link rel="prev" href="../../../header/boost/numeric/odeint/iterator/times_iterator_hpp.html" title="Header &lt;boost/numeric/odeint/iterator/times_iterator.hpp&gt;">
@@ -29,19 +29,19 @@
 <span class="keyword">class</span> <a class="link" href="times_iterator.html" title="Class template times_iterator">times_iterator</a> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
   <span class="comment">// <a class="link" href="times_iterator.html#boost.numeric.odeint.times_iteratorconstruct-copy-destruct">construct/copy/destruct</a></span>
-  <a class="link" href="times_iterator.html#idp22005792-bb"><span class="identifier">times_iterator</span></a><span class="special">(</span><span class="identifier">Stepper</span><span class="special">,</span> <span class="identifier">System</span><span class="special">,</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">TimeIterator</span><span class="special">,</span> <span class="identifier">TimeIterator</span><span class="special">,</span> 
+  <a class="link" href="times_iterator.html#idp53846000-bb"><span class="identifier">times_iterator</span></a><span class="special">(</span><span class="identifier">Stepper</span><span class="special">,</span> <span class="identifier">System</span><span class="special">,</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">TimeIterator</span><span class="special">,</span> <span class="identifier">TimeIterator</span><span class="special">,</span> 
                  <span class="identifier">time_type</span><span class="special">)</span><span class="special">;</span>
-  <a class="link" href="times_iterator.html#idp22010048-bb"><span class="identifier">times_iterator</span></a><span class="special">(</span><span class="identifier">Stepper</span><span class="special">,</span> <span class="identifier">System</span><span class="special">,</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="times_iterator.html#idp53850416-bb"><span class="identifier">times_iterator</span></a><span class="special">(</span><span class="identifier">Stepper</span><span class="special">,</span> <span class="identifier">System</span><span class="special">,</span> <span class="identifier">State</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp20785648"></a><h2>Description</h2>
+<a name="idp117650304"></a><h2>Description</h2>
 <p>Implements an iterator representing the solution of an ODE from *t_start to *t_end evaluated at time points given by the sequence t_start to t_end. t_start and t_end are iterators representing a sequence of time points where the solution of the ODE should be evaluated. After each iteration the iterator dereferences to the state x at the next time *t_start++ until t_end is reached. This iterator can be used with Steppers, ControlledSteppers and DenseOutputSteppers and it always makes use of the all the given steppers capabilities. A for_each over such an iterator range behaves similar to the integrate_times routine.</p>
 <p><a class="link" href="times_iterator.html" title="Class template times_iterator">times_iterator</a> is a model of single-pass iterator.</p>
 <p>The value type of this iterator is the state type of the stepper. Hence one can only access the state and not the current time.</p>
 <p>
 </p>
 <div class="refsect2">
-<a name="idp20788624"></a><h3>Template Parameters</h3>
+<a name="idp117653280"></a><h3>Template Parameters</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">typename</span> Stepper</pre>
@@ -62,14 +62,14 @@
 </ol></div>
 </div>
 <div class="refsect2">
-<a name="idp20797936"></a><h3>
+<a name="idp117662768"></a><h3>
 <a name="boost.numeric.odeint.times_iteratorconstruct-copy-destruct"></a><code class="computeroutput">times_iterator</code> 
         public
        construct/copy/destruct</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
-<li class="listitem"><pre class="literallayout"><a name="idp22005792-bb"></a><span class="identifier">times_iterator</span><span class="special">(</span><span class="identifier">Stepper</span> stepper<span class="special">,</span> <span class="identifier">System</span> sys<span class="special">,</span> <span class="identifier">State</span> <span class="special">&amp;</span> s<span class="special">,</span> <span class="identifier">TimeIterator</span> t_start<span class="special">,</span> 
+<li class="listitem"><pre class="literallayout"><a name="idp53846000-bb"></a><span class="identifier">times_iterator</span><span class="special">(</span><span class="identifier">Stepper</span> stepper<span class="special">,</span> <span class="identifier">System</span> sys<span class="special">,</span> <span class="identifier">State</span> <span class="special">&amp;</span> s<span class="special">,</span> <span class="identifier">TimeIterator</span> t_start<span class="special">,</span> 
                <span class="identifier">TimeIterator</span> t_end<span class="special">,</span> <span class="identifier">time_type</span> dt<span class="special">)</span><span class="special">;</span></pre></li>
-<li class="listitem"><pre class="literallayout"><a name="idp22010048-bb"></a><span class="identifier">times_iterator</span><span class="special">(</span><span class="identifier">Stepper</span> stepper<span class="special">,</span> <span class="identifier">System</span> sys<span class="special">,</span> <span class="identifier">State</span> <span class="special">&amp;</span> s<span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><a name="idp53850416-bb"></a><span class="identifier">times_iterator</span><span class="special">(</span><span class="identifier">Stepper</span> stepper<span class="special">,</span> <span class="identifier">System</span> sys<span class="special">,</span> <span class="identifier">State</span> <span class="special">&amp;</span> s<span class="special">)</span><span class="special">;</span></pre></li>
 </ol></div>
 </div>
 </div>

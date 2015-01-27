@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Class template bulirsch_stoer</title>
 <link rel="stylesheet" href="../../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="../../../index.html" title="Chapter&#160;1.&#160;Boost.Numeric.Odeint">
 <link rel="up" href="../../../header/boost/numeric/odeint/stepper/bulirsch_stoer_hpp.html" title="Header &lt;boost/numeric/odeint/stepper/bulirsch_stoer.hpp&gt;">
 <link rel="prev" href="../../../header/boost/numeric/odeint/stepper/bulirsch_stoer_hpp.html" title="Header &lt;boost/numeric/odeint/stepper/bulirsch_stoer.hpp&gt;">
@@ -41,56 +41,56 @@
   <span class="keyword">typedef</span> <span class="identifier">Resizer</span>    <a name="boost.numeric.odeint.bulirsch_stoer.resizer_type"></a><span class="identifier">resizer_type</span><span class="special">;</span>   
 
   <span class="comment">// <a class="link" href="bulirsch_stoer.html#boost.numeric.odeint.bulirsch_stoerconstruct-copy-destruct">construct/copy/destruct</a></span>
-  <a class="link" href="bulirsch_stoer.html#idp23123536-bb"><span class="identifier">bulirsch_stoer</span></a><span class="special">(</span><span class="identifier">value_type</span> <span class="special">=</span> <span class="number">1E</span><span class="special">-</span><span class="number">6</span><span class="special">,</span> <span class="identifier">value_type</span> <span class="special">=</span> <span class="number">1E</span><span class="special">-</span><span class="number">6</span><span class="special">,</span> <span class="identifier">value_type</span> <span class="special">=</span> <span class="number">1</span><span class="special">.</span><span class="number">0</span><span class="special">,</span> 
+  <a class="link" href="bulirsch_stoer.html#idp54275200-bb"><span class="identifier">bulirsch_stoer</span></a><span class="special">(</span><span class="identifier">value_type</span> <span class="special">=</span> <span class="number">1E</span><span class="special">-</span><span class="number">6</span><span class="special">,</span> <span class="identifier">value_type</span> <span class="special">=</span> <span class="number">1E</span><span class="special">-</span><span class="number">6</span><span class="special">,</span> <span class="identifier">value_type</span> <span class="special">=</span> <span class="number">1</span><span class="special">.</span><span class="number">0</span><span class="special">,</span> 
                  <span class="identifier">value_type</span> <span class="special">=</span> <span class="number">1</span><span class="special">.</span><span class="number">0</span><span class="special">)</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="bulirsch_stoer.html#idp23070000-bb">public member functions</a></span>
+  <span class="comment">// <a class="link" href="bulirsch_stoer.html#idp54239232-bb">public member functions</a></span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
     <span class="identifier">controlled_step_result</span> 
-    <a class="link" href="bulirsch_stoer.html#idp23070400-bb"><span class="identifier">try_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+    <a class="link" href="bulirsch_stoer.html#idp54239792-bb"><span class="identifier">try_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
     <span class="identifier">controlled_step_result</span> 
-    <a class="link" href="bulirsch_stoer.html#idp23079264-bb"><span class="identifier">try_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+    <a class="link" href="bulirsch_stoer.html#idp54244800-bb"><span class="identifier">try_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">,</span> <span class="keyword">typename</span> DerivIn<span class="special">&gt;</span> 
     <span class="identifier">controlled_step_result</span> 
-    <a class="link" href="bulirsch_stoer.html#idp23084752-bb"><span class="identifier">try_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+    <a class="link" href="bulirsch_stoer.html#idp54250176-bb"><span class="identifier">try_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">,</span> <span class="keyword">typename</span> StateOut<span class="special">&gt;</span> 
     <span class="identifier">boost</span><span class="special">::</span><span class="identifier">disable_if</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">is_same</span><span class="special">&lt;</span> <span class="identifier">StateIn</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&gt;</span><span class="special">,</span> <span class="identifier">controlled_step_result</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> 
-    <a class="link" href="bulirsch_stoer.html#idp23095296-bb"><span class="identifier">try_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+    <a class="link" href="bulirsch_stoer.html#idp54256432-bb"><span class="identifier">try_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">,</span> <span class="keyword">typename</span> DerivIn<span class="special">,</span> 
            <span class="keyword">typename</span> StateOut<span class="special">&gt;</span> 
     <span class="identifier">controlled_step_result</span> 
-    <a class="link" href="bulirsch_stoer.html#idp23106336-bb"><span class="identifier">try_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">,</span> 
+    <a class="link" href="bulirsch_stoer.html#idp54262752-bb"><span class="identifier">try_step</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">,</span> 
              <span class="identifier">StateOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">void</span> <a class="link" href="bulirsch_stoer.html#idp23118528-bb"><span class="identifier">reset</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">void</span> <a class="link" href="bulirsch_stoer.html#idp23119808-bb"><span class="identifier">adjust_size</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">void</span> <a class="link" href="bulirsch_stoer.html#idp54270256-bb"><span class="identifier">reset</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">void</span> <a class="link" href="bulirsch_stoer.html#idp54271424-bb"><span class="identifier">adjust_size</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="bulirsch_stoer.html#idp23130784-bb">private member functions</a></span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a class="link" href="bulirsch_stoer.html#idp23131200-bb"><span class="identifier">resize_m_dxdt</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a class="link" href="bulirsch_stoer.html#idp23133696-bb"><span class="identifier">resize_m_xnew</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a class="link" href="bulirsch_stoer.html#idp23136192-bb"><span class="identifier">resize_impl</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="comment">// <a class="link" href="bulirsch_stoer.html#idp54282608-bb">private member functions</a></span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a class="link" href="bulirsch_stoer.html#idp54283184-bb"><span class="identifier">resize_m_dxdt</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a class="link" href="bulirsch_stoer.html#idp54285568-bb"><span class="identifier">resize_m_xnew</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a class="link" href="bulirsch_stoer.html#idp54287952-bb"><span class="identifier">resize_impl</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
     <span class="identifier">controlled_step_result</span> 
-    <a class="link" href="bulirsch_stoer.html#idp23138688-bb"><span class="identifier">try_step_v1</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+    <a class="link" href="bulirsch_stoer.html#idp54290336-bb"><span class="identifier">try_step_v1</span></a><span class="special">(</span><span class="identifier">System</span><span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
-    <span class="keyword">void</span> <a class="link" href="bulirsch_stoer.html#idp23143808-bb"><span class="identifier">extrapolate</span></a><span class="special">(</span><span class="identifier">size_t</span><span class="special">,</span> <span class="identifier">state_table_type</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">value_matrix</span> <span class="special">&amp;</span><span class="special">,</span> 
+    <span class="keyword">void</span> <a class="link" href="bulirsch_stoer.html#idp54295344-bb"><span class="identifier">extrapolate</span></a><span class="special">(</span><span class="identifier">size_t</span><span class="special">,</span> <span class="identifier">state_table_type</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">value_matrix</span> <span class="special">&amp;</span><span class="special">,</span> 
                      <span class="identifier">StateInOut</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
-  <span class="identifier">time_type</span> <a class="link" href="bulirsch_stoer.html#idp23148368-bb"><span class="identifier">calc_h_opt</span></a><span class="special">(</span><span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">value_type</span><span class="special">,</span> <span class="identifier">size_t</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="identifier">time_type</span> <a class="link" href="bulirsch_stoer.html#idp54299792-bb"><span class="identifier">calc_h_opt</span></a><span class="special">(</span><span class="identifier">time_type</span><span class="special">,</span> <span class="identifier">value_type</span><span class="special">,</span> <span class="identifier">size_t</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
   <span class="identifier">controlled_step_result</span> 
-  <a class="link" href="bulirsch_stoer.html#idp23151392-bb"><span class="identifier">set_k_opt</span></a><span class="special">(</span><span class="identifier">size_t</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">inv_time_vector</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">time_vector</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">bool</span> <a class="link" href="bulirsch_stoer.html#idp23155104-bb"><span class="identifier">in_convergence_window</span></a><span class="special">(</span><span class="identifier">size_t</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-  <span class="keyword">bool</span> <a class="link" href="bulirsch_stoer.html#idp23156752-bb"><span class="identifier">should_reject</span></a><span class="special">(</span><span class="identifier">value_type</span><span class="special">,</span> <span class="identifier">size_t</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <a class="link" href="bulirsch_stoer.html#idp54302976-bb"><span class="identifier">set_k_opt</span></a><span class="special">(</span><span class="identifier">size_t</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">inv_time_vector</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">time_vector</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">bool</span> <a class="link" href="bulirsch_stoer.html#idp54306576-bb"><span class="identifier">in_convergence_window</span></a><span class="special">(</span><span class="identifier">size_t</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">bool</span> <a class="link" href="bulirsch_stoer.html#idp54308384-bb"><span class="identifier">should_reject</span></a><span class="special">(</span><span class="identifier">value_type</span><span class="special">,</span> <span class="identifier">size_t</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 
   <span class="comment">// public data members</span>
   <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">m_k_max</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp26542384"></a><h2>Description</h2>
+<a name="idp120045744"></a><h2>Description</h2>
 <p>The Bulirsch-Stoer is a controlled stepper that adjusts both step size and order of the method. The algorithm uses the modified midpoint and a polynomial extrapolation compute the solution.</p>
 <p>
 </p>
 <div class="refsect2">
-<a name="idp26543520"></a><h3>Template Parameters</h3>
+<a name="idp120046880"></a><h3>Template Parameters</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">typename</span> State</pre>
@@ -123,20 +123,26 @@
 </ol></div>
 </div>
 <div class="refsect2">
-<a name="idp26573888"></a><h3>
+<a name="idp120077248"></a><h3>
 <a name="boost.numeric.odeint.bulirsch_stoerconstruct-copy-destruct"></a><code class="computeroutput">bulirsch_stoer</code> 
         public
        construct/copy/destruct</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
-<pre class="literallayout"><a name="idp23123536-bb"></a><span class="identifier">bulirsch_stoer</span><span class="special">(</span><span class="identifier">value_type</span> eps_abs <span class="special">=</span> <span class="number">1E</span><span class="special">-</span><span class="number">6</span><span class="special">,</span> <span class="identifier">value_type</span> eps_rel <span class="special">=</span> <span class="number">1E</span><span class="special">-</span><span class="number">6</span><span class="special">,</span> 
+<pre class="literallayout"><a name="idp54275200-bb"></a><span class="identifier">bulirsch_stoer</span><span class="special">(</span><span class="identifier">value_type</span> eps_abs <span class="special">=</span> <span class="number">1E</span><span class="special">-</span><span class="number">6</span><span class="special">,</span> <span class="identifier">value_type</span> eps_rel <span class="special">=</span> <span class="number">1E</span><span class="special">-</span><span class="number">6</span><span class="special">,</span> 
                <span class="identifier">value_type</span> factor_x <span class="special">=</span> <span class="number">1</span><span class="special">.</span><span class="number">0</span><span class="special">,</span> <span class="identifier">value_type</span> factor_dxdt <span class="special">=</span> <span class="number">1</span><span class="special">.</span><span class="number">0</span><span class="special">)</span><span class="special">;</span></pre>Constructs the <code class="computeroutput"><a class="link" href="bulirsch_stoer.html" title="Class template bulirsch_stoer">bulirsch_stoer</a></code> class, including initialization of the error bounds. <p>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term">Parameters:</span></p></td>
-<td><div class="variablelist"><table border="0">
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><code class="computeroutput">eps_abs</code></span></p></td>
@@ -161,216 +167,46 @@
 </li></ol></div>
 </div>
 <div class="refsect2">
-<a name="idp26602176"></a><h3>
-<a name="idp23070000-bb"></a><code class="computeroutput">bulirsch_stoer</code> public member functions</h3>
+<a name="idp120105536"></a><h3>
+<a name="idp54239232-bb"></a><code class="computeroutput">bulirsch_stoer</code> public member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
+  <span class="identifier">controlled_step_result</span> 
+  <a name="idp54239792-bb"></a><span class="identifier">try_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span> t<span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span> dt<span class="special">)</span><span class="special">;</span></pre></li>
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
   <span class="identifier">controlled_step_result</span> 
-  <a name="idp23070400-bb"></a><span class="identifier">try_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span> t<span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span> dt<span class="special">)</span><span class="special">;</span></pre>Tries to perform one step. <p>This method tries to do one step with step size dt. If the error estimate is to large, the step is rejected and the method returns fail and the step size dt is reduced. If the error estimate is acceptably small, the step is performed, success is returned and dt might be increased to make the steps as large as possible. This method also updates t if a step is performed. Also, the internal order of the stepper is adjusted if required.</p>
-<p>
-
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term">Parameters:</span></p></td>
-<td><div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><code class="computeroutput">dt</code></span></p></td>
-<td><p>The step size. Updated. </p></td>
-</tr>
-<tr>
-<td><p><span class="term"><code class="computeroutput">system</code></span></p></td>
-<td><p>The system function to solve, hence the r.h.s. of the ODE. It must fulfill the Simple System concept. </p></td>
-</tr>
-<tr>
-<td><p><span class="term"><code class="computeroutput">t</code></span></p></td>
-<td><p>The value of the time. Updated if the step is successful. </p></td>
-</tr>
-<tr>
-<td><p><span class="term"><code class="computeroutput">x</code></span></p></td>
-<td><p>The state of the ODE which should be solved. Overwritten if the step is successful. </p></td>
-</tr>
-</tbody>
-</table></div></td>
-</tr>
-<tr>
-<td><p><span class="term">Returns:</span></p></td>
-<td><p>success if the step was accepted, fail otherwise. </p></td>
-</tr>
-</tbody>
-</table></div>
-</li>
-<li class="listitem">
-<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
+  <a name="idp54244800-bb"></a><span class="identifier">try_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span> t<span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span> dt<span class="special">)</span><span class="special">;</span></pre>Second version to solve the forwarding problem, can be used with Boost.Range as StateInOut. </li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">,</span> <span class="keyword">typename</span> DerivIn<span class="special">&gt;</span> 
   <span class="identifier">controlled_step_result</span> 
-  <a name="idp23079264-bb"></a><span class="identifier">try_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span> t<span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span> dt<span class="special">)</span><span class="special">;</span></pre>Second version to solve the forwarding problem, can be used with Boost.Range as StateInOut. </li>
-<li class="listitem">
-<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">,</span> <span class="keyword">typename</span> DerivIn<span class="special">&gt;</span> 
-  <span class="identifier">controlled_step_result</span> 
-  <a name="idp23084752-bb"></a><span class="identifier">try_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span> dxdt<span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span> t<span class="special">,</span> 
-           <span class="identifier">time_type</span> <span class="special">&amp;</span> dt<span class="special">)</span><span class="special">;</span></pre>Tries to perform one step. <p>This method tries to do one step with step size dt. If the error estimate is to large, the step is rejected and the method returns fail and the step size dt is reduced. If the error estimate is acceptably small, the step is performed, success is returned and dt might be increased to make the steps as large as possible. This method also updates t if a step is performed. Also, the internal order of the stepper is adjusted if required.</p>
-<p>
-
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term">Parameters:</span></p></td>
-<td><div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><code class="computeroutput">dt</code></span></p></td>
-<td><p>The step size. Updated. </p></td>
-</tr>
-<tr>
-<td><p><span class="term"><code class="computeroutput">dxdt</code></span></p></td>
-<td><p>The derivative of state. </p></td>
-</tr>
-<tr>
-<td><p><span class="term"><code class="computeroutput">system</code></span></p></td>
-<td><p>The system function to solve, hence the r.h.s. of the ODE. It must fulfill the Simple System concept. </p></td>
-</tr>
-<tr>
-<td><p><span class="term"><code class="computeroutput">t</code></span></p></td>
-<td><p>The value of the time. Updated if the step is successful. </p></td>
-</tr>
-<tr>
-<td><p><span class="term"><code class="computeroutput">x</code></span></p></td>
-<td><p>The state of the ODE which should be solved. Overwritten if the step is successful. </p></td>
-</tr>
-</tbody>
-</table></div></td>
-</tr>
-<tr>
-<td><p><span class="term">Returns:</span></p></td>
-<td><p>success if the step was accepted, fail otherwise. </p></td>
-</tr>
-</tbody>
-</table></div>
-</li>
-<li class="listitem">
-<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">,</span> <span class="keyword">typename</span> StateOut<span class="special">&gt;</span> 
+  <a name="idp54250176-bb"></a><span class="identifier">try_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span> dxdt<span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span> t<span class="special">,</span> 
+           <span class="identifier">time_type</span> <span class="special">&amp;</span> dt<span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">,</span> <span class="keyword">typename</span> StateOut<span class="special">&gt;</span> 
   <span class="identifier">boost</span><span class="special">::</span><span class="identifier">disable_if</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">is_same</span><span class="special">&lt;</span> <span class="identifier">StateIn</span><span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&gt;</span><span class="special">,</span> <span class="identifier">controlled_step_result</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> 
-  <a name="idp23095296-bb"></a><span class="identifier">try_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> in<span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span> t<span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span> out<span class="special">,</span> 
-           <span class="identifier">time_type</span> <span class="special">&amp;</span> dt<span class="special">)</span><span class="special">;</span></pre>Tries to perform one step. <div class="note"><table border="0" summary="Note">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../images/note.png"></td>
-<th align="left">Note</th>
-</tr>
-<tr><td align="left" valign="top"><p>This method is disabled if state_type=time_type to avoid ambiguity.</p></td></tr>
-</table></div>
-<p>
-This method tries to do one step with step size dt. If the error estimate is to large, the step is rejected and the method returns fail and the step size dt is reduced. If the error estimate is acceptably small, the step is performed, success is returned and dt might be increased to make the steps as large as possible. This method also updates t if a step is performed. Also, the internal order of the stepper is adjusted if required.</p>
-<p>
-
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term">Parameters:</span></p></td>
-<td><div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><code class="computeroutput">dt</code></span></p></td>
-<td><p>The step size. Updated. </p></td>
-</tr>
-<tr>
-<td><p><span class="term"><code class="computeroutput">in</code></span></p></td>
-<td><p>The state of the ODE which should be solved. </p></td>
-</tr>
-<tr>
-<td><p><span class="term"><code class="computeroutput">out</code></span></p></td>
-<td><p>Used to store the result of the step. </p></td>
-</tr>
-<tr>
-<td><p><span class="term"><code class="computeroutput">system</code></span></p></td>
-<td><p>The system function to solve, hence the r.h.s. of the ODE. It must fulfill the Simple System concept. </p></td>
-</tr>
-<tr>
-<td><p><span class="term"><code class="computeroutput">t</code></span></p></td>
-<td><p>The value of the time. Updated if the step is successful. </p></td>
-</tr>
-</tbody>
-</table></div></td>
-</tr>
-<tr>
-<td><p><span class="term">Returns:</span></p></td>
-<td><p>success if the step was accepted, fail otherwise. </p></td>
-</tr>
-</tbody>
-</table></div>
-</li>
-<li class="listitem">
-<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">,</span> <span class="keyword">typename</span> DerivIn<span class="special">,</span> 
+  <a name="idp54256432-bb"></a><span class="identifier">try_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> in<span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span> t<span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span> out<span class="special">,</span> 
+           <span class="identifier">time_type</span> <span class="special">&amp;</span> dt<span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateIn<span class="special">,</span> <span class="keyword">typename</span> DerivIn<span class="special">,</span> 
          <span class="keyword">typename</span> StateOut<span class="special">&gt;</span> 
   <span class="identifier">controlled_step_result</span> 
-  <a name="idp23106336-bb"></a><span class="identifier">try_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> in<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span> dxdt<span class="special">,</span> 
-           <span class="identifier">time_type</span> <span class="special">&amp;</span> t<span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span> out<span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span> dt<span class="special">)</span><span class="special">;</span></pre>Tries to perform one step. <p>This method tries to do one step with step size dt. If the error estimate is to large, the step is rejected and the method returns fail and the step size dt is reduced. If the error estimate is acceptably small, the step is performed, success is returned and dt might be increased to make the steps as large as possible. This method also updates t if a step is performed. Also, the internal order of the stepper is adjusted if required.</p>
-<p>
-
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term">Parameters:</span></p></td>
-<td><div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><code class="computeroutput">dt</code></span></p></td>
-<td><p>The step size. Updated. </p></td>
-</tr>
-<tr>
-<td><p><span class="term"><code class="computeroutput">dxdt</code></span></p></td>
-<td><p>The derivative of state. </p></td>
-</tr>
-<tr>
-<td><p><span class="term"><code class="computeroutput">in</code></span></p></td>
-<td><p>The state of the ODE which should be solved. </p></td>
-</tr>
-<tr>
-<td><p><span class="term"><code class="computeroutput">out</code></span></p></td>
-<td><p>Used to store the result of the step. </p></td>
-</tr>
-<tr>
-<td><p><span class="term"><code class="computeroutput">system</code></span></p></td>
-<td><p>The system function to solve, hence the r.h.s. of the ODE. It must fulfill the Simple System concept. </p></td>
-</tr>
-<tr>
-<td><p><span class="term"><code class="computeroutput">t</code></span></p></td>
-<td><p>The value of the time. Updated if the step is successful. </p></td>
-</tr>
-</tbody>
-</table></div></td>
-</tr>
-<tr>
-<td><p><span class="term">Returns:</span></p></td>
-<td><p>success if the step was accepted, fail otherwise. </p></td>
-</tr>
-</tbody>
-</table></div>
-</li>
+  <a name="idp54262752-bb"></a><span class="identifier">try_step</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> in<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">DerivIn</span> <span class="special">&amp;</span> dxdt<span class="special">,</span> 
+           <span class="identifier">time_type</span> <span class="special">&amp;</span> t<span class="special">,</span> <span class="identifier">StateOut</span> <span class="special">&amp;</span> out<span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span> dt<span class="special">)</span><span class="special">;</span></pre></li>
 <li class="listitem">
-<pre class="literallayout"><span class="keyword">void</span> <a name="idp23118528-bb"></a><span class="identifier">reset</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>Resets the internal state of the stepper. </li>
+<pre class="literallayout"><span class="keyword">void</span> <a name="idp54270256-bb"></a><span class="identifier">reset</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>Resets the internal state of the stepper. </li>
 <li class="listitem">
-<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">void</span> <a name="idp23119808-bb"></a><span class="identifier">adjust_size</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre>Adjust the size of all temporaries in the stepper manually. <p>
+<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">void</span> <a name="idp54271424-bb"></a><span class="identifier">adjust_size</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre>Adjust the size of all temporaries in the stepper manually. <p>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term">Parameters:</span></p></td>
-<td><div class="variablelist"><table border="0">
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><code class="computeroutput">x</code></span></p></td>
 <td><p>A state from which the size of the temporaries to be resized is deduced. </p></td>
@@ -382,24 +218,24 @@ This method tries to do one step with step size dt. If the error estimate is to 
 </ol></div>
 </div>
 <div class="refsect2">
-<a name="idp26763616"></a><h3>
-<a name="idp23130784-bb"></a><code class="computeroutput">bulirsch_stoer</code> private member functions</h3>
+<a name="idp120226576"></a><h3>
+<a name="idp54282608-bb"></a><code class="computeroutput">bulirsch_stoer</code> private member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
-<li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a name="idp23131200-bb"></a><span class="identifier">resize_m_dxdt</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre></li>
-<li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a name="idp23133696-bb"></a><span class="identifier">resize_m_xnew</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre></li>
-<li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a name="idp23136192-bb"></a><span class="identifier">resize_impl</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a name="idp54283184-bb"></a><span class="identifier">resize_m_dxdt</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a name="idp54285568-bb"></a><span class="identifier">resize_m_xnew</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateIn<span class="special">&gt;</span> <span class="keyword">bool</span> <a name="idp54287952-bb"></a><span class="identifier">resize_impl</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">StateIn</span> <span class="special">&amp;</span> x<span class="special">)</span><span class="special">;</span></pre></li>
 <li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> System<span class="special">,</span> <span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
   <span class="identifier">controlled_step_result</span> 
-  <a name="idp23138688-bb"></a><span class="identifier">try_step_v1</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span> t<span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span> dt<span class="special">)</span><span class="special">;</span></pre></li>
+  <a name="idp54290336-bb"></a><span class="identifier">try_step_v1</span><span class="special">(</span><span class="identifier">System</span> system<span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> x<span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span> t<span class="special">,</span> <span class="identifier">time_type</span> <span class="special">&amp;</span> dt<span class="special">)</span><span class="special">;</span></pre></li>
 <li class="listitem"><pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> StateInOut<span class="special">&gt;</span> 
-  <span class="keyword">void</span> <a name="idp23143808-bb"></a><span class="identifier">extrapolate</span><span class="special">(</span><span class="identifier">size_t</span> k<span class="special">,</span> <span class="identifier">state_table_type</span> <span class="special">&amp;</span> table<span class="special">,</span> 
+  <span class="keyword">void</span> <a name="idp54295344-bb"></a><span class="identifier">extrapolate</span><span class="special">(</span><span class="identifier">size_t</span> k<span class="special">,</span> <span class="identifier">state_table_type</span> <span class="special">&amp;</span> table<span class="special">,</span> 
                    <span class="keyword">const</span> <span class="identifier">value_matrix</span> <span class="special">&amp;</span> coeff<span class="special">,</span> <span class="identifier">StateInOut</span> <span class="special">&amp;</span> xest<span class="special">)</span><span class="special">;</span></pre></li>
-<li class="listitem"><pre class="literallayout"><span class="identifier">time_type</span> <a name="idp23148368-bb"></a><span class="identifier">calc_h_opt</span><span class="special">(</span><span class="identifier">time_type</span> h<span class="special">,</span> <span class="identifier">value_type</span> error<span class="special">,</span> <span class="identifier">size_t</span> k<span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="identifier">time_type</span> <a name="idp54299792-bb"></a><span class="identifier">calc_h_opt</span><span class="special">(</span><span class="identifier">time_type</span> h<span class="special">,</span> <span class="identifier">value_type</span> error<span class="special">,</span> <span class="identifier">size_t</span> k<span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre></li>
 <li class="listitem"><pre class="literallayout"><span class="identifier">controlled_step_result</span> 
-<a name="idp23151392-bb"></a><span class="identifier">set_k_opt</span><span class="special">(</span><span class="identifier">size_t</span> k<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">inv_time_vector</span> <span class="special">&amp;</span> work<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">time_vector</span> <span class="special">&amp;</span> h_opt<span class="special">,</span> 
+<a name="idp54302976-bb"></a><span class="identifier">set_k_opt</span><span class="special">(</span><span class="identifier">size_t</span> k<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">inv_time_vector</span> <span class="special">&amp;</span> work<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">time_vector</span> <span class="special">&amp;</span> h_opt<span class="special">,</span> 
           <span class="identifier">time_type</span> <span class="special">&amp;</span> dt<span class="special">)</span><span class="special">;</span></pre></li>
-<li class="listitem"><pre class="literallayout"><span class="keyword">bool</span> <a name="idp23155104-bb"></a><span class="identifier">in_convergence_window</span><span class="special">(</span><span class="identifier">size_t</span> k<span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre></li>
-<li class="listitem"><pre class="literallayout"><span class="keyword">bool</span> <a name="idp23156752-bb"></a><span class="identifier">should_reject</span><span class="special">(</span><span class="identifier">value_type</span> error<span class="special">,</span> <span class="identifier">size_t</span> k<span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">bool</span> <a name="idp54306576-bb"></a><span class="identifier">in_convergence_window</span><span class="special">(</span><span class="identifier">size_t</span> k<span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">bool</span> <a name="idp54308384-bb"></a><span class="identifier">should_reject</span><span class="special">(</span><span class="identifier">value_type</span> error<span class="special">,</span> <span class="identifier">size_t</span> k<span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre></li>
 </ol></div>
 </div>
 </div>
