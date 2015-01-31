@@ -30,5 +30,6 @@ test-suite "odeint"
      [ run adams_bashforth_moulton.cpp ]
      [ run abm_time_dependent.cpp ]
      [ run order_quadrature_formula.cpp ]
+     [ run velocity_verlet.cpp ]
      : <testing.launcher>valgrind
      ;
