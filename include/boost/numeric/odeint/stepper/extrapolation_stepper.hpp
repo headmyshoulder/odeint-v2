@@ -280,14 +280,12 @@ class extrapolation_stepper : public explicit_error_stepper_base
  * \brief Extrapolation stepper with configurable order, and error estimation.
  *
  * The extrapolation stepper is a stepper with error estimation and configurable
- *order. The order is given as
- * template parameter and needs to be an _odd_ number. The stepper is based on
- *several executions of the
- * modified midpoint method and a Richardson extrapolation. This is essentially
- *the same technique as for
- * bulirsch_stoer, but without the variable order.
+ * order. The order is given as template parameter and needs to be an _odd_
+ * number. The stepper is based on several executions of the modified midpoint
+ * method and a Richardson extrapolation. This is essentially the same technique
+ * as for bulirsch_stoer, but without the variable order.
  *
- * \note The Order parameter has to be an even number.
+ * \note The Order parameter has to be an even number greater 2.
  */
 }
 }
