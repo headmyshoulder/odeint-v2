@@ -199,6 +199,22 @@ class extrapolation_stepper : public explicit_error_stepper_base
         boost::numeric::odeint::copy( m_xout.m_v, inout );
     }
 
+    template < class System, class StateInOut, class DerivIn >
+    void do_step_dxdt_impl( System system, StateInOut &x, const DerivIn &dxdt,
+                            time_type t, time_type dt )
+    {
+        do_step_impl_io( system , x , dxdt , t , dt );
+    }
+
+    template < class System, class StateIn, class DerivIn, class StateOut >
+    void do_step_dxdt_impl( System system, const StateIn &in,
+                            const DerivIn &dxdt, time_type t, StateOut &out,
+                            time_type dt )
+    {
+        do_step_impl( system , in , dxdt , t , out , dt );
+    }
+
+
     template < class StateIn > void adjust_size( const StateIn &x )
     {
         resize_impl( x );
