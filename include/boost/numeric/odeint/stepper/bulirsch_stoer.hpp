@@ -340,7 +340,7 @@ public:
         resize_m_dxdt( x );
         resize_m_xnew( x );
         resize_impl( x );
-        m_midpoint.adjust_size();
+        m_midpoint.adjust_size( x );
     }
 
 
