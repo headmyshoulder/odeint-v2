@@ -366,7 +366,7 @@ public:
     void adjust_size( const StateIn &x )
     {
         resize_impl( x );
-        m_midpoint.adjust_size();
+        m_midpoint.adjust_size( x );
     }
 
 

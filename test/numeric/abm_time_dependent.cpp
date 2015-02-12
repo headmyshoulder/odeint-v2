@@ -1,7 +1,7 @@
 /* Boost numeric test of the adams-bashforth-moulton steppers test file
 
  Copyright 2013 Karsten Ahnert
- Copyright 2013 Mario Mulansky
+ Copyright 2013-2015 Mario Mulansky
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
@@ -32,7 +32,6 @@ namespace mpl = boost::mpl;
 typedef double value_type;
 
 typedef value_type state_type;
-typedef runge_kutta_fehlberg78<state_type> initializing_stepper;
 
 
 // simple time-dependent rhs, analytic solution x = 0.5*t^2
@@ -54,7 +53,6 @@ struct perform_abm_time_dependent_test
     void operator()( void )
     {
         Stepper stepper;
-        initializing_stepper init_stepper;
         const int o = stepper.order()+1; //order of the error is order of approximation + 1
 
         const state_type x0 = 0.0;
@@ -63,7 +61,7 @@ struct perform_abm_time_dependent_test
         double dt = 0.1;
         const int steps = 10;
 
-integrate_n_steps( boost::ref(stepper) , simple_rhs(), x1 , t , dt , steps );
+        integrate_n_steps( boost::ref(stepper) , simple_rhs(), x1 , t , dt , steps );
         BOOST_CHECK_LT( std::abs( 0.5 - x1 ) , std::pow( dt , o ) );
     }
 };
