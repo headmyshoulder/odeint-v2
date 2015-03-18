@@ -38,7 +38,7 @@ if --enable-index in  [ modules.peek : ARGV ]
         # PDF native index support is probably better for PDFs as then you actually get page numbers.
 
         <auto-index-script>odeint.idx # Specifies the name of the index script to load. 
-        <auto-index-prefix>../../../.. 
+        <auto-index-prefix>../include
         
         # Inform Quickbook that there is to be an index(es).
         <quickbook-define>enable_index

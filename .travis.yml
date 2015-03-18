@@ -1,5 +1,7 @@
 language: cpp
-
+os: 
+  - linux
+  - osx
 compiler:
   - gcc
   - clang
@@ -7,6 +9,12 @@ compiler:
 env:
   - CXXSTD=''
   - CXXSTD='cxxflags="-std=c++0x"'
+
+# For now disable gcc on osx as g++4.8 is not yet available
+matrix:
+  exclude:
+    - os: osx
+      compiler: gcc
 
 before_install:
  - wget http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2/download -O /tmp/boost.tar.bz2
@@ -19,9 +27,11 @@ before_install:
  - cd $BOOST_ROOT
  - ./bootstrap.sh
  - cd $TRAVIS_BUILD_DIR
-
+ - if [ "$TRAVIS_OS_NAME" = "osx" ] && [ "$CC" = "gcc" ]; then export CC=gcc-4.8; fi
+ - $CC --version
 
 script:
- - $BOOST_ROOT/b2 toolset=$CC$GCCVER $CXXSTD
+ - $BOOST_ROOT/b2 toolset=$CC $CXXSTD
 # build in c++11 mode only with gcc
 # - if [ "$CXX" = "g++" ]; then $BOOST_ROOT/b2 -a toolset=$CC$GCCVER cxxflags="-std=c++0x"; fi
+
