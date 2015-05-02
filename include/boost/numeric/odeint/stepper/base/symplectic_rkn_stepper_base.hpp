@@ -210,7 +210,7 @@ private:
 
         // ToDo: check sizes?
 
-        for( size_t l=0 ; l<num_of_stages ; ++l )
+        for( size_t l(0) ; l<num_of_stages ; ++l )
         {
             if( l == 0 )
             {

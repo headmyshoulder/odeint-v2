@@ -70,7 +70,7 @@ public:
         
         const size_t n = x.size();
         value_type err = 0.0 , sk = 0.0;
-        for( size_t i=0 ; i<n ; ++i )
+        for( size_t i(0) ; i<n ; ++i )
         {
             sk = m_atol + m_rtol * max BOOST_PREVENT_MACRO_SUBSTITUTION ( abs( xold[i] ) , abs( x[i] ) );
             err += xerr[i] * xerr[i] / sk / sk;

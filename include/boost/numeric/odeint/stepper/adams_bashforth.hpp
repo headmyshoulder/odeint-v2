@@ -197,7 +197,7 @@ public :
 
         m_resizer.adjust_size( x , detail::bind( &stepper_type::template resize_impl<StateIn> , detail::ref( *this ) , detail::_1 ) );
 
-        for( size_t i=0 ; i+1<steps ; ++i )
+        for( size_t i(0) ; i+1<steps ; ++i )
         {
             if( i != 0 ) m_step_storage.rotate();
             sys( x , m_step_storage[0].m_v , t );
@@ -260,7 +260,7 @@ private:
     bool resize_impl( const StateIn &x )
     {
         bool resized( false );
-        for( size_t i=0 ; i<steps ; ++i )
+        for( size_t i(0) ; i<steps ; ++i )
         {
             resized |= adjust_size_by_resizeability( m_step_storage[i] , x , typename is_resizeable<deriv_type>::type() );
         }
