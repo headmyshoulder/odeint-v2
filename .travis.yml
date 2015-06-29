@@ -7,7 +7,7 @@ compiler:
   - clang
 
 env:
-  - CXXSTD='-std=c++98'
+  - CXXSTD=''
   - CXXSTD='-std=c++0x'
 
 # For now disable gcc on osx as g++4.8 is not yet available
