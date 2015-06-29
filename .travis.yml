@@ -32,12 +32,12 @@ before_install:
  - if [ "$TRAVIS_OS_NAME" = "osx" ] && [ "$CC" = "gcc" ]; then export CC=gcc-4.8; fi
  - $CC --version
  
-# - if [ "$CXX" = "g++" ]; then export COMPAREFLAG='-Wno-sign-compare'; fi
-# - if [ "$CXX" = "clang++"]; then export DEFINE='define=BOOST_NO_CXX11_ALLOCATOR'; fi
+- if [ "$CXX" = "g++" ]; then export COMPAREFLAG='-Wno-sign-compare'; fi
+- if [ "$CXX" = "clang++"]; then export DEFINE='define=BOOST_NO_CXX11_ALLOCATOR'; export STDLIB='-stdlib=libc++'; fi
 
 script:
- - $BOOST_ROOT/b2 toolset=$CC cxxflags="$CXXSTD"
-# - $BOOST_ROOT/b2 toolset=$CC cxxflags="$CXXSTD $COMPAREFLAG" $DEFINE
+# - $BOOST_ROOT/b2 toolset=$CC cxxflags="$CXXSTD"
+ - $BOOST_ROOT/b2 toolset=$CC cxxflags="$CXXSTD $COMPAREFLAG" $STDLIB $DEFINE
 # build in c++11 mode only with gcc
 # - if [ "$CXX" = "g++" ]; then $BOOST_ROOT/b2 -a toolset=$CC$GCCVER cxxflags="-std=c++0x"; fi
 
