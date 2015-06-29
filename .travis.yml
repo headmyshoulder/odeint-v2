@@ -7,8 +7,8 @@ compiler:
   - clang
 
 env:
-  - CXXSTD=''
-  - CXXSTD='cxxflags="-std=c++0x"'
+  - CXXSTD='-std=c++03'
+  - CXXSTD='-std=c++0x'
 
 # For now disable gcc on osx as g++4.8 is not yet available
 matrix:
@@ -30,9 +30,12 @@ before_install:
  - cd $TRAVIS_BUILD_DIR
  - if [ "$TRAVIS_OS_NAME" = "osx" ] && [ "$CC" = "gcc" ]; then export CC=gcc-4.8; fi
  - $CC --version
+ 
+ - if [ "$CXX" = "g++" ]; then export COMPAREFLAG='-Wno-sign-compare'; fi
+ - if [ "$CXX" = "clang++"]; then export DEFINE='define=BOOST_NO_CXX11_ALLOCATOR'; fi
 
 script:
- - $BOOST_ROOT/b2 toolset=$CC $CXXSTD
+ - $BOOST_ROOT/b2 toolset=$CC cxxflags="$CXXSTD $COMPAREFLAG" $DEFINE
 # build in c++11 mode only with gcc
 # - if [ "$CXX" = "g++" ]; then $BOOST_ROOT/b2 -a toolset=$CC$GCCVER cxxflags="-std=c++0x"; fi
 
