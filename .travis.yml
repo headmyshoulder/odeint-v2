@@ -1,3 +1,4 @@
+sudo: false
 language: cpp
 os: 
   - linux
@@ -5,6 +6,16 @@ os:
 compiler:
   - gcc
   - clang
+install:
+- if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-4.8
+    - g++-4.8
+    - clang
 
 env:
   - CXXSTD=''
@@ -32,16 +43,12 @@ before_install:
  - if [ "$TRAVIS_OS_NAME" = "osx" ] && [ "$CC" = "gcc" ]; then export CC=gcc-4.8; fi
  - $CC --version
  
- - if [ "$CXX" = "g++" ]; then export COMPAREFLAG='-Wno-sign-compare'; fi
- - if [ "$CXX" = "clang++" ]; then export STDLIB='-stdlib=libc++'; fi
- - if [ "$CXX" = "clang++" ] && [ "$CXXSTD" = '-std=c++0x' ]; then export DEFINE='define=BOOST_NO_CXX11_ALLOCATOR'; fi
+# - if [ "$CXX" = "g++" ]; then export COMPAREFLAG='-Wno-sign-compare'; fi
+# - if [ "$CXX" = "clang++" ]; then export STDLIB='-stdlib=libc++'; fi
+# - if [ "$CXX" = "clang++" ] && [ "$CXXSTD" = '-std=c++0x' ]; then export DEFINE='define=BOOST_NO_CXX11_ALLOCATOR'; fi
 
 script:
- - echo $COMPAREFLAG
- - echo $STDLIB
- - echo $DEFINE
- - echo $CXXSTD
-# - $BOOST_ROOT/b2 toolset=$CC cxxflags="$CXXSTD"
- - $BOOST_ROOT/b2 toolset=$CC cxxflags="$CXXSTD $COMPAREFLAG" $DEFINE $STDLIB -d+2
+ - $BOOST_ROOT/b2 toolset=$CC cxxflags="$CXXSTD"
+# - $BOOST_ROOT/b2 toolset=$CC cxxflags="$CXXSTD $COMPAREFLAG $STDLIB" $DEFINE -d+2
 # build in c++11 mode only with gcc
 # - if [ "$CXX" = "g++" ]; then $BOOST_ROOT/b2 -a toolset=$CC$GCCVER cxxflags="-std=c++0x"; fi
