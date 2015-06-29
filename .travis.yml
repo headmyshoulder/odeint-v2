@@ -1,25 +1,25 @@
 sudo: false
 language: cpp
 os: 
-  - linux
-  - osx
+ - linux
+ - osx
 compiler:
-  - gcc
-  - clang
+ - gcc
+ - clang
 install:
-- if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+ - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
 addons:
   apt:
     sources:
-    - ubuntu-toolchain-r-test
+     - ubuntu-toolchain-r-test
     packages:
-    - gcc-4.8
-    - g++-4.8
-    - clang
+     - gcc-4.8
+     - g++-4.8
+     - clang
 
 env:
-  - CXXSTD=''
-  - CXXSTD='-std=c++0x'
+ - CXXSTD=""
+ - CXXSTD="cxxflags='-std=c++0x'"
 
 # For now disable gcc on osx as g++4.8 is not yet available
 matrix:
@@ -48,7 +48,7 @@ before_install:
 # - if [ "$CXX" = "clang++" ] && [ "$CXXSTD" = '-std=c++0x' ]; then export DEFINE='define=BOOST_NO_CXX11_ALLOCATOR'; fi
 
 script:
- - $BOOST_ROOT/b2 toolset=$CC cxxflags="$CXXSTD"
+ - $BOOST_ROOT/b2 toolset=$CC $CXXSTD
 # - $BOOST_ROOT/b2 toolset=$CC cxxflags="$CXXSTD $COMPAREFLAG $STDLIB" $DEFINE -d+2
 # build in c++11 mode only with gcc
 # - if [ "$CXX" = "g++" ]; then $BOOST_ROOT/b2 -a toolset=$CC$GCCVER cxxflags="-std=c++0x"; fi
