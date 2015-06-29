@@ -40,7 +40,8 @@ script:
  - echo $COMPAREFLAG
  - echo $STDLIB
  - echo $DEFINE
+ - echo $CXXSTD
 # - $BOOST_ROOT/b2 toolset=$CC cxxflags="$CXXSTD"
- - $BOOST_ROOT/b2 toolset=$CC cxxflags="$CXXSTD $COMPAREFLAG" $STDLIB $DEFINE
+ - $BOOST_ROOT/b2 toolset=$CC cxxflags="$CXXSTD $COMPAREFLAG" $DEFINE $STDLIB -d+2
 # build in c++11 mode only with gcc
 # - if [ "$CXX" = "g++" ]; then $BOOST_ROOT/b2 -a toolset=$CC$GCCVER cxxflags="-std=c++0x"; fi
