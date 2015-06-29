@@ -17,11 +17,12 @@ matrix:
       compiler: gcc
 
 before_install:
- - wget http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2/download -O /tmp/boost.tar.bz2
+# http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2/download
+ - wget http://downloads.sourceforge.net/project/boost/boost/1.58.0/boost_1_58_0.tar.bz2/download -O /tmp/boost.tar.bz2
  - tar jxf /tmp/boost.tar.bz2
- - mv boost_1_55_0 $PWD/boost-trunk
-# patch the boost build system
- - patch $PWD/boost-trunk/tools/build/v2/build/toolset.jam toolset.jam.patch
+ - mv boost_1_58_0 $PWD/boost-trunk
+# patch the boost build system - not neccessary with 1.58 anymore
+# - patch $PWD/boost-trunk/tools/build/v2/build/toolset.jam toolset.jam.patch
  - export BOOST_ROOT="$PWD/boost-trunk"
 
  - cd $BOOST_ROOT
