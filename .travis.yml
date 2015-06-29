@@ -17,8 +17,9 @@ matrix:
       compiler: gcc
 
 before_install:
-# http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2/download
- - wget http://downloads.sourceforge.net/project/boost/boost/1.58.0/boost_1_58_0.tar.bz2\?r\=\&ts\=1435589970\&use_mirror\=garr -O /tmp/boost.tar.bz2
+# 1.55: http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2/download
+# 1.58: http://downloads.sourceforge.net/project/boost/boost/1.58.0/boost_1_58_0.tar.bz2\?r\=\&ts\=1435589970\&use_mirror\=garr
+ - wget http://sourceforge.net/projects/boost/files/boost/1.57.0/boost_1_57_0.tar.bz2/download -O /tmp/boost.tar.bz2
  - tar jxf /tmp/boost.tar.bz2
  - mv boost_1_58_0 $PWD/boost-trunk
 # patch the boost build system - not neccessary with 1.58 anymore
@@ -31,11 +32,12 @@ before_install:
  - if [ "$TRAVIS_OS_NAME" = "osx" ] && [ "$CC" = "gcc" ]; then export CC=gcc-4.8; fi
  - $CC --version
  
- - if [ "$CXX" = "g++" ]; then export COMPAREFLAG='-Wno-sign-compare'; fi
- - if [ "$CXX" = "clang++"]; then export DEFINE='define=BOOST_NO_CXX11_ALLOCATOR'; fi
+# - if [ "$CXX" = "g++" ]; then export COMPAREFLAG='-Wno-sign-compare'; fi
+# - if [ "$CXX" = "clang++"]; then export DEFINE='define=BOOST_NO_CXX11_ALLOCATOR'; fi
 
 script:
- - $BOOST_ROOT/b2 toolset=$CC cxxflags="$CXXSTD $COMPAREFLAG" $DEFINE
+ - $BOOST_ROOT/b2 toolset=$CC cxxflags="$CXXSTD"
+# - $BOOST_ROOT/b2 toolset=$CC cxxflags="$CXXSTD $COMPAREFLAG" $DEFINE
 # build in c++11 mode only with gcc
 # - if [ "$CXX" = "g++" ]; then $BOOST_ROOT/b2 -a toolset=$CC$GCCVER cxxflags="-std=c++0x"; fi
 
