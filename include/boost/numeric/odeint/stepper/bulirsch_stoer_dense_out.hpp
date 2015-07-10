@@ -684,7 +684,7 @@ private:
 
     //wrapped_state_type m_a1 , m_a2 , m_a3 , m_a4;
 
-    const value_type STEPFAC1 , STEPFAC2 , STEPFAC3 , STEPFAC4 , KFAC1 , KFAC2;
+    value_type STEPFAC1 , STEPFAC2 , STEPFAC3 , STEPFAC4 , KFAC1 , KFAC2;
 };
 
 
