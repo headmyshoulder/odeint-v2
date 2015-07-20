@@ -109,7 +109,7 @@ public:
           m_table( m_k_max ) ,
           m_mp_states( m_k_max+1 ) ,
           m_derivs( m_k_max+1 ) ,
-          m_diffs( 2*m_k_max+1 ) ,
+          m_diffs( 2*m_k_max+2 ) ,
           STEPFAC1( 0.65 ) , STEPFAC2( 0.94 ) , STEPFAC3( 0.02 ) , STEPFAC4( 4.0 ) , KFAC1( 0.8 ) , KFAC2( 0.9 )
     {
         BOOST_USING_STD_MIN();
@@ -139,7 +139,7 @@ public:
             */
         }
         int num = 1;
-        for( int i = 2*(m_k_max) ; i >=0  ; i-- )
+        for( int i = 2*(m_k_max)+1 ; i >=0  ; i-- )
         {
             m_diffs[i].resize( num );
             num += (i+1)%2;
@@ -587,7 +587,7 @@ private:
         for( size_t i = 0 ; i < m_k_max+1 ; ++i )
             for( size_t j = 0 ; j < m_derivs[i].size() ; ++j )
                 resized |= adjust_size_by_resizeability( m_derivs[i][j] , x , typename is_resizeable<deriv_type>::type() );
-        for( size_t i = 0 ; i < 2*m_k_max+1 ; ++i )
+        for( size_t i = 0 ; i < 2*m_k_max+2 ; ++i )
             for( size_t j = 0 ; j < m_diffs[i].size() ; ++j )
                 resized |= adjust_size_by_resizeability( m_diffs[i][j] , x , typename is_resizeable<deriv_type>::type() );
 
