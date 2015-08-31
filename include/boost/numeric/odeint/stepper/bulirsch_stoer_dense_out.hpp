@@ -412,15 +412,15 @@ private:
         BOOST_USING_STD_MAX();
         using std::pow;
 
-        value_type expo=1.0/(m_interval_sequence[k-1]);
+        value_type expo = static_cast<value_type>(1)/(m_interval_sequence[k-1]);
         value_type facmin = pow BOOST_PREVENT_MACRO_SUBSTITUTION( STEPFAC3 , expo );
         value_type fac;
         if (error == 0.0)
-            fac=1.0/facmin;
+            fac = static_cast<value_type>(1)/facmin;
         else
         {
             fac = STEPFAC2 / pow BOOST_PREVENT_MACRO_SUBSTITUTION( error / STEPFAC1 , expo );
-            fac = max BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<value_type>( facmin/STEPFAC4 ) , min BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<value_type>( 1.0/facmin ) , fac ) );
+            fac = max BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<value_type>( facmin/STEPFAC4 ) , min BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<value_type>(static_cast<value_type>(1)/facmin) , fac ) );
         }
         return h*fac;
     }
