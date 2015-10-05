@@ -329,7 +329,7 @@ public:
             res = m_stepper.try_step( system , get_current_state() , get_current_deriv() , m_t ,
                                       get_old_state() , get_old_deriv() , m_dt );
             if( count++ == max_count )
-                BOOST_THROW_EXCEPTION( std::overflow_error( "dense_output_controlled_explicit : too much iterations!") );
+                BOOST_THROW_EXCEPTION( std::overflow_error( "dense_output_controlled_explicit : too many iterations!") );
         }
         while( res == fail );
         toggle_current_state();

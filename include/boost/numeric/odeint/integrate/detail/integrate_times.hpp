@@ -99,6 +99,8 @@ size_t integrate_times(
             if( st.try_step( system , start_state , current_time , current_dt ) == success )
             {
                 ++steps;
+                // successful step -> reset the fail counter, see #173
+                fail_steps = 0;
                 // continue with the original step size if dt was reduced due to observation
                 dt = max_abs( dt , current_dt );
             }
