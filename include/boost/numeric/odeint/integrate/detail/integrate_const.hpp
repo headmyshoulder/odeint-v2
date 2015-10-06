@@ -31,24 +31,28 @@ namespace odeint {
 namespace detail {
 
 // forward declaration
-template< class Stepper , class System , class State , class Time , class Observer >
-size_t integrate_adaptive(
+template< class Stepper , class System , class State , class Time , class Observer , class StepOverflowChecker >
+size_t integrate_adaptive_checked(
         Stepper stepper , System system , State &start_state ,
         Time &start_time , Time end_time , Time &dt ,
-        Observer observer , controlled_stepper_tag
+        Observer observer , StepOverflowChecker checker
 );
 
 
-template< class Stepper , class System , class State , class Time , class Observer >
+template< class Stepper , class System , class State , class Time , class Observer , class StepOverflowChecker >
 size_t integrate_const(
         Stepper stepper , System system , State &start_state ,
         Time start_time , Time end_time , Time dt ,
-        Observer observer , stepper_tag 
+        Observer observer , StepOverflowChecker /* checker */ , stepper_tag
 )
 {
+
+    // note that for integrate_const with a basic stepper, overflow checks are not required as exactly
+    // one step is performed between each observer call
+
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
     typename odeint::unwrap_reference< Stepper >::type &st = stepper;
-    
+
     Time time = start_time;
     int step = 0;
     // cast time+dt explicitely in case of expression templates (e.g. multiprecision)
@@ -68,15 +72,15 @@ size_t integrate_const(
 
 
 
-template< class Stepper , class System , class State , class Time , class Observer >
+template< class Stepper , class System , class State , class Time , class Observer , class StepOverflowChecker >
 size_t integrate_const(
         Stepper stepper , System system , State &start_state ,
         Time start_time , Time end_time , Time dt ,
-        Observer observer , controlled_stepper_tag 
+        Observer observer , StepOverflowChecker checker , controlled_stepper_tag
 )
 {
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
-    
+
     Time time = start_time;
     const Time time_step = dt;
     int real_steps = 0;
@@ -85,8 +89,8 @@ size_t integrate_const(
     while( less_eq_with_sign( static_cast<Time>(time+time_step) , end_time , dt ) )
     {
         obs( start_state , time );
-        real_steps += detail::integrate_adaptive( stepper , system , start_state , time , time+time_step , dt ,
-                                    null_observer() , controlled_stepper_tag() );
+        real_steps += detail::integrate_adaptive_checked( stepper , system , start_state , time , time+time_step , dt ,
+                                                          null_observer() , checker );
         // direct computation of the time avoids error propagation happening when using time += dt
         // we need clumsy type analysis to get boost units working here
         step++;
@@ -98,16 +102,17 @@ size_t integrate_const(
 }
 
 
-template< class Stepper , class System , class State , class Time , class Observer >
+template< class Stepper , class System , class State , class Time , class Observer , class StepOverflowChecker >
 size_t integrate_const(
         Stepper stepper , System system , State &start_state ,
         Time start_time , Time end_time , Time dt ,
-        Observer observer , dense_output_stepper_tag 
+        Observer observer , StepOverflowChecker checker , dense_output_stepper_tag
 )
 {
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
     typename odeint::unwrap_reference< Stepper >::type &st = stepper;
-    
+    typename odeint::unwrap_reference< StepOverflowChecker >::type &chk = checker;
+
     Time time = start_time;
     
     st.initialize( start_state , time , dt );
@@ -123,6 +128,7 @@ size_t integrate_const(
         {
             st.calc_state( time , start_state );
             obs( start_state , time );
+            chk.reset();  // reset checker at observation points
             ++obs_step;
             // direct computation of the time avoids error propagation happening when using time += dt
             // we need clumsy type analysis to get boost units working here
@@ -136,6 +142,7 @@ size_t integrate_const(
             while( less_eq_with_sign( st.current_time() , time , dt ) )
             {
                 st.do_step( system );
+                chk();
                 ++real_step;
             }
         }
@@ -143,6 +150,7 @@ size_t integrate_const(
         { // do the last step ending exactly on the end point
             st.initialize( st.current_state() , st.current_time() , end_time - st.current_time() );
             st.do_step( system );
+            chk();
             ++real_step;
         }
         

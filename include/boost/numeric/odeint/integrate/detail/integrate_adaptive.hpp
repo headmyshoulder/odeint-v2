@@ -25,6 +25,7 @@
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
+#include <boost/numeric/odeint/integrate/null_checker.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_const.hpp>
 #include <boost/numeric/odeint/util/bind.hpp>
 #include <boost/numeric/odeint/util/unwrap_reference.hpp>
@@ -41,11 +42,11 @@ namespace odeint {
 namespace detail {
 
 // forward declaration
-template< class Stepper , class System , class State , class Time , class Observer>
+template< class Stepper , class System , class State , class Time , class Observer , class StepOverflowChecker >
 size_t integrate_const(
         Stepper stepper , System system , State &start_state ,
         Time start_time , Time end_time , Time dt ,
-        Observer observer , stepper_tag );
+        Observer observer , StepOverflowChecker checker , stepper_tag );
 
 /*
  * integrate_adaptive for simple stepper is basically an integrate_const + some last step
@@ -58,7 +59,7 @@ size_t integrate_adaptive(
 )
 {
     size_t steps = detail::integrate_const( stepper , system , start_state , start_time ,
-                                            end_time , dt , observer , stepper_tag() );
+                                            end_time , dt , observer , null_checker() , stepper_tag() );
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
     typename odeint::unwrap_reference< Stepper >::type &st = stepper;
 
@@ -74,17 +75,18 @@ size_t integrate_adaptive(
 
 
 /*
- * classical integrate adaptive
+ * small helper function that calls a given checker - this is for use in integrate_const for ControlledStepper
  */
-template< class Stepper , class System , class State , class Time , class Observer >
-size_t integrate_adaptive(
+template< class Stepper , class System , class State , class Time , class Observer , class StepOverflowChecker >
+size_t integrate_adaptive_checked(
         Stepper stepper , System system , State &start_state ,
         Time &start_time , Time end_time , Time &dt ,
-        Observer observer , controlled_stepper_tag
+        Observer observer , StepOverflowChecker checker
 )
 {
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
     typename odeint::unwrap_reference< Stepper >::type &st = stepper;
+    typename odeint::unwrap_reference< StepOverflowChecker >::type &chk = checker;
 
     const size_t max_attempts = 1000;
     const char *error_string = "Integrate adaptive : Maximal number of iterations reached. A step size could not be found.";
@@ -102,6 +104,7 @@ size_t integrate_adaptive(
         do
         {
             res = st.try_step( system , start_state , start_time , dt );
+            chk();
             ++trials;
         }
         while( ( res == fail ) && ( trials < max_attempts ) );
@@ -111,6 +114,23 @@ size_t integrate_adaptive(
     }
     obs( start_state , start_time );
     return count;
+}
+
+
+/*
+* classical integrate adaptive
+*/
+
+template< class Stepper , class System , class State , class Time , class Observer >
+size_t integrate_adaptive(
+        Stepper stepper , System system , State &start_state ,
+        Time &start_time , Time end_time , Time &dt ,
+        Observer observer , controlled_stepper_tag
+)
+{
+    // call the checked version with a null_checker
+    return integrate_adaptive_checked(stepper, system, start_state, start_time, end_time,
+                                      dt, observer, null_checker());
 }
 
 
