@@ -80,6 +80,7 @@ size_t integrate_const(
 )
 {
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
+    typename odeint::unwrap_reference< StepOverflowChecker >::type &chk = checker;
 
     Time time = start_time;
     const Time time_step = dt;
@@ -89,6 +90,8 @@ size_t integrate_const(
     while( less_eq_with_sign( static_cast<Time>(time+time_step) , end_time , dt ) )
     {
         obs( start_state , time );
+        chk.reset();  // reset after each observation
+        // integrate_adaptive_checked uses the given checker to throw if an overflow occurs
         real_steps += detail::integrate_adaptive_checked( stepper , system , start_state , time , time+time_step , dt ,
                                                           null_observer() , checker );
         // direct computation of the time avoids error propagation happening when using time += dt
