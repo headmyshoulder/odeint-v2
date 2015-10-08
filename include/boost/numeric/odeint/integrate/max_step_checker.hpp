@@ -45,6 +45,9 @@ namespace odeint {
             reset();
         }
 
+        /**
+         * \brief Resets the max_step_checker by setting the internal counter to 0.
+         */
         void reset()
         {
             m_steps = 0;

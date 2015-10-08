@@ -24,6 +24,7 @@
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/integrate/null_observer.hpp>
+#include <boost/numeric/odeint/integrate/null_checker.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_times.hpp>
 
 namespace boost {
@@ -32,8 +33,72 @@ namespace odeint {
 
 
 /*
+ * \brief Integrates while calling the observer at the time points given by sequence [times_start, time_end)
  * the two overloads are needed in order to solve the forwarding problem
  */
+template< class Stepper , class System , class State , class TimeIterator , class Time , class Observer , class StepOverflowChecker >
+size_t integrate_times(
+        Stepper stepper , System system , State &start_state ,
+        TimeIterator times_start , TimeIterator times_end , Time dt ,
+        Observer observer , StepOverflowChecker checker )
+{
+    typedef typename odeint::unwrap_reference< Stepper >::type::stepper_category stepper_category;
+    return detail::integrate_times(
+            stepper , system , start_state ,
+            times_start , times_end , dt ,
+            observer , checker , stepper_category() );
+}
+
+/**
+ * \brief Solves the forwarding problem, can be called with Boost.Range as start_state.
+ */
+template< class Stepper , class System , class State , class TimeIterator , class Time , class Observer , class StepOverflowChecker >
+size_t integrate_times(
+        Stepper stepper , System system , const State &start_state ,
+        TimeIterator times_start , TimeIterator times_end , Time dt ,
+        Observer observer , StepOverflowChecker checker )
+{
+    typedef typename odeint::unwrap_reference< Stepper >::type::stepper_category stepper_category;
+    return detail::integrate_times(
+            stepper , system , start_state ,
+            times_start , times_end , dt ,
+            observer , checker , stepper_category() );
+}
+
+/**
+ * \brief The same function as above, but with the observation times given as range.
+ */
+template< class Stepper , class System , class State , class TimeRange , class Time , class Observer , class StepOverflowChecker >
+size_t integrate_times(
+        Stepper stepper , System system , State &start_state ,
+        const TimeRange &times , Time dt ,
+        Observer observer , StepOverflowChecker checker )
+{
+    return integrate_times(
+            stepper , system , start_state ,
+            boost::begin( times ) , boost::end( times ) , dt , observer , checker );
+}
+
+/**
+ * \brief Solves the forwarding problem, can be called with Boost.Range as start_state.
+ */
+template< class Stepper , class System , class State , class TimeRange , class Time , class Observer , class StepOverflowChecker >
+size_t integrate_times(
+        Stepper stepper , System system , const State &start_state ,
+        const TimeRange &times , Time dt ,
+        Observer observer , StepOverflowChecker checker )
+{
+    return integrate_times(
+            stepper , system , start_state ,
+            boost::begin( times ) , boost::end( times ) , dt , observer , checker );
+}
+
+
+
+
+/*
+* The same functions as above, but without a StepOverflowChecker
+*/
 template< class Stepper , class System , class State , class TimeIterator , class Time , class Observer >
 size_t integrate_times(
         Stepper stepper , System system , State &start_state ,
@@ -44,12 +109,12 @@ size_t integrate_times(
     return detail::integrate_times(
             stepper , system , start_state ,
             times_start , times_end , dt ,
-            observer , stepper_category() );
+            observer , null_checker() , stepper_category() );
 }
 
 /**
- * \brief Solves the forwarding problem, can be called with Boost.Range as start_state.
- */
+* \brief Solves the forwarding problem, can be called with Boost.Range as start_state.
+*/
 template< class Stepper , class System , class State , class TimeIterator , class Time , class Observer >
 size_t integrate_times(
         Stepper stepper , System system , const State &start_state ,
@@ -60,12 +125,12 @@ size_t integrate_times(
     return detail::integrate_times(
             stepper , system , start_state ,
             times_start , times_end , dt ,
-            observer , stepper_category() );
+            observer , null_checker() , stepper_category() );
 }
 
 /**
- * \brief The same function as above, but without observer calls.
- */
+* \brief The same function as above, but with the observation times given as range.
+*/
 template< class Stepper , class System , class State , class TimeRange , class Time , class Observer >
 size_t integrate_times(
         Stepper stepper , System system , State &start_state ,
@@ -74,12 +139,12 @@ size_t integrate_times(
 {
     return integrate_times(
             stepper , system , start_state ,
-            boost::begin( times ) , boost::end( times ) , dt , observer );
+            boost::begin( times ) , boost::end( times ) , dt , observer , null_checker() );
 }
 
 /**
- * \brief Solves the forwarding problem, can be called with Boost.Range as start_state.
- */
+* \brief Solves the forwarding problem, can be called with Boost.Range as start_state.
+*/
 template< class Stepper , class System , class State , class TimeRange , class Time , class Observer >
 size_t integrate_times(
         Stepper stepper , System system , const State &start_state ,
@@ -88,10 +153,8 @@ size_t integrate_times(
 {
     return integrate_times(
             stepper , system , start_state ,
-            boost::begin( times ) , boost::end( times ) , dt , observer );
+            boost::begin( times ) , boost::end( times ) , dt , observer , null_checker() );
 }
-
-
 
 
 /********* DOXYGEN ***********/

@@ -6,7 +6,7 @@
  integrate const implementation
  [end_description]
 
- Copyright 2012 Mario Mulansky
+ Copyright 2012-2015 Mario Mulansky
  Copyright 2012 Christoph Koke
  Copyright 2012 Karsten Ahnert
 
@@ -92,8 +92,9 @@ size_t integrate_const(
         obs( start_state , time );
         chk.reset();  // reset after each observation
         // integrate_adaptive_checked uses the given checker to throw if an overflow occurs
-        real_steps += detail::integrate_adaptive_checked( stepper , system , start_state , time , time+time_step , dt ,
-                                                          null_observer() , checker );
+        real_steps += detail::integrate_adaptive_checked(stepper, system, start_state, time,
+                                                         static_cast<Time>(time + time_step), dt,
+                                                         null_observer(), checker);
         // direct computation of the time avoids error propagation happening when using time += dt
         // we need clumsy type analysis to get boost units working here
         step++;

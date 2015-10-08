@@ -22,6 +22,7 @@
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/integrate/null_observer.hpp>
+#include <boost/numeric/odeint/integrate/null_checker.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_n_steps.hpp>
 
 namespace boost {
@@ -34,35 +35,57 @@ namespace odeint {
  *
  * the two overloads are needed in order to solve the forwarding problem
  */
-template< class Stepper , class System , class State , class Time , class Observer>
+template< class Stepper , class System , class State , class Time , class Observer , class StepOverflowChecker >
 Time integrate_n_steps(
         Stepper stepper , System system , State &start_state ,
         Time start_time , Time dt , size_t num_of_steps ,
-        Observer observer )
+        Observer observer , StepOverflowChecker checker )
 {
     typedef typename odeint::unwrap_reference< Stepper >::type::stepper_category stepper_category;
     return detail::integrate_n_steps(
                 stepper , system , start_state ,
                 start_time , dt , num_of_steps ,
-                observer , stepper_category() );
+                observer , checker , stepper_category() );
 }
 
 /**
  * \brief Solves the forwarding problem, can be called with Boost.Range as start_state.
  */
-template< class Stepper , class System , class State , class Time , class Observer >
+template< class Stepper , class System , class State , class Time , class Observer , class StepOverflowChecker >
 Time integrate_n_steps(
         Stepper stepper , System system , const State &start_state ,
         Time start_time , Time dt , size_t num_of_steps ,
-        Observer observer )
+        Observer observer , StepOverflowChecker checker )
 {
     typedef typename odeint::unwrap_reference< Stepper >::type::stepper_category stepper_category;
     return detail::integrate_n_steps(
                  stepper , system , start_state ,
                  start_time , dt , num_of_steps ,
-                 observer , stepper_category() );
+                 observer , checker , stepper_category() );
 }
 
+
+/**
+* \brief The same function as above, but without checker.
+*/
+template< class Stepper , class System , class State , class Time , class Observer >
+Time integrate_n_steps(
+        Stepper stepper , System system , State &start_state ,
+        Time start_time , Time dt , size_t num_of_steps , Observer observer )
+{
+    return integrate_n_steps(stepper, system, start_state, start_time, dt, num_of_steps, observer, null_checker());
+}
+
+/**
+* \brief Solves the forwarding problem, can be called with Boost.Range as start_state.
+*/
+template< class Stepper , class System , class State , class Time , class Observer >
+Time integrate_n_steps(
+        Stepper stepper , System system , const State &start_state ,
+        Time start_time , Time dt , size_t num_of_steps , Observer observer )
+{
+    return integrate_n_steps(stepper, system, start_state, start_time, dt, num_of_steps, observer, null_checker());
+}
 
 /**
  * \brief The same function as above, but without observer calls.
@@ -72,7 +95,8 @@ Time integrate_n_steps(
         Stepper stepper , System system , State &start_state ,
         Time start_time , Time dt , size_t num_of_steps )
 {
-    return integrate_n_steps( stepper , system , start_state , start_time , dt , num_of_steps , null_observer() );
+    return integrate_n_steps(stepper, system, start_state, start_time, dt, num_of_steps, null_observer(),
+                             null_checker());
 }
 
 /**
@@ -83,7 +107,8 @@ Time integrate_n_steps(
         Stepper stepper , System system , const State &start_state ,
         Time start_time , Time dt , size_t num_of_steps )
 {
-    return integrate_n_steps( stepper , system , start_state , start_time , dt , num_of_steps , null_observer() );
+    return integrate_n_steps(stepper, system, start_state, start_time, dt, num_of_steps, null_observer(),
+                             null_checker());
 }
 
 

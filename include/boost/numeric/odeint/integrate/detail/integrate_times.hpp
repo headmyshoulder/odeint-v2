@@ -6,7 +6,7 @@
  Default integrate times implementation.
  [end_description]
 
- Copyright 2011-2012 Mario Mulansky
+ Copyright 2011-2015 Mario Mulansky
  Copyright 2012 Karsten Ahnert
  Copyright 2012 Christoph Koke
 
@@ -38,15 +38,16 @@ namespace detail {
 /*
  * integrate_times for simple stepper
  */
-template< class Stepper , class System , class State , class TimeIterator , class Time , class Observer >
+template<class Stepper, class System, class State, class TimeIterator, class Time, class Observer, class StepOverflowChecker>
 size_t integrate_times(
         Stepper stepper , System system , State &start_state ,
         TimeIterator start_time , TimeIterator end_time , Time dt ,
-        Observer observer , stepper_tag
+        Observer observer , StepOverflowChecker checker , stepper_tag
 )
 {
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
     typename odeint::unwrap_reference< Stepper >::type &st = stepper;
+    typename odeint::unwrap_reference< StepOverflowChecker >::type &chk = checker;
     typedef typename unit_value_type<Time>::type time_type;
 
     size_t steps = 0;
@@ -55,12 +56,14 @@ size_t integrate_times(
     {
         Time current_time = *start_time++;
         obs( start_state , current_time );
+        chk.reset();  // reset after each observer call
         if( start_time == end_time )
             break;
         while( less_with_sign( current_time , static_cast<time_type>(*start_time) , current_dt ) )
         {
             current_dt = min_abs( dt , *start_time - current_time );
             st.do_step( system , start_state , current_time , current_dt );
+            chk();  // check for potential too many steps exception
             current_time += current_dt;
             steps++;
         }
@@ -71,17 +74,19 @@ size_t integrate_times(
 /*
  * integrate_times for controlled stepper
  */
-template< class Stepper , class System , class State , class TimeIterator , class Time , class Observer >
+template< class Stepper , class System , class State , class TimeIterator , class Time , class Observer , class StepOverflowChecker >
 size_t integrate_times(
         Stepper stepper , System system , State &start_state ,
         TimeIterator start_time , TimeIterator end_time , Time dt ,
-        Observer observer , controlled_stepper_tag
+        Observer observer , StepOverflowChecker checker , controlled_stepper_tag
 )
 {
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
     typename odeint::unwrap_reference< Stepper >::type &st = stepper;
+    typename odeint::unwrap_reference< StepOverflowChecker >::type &chk = checker;
     typedef typename unit_value_type<Time>::type time_type;
 
+    // ToDo: refactor this into a separate max_step_checker
     const size_t max_attempts = 1000;
     const char *error_string = "Integrate adaptive : Maximal number of iterations reached. A step size could not be found.";
     size_t steps = 0;
@@ -90,6 +95,7 @@ size_t integrate_times(
         size_t fail_steps = 0;
         Time current_time = *start_time++;
         obs( start_state , current_time );
+        chk.reset();  // reset after each observer call
         if( start_time == end_time )
             break;
         while( less_with_sign( current_time , static_cast<time_type>(*start_time) , dt ) )
@@ -109,6 +115,8 @@ size_t integrate_times(
                 ++fail_steps;
                 dt = current_dt;
             }
+            chk();  // check for potential step overflow exception
+            // ToDo: The following should be part of another checker
             if( fail_steps == max_attempts ) BOOST_THROW_EXCEPTION( std::overflow_error( error_string ));
         }
     }
@@ -118,15 +126,16 @@ size_t integrate_times(
 /*
  * integrate_times for dense output stepper
  */
-template< class Stepper , class System , class State , class TimeIterator , class Time , class Observer >
+template< class Stepper , class System , class State , class TimeIterator , class Time , class Observer , class StepOverflowChecker >
 size_t integrate_times(
         Stepper stepper , System system , State &start_state ,
         TimeIterator start_time , TimeIterator end_time , Time dt ,
-        Observer observer , dense_output_stepper_tag
+        Observer observer , StepOverflowChecker checker , dense_output_stepper_tag
 )
 {
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
     typename odeint::unwrap_reference< Stepper >::type &st = stepper;
+    typename odeint::unwrap_reference< StepOverflowChecker >::type &chk = checker;
     typedef typename unit_value_type<Time>::type time_type;
 
     if( start_time == end_time )
@@ -138,6 +147,7 @@ size_t integrate_times(
 
     st.initialize( start_state , *start_time , dt );
     obs( start_state , *start_time++ );
+    chk.reset();  // reset after each observer call
 
     size_t count = 0;
     while( start_time != end_time )
@@ -146,6 +156,7 @@ size_t integrate_times(
         {
             st.calc_state( *start_time , start_state );
             obs( start_state , *start_time );
+            chk.reset();  // reset after each observer call
             start_time++;
         }
 
@@ -155,12 +166,14 @@ size_t integrate_times(
                                st.current_time_step() ) )
         {
             st.do_step( system );
+            chk();  // check for potential step overflow exception
             ++count;
         }
         else if( start_time != end_time )
         { // do the last step ending exactly on the end point
             st.initialize( st.current_state() , st.current_time() , last_time_point - st.current_time() );
             st.do_step( system );
+            chk();  // check for potential step overflow exception
             ++count;
         }
     }
