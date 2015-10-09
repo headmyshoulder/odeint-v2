@@ -6,7 +6,7 @@
  integrate steps implementation
  [end_description]
 
- Copyright 2012 Mario Mulansky
+ Copyright 2012-2015 Mario Mulansky
  Copyright 2012 Christoph Koke
  Copyright 2012 Karsten Ahnert
 

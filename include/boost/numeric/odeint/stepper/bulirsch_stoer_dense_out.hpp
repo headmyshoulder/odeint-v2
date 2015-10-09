@@ -6,7 +6,7 @@
  Implementaiton of the Burlish-Stoer method with dense output
  [end_description]
 
- Copyright 2011-2013 Mario Mulansky
+ Copyright 2011-2015 Mario Mulansky
  Copyright 2011-2013 Karsten Ahnert
  Copyright 2012 Christoph Koke
 

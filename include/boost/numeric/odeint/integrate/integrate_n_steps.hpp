@@ -7,7 +7,7 @@
  [end_description]
 
  Copyright 2011-2013 Karsten Ahnert
- Copyright 2011-2012 Mario Mulansky
+ Copyright 2011-2015 Mario Mulansky
 
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
@@ -127,6 +127,11 @@ Time integrate_n_steps(
      * t0 + n*dt. If a DenseOutputStepper is used, the step size also may vary
      * and the dense output is used to call the observer at equidistant time
      * points. The final integration time is always t0 + num_of_steps*dt.
+     * If a max_step_checker is provided as StepOverflowChecker, an exception is
+     * thrown if too many steps (default: 500) are performed without progress,
+     * i.e. in between observer calls. If no checker is provided, no such
+     * overflow check is performed.
+
      *
      * \param stepper The stepper to be used for numerical integration.
      * \param system Function/Functor defining the rhs of the ODE.
@@ -136,6 +141,8 @@ Time integrate_n_steps(
      * time step of the integration.
      * \param num_of_steps Number of steps to be performed
      * \param observer Function/Functor called at equidistant time intervals.
+     * \param checker [optional] Functor to check for step count overflows, if no
+     * checker is provided, no exception is thrown.
      * \return The number of steps performed.
      */
 

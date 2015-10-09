@@ -168,7 +168,8 @@ size_t integrate_const(
  * \param dt The time step between observer calls, _not_ necessarily the
  * time step of the integration.
  * \param observer [optional] Function/Functor called at equidistant time intervals.
- * \param checker [optional] Functor to check for step count overflows.
+ * \param checker [optional] Functor to check for step count overflows, if no
+ * checker is provided, no exception is thrown.
  * \return The number of steps performed.
  */
 
