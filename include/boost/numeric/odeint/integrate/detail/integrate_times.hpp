@@ -26,6 +26,7 @@
 #include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/util/detail/less_with_sign.hpp>
+#include <boost/numeric/odeint/integrate/max_step_checker.hpp>
 
 
 namespace boost {
@@ -86,13 +87,10 @@ size_t integrate_times(
     typename odeint::unwrap_reference< StepOverflowChecker >::type &chk = checker;
     typedef typename unit_value_type<Time>::type time_type;
 
-    // ToDo: refactor this into a separate max_step_checker
-    const size_t max_attempts = 1000;
-    const char *error_string = "Integrate adaptive : Maximal number of iterations reached. A step size could not be found.";
+    failed_step_checker fail_checker;  // to throw a runtime_error if step size adjustment fails
     size_t steps = 0;
     while( true )
     {
-        size_t fail_steps = 0;
         Time current_time = *start_time++;
         obs( start_state , current_time );
         chk.reset();  // reset after each observer call
@@ -106,18 +104,16 @@ size_t integrate_times(
             {
                 ++steps;
                 // successful step -> reset the fail counter, see #173
-                fail_steps = 0;
+                fail_checker.reset();
                 // continue with the original step size if dt was reduced due to observation
                 dt = max_abs( dt , current_dt );
             }
             else
             {
-                ++fail_steps;
+                fail_checker();  // check for possible overflow of failed steps in step size adjustment
                 dt = current_dt;
             }
             chk();  // check for potential step overflow exception
-            // ToDo: The following should be part of another checker
-            if( fail_steps == max_attempts ) BOOST_THROW_EXCEPTION( std::overflow_error( error_string ));
         }
     }
     return steps;

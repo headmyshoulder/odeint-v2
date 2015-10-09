@@ -26,6 +26,7 @@
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/integrate/null_checker.hpp>
+#include <boost/numeric/odeint/integrate/max_step_checker.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_const.hpp>
 #include <boost/numeric/odeint/util/bind.hpp>
 #include <boost/numeric/odeint/util/unwrap_reference.hpp>
@@ -88,8 +89,7 @@ size_t integrate_adaptive_checked(
     typename odeint::unwrap_reference< Stepper >::type &st = stepper;
     typename odeint::unwrap_reference< StepOverflowChecker >::type &chk = checker;
 
-    const size_t max_attempts = 1000;
-    const char *error_string = "Integrate adaptive : Maximal number of iterations reached. A step size could not be found.";
+    failed_step_checker fail_checker;  // to throw a runtime_error if step size adjustment fails
     size_t count = 0;
     while( less_with_sign( start_time , end_time , dt ) )
     {
@@ -99,16 +99,15 @@ size_t integrate_adaptive_checked(
             dt = end_time - start_time;
         }
 
-        size_t trials = 0;
         controlled_step_result res;
         do
         {
             res = st.try_step( system , start_state , start_time , dt );
-            chk();
-            ++trials;
+            chk();  // check number of steps
+            fail_checker();  // check number of failed steps
         }
-        while( ( res == fail ) && ( trials < max_attempts ) );
-        if( trials == max_attempts ) BOOST_THROW_EXCEPTION( std::overflow_error( error_string ) );
+        while( res == fail );
+        fail_checker.reset();  // if we reach here, the step was successful -> reset fail checker
 
         ++count;
     }
