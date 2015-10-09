@@ -87,11 +87,11 @@ BOOST_AUTO_TEST_CASE( test_integrate_const )
     // very small error terms -> standard overflow threshold of 500 should fire an exception
     BOOST_CHECK_THROW(integrate_const(make_controlled<stepper_type>(1E-15, 1E-15), lorenz, x,
                                       0.0, 10.0, 1.0, push_back_time(times), max_step_checker()),
-                      std::overflow_error);
+                      std::runtime_error);
     // small threshold of 10 -> larger error still gives an exception
     BOOST_CHECK_THROW(integrate_const(make_controlled<stepper_type>(1E-5, 1E-5), lorenz, x,
                                       0.0, 10.0, 1.0, push_back_time(times), max_step_checker(10)),
-                      std::overflow_error);
+                      std::runtime_error);
 
     // check exceptions for dense output stepper
     integrate_const(make_dense_output<stepper_type>(1E-5, 1E-5), lorenz, x, 0.0, 10.0, 1.0);
@@ -99,11 +99,11 @@ BOOST_AUTO_TEST_CASE( test_integrate_const )
     // very small error terms -> standard overflow threshold of 500 should fire an exception
     BOOST_CHECK_THROW(integrate_const(make_dense_output<stepper_type>(1E-15, 1E-15), lorenz, x,
                                       0.0, 10.0, 1.0, push_back_time(times), max_step_checker()),
-                      std::overflow_error);
+                      std::runtime_error);
     // small threshold of 10 -> larger error still gives an exception
     BOOST_CHECK_THROW(integrate_const(make_dense_output<stepper_type>(1E-5, 1E-5), lorenz, x,
                                       0.0, 10.0, 1.0, push_back_time(times), max_step_checker(10)),
-                      std::overflow_error);
+                      std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE( test_integrate_n_steps )
@@ -124,11 +124,11 @@ BOOST_AUTO_TEST_CASE( test_integrate_n_steps )
     // very small error terms -> standard overflow threshold of 500 should fire an exception
     BOOST_CHECK_THROW(integrate_n_steps(make_controlled<stepper_type>(1E-15, 1E-15), lorenz, x,
                                         0.0, 1.0, 10, push_back_time(times), max_step_checker()),
-                      std::overflow_error);
+                      std::runtime_error);
     // small threshold of 10 -> larger error still gives an exception
     BOOST_CHECK_THROW(integrate_n_steps(make_controlled<stepper_type>(1E-5, 1E-5), lorenz, x,
                                         0.0, 1.0, 10, push_back_time(times), max_step_checker(10)),
-                      std::overflow_error);
+                      std::runtime_error);
 
     // check exceptions for dense output stepper
     integrate_n_steps(make_dense_output<stepper_type>(1E-5, 1E-5), lorenz, x, 0.0, 1.0, 10);
@@ -136,11 +136,11 @@ BOOST_AUTO_TEST_CASE( test_integrate_n_steps )
     // very small error terms -> standard overflow threshold of 500 should fire an exception
     BOOST_CHECK_THROW(integrate_n_steps(make_dense_output<stepper_type>(1E-15, 1E-15), lorenz, x,
                                         0.0, 1.0, 10, push_back_time(times), max_step_checker()),
-                      std::overflow_error);
+                      std::runtime_error);
     // small threshold of 10 -> larger error still gives an exception
     BOOST_CHECK_THROW(integrate_n_steps(make_dense_output<stepper_type>(1E-5, 1E-5), lorenz, x,
                                         0.0, 1.0, 10, push_back_time(times), max_step_checker(10)),
-                      std::overflow_error);
+                      std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE( test_integrate_times )
@@ -158,7 +158,7 @@ BOOST_AUTO_TEST_CASE( test_integrate_times )
     // if dt*max_steps < observer time difference we expect an exception
     BOOST_CHECK_THROW(integrate_times(stepper_type(), lorenz, x, t0, t1, 0.01, push_back_time(times),
                                       max_step_checker(10)),
-                      std::overflow_error);
+                      std::runtime_error);
 
     // check exceptions for controlled stepper
     // no exception if no checker is provided
@@ -166,22 +166,22 @@ BOOST_AUTO_TEST_CASE( test_integrate_times )
     // very small error terms -> standard overflow threshold of 500 should fire an exception
     BOOST_CHECK_THROW(integrate_times(make_controlled<stepper_type>(1E-15, 1E-15), lorenz, x,
                                       t0, t1, 1.0 , push_back_time(times), max_step_checker()),
-                      std::overflow_error);
+                      std::runtime_error);
     // small threshold of 10 -> larger error still gives an exception
     BOOST_CHECK_THROW(integrate_times(make_controlled<stepper_type>(1E-5, 1E-5), lorenz, x,
                                       t0, t1, 1.0 , push_back_time(times), max_step_checker(10)),
-                      std::overflow_error);
+                      std::runtime_error);
 
     // check exceptions for dense output stepper
     integrate_times(make_dense_output<stepper_type>(1E-5, 1E-5), lorenz, x, t0, t1, 1.0 , push_back_time(times));
     // very small error terms -> standard overflow threshold of 500 should fire an exception
     BOOST_CHECK_THROW(integrate_times(make_dense_output<stepper_type>(1E-15, 1E-15), lorenz, x,
                                       t0, t1, 1.0 , push_back_time(times), max_step_checker()),
-                      std::overflow_error);
+                      std::runtime_error);
     // small threshold of 10 -> larger error still gives an exception
     BOOST_CHECK_THROW(integrate_times(make_dense_output<stepper_type>(1E-5, 1E-5), lorenz, x,
                                       t0, t1, 1.0 , push_back_time(times), max_step_checker(10)),
-                      std::overflow_error);
+                      std::runtime_error);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

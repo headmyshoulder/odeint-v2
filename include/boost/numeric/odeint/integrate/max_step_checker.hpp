@@ -26,39 +26,50 @@ namespace boost {
 namespace numeric {
 namespace odeint {
 
+/**
+ * \brief A class for performing overflow checks on the step count in integrate functions.
+ *
+ * Provide an instance of this class to integrate functions if you want to throw a runtime error if
+ * too many steps are performed without progress during the integrate routine.
+ */
+struct max_step_checker
+{
+    // the exception to be thrown
+    typedef std::runtime_error exception_type;
+
+    const int m_max_steps;
+    int m_steps;
+
     /**
-     * \brief A class for performing overflow checks on the step count in integrate functions.
-     *
-     * Provide an instance of this class to integrate functions if you want to throw an exception if
-     * too many steps are performed without progress during the integrate routine.
+     * \brief Construct the max_step_checker.
      */
-    struct max_step_checker{
-        const int m_max_steps;
-        int m_steps;
+    max_step_checker(const int max_steps = 500)
+        : m_max_steps(max_steps)
+    {
+        reset();
+    }
 
-        /**
-         * \brief Construct the max_step_checker.
-         */
-        max_step_checker(const int max_steps = 500)
-            : m_max_steps(max_steps)
-        {
-            reset();
-        }
+    /**
+     * \brief Resets the max_step_checker by setting the internal counter to 0.
+     */
+    void reset()
+    {
+        m_steps = 0;
+    }
 
-        /**
-         * \brief Resets the max_step_checker by setting the internal counter to 0.
-         */
-        void reset()
+    /**
+     * \brief Increases the counter and performs the iteration check
+     */
+    void operator()(void)
+    {
+        if( m_steps++ >= m_max_steps )
         {
-            m_steps = 0;
+            char error_msg[100];
+            sprintf(error_msg, "Max number of iterations exceeded (%d).", m_max_steps);
+            BOOST_THROW_EXCEPTION( exception_type(error_msg) );
         }
-
-        void operator()(void)
-        {
-            if( m_steps++ >= m_max_steps )
-                BOOST_THROW_EXCEPTION( std::overflow_error( "too many steps!") );
-        }
-    };
+    }
+};
 
 } // namespace odeint
 } // namespace numeric
