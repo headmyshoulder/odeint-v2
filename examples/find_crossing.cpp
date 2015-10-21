@@ -29,7 +29,7 @@ namespace odeint = boost::numeric::odeint;
 
 typedef std::array<double, 2> state_type;
 
-const double gam = 1.0;
+const double gam = 1.0;  // damping strength
 
 void damped_osc(const state_type &x, state_type &dxdt, const double /*t*/)
 {
@@ -84,12 +84,15 @@ find_condition(state_type &x0, System sys, Condition cond,
     }
 
     // the dense out stepper now covers the interval where the condition changes
-    // let's find the position by bisection
+    // improve the solution by bisection
     double t0 = stepper.previous_time();
     double t1 = stepper.current_time();
     double t_m;
     state_type x_m;
-    while (t1 - t0 > precision) {
+    // use odeint's resizing functionality to allocate memory for x_m
+    odeint::adjust_size_by_resizeability(x_m, x0,
+                                         typename odeint::is_resizeable<state_type>::type());
+    while(std::abs(t1 - t0) > precision) {
         t_m = 0.5 * (t0 + t1);  // get the mid point time
         stepper.calc_state(t_m, x_m); // obtain the corresponding state
         if (cond(x_m))
