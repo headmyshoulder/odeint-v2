@@ -57,7 +57,7 @@ T min_abs( T t1 , T t2 )
 {
     BOOST_USING_STD_MIN();
     BOOST_USING_STD_MAX();
-    if( t1>0 )
+    if( get_unit_value(t1)>0 )
         return min BOOST_PREVENT_MACRO_SUBSTITUTION ( t1 , t2 );
     else
         return max BOOST_PREVENT_MACRO_SUBSTITUTION ( t1 , t2 );
@@ -68,7 +68,7 @@ T max_abs( T t1 , T t2 )
 {
     BOOST_USING_STD_MIN();
     BOOST_USING_STD_MAX();
-    if( t1>0 )
+    if( get_unit_value(t1)>0 )
         return max BOOST_PREVENT_MACRO_SUBSTITUTION ( t1 , t2 );
     else
         return min BOOST_PREVENT_MACRO_SUBSTITUTION ( t1 , t2 );

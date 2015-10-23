@@ -466,7 +466,7 @@ private:
             return error > 1.0;
     }
 
-    default_error_checker< value_type, algebra_type , operations_type > m_error_checker;
+    default_error_checker< value_type, time_type, algebra_type , operations_type > m_error_checker;
     modified_midpoint< state_type , value_type , deriv_type , time_type , algebra_type , operations_type , resizer_type > m_midpoint;
 
     bool m_last_step_rejected;
