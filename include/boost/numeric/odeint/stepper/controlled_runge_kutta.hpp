@@ -93,7 +93,7 @@ public:
     }
 
 
-    time_type decrease_step(const time_type dt, const value_type error, const int stepper_order) const
+    time_type decrease_step(const time_type dt, const value_type error, const int error_order) const
     {
         BOOST_USING_STD_MIN();
         BOOST_USING_STD_MAX();
@@ -102,7 +102,7 @@ public:
         return dt * max
         BOOST_PREVENT_MACRO_SUBSTITUTION(
                 static_cast<value_type>( static_cast<value_type>(9) / static_cast<value_type>(10) *
-                                         pow(error, static_cast<value_type>(-1) / (stepper_order - 1))),
+                                         pow(error, static_cast<value_type>(-1) / (error_order - 1))),
                 static_cast<value_type>( static_cast<value_type>(1) / static_cast<value_type> (5)));
     }
 
@@ -112,7 +112,7 @@ public:
         BOOST_USING_STD_MAX();
         using std::pow;
 
-        // adjust the size if dt is smaller than max_dt
+        // adjust the size if dt is smaller than max_dt (providede max_dt is not zero)
         if(error < 0.5 && (m_max_dt == static_cast<time_type >(0) ||
                            detail::less_with_sign(dt, m_max_dt, dt)))
         {
@@ -120,11 +120,12 @@ public:
             error = max BOOST_PREVENT_MACRO_SUBSTITUTION (
                     static_cast<value_type>( pow( static_cast<value_type>(5.0) , -static_cast<value_type>(stepper_order) ) ) ,
                     error);
+            time_type dt_old = dt;
             //error too small - increase dt and keep the evolution and limit scaling factor to 5.0
-            time_type dt_new = dt*static_cast<value_type>(9)/static_cast<value_type>(10) * pow(error ,
-                                                                                          static_cast<value_type>(-1) / stepper_order);
-            // limit the step size to maximal stepsize
-            dt = detail::max_abs(dt_new, m_max_dt);
+            dt *= static_cast<value_type>(9)/static_cast<value_type>(10) *
+                    pow(error, static_cast<value_type>(-1) / stepper_order);
+            // limit to maximal stepsize
+            dt = detail::max_abs(dt, m_max_dt);
         }
         return dt;
     }
@@ -385,32 +386,21 @@ public:
         // do one step with error calculation
         m_stepper.do_step( system , in , dxdt , t , out , dt , m_xerr.m_v );
 
-        m_max_rel_error = m_error_checker.error( m_stepper.algebra() , in , dxdt , m_xerr.m_v , dt );
+        value_type max_rel_err = m_error_checker.error( m_stepper.algebra() , in , dxdt , m_xerr.m_v , dt );
 
-        if( m_max_rel_error > 1.0 )
+        if( max_rel_err > 1.0 )
         {
             // error too big, decrease step size and reject this step
-            dt = m_error_checker.decrease_step(dt, m_max_rel_error, m_stepper.stepper_order());
+            dt = m_error_checker.decrease_step(dt, max_rel_err, m_stepper.error_order());
             return fail;
         } else
         {
             // otherwise, increase step size and accept
             t += dt;
-            dt = m_error_checker.increase_step(dt, m_max_rel_error, m_stepper.stepper_order());
+            dt = m_error_checker.increase_step(dt, max_rel_err, m_stepper.stepper_order());
             return success;
         }
     }
-
-    /**
-     * \brief Returns the error of the last step.
-     *
-     * returns The last error of the step.
-     */
-    value_type last_error( void ) const
-    {
-        return m_max_rel_error;
-    }
-
 
     /**
      * \brief Adjust the size of all temporaries in the stepper manually.
@@ -485,7 +475,6 @@ private:
     wrapped_deriv_type m_dxdt;
     wrapped_state_type m_xerr;
     wrapped_state_type m_xnew;
-    value_type m_max_rel_error;
 };
 
 
@@ -738,7 +727,7 @@ public:
         if( max_rel_err > 1.0 )
         {
             // error too big, decrease step size and reject this step
-            dt = m_error_checker.decrease_step(dt, max_rel_err, m_stepper.stepper_order());
+            dt = m_error_checker.decrease_step(dt, max_rel_err, m_stepper.error_order());
             return fail;
         }
         // otherwise, increase step size and accept
@@ -897,12 +886,14 @@ private:
  * It is used by the controlled_runge_kutta steppers.
  *
  * \tparam Value The value type.
+ * \tparam Time The time type.
  * \tparam Algebra The algebra type.
  * \tparam Operations The operations type.
  */
 
     /**
-     * \fn default_error_checker( value_type eps_abs , value_type eps_rel , value_type a_x , value_type a_dxdt )
+     * \fn default_error_checker( value_type eps_abs , value_type eps_rel , value_type a_x , value_type a_dxdt ,
+     * time_type max_dt)
      * \brief Constructs the error checker.
      *
      * The error is calculated as follows: ???? 
@@ -911,10 +902,11 @@ private:
      * \param eps_rel Relative tolerance level.
      * \param a_x Factor for the weight of the state.
      * \param a_dxdt Factor for the weight of the derivative.
+     * \param max_dt Maximum allowed step size.
      */
     
     /**
-     * \fn error( const State &x_old , const Deriv &dxdt_old , Err &x_err , Time dt ) const
+     * \fn error( const State &x_old , const Deriv &dxdt_old , Err &x_err , time_type dt ) const
      * \brief Calculates the error level.
      *
      * If the returned error level is greater than 1, the estimated error was
@@ -929,7 +921,7 @@ private:
      */
 
     /**
-     * \fn error( algebra_type &algebra , const State &x_old , const Deriv &dxdt_old , Err &x_err , Time dt ) const
+     * \fn error( algebra_type &algebra , const State &x_old , const Deriv &dxdt_old , Err &x_err , time_type dt ) const
      * \brief Calculates the error level using a given algebra.
      *
      * If the returned error level is greater than 1, the estimated error was
@@ -942,6 +934,31 @@ private:
      * \param x_err Error estimate.
      * \param dt Time step.
      * \return error
+     */
+
+    /**
+     * \fn time_type decrease_step(const time_type dt, const value_type error, const int error_order)
+     * \brief Returns a decreased step size based on the given error and order
+     *
+     * Calculates a new smaller step size based on the given error and its order.
+     *
+     * \param dt The old step size.
+     * \param error The computed error estimate.
+     * \param error_order The error order of the stepper.
+     * \return dt_new The new, reduced step size.
+     */
+
+    /**
+     * \fn time_type increase_step(const time_type dt, const value_type error, const int error_order)
+     * \brief Returns an increased step size based on the given error and order.
+     *
+     * Calculates a new bigger step size based on the given error and its order. If max_dt != 0, the
+     * new step size is limited to max_dt.
+     *
+     * \param dt The old step size.
+     * \param error The computed error estimate.
+     * \param error_order The order of the stepper.
+     * \return dt_new The new, increased step size.
      */
 
 
