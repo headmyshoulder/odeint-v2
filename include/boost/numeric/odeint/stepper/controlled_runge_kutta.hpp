@@ -93,17 +93,21 @@ public:
     }
 
 
-    time_type decrease_step(const time_type dt, const value_type error, const int error_order) const
+    time_type decrease_step(time_type dt, const value_type error, const int error_order) const
     {
         BOOST_USING_STD_MIN();
         BOOST_USING_STD_MAX();
         using std::pow;
 
-        return dt * max
+        dt *= max
         BOOST_PREVENT_MACRO_SUBSTITUTION(
                 static_cast<value_type>( static_cast<value_type>(9) / static_cast<value_type>(10) *
                                          pow(error, static_cast<value_type>(-1) / (error_order - 1))),
                 static_cast<value_type>( static_cast<value_type>(1) / static_cast<value_type> (5)));
+        if(m_max_dt != static_cast<time_type >(0))
+            // limit to maximal stepsize even when decreasing
+            dt = detail::min_abs(dt, m_max_dt);
+        return dt;
     }
 
     time_type increase_step(time_type dt, value_type error, const int stepper_order) const
@@ -113,8 +117,7 @@ public:
         using std::pow;
 
         // adjust the size if dt is smaller than max_dt (providede max_dt is not zero)
-        if(error < 0.5 && (m_max_dt == static_cast<time_type >(0) ||
-                           detail::less_with_sign(dt, m_max_dt, dt)))
+        if(error < 0.5)
         {
             // error should be > 0
             error = max BOOST_PREVENT_MACRO_SUBSTITUTION (
@@ -124,11 +127,21 @@ public:
             //error too small - increase dt and keep the evolution and limit scaling factor to 5.0
             dt *= static_cast<value_type>(9)/static_cast<value_type>(10) *
                     pow(error, static_cast<value_type>(-1) / stepper_order);
-            // limit to maximal stepsize
-            dt = detail::max_abs(dt, m_max_dt);
+            if(m_max_dt != static_cast<time_type >(0))
+                // limit to maximal stepsize
+                dt = detail::min_abs(dt, m_max_dt);
         }
         return dt;
     }
+
+    bool check_step_size_limit(const time_type dt)
+    {
+        if(m_max_dt != static_cast<time_type >(0))
+            return detail::less_eq_with_sign(dt, m_max_dt, dt);
+        return true;
+    }
+
+    time_type get_max_dt() { return m_max_dt; }
 
 
 private:
@@ -380,6 +393,12 @@ public:
     template< class System , class StateIn , class DerivIn , class StateOut >
     controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt , time_type &t , StateOut &out , time_type &dt )
     {
+        if( !m_error_checker.check_step_size_limit(dt) )
+        {
+            // given dt was above step size limit - adjust and return fail;
+            dt = m_error_checker.get_max_dt();
+            return fail;
+        }
 
         m_xerr_resizer.adjust_size( in , detail::bind( &controlled_runge_kutta::template resize_m_xerr_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
 
@@ -710,10 +729,12 @@ public:
     controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt_in , time_type &t ,
             StateOut &out , DerivOut &dxdt_out , time_type &dt )
     {
-        BOOST_USING_STD_MIN();
-        BOOST_USING_STD_MAX();
-
-        using std::pow;
+        if( !m_error_checker.check_step_size_limit(dt) )
+        {
+            // given dt was above step size limit - adjust and return fail;
+            dt = m_error_checker.get_max_dt();
+            return fail;
+        }
 
         m_xerr_resizer.adjust_size( in , detail::bind( &controlled_runge_kutta::template resize_m_xerr_impl< StateIn > , detail::ref( *this ) , detail::_1 ) );
 

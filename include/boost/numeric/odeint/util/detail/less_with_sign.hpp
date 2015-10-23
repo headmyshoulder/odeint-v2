@@ -6,7 +6,7 @@
  Helper function to compare times taking into account the sign of dt
  [end_description]
 
- Copyright 2012-2013 Mario Mulansky
+ Copyright 2012-2015 Mario Mulansky
  Copyright 2012 Karsten Ahnert
 
  Distributed under the Boost Software License, Version 1.0.

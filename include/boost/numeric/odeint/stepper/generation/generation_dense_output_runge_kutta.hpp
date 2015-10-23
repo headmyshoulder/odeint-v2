@@ -34,11 +34,20 @@ struct dense_output_factory< Stepper , dense_output_runge_kutta< controlled_rung
     typedef controlled_runge_kutta< stepper_type > controller_type;
     typedef typename controller_type::error_checker_type error_checker_type;
     typedef typename stepper_type::value_type value_type;
+    typedef typename stepper_type::time_type time_type;
     typedef dense_output_runge_kutta< controller_type > dense_output_type;
 
     dense_output_type operator()( value_type abs_error , value_type rel_error , const stepper_type &stepper )
     {
         return dense_output_type( controller_type( error_checker_type( abs_error , rel_error ) , stepper ) );
+    }
+
+    dense_output_type operator()( value_type abs_error , value_type rel_error ,
+                                  time_type max_dt , const stepper_type &stepper )
+    {
+        return dense_output_type(
+                controller_type( error_checker_type( abs_error , rel_error , 1, 1, max_dt) ,
+                                                   stepper ) );
     }
 };
 
