@@ -42,11 +42,20 @@ size_t integrate_times(
         TimeIterator times_start , TimeIterator times_end , Time dt ,
         Observer observer , StepOverflowChecker checker )
 {
-    typedef typename odeint::unwrap_reference< Stepper >::type::stepper_category stepper_category;
+    // unwrap references
+    typedef typename odeint::unwrap_reference< Stepper >::type stepper_type;
+    typedef typename odeint::unwrap_reference< Observer >::type observer_type;
+    typedef typename odeint::unwrap_reference< StepOverflowChecker >::type checker_type;
+    typedef typename stepper_type::stepper_category stepper_category;
+
+    // pass on checked stepper and observer
+    // checked_stepper/observer use references internally, so passing by value is fine
     return detail::integrate_times(
-            stepper , system , start_state ,
+            checked_stepper<stepper_type, checker_type>(stepper, checker) ,
+            system , start_state ,
             times_start , times_end , dt ,
-            observer , checker , stepper_category() );
+            checked_observer<observer_type, checker_type>(observer, checker),
+            stepper_category() );
 }
 
 /**
@@ -58,11 +67,21 @@ size_t integrate_times(
         TimeIterator times_start , TimeIterator times_end , Time dt ,
         Observer observer , StepOverflowChecker checker )
 {
-    typedef typename odeint::unwrap_reference< Stepper >::type::stepper_category stepper_category;
+    typedef typename odeint::unwrap_reference< Stepper >::type stepper_type;
+    typedef typename odeint::unwrap_reference< Observer >::type observer_type;
+    typedef typename odeint::unwrap_reference< StepOverflowChecker >::type checker_type;
+    typedef typename stepper_type::stepper_category stepper_category;
+
+    stepper_type &st = stepper;
+    observer_type &obs = observer;
+    checker_type &chk = checker;
+
     return detail::integrate_times(
-            stepper , system , start_state ,
+            checked_stepper<stepper_type, checker_type>(stepper, checker) ,
+            system , start_state ,
             times_start , times_end , dt ,
-            observer , checker , stepper_category() );
+            checked_observer<observer_type, checker_type>(observer, checker),
+            stepper_category() );
 }
 
 /**
@@ -106,10 +125,11 @@ size_t integrate_times(
         Observer observer )
 {
     typedef typename odeint::unwrap_reference< Stepper >::type::stepper_category stepper_category;
+    // simply don't use checked_* adapters
     return detail::integrate_times(
             stepper , system , start_state ,
             times_start , times_end , dt ,
-            observer , null_checker() , stepper_category() );
+            observer , stepper_category() );
 }
 
 /**
@@ -125,7 +145,7 @@ size_t integrate_times(
     return detail::integrate_times(
             stepper , system , start_state ,
             times_start , times_end , dt ,
-            observer , null_checker() , stepper_category() );
+            observer , stepper_category() );
 }
 
 /**
@@ -139,7 +159,7 @@ size_t integrate_times(
 {
     return integrate_times(
             stepper , system , start_state ,
-            boost::begin( times ) , boost::end( times ) , dt , observer , null_checker() );
+            boost::begin( times ) , boost::end( times ) , dt , observer );
 }
 
 /**
@@ -153,7 +173,7 @@ size_t integrate_times(
 {
     return integrate_times(
             stepper , system , start_state ,
-            boost::begin( times ) , boost::end( times ) , dt , observer , null_checker() );
+            boost::begin( times ) , boost::end( times ) , dt , observer);
 }
 
 

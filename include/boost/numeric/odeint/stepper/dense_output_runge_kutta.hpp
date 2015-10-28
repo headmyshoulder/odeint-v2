@@ -208,6 +208,15 @@ public:
         return m_t_old;
     }
 
+    /**
+     * \brief Returns the current time step.
+     * \return dt.
+     */
+    time_type current_time_step( void ) const
+    {
+        return m_dt;
+    }
+
 
 private:
 
