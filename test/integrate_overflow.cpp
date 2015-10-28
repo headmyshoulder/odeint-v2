@@ -65,6 +65,7 @@ struct push_back_time
 };
 
 typedef runge_kutta_dopri5<state_type> stepper_type;
+typedef runge_kutta_cash_karp54<state_type> cash_karp_type;
 
 
 BOOST_AUTO_TEST_SUITE( integrate_overflow )
@@ -172,6 +173,19 @@ BOOST_AUTO_TEST_CASE( test_integrate_times )
     BOOST_CHECK_THROW(integrate_times(make_controlled<stepper_type>(1E-5, 1E-5), lorenz, x,
                                       t0, t1, 1.0 , push_back_time(times), max_step_checker(10)),
                       std::runtime_error);
+
+    // check cash karp controlled stepper
+    // no exception if no checker is provided
+    integrate_times(make_controlled<cash_karp_type>(1E-5, 1E-5), lorenz, x, t0, t1, 1.0 , push_back_time(times));
+    // very small error terms -> standard overflow threshold of 500 should fire an exception
+    BOOST_CHECK_THROW(integrate_times(make_controlled<cash_karp_type>(1E-15, 1E-15), lorenz, x,
+                      t0, t1, 1.0 , push_back_time(times), max_step_checker()),
+    std::runtime_error);
+
+    // small threshold of 10 -> larger error still gives an exception
+    BOOST_CHECK_THROW(integrate_times(make_controlled<cash_karp_type>(1E-5, 1E-5), lorenz, x,
+                      t0, t1, 1.0 , push_back_time(times), max_step_checker(10)),
+    std::runtime_error);
 
     // check exceptions for dense output stepper
     integrate_times(make_dense_output<stepper_type>(1E-5, 1E-5), lorenz, x, t0, t1, 1.0 ,

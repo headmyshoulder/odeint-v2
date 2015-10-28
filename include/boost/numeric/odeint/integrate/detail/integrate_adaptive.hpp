@@ -43,11 +43,11 @@ namespace odeint {
 namespace detail {
 
 // forward declaration
-template< class Stepper , class System , class State , class Time , class Observer , class StepOverflowChecker >
+template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate_const(
         Stepper stepper , System system , State &start_state ,
         Time start_time , Time end_time , Time dt ,
-        Observer observer , StepOverflowChecker checker , stepper_tag );
+        Observer observer , stepper_tag );
 
 /*
  * integrate_adaptive for simple stepper is basically an integrate_const + some last step
@@ -60,7 +60,7 @@ size_t integrate_adaptive(
 )
 {
     size_t steps = detail::integrate_const( stepper , system , start_state , start_time ,
-                                            end_time , dt , observer , null_checker() , stepper_tag() );
+                                            end_time , dt , observer , stepper_tag() );
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
     typename odeint::unwrap_reference< Stepper >::type &st = stepper;
 
@@ -76,18 +76,17 @@ size_t integrate_adaptive(
 
 
 /*
- * small helper function that calls a given checker - this is for use in integrate_const for ControlledStepper
+ * integrate adaptive for controlled stepper
  */
-template< class Stepper , class System , class State , class Time , class Observer , class StepOverflowChecker >
-size_t integrate_adaptive_checked(
+template< class Stepper , class System , class State , class Time , class Observer >
+size_t integrate_adaptive(
         Stepper stepper , System system , State &start_state ,
         Time &start_time , Time end_time , Time &dt ,
-        Observer observer , StepOverflowChecker checker
+        Observer observer , controlled_stepper_tag
 )
 {
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
     typename odeint::unwrap_reference< Stepper >::type &st = stepper;
-    typename odeint::unwrap_reference< StepOverflowChecker >::type &chk = checker;
 
     failed_step_checker fail_checker;  // to throw a runtime_error if step size adjustment fails
     size_t count = 0;
@@ -103,7 +102,6 @@ size_t integrate_adaptive_checked(
         do
         {
             res = st.try_step( system , start_state , start_time , dt );
-            chk();  // check number of steps
             fail_checker();  // check number of failed steps
         }
         while( res == fail );
@@ -113,23 +111,6 @@ size_t integrate_adaptive_checked(
     }
     obs( start_state , start_time );
     return count;
-}
-
-
-/*
-* classical integrate adaptive
-*/
-
-template< class Stepper , class System , class State , class Time , class Observer >
-size_t integrate_adaptive(
-        Stepper stepper , System system , State &start_state ,
-        Time &start_time , Time end_time , Time &dt ,
-        Observer observer , controlled_stepper_tag
-)
-{
-    // call the checked version with a null_checker
-    return integrate_adaptive_checked(stepper, system, start_state, start_time, end_time,
-                                      dt, observer, null_checker());
 }
 
 

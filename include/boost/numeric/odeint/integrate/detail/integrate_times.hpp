@@ -27,7 +27,6 @@
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/util/detail/less_with_sign.hpp>
 #include <boost/numeric/odeint/integrate/max_step_checker.hpp>
-#include <boost/numeric/odeint/integrate/check_adapter.hpp>
 
 
 namespace boost {

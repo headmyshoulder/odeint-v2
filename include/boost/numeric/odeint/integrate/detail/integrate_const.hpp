@@ -31,19 +31,19 @@ namespace odeint {
 namespace detail {
 
 // forward declaration
-template< class Stepper , class System , class State , class Time , class Observer , class StepOverflowChecker >
-size_t integrate_adaptive_checked(
+template< class Stepper , class System , class State , class Time , class Observer >
+size_t integrate_adaptive(
         Stepper stepper , System system , State &start_state ,
         Time &start_time , Time end_time , Time &dt ,
-        Observer observer , StepOverflowChecker checker
+        Observer observer , controlled_stepper_tag
 );
 
 
-template< class Stepper , class System , class State , class Time , class Observer , class StepOverflowChecker >
+template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate_const(
         Stepper stepper , System system , State &start_state ,
         Time start_time , Time end_time , Time dt ,
-        Observer observer , StepOverflowChecker /* checker */ , stepper_tag
+        Observer observer , stepper_tag
 )
 {
 
@@ -72,15 +72,14 @@ size_t integrate_const(
 
 
 
-template< class Stepper , class System , class State , class Time , class Observer , class StepOverflowChecker >
+template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate_const(
         Stepper stepper , System system , State &start_state ,
         Time start_time , Time end_time , Time dt ,
-        Observer observer , StepOverflowChecker checker , controlled_stepper_tag
+        Observer observer , controlled_stepper_tag
 )
 {
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
-    typename odeint::unwrap_reference< StepOverflowChecker >::type &chk = checker;
 
     Time time = start_time;
     const Time time_step = dt;
@@ -90,11 +89,10 @@ size_t integrate_const(
     while( less_eq_with_sign( static_cast<Time>(time+time_step) , end_time , dt ) )
     {
         obs( start_state , time );
-        chk.reset();  // reset after each observation
         // integrate_adaptive_checked uses the given checker to throw if an overflow occurs
-        real_steps += detail::integrate_adaptive_checked(stepper, system, start_state, time,
-                                                         static_cast<Time>(time + time_step), dt,
-                                                         null_observer(), checker);
+        real_steps += detail::integrate_adaptive(stepper, system, start_state, time,
+                                                 static_cast<Time>(time + time_step), dt,
+                                                 null_observer(), controlled_stepper_tag());
         // direct computation of the time avoids error propagation happening when using time += dt
         // we need clumsy type analysis to get boost units working here
         step++;
@@ -106,16 +104,15 @@ size_t integrate_const(
 }
 
 
-template< class Stepper , class System , class State , class Time , class Observer , class StepOverflowChecker >
+template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate_const(
         Stepper stepper , System system , State &start_state ,
         Time start_time , Time end_time , Time dt ,
-        Observer observer , StepOverflowChecker checker , dense_output_stepper_tag
+        Observer observer , dense_output_stepper_tag
 )
 {
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
     typename odeint::unwrap_reference< Stepper >::type &st = stepper;
-    typename odeint::unwrap_reference< StepOverflowChecker >::type &chk = checker;
 
     Time time = start_time;
     
@@ -132,7 +129,6 @@ size_t integrate_const(
         {
             st.calc_state( time , start_state );
             obs( start_state , time );
-            chk.reset();  // reset checker at observation points
             ++obs_step;
             // direct computation of the time avoids error propagation happening when using time += dt
             // we need clumsy type analysis to get boost units working here
@@ -146,7 +142,6 @@ size_t integrate_const(
             while( less_eq_with_sign( st.current_time() , time , dt ) )
             {
                 st.do_step( system );
-                chk();
                 ++real_step;
             }
         }
@@ -154,7 +149,6 @@ size_t integrate_const(
         { // do the last step ending exactly on the end point
             st.initialize( st.current_state() , st.current_time() , end_time - st.current_time() );
             st.do_step( system );
-            chk();
             ++real_step;
         }
         

@@ -41,11 +41,18 @@ Time integrate_n_steps(
         Time start_time , Time dt , size_t num_of_steps ,
         Observer observer , StepOverflowChecker checker )
 {
-    typedef typename odeint::unwrap_reference< Stepper >::type::stepper_category stepper_category;
+    // unwrap references
+    typedef typename odeint::unwrap_reference< Stepper >::type stepper_type;
+    typedef typename odeint::unwrap_reference< Observer >::type observer_type;
+    typedef typename odeint::unwrap_reference< StepOverflowChecker >::type checker_type;
+    typedef typename stepper_type::stepper_category stepper_category;
+
     return detail::integrate_n_steps(
-                stepper , system , start_state ,
+                checked_stepper<stepper_type, checker_type>(stepper, checker),
+                system , start_state ,
                 start_time , dt , num_of_steps ,
-                observer , checker , stepper_category() );
+                checked_observer<observer_type, checker_type>(observer, checker),
+                stepper_category() );
 }
 
 /**
@@ -57,11 +64,17 @@ Time integrate_n_steps(
         Time start_time , Time dt , size_t num_of_steps ,
         Observer observer , StepOverflowChecker checker )
 {
-    typedef typename odeint::unwrap_reference< Stepper >::type::stepper_category stepper_category;
+    typedef typename odeint::unwrap_reference< Stepper >::type stepper_type;
+    typedef typename odeint::unwrap_reference< Observer >::type observer_type;
+    typedef typename odeint::unwrap_reference< StepOverflowChecker >::type checker_type;
+    typedef typename stepper_type::stepper_category stepper_category;
+
     return detail::integrate_n_steps(
-                 stepper , system , start_state ,
-                 start_time , dt , num_of_steps ,
-                 observer , checker , stepper_category() );
+            checked_stepper<stepper_type, checker_type>(stepper, checker),
+            system , start_state ,
+            start_time , dt , num_of_steps ,
+            checked_observer<observer_type, checker_type>(observer, checker),
+            stepper_category() );
 }
 
 
@@ -73,7 +86,12 @@ Time integrate_n_steps(
         Stepper stepper , System system , State &start_state ,
         Time start_time , Time dt , size_t num_of_steps , Observer observer )
 {
-    return integrate_n_steps(stepper, system, start_state, start_time, dt, num_of_steps, observer, null_checker());
+    typedef typename odeint::unwrap_reference<Stepper>::type::stepper_category stepper_category;
+
+    return detail::integrate_n_steps(
+            stepper , system , start_state ,
+            start_time , dt , num_of_steps ,
+            observer , stepper_category() );
 }
 
 /**
@@ -84,7 +102,12 @@ Time integrate_n_steps(
         Stepper stepper , System system , const State &start_state ,
         Time start_time , Time dt , size_t num_of_steps , Observer observer )
 {
-    return integrate_n_steps(stepper, system, start_state, start_time, dt, num_of_steps, observer, null_checker());
+    typedef typename odeint::unwrap_reference<Stepper>::type::stepper_category stepper_category;
+
+    return detail::integrate_n_steps(
+            stepper , system , start_state ,
+            start_time , dt , num_of_steps ,
+            observer , stepper_category() );
 }
 
 /**
@@ -95,8 +118,8 @@ Time integrate_n_steps(
         Stepper stepper , System system , State &start_state ,
         Time start_time , Time dt , size_t num_of_steps )
 {
-    return integrate_n_steps(stepper, system, start_state, start_time, dt, num_of_steps, null_observer(),
-                             null_checker());
+    return integrate_n_steps(stepper, system, start_state, start_time,
+                             dt, num_of_steps, null_observer());
 }
 
 /**
@@ -107,8 +130,8 @@ Time integrate_n_steps(
         Stepper stepper , System system , const State &start_state ,
         Time start_time , Time dt , size_t num_of_steps )
 {
-    return integrate_n_steps(stepper, system, start_state, start_time, dt, num_of_steps, null_observer(),
-                             null_checker());
+    return integrate_n_steps(stepper, system, start_state, start_time,
+                             dt, num_of_steps, null_observer());
 }
 
 

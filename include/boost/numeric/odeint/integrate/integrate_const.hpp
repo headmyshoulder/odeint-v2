@@ -24,6 +24,7 @@
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/integrate/null_observer.hpp>
 #include <boost/numeric/odeint/integrate/null_checker.hpp>
+#include <boost/numeric/odeint/integrate/check_adapter.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_const.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_adaptive.hpp>
 
@@ -51,9 +52,16 @@ size_t integrate_const(
                 observer, stepper_category());
     }
     else {
-        return detail::integrate_const(stepper, system, start_state,
+        // unwrap references
+        typedef typename odeint::unwrap_reference< Stepper >::type stepper_type;
+        typedef typename odeint::unwrap_reference< Observer >::type observer_type;
+        typedef typename odeint::unwrap_reference< StepOverflowChecker >::type checker_type;
+
+        return detail::integrate_const(checked_stepper<stepper_type, checker_type>(stepper, checker),
+                                       system, start_state,
                                        start_time, end_time, dt,
-                                       observer, checker, stepper_category());
+                                       checked_observer<observer_type, checker_type>(observer, checker),
+                                       stepper_category());
     }
 }
 
@@ -69,7 +77,7 @@ size_t integrate_const(
 ) {
     typedef typename odeint::unwrap_reference<Stepper>::type::stepper_category stepper_category;
     // we want to get as fast as possible to the end
-    // ToDo: forward checker to this call
+
     if (boost::is_same<null_observer, Observer>::value) {
         return detail::integrate_adaptive(
                 stepper, system, start_state,
@@ -77,9 +85,15 @@ size_t integrate_const(
                 observer, stepper_category());
     }
     else {
-        return detail::integrate_const(stepper, system, start_state,
+        typedef typename odeint::unwrap_reference< Stepper >::type stepper_type;
+        typedef typename odeint::unwrap_reference< Observer >::type observer_type;
+        typedef typename odeint::unwrap_reference< StepOverflowChecker >::type checker_type;
+
+        return detail::integrate_const(checked_stepper<stepper_type, checker_type>(stepper, checker),
+                                       system, start_state,
                                        start_time, end_time, dt,
-                                       observer, checker, stepper_category());
+                                       checked_observer<observer_type, checker_type>(observer, checker),
+                                       stepper_category());
     }
 }
 
@@ -90,10 +104,11 @@ size_t integrate_const(
 template<class Stepper, class System, class State, class Time, class Observer>
 size_t integrate_const(
         Stepper stepper, System system, State &start_state,
-        Time start_time, Time end_time, Time dt, Observer observer
-) {
-    return integrate_const(stepper, system, start_state, start_time, end_time, dt, observer,
-                           null_checker());
+        Time start_time, Time end_time, Time dt, Observer observer)
+{
+    typedef typename odeint::unwrap_reference<Stepper>::type::stepper_category stepper_category;
+    return detail::integrate_const(stepper, system, start_state,
+                                   start_time, end_time, dt, observer, stepper_category());
 }
 
 /**
@@ -105,8 +120,9 @@ size_t integrate_const(
         Stepper stepper, System system, const State &start_state,
         Time start_time, Time end_time, Time dt, Observer observer
 ) {
-    return integrate_const(stepper, system, start_state, start_time, end_time, dt, observer,
-                           null_checker());
+    typedef typename odeint::unwrap_reference<Stepper>::type::stepper_category stepper_category;
+    return detail::integrate_const(stepper, system, start_state,
+                                   start_time, end_time, dt, observer, stepper_category());
 }
 
 
@@ -118,8 +134,7 @@ size_t integrate_const(
         Stepper stepper, System system, State &start_state,
         Time start_time, Time end_time, Time dt
 ) {
-    return integrate_const(stepper, system, start_state, start_time, end_time, dt, null_observer(),
-                           null_checker());
+    return integrate_const(stepper, system, start_state, start_time, end_time, dt, null_observer());
 }
 
 /**
@@ -131,8 +146,7 @@ size_t integrate_const(
         Stepper stepper, System system, const State &start_state,
         Time start_time, Time end_time, Time dt
 ) {
-    return integrate_const(stepper, system, start_state, start_time, end_time, dt, null_observer(),
-                           null_checker());
+    return integrate_const(stepper, system, start_state, start_time, end_time, dt, null_observer());
 }
 
 
