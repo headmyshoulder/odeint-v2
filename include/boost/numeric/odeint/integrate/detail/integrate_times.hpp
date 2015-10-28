@@ -27,6 +27,7 @@
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/util/detail/less_with_sign.hpp>
 #include <boost/numeric/odeint/integrate/max_step_checker.hpp>
+#include <boost/numeric/odeint/integrate/check_adapter.hpp>
 
 
 namespace boost {
@@ -46,25 +47,32 @@ size_t integrate_times(
         Observer observer , StepOverflowChecker checker , stepper_tag
 )
 {
-    typename odeint::unwrap_reference< Observer >::type &obs = observer;
-    typename odeint::unwrap_reference< Stepper >::type &st = stepper;
-    typename odeint::unwrap_reference< StepOverflowChecker >::type &chk = checker;
+    typedef typename odeint::unwrap_reference< Stepper >::type stepper_type;
+    typedef typename odeint::unwrap_reference< Observer >::type observer_type;
+    typedef typename odeint::unwrap_reference< StepOverflowChecker >::type checker_type;
+
+    stepper_type &st = stepper;
+    observer_type &obs = observer;
+    checker_type &chk = checker;
     typedef typename unit_value_type<Time>::type time_type;
+
+    checked_stepper<stepper_type, checker_type> ch_st(st, chk);
+    checked_observer<observer_type, checker_type> ch_obs(obs, chk);
 
     size_t steps = 0;
     Time current_dt = dt;
     while( true )
     {
         Time current_time = *start_time++;
-        obs( start_state , current_time );
-        chk.reset();  // reset after each observer call
+        ch_obs( start_state , current_time );
+        // chk.reset();  // reset after each observer call
         if( start_time == end_time )
             break;
         while( less_with_sign( current_time , static_cast<time_type>(*start_time) , current_dt ) )
         {
             current_dt = min_abs( dt , *start_time - current_time );
-            st.do_step( system , start_state , current_time , current_dt );
-            chk();  // check for potential too many steps exception
+            ch_st.do_step( system , start_state , current_time , current_dt );
+            // chk();  // check for potential too many steps exception
             current_time += current_dt;
             steps++;
         }
