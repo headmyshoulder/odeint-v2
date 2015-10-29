@@ -25,7 +25,6 @@
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
-#include <boost/numeric/odeint/integrate/null_checker.hpp>
 #include <boost/numeric/odeint/integrate/max_step_checker.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_const.hpp>
 #include <boost/numeric/odeint/util/bind.hpp>

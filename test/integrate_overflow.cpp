@@ -78,7 +78,6 @@ BOOST_AUTO_TEST_CASE( test_integrate_const )
     // check the function signatures with normal stepper
     integrate_const(stepper_type(), lorenz, x, 0.0, 10.0, 1.0);
     integrate_const(stepper_type(), lorenz, x, 0.0, 10.0, 1.0, null_observer());
-    integrate_const(stepper_type(), lorenz, x, 0.0, 10.0, 1.0, null_observer(), null_checker());
     // no exceptions expected for normal steppers
     integrate_const(stepper_type(), lorenz, x, 0.0, 10.0, 1.0, null_observer(), max_step_checker(10));
 
@@ -115,7 +114,6 @@ BOOST_AUTO_TEST_CASE( test_integrate_n_steps )
     // check the function signatures with normal stepper
     integrate_n_steps(stepper_type(), lorenz, x, 0.0, 1.0, 10);
     integrate_n_steps(stepper_type(), lorenz, x, 0.0, 1.0, 10, null_observer());
-    integrate_n_steps(stepper_type(), lorenz, x, 0.0, 1.0, 10, null_observer(), null_checker());
     // no exceptions expected for normal steppers
     integrate_n_steps(stepper_type(), lorenz, x, 0.0, 1.0, 10, null_observer(), max_step_checker(10));
 
@@ -153,7 +151,6 @@ BOOST_AUTO_TEST_CASE( test_integrate_times )
 
     // check the function signatures with normal stepper
     integrate_times(stepper_type(), lorenz, x, t0, t1, 1.0 , push_back_time(times));
-    integrate_times(stepper_type(), lorenz, x, t0, t1, 1.0 , push_back_time(times), null_checker());
     // no exceptions expected for big enough step size
     integrate_times(stepper_type(), lorenz, x, t0, t1, 1.0 , push_back_time(times), max_step_checker(10));
     // if dt*max_steps < observer time difference we expect an exception

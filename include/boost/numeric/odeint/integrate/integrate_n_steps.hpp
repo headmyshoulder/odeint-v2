@@ -22,7 +22,6 @@
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/integrate/null_observer.hpp>
-#include <boost/numeric/odeint/integrate/null_checker.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_n_steps.hpp>
 
 namespace boost {
