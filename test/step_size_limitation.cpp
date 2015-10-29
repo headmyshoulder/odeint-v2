@@ -58,45 +58,45 @@ struct push_back_time
 
 BOOST_AUTO_TEST_SUITE( step_size_limitation_test )
 
-BOOST_AUTO_TEST_CASE( test_error_checker )
+BOOST_AUTO_TEST_CASE( test_step_adjuster )
 {
-    // first use checker without step size limitation
-    default_error_checker<double, double, range_algebra, default_operations> checker;
+    // first use adjuster without step size limitation
+    default_step_adjuster<double, double> step_adjuster;
     const double dt = 0.1;
-    double dt_new = checker.decrease_step(dt, 1.5, 2);
+    double dt_new = step_adjuster.decrease_step(dt, 1.5, 2);
     BOOST_CHECK(dt_new < dt*2.0/3.0);
 
-    dt_new = checker.increase_step(dt, 0.8, 1);
+    dt_new = step_adjuster.increase_step(dt, 0.8, 1);
     // for errors > 0.5 no increase is performed
     BOOST_CHECK(dt_new == dt);
 
-    dt_new = checker.increase_step(dt, 0.4, 1);
+    dt_new = step_adjuster.increase_step(dt, 0.4, 1);
     // smaller errors should lead to step size increase
     std::cout << dt_new << std::endl;
     BOOST_CHECK(dt_new > dt);
 
 
     // now test with step size limitation max_dt = 0.1
-    default_error_checker<double, double, range_algebra, default_operations>
-        limited_checker(1E-6, 1E-6, 1, 1, dt);
+    default_step_adjuster<double, double>
+        limited_adjuster(dt);
 
-    dt_new = limited_checker.decrease_step(dt, 1.5, 2);
+    dt_new = limited_adjuster.decrease_step(dt, 1.5, 2);
     // decreasing works as before
     BOOST_CHECK(dt_new < dt*2.0/3.0);
 
-    dt_new = limited_checker.decrease_step(2*dt, 1.1, 2);
+    dt_new = limited_adjuster.decrease_step(2*dt, 1.1, 2);
     // decreasing a large step size should give max_dt
     BOOST_CHECK(dt_new == dt);
 
-    dt_new = limited_checker.increase_step(dt, 0.8, 1);
+    dt_new = limited_adjuster.increase_step(dt, 0.8, 1);
     // for errors > 0.5 no increase is performed, still valid
     BOOST_CHECK(dt_new == dt);
 
-    dt_new = limited_checker.increase_step(dt, 0.4, 1);
+    dt_new = limited_adjuster.increase_step(dt, 0.4, 1);
     // but even for smaller errors, we should at most get 0.1
     BOOST_CHECK(dt_new == dt);
 
-    dt_new = limited_checker.increase_step(0.9*dt, 0.1, 1);
+    dt_new = limited_adjuster.increase_step(0.9*dt, 0.1, 1);
     std::cout << dt_new << std::endl;
     // check that we don't increase beyond max_dt
     BOOST_CHECK(dt_new == dt);

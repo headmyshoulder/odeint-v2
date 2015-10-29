@@ -50,7 +50,6 @@ namespace odeint {
 template
 <
 class Value ,
-class Time ,
 class Algebra ,
 class Operations
 >
@@ -59,7 +58,6 @@ class default_error_checker
 public:
 
     typedef Value value_type;
-    typedef Time time_type;
     typedef Algebra algebra_type;
     typedef Operations operations_type;
 
@@ -67,21 +65,19 @@ public:
             value_type eps_abs = static_cast< value_type >( 1.0e-6 ) ,
             value_type eps_rel = static_cast< value_type >( 1.0e-6 ) ,
             value_type a_x = static_cast< value_type >( 1 ) ,
-            value_type a_dxdt = static_cast< value_type >( 1 ),
-            time_type max_dt = static_cast<time_type>(0) )
-        : m_eps_abs( eps_abs ) , m_eps_rel( eps_rel ) , m_a_x( a_x ) , m_a_dxdt( a_dxdt ),
-          m_max_dt(max_dt)
+            value_type a_dxdt = static_cast< value_type >( 1 ))
+        : m_eps_abs( eps_abs ) , m_eps_rel( eps_rel ) , m_a_x( a_x ) , m_a_dxdt( a_dxdt )
     { }
 
 
-    template< class State , class Deriv , class Err>
-    value_type error( const State &x_old , const Deriv &dxdt_old , Err &x_err , time_type dt ) const
+    template< class State , class Deriv , class Err, class Time >
+    value_type error( const State &x_old , const Deriv &dxdt_old , Err &x_err , Time dt ) const
     {
         return error( algebra_type() , x_old , dxdt_old , x_err , dt );
     }
 
-    template< class State , class Deriv , class Err>
-    value_type error( algebra_type &algebra , const State &x_old , const Deriv &dxdt_old , Err &x_err , time_type dt ) const
+    template< class State , class Deriv , class Err, class Time >
+    value_type error( algebra_type &algebra , const State &x_old , const Deriv &dxdt_old , Err &x_err , Time dt ) const
     {
         // this overwrites x_err !
         algebra.for_each3( x_err , x_old , dxdt_old ,
@@ -92,9 +88,31 @@ public:
         return algebra.norm_inf( x_err );
     }
 
+private:
+
+    value_type m_eps_abs;
+    value_type m_eps_rel;
+    value_type m_a_x;
+    value_type m_a_dxdt;
+
+};
+
+
+template< typename Value, typename Time >
+class default_step_adjuster
+{
+public:
+    typedef Time time_type;
+    typedef Value value_type;
+
+    default_step_adjuster(const time_type max_dt=static_cast<time_type>(0))
+            : m_max_dt(max_dt)
+    {}
+
 
     time_type decrease_step(time_type dt, const value_type error, const int error_order) const
     {
+        // returns the decreased time step
         BOOST_USING_STD_MIN();
         BOOST_USING_STD_MAX();
         using std::pow;
@@ -112,6 +130,7 @@ public:
 
     time_type increase_step(time_type dt, value_type error, const int stepper_order) const
     {
+        // returns the increased time step
         BOOST_USING_STD_MIN();
         BOOST_USING_STD_MAX();
         using std::pow;
@@ -126,7 +145,7 @@ public:
             time_type dt_old = dt;
             //error too small - increase dt and keep the evolution and limit scaling factor to 5.0
             dt *= static_cast<value_type>(9)/static_cast<value_type>(10) *
-                    pow(error, static_cast<value_type>(-1) / stepper_order);
+                  pow(error, static_cast<value_type>(-1) / stepper_order);
             if(m_max_dt != static_cast<time_type >(0))
                 // limit to maximal stepsize
                 dt = detail::min_abs(dt, m_max_dt);
@@ -143,17 +162,9 @@ public:
 
     time_type get_max_dt() { return m_max_dt; }
 
-
 private:
-
-    value_type m_eps_abs;
-    value_type m_eps_rel;
-    value_type m_a_x;
-    value_type m_a_dxdt;
-
     time_type m_max_dt;
 };
-
 
 
 
@@ -163,9 +174,10 @@ private:
 template<
 class ErrorStepper ,
 class ErrorChecker = default_error_checker< typename ErrorStepper::value_type ,
-    typename ErrorStepper::time_type ,
     typename ErrorStepper::algebra_type ,
     typename ErrorStepper::operations_type > ,
+class StepAdjuster = default_step_adjuster< typename ErrorStepper::value_type ,
+    typename ErrorStepper::time_type > ,
 class Resizer = typename ErrorStepper::resizer_type ,
 class ErrorStepperCategory = typename ErrorStepper::stepper_category
 >
@@ -196,9 +208,11 @@ class controlled_runge_kutta ;
 template<
 class ErrorStepper,
 class ErrorChecker,
+class StepAdjuster,
 class Resizer
 >
-class controlled_runge_kutta< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag >
+class controlled_runge_kutta< ErrorStepper , ErrorChecker , StepAdjuster, Resizer ,
+        explicit_error_stepper_tag >
 {
 
 public:
@@ -212,13 +226,15 @@ public:
     typedef typename stepper_type::operations_type operations_type;
     typedef Resizer resizer_type;
     typedef ErrorChecker error_checker_type;
+    typedef StepAdjuster step_adjuster_type;
     typedef explicit_controlled_stepper_tag stepper_category;
 
 #ifndef DOXYGEN_SKIP
     typedef typename stepper_type::wrapped_state_type wrapped_state_type;
     typedef typename stepper_type::wrapped_deriv_type wrapped_deriv_type;
 
-    typedef controlled_runge_kutta< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag > controlled_stepper_type;
+    typedef controlled_runge_kutta< ErrorStepper , ErrorChecker , StepAdjuster ,
+            Resizer , explicit_error_stepper_tag > controlled_stepper_type;
 #endif //DOXYGEN_SKIP
 
 
@@ -229,9 +245,10 @@ public:
      */
     controlled_runge_kutta(
             const error_checker_type &error_checker = error_checker_type( ) ,
+            const step_adjuster_type &step_adjuster = step_adjuster_type() ,
             const stepper_type &stepper = stepper_type( )
     )
-        : m_stepper(stepper), m_error_checker(error_checker)
+        : m_stepper(stepper), m_error_checker(error_checker) , m_step_adjuster(step_adjuster)
     { }
 
 
@@ -393,10 +410,10 @@ public:
     template< class System , class StateIn , class DerivIn , class StateOut >
     controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt , time_type &t , StateOut &out , time_type &dt )
     {
-        if( !m_error_checker.check_step_size_limit(dt) )
+        if( !m_step_adjuster.check_step_size_limit(dt) )
         {
             // given dt was above step size limit - adjust and return fail;
-            dt = m_error_checker.get_max_dt();
+            dt = m_step_adjuster.get_max_dt();
             return fail;
         }
 
@@ -410,13 +427,13 @@ public:
         if( max_rel_err > 1.0 )
         {
             // error too big, decrease step size and reject this step
-            dt = m_error_checker.decrease_step(dt, max_rel_err, m_stepper.error_order());
+            dt = m_step_adjuster.decrease_step(dt, max_rel_err, m_stepper.error_order());
             return fail;
         } else
         {
             // otherwise, increase step size and accept
             t += dt;
-            dt = m_error_checker.increase_step(dt, max_rel_err, m_stepper.stepper_order());
+            dt = m_step_adjuster.increase_step(dt, max_rel_err, m_stepper.stepper_order());
             return success;
         }
     }
@@ -486,6 +503,7 @@ private:
 
     stepper_type m_stepper;
     error_checker_type m_error_checker;
+    step_adjuster_type m_step_adjuster;
 
     resizer_type m_dxdt_resizer;
     resizer_type m_xerr_resizer;
@@ -528,9 +546,10 @@ private:
 template<
 class ErrorStepper ,
 class ErrorChecker ,
+class StepAdjuster ,
 class Resizer
 >
-class controlled_runge_kutta< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_fsal_tag >
+class controlled_runge_kutta< ErrorStepper , ErrorChecker , StepAdjuster , Resizer , explicit_error_stepper_fsal_tag >
 {
 
 public:
@@ -544,13 +563,14 @@ public:
     typedef typename stepper_type::operations_type operations_type;
     typedef Resizer resizer_type;
     typedef ErrorChecker error_checker_type;
+    typedef StepAdjuster step_adjuster_type;
     typedef explicit_controlled_stepper_fsal_tag stepper_category;
 
 #ifndef DOXYGEN_SKIP
     typedef typename stepper_type::wrapped_state_type wrapped_state_type;
     typedef typename stepper_type::wrapped_deriv_type wrapped_deriv_type;
 
-    typedef controlled_runge_kutta< ErrorStepper , ErrorChecker , Resizer , explicit_error_stepper_tag > controlled_stepper_type;
+    typedef controlled_runge_kutta< ErrorStepper , ErrorChecker , StepAdjuster , Resizer , explicit_error_stepper_tag > controlled_stepper_type;
 #endif // DOXYGEN_SKIP
 
     /**
@@ -560,9 +580,10 @@ public:
      */
     controlled_runge_kutta(
             const error_checker_type &error_checker = error_checker_type() ,
+            const step_adjuster_type &step_adjuster = step_adjuster_type() ,
             const stepper_type &stepper = stepper_type()
     )
-    : m_stepper( stepper ) , m_error_checker( error_checker ) ,
+    : m_stepper( stepper ) , m_error_checker( error_checker ) , m_step_adjuster(step_adjuster) ,
       m_first_call( true )
     { }
 
@@ -729,10 +750,10 @@ public:
     controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt_in , time_type &t ,
             StateOut &out , DerivOut &dxdt_out , time_type &dt )
     {
-        if( !m_error_checker.check_step_size_limit(dt) )
+        if( !m_step_adjuster.check_step_size_limit(dt) )
         {
             // given dt was above step size limit - adjust and return fail;
-            dt = m_error_checker.get_max_dt();
+            dt = m_step_adjuster.get_max_dt();
             return fail;
         }
 
@@ -748,12 +769,12 @@ public:
         if( max_rel_err > 1.0 )
         {
             // error too big, decrease step size and reject this step
-            dt = m_error_checker.decrease_step(dt, max_rel_err, m_stepper.error_order());
+            dt = m_step_adjuster.decrease_step(dt, max_rel_err, m_stepper.error_order());
             return fail;
         }
         // otherwise, increase step size and accept
         t += dt;
-        dt = m_error_checker.increase_step(dt, max_rel_err, m_stepper.stepper_order());
+        dt = m_step_adjuster.increase_step(dt, max_rel_err, m_stepper.stepper_order());
         return success;
     }
 
@@ -880,6 +901,7 @@ private:
 
     stepper_type m_stepper;
     error_checker_type m_error_checker;
+    step_adjuster_type m_step_adjuster;
 
     resizer_type m_dxdt_resizer;
     resizer_type m_xerr_resizer;
