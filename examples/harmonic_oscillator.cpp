@@ -166,7 +166,7 @@ int main(int /* argc */ , char** /* argv */ )
     //[integrate_adapt_full
     double abs_err = 1.0e-10 , rel_err = 1.0e-6 , a_x = 1.0 , a_dxdt = 1.0;
     controlled_stepper_type controlled_stepper( 
-        default_error_checker< double , double , range_algebra , default_operations >( abs_err , rel_err , a_x , a_dxdt ) );
+        default_error_checker< double , range_algebra , default_operations >( abs_err , rel_err , a_x , a_dxdt ) );
     integrate_adaptive( controlled_stepper , harmonic_oscillator , x , 0.0 , 10.0 , 0.01 );
     //]
     }
