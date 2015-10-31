@@ -43,6 +43,7 @@ void lorenz( const state_type &x , state_type &dxdt , const value_type t )
     dxdt[2] = -b * x[2] + x[0] * x[1];
 }
 
+
 struct push_back_time
 {
     std::vector< double >& m_times;
@@ -103,16 +104,15 @@ BOOST_AUTO_TEST_CASE( test_step_adjuster )
 }
 
 
-BOOST_AUTO_TEST_CASE( test_controlled )
+template<class ControlledStepper>
+void test_controlled_stepper(ControlledStepper stepper, const double max_dt)
 {
     state_type x( 3 );
     x[0] = x[1] = x[2] = 10.0;
-    const double max_dt = 0.01;
 
     std::vector<double> times;
 
-    integrate_adaptive(make_controlled(1E-2, 1E-2, max_dt, runge_kutta_dopri5<state_type>()),
-                       lorenz, x, 0.0, 1.0, max_dt, push_back_time(times));
+    integrate_adaptive(stepper, lorenz, x, 0.0, 1.0, max_dt, push_back_time(times));
     // check that dt remains at exactly max_dt
     for( size_t i=0 ; i<times.size() ; ++i )
         // check if observer was called at times 0,1,2,...
@@ -120,32 +120,27 @@ BOOST_AUTO_TEST_CASE( test_controlled )
     times.clear();
 
     // this should also work when we provide some bigger initial dt
-    integrate_adaptive(make_controlled(1E-2, 1E-2, max_dt, runge_kutta_dopri5<state_type>()),
-                       lorenz, x, 0.0, 1.0, 0.1, push_back_time(times));
-    // check that dt remains at exactly max_dt
-    for( size_t i=0 ; i<times.size() ; ++i )
-    // check if observer was called at times 0,1,2,...
-    BOOST_CHECK_SMALL( times[i] - static_cast<double>(i)*max_dt , 1E-15);
-    times.clear();
-
-    // check this behavior with cash karp
-    integrate_adaptive(make_controlled(1E-2, 1E-2, max_dt, runge_kutta_cash_karp54<state_type>()),
-                       lorenz, x, 0.0, 1.0, max_dt, push_back_time(times));
+    integrate_adaptive(stepper, lorenz, x, 0.0, 1.0, 0.1, push_back_time(times));
     // check that dt remains at exactly max_dt
     for( size_t i=0 ; i<times.size() ; ++i )
         // check if observer was called at times 0,1,2,...
         BOOST_CHECK_SMALL( times[i] - static_cast<double>(i)*max_dt , 1E-15);
     times.clear();
+}
 
-    // this should also work when we provide some bigger initial dt
-    integrate_adaptive(make_controlled(1E-2, 1E-2, max_dt, runge_kutta_cash_karp54<state_type>()),
-                       lorenz, x, 0.0, 1.0, 0.1, push_back_time(times));
-    // check that dt remains at exactly max_dt
-    for( size_t i=0 ; i<times.size() ; ++i )
-        // check if observer was called at times 0,1,2,...
-        BOOST_CHECK_SMALL( times[i] - static_cast<double>(i)*max_dt , 1E-15);
-    times.clear();
 
+BOOST_AUTO_TEST_CASE( test_controlled )
+{
+    const double max_dt = 0.01;
+
+    test_controlled_stepper(make_controlled(1E-2, 1E-2, max_dt,
+                                            runge_kutta_dopri5<state_type>()),
+                            max_dt);
+    test_controlled_stepper(make_controlled(1E-2, 1E-2, max_dt,
+                                            runge_kutta_cash_karp54<state_type>()),
+                            max_dt);
+    test_controlled_stepper(bulirsch_stoer<state_type>(1E-2, 1E-2, 1.0, 1.0, max_dt),
+                            max_dt);
 }
 
 
