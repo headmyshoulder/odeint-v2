@@ -47,9 +47,6 @@ size_t integrate_const(
 )
 {
 
-    // note that for integrate_const with a basic stepper, overflow checks are not required as exactly
-    // one step is performed between each observer call
-
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
     typename odeint::unwrap_reference< Stepper >::type &st = stepper;
 
