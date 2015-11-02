@@ -193,10 +193,10 @@ size_t integrate_times(
      * If a DenseOutputStepper is provided, the dense output functionality is
      * used to call the observer at the given times. The end time of the 
      * integration is always *(end_time-1).
-     * If a max_step_checker is provided as StepOverflowChecker, an exception is
-     * thrown if too many steps (default: 500) are performed without progress,
-     * i.e. in between observer calls. If no checker is provided, no such
-     * overflow check is performed.
+     * If a max_step_checker is provided as StepOverflowChecker, a
+     * no_progress_error is thrown if too many steps (default: 500) are
+     * performed without progress, i.e. in between observer calls. If no
+     * checker is provided, no such overflow check is performed.
      *
      * \param stepper The stepper to be used for numerical integration.
      * \param system Function/Functor defining the rhs of the ODE.

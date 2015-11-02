@@ -79,8 +79,7 @@ public:
 /**
  * \brief A class for performing overflow checks on the failed step count in step size adjustments.
  *
- * Provide an instance of this class to integrate functions if you want to throw a runtime error if
- * too many failed steps are performed during the step size adjustment.
+ * Used internally within the dense output stepper and integrate routines.
  */
 class failed_step_checker : public max_step_checker
 {
