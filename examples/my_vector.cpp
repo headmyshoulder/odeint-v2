@@ -9,7 +9,6 @@
  * Example for self defined vector type.
  */
 
-#include <iostream>
 #include <vector>
 
 #include <boost/numeric/odeint.hpp>
