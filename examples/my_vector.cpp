@@ -9,12 +9,13 @@
  * Example for self defined vector type.
  */
 
+#include <iostream>
 #include <vector>
 
 #include <boost/numeric/odeint.hpp>
 
 //[my_vector
-template< int MAX_N >
+template< size_t MAX_N >
 class my_vector
 {
     typedef std::vector< double > vector;
@@ -103,7 +104,7 @@ int main()
     state_type x(3);
     x[0] = 5.0 ; x[1] = 10.0 ; x[2] = 10.0;
 
-    // my_vector works with range_algebra as it implements 
+    // my_vector works with range_algebra as it implements
     // the required parts of a container interface
     // no further work is required
 
