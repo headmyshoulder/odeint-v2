@@ -103,6 +103,9 @@ int main()
     state_type x(3);
     x[0] = 5.0 ; x[1] = 10.0 ; x[2] = 10.0;
 
+    // make sure resizing is ON
+    BOOST_STATIC_ASSERT( is_resizeable<state_type>::value == true );
+
     // my_vector works with range_algebra as it implements
     // the required parts of a container interface
     // no further work is required
