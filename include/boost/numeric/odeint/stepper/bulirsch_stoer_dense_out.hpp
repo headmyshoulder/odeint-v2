@@ -6,7 +6,7 @@
  Implementaiton of the Burlish-Stoer method with dense output
  [end_description]
 
- Copyright 2011-2013 Mario Mulansky
+ Copyright 2011-2015 Mario Mulansky
  Copyright 2011-2013 Karsten Ahnert
  Copyright 2012 Christoph Koke
 
@@ -42,6 +42,8 @@
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 #include <boost/numeric/odeint/util/unit_helper.hpp>
+
+#include <boost/numeric/odeint/integrate/max_step_checker.hpp>
 
 #include <boost/type_traits.hpp>
 
@@ -318,23 +320,20 @@ public:
     template< class System >
     std::pair< time_type , time_type > do_step( System system )
     {
-        const size_t max_count = 1000;
-
         if( m_first )
         {
             typename odeint::unwrap_reference< System >::type &sys = system;
             sys( get_current_state() , get_current_deriv() , m_t );
         }
 
+        failed_step_checker fail_checker;  // to throw a runtime_error if step size adjustment fails
         controlled_step_result res = fail;
         m_t_last = m_t;
-        size_t count = 0;
         while( res == fail )
         {
             res = try_step( system , get_current_state() , get_current_deriv() , m_t , get_old_state() , get_old_deriv() , m_dt );
             m_first = false;
-            if( count++ == max_count )
-                throw std::overflow_error( "bulirsch_stoer : too much iterations!");
+            fail_checker();  // check for overflow of failed steps
         }
         toggle_current_state();
         return std::make_pair( m_t_last , m_t );
