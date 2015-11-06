@@ -117,7 +117,7 @@ size_t integrate_const(
     int obs_step( 1 );
     int real_step( 0 );
     
-    while( less_with_sign( static_cast<Time>(time+dt) , end_time , dt ) )
+    while( less_eq_with_sign( static_cast<Time>(time+dt) , end_time , dt ) )
     {
         while( less_eq_with_sign( time , st.current_time() , dt ) )
         {
@@ -148,6 +148,7 @@ size_t integrate_const(
         
     }
     // last observation, if we are still in observation interval
+    // might happen due to finite precision problems when computing the the time
     if( less_eq_with_sign( time , end_time , dt ) )
     {
         st.calc_state( time , start_state );

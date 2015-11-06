@@ -97,8 +97,10 @@ public:
     bulirsch_stoer_dense_out(
         value_type eps_abs = 1E-6 , value_type eps_rel = 1E-6 ,
         value_type factor_x = 1.0 , value_type factor_dxdt = 1.0 ,
+        time_type max_dt = static_cast<time_type>(0) ,
         bool control_interpolation = false )
-        : m_error_checker( eps_abs , eps_rel , factor_x, factor_dxdt ) , 
+        : m_error_checker( eps_abs , eps_rel , factor_x, factor_dxdt ) ,
+          m_max_dt(max_dt) ,
           m_control_interpolation( control_interpolation) ,
           m_last_step_rejected( false ) , m_first( true ) ,
           m_current_state_x1( true ) ,
@@ -149,6 +151,14 @@ public:
     template< class System , class StateIn , class DerivIn , class StateOut , class DerivOut >
     controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt , time_type &t , StateOut &out , DerivOut &dxdt_new , time_type &dt )
     {
+        if( m_max_dt != static_cast<time_type>(0) && detail::less_with_sign(m_max_dt, dt, dt) )
+        {
+            // given step size is bigger then max_dt
+            // set limit and return fail
+            dt = m_max_dt;
+            return fail;
+        }
+
         BOOST_USING_STD_MIN();
         BOOST_USING_STD_MAX();
         using std::pow;
@@ -275,7 +285,14 @@ public:
         }
         //set next stepsize
         if( !m_last_step_rejected || (new_h < dt) )
+        {
+            // limit step size
+            if( m_max_dt != static_cast<time_type>(0) )
+            {
+                new_h = detail::min_abs(m_max_dt, new_h);
+            }
             dt = new_h;
+        }
 
         m_last_step_rejected = reject;
         if( reject )
@@ -645,6 +662,8 @@ private:
 
     default_error_checker< value_type, algebra_type , operations_type > m_error_checker;
     modified_midpoint_dense_out< state_type , value_type , deriv_type , time_type , algebra_type , operations_type , resizer_type > m_midpoint;
+
+    time_type m_max_dt;
 
     bool m_control_interpolation;
 
