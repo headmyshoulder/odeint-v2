@@ -150,6 +150,12 @@ public :
     }
 
 
+    void reset(void)
+    {
+        m_adams_bashforth.reset();
+    }
+
+
 
 private:
     
@@ -291,6 +297,11 @@ private:
      * \param x The state of the ODE which should be solved. After calling do_step the result is updated in x.
      * \param t The value of the time, at which the step should be performed.
      * \param dt The step size.
+     */
+
+    /**
+     * \fn adams_bashforth_moulton::reset( void )
+     * \brief Resets the internal buffers of the stepper.
      */
 
 
