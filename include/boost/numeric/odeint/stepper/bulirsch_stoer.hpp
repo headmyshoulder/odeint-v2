@@ -117,16 +117,8 @@ public:
                 const value_type r = static_cast< value_type >( m_interval_sequence[i] ) / static_cast< value_type >( m_interval_sequence[k] );
                 m_coeff[i][k] = 1.0 / ( r*r - static_cast< value_type >( 1.0 ) ); // coefficients for extrapolation
             }
-
-            // crude estimate of optimal order
-
-            m_current_k_opt = 4;
-            /* no calculation because log10 might not exist for value_type!
-            const value_type logfact( -log10( max BOOST_PREVENT_MACRO_SUBSTITUTION( eps_rel , static_cast< value_type >(1.0E-12) ) ) * 0.6 + 0.5 );
-            m_current_k_opt = max BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<value_type>( 1 ) , min BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<value_type>( m_k_max-1 ) , logfact ));
-            */
         }
-
+        reset();
     }
 
 
@@ -344,6 +336,12 @@ public:
     {
         m_first = true;
         m_last_step_rejected = false;
+        // crude estimate of optimal order
+        m_current_k_opt = 4;
+        /* no calculation because log10 might not exist for value_type!
+        const value_type logfact( -log10( max BOOST_PREVENT_MACRO_SUBSTITUTION( eps_rel , static_cast< value_type >(1.0E-12) ) ) * 0.6 + 0.5 );
+        m_current_k_opt = max BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<value_type>( 1 ) , min BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<value_type>( m_k_max-1 ) , logfact ));
+        */
     }
 
 
