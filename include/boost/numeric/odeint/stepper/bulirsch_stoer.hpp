@@ -282,7 +282,7 @@ public:
                         {
                             m_current_k_opt = min BOOST_PREVENT_MACRO_SUBSTITUTION( static_cast<int>(m_k_max-1) , static_cast<int>(m_current_k_opt)+1 );
                             new_h = h_opt[k];
-                            new_h *= m_cost[m_current_k_opt]/m_cost[k];
+                            new_h *= static_cast<value_type>(m_cost[m_current_k_opt])/static_cast<value_type>(m_cost[k]);
                         } else
                             new_h = h_opt[m_current_k_opt];
                         break;
