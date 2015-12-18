@@ -694,7 +694,7 @@ private:
     int_vector m_interval_sequence; // stores the successive interval counts
     value_matrix m_coeff;
     int_vector m_cost; // costs for interval count
-    value_vector m_facmin_table // for precomputed facmin to save pow calls
+    value_vector m_facmin_table; // for precomputed facmin to save pow calls
 
     state_vector_type m_table; // sequence of states for extrapolation
 
