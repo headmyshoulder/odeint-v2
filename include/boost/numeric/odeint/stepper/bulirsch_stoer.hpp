@@ -113,7 +113,7 @@ public:
             else
                 m_cost[i] = m_cost[i-1] + m_interval_sequence[i];
             m_coeff[i].resize(i);
-            m_facmin_table[i] = pow BOOST_PREVENT_MACRO_SUBSTITUTION( STEPFAC3 , 1.0 / static_cast< value_type > ( 2*i+1 ) );
+            m_facmin_table[i] = pow BOOST_PREVENT_MACRO_SUBSTITUTION( STEPFAC3 , static_cast< value_type >(1) / static_cast< value_type >( 2*i+1 ) );
             for( size_t k = 0 ; k < i ; ++k  )
             {
                 const value_type r = static_cast< value_type >( m_interval_sequence[i] ) / static_cast< value_type >( m_interval_sequence[k] );
