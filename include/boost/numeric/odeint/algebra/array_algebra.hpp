@@ -25,6 +25,7 @@
 #include <algorithm>
 #include <boost/array.hpp>
 
+#include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 #include <boost/numeric/odeint/algebra/norm_result_type.hpp>
 
 namespace boost {
