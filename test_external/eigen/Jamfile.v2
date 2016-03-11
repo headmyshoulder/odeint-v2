@@ -32,5 +32,6 @@ test-suite "odeint"
     [ run runge_kutta_dopri5.cpp ]
     [ run integrate.cpp ]
     [ compile-fail fail_integrate.cpp ]
+    [ compile regression_191.cpp : <cxxflags>-std=c++0x ]
     : <testing.launcher>valgrind
     ;

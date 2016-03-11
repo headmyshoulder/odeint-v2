@@ -104,6 +104,16 @@ struct vector_space_norm_inf< Eigen::Matrix<B,S1,S2,O,M1,M2> >
     }
 };
 
+namespace detail {
+     
+    template<typename B,int S1,int S2,int O, int M1, int M2>
+    struct extract_value_type< Eigen::Matrix<B,S1,S2,O,M1,M2> >
+    {    
+        //typedef typename extract_value_type< B >::type type;
+        typedef B type;
+    };
+}  // end detail namespace
+
 } } } // end boost::numeric::odeint namespace
 
 #endif // BOOST_NUMERIC_ODEINT_EXTERNAL_EIGEN_EIGEN_ALGEBRA_HPP_INCLUDED

@@ -280,7 +280,7 @@ struct array_algebra
         typedef typename norm_result_type< Array< T , dim > >::type result_type;
         result_type init = static_cast< result_type >( 0 );
         for( size_t i=0 ; i<dim ; ++i )
-            init = max BOOST_PREVENT_MACRO_SUBSTITUTION ( init , static_cast< result_type >(abs(s[i])) );
+            init = max BOOST_PREVENT_MACRO_SUBSTITUTION ( init , static_cast< result_type >(vector_space_algebra::norm_inf(s[i])) );
         return init;
     }
 
