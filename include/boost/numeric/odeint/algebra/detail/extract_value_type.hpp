@@ -28,20 +28,23 @@ namespace odeint {
 namespace detail {
 
 template< typename S , typename Enabler = void >
-struct extract_value_type {};
+struct extract_value_type_sfinae {};
+
+template< typename S >
+struct extract_value_type : extract_value_type_sfinae<S> {};
 
 // as long as value_types are defined we go down the value_type chain
 // e.g. returning S::value_type::value_type::value_type
 
 template< typename S >
-struct extract_value_type<S , typename boost::disable_if< has_value_type<S> >::type >
+struct extract_value_type_sfinae<S , typename boost::disable_if< has_value_type<S> >::type >
 {
     // no value_type defined, return S
     typedef S type;
 };
 
 template< typename S >
-struct extract_value_type< S , typename boost::enable_if< has_value_type<S> >::type >
+struct extract_value_type_sfinae< S , typename boost::enable_if< has_value_type<S> >::type >
 {
     // go down the value_type
     typedef typename extract_value_type< typename S::value_type >::type type;
