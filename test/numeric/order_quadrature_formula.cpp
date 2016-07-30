@@ -28,6 +28,8 @@
 
 #include <boost/numeric/ublas/vector.hpp>
 
+#include <boost/format.hpp>
+
 using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
 namespace mpl = boost::mpl;
