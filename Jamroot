@@ -14,8 +14,8 @@ path-constant BOOST_ROOT : [ os.environ BOOST_ROOT ] ;
 project 
    : requirements 
      <include>include&&$(BOOST_ROOT)
-     <toolset>gcc:<cxxflags>"-Wall -Wno-unused-parameter -Wno-unused-variable -Wno-unknown-pragmas -Wno-unused-local-typedefs"
-     <toolset>clang:<cxxflags>"-Wall -Wextra -Wno-unused-function -Wno-unused-parameter -Wno-unknown-pragmas -Wno-unused-local-typedefs"
+     <toolset>gcc:<cxxflags>"-Wno-unused-parameter -Wno-unused-variable -Wno-unknown-pragmas"
+     <toolset>clang:<cxxflags>"-Wextra -Wno-unused-function -Wno-unused-parameter -Wno-unknown-pragmas"
      <toolset>intel:<cxxflags>"-ipo"
    ;
 
