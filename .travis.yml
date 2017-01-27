@@ -19,7 +19,7 @@ addons:
 
 env:
  - CXXSTD=""
- - CXXSTD="cxxflags='-std=c++0x'"
+ - CXXSTD="-std=c++0x"
 
 # For now disable gcc on osx as g++4.8 is not yet available
 matrix:
@@ -45,4 +45,4 @@ before_install:
  - $CC --version
 
 script:
- - $BOOST_ROOT/b2 toolset=$CC $CXXSTD
+ - $BOOST_ROOT/b2 toolset=$CC cxxflags='-Wno-unused-local-typedef $CXXSTD'
