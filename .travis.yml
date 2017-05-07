@@ -42,4 +42,4 @@ before_install:
  - $CC --version
 
 script:
- - $BOOST_ROOT/b2 toolset=$CC cxxflags='$CXXSTD'
+ - $BOOST_ROOT/b2 toolset=$CC cxxflags='$CXXSTD' -j4

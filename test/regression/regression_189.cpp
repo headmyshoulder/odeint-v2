@@ -59,13 +59,14 @@ BOOST_AUTO_TEST_CASE( regression_189 )
             x , 0.0 , 50.0 , 0.01 ,
             std::cout << phoenix::arg_names::arg2 << " " << phoenix::arg_names::arg1[0] << "\n" );
     // regression: number of steps should be 74
-    BOOST_CHECK_EQUAL( num_of_steps , 74 );
+    size_t num_of_steps_expected = 74;
+    BOOST_CHECK_EQUAL( num_of_steps , num_of_steps_expected );
     
     vector_type x2( 2 , 1.0 );
 
     size_t num_of_steps2 = integrate_const( make_dense_output< runge_kutta_dopri5< vector_type > >( 1.0e-6 , 1.0e-6 ) ,
             stiff_system() , x2 , 0.0 , 50.0 , 0.01 ,
             std::cout << phoenix::arg_names::arg2 << " " << phoenix::arg_names::arg1[0] << "\n" );
-    
-    BOOST_CHECK_EQUAL( num_of_steps2 , 1531 );
+    num_of_steps_expected = 1531;
+    BOOST_CHECK_EQUAL( num_of_steps2 , num_of_steps_expected );
 }

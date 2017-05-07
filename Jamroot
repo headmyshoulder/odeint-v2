@@ -15,7 +15,7 @@ project
    : requirements 
      <include>include&&$(BOOST_ROOT)
      <toolset>gcc:<cxxflags>"-Wall -Wno-unused-parameter -Wno-unused-variable -Wno-unknown-pragmas -Wno-unused-local-typedefs"
-     <toolset>clang:<cxxflags>"-Wall -Wextra -Wno-unused-function -Wno-unused-parameter -Wno-unknown-pragmas -Wno-unused-local-typedef"
+     <toolset>clang:<cxxflags>"-Wall -Wextra -Wno-unknown-warning-option -Wno-unused-function -Wno-unused-parameter -Wno-unknown-pragmas -Wno-unused-local-typedef"
      <toolset>intel:<cxxflags>"-ipo"
    ;
 
