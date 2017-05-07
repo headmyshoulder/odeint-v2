@@ -39,7 +39,8 @@ before_install:
  - ./bootstrap.sh
  - cd $TRAVIS_BUILD_DIR
  - if [ "$TRAVIS_OS_NAME" = "osx" ] && [ "$CC" = "gcc" ]; then export CC=gcc-4.8; fi
+ - echo "Toolset: ${CC}"
  - $CC --version
 
 script:
- - $BOOST_ROOT/b2 toolset=$CC cxxflags='$CXXSTD' -j4
+ - $BOOST_ROOT/b2 toolset=$CC cxxflags='$CXXSTD' -j2
