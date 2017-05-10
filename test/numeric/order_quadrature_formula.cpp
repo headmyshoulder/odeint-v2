@@ -20,6 +20,8 @@
 #include <iostream>
 #include <cmath>
 
+#include "boost/format.hpp"
+
 #include <boost/test/unit_test.hpp>
 
 #include <boost/mpl/vector.hpp>
