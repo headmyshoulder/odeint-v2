@@ -19,7 +19,7 @@ namespace odeint {
 template<
 size_t Steps,
 class State,
-class Value,
+class Value = double,
 class Deriv = State,
 class Time = Value,
 class Algebra = typename algebra_dispatcher< State >::algebra_type,

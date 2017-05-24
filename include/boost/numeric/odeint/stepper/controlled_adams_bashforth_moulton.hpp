@@ -30,7 +30,7 @@ namespace odeint {
 template<
 size_t Steps,
 class State,
-class Value,
+class Value = double,
 class Deriv = State,
 class Time = Value,
 class StepAdjuster = detail::pid_step_adjuster<Steps, State, Time>,
@@ -69,15 +69,15 @@ class controlled_adams_bashforth_moulton
 		typedef explicit_controlled_stepper_tag stepper_category;
 
 		controlled_adams_bashforth_moulton()
-		:m_aab(), m_aam(m_aab.algebra()), m_coeff(),
-		m_xerr_resizer(), m_dxdt_resizer(), m_xnew_resizer(),
-		m_step_adjuster()
+		:m_aab(), m_aam(m_aab.algebra()),
+		m_dxdt_resizer(), m_xerr_resizer(), m_xnew_resizer(),
+		m_coeff(), m_step_adjuster()
 		{};
 
 		controlled_adams_bashforth_moulton(const algebra_type &algebra)
-		:m_aab(algebra), m_aam(m_aab.algebra()), m_coeff(),
-		m_xerr_resizer(), m_dxdt_resizer(), m_xnew_resizer(),
-		m_step_adjuster()
+		:m_aab(algebra), m_aam(m_aab.algebra()),
+		m_dxdt_resizer(), m_xerr_resizer(), m_xnew_resizer(),
+		m_coeff(), m_step_adjuster()
 		{};
 
 		template<class System>

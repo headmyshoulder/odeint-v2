@@ -10,6 +10,7 @@
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
+#include <boost/numeric/odeint/util/copy.hpp>
 #include <boost/numeric/odeint/util/bind.hpp>
 
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
@@ -25,7 +26,7 @@ namespace odeint {
 template<
 size_t Steps,
 class State,
-class Value,
+class Value = double,
 class Deriv = State,
 class Time = Value,
 class Algebra = typename algebra_dispatcher< State >::algebra_type,
@@ -67,7 +68,7 @@ class adaptive_adams_bashforth: public algebra_stepper_base< Algebra , Operation
 		{
 			m_xnew_resizer.adjust_size( inOut , detail::bind( &stepper_type::template resize_xnew_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
 
-			do_step(system, inOut, t, m_xnew, dt);
+			do_step(system, inOut, t, m_xnew.m_v, dt);
 			boost::numeric::odeint::copy( m_xnew.m_v , inOut);
 		};
 

@@ -2,7 +2,7 @@
 #define POLYNOMIAL_HPP_INCLUDED
 
 #include <iostream>
-#include <array>
+#include <boost/array.hpp>
 
 namespace boost {
 namespace numeric {
@@ -19,20 +19,21 @@ class Polynomial
 		typedef Time time_type;
 
 		Polynomial()
-		:m_coeff{0}
 		{
+			for(size_t i = 0; i<order; ++i)
+				m_coeff[i] = 0;
 			// start with 'constant' polynomial
 			m_coeff[order-1] = 1;
 		};
 
-		Polynomial(std::array<time_type, order> coeff)
+		Polynomial(boost::array<time_type, order> coeff)
 		{
 			m_coeff = coeff;
 		};
 
 		Polynomial<order+1, time_type> integrate()
 		{
-			std::array<time_type, order + 1> coeff_int;
+			boost::array<time_type, order + 1> coeff_int;
 			coeff_int[order] = 0;
 
 			for(size_t i=0; i<order; ++i)
@@ -80,7 +81,9 @@ class Polynomial
 
 		void reset()
 		{
-			m_coeff = {0};
+			for(size_t i = 0; i<order; ++i)
+				m_coeff[i] = 0;
+			
 			m_coeff[order-1] = 1;
 		};
 
@@ -129,7 +132,7 @@ class Polynomial
 		};
 	private:
 		// first element is highest order
-		std::array<time_type, order> m_coeff;
+		boost::array<time_type, order> m_coeff;
 		time_type res;
 };
 }}}}

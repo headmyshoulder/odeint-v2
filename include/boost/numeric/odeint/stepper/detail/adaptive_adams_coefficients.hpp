@@ -12,8 +12,10 @@
 #include <boost/numeric/odeint/algebra/algebra_dispatcher.hpp>
 #include <boost/numeric/odeint/algebra/operations_dispatcher.hpp>
 
+#include <boost/numeric/odeint/util/unwrap_reference.hpp>
+
 #include <iostream>
-#include <array>
+#include <boost/array.hpp>
 
 namespace boost {
 namespace numeric {
@@ -48,7 +50,7 @@ struct adaptive_adams_coefficients
 		typedef detail::Polynomial<steps+2, time_type> poly_type;
 
 		adaptive_adams_coefficients(const algebra_type &algebra = algebra_type() )
-		:m_algebra(algebra), m_effective_order(1), poly(), m_resizer()
+		:poly(), m_effective_order(1), m_resizer(), m_algebra(algebra)
 		{};
 
 		// maybe step/tentative step are the better options
@@ -99,10 +101,10 @@ struct adaptive_adams_coefficients
 		poly_type poly;
 		time_storage_type m_c;
 
-		std::array<step_storage_type, steps+1> m_ss;
+		boost::array<step_storage_type, steps+1> m_ss;
 		time_storage_type m_ts;
 
-		std::array<step_storage_type, steps+1> m_tss;
+		boost::array<step_storage_type, steps+1> m_tss;
 		time_storage_type m_tts;
 
 		size_t m_effective_order;

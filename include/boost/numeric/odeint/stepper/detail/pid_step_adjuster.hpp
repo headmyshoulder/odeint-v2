@@ -18,7 +18,7 @@ struct pid_step_adjuster
 		typedef rotating_buffer<state_type, 3> error_storage_type;
 
 		pid_step_adjuster(time_type dtmax = 0.5)
-		:m_error_storage(), m_dtmax(dtmax), init(0)
+		:m_dtmax(dtmax), m_error_storage(), init(0)
 		{};
 
 		double adjust_stepsize(const state_type &err, const time_type &dt)
