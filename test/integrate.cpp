@@ -54,6 +54,8 @@
 #include <boost/numeric/odeint/stepper/dense_output_runge_kutta.hpp>
 #include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>
 
+#include <boost/numeric/odeint/stepper/controlled_adams_bashforth_moulton.hpp>
+
 #include <boost/numeric/odeint/util/detail/less_with_sign.hpp>
 
 using namespace boost::unit_test;
@@ -237,7 +239,9 @@ class stepper_methods : public mpl::vector<
     controlled_runge_kutta< runge_kutta_dopri5< state_type > > ,
     controlled_runge_kutta< runge_kutta_fehlberg78< state_type > > ,
     bulirsch_stoer< state_type > ,
-    dense_output_runge_kutta< controlled_runge_kutta< runge_kutta_dopri5< state_type > > >
+    dense_output_runge_kutta< controlled_runge_kutta< runge_kutta_dopri5< state_type > > >,
+    controlled_adams_bashforth_moulton<3, state_type, value_type>,
+    controlled_adams_bashforth_moulton<5, state_type, value_type>
     //bulirsch_stoer_dense_out< state_type >
 > { };
 
