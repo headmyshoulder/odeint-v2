@@ -180,7 +180,7 @@ public:
 
         m_resizer.adjust_size( x , detail::bind( &stepper_type::template resize_impl<state_type> , detail::ref( *this ) , detail::_1 ) );
 
-        for( size_t i=0 ; i<n ; ++i )
+        for( size_t i(0) ; i<n ; ++i )
             m_pm.m_v( i ) = i;
 
         deriv_func( x , m_dxdt.m_v , t );
@@ -190,50 +190,50 @@ public:
         m_jac.m_v += 1.0 / m_coef.gamma / dt * boost::numeric::ublas::identity_matrix< value_type >( n );
         boost::numeric::ublas::lu_factorize( m_jac.m_v , m_pm.m_v );
 
-        for( size_t i=0 ; i<n ; ++i )
+        for( size_t i(0) ; i<n ; ++i )
             m_g1.m_v[i] = m_dxdt.m_v[i] + dt * m_coef.d1 * m_dfdt.m_v[i];
         boost::numeric::ublas::lu_substitute( m_jac.m_v , m_pm.m_v , m_g1.m_v );
 
 
-        for( size_t i=0 ; i<n ; ++i )
+        for( size_t i(0) ; i<n ; ++i )
             m_xtmp.m_v[i] = x[i] + m_coef.a21 * m_g1.m_v[i];
         deriv_func( m_xtmp.m_v , m_dxdtnew.m_v , t + m_coef.c2 * dt );
-        for( size_t i=0 ; i<n ; ++i )
+        for( size_t i(0) ; i<n ; ++i )
             m_g2.m_v[i] = m_dxdtnew.m_v[i] + dt * m_coef.d2 * m_dfdt.m_v[i] + m_coef.c21 * m_g1.m_v[i] / dt;
         boost::numeric::ublas::lu_substitute( m_jac.m_v , m_pm.m_v , m_g2.m_v );
 
 
-        for( size_t i=0 ; i<n ; ++i )
+        for( size_t i(0) ; i<n ; ++i )
             m_xtmp.m_v[i] = x[i] + m_coef.a31 * m_g1.m_v[i] + m_coef.a32 * m_g2.m_v[i];
         deriv_func( m_xtmp.m_v , m_dxdtnew.m_v , t + m_coef.c3 * dt );
-        for( size_t i=0 ; i<n ; ++i )
+        for( size_t i(0) ; i<n ; ++i )
             m_g3.m_v[i] = m_dxdtnew.m_v[i] + dt * m_coef.d3 * m_dfdt.m_v[i] + ( m_coef.c31 * m_g1.m_v[i] + m_coef.c32 * m_g2.m_v[i] ) / dt;
         boost::numeric::ublas::lu_substitute( m_jac.m_v , m_pm.m_v , m_g3.m_v );
 
 
-        for( size_t i=0 ; i<n ; ++i )
+        for( size_t i(0) ; i<n ; ++i )
             m_xtmp.m_v[i] = x[i] + m_coef.a41 * m_g1.m_v[i] + m_coef.a42 * m_g2.m_v[i] + m_coef.a43 * m_g3.m_v[i];
         deriv_func( m_xtmp.m_v , m_dxdtnew.m_v , t + m_coef.c4 * dt );
-        for( size_t i=0 ; i<n ; ++i )
+        for( size_t i(0) ; i<n ; ++i )
             m_g4.m_v[i] = m_dxdtnew.m_v[i] + dt * m_coef.d4 * m_dfdt.m_v[i] + ( m_coef.c41 * m_g1.m_v[i] + m_coef.c42 * m_g2.m_v[i] + m_coef.c43 * m_g3.m_v[i] ) / dt;
         boost::numeric::ublas::lu_substitute( m_jac.m_v , m_pm.m_v , m_g4.m_v );
 
 
-        for( size_t i=0 ; i<n ; ++i )
+        for( size_t i(0) ; i<n ; ++i )
             m_xtmp.m_v[i] = x[i] + m_coef.a51 * m_g1.m_v[i] + m_coef.a52 * m_g2.m_v[i] + m_coef.a53 * m_g3.m_v[i] + m_coef.a54 * m_g4.m_v[i];
         deriv_func( m_xtmp.m_v , m_dxdtnew.m_v , t + dt );
-        for( size_t i=0 ; i<n ; ++i )
+        for( size_t i(0) ; i<n ; ++i )
             m_g5.m_v[i] = m_dxdtnew.m_v[i] + ( m_coef.c51 * m_g1.m_v[i] + m_coef.c52 * m_g2.m_v[i] + m_coef.c53 * m_g3.m_v[i] + m_coef.c54 * m_g4.m_v[i] ) / dt;
         boost::numeric::ublas::lu_substitute( m_jac.m_v , m_pm.m_v , m_g5.m_v );
 
-        for( size_t i=0 ; i<n ; ++i )
+        for( size_t i(0) ; i<n ; ++i )
             m_xtmp.m_v[i] += m_g5.m_v[i];
         deriv_func( m_xtmp.m_v , m_dxdtnew.m_v , t + dt );
-        for( size_t i=0 ; i<n ; ++i )
+        for( size_t i(0) ; i<n ; ++i )
             xerr[i] = m_dxdtnew.m_v[i] + ( m_coef.c61 * m_g1.m_v[i] + m_coef.c62 * m_g2.m_v[i] + m_coef.c63 * m_g3.m_v[i] + m_coef.c64 * m_g4.m_v[i] + m_coef.c65 * m_g5.m_v[i] ) / dt;
         boost::numeric::ublas::lu_substitute( m_jac.m_v , m_pm.m_v , xerr );
 
-        for( size_t i=0 ; i<n ; ++i )
+        for( size_t i(0) ; i<n ; ++i )
             xout[i] = m_xtmp.m_v[i] + xerr[i];
     }
 
@@ -263,7 +263,7 @@ public:
     void prepare_dense_output()
     {
         const size_t n = m_g1.m_v.size();
-        for( size_t i=0 ; i<n ; ++i )
+        for( size_t i(0) ; i<n ; ++i )
         {
             m_cont3.m_v[i] = m_coef.d21 * m_g1.m_v[i] + m_coef.d22 * m_g2.m_v[i] + m_coef.d23 * m_g3.m_v[i] + m_coef.d24 * m_g4.m_v[i] + m_coef.d25 * m_g5.m_v[i];
             m_cont4.m_v[i] = m_coef.d31 * m_g1.m_v[i] + m_coef.d32 * m_g2.m_v[i] + m_coef.d33 * m_g3.m_v[i] + m_coef.d34 * m_g4.m_v[i] + m_coef.d35 * m_g5.m_v[i];
@@ -279,7 +279,7 @@ public:
         time_type dt = t_new - t_old;
         time_type s = ( t - t_old ) / dt;
         time_type s1 = 1.0 - s;
-        for( size_t i=0 ; i<n ; ++i )
+        for( size_t i(0) ; i<n ; ++i )
             x[i] = x_old[i] * s1 + s * ( x_new[i] + s1 * ( m_cont3.m_v[i] + s * m_cont4.m_v[i] ) );
     }
 

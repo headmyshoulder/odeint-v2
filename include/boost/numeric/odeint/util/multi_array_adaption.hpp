@@ -89,7 +89,7 @@ struct same_size_impl_sfinae< T1 , T2 ,
 {
     static bool same_size( T1 const &x1 , T2 const &x2 )
     {
-        for( size_t i=0 ; i<T1::dimensionality ; ++i )
+        for( size_t i(0) ; i<T1::dimensionality ; ++i )
         {
             if( x1.shape()[i] != x2.shape()[i] ) return false;
             if( x1.index_bases()[i] != x2.index_bases()[i] ) return false;
@@ -112,10 +112,10 @@ struct resize_impl_sfinae< T1 , T2 ,
     static void resize( T1 &x1 , const T2 &x2 )
     {
         boost::array< int , T1::dimensionality > extents;
-        for( size_t i=0 ; i<T1::dimensionality ; ++i ) extents[i] = x2.shape()[i];
+        for( size_t i(0) ; i<T1::dimensionality ; ++i ) extents[i] = x2.shape()[i];
         x1.resize( extents );
         boost::array< int , T1::dimensionality > origins;
-        for( size_t i=0 ; i<T1::dimensionality ; ++i ) origins[i] = x2.index_bases()[i];
+        for( size_t i(0) ; i<T1::dimensionality ; ++i ) origins[i] = x2.index_bases()[i];
         x1.reindex( origins );
     }
 };

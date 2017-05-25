@@ -82,7 +82,7 @@ public:
 
         m_resizer.adjust_size( x , detail::bind( &stepper_type::template resize_impl<state_type> , detail::ref( *this ) , detail::_1 ) );
 
-        for( size_t i=0 ; i<x.size() ; ++i )
+        for( size_t i(0) ; i<x.size() ; ++i )
             m_pm.m_v[i] = i;
 
         t += dt;

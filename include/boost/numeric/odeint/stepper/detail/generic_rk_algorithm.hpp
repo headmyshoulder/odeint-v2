@@ -144,7 +144,7 @@ public:
             template<class Index>
             void operator()(Index) const {
                 m_os << boost::fusion::at<Index>(m_base).c << " | ";
-                for( size_t i=0 ; i<Index::value ; ++i )
+                for( size_t i(0) ; i<Index::value ; ++i )
                     m_os << boost::fusion::at<Index>(m_base).a[i] << " ";
                 m_os << std::endl;
             }

@@ -36,7 +36,7 @@ public:
 
     void operator()( const State& x , Time t )
     {
-        for( size_t i=0 ; i<m_observers.size() ; ++i )
+        for( size_t i(0) ; i<m_observers.size() ; ++i )
             m_observers[i]( x , t );
     }
 
