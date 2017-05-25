@@ -140,6 +140,16 @@ class controlled_adams_bashforth_moulton
 			}
 		};
 
+		const coeff_type& coeff() const
+		{
+			return m_coeff;
+		};
+
+		coeff_type& coeff()
+		{
+			return m_coeff;
+		};
+
 	private:
 		template< class StateType >
 		bool resize_dxdt_impl( const StateType &x )

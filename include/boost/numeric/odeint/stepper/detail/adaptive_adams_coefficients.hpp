@@ -53,7 +53,6 @@ struct adaptive_adams_coefficients
 		:poly(), m_effective_order(1), m_resizer(), m_algebra(algebra)
 		{};
 
-		// maybe step/tentative step are the better options
 		void step(const deriv_type &deriv, const time_type &t)
 		{
 			m_resizer.adjust_size( deriv , detail::bind( &aac_type::template resize_tss_impl< deriv_type > , detail::ref( *this ) , detail::_1 ) );
