@@ -66,6 +66,7 @@
 
 #include <boost/numeric/odeint/integrate/integrate.hpp>
 #include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
+#include <boost/numeric/odeint/integrate/integrate_adaptive_intr.hpp>
 #include <boost/numeric/odeint/integrate/integrate_const.hpp>
 #include <boost/numeric/odeint/integrate/integrate_n_steps.hpp>
 #include <boost/numeric/odeint/integrate/integrate_times.hpp>
