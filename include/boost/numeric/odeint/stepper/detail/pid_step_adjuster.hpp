@@ -11,7 +11,7 @@ namespace numeric{
 namespace odeint{
 namespace detail{
 
-template<size_t Steps, class State, class Time, size_t Type = adjuster_type::H211PI>
+template<size_t Steps, class State, class Time, size_t Type = H211PI>
 struct pid_step_adjuster
 {
 	public:
