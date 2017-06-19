@@ -45,7 +45,7 @@ class adaptive_adams_moulton: public algebra_stepper_base< Algebra , Operations 
 
 		typedef state_wrapper<state_type> wrapped_state_type;
 
-		typedef detail::adaptive_adams_coefficients<steps, deriv_type, time_type> coeff_type;
+		typedef detail::adaptive_adams_coefficients<steps, deriv_type, time_type, algebra_type, operations_type> coeff_type;
 
 		typedef adaptive_adams_moulton< Steps , State , Value , Deriv , Time , Resizer > stepper_type;
 

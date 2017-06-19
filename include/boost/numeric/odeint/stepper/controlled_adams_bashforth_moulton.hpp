@@ -33,10 +33,10 @@ class State,
 class Value = double,
 class Deriv = State,
 class Time = Value,
-class StepAdjuster = detail::pid_step_adjuster<Steps, State, Time>,
 class Algebra = typename algebra_dispatcher< State >::algebra_type,
 class Operations = typename operations_dispatcher< State >::operations_type ,
-class Resizer = initially_resizer
+class Resizer = initially_resizer,
+class StepAdjuster = detail::pid_step_adjuster<Steps, State, Time>
 >
 class controlled_adams_bashforth_moulton
 {
@@ -58,13 +58,13 @@ class controlled_adams_bashforth_moulton
 		typedef state_wrapper<state_type> wrapped_state_type;
 		typedef state_wrapper<deriv_type> wrapped_deriv_type;
 
-		typedef detail::adaptive_adams_coefficients<order, deriv_type, time_type> coeff_type;
+		typedef detail::adaptive_adams_coefficients<order, deriv_type, time_type, algebra_type, operations_type> coeff_type;
 
 		typedef detail::rotating_buffer<state_type, steps> error_storage_type;
 
-		typedef adaptive_adams_bashforth<order, state_type, value_type> aab_type;
-		typedef adaptive_adams_moulton<order, state_type, value_type> aam_type;
-		typedef controlled_adams_bashforth_moulton< Steps , State , Value , Deriv , Time, StepAdjuster, Algebra, Operations, Resizer > stepper_type;
+		typedef adaptive_adams_bashforth<order, state_type, value_type, state_type, value_type, algebra_type, operations_type> aab_type;
+		typedef adaptive_adams_moulton<order, state_type, value_type, state_type, value_type, algebra_type, operations_type> aam_type;
+		typedef controlled_adams_bashforth_moulton< Steps , State , Value , Deriv , Time, Algebra, Operations, Resizer, StepAdjuster > stepper_type;
 
 		typedef explicit_controlled_stepper_tag stepper_category;
 
@@ -97,6 +97,8 @@ class controlled_adams_bashforth_moulton
 		controlled_step_result try_step(System system, const state_type & in, time_type &t, state_type & out, time_type &dt)
 		{
 			m_dxdt_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_dxdt_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
+			
+			// std::cout << "T: " << t << std::endl;
 
 			if(m_coeff.m_effective_order == 1)
 			{
@@ -107,6 +109,7 @@ class controlled_adams_bashforth_moulton
 			}
 			// predict
 			m_aab.do_step_impl(m_coeff, in, t, out, dt);
+			// std::cout << "Pred: " << out[0] << std::endl;
 
 			// evaluate
 			system(out, m_dxdt.m_v, t + dt);
@@ -115,11 +118,16 @@ class controlled_adams_bashforth_moulton
 			m_xerr_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_xerr_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
 			boost::numeric::odeint::copy( out, m_xerr.m_v);
 
-			// correct
+			// // correct
 			m_aam.do_step(m_coeff, in, t, out, dt);
-			m_aab.algebra().for_each3(m_xerr.m_v, m_xerr.m_v, out, typename Operations::template scale_sum2<double, double>(1.0, -1.0));
+			m_aab.algebra().for_each3(m_xerr.m_v, m_xerr.m_v, out, typename Operations::template scale_sum2<double, double>(-1.0, 1.0));
+
+			// std::cout << "Corr: " << out[0] << std::endl;
+			// std::cout << "Err: " << m_xerr.m_v[0] << std::endl;
 
 			double ratio = m_step_adjuster.adjust_stepsize(m_xerr.m_v, dt);
+
+			// std::cout << "Ratio: " << ratio << std::endl;
 
 			if(ratio >= 0.9)
 			{

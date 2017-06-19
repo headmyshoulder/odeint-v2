@@ -54,7 +54,7 @@ class adaptive_adams_bashforth: public algebra_stepper_base< Algebra , Operation
 		typedef state_wrapper<deriv_type> wrapped_deriv_type;
 		typedef stepper_tag stepper_category;
 
-		typedef detail::adaptive_adams_coefficients<order, deriv_type, time_type> coeff_type;
+		typedef detail::adaptive_adams_coefficients<order, deriv_type, time_type, algebra_type, operations_type> coeff_type;
 
 		typedef adaptive_adams_bashforth< Steps , State , Value , Deriv , Time , Algebra, Operations, Resizer > stepper_type;
 
@@ -75,6 +75,7 @@ class adaptive_adams_bashforth: public algebra_stepper_base< Algebra , Operation
 		template<class System>
 		void do_step(System system, const state_type & in, time_type t, state_type & out, time_type dt)
 		{
+			std::cout << "aa1" << std::endl;
 			m_dxdt_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_dxdt_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
 
 			system(in, m_dxdt.m_v, t);
