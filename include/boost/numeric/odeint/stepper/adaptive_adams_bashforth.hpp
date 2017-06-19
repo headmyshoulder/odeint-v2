@@ -75,7 +75,6 @@ class adaptive_adams_bashforth: public algebra_stepper_base< Algebra , Operation
 		template<class System>
 		void do_step(System system, const state_type & in, time_type t, state_type & out, time_type dt)
 		{
-			std::cout << "aa1" << std::endl;
 			m_dxdt_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_dxdt_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
 
 			system(in, m_dxdt.m_v, t);
