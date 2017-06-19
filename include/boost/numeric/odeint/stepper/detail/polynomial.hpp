@@ -17,6 +17,7 @@ class Polynomial
 {
 	public:
 		typedef Time time_type;
+		typedef Polynomial<order, Time> poly_type;
 
 		Polynomial()
 		{
@@ -49,26 +50,26 @@ class Polynomial
 		time_type evaluate(const time_type &t)
 		{
 			// fma: x*y+z
-			res = m_coeff[0];
+			m_res = m_coeff[0];
 			for(size_t i=1; i<order; ++i)
 			{
-				// res = fma(res, t, m_coeff[i]);
-				res = m_coeff[i] + res * t;
+				// m_res = fma(m_res, t, m_coeff[i]);
+				m_res = m_coeff[i] + m_res * t;
 			}
 
-			return res;
+			return m_res;
 		};
 
 		time_type evaluate_integrated(const time_type &t)
 		{
-			res = m_coeff[0]/order;
+			m_res = m_coeff[0]/order;
 			for(size_t i=1; i<order+1; ++i)
 			{
-				// res = fma(res, t, ((i >= order)?0:m_coeff[i]/(order-i)));
-				res = ((i >= order)?0:m_coeff[i]/(order-i)) + res * t;
+				// m_res = fma(m_res, t, ((i >= order)?0:m_coeff[i]/(order-i)));
+				m_res = ((i >= order)?0:m_coeff[i]/(order-i)) + m_res * t;
 			}
 
-			return res;
+			return m_res;
 		}
 
 		void add_root(const time_type &root)
@@ -130,10 +131,11 @@ class Polynomial
 			Polynomial<order, time_type> poly(coeff);
 			return poly;
 		};
-	private:
+
 		// first element is highest order
 		boost::array<time_type, order> m_coeff;
-		time_type res;
+	private:
+		time_type m_res;
 };
 }}}}
 

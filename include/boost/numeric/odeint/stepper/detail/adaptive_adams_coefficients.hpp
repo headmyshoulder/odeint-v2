@@ -53,6 +53,31 @@ struct adaptive_adams_coefficients
 		:poly(), m_effective_order(1), m_resizer(), m_algebra(algebra)
 		{};
 
+		/*aac_type &operator=(const aac_type & rhs)
+		{
+			this->poly = rhs.poly;
+			this->m_c = rhs.m_c;
+			// this->m_ss = rhs.m_ss;
+
+			for(size_t i=0; i<steps+1; ++i)
+			{
+				for(size_t j=0; j<steps+1; ++j)
+				{
+					this->m_ss[i][j] = rhs.m_ss[i][j];
+				}
+			}
+
+			this->m_ts = rhs.m_ts;
+			this->m_tss = rhs.m_tss;
+			this->m_tts = rhs.m_tts;
+			this->m_effective_order = rhs.m_effective_order;
+
+			this->m_algebra = rhs.m_algebra;
+			this->m_resizer = rhs.m_resizer;
+
+			return *this;
+		}*/
+
 		void step(const deriv_type &deriv, const time_type &t)
 		{
 			m_resizer.adjust_size( deriv , detail::bind( &aac_type::template resize_tss_impl< deriv_type > , detail::ref( *this ) , detail::_1 ) );

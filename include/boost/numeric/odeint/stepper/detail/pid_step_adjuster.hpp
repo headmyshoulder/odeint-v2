@@ -23,7 +23,7 @@ struct pid_step_adjuster
 		typedef pid_step_adjuster_coefficients<Type> coeff_type;
 
 		pid_step_adjuster(double tol = 1e-5, time_type dtmax = 1.0)
-		:m_dtmax(dtmax), m_error_storage(), m_time_storage(), m_tol(tol), m_failed(0), m_init(0)
+		:m_dtmax(dtmax), m_error_storage(), m_time_storage(), m_init(0), m_tol(tol), m_failed(0)
 		{};
 
 		double adjust_stepsize(const state_type &err, const time_type &dt)
