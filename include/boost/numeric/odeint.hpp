@@ -52,6 +52,7 @@
 #include <boost/numeric/odeint/stepper/adams_bashforth_moulton.hpp>
 
 #include <boost/numeric/odeint/stepper/adaptive_adams_bashforth.hpp>
+#include <boost/numeric/odeint/stepper/adaptive_adams_bashforth_moulton.hpp>
 #include <boost/numeric/odeint/stepper/controlled_adams_bashforth_moulton.hpp>
 
 #include <boost/numeric/odeint/stepper/implicit_euler.hpp>

@@ -1,89 +1,65 @@
 #ifndef STEPPER_CONTROLLED_ADAMS_BASHFORTH_MOULTON_HPP_INCLUDED
 #define STEPPER_CONTROLLED_ADAMS_BASHFORTH_MOULTON_HPP_INCLUDED
 
-#include <boost/numeric/odeint/stepper/adaptive_adams_bashforth.hpp>
-#include <boost/numeric/odeint/stepper/adaptive_adams_moulton.hpp>
-#include <boost/numeric/odeint/stepper/detail/adaptive_adams_coefficients.hpp>
+#include <boost/numeric/odeint/stepper/stepper_categories.hpp>
+#include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
+
+#include <boost/numeric/odeint/stepper/adaptive_adams_bashforth_moulton.hpp>
 #include <boost/numeric/odeint/stepper/detail/pid_step_adjuster.hpp>
 
-#include <boost/numeric/odeint/stepper/detail/rotating_buffer.hpp>
-
-#include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
-#include <boost/numeric/odeint/util/state_wrapper.hpp>
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
-
-#include <boost/numeric/odeint/algebra/algebra_dispatcher.hpp>
-#include <boost/numeric/odeint/algebra/operations_dispatcher.hpp>
-
-#include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/util/bind.hpp>
 
-#include <math.h>
-
-namespace boost {
-namespace numeric {
+namespace boost{
+namespace numeric{
 namespace odeint {
 
-
-
+// template<
+// class ErrorStepper,
+// class ErrorChecker,
+// class StepAdjuster,
+// class Resizer
+// >
 template<
-size_t Steps,
-class State,
-class Value = double,
-class Deriv = State,
-class Time = Value,
-class Algebra = typename algebra_dispatcher< State >::algebra_type,
-class Operations = typename operations_dispatcher< State >::operations_type ,
-class Resizer = initially_resizer,
-class StepAdjuster = detail::pid_step_adjuster<Steps, State, Time>
+class ErrorStepper,
+class StepAdjuster = detail::pid_step_adjuster<ErrorStepper::order_value, typename ErrorStepper::state_type, typename ErrorStepper::time_type>,
+class Resizer = initially_resizer
 >
 class controlled_adams_bashforth_moulton
 {
 	public:
-		static const size_t steps = Steps;
-		typedef unsigned short order_type;
-		static const order_type order = steps;
+		typedef ErrorStepper stepper_type;
+		typedef typename stepper_type::state_type state_type;
+		typedef typename stepper_type::value_type value_type;
+		typedef typename stepper_type::deriv_type deriv_type;
+		typedef typename stepper_type::time_type time_type;
 
-		typedef State state_type;
-		typedef Value value_type;
-		typedef Deriv deriv_type;
-		typedef Time time_type;
-		typedef StepAdjuster step_adjuster_type;
+		typedef typename stepper_type::algebra_type algebra_type;
+		typedef typename stepper_type::operations_type operations_type;
 		typedef Resizer resizer_type;
 
-		typedef Algebra algebra_type;
-		typedef Operations operations_type;
+		// typedef ErrorChecker error_checker_type;
+		typedef StepAdjuster step_adjuster_type;
+		typedef controlled_stepper_tag stepper_category;
 
-		typedef state_wrapper<state_type> wrapped_state_type;
-		typedef state_wrapper<deriv_type> wrapped_deriv_type;
+		typedef typename stepper_type::wrapped_state_type wrapped_state_type;
+		typedef typename stepper_type::wrapped_deriv_type wrapped_deriv_type;
 
-		typedef detail::adaptive_adams_coefficients<order, deriv_type, time_type, algebra_type, operations_type> coeff_type;
+		typedef controlled_adams_bashforth_moulton<ErrorStepper, StepAdjuster, Resizer> controlled_stepper_type;
 
-		typedef detail::rotating_buffer<state_type, steps> error_storage_type;
-
-		typedef adaptive_adams_bashforth<order, state_type, value_type, state_type, value_type, algebra_type, operations_type> aab_type;
-		typedef adaptive_adams_moulton<order, state_type, value_type, state_type, value_type, algebra_type, operations_type> aam_type;
-		typedef controlled_adams_bashforth_moulton< Steps , State , Value , Deriv , Time, Algebra, Operations, Resizer, StepAdjuster > stepper_type;
-
-		typedef explicit_controlled_stepper_tag stepper_category;
-
-		controlled_adams_bashforth_moulton()
-		:m_aab(), m_aam(m_aab.algebra()),
+		controlled_adams_bashforth_moulton(
+			step_adjuster_type step_adjuster = step_adjuster_type()
+			)
+		:m_stepper(), m_coeff(m_stepper.coeff()), 
 		m_dxdt_resizer(), m_xerr_resizer(), m_xnew_resizer(),
-		m_coeff(), m_step_adjuster()
-		{};
-
-		controlled_adams_bashforth_moulton(const algebra_type &algebra)
-		:m_aab(algebra), m_aam(m_aab.algebra()),
-		m_dxdt_resizer(), m_xerr_resizer(), m_xnew_resizer(),
-		m_coeff(), m_step_adjuster()
+		m_step_adjuster(step_adjuster)
 		{};
 
 		template<class System>
 		controlled_step_result try_step(System system, state_type & inOut, time_type &t, time_type &dt)
 		{
-			m_xnew_resizer.adjust_size( inOut , detail::bind( &stepper_type::template resize_xnew_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
+			m_xnew_resizer.adjust_size( inOut , detail::bind( &controlled_stepper_type::template resize_xnew_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
 
 			controlled_step_result res = try_step(system, inOut, t, m_xnew.m_v, dt);
 
@@ -96,42 +72,15 @@ class controlled_adams_bashforth_moulton
 		template<class System>
 		controlled_step_result try_step(System system, const state_type & in, time_type &t, state_type & out, time_type &dt)
 		{
-			m_dxdt_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_dxdt_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
-			
-			// std::cout << "T: " << t << std::endl;
-
-			if(m_coeff.m_effective_order == 1)
-			{
-				system(in, m_dxdt.m_v, t);
-
-				m_coeff.step(m_dxdt.m_v, t);
-				m_coeff.confirm();
-			}
-			// predict
-			m_aab.do_step_impl(m_coeff, in, t, out, dt);
-			// std::cout << "Pred: " << out[0] << std::endl;
-
-			// evaluate
-			system(out, m_dxdt.m_v, t + dt);
-			m_coeff.step(m_dxdt.m_v, t + dt);
-
-			m_xerr_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_xerr_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
-			boost::numeric::odeint::copy( out, m_xerr.m_v);
-
-			// // correct
-			m_aam.do_step(m_coeff, in, t, out, dt);
-			m_aab.algebra().for_each3(m_xerr.m_v, m_xerr.m_v, out, typename Operations::template scale_sum2<double, double>(-1.0, 1.0));
-
-			// std::cout << "Corr: " << out[0] << std::endl;
-			// std::cout << "Err: " << m_xerr.m_v[0] << std::endl;
+			m_xerr_resizer.adjust_size( in , detail::bind( &controlled_stepper_type::template resize_xerr_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
+			m_stepper.do_step_impl(system, m_coeff, in, t, out, dt, m_xerr.m_v);
 
 			double ratio = m_step_adjuster.adjust_stepsize(m_xerr.m_v, dt);
 
-			// std::cout << "Ratio: " << ratio << std::endl;
-
 			if(ratio >= 0.9)
 			{
-				// evaluate
+				m_dxdt_resizer.adjust_size( in , detail::bind( &controlled_stepper_type::template resize_dxdt_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
+
 				system(out, m_dxdt.m_v, t+dt);
 				m_coeff.step(m_dxdt.m_v, t+dt);
 				m_coeff.confirm();
@@ -148,16 +97,6 @@ class controlled_adams_bashforth_moulton
 			}
 		};
 
-		const coeff_type& coeff() const
-		{
-			return m_coeff;
-		};
-
-		coeff_type& coeff()
-		{
-			return m_coeff;
-		};
-
 	private:
 		template< class StateType >
 		bool resize_dxdt_impl( const StateType &x )
@@ -167,7 +106,7 @@ class controlled_adams_bashforth_moulton
 		template< class StateType >
 		bool resize_xerr_impl( const StateType &x )
 		{
-			return adjust_size_by_resizeability( m_xerr, x, typename is_resizeable<deriv_type>::type() );
+			return adjust_size_by_resizeability( m_xerr, x, typename is_resizeable<state_type>::type() );
 		};
 		template< class StateType >
 		bool resize_xnew_impl( const StateType &x )
@@ -175,22 +114,23 @@ class controlled_adams_bashforth_moulton
 			return adjust_size_by_resizeability( m_xnew, x, typename is_resizeable<state_type>::type() );
 		};
 
-		aab_type m_aab;
-		aam_type m_aam;
+		stepper_type m_stepper;
+		typename stepper_type::coeff_type &m_coeff;
+
+		wrapped_deriv_type m_dxdt;
+		wrapped_state_type m_xerr;
+		wrapped_state_type m_xnew;
 
 		resizer_type m_dxdt_resizer;
 		resizer_type m_xerr_resizer;
 		resizer_type m_xnew_resizer;
 
-		wrapped_deriv_type m_dxdt;
-		wrapped_state_type m_xnew;
-		wrapped_state_type m_xerr;
-
-		coeff_type m_coeff;
-
+		// error_checker_type m_error_checker;
 		step_adjuster_type m_step_adjuster;
 };
 
-}}}
+}
+}
+}
 
 #endif

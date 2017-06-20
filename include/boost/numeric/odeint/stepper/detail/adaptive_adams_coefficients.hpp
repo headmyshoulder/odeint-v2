@@ -108,6 +108,12 @@ struct adaptive_adams_coefficients
 			}
 		};
 
+		void reset()
+		{
+			poly.reset();
+			m_effective_order = 1;
+		};
+
 		void pretty_print()
 		{
 			for(size_t k=0; k<2; ++k)

@@ -38,7 +38,7 @@ class adaptive_adams_bashforth: public algebra_stepper_base< Algebra , Operation
 	public:
 		static const size_t steps = Steps;
 		typedef unsigned short order_type;
-		static const order_type order = steps;
+		static const order_type order_value = steps;
 
 		typedef State state_type;
 		typedef Value value_type;
@@ -54,7 +54,7 @@ class adaptive_adams_bashforth: public algebra_stepper_base< Algebra , Operation
 		typedef state_wrapper<deriv_type> wrapped_deriv_type;
 		typedef stepper_tag stepper_category;
 
-		typedef detail::adaptive_adams_coefficients<order, deriv_type, time_type, algebra_type, operations_type> coeff_type;
+		typedef detail::adaptive_adams_coefficients<Steps, deriv_type, time_type, algebra_type, operations_type> coeff_type;
 
 		typedef adaptive_adams_bashforth< Steps , State , Value , Deriv , Time , Algebra, Operations, Resizer > stepper_type;
 
@@ -62,6 +62,11 @@ class adaptive_adams_bashforth: public algebra_stepper_base< Algebra , Operation
 		:algebra_stepper_base_type( algebra ) ,
 		m_dxdt_resizer(), m_xnew_resizer()
 		{};
+
+		order_type order() const
+		{
+			return order_value;
+		};
 
 		template<class System>
 		void do_step(System system, state_type & inOut, time_type t, time_type dt)
@@ -103,6 +108,21 @@ class adaptive_adams_bashforth: public algebra_stepper_base< Algebra , Operation
 				// predict next state
 				this->m_algebra.for_each3(out, out, coeff.m_ss[i][coeff.m_effective_order-i-2].m_v, typename Operations::template scale_sum2<double, double>(1.0, c));
 			}
+		};
+
+		const coeff_type& coeff() const
+		{
+			return m_coeff;
+		};
+
+		coeff_type& coeff()
+		{
+			return m_coeff;
+		};
+
+		void reset()
+		{
+			m_coeff.reset();
 		};
 
 	private:
