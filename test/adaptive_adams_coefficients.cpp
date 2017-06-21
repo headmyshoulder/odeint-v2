@@ -72,7 +72,10 @@ BOOST_AUTO_TEST_CASE( test_copy )
 	BOOST_CHECK(&(c1.m_ss[0][0].m_v) != &(c2.m_ss[0][0].m_v));
 
 	aac_type c3;
+	deriv_type *p1 = &(c3.m_ss[0][0].m_v);
+
 	c3 = c1;
+	// BOOST_CHECK(p1 == (&(c3.m_ss[0][0].m_v)));
 	BOOST_CHECK_EQUAL(c1.m_ss[0][0].m_v[0], c3.m_ss[0][0].m_v[0]);
 }
 

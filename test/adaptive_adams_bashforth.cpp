@@ -56,4 +56,8 @@ BOOST_AUTO_TEST_CASE( test_instantiation )
 	s9.do_step(const_sys(), x0, t0, dt);
 }
 
+BOOST_AUTO_TEST_CASE( test_copy )
+{
+}
+
 BOOST_AUTO_TEST_SUITE_END()

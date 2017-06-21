@@ -25,12 +25,28 @@ BOOST_AUTO_TEST_CASE( test_add_roots )
 {
 	Polynomial<3, double> poly;
 	poly.add_root(1);
-
 	poly.add_root(0);
 }
 BOOST_AUTO_TEST_CASE( test_copy )
 {
-	
+	typedef Polynomial<5, double> poly_type;
+	poly_type p1;
+	p1.add_root(1);
+	p1.add_root(0);
+
+	poly_type p2(p1);
+	BOOST_CHECK_EQUAL(p1.m_coeff[0], p2.m_coeff[0]);
+	BOOST_CHECK_EQUAL(p1.m_coeff[1], p2.m_coeff[1]);
+
+	poly_type p3;
+	double* a1 = &(p3.m_coeff[0]);
+
+	p3 = p1;
+
+	BOOST_CHECK(a1 == &(p3.m_coeff[0]));
+
+	BOOST_CHECK_EQUAL(p1.m_coeff[0], p3.m_coeff[0]);
+	BOOST_CHECK_EQUAL(p1.m_coeff[1], p3.m_coeff[1]);
 }
 BOOST_AUTO_TEST_CASE( test_remove )
 {
