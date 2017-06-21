@@ -7,6 +7,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <boost/numeric/odeint/stepper/adaptive_adams_bashforth_moulton.hpp>
 #include <boost/numeric/odeint/stepper/controlled_adams_bashforth_moulton.hpp>
 
 using namespace boost::unit_test;
@@ -26,41 +27,17 @@ typedef double value_type;
 
 BOOST_AUTO_TEST_SUITE( controlled_adams_bashforth_moulton_test )
 
-BOOST_AUTO_TEST_CASE( test_copy )
-{
-	controlled_adams_bashforth_moulton<3, state_type> s1;
-
-	state_type deriv = {{1.0}};
-	s1.coeff().step(deriv, 0.0);
-	s1.coeff().confirm();
-	s1.coeff().step(deriv, 1.0);
-	s1.coeff().confirm();
-	s1.coeff().step(deriv, 2.0);
-	s1.coeff().confirm();
-
-	controlled_adams_bashforth_moulton<3, state_type> s2(s1);
-	BOOST_CHECK_CLOSE(s2.coeff().m_ss[0][0].m_v[0], s1.coeff().m_ss[0][0].m_v[0], 1e-14);
-	BOOST_CHECK_CLOSE(s2.coeff().m_ss[1][0].m_v[0], s1.coeff().m_ss[1][0].m_v[0], 1e-14);
-	BOOST_CHECK((&(s2.coeff().m_ss[0]) != &(s1.coeff().m_ss[0])));
-
-	controlled_adams_bashforth_moulton<3, state_type> s3;
-	s3 = s1;
-
-	BOOST_CHECK_CLOSE(s3.coeff().m_ss[0][0].m_v[0], s1.coeff().m_ss[0][0].m_v[0], 1e-14);
-	BOOST_CHECK_CLOSE(s3.coeff().m_ss[1][0].m_v[0], s1.coeff().m_ss[1][0].m_v[0], 1e-14);
-}
-
 BOOST_AUTO_TEST_CASE( test_instantiation )
 {
-	controlled_adams_bashforth_moulton<1, state_type> s1;
-	controlled_adams_bashforth_moulton<2, state_type> s2;
-	controlled_adams_bashforth_moulton<3, state_type> s3;
-	controlled_adams_bashforth_moulton<4, state_type> s4;
-	controlled_adams_bashforth_moulton<5, state_type> s5;
-	controlled_adams_bashforth_moulton<6, state_type> s6;
-	controlled_adams_bashforth_moulton<7, state_type> s7;
-	controlled_adams_bashforth_moulton<8, state_type> s8;
-	controlled_adams_bashforth_moulton<9, state_type> s9;
+	controlled_adams_bashforth_moulton<adaptive_adams_bashforth_moulton<1, state_type> > s1;
+	controlled_adams_bashforth_moulton<adaptive_adams_bashforth_moulton<2, state_type> > s2;
+	controlled_adams_bashforth_moulton<adaptive_adams_bashforth_moulton<3, state_type> > s3;
+	controlled_adams_bashforth_moulton<adaptive_adams_bashforth_moulton<4, state_type> > s4;
+	controlled_adams_bashforth_moulton<adaptive_adams_bashforth_moulton<5, state_type> > s5;
+	controlled_adams_bashforth_moulton<adaptive_adams_bashforth_moulton<6, state_type> > s6;
+	controlled_adams_bashforth_moulton<adaptive_adams_bashforth_moulton<7, state_type> > s7;
+	controlled_adams_bashforth_moulton<adaptive_adams_bashforth_moulton<8, state_type> > s8;
+	controlled_adams_bashforth_moulton<adaptive_adams_bashforth_moulton<9, state_type> > s9;
 
 	state_type x = {{ 10.0 }};
     value_type t = 0.0 , dt = 0.01;
