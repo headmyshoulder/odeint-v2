@@ -1,6 +1,7 @@
 #ifndef STEPPER_ADAPTIVE_ADAMS_BASHFORTH_MOULTON_HPP_INCLUDED
 #define STEPPER_ADAPTIVE_ADAMS_BASHFORTH_MOULTON_HPP_INCLUDED
 
+#include <boost/numeric/odeint/stepper/base/algebra_stepper_base.hpp>
 #include <boost/numeric/odeint/stepper/adaptive_adams_bashforth.hpp>
 #include <boost/numeric/odeint/stepper/adaptive_adams_moulton.hpp>
 #include <boost/numeric/odeint/stepper/detail/adaptive_adams_coefficients.hpp>
@@ -34,7 +35,7 @@ class Algebra = typename algebra_dispatcher< State >::algebra_type,
 class Operations = typename operations_dispatcher< State >::operations_type ,
 class Resizer = initially_resizer
 >
-class adaptive_adams_bashforth_moulton
+class adaptive_adams_bashforth_moulton: public algebra_stepper_base< Algebra , Operations >
 {
 	public:
 		static const size_t steps = Steps;
@@ -49,6 +50,7 @@ class adaptive_adams_bashforth_moulton
 
 		typedef Algebra algebra_type;
 		typedef Operations operations_type;
+		typedef algebra_stepper_base< Algebra , Operations > algebra_stepper_base_type;
 
 		typedef state_wrapper<state_type> wrapped_state_type;
 		typedef state_wrapper<deriv_type> wrapped_deriv_type;
@@ -63,14 +65,8 @@ class adaptive_adams_bashforth_moulton
 
 		typedef error_stepper_tag stepper_category;
 
-		adaptive_adams_bashforth_moulton()
-		:m_aab(), m_aam(m_aab.algebra()),
-		m_dxdt_resizer(), m_xerr_resizer(), m_xnew_resizer(),
-		m_coeff()
-		{};
-
-		adaptive_adams_bashforth_moulton(const algebra_type &algebra)
-		:m_aab(algebra), m_aam(m_aab.algebra()),
+		adaptive_adams_bashforth_moulton(const algebra_type &algebra = algebra_type())
+		:algebra_stepper_base_type( algebra ), m_aab(algebra), m_aam(algebra),
 		m_dxdt_resizer(), m_xerr_resizer(), m_xnew_resizer(),
 		m_coeff()
 		{};
@@ -163,6 +159,8 @@ class adaptive_adams_bashforth_moulton
 			return m_coeff;
 		};
 
+		wrapped_deriv_type m_dxdt;
+
 	private:
 		template< class StateType >
 		bool resize_dxdt_impl( const StateType &x )
@@ -187,7 +185,6 @@ class adaptive_adams_bashforth_moulton
 		resizer_type m_xerr_resizer;
 		resizer_type m_xnew_resizer;
 
-		wrapped_deriv_type m_dxdt;
 		wrapped_state_type m_xnew;
 		wrapped_state_type m_xerr;
 

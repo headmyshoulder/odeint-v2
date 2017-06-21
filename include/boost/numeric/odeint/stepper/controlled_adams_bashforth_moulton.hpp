@@ -15,15 +15,12 @@ namespace boost{
 namespace numeric{
 namespace odeint {
 
-// template<
-// class ErrorStepper,
-// class ErrorChecker,
-// class StepAdjuster,
-// class Resizer
-// >
 template<
 class ErrorStepper,
-class StepAdjuster = detail::pid_step_adjuster<ErrorStepper::order_value, typename ErrorStepper::state_type, typename ErrorStepper::time_type>,
+class StepAdjuster = detail::pid_step_adjuster<ErrorStepper::order_value, 
+	typename ErrorStepper::state_type, 
+	typename ErrorStepper::time_type,
+	detail::H211PI>,
 class Resizer = initially_resizer
 >
 class controlled_adams_bashforth_moulton
@@ -39,7 +36,6 @@ class controlled_adams_bashforth_moulton
 		typedef typename stepper_type::operations_type operations_type;
 		typedef Resizer resizer_type;
 
-		// typedef ErrorChecker error_checker_type;
 		typedef StepAdjuster step_adjuster_type;
 		typedef controlled_stepper_tag stepper_category;
 
@@ -48,9 +44,7 @@ class controlled_adams_bashforth_moulton
 
 		typedef controlled_adams_bashforth_moulton<ErrorStepper, StepAdjuster, Resizer> controlled_stepper_type;
 
-		controlled_adams_bashforth_moulton(
-			step_adjuster_type step_adjuster = step_adjuster_type()
-			)
+		controlled_adams_bashforth_moulton(step_adjuster_type step_adjuster = step_adjuster_type())
 		:m_stepper(), m_coeff(m_stepper.coeff()), 
 		m_dxdt_resizer(), m_xerr_resizer(), m_xnew_resizer(),
 		m_step_adjuster(step_adjuster)
@@ -75,24 +69,22 @@ class controlled_adams_bashforth_moulton
 			m_xerr_resizer.adjust_size( in , detail::bind( &controlled_stepper_type::template resize_xerr_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
 			m_stepper.do_step_impl(system, m_coeff, in, t, out, dt, m_xerr.m_v);
 
-			double ratio = m_step_adjuster.adjust_stepsize(m_xerr.m_v, dt);
+			time_type dtPrev = dt;
+			dt = m_step_adjuster.adjust_stepsize(dt, m_xerr.m_v);
 
-			if(ratio >= 0.9)
+			if(dt / dtPrev >= 0.9)
 			{
 				m_dxdt_resizer.adjust_size( in , detail::bind( &controlled_stepper_type::template resize_dxdt_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
 
-				system(out, m_dxdt.m_v, t+dt);
-				m_coeff.step(m_dxdt.m_v, t+dt);
+				system(out, m_dxdt.m_v, t+dtPrev);
+				m_coeff.step(m_dxdt.m_v, t+dtPrev);
 				m_coeff.confirm();
 
-				t += dt;
-				dt *= ratio;
-
+				t += dtPrev;
 				return success;
 			}
 			else
 			{
-				dt *= ratio;
 				return fail;
 			}
 		};
@@ -125,7 +117,6 @@ class controlled_adams_bashforth_moulton
 		resizer_type m_xerr_resizer;
 		resizer_type m_xnew_resizer;
 
-		// error_checker_type m_error_checker;
 		step_adjuster_type m_step_adjuster;
 };
 

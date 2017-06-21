@@ -28,13 +28,13 @@ struct controller_factory< Stepper , controlled_adams_bashforth_moulton< Stepper
 
     controller_type operator()( value_type abs_error , value_type rel_error , const stepper_type &stepper )
     {
-        return controller_type( step_adjuster_type(rel_error));
+        return controller_type(step_adjuster_type(abs_error));
     }
 
     controller_type operator()( value_type abs_error , value_type rel_error ,
                                 time_type max_dt, const stepper_type &stepper )
     {
-        return controller_type( step_adjuster_type(rel_error, max_dt));
+        return controller_type( step_adjuster_type(abs_error, max_dt));
     }
 };
 

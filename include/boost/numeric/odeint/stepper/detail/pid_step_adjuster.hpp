@@ -11,10 +11,17 @@ namespace numeric{
 namespace odeint{
 namespace detail{
 
-template<size_t Steps, class State, class Time, size_t Type = H211PI>
+template<
+size_t Steps,
+class State,
+class Time,
+size_t Type = H211PI
+>
 struct pid_step_adjuster
 {
 	public:
+		const static size_t steps = Steps;
+
 		typedef State state_type;
 		typedef Time time_type;
 
@@ -23,12 +30,11 @@ struct pid_step_adjuster
 		typedef pid_step_adjuster_coefficients<Type> coeff_type;
 
 		pid_step_adjuster(double tol = 1e-5, time_type dtmax = 1.0)
-		:m_dtmax(dtmax), m_error_storage(), m_time_storage(), m_init(0), m_tol(tol), m_failed(0)
+		:m_dtmax(dtmax), m_error_storage(), m_time_storage(), m_init(0), m_tol(tol)
 		{};
 
-		double adjust_stepsize(const state_type &err, const time_type &dt)
+		time_type adjust_stepsize(time_type dt, const state_type &err)
 		{
-			// basic controller
 			m_error_storage[0] = err;
 			m_time_storage[0] = dt;
 
@@ -39,16 +45,16 @@ struct pid_step_adjuster
 			{
 				if(m_init >= 2)
 				{
-					r = pow(fabs(m_tol/m_error_storage[0][i]), m_coeff[0]/(Steps + 1)) *
-						pow(fabs(m_tol/m_error_storage[1][i]), m_coeff[1]/(Steps + 1)) *
-						pow(fabs(m_tol/m_error_storage[2][i]), m_coeff[2]/(Steps + 1)) *
-						pow(fabs(m_time_storage[0]/m_time_storage[1]), -m_coeff[3]/(Steps + 1))*
-						pow(fabs(m_time_storage[1]/m_time_storage[2]), -m_coeff[4]/(Steps + 1));
-				 }
-				 else
-				 {
-				 	r = pow(fabs(m_tol/m_error_storage[0][i]), 0.7/(Steps + 1)); // purely integrating controller for startup
-			 	}
+					r = pow(fabs(m_tol/m_error_storage[0][i]), m_coeff[0]/(steps + 1)) *
+						pow(fabs(m_tol/m_error_storage[1][i]), m_coeff[1]/(steps + 1)) *
+						pow(fabs(m_tol/m_error_storage[2][i]), m_coeff[2]/(steps + 1)) *
+						pow(fabs(m_time_storage[0]/m_time_storage[1]), -m_coeff[3]/(steps + 1))*
+						pow(fabs(m_time_storage[1]/m_time_storage[2]), -m_coeff[4]/(steps + 1));
+				}
+				else
+				{
+					r = pow(fabs(m_tol/m_error_storage[0][i]), 0.7/(steps + 1)); // purely integrating controller for startup
+		 		}
 
 				if(r<ratio)
 					ratio = r;
@@ -59,7 +65,7 @@ struct pid_step_adjuster
 
 			if(ratio*dt >= m_dtmax)
 			{
-				ratio = m_dtmax / dt;
+				dt = m_dtmax;
 			}
 
 			if(ratio >= 0.9)
@@ -72,11 +78,9 @@ struct pid_step_adjuster
 			else
 			{
 				m_init = 0;
-				m_failed ++;
-				//std::cout << m_failed << std::endl;
 			}
 
-			return ratio;
+			return dt*ratio;
 		};
 
 	private:
@@ -86,8 +90,6 @@ struct pid_step_adjuster
 
 		size_t m_init;
 		double m_tol;
-
-		size_t m_failed;
 
 		coeff_type m_coeff;
 };
