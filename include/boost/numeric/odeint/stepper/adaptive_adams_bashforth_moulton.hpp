@@ -73,7 +73,7 @@ public:
 
     order_type order()
     {
-        return order_value + 1;
+        return order_value;
     }
 
     order_type stepper_order()
@@ -87,7 +87,7 @@ public:
     }
 
     template<class System>
-    void do_step(System system, state_type & inOut, time_type &t, time_type &dt)
+    void do_step(System system, state_type & inOut, time_type t, time_type &dt)
     {
         m_xerr_resizer.adjust_size( inOut , detail::bind( &stepper_type::template resize_xerr_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
 
@@ -95,7 +95,7 @@ public:
     };
 
     template<class System>
-    void do_step(System system, const state_type & in, time_type &t, state_type & out, time_type &dt)
+    void do_step(System system, const state_type & in, time_type t, state_type & out, time_type &dt)
     {
         m_xerr_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_xerr_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
 
@@ -103,7 +103,7 @@ public:
     };
 
     template<class System>
-    void do_step(System system, state_type & inOut, time_type &t, time_type &dt, state_type &xerr)
+    void do_step(System system, state_type & inOut, time_type t, time_type &dt, state_type &xerr)
     {
         m_xnew_resizer.adjust_size( inOut , detail::bind( &stepper_type::template resize_xnew_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
 
@@ -112,7 +112,7 @@ public:
     };
 
     template<class System>
-    void do_step(System system, const state_type & in, time_type &t, state_type & out, time_type &dt, state_type &xerr)
+    void do_step(System system, const state_type & in, time_type &t, state_type & out, time_type dt, state_type &xerr)
     {
         do_step_impl(system, m_coeff, in, t, out, dt, xerr);
 
@@ -148,6 +148,18 @@ public:
         // Error calculation
         m_aab.algebra().for_each3(xerr, xerr, out, typename Operations::template scale_sum2<double, double>(-1.0, 1.0));
     };
+
+    template<class System>
+    void initialize(System system, state_type &inOut, time_type &t, time_type dt)
+    {
+        m_coeff.reset();
+
+        for(size_t i=0; i<steps+1; ++i)
+        {
+            do_step(system, inOut, t, dt);
+            t += dt;
+        }
+    }
 
     const coeff_type& coeff() const
     {

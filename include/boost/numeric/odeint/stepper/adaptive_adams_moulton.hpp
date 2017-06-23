@@ -42,7 +42,7 @@ public:
     typedef Operations operations_type;
     typedef algebra_stepper_base< Algebra , Operations > algebra_stepper_base_type;
 
-    typedef detail::adaptive_adams_coefficients<Steps, deriv_type, time_type, algebra_type, operations_type> coeff_type;
+    typedef detail::adaptive_adams_coefficients<order_value - 1, deriv_type, time_type, algebra_type, operations_type> coeff_type;
 
     typedef adaptive_adams_moulton< Steps , State , Value , Deriv , Time , Resizer > stepper_type;
 
@@ -64,8 +64,9 @@ public:
         // integrating
         for(size_t i=0; i<coeff.m_effective_order; ++i)
         {
-            time_type c = ((i!=coeff.m_effective_order-1)?coeff.m_c[i]:coeff.poly.evaluate_integrated(dt));
-            this->m_algebra.for_each3(out, out, coeff.m_tss[i][coeff.m_effective_order-i-1].m_v, typename Operations::template scale_sum2<double, double>(1.0, c));
+            time_type c = ((i != coeff.m_effective_order-1) ? coeff.m_c[i] : coeff.poly.evaluate_integrated(dt));
+            this->m_algebra.for_each3(out, out, coeff.m_tss[i][coeff.m_effective_order-i-1].m_v,
+                                typename Operations::template scale_sum2<double, double>(1.0, c));
         }
     };
 };
