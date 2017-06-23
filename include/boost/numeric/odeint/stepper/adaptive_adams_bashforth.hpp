@@ -89,6 +89,18 @@ public:
         do_step_impl(m_coeff, in, t, out, dt);
     };
 
+    template<class System>
+    void initialize(System system, state_type &inOut, time_type &t, time_type dt)
+    {
+        m_coeff.reset();
+
+        for(size_t i=0; i<steps; ++i)
+        {
+            do_step(system, inOut, t, dt);
+            t += dt;
+        }
+    }
+
     void do_step_impl(coeff_type & coeff, const state_type & in, time_type t, state_type & out, time_type dt)
     {
         coeff.poly.reset();
