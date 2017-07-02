@@ -7,8 +7,11 @@
 #include <boost/numeric/odeint/stepper/adaptive_adams_bashforth_moulton.hpp>
 #include <boost/numeric/odeint/stepper/detail/pid_step_adjuster.hpp>
 
+#include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
+
+#include <boost/numeric/odeint/util/copy.hpp>
 #include <boost/numeric/odeint/util/bind.hpp>
 
 namespace boost{

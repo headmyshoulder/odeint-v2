@@ -3,10 +3,10 @@
 
 #include <boost/numeric/odeint/stepper/detail/adaptive_adams_coefficients.hpp>
 
+#include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/util/bind.hpp>
 #include <boost/numeric/odeint/util/copy.hpp>
 
-#include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
 #include <boost/numeric/odeint/algebra/algebra_dispatcher.hpp>
 #include <boost/numeric/odeint/algebra/operations_dispatcher.hpp>
@@ -113,18 +113,18 @@ public:
     template<class ExplicitStepper, class System>
     void initialize(ExplicitStepper stepper, System system, state_type &inOut, time_type &t, time_type dt)
     {
-        m_xnew_resizer.adjust_size( inOut , detail::bind( &stepper_type::template resize_xnew_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
+        m_dxdt_resizer.adjust_size( inOut , detail::bind( &stepper_type::template resize_dxdt_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
 
-        for( size_t i=0 ; i<order_value ; ++i )
+        for( size_t i=0 ; i<order_value; ++i )
         {
-            sys( inOut , m_xnew.m_v , t );
-            stepper.do_step_dxdt_impl( system, inOut, m_xnew.m_v, t, dt );
+            system( inOut , m_dxdt.m_v , t );
+            stepper.do_step_dxdt_impl( system, inOut, m_dxdt.m_v, t, dt/static_cast< Time >(order_value) );
             
-            m_coeff.predict(t, dt);
+            m_coeff.predict(t, dt/static_cast< Time >(order_value));
             m_coeff.do_step(m_dxdt.m_v);
             m_coeff.confirm();
 
-            t += dt;
+            t += dt/static_cast< Time >(order_value);
         }
     };
 
