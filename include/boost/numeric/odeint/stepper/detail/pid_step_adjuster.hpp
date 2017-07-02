@@ -21,6 +21,7 @@ struct pid_step_adjuster
 {
 public:
     const static size_t steps = Steps;
+    static double threshold() { return 0.9; };
 
     typedef State state_type;
     typedef Time time_type;
@@ -68,7 +69,7 @@ public:
             dt = m_dtmax;
         }
 
-        if(ratio >= 0.9)
+        if(ratio >= threshold() )
         {
             m_error_storage.rotate();
             m_time_storage.rotate();
