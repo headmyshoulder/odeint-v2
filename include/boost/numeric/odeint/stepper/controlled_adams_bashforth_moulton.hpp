@@ -16,17 +16,58 @@ namespace numeric{
 namespace odeint {
 
 template<
+size_t MaxOrder,
+class State,
+class Algebra = typename algebra_dispatcher< State >::algebra_type
+>
+class default_order_adjuster
+{
+public:
+    typedef State state_type;
+    typedef state_wrapper< state_type > wrapped_state_type;
+
+    typedef Algebra algebra_type;
+
+    default_order_adjuster(const algebra_type &algebra = algebra_type())
+    : m_algebra(algebra)
+    {};
+
+    void adjust_order(size_t &order, const boost::array<wrapped_state_type, 3> & xerr)
+    {
+        if(order > 1 && m_algebra.norm_inf(xerr[0].m_v) < 0.5 * m_algebra.norm_inf(xerr[1].m_v))
+        {
+            --order;
+        }
+        else if (order < MaxOrder && m_algebra.norm_inf(xerr[2].m_v) < 0.5 * m_algebra.norm_inf(xerr[1].m_v))
+        {
+            ++order;
+        }
+    };
+private:
+    algebra_type m_algebra;
+
+};
+
+template<
 class ErrorStepper,
 class StepAdjuster = detail::pid_step_adjuster<ErrorStepper::order_value, 
     typename ErrorStepper::state_type, 
     typename ErrorStepper::time_type,
-    detail::H211PI>,
+    detail::H312PID
+    >,
+class OrderAdjuster = default_order_adjuster<ErrorStepper::order_value,
+    typename ErrorStepper::state_type,
+    typename ErrorStepper::algebra_type
+    >,
 class Resizer = initially_resizer
 >
 class controlled_adams_bashforth_moulton
 {
 public:
     typedef ErrorStepper stepper_type;
+
+    static const typename stepper_type::order_type order_value = stepper_type::order_value;
+    
     typedef typename stepper_type::state_type state_type;
     typedef typename stepper_type::value_type value_type;
     typedef typename stepper_type::deriv_type deriv_type;
@@ -37,18 +78,33 @@ public:
     typedef Resizer resizer_type;
 
     typedef StepAdjuster step_adjuster_type;
+    typedef OrderAdjuster order_adjuster_type;
     typedef controlled_stepper_tag stepper_category;
 
     typedef typename stepper_type::wrapped_state_type wrapped_state_type;
     typedef typename stepper_type::wrapped_deriv_type wrapped_deriv_type;
+    typedef boost::array<wrapped_state_type, 3> error_storage_type;
 
-    typedef controlled_adams_bashforth_moulton<ErrorStepper, StepAdjuster, Resizer> controlled_stepper_type;
+    typedef typename stepper_type::coeff_type coeff_type;
+    typedef controlled_adams_bashforth_moulton<ErrorStepper, StepAdjuster, OrderAdjuster, Resizer> controlled_stepper_type;
 
     controlled_adams_bashforth_moulton(step_adjuster_type step_adjuster = step_adjuster_type())
-    :m_stepper(), m_coeff(m_stepper.coeff()), 
+    :m_stepper(),
     m_dxdt_resizer(), m_xerr_resizer(), m_xnew_resizer(),
-    m_step_adjuster(step_adjuster)
+    m_step_adjuster(step_adjuster), m_order_adjuster()
     {};
+
+    template<class ExplicitStepper, class System>
+    void initialize(ExplicitStepper stepper, System system, state_type &inOut, time_type &t, time_type dt)
+    {
+        m_stepper.initialize(stepper, system, inOut, t, dt);
+    };
+
+    template<class System>
+    void initialize(System system, state_type &inOut, time_type &t, time_type dt)
+    {
+        m_stepper.initialize(system, inOut, t, dt);
+    };
 
     template<class System>
     controlled_step_result try_step(System system, state_type & inOut, time_type &t, time_type &dt)
@@ -67,18 +123,23 @@ public:
     controlled_step_result try_step(System system, const state_type & in, time_type &t, state_type & out, time_type &dt)
     {
         m_xerr_resizer.adjust_size( in , detail::bind( &controlled_stepper_type::template resize_xerr_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
-        m_stepper.do_step_impl(system, m_coeff, in, t, out, dt, m_xerr.m_v);
+        m_dxdt_resizer.adjust_size( in , detail::bind( &controlled_stepper_type::template resize_dxdt_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
+
+        m_stepper.do_step_impl(system, in, t, out, dt, m_xerr);
+
+        coeff_type &coeff = m_stepper.coeff();
+
+        size_t prevOrder = coeff.m_eo;
+        m_order_adjuster.adjust_order(coeff.m_eo, m_xerr);
 
         time_type dtPrev = dt;
-        dt = m_step_adjuster.adjust_stepsize(dt, m_xerr.m_v);
+        dt = m_step_adjuster.adjust_stepsize(dt, m_xerr[1 + coeff.m_eo - prevOrder].m_v);
 
-        if(dt / dtPrev >= 0.9)
+        if(dt / dtPrev >= step_adjuster_type::threshold())
         {
-            m_dxdt_resizer.adjust_size( in , detail::bind( &controlled_stepper_type::template resize_dxdt_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
-
-            system(out, m_dxdt.m_v, t+dtPrev);
-            m_coeff.step(m_dxdt.m_v, t+dtPrev);
-            m_coeff.confirm();
+            system(out, m_dxdt.m_v, t+dt);
+            coeff.do_step(m_dxdt.m_v);
+            coeff.confirm();
 
             t += dtPrev;
             return success;
@@ -89,6 +150,8 @@ public:
         }
     };
 
+    void reset() { m_stepper.reset(); };
+
 private:
     template< class StateType >
     bool resize_dxdt_impl( const StateType &x )
@@ -98,7 +161,13 @@ private:
     template< class StateType >
     bool resize_xerr_impl( const StateType &x )
     {
-        return adjust_size_by_resizeability( m_xerr, x, typename is_resizeable<state_type>::type() );
+        bool resized( false );
+
+        for(size_t i=0; i<3; ++i)
+        {
+            resized |= adjust_size_by_resizeability( m_xerr[i], x, typename is_resizeable<state_type>::type() );
+        }
+        return resized;
     };
     template< class StateType >
     bool resize_xnew_impl( const StateType &x )
@@ -107,10 +176,9 @@ private:
     };
 
     stepper_type m_stepper;
-    typename stepper_type::coeff_type &m_coeff;
 
     wrapped_deriv_type m_dxdt;
-    wrapped_state_type m_xerr;
+    error_storage_type m_xerr;
     wrapped_state_type m_xnew;
 
     resizer_type m_dxdt_resizer;
@@ -118,6 +186,7 @@ private:
     resizer_type m_xnew_resizer;
 
     step_adjuster_type m_step_adjuster;
+    order_adjuster_type m_order_adjuster;
 };
 
 }

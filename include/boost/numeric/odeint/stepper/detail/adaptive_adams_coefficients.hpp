@@ -1,8 +1,7 @@
-#ifndef ADAPTIVE_ADAMS_COEFFICIENTS_HPP_INCLUDED
-#define ADAPTIVE_ADAMS_COEFFICIENTS_HPP_INCLUDED
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_DETAIL_ADAPTIVE_ADAMS_COEFFICIENTS_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STEPPER_DETAIL_ADAPTIVE_ADAMS_COEFFICIENTS_HPP_INCLUDED
 
 #include <boost/numeric/odeint/stepper/detail/rotating_buffer.hpp>
-#include <boost/numeric/odeint/stepper/detail/polynomial.hpp>
 
 #include <boost/numeric/odeint/util/state_wrapper.hpp>
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
@@ -11,8 +10,6 @@
 
 #include <boost/numeric/odeint/algebra/algebra_dispatcher.hpp>
 #include <boost/numeric/odeint/algebra/operations_dispatcher.hpp>
-
-#include <boost/numeric/odeint/util/unwrap_reference.hpp>
 
 #include <iostream>
 #include <boost/array.hpp>
@@ -25,112 +22,133 @@ namespace detail {
 template<
 size_t Steps,
 class Deriv,
-class Time,
+class Value = double,
+class Time = double,
 class Algebra = typename algebra_dispatcher< Deriv >::algebra_type,
 class Operations = typename operations_dispatcher< Deriv >::operations_type ,
 class Resizer = initially_resizer
 >
-struct adaptive_adams_coefficients
+class adaptive_adams_coefficients
 {
 public:
     static const size_t steps = Steps;
 
+    typedef unsigned short order_type;
+    static const order_type order_value = steps;
+
+    typedef Value value_type;
     typedef Deriv deriv_type;
     typedef Time time_type;
+
     typedef state_wrapper<deriv_type> wrapped_deriv_type;
-    typedef detail::rotating_buffer<wrapped_deriv_type, steps+1> step_storage_type; // +1 for moulton
-    typedef detail::rotating_buffer<time_type, steps+1> time_storage_type;
+    typedef rotating_buffer<wrapped_deriv_type, steps+1> step_storage_type; // +1 for moulton
+    typedef rotating_buffer<time_type, steps+1> time_storage_type;
 
     typedef Algebra algebra_type;
     typedef Operations operations_type;
-
     typedef Resizer resizer_type;
 
-    typedef adaptive_adams_coefficients<Steps, Deriv, Time, Algebra, Operations, Resizer> aac_type;
-    typedef detail::Polynomial<steps+2, time_type> poly_type;
+    typedef adaptive_adams_coefficients<Steps, Deriv, Value, Time, Algebra, Operations, Resizer> aac_type;
 
-    adaptive_adams_coefficients(const algebra_type &algebra = algebra_type() )
-    :poly(), m_effective_order(1), m_resizer(), m_algebra(algebra)
-    {};
-
-    void step(const deriv_type &deriv, const time_type &t)
+    adaptive_adams_coefficients( const algebra_type &algebra = algebra_type())
+    :m_eo(1), beta(), phi(), m_ns(0), m_time_storage(),
+    m_algebra(algebra),
+    m_phi_resizer()
     {
-        m_resizer.adjust_size( deriv , detail::bind( &aac_type::template resize_tss_impl< deriv_type > , detail::ref( *this ) , detail::_1 ) );
+        for (size_t i=0; i<order_value+2; ++i)
+            c[0][i] = 1.0/(i+1);
 
-        m_tts[0] = t;
-        m_tss[0][0].m_v = deriv;
+        g[0] = c[0][0];
 
-        for(size_t i=1; i<m_effective_order; ++i)
+        beta[0][0] = 1;
+        beta[1][0] = 1;
+    };
+
+    void predict(time_type t, time_type dt)
+    {
+        m_time_storage[0] = t;
+
+        if (fabs(m_time_storage[0] - m_time_storage[1] - dt) > 1e-16 || m_eo >= m_ns)
         {
-            time_type dt = t - m_ts[i-1];
-            m_algebra.for_each3(m_tss[i][0].m_v, m_tss[i-1][0].m_v, m_ss[i-1][0].m_v, typename Operations::template scale_sum2<double, double>(1/dt, -1/dt));
+            m_ns = 0;
+        }
+        else if (m_ns < order_value + 2)
+        {
+            m_ns++;
+        }
+
+        for(size_t i=1+m_ns; i<m_eo+1; ++i)
+        {
+            beta[0][i] = beta[0][i-1]*(m_time_storage[0] + dt -
+                m_time_storage[i-1])/(m_time_storage[0] - m_time_storage[i]);
+        }
+
+        for(size_t i=1; i<m_eo+2; ++i)
+        {
+            for(size_t j=0; j<m_eo+1; ++j)
+            {
+                c[i][j] = c[i-1][j] - c[i-1][j+1]*dt/(m_time_storage[0] + dt - m_time_storage[i-1]);
+            }
+
+            g[i] = c[i][0];
         }
     };
+
+    void do_step(const deriv_type &dxdt, const int o = 0)
+    {
+        m_phi_resizer.adjust_size( dxdt , detail::bind( &aac_type::template resize_phi_impl< deriv_type > , detail::ref( *this ) , detail::_1 ) );
+
+        phi[o][0].m_v = dxdt;
+
+        for(size_t i=1; i<m_eo + 2; ++i)
+        {
+            this->m_algebra.for_each3(phi[o][i].m_v, phi[o][i-1].m_v, phi[o+1][i-1].m_v,
+                typename Operations::template scale_sum2<double, double>(1.0, -beta[o][i-1]));
+        }   
+    };
+
     void confirm()
     {
-        for(size_t i=0; i<steps; ++i)
-        {
-            m_ss[i] = m_tss[i];
-            m_tss[i].rotate();
-        }
-
-        m_ts = m_tts;
-        m_tts.rotate();
-
-        if(m_effective_order < steps+1)
-        {
-            ++m_effective_order;
-        }
+        beta.rotate();
+        phi.rotate();
+        m_time_storage.rotate();
     };
 
     void reset()
     {
-        poly.reset();
-        m_effective_order = 1;
+        m_eo = 1;
     };
 
-    void pretty_print()
-    {
-        for(size_t k=0; k<2; ++k)
-        {
-            for(size_t i=0; i<m_effective_order; ++i)
-            {
-                for(size_t j=0; j<m_effective_order - i-1; ++j)
-                    std::cout << m_ss[j][i].m_v[k] << " ";
-                std::cout << std::endl;
-            }
-            std::cout << std::endl;
-        }
-    };
+    size_t m_eo;
 
-    poly_type poly;
-    time_storage_type m_c;
-
-    boost::array<step_storage_type, steps+1> m_ss;
-    time_storage_type m_ts;
-
-    boost::array<step_storage_type, steps+1> m_tss;
-    time_storage_type m_tts;
-
-    size_t m_effective_order;
+    rotating_buffer<boost::array<value_type, (order_value+1)>, 2> beta; // beta[0] = beta(n)
+    rotating_buffer<boost::array<wrapped_deriv_type, (order_value + 2)>, 3> phi; // phi[0] = phi(n+1)
+    boost::array<value_type, order_value + 2> g;
 
 private:
     template< class StateType >
-    bool resize_tss_impl( const StateType &x )
+    bool resize_phi_impl( const StateType &x )
     {
+
         bool resized( false );
-        for( size_t i=0 ; i<steps+1 ; ++i )
+
+        for(size_t i=0; i<(order_value + 2); ++i)
         {
-            for(size_t j=0; j<steps+1; ++j)
-                resized |= adjust_size_by_resizeability( m_tss[i][j] , x , typename is_resizeable<deriv_type>::type() );
-            
-            m_tts[i] = 0;
+            resized |= adjust_size_by_resizeability( phi[0][i], x, typename is_resizeable<deriv_type>::type() );
+            resized |= adjust_size_by_resizeability( phi[1][i], x, typename is_resizeable<deriv_type>::type() );
+            resized |= adjust_size_by_resizeability( phi[2][i], x, typename is_resizeable<deriv_type>::type() );
         }
         return resized;
     };
 
-    resizer_type m_resizer;
+    size_t m_ns;
+
+    time_storage_type m_time_storage;
+    boost::array<boost::array<value_type, order_value + 2>, order_value + 2> c;
+
     algebra_type m_algebra;
+
+    resizer_type m_phi_resizer;
 };
 
 }
