@@ -123,8 +123,8 @@ public:
 
     size_t m_eo;
 
-    rotating_buffer<boost::array<value_type, (order_value+1)>, 2> beta; // beta[0] = beta(n)
-    rotating_buffer<boost::array<wrapped_deriv_type, (order_value + 2)>, 3> phi; // phi[0] = phi(n+1)
+    rotating_buffer<boost::array<value_type, order_value+1>, 2> beta; // beta[0] = beta(n)
+    rotating_buffer<boost::array<wrapped_deriv_type, order_value+2>, 3> phi; // phi[0] = phi(n+1)
     boost::array<value_type, order_value + 2> g;
 
 private:

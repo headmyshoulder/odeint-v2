@@ -30,7 +30,7 @@ public:
     typedef rotating_buffer<time_type, 3> time_storage_type;
     typedef pid_step_adjuster_coefficients<Type> coeff_type;
 
-    pid_step_adjuster(double tol = 1e-5, time_type dtmax = 1.0)
+    pid_step_adjuster(double tol = 1e-6, time_type dtmax = 1.0)
     :m_dtmax(dtmax), m_error_storage(), m_time_storage(), m_init(0), m_tol(tol)
     {};
 
