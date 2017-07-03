@@ -14,6 +14,8 @@
 #include <boost/numeric/odeint/util/copy.hpp>
 #include <boost/numeric/odeint/util/bind.hpp>
 
+#include <iostream>
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -132,11 +134,21 @@ public:
 
         coeff_type &coeff = m_stepper.coeff();
 
-        size_t prevOrder = coeff.m_eo;
-        m_order_adjuster.adjust_order(coeff.m_eo, m_xerr);
-
         time_type dtPrev = dt;
-        dt = m_step_adjuster.adjust_stepsize(dt, m_xerr[1 + coeff.m_eo - prevOrder].m_v);
+        size_t prevOrder = coeff.m_eo;
+        
+        if(coeff.m_init)
+        {
+            m_order_adjuster.adjust_order(coeff.m_eo, m_xerr);
+            dt = m_step_adjuster.adjust_stepsize(dt, m_xerr[1 + coeff.m_eo - prevOrder].m_v);
+        }
+        else
+        {
+            if(coeff.m_eo < order_value)
+                coeff.m_eo ++;
+
+            dt = m_step_adjuster.adjust_stepsize(dt, m_xerr[1].m_v);
+        }
 
         if(dt / dtPrev >= step_adjuster_type::threshold())
         {
@@ -149,6 +161,7 @@ public:
         }
         else
         {
+            coeff.m_eo = prevOrder;
             return fail;
         }
     };

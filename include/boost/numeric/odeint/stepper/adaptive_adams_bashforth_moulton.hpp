@@ -176,8 +176,11 @@ public:
                 typename Operations::template scale_sum1<double>(dt*(m_coeff.g[eO-1]-m_coeff.g[eO-2])));
         }
 
-        this->m_algebra.for_each2(xerr[2].m_v, m_coeff.phi[0][eO+1].m_v,
+        if(m_coeff.m_init)
+        {
+            this->m_algebra.for_each2(xerr[2].m_v, m_coeff.phi[0][eO+1].m_v,
                 typename Operations::template scale_sum1<double>(dt*(m_coeff.g[eO+1]-m_coeff.g[eO])));
+        }
     };
 
     const coeff_type& coeff() const { return m_coeff; };

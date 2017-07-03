@@ -52,7 +52,7 @@ public:
     typedef adaptive_adams_coefficients< Steps , Deriv , Value , Time , Algebra , Operations , Resizer > aac_type;
 
     adaptive_adams_coefficients( const algebra_type &algebra = algebra_type())
-    :m_eo( 1 ), beta(), phi(), m_ns( 0 ), m_time_storage(),
+    :m_eo( 1 ), m_init( false ), beta(), phi(), m_ns( 0 ), m_time_storage(),
     m_algebra( algebra ),
     m_phi_resizer()
     {
@@ -80,15 +80,20 @@ public:
 
         for(size_t i=1+m_ns; i<m_eo+1; ++i)
         {
-            beta[0][i] = beta[0][i-1]*(m_time_storage[0] + dt -
-                m_time_storage[i-1])/(m_time_storage[0] - m_time_storage[i]);
+            // std::cout <<i << " " << m_eo << " " << (m_time_storage[0] + dt -
+            //     m_time_storage[i-1])/(m_time_storage[0] - m_time_storage[i]) << " " << m_time_storage[0] - m_time_storage[i] << " " << m_time_storage[0] << std::endl;
+
+            if(i<m_eo || m_init)
+                beta[0][i] = beta[0][i-1]*(m_time_storage[0] + dt -
+                    m_time_storage[i-1])/(m_time_storage[0] - m_time_storage[i]);
         }
 
         for(size_t i=1; i<m_eo+2; ++i)
         {
             for(size_t j=0; j<m_eo+1; ++j)
             {
-                c[i][j] = c[i-1][j] - c[i-1][j+1]*dt/(m_time_storage[0] + dt - m_time_storage[i-1]);
+                if(i<m_eo+1 || m_init)
+                    c[i][j] = c[i-1][j] - c[i-1][j+1]*dt/(m_time_storage[0] + dt - m_time_storage[i-1]);
             }
 
             g[i] = c[i][0];
@@ -103,8 +108,9 @@ public:
 
         for(size_t i=1; i<m_eo + 2; ++i)
         {
-            this->m_algebra.for_each3(phi[o][i].m_v, phi[o][i-1].m_v, phi[o+1][i-1].m_v,
-                typename Operations::template scale_sum2<double, double>(1.0, -beta[o][i-1]));
+            if(i<m_eo+1 || m_init)
+                this->m_algebra.for_each3(phi[o][i].m_v, phi[o][i-1].m_v, phi[o+1][i-1].m_v,
+                    typename Operations::template scale_sum2<double, double>(1.0, -beta[o][i-1]));
         }   
     };
 
@@ -113,11 +119,15 @@ public:
         beta.rotate();
         phi.rotate();
         m_time_storage.rotate();
+
+        if(m_eo == order_value)
+            m_init = true;
     };
 
     void reset() { m_eo = 1; };
 
     size_t m_eo;
+    bool m_init;
 
     rotating_buffer<boost::array<value_type, order_value+1>, 2> beta; // beta[0] = beta(n)
     rotating_buffer<boost::array<wrapped_deriv_type, order_value+2>, 3> phi; // phi[0] = phi(n+1)
