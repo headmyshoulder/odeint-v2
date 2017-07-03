@@ -20,8 +20,6 @@
 #include <boost/numeric/odeint/stepper/base/algebra_stepper_base.hpp>
 #include <boost/numeric/odeint/stepper/detail/rotating_buffer.hpp>
 
-#include <iostream>
-
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -33,7 +31,7 @@ class Value = double,
 class Deriv = State,
 class Time = Value,
 class Algebra = typename algebra_dispatcher< State >::algebra_type ,
-class Operations = typename operations_dispatcher< State >::operations_type ,
+class Operations = typename operations_dispatcher< State >::operations_type,
 class Resizer = initially_resizer 
 >
 class adaptive_adams_bashforth_moulton: public algebra_stepper_base< Algebra , Operations >
@@ -51,7 +49,7 @@ public:
 
     typedef state_wrapper< state_type > wrapped_state_type;
     typedef state_wrapper< deriv_type > wrapped_deriv_type;
-    typedef boost::array<wrapped_state_type, 3> error_storage_type;
+    typedef boost::array< wrapped_state_type , 3 > error_storage_type;
 
     typedef algebra_stepper_base< Algebra , Operations > algebra_stepper_base_type;
     typedef typename algebra_stepper_base_type::algebra_type algebra_type;
@@ -59,12 +57,12 @@ public:
     typedef Resizer resizer_type;
     typedef error_stepper_tag stepper_category;
 
-    typedef detail::adaptive_adams_coefficients< Steps, Deriv, Value, Time, Algebra, Operations, Resizer> coeff_type;
+    typedef detail::adaptive_adams_coefficients< Steps , Deriv , Value , Time , Algebra , Operations , Resizer > coeff_type;
     typedef adaptive_adams_bashforth_moulton< Steps , State , Value , Deriv , Time , Algebra , Operations , Resizer > stepper_type;
 
     order_type order() const { return order_value; };
-    order_type stepper_order() const {return order_value + 1; };
-    order_type error_order() const {return order_value; };
+    order_type stepper_order() const { return order_value + 1; };
+    order_type error_order() const { return order_value; };
 
     adaptive_adams_bashforth_moulton( const algebra_type &algebra = algebra_type() )
     :algebra_stepper_base_type( algebra ), m_coeff(),
@@ -110,7 +108,7 @@ public:
             m_coeff.m_eo ++;
     };
 
-    template<class ExplicitStepper, class System>
+    template< class ExplicitStepper, class System >
     void initialize(ExplicitStepper stepper, System system, state_type &inOut, time_type &t, time_type dt)
     {
         m_dxdt_resizer.adjust_size( inOut , detail::bind( &stepper_type::template resize_dxdt_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
@@ -129,7 +127,7 @@ public:
         }
     };
 
-    template<class System>
+    template< class System >
     void initialize(System system, state_type &inOut, time_type &t, time_type dt)
     {
         for(size_t i=0; i<order_value; ++i)
@@ -139,7 +137,7 @@ public:
         };
     };
 
-    template<class System>
+    template< class System >
     void do_step_impl(System system, const state_type & in, time_type t, state_type & out, time_type &dt, error_storage_type &xerr)
     {
         size_t eO = m_coeff.m_eo;
@@ -182,8 +180,8 @@ public:
                 typename Operations::template scale_sum1<double>(dt*(m_coeff.g[eO+1]-m_coeff.g[eO])));
     };
 
-    const coeff_type& coeff() const {return m_coeff;};
-    coeff_type & coeff() {return m_coeff;};
+    const coeff_type& coeff() const { return m_coeff; };
+    coeff_type & coeff() { return m_coeff; };
 
     void reset() { m_coeff.reset(); };
 

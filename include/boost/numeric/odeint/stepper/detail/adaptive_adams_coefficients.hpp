@@ -8,12 +8,10 @@
 #include <boost/numeric/odeint/util/resizer.hpp>
 
 #include <boost/numeric/odeint/util/bind.hpp>
-#include <boost/numeric/odeint/util/copy.hpp>
 
 #include <boost/numeric/odeint/algebra/algebra_dispatcher.hpp>
 #include <boost/numeric/odeint/algebra/operations_dispatcher.hpp>
 
-#include <iostream>
 #include <boost/array.hpp>
 
 namespace boost {
@@ -27,7 +25,7 @@ class Deriv,
 class Value = double,
 class Time = double,
 class Algebra = typename algebra_dispatcher< Deriv >::algebra_type,
-class Operations = typename operations_dispatcher< Deriv >::operations_type ,
+class Operations = typename operations_dispatcher< Deriv >::operations_type,
 class Resizer = initially_resizer
 >
 class adaptive_adams_coefficients
@@ -42,19 +40,19 @@ public:
     typedef Deriv deriv_type;
     typedef Time time_type;
 
-    typedef state_wrapper<deriv_type> wrapped_deriv_type;
-    typedef rotating_buffer<wrapped_deriv_type, steps+1> step_storage_type; // +1 for moulton
-    typedef rotating_buffer<time_type, steps+1> time_storage_type;
+    typedef state_wrapper< deriv_type > wrapped_deriv_type;
+    typedef rotating_buffer< wrapped_deriv_type , steps+1 > step_storage_type; // +1 for moulton
+    typedef rotating_buffer< time_type , steps+1 > time_storage_type;
 
     typedef Algebra algebra_type;
     typedef Operations operations_type;
     typedef Resizer resizer_type;
 
-    typedef adaptive_adams_coefficients<Steps, Deriv, Value, Time, Algebra, Operations, Resizer> aac_type;
+    typedef adaptive_adams_coefficients< Steps , Deriv , Value , Time , Algebra , Operations , Resizer > aac_type;
 
     adaptive_adams_coefficients( const algebra_type &algebra = algebra_type())
-    :m_eo(1), beta(), phi(), m_ns(0), m_time_storage(),
-    m_algebra(algebra),
+    :m_eo( 1 ), beta(), phi(), m_ns( 0 ), m_time_storage(),
+    m_algebra( algebra ),
     m_phi_resizer()
     {
         for (size_t i=0; i<order_value+2; ++i)
@@ -116,10 +114,7 @@ public:
         m_time_storage.rotate();
     };
 
-    void reset()
-    {
-        m_eo = 1;
-    };
+    void reset() { m_eo = 1; };
 
     size_t m_eo;
 
@@ -153,9 +148,9 @@ private:
     resizer_type m_phi_resizer;
 };
 
-}
-}
-}
-}
+} // detail
+} // odeint
+} // numeric
+} // boost
 
 #endif
