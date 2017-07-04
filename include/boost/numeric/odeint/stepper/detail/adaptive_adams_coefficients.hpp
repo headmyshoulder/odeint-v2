@@ -85,7 +85,7 @@ public:
                     m_time_storage[i-1])/(m_time_storage[0] - m_time_storage[i]);
         }
 
-        for(size_t i=1; i<m_eo+2; ++i)
+        for(size_t i=1+m_ns; i<m_eo+2; ++i)
         {
             for(size_t j=0; j<m_eo+1; ++j)
             {
@@ -117,7 +117,7 @@ public:
         phi.rotate();
         m_time_storage.rotate();
 
-        if(m_steps_init < order_value)
+        if(m_steps_init < order_value+1)
             ++m_steps_init;
     };
 

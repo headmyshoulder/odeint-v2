@@ -16,10 +16,6 @@
 
 #include <iostream>
 
-#include <fstream>
-#include <stdlib.h>
-#include <string>
-
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -27,12 +23,14 @@ namespace odeint {
 template<
 size_t MaxOrder,
 class State,
+class Value = double,
 class Algebra = typename algebra_dispatcher< State >::algebra_type
 >
 class default_order_adjuster
 {
 public:
     typedef State state_type;
+    typedef Value value_type;
     typedef state_wrapper< state_type > wrapped_state_type;
 
     typedef Algebra algebra_type;
@@ -43,15 +41,22 @@ public:
 
     void adjust_order(size_t &order, const boost::array<wrapped_state_type, 3> & xerr)
     {
-        if(order > 1 && m_algebra.norm_inf(xerr[0].m_v) < 0.5 * m_algebra.norm_inf(xerr[1].m_v))
+        if(order == 1 && m_algebra.norm_inf(xerr[2].m_v) < 0.5 * m_algebra.norm_inf(xerr[1].m_v))
         {
-            --order;
+            order ++;
         }
-        else if (order < MaxOrder && m_algebra.norm_inf(xerr[2].m_v) < 0.5 * m_algebra.norm_inf(xerr[1].m_v))
+        else
         {
-            ++order;
+            if(m_algebra.norm_inf(xerr[0].m_v) < m_algebra.norm_inf(xerr[1].m_v) && 
+                m_algebra.norm_inf(xerr[0].m_v) < m_algebra.norm_inf(xerr[2].m_v))
+            {
+                order--;
+            }
+            else if(order < MaxOrder && m_algebra.norm_inf(xerr[2].m_v) < m_algebra.norm_inf(xerr[1].m_v))
+            {
+                order++;
+            }
         }
-        //std::cout << order << std::endl;
     };
 private:
     algebra_type m_algebra;
@@ -60,8 +65,7 @@ private:
 
 template<
 class ErrorStepper,
-class StepAdjuster = detail::pid_step_adjuster< ErrorStepper::order_value, 
-    typename ErrorStepper::state_type, 
+class StepAdjuster = detail::pid_step_adjuster< typename ErrorStepper::state_type, 
     typename ErrorStepper::value_type, 
     typename ErrorStepper::time_type,
     typename ErrorStepper::algebra_type,
@@ -69,6 +73,7 @@ class StepAdjuster = detail::pid_step_adjuster< ErrorStepper::order_value,
     >,
 class OrderAdjuster = default_order_adjuster< ErrorStepper::order_value,
     typename ErrorStepper::state_type,
+    typename ErrorStepper::value_type,
     typename ErrorStepper::algebra_type
     >,
 class Resizer = initially_resizer
@@ -144,15 +149,17 @@ public:
         time_type dtPrev = dt;
         size_t prevOrder = coeff.m_eo;
         
-        if(coeff.m_steps_init+1 >= coeff.m_eo)
+        if(coeff.m_steps_init > coeff.m_eo)
         {
             m_order_adjuster.adjust_order(coeff.m_eo, m_xerr);
-            dt = m_step_adjuster.adjust_stepsize(dt, m_xerr[1 + coeff.m_eo - prevOrder].m_v);
+            dt = m_step_adjuster.adjust_stepsize(coeff.m_eo, dt, m_xerr[1 + coeff.m_eo - prevOrder].m_v);
         }
         else
         {
-            coeff.m_eo ++;
-            dt = m_step_adjuster.adjust_stepsize(dt, m_xerr[1].m_v);
+            if(coeff.m_eo < order_value)
+                coeff.m_eo ++;
+
+            dt = m_step_adjuster.adjust_stepsize(coeff.m_eo, dt, m_xerr[1].m_v);
         }
 
         if(dt / dtPrev >= step_adjuster_type::threshold())
@@ -162,8 +169,6 @@ public:
             coeff.confirm();
 
             t += dtPrev;
-            // std::cout << t  << " " << dt << " " << coeff.m_eo << std::endl;
-
             return success;
         }
         else

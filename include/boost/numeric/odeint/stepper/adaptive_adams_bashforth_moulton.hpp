@@ -169,13 +169,14 @@ public:
         this->m_algebra.for_each2(xerr[1].m_v, m_coeff.phi[0][eO].m_v,
             typename Operations::template scale_sum1<double>(dt*(m_coeff.g[eO]-m_coeff.g[eO-1])));
 
-        // error for order below/above
+        // error for order below
         if (eO > 1)
         {
             this->m_algebra.for_each2(xerr[0].m_v, m_coeff.phi[0][eO-1].m_v,
                 typename Operations::template scale_sum1<double>(dt*(m_coeff.g[eO-1]-m_coeff.g[eO-2])));
         }
 
+        // error for order above
         if(m_coeff.m_steps_init > eO)
         {
             this->m_algebra.for_each2(xerr[2].m_v, m_coeff.phi[0][eO+1].m_v,
