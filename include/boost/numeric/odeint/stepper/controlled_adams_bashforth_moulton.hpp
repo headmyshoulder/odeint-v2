@@ -57,8 +57,9 @@ template<
 class ErrorStepper,
 class StepAdjuster = detail::pid_step_adjuster< ErrorStepper::order_value, 
     typename ErrorStepper::state_type, 
+    typename ErrorStepper::value_type, 
     typename ErrorStepper::time_type,
-    detail::H312PID
+    detail::H0312
     >,
 class OrderAdjuster = default_order_adjuster< ErrorStepper::order_value,
     typename ErrorStepper::state_type,
