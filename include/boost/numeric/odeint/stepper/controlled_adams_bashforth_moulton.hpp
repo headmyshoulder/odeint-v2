@@ -16,6 +16,10 @@
 
 #include <iostream>
 
+#include <fstream>
+#include <stdlib.h>
+#include <string>
+
 namespace boost {
 namespace numeric {
 namespace odeint {
@@ -47,6 +51,7 @@ public:
         {
             ++order;
         }
+        //std::cout << order << std::endl;
     };
 private:
     algebra_type m_algebra;
@@ -59,7 +64,7 @@ class StepAdjuster = detail::pid_step_adjuster< ErrorStepper::order_value,
     typename ErrorStepper::state_type, 
     typename ErrorStepper::value_type, 
     typename ErrorStepper::time_type,
-    detail::H0312
+    detail::H312PID
     >,
 class OrderAdjuster = default_order_adjuster< ErrorStepper::order_value,
     typename ErrorStepper::state_type,
@@ -138,16 +143,14 @@ public:
         time_type dtPrev = dt;
         size_t prevOrder = coeff.m_eo;
         
-        if(coeff.m_init)
+        if(coeff.m_steps_init+1 >= coeff.m_eo)
         {
             m_order_adjuster.adjust_order(coeff.m_eo, m_xerr);
             dt = m_step_adjuster.adjust_stepsize(dt, m_xerr[1 + coeff.m_eo - prevOrder].m_v);
         }
         else
         {
-            if(coeff.m_eo < order_value)
-                coeff.m_eo ++;
-
+            coeff.m_eo ++;
             dt = m_step_adjuster.adjust_stepsize(dt, m_xerr[1].m_v);
         }
 
@@ -158,6 +161,8 @@ public:
             coeff.confirm();
 
             t += dtPrev;
+            // std::cout << t  << " " << dt << " " << coeff.m_eo << std::endl;
+
             return success;
         }
         else

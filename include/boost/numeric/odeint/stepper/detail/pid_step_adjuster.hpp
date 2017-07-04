@@ -1,5 +1,5 @@
-#ifndef PID_STEP_ADJUSTER_HPP_INCLUDED
-#define PID_STEP_ADJUSTER_HPP_INCLUDED
+#ifndef BOOST_NUMERIC_ODEINT_STEPPER_DETAIL_PID_STEP_ADJUSTER_HPP_INCLUDED
+#define BOOST_NUMERIC_ODEINT_STEPPER_DETAIL_PID_STEP_ADJUSTER_HPP_INCLUDED
 
 #include <boost/numeric/odeint/stepper/detail/rotating_buffer.hpp>
 #include <boost/numeric/odeint/stepper/detail/pid_step_adjuster_coefficients.hpp>
@@ -68,7 +68,7 @@ public:
 
         if(ratio*dt >= m_dtmax)
         {
-            dt = m_dtmax;
+            ratio = m_dtmax / dt;
         }
 
         if(ratio >= threshold() )
