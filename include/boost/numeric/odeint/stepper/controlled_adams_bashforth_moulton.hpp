@@ -41,18 +41,33 @@ public:
 
     void adjust_order(size_t &order, const boost::array<wrapped_state_type, 3> & xerr)
     {
-        if(order == 1 && m_algebra.norm_inf(xerr[2].m_v) < 0.5 * m_algebra.norm_inf(xerr[1].m_v))
+        value_type errm = fabs(m_algebra.norm_inf(xerr[0].m_v));
+        value_type errc = fabs(m_algebra.norm_inf(xerr[1].m_v));
+        value_type errp = fabs(m_algebra.norm_inf(xerr[2].m_v));
+
+        if(order == 1)
+        {   
+            if(errp < errc)
+            {
+                order ++;
+            }
+        }
+        else if(order == MaxOrder)
         {
-            order ++;
+            if(errm < errc)
+            {
+                order --;
+            }
         }
         else
         {
-            if(m_algebra.norm_inf(xerr[0].m_v) < m_algebra.norm_inf(xerr[1].m_v) && 
-                m_algebra.norm_inf(xerr[0].m_v) < m_algebra.norm_inf(xerr[2].m_v))
+            if(errm < errc && 
+                errm < errp)
             {
                 order--;
             }
-            else if(order < MaxOrder && m_algebra.norm_inf(xerr[2].m_v) < m_algebra.norm_inf(xerr[1].m_v))
+            else if(errp < errm &&
+                errp < errc)
             {
                 order++;
             }
@@ -69,7 +84,7 @@ class StepAdjuster = detail::pid_step_adjuster< typename ErrorStepper::state_typ
     typename ErrorStepper::value_type, 
     typename ErrorStepper::time_type,
     typename ErrorStepper::algebra_type,
-    detail::H312PID
+    detail::BASIC
     >,
 class OrderAdjuster = default_order_adjuster< ErrorStepper::order_value,
     typename ErrorStepper::state_type,
@@ -169,6 +184,7 @@ public:
             coeff.confirm();
 
             t += dtPrev;
+
             return success;
         }
         else
