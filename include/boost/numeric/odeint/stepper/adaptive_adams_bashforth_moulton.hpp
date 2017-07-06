@@ -105,7 +105,9 @@ public:
         m_coeff.confirm();
 
         if(m_coeff.m_eo < order_value)
+        {
             m_coeff.m_eo ++;
+        }
     };
 
     template< class ExplicitStepper, class System >
@@ -123,7 +125,9 @@ public:
             m_coeff.confirm();
 
             if(m_coeff.m_eo < order_value)
-                m_coeff.m_eo ++;
+            {
+                ++m_coeff.m_eo;
+            }
         }
     };
 

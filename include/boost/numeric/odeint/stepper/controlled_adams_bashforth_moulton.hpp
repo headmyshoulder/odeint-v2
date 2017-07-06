@@ -75,7 +75,6 @@ public:
     };
 private:
     algebra_type m_algebra;
-
 };
 
 template<
@@ -146,7 +145,9 @@ public:
         controlled_step_result res = try_step(system, inOut, t, m_xnew.m_v, dt);
 
         if(res == success)
+        {
             boost::numeric::odeint::copy( m_xnew.m_v , inOut);
+        }
 
         return res;
     };

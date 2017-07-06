@@ -52,8 +52,8 @@ public:
     typedef adaptive_adams_coefficients< Steps , Deriv , Value , Time , Algebra , Operations , Resizer > aac_type;
 
     adaptive_adams_coefficients( const algebra_type &algebra = algebra_type())
-    :m_eo( 1 ), m_steps_init( 1 ), beta(), phi(), m_ns( 0 ), m_time_storage(),
-    m_algebra( algebra ),
+    :m_eo(1), m_steps_init(1), beta(), phi(), m_ns(0), m_time_storage(),
+    m_algebra(algebra),
     m_phi_resizer()
     {
         for (size_t i=0; i<order_value+2; ++i)
@@ -81,8 +81,10 @@ public:
         for(size_t i=1+m_ns; i<m_eo+1; ++i)
         {
             if(i<m_steps_init)
+            {
                 beta[0][i] = beta[0][i-1]*(m_time_storage[0] + dt -
                     m_time_storage[i-1])/(m_time_storage[0] - m_time_storage[i]);
+            }
         }
 
         for(size_t i=1+m_ns; i<m_eo+2; ++i)
@@ -90,7 +92,9 @@ public:
             for(size_t j=0; j<m_eo+1; ++j)
             {
                 if(i<m_steps_init+1)
+                {
                     c[i][j] = c[i-1][j] - c[i-1][j+1]*dt/(m_time_storage[0] + dt - m_time_storage[i-1]);
+                }
             }
 
             g[i] = c[i][0];
@@ -106,8 +110,10 @@ public:
         for(size_t i=1; i<m_eo + 2; ++i)
         {
             if(i<m_steps_init+1)
+            {
                 this->m_algebra.for_each3(phi[o][i].m_v, phi[o][i-1].m_v, phi[o+1][i-1].m_v,
                     typename Operations::template scale_sum2<double, double>(1.0, -beta[o][i-1]));
+            }
         }   
     };
 
@@ -118,7 +124,9 @@ public:
         m_time_storage.rotate();
 
         if(m_steps_init < order_value+1)
+        {
             ++m_steps_init;
+        }
     };
 
     void reset() { m_eo = 1; };

@@ -8,10 +8,10 @@
 
 #include <math.h>
 
-namespace boost{
-namespace numeric{
-namespace odeint{
-namespace detail{
+namespace boost {
+namespace numeric {
+namespace odeint {
+namespace detail {
 
 template<
 class Value = double,
@@ -51,6 +51,7 @@ public:
             adapted_pow(fabs(m_tol/t4), beta3/(m_steps + 1)) *
             adapted_pow(fabs(dt1/dt2), -alpha1/(m_steps + 1))*
             adapted_pow(fabs(dt2/dt3), -alpha2/(m_steps + 1));
+
         t1 = 1/t1;
     };
 
@@ -58,6 +59,7 @@ public:
     void operator()(T1 &t1, const T2 &t2)
     {
         t1 = adapted_pow(fabs(m_tol/t2), beta1/(m_steps + 1));
+
         t1 = 1/t1;
     };
 
@@ -85,7 +87,7 @@ class State,
 class Value = double,
 class Time = double,
 class Algebra = typename algebra_dispatcher< State >::algebra_type,
-size_t Type = H211PI
+size_t Type = BASIC
 >
 struct pid_step_adjuster
 {
@@ -95,6 +97,7 @@ public:
     typedef State state_type;
     typedef Value value_type;
     typedef Time time_type;
+
     typedef Algebra algebra_type;
 
     typedef rotating_buffer<state_type, 3> error_storage_type;
@@ -122,17 +125,17 @@ public:
                 pid_op<>(steps, m_tol, m_dt_storage[0], m_dt_storage[1], m_dt_storage[2], 0.7));
         }
 
-        value_type ratio = 1/m_algebra.norm_inf(err);
+        value_type ratio = 1 / m_algebra.norm_inf(err);
 
         value_type kappa = 1.0;
-        ratio = 1.0 + kappa*atan((ratio - 1)/kappa);
+        ratio = 1.0 + kappa*atan((ratio - 1) / kappa);
 
         if(ratio*dt >= m_dtmax)
         {
             ratio = m_dtmax / dt;
         }
 
-        if(ratio >= threshold() )
+        if(ratio >= threshold())
         {
             m_error_storage.rotate();
             m_dt_storage.rotate();
@@ -144,7 +147,7 @@ public:
             m_init = 0;
         }
 
-        return dt * static_cast<time_type> (ratio);
+        return dt * static_cast<time_type>(ratio);
     };
 
 private:
@@ -160,8 +163,9 @@ private:
     coeff_type m_coeff;
 };
 
-}
-}
-}
-}
+} // detail
+} // odeint
+} // numeric
+} // boost
+
 #endif
