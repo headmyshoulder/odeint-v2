@@ -57,7 +57,9 @@ public:
     m_phi_resizer()
     {
         for (size_t i=0; i<order_value+2; ++i)
+        {
             c[0][i] = 1.0/(i+1);
+        }
 
         g[0] = c[0][0];
 
@@ -78,23 +80,17 @@ public:
             m_ns++;
         }
 
-        for(size_t i=1+m_ns; i<m_eo+1; ++i)
+        for(size_t i=1+m_ns; i<m_eo+1 && i<m_steps_init; ++i)
         {
-            if(i<m_steps_init)
-            {
-                beta[0][i] = beta[0][i-1]*(m_time_storage[0] + dt -
-                    m_time_storage[i-1])/(m_time_storage[0] - m_time_storage[i]);
-            }
+            beta[0][i] = beta[0][i-1]*(m_time_storage[0] + dt -
+                m_time_storage[i-1])/(m_time_storage[0] - m_time_storage[i]);
         }
 
-        for(size_t i=1+m_ns; i<m_eo+2; ++i)
+        for(size_t i=1+m_ns; i<m_eo+2 && i<m_steps_init+1; ++i)
         {
             for(size_t j=0; j<m_eo+1; ++j)
             {
-                if(i<m_steps_init+1)
-                {
-                    c[i][j] = c[i-1][j] - c[i-1][j+1]*dt/(m_time_storage[0] + dt - m_time_storage[i-1]);
-                }
+                c[i][j] = c[i-1][j] - c[i-1][j+1]*dt/(m_time_storage[0] + dt - m_time_storage[i-1]);
             }
 
             g[i] = c[i][0];
@@ -107,13 +103,10 @@ public:
 
         phi[o][0].m_v = dxdt;
 
-        for(size_t i=1; i<m_eo + 2; ++i)
+        for(size_t i=1; i<m_eo+2 && i<m_steps_init+1; ++i)
         {
-            if(i<m_steps_init+1)
-            {
-                this->m_algebra.for_each3(phi[o][i].m_v, phi[o][i-1].m_v, phi[o+1][i-1].m_v,
-                    typename Operations::template scale_sum2<double, double>(1.0, -beta[o][i-1]));
-            }
+            this->m_algebra.for_each3(phi[o][i].m_v, phi[o][i-1].m_v, phi[o+1][i-1].m_v,
+                typename Operations::template scale_sum2<double, double>(1.0, -beta[o][i-1]));
         }   
     };
 

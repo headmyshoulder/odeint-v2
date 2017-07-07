@@ -80,10 +80,12 @@ private:
 template<
 class ErrorStepper,
 class StepAdjuster = detail::pid_step_adjuster< typename ErrorStepper::state_type, 
-    typename ErrorStepper::value_type, 
+    typename ErrorStepper::value_type,
+    typename ErrorStepper::deriv_type,
     typename ErrorStepper::time_type,
     typename ErrorStepper::algebra_type,
-    detail::BASIC
+    typename ErrorStepper::operations_type,
+    detail::H211PI
     >,
 class OrderAdjuster = default_order_adjuster< ErrorStepper::order_value,
     typename ErrorStepper::state_type,
@@ -168,14 +170,15 @@ public:
         if(coeff.m_steps_init > coeff.m_eo)
         {
             m_order_adjuster.adjust_order(coeff.m_eo, m_xerr);
-            dt = m_step_adjuster.adjust_stepsize(coeff.m_eo, dt, m_xerr[1 + coeff.m_eo - prevOrder].m_v);
+            dt = m_step_adjuster.adjust_stepsize(coeff.m_eo, dt, m_xerr[1 + coeff.m_eo - prevOrder].m_v, in, m_stepper.dxdt());
         }
         else
         {
             if(coeff.m_eo < order_value)
+            {
                 coeff.m_eo ++;
-
-            dt = m_step_adjuster.adjust_stepsize(coeff.m_eo, dt, m_xerr[1].m_v);
+            }
+            dt = m_step_adjuster.adjust_stepsize(coeff.m_eo, dt, m_xerr[1].m_v, in, m_stepper.dxdt());
         }
 
         if(dt / dtPrev >= step_adjuster_type::threshold())
@@ -185,7 +188,6 @@ public:
             coeff.confirm();
 
             t += dtPrev;
-
             return success;
         }
         else

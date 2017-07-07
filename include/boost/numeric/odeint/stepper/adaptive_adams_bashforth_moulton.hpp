@@ -192,6 +192,7 @@ public:
     coeff_type & coeff() { return m_coeff; };
 
     void reset() { m_coeff.reset(); };
+    const deriv_type & dxdt() const { return m_dxdt.m_v; };
 
 private:
     template< class StateType >
