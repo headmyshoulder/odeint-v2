@@ -156,7 +156,7 @@ public:
             m_coeff.do_step(m_dxdt.m_v, 1);
         }
 
-        out = in;
+        boost::numeric::odeint::copy( in , out );
         for(size_t i=0; i<eO; ++i)
         {
             this->m_algebra.for_each3(out, out, m_coeff.phi[1][i].m_v,
