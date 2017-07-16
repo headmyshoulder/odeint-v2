@@ -17,6 +17,8 @@
 
 #define BOOST_TEST_MODULE odeint_integrate_functions
 
+#include <boost/type_traits.hpp>
+
 #include <vector>
 #include <cmath>
 #include <iostream>
@@ -53,6 +55,9 @@
 #include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
 #include <boost/numeric/odeint/stepper/dense_output_runge_kutta.hpp>
 #include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>
+
+#include <boost/numeric/odeint/stepper/adaptive_adams_bashforth_moulton.hpp>
+#include <boost/numeric/odeint/stepper/controlled_adams_bashforth_moulton.hpp>
 
 #include <boost/numeric/odeint/util/detail/less_with_sign.hpp>
 
@@ -237,7 +242,12 @@ class stepper_methods : public mpl::vector<
     controlled_runge_kutta< runge_kutta_dopri5< state_type > > ,
     controlled_runge_kutta< runge_kutta_fehlberg78< state_type > > ,
     bulirsch_stoer< state_type > ,
-    dense_output_runge_kutta< controlled_runge_kutta< runge_kutta_dopri5< state_type > > >
+    dense_output_runge_kutta< controlled_runge_kutta< runge_kutta_dopri5< state_type > > >,
+    adaptive_adams_bashforth_moulton<3, state_type>,
+    adaptive_adams_bashforth_moulton<5, state_type>,
+    adaptive_adams_bashforth_moulton<7, state_type>,
+    controlled_adams_bashforth_moulton<adaptive_adams_bashforth_moulton<3, state_type> >,
+    controlled_adams_bashforth_moulton<adaptive_adams_bashforth_moulton<5, state_type> >
     //bulirsch_stoer_dense_out< state_type >
 > { };
 
@@ -274,12 +284,16 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_times_test_case , Stepper, stepper_meth
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( integrate_n_steps_test_case , Stepper, stepper_methods )
 {
-    perform_integrate_n_steps_test< Stepper > tester;
-    tester();
-    tester( 200 , 0.01 );
-    tester( 200 , 0.01 );
-    tester( 200 , 0.01 );
-    tester( 200 , -0.01 );
+    if(!boost::is_same<Stepper, controlled_adams_bashforth_moulton<adaptive_adams_bashforth_moulton<3, state_type> > >::value &&
+        !boost::is_same<Stepper, controlled_adams_bashforth_moulton<adaptive_adams_bashforth_moulton<5, state_type> > >::value)
+    {
+        perform_integrate_n_steps_test< Stepper > tester;
+        tester();
+        tester( 200 , 0.01 );
+        tester( 200 , 0.01 );
+        tester( 200 , 0.01 );
+        tester( 200 , -0.01 );
+    }
 }
 
 BOOST_AUTO_TEST_SUITE_END()
