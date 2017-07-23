@@ -41,9 +41,11 @@ public:
 
     void adjust_order(size_t &order, const boost::array<wrapped_state_type, 3> & xerr)
     {
-        value_type errm = fabs(m_algebra.norm_inf(xerr[0].m_v));
-        value_type errc = fabs(m_algebra.norm_inf(xerr[1].m_v));
-        value_type errp = fabs(m_algebra.norm_inf(xerr[2].m_v));
+        using std::abs;
+
+        value_type errm = abs(m_algebra.norm_inf(xerr[0].m_v));
+        value_type errc = abs(m_algebra.norm_inf(xerr[1].m_v));
+        value_type errp = abs(m_algebra.norm_inf(xerr[2].m_v));
 
         if(order == 1)
         {   
