@@ -69,9 +69,11 @@ public:
 
     void predict(time_type t, time_type dt)
     {
+        using std::abs;
+
         m_time_storage[0] = t;
 
-        if (fabs(m_time_storage[0] - m_time_storage[1] - dt) > 1e-16 || m_eo >= m_ns)
+        if (abs(m_time_storage[0] - m_time_storage[1] - dt) > 1e-16 || m_eo >= m_ns)
         {
             m_ns = 0;
         }
