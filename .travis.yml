@@ -19,7 +19,7 @@ addons:
 
 env:
  - CXXSTD=""
- - CXXSTD="cxxflags='-std=c++0x'"
+ - CXXSTD="-std=c++0x"
 
 # For now disable gcc on osx as g++4.8 is not yet available
 matrix:
@@ -28,21 +28,19 @@ matrix:
       compiler: gcc
 
 before_install:
-# 1.55: http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2/download
-# 1.57: http://sourceforge.net/projects/boost/files/boost/1.57.0/boost_1_57_0.tar.bz2/download
 # 1.58: http://downloads.sourceforge.net/project/boost/boost/1.58.0/boost_1_58_0.tar.bz2\?r\=\&ts\=1435589970\&use_mirror\=garr
- - wget http://downloads.sourceforge.net/project/boost/boost/1.58.0/boost_1_58_0.tar.bz2\?r\=\&ts\=1435589970\&use_mirror\=garr -O /tmp/boost.tar.bz2
+# 1.63: https://sourceforge.net/projects/boost/files/boost/1.63.0/boost_1_63_0.tar.bz2/download?use_mirror=superb-dca2
+ - wget https://sourceforge.net/projects/boost/files/boost/1.63.0/boost_1_63_0.tar.bz2/download?use_mirror=superb-dca2 -O /tmp/boost.tar.bz2
  - tar jxf /tmp/boost.tar.bz2
- - mv boost_1_58_0 $PWD/boost-trunk
-# patch the boost build system - not neccessary with 1.58 anymore
-# - patch $PWD/boost-trunk/tools/build/v2/build/toolset.jam toolset.jam.patch
+ - mv boost_1_63_0 $PWD/boost-trunk
  - export BOOST_ROOT="$PWD/boost-trunk"
 
  - cd $BOOST_ROOT
  - ./bootstrap.sh
  - cd $TRAVIS_BUILD_DIR
  - if [ "$TRAVIS_OS_NAME" = "osx" ] && [ "$CC" = "gcc" ]; then export CC=gcc-4.8; fi
+ - echo $CC
  - $CC --version
 
 script:
- - $BOOST_ROOT/b2 toolset=$CC $CXXSTD
+ - $BOOST_ROOT/b2 toolset=$CC cxxflags='$CXXSTD' -j2
