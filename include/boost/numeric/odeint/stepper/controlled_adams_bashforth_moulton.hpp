@@ -39,41 +39,58 @@ public:
     : m_algebra( algebra )
     {};
 
-    void adjust_order(size_t &order, const boost::array<wrapped_state_type, 3> & xerr)
+    size_t adjust_order(size_t order, size_t init, boost::array<wrapped_state_type, 4> &xerr)
     {
         using std::abs;
 
-        value_type errm = abs(m_algebra.norm_inf(xerr[0].m_v));
-        value_type errc = abs(m_algebra.norm_inf(xerr[1].m_v));
-        value_type errp = abs(m_algebra.norm_inf(xerr[2].m_v));
+        value_type errc = abs(m_algebra.norm_inf(xerr[2].m_v));
 
-        if(order == 1)
-        {   
-            if(errp < errc)
-            {
-                order ++;
-            }
-        }
-        else if(order == MaxOrder)
+        value_type errm1 = 3*errc;
+        value_type errm2 = 3*errc;
+
+        if(order > 2)
         {
-            if(errm < errc)
-            {
-                order --;
-            }
+            errm2 = abs(m_algebra.norm_inf(xerr[0].m_v));
         }
-        else
+        if(order >= 2)
         {
-            if(errm < errc && 
-                errm < errp)
+            errm1 = abs(m_algebra.norm_inf(xerr[1].m_v));
+        }
+
+        size_t o_new = order;
+
+        if(order == 2 && errm1 <= 0.5*errc)
+        {
+            o_new = order - 1;
+        }
+        else if(order > 2 && errm2 < errc && errm1 < errc)
+        {
+            o_new = order - 1;
+        }
+
+        if(init < order)
+        {
+            return order+1;
+        }
+        else if(o_new == order - 1)
+        {
+            return order-1;
+        }
+        else if(order <= MaxOrder)
+        {
+            value_type errp = abs(m_algebra.norm_inf(xerr[3].m_v));
+
+            if(order > 1 && errm1 < errc && errp)
             {
-                order--;
+                return order-1;
             }
-            else if(errp < errm &&
-                errp < errc)
+            else if(order < MaxOrder && errp < (0.5-0.25*order/MaxOrder) * errc)
             {
-                order++;
+                return order+1;
             }
         }
+
+        return order;
     };
 private:
     algebra_type m_algebra;
@@ -118,7 +135,7 @@ public:
 
     typedef typename stepper_type::wrapped_state_type wrapped_state_type;
     typedef typename stepper_type::wrapped_deriv_type wrapped_deriv_type;
-    typedef boost::array< wrapped_state_type , 3 > error_storage_type;
+    typedef boost::array< wrapped_state_type , 4 > error_storage_type;
 
     typedef typename stepper_type::coeff_type coeff_type;
     typedef controlled_adams_bashforth_moulton< ErrorStepper , StepAdjuster , OrderAdjuster , Resizer > controlled_stepper_type;
@@ -162,39 +179,54 @@ public:
         m_xerr_resizer.adjust_size( in , detail::bind( &controlled_stepper_type::template resize_xerr_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
         m_dxdt_resizer.adjust_size( in , detail::bind( &controlled_stepper_type::template resize_dxdt_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
 
-        m_stepper.do_step_impl(system, in, t, out, dt, m_xerr);
+        m_stepper.do_step_impl(system, in, t, out, dt, m_xerr[2].m_v);
 
         coeff_type &coeff = m_stepper.coeff();
 
         time_type dtPrev = dt;
-        size_t prevOrder = coeff.m_eo;
-        
-        if(coeff.m_steps_init > coeff.m_eo)
-        {
-            m_order_adjuster.adjust_order(coeff.m_eo, m_xerr);
-            dt = m_step_adjuster.adjust_stepsize(coeff.m_eo, dt, m_xerr[1 + coeff.m_eo - prevOrder].m_v, in, m_stepper.dxdt());
-        }
-        else
-        {
-            if(coeff.m_eo < order_value)
-            {
-                coeff.m_eo ++;
-            }
-            dt = m_step_adjuster.adjust_stepsize(coeff.m_eo, dt, m_xerr[1].m_v, in, m_stepper.dxdt());
-        }
+        dt = m_step_adjuster.adjust_stepsize(coeff.m_eo, dt, m_xerr[2].m_v, out, m_stepper.dxdt() );
 
         if(dt / dtPrev >= step_adjuster_type::threshold())
         {
-            system(out, m_dxdt.m_v, t+dt);
+            system(out, m_dxdt.m_v, t+dtPrev);
+
             coeff.do_step(m_dxdt.m_v);
             coeff.confirm();
 
             t += dtPrev;
+
+            size_t eo = coeff.m_eo;
+
+            // estimate errors for next step
+            double factor = 1;
+            algebra_type m_algebra;
+
+            m_algebra.for_each2(m_xerr[2].m_v, coeff.phi[1][eo].m_v, 
+                typename operations_type::template scale_sum1<double>(factor*dt*(coeff.gs[eo])));
+
+            if(eo > 1)
+            {
+                m_algebra.for_each2(m_xerr[1].m_v, coeff.phi[1][eo-1].m_v, 
+                    typename operations_type::template scale_sum1<double>(factor*dt*(coeff.gs[eo-1])));
+            }
+            if(eo > 2)
+            {
+                m_algebra.for_each2(m_xerr[0].m_v, coeff.phi[1][eo-2].m_v, 
+                    typename operations_type::template scale_sum1<double>(factor*dt*(coeff.gs[eo-2])));
+            }
+            if(eo < order_value && coeff.m_eo < coeff.m_steps_init-1)
+            {
+                m_algebra.for_each2(m_xerr[3].m_v, coeff.phi[1][eo+1].m_v, 
+                    typename operations_type::template scale_sum1<double>(factor*dt*(coeff.gs[eo+1])));
+            }
+
+            // adjust order
+            coeff.m_eo = m_order_adjuster.adjust_order(coeff.m_eo, coeff.m_steps_init-1, m_xerr);
+
             return success;
         }
         else
         {
-            coeff.m_eo = prevOrder;
             return fail;
         }
     };
@@ -212,7 +244,7 @@ private:
     {
         bool resized( false );
 
-        for(size_t i=0; i<3; ++i)
+        for(size_t i=0; i<m_xerr.size(); ++i)
         {
             resized |= adjust_size_by_resizeability( m_xerr[i], x, typename is_resizeable<state_type>::type() );
         }

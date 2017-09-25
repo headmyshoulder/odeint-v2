@@ -42,7 +42,6 @@ public:
     typedef Time time_type;
 
     typedef state_wrapper< deriv_type > wrapped_deriv_type;
-    typedef rotating_buffer< wrapped_deriv_type , steps+1 > step_storage_type; // +1 for moulton
     typedef rotating_buffer< time_type , steps+1 > time_storage_type;
 
     typedef Algebra algebra_type;
@@ -58,13 +57,30 @@ public:
     {
         for (size_t i=0; i<order_value+2; ++i)
         {
-            c[0][i] = 1.0/(i+1);
+            c[i] = 1.0/(i+1);
+            c[c_size+i] = 1.0/((i+1)*(i+2));
         }
 
-        g[0] = c[0][0];
+        g[0] = c[0];
+        g[1] = c[c_size];
 
         beta[0][0] = 1;
         beta[1][0] = 1;
+
+        gs[0] = 1.0;
+        gs[1] = -1.0/2;
+        gs[2] = -1.0/12;
+        gs[3] = -1.0/24;
+        gs[4] = -19.0/720;
+        gs[5] = -3.0/160;
+        gs[6] = -863.0/60480;
+        gs[7] = -275.0/24192;
+        gs[8] = -33953.0/3628800;
+        gs[9] = 35.0/4436;
+        gs[10] =  40.0/5891;
+        gs[11] = 37.0/6250;
+        gs[12] = 25.0/4771;
+        gs[13] = 40.0/8547;
     };
 
     void predict(time_type t, time_type dt)
@@ -84,18 +100,19 @@ public:
 
         for(size_t i=1+m_ns; i<m_eo+1 && i<m_steps_init; ++i)
         {
-            beta[0][i] = beta[0][i-1]*(m_time_storage[0] + dt -
-                m_time_storage[i-1])/(m_time_storage[0] - m_time_storage[i]);
+            time_type diff = m_time_storage[0] - m_time_storage[i];
+            beta[0][i] = beta[0][i-1]*(m_time_storage[0] + dt - m_time_storage[i-1])/diff;
         }
 
-        for(size_t i=1+m_ns; i<m_eo+2 && i<m_steps_init+1; ++i)
+        for(size_t i=2+m_ns; i<m_eo+2 && i<m_steps_init+1; ++i)
         {
-            for(size_t j=0; j<m_eo+1; ++j)
+            time_type diff = m_time_storage[0] + dt - m_time_storage[i-1];
+            for(size_t j=0; j<m_eo+1-i+1; ++j)
             {
-                c[i][j] = c[i-1][j] - c[i-1][j+1]*dt/(m_time_storage[0] + dt - m_time_storage[i-1]);
+                c[c_size*i+j] = c[c_size*(i-1)+j] - c[c_size*(i-1)+j+1]*dt/diff;
             }
 
-            g[i] = c[i][0];
+            g[i] = c[c_size*i];
         }
     };
 
@@ -105,11 +122,19 @@ public:
 
         phi[o][0].m_v = dxdt;
 
-        for(size_t i=1; i<m_eo+2 && i<m_steps_init+1; ++i)
+        for(size_t i=1; i<m_eo+3 && i<m_steps_init+2 && i<order_value+2; ++i)
         {
-            this->m_algebra.for_each3(phi[o][i].m_v, phi[o][i-1].m_v, phi[o+1][i-1].m_v,
-                typename Operations::template scale_sum2<double, double>(1.0, -beta[o][i-1]));
-        }   
+            if (o == 0)
+            {
+                this->m_algebra.for_each3(phi[o][i].m_v, phi[o][i-1].m_v, phi[o+1][i-1].m_v,
+                    typename Operations::template scale_sum2<value_type, value_type>(1.0, -beta[o][i-1]));
+            }
+            else
+            {
+                this->m_algebra.for_each2(phi[o][i].m_v, phi[o][i-1].m_v,
+                    typename Operations::template scale_sum1<value_type>(1.0));
+            }
+        }
     };
 
     void confirm()
@@ -124,7 +149,7 @@ public:
         }
     };
 
-    void reset() { m_eo = 1; };
+    void reset() { m_eo = 1; m_steps_init = 1; };
 
     size_t m_eo;
     size_t m_steps_init;
@@ -132,12 +157,12 @@ public:
     rotating_buffer<boost::array<value_type, order_value+1>, 2> beta; // beta[0] = beta(n)
     rotating_buffer<boost::array<wrapped_deriv_type, order_value+2>, 3> phi; // phi[0] = phi(n+1)
     boost::array<value_type, order_value + 2> g;
+    boost::array<value_type, 14> gs;
 
 private:
     template< class StateType >
     bool resize_phi_impl( const StateType &x )
     {
-
         bool resized( false );
 
         for(size_t i=0; i<(order_value + 2); ++i)
@@ -152,7 +177,8 @@ private:
     size_t m_ns;
 
     time_storage_type m_time_storage;
-    boost::array<boost::array<value_type, order_value + 2>, order_value + 2> c;
+    static const size_t c_size = order_value + 2;
+    boost::array<value_type, c_size*c_size> c;
 
     algebra_type m_algebra;
 

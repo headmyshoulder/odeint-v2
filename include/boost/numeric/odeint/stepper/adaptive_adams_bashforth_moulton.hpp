@@ -49,7 +49,6 @@ public:
 
     typedef state_wrapper< state_type > wrapped_state_type;
     typedef state_wrapper< deriv_type > wrapped_deriv_type;
-    typedef boost::array< wrapped_state_type , 3 > error_storage_type;
 
     typedef algebra_stepper_base< Algebra , Operations > algebra_stepper_base_type;
     typedef typename algebra_stepper_base_type::algebra_type algebra_type;
@@ -74,14 +73,14 @@ public:
     {
         m_xnew_resizer.adjust_size( inOut , detail::bind( &stepper_type::template resize_xnew_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
     
-        do_step(system, inOut, t, m_xnew.m_v, dt, m_xerr[1].m_v);
+        do_step(system, inOut, t, m_xnew.m_v, dt, m_xerr.m_v);
         boost::numeric::odeint::copy( m_xnew.m_v , inOut);
     };
 
     template< class System >
     void do_step(System system, const state_type &in, time_type t, state_type &out, time_type dt )
     {    
-        do_step(system, in, t, out, dt, m_xerr);
+        do_step(system, in, t, out, dt, m_xerr.m_v);
     };
 
     template< class System >
@@ -89,16 +88,14 @@ public:
     {
         m_xnew_resizer.adjust_size( inOut , detail::bind( &stepper_type::template resize_xnew_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
     
-        do_step(system, inOut, t, m_xnew.m_v, dt, m_xerr[1].m_v);
+        do_step(system, inOut, t, m_xnew.m_v, dt, xerr);
         boost::numeric::odeint::copy( m_xnew.m_v , inOut);
-        boost::numeric::odeint::copy( m_xerr[1].m_v , xerr);
     };
 
     template< class System >
     void do_step(System system, const state_type &in, time_type t, state_type &out, time_type dt , state_type &xerr)
     {
-        do_step_impl(system, in, t, out, dt, m_xerr);
-        boost::numeric::odeint::copy( m_xerr[1].m_v , xerr);
+        do_step_impl(system, in, t, out, dt, xerr);
         
         system(out, m_dxdt.m_v, t+dt);
         m_coeff.do_step(m_dxdt.m_v);
@@ -142,7 +139,7 @@ public:
     };
 
     template< class System >
-    void do_step_impl(System system, const state_type & in, time_type t, state_type & out, time_type &dt, error_storage_type &xerr)
+    void do_step_impl(System system, const state_type & in, time_type t, state_type & out, time_type &dt, state_type &xerr)
     {
         size_t eO = m_coeff.m_eo;
 
@@ -150,7 +147,7 @@ public:
         m_dxdt_resizer.adjust_size( in , detail::bind( &stepper_type::template resize_dxdt_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
 
         m_coeff.predict(t, dt);
-        if (eO == 1)
+        if (m_coeff.m_steps_init == 1)
         {
             system(in, m_dxdt.m_v, t);
             m_coeff.do_step(m_dxdt.m_v, 1);
@@ -170,22 +167,8 @@ public:
             typename Operations::template scale_sum2<double, double>(1.0, dt*m_coeff.g[eO]));
 
         // error for current order
-        this->m_algebra.for_each2(xerr[1].m_v, m_coeff.phi[0][eO].m_v,
-            typename Operations::template scale_sum1<double>(dt*(m_coeff.g[eO]-m_coeff.g[eO-1])));
-
-        // error for order below
-        if (eO > 1)
-        {
-            this->m_algebra.for_each2(xerr[0].m_v, m_coeff.phi[0][eO-1].m_v,
-                typename Operations::template scale_sum1<double>(dt*(m_coeff.g[eO-1]-m_coeff.g[eO-2])));
-        }
-
-        // error for order above
-        if(m_coeff.m_steps_init > eO)
-        {
-            this->m_algebra.for_each2(xerr[2].m_v, m_coeff.phi[0][eO+1].m_v,
-                typename Operations::template scale_sum1<double>(dt*(m_coeff.g[eO+1]-m_coeff.g[eO])));
-        }
+        this->m_algebra.for_each2(xerr, m_coeff.phi[0][eO].m_v, 
+            typename Operations::template scale_sum1<double>(dt*(m_coeff.g[eO])));
     };
 
     const coeff_type& coeff() const { return m_coeff; };
@@ -208,13 +191,7 @@ private:
     template< class StateType >
     bool resize_xerr_impl( const StateType &x )
     {
-        bool resized( false );
-
-        for(size_t i=0; i<3; ++i)
-        {
-            resized |= adjust_size_by_resizeability( m_xerr[i], x, typename is_resizeable<state_type>::type() );
-        }
-        return resized;
+        return adjust_size_by_resizeability( m_xerr, x, typename is_resizeable<state_type>::type() );
     };
 
     coeff_type m_coeff;
@@ -225,7 +202,7 @@ private:
 
     wrapped_deriv_type m_dxdt;
     wrapped_state_type m_xnew;
-    error_storage_type m_xerr;
+    wrapped_state_type m_xerr;
 };
 
 } // odeint
