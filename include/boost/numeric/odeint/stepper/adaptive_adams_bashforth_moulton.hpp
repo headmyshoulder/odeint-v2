@@ -110,16 +110,23 @@ public:
     template< class ExplicitStepper, class System >
     void initialize(ExplicitStepper stepper, System system, state_type &inOut, time_type &t, time_type dt)
     {
+        reset();
+        dt = dt/static_cast< time_type >(order_value);
+
         m_dxdt_resizer.adjust_size( inOut , detail::bind( &stepper_type::template resize_dxdt_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
 
+        system( inOut , m_dxdt.m_v , t );
         for( size_t i=0 ; i<order_value; ++i )
         {
-            system( inOut , m_dxdt.m_v , t );
-            stepper.do_step_dxdt_impl( system, inOut, m_dxdt.m_v, t, dt/static_cast< Time >(order_value) );
+            stepper.do_step_dxdt_impl( system, inOut, m_dxdt.m_v, t, dt );
             
-            m_coeff.predict(t, dt/static_cast< Time >(order_value));
+            system( inOut , m_dxdt.m_v , t + dt);
+            
+            m_coeff.predict(t, dt);
             m_coeff.do_step(m_dxdt.m_v);
             m_coeff.confirm();
+            
+            t += dt;
 
             if(m_coeff.m_eo < order_value)
             {
@@ -131,10 +138,13 @@ public:
     template< class System >
     void initialize(System system, state_type &inOut, time_type &t, time_type dt)
     {
+        reset();
+        dt = dt/static_cast< time_type >(order_value);
+
         for(size_t i=0; i<order_value; ++i)
         {
-            this->do_step(system, inOut, t, dt/static_cast< Time >(order_value));
-            t += dt/static_cast< Time >(order_value);
+            this->do_step(system, inOut, t, dt);
+            t += dt;
         };
     };
 
