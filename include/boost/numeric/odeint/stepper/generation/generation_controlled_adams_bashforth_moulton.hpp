@@ -1,3 +1,17 @@
+/*
+ boost/numeric/odeint/stepper/detail/generation_controlled_adams_bashforth_moulton.hpp
+
+ [begin_description]
+ Spezialization of the generation functions for creation of the controlled adams bashforth moulton stepper.
+ [end_description]
+
+ Copyright 2017 Valentin Noah Hartmann
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
 #ifndef GENERATION_CONTROLLED_ADAMS_BASHFORTH_MOULTON_HPP_INCLUDED
 #define GENERATION_CONTROLLED_ADAMS_BASHFORTH_MOULTON_HPP_INCLUDED
 

@@ -1,3 +1,17 @@
+/*
+ boost/numeric/odeint/stepper/detail/adaptive_adams_coefficients.hpp
+
+ [begin_description]
+ Calculation of the coefficients for the adaptive adams stepper.
+ [end_description]
+
+ Copyright 2017 Valentin Noah Hartmann
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_DETAIL_ADAPTIVE_ADAMS_COEFFICIENTS_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_STEPPER_DETAIL_ADAPTIVE_ADAMS_COEFFICIENTS_HPP_INCLUDED
 

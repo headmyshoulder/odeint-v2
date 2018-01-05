@@ -1,3 +1,17 @@
+/*
+ boost/numeric/odeint/stepper/detail/pid_step_adjuster.hpp
+
+ [begin_description]
+ Implementation of the stepsize controller for the controlled adams bashforth moulton stepper.
+ [end_description]
+
+ Copyright 2017 Valentin Noah Hartmann
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_DETAIL_PID_STEP_ADJUSTER_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_STEPPER_DETAIL_PID_STEP_ADJUSTER_HPP_INCLUDED
 

@@ -1,3 +1,17 @@
+/*
+ boost/numeric/odeint/stepper/detail/pid_step_adjuster_coefficients.hpp
+
+ [begin_description]
+ Coefficients for the PID stepsize controller.
+ [end_description]
+
+ Copyright 2017 Valentin Noah Hartmann
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_DETAIL_PID_STEP_ADJUSTER_COEFFICIENTS_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_STEPPER_DETAIL_PID_STEP_ADJUSTER_COEFFICIENTS_HPP_INCLUDED
 

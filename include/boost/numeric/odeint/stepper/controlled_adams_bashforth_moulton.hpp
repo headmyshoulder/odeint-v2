@@ -1,3 +1,17 @@
+/*
+ boost/numeric/odeint/stepper/detail/controlled_adams_bashforth_moulton.hpp
+
+ [begin_description]
+ Implemetation of an controlled adams bashforth moulton stepper.
+ [end_description]
+
+ Copyright 2017 Valentin Noah Hartmann
+
+ Distributed under the Boost Software License, Version 1.0.
+ (See accompanying file LICENSE_1_0.txt or
+ copy at http://www.boost.org/LICENSE_1_0.txt)
+*/
+
 #ifndef BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLED_ADAMS_BASHFORTH_MOULTON_HPP_INCLUDED
 #define BOOST_NUMERIC_ODEINT_STEPPER_CONTROLLED_ADAMS_BASHFORTH_MOULTON_HPP_INCLUDED
 
@@ -157,6 +171,37 @@ public:
     {
         m_stepper.initialize(system, inOut, t, dt);
     };
+
+    template< class ExplicitStepper, class System >
+    void initialize_controlled(ExplicitStepper stepper, System system, state_type &inOut, time_type &t, time_type &dt)
+    {
+        reset();
+        coeff_type &coeff = m_stepper.coeff();
+
+        m_dxdt_resizer.adjust_size( inOut , detail::bind( &controlled_stepper_type::template resize_dxdt_impl< state_type > , detail::ref( *this ) , detail::_1 ) );
+
+        controlled_step_result res = fail;
+
+        for( size_t i=0 ; i<order_value; ++i )
+        {
+            do
+            {
+                res = stepper.try_step( system, inOut, t, dt );
+            }
+            while(res != success);
+
+            system( inOut , m_dxdt.m_v , t );
+            
+            coeff.predict(t-dt, dt);
+            coeff.do_step(m_dxdt.m_v);
+            coeff.confirm();
+
+            if(coeff.m_eo < order_value)
+            {
+                ++coeff.m_eo;
+            }
+        }
+    }
 
     template< class System >
     controlled_step_result try_step(System system, state_type & inOut, time_type &t, time_type &dt)
