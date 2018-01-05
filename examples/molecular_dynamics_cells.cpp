@@ -141,10 +141,8 @@ public:
 
 
 
-    struct transform_functor
+    struct transform_functor : public std::unary_function< size_t , size_t >
     {
-        typedef size_t argument_type;
-        typedef size_t result_type;
         hash_vector const* m_index;
         transform_functor( hash_vector const& index ) : m_index( &index ) { }
         size_t operator()( size_t i ) const { return (*m_index)[i]; }
