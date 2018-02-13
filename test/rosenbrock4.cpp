@@ -127,6 +127,39 @@ BOOST_AUTO_TEST_CASE( test_rosenbrock4_dense_output )
     stepper.calc_state( 0.5 * ( tr.first + tr.second ) , x );
 }
 
+class rosenbrock4_controller_max_dt_adaptable : public rosenbrock4_controller< rosenbrock4< value_type > >
+{
+    public:
+        void set_max_dt(value_type max_dt)
+        {
+            m_max_dt = max_dt;
+        }
+};
+
+BOOST_AUTO_TEST_CASE( test_rosenbrock4_dense_output_ref )
+{
+    typedef rosenbrock4_dense_output< boost::reference_wrapper< rosenbrock4_controller_max_dt_adaptable > > stepper_type;
+    rosenbrock4_controller_max_dt_adaptable  c_stepper;
+    stepper_type stepper( boost::ref( c_stepper ) );
+
+    typedef stepper_type::state_type state_type;
+    typedef stepper_type::value_type stepper_value_type;
+    typedef stepper_type::deriv_type deriv_type;
+    typedef stepper_type::time_type time_type;
+    state_type x( 2 );
+    x( 0 ) = 0.0 ; x(1) = 1.0;
+    stepper.initialize( x , 0.0 , 0.1 );
+    std::pair< value_type , value_type > tr = stepper.do_step( std::make_pair( sys() , jacobi() ) );
+    stepper.calc_state( 0.5 * ( tr.first + tr.second ) , x );
+
+    // adapt the maximal step size to a small value (smaller than the step size) and make a step
+    const double max_dt = 1e-8;
+    c_stepper.set_max_dt(max_dt);
+    stepper.do_step( std::make_pair( sys() , jacobi() ) );
+    // check if the step was done with the requested maximal step size
+    BOOST_CHECK_CLOSE(max_dt, stepper.current_time_step(), 1e-14);
+}
+
 BOOST_AUTO_TEST_CASE( test_rosenbrock4_copy_dense_output )
 {
     typedef rosenbrock4_controller< rosenbrock4< value_type > > controlled_stepper_type;
