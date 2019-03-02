@@ -174,7 +174,7 @@ public :
         const value_type dc4 = c4 - static_cast<value_type> ( 393 ) / static_cast<value_type>( 640 );
         const value_type dc5 = c5 - static_cast<value_type> ( -92097 ) / static_cast<value_type>( 339200 );
         const value_type dc6 = c6 - static_cast<value_type> ( 187 ) / static_cast<value_type>( 2100 );
-        const value_type dc7 = static_cast<value_type>( -1 ) / static_cast<value_type> ( 40 );
+        const value_type dc7 = static_cast<value_type>( 1 ) / static_cast<value_type> ( 40 );
 
         /* ToDo: copy only if &dxdt_in == &dxdt_out ? */
         if( same_instance( dxdt_in , dxdt_out ) )
