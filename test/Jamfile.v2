@@ -84,7 +84,6 @@ test-suite "odeint"
     [ run integrate_overflow.cpp ]
     [ compile unwrap_boost_reference.cpp ]
     [ compile unwrap_reference.cpp : <cxxflags>-std=c++0x : unwrap_reference_C++11 ]
-    [ compile-fail unwrap_reference.cpp : <cxxflags>-std=c++98 : unwrap_reference_C++98 ]
     [ compile std_array.cpp : <cxxflags>-std=c++0x ]
     : 
         <testing.launcher>valgrind
