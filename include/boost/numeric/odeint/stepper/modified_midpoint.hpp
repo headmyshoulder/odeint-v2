@@ -22,6 +22,7 @@
 #include <vector>
 
 #include <boost/numeric/odeint/stepper/base/explicit_stepper_base.hpp>
+#include <boost/numeric/odeint/stepper/system_categories.hpp>
 #include <boost/numeric/odeint/util/resizer.hpp>
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
@@ -69,6 +70,7 @@ public :
     typedef typename stepper_base_type::operations_type operations_type;
     typedef typename stepper_base_type::resizer_type resizer_type;
     typedef typename stepper_base_type::stepper_type stepper_type;
+    typedef explicit_system_tag system_category;
 
 
     modified_midpoint( unsigned short steps = 2 , const algebra_type &algebra = algebra_type() )

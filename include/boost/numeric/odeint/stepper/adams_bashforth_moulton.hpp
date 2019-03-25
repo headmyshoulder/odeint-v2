@@ -23,6 +23,7 @@
 #include <boost/numeric/odeint/util/bind.hpp>
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
+#include <boost/numeric/odeint/stepper/system_categories.hpp>
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
 #include <boost/numeric/odeint/algebra/algebra_dispatcher.hpp>
@@ -73,6 +74,7 @@ public :
     typedef Resizer resizer_type;
     typedef stepper_tag stepper_category;
     typedef InitializingStepper initializing_stepper_type;
+    typedef explicit_system_tag system_category;
 
     static const size_t steps = Steps;
 #ifndef DOXYGEN_SKIP

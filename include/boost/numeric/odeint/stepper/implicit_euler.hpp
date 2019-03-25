@@ -25,6 +25,7 @@
 #include <boost/numeric/odeint/util/bind.hpp>
 #include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
+#include <boost/numeric/odeint/stepper/system_categories.hpp>
 
 #include <boost/numeric/odeint/util/ublas_wrapper.hpp>
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
@@ -64,6 +65,7 @@ public:
     typedef Resizer resizer_type;
     typedef stepper_tag stepper_category;
     typedef implicit_euler< ValueType , Resizer > stepper_type;
+    typedef implicit_system_tag system_category;
 
     implicit_euler( value_type epsilon = 1E-6 )
     : m_epsilon( epsilon ) 

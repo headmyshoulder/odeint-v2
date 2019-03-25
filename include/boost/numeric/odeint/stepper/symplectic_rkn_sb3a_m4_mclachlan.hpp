@@ -21,6 +21,7 @@
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
 #include <boost/numeric/odeint/algebra/algebra_dispatcher.hpp>
 #include <boost/numeric/odeint/algebra/operations_dispatcher.hpp>
+#include <boost/numeric/odeint/stepper/system_categories.hpp>
 
 #include <boost/numeric/odeint/util/resizer.hpp>
 
@@ -111,6 +112,7 @@ public:
 #endif
     typedef typename stepper_base_type::algebra_type algebra_type;
     typedef typename stepper_base_type::value_type value_type;
+    typedef symplectic_or_simple_symplectic_system_tag system_category;
 
 
     symplectic_rkn_sb3a_m4_mclachlan( const algebra_type &algebra = algebra_type() )

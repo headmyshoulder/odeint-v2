@@ -25,6 +25,7 @@
 #include <boost/numeric/odeint/util/bind.hpp>
 
 #include <boost/numeric/odeint/stepper/rosenbrock4_controller.hpp>
+#include <boost/numeric/odeint/stepper/system_categories.hpp>
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
 
 #include <boost/numeric/odeint/integrate/max_step_checker.hpp>
@@ -51,6 +52,7 @@ public:
     typedef typename stepper_type::wrapped_deriv_type wrapped_deriv_type;
     typedef typename stepper_type::resizer_type resizer_type;
     typedef dense_output_stepper_tag stepper_category;
+    typedef implicit_system_tag system_category;
 
     typedef rosenbrock4_dense_output< ControlledStepper > dense_output_stepper_type;
 

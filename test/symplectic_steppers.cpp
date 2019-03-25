@@ -155,6 +155,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_assoc_types , Stepper , vector_steppers< ini
 
     BOOST_STATIC_ASSERT_MSG( ( boost::is_same< typename Stepper::resizer_type , initially_resizer >::value ) , "Resizer type" );
     BOOST_STATIC_ASSERT_MSG( ( boost::is_same< typename Stepper::stepper_category , stepper_tag >::value ) , "Stepper category" );
+
+    BOOST_STATIC_ASSERT_MSG(
+        ( boost::is_same< typename Stepper::system_category , symplectic_or_simple_symplectic_system_tag >::value ) , 
+        "System category" );
 }
 
 

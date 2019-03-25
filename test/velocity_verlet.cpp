@@ -123,6 +123,7 @@ BOOST_AUTO_TEST_SUITE( velocity_verlet_test )
 BOOST_FIXTURE_TEST_CASE( test_with_array_ref , velocity_verlet_fixture )
 {
     array_stepper stepper;
+    BOOST_STATIC_ASSERT_MSG( ( boost::is_same< array_stepper::system_category , second_order_system_tag >::value ) , "System category" );
     array_type q , p ;
     init_state( q , p );
     stepper.do_step( ode() , std::make_pair( boost::ref( q ) , boost::ref( p ) ) , 0.0 , 0.01 );

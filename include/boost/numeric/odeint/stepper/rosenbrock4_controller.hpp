@@ -23,6 +23,7 @@
 #include <boost/numeric/odeint/util/bind.hpp>
 
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
+#include <boost/numeric/odeint/stepper/system_categories.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
 #include <boost/numeric/odeint/util/copy.hpp>
@@ -52,6 +53,7 @@ public:
     typedef typename stepper_type::wrapped_deriv_type wrapped_deriv_type;
     typedef typename stepper_type::resizer_type resizer_type;
     typedef controlled_stepper_tag stepper_category;
+    typedef implicit_system_tag system_category;
 
     typedef rosenbrock4_controller< Stepper > controller_type;
 

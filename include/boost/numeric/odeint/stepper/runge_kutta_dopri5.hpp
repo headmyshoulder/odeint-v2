@@ -23,6 +23,7 @@
 #include <boost/numeric/odeint/util/bind.hpp>
 
 #include <boost/numeric/odeint/stepper/base/explicit_error_stepper_fsal_base.hpp>
+#include <boost/numeric/odeint/stepper/system_categories.hpp>
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
 #include <boost/numeric/odeint/algebra/algebra_dispatcher.hpp>
@@ -76,6 +77,7 @@ public :
     typedef typename stepper_base_type::algebra_type algebra_type;
     typedef typename stepper_base_type::operations_type operations_type;
     typedef typename stepper_base_type::resizer_type resizer_type;
+    typedef explicit_system_tag system_category;
 
     #ifndef DOXYGEN_SKIP
     typedef typename stepper_base_type::stepper_type stepper_type;

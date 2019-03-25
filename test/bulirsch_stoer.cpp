@@ -84,6 +84,7 @@ BOOST_AUTO_TEST_CASE( test_bulirsch_stoer )
 {
     typedef bulirsch_stoer< state_type > stepper_type;
     stepper_type stepper( 1E-9 , 1E-9 , 1.0 , 0.0 );
+    BOOST_STATIC_ASSERT_MSG( ( boost::is_same< stepper_type::system_category , explicit_system_tag >::value ) , "System category" );
 
     state_type x;
     x[0] = 10.0 ; x[1] = 10.0 ; x[2] = 5.0;

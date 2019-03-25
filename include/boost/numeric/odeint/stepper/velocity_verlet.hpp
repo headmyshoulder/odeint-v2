@@ -19,6 +19,7 @@
 #define BOOST_NUMERIC_ODEINT_STEPPER_VELOCITY_VERLET_HPP_DEFINED
 
 #include <boost/numeric/odeint/stepper/base/algebra_stepper_base.hpp>
+#include <boost/numeric/odeint/stepper/system_categories.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 
 #include <boost/numeric/odeint/algebra/algebra_dispatcher.hpp>
@@ -71,6 +72,7 @@ public:
     typedef TimeSq time_square_type;
     typedef Resizer resizer_type;
     typedef stepper_tag stepper_category;
+    typedef second_order_system_tag system_category;
 
     typedef unsigned short order_type;
 

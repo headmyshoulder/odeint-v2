@@ -41,6 +41,7 @@
 
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
+#include <boost/numeric/odeint/stepper/system_categories.hpp>
 
 namespace boost {
 namespace numeric {
@@ -229,6 +230,7 @@ public:
     typedef ErrorChecker error_checker_type;
     typedef StepAdjuster step_adjuster_type;
     typedef explicit_controlled_stepper_tag stepper_category;
+    typedef explicit_system_tag system_category;
 
 #ifndef DOXYGEN_SKIP
     typedef typename stepper_type::wrapped_state_type wrapped_state_type;

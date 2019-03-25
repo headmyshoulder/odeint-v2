@@ -35,6 +35,7 @@
 #include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
 #include <boost/numeric/odeint/stepper/modified_midpoint.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
+#include <boost/numeric/odeint/stepper/system_categories.hpp>
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
 #include <boost/numeric/odeint/algebra/algebra_dispatcher.hpp>
@@ -70,6 +71,7 @@ public:
     typedef Algebra algebra_type;
     typedef Operations operations_type;
     typedef Resizer resizer_type;
+    typedef explicit_system_tag system_category;
 #ifndef DOXYGEN_SKIP
     typedef state_wrapper< state_type > wrapped_state_type;
     typedef state_wrapper< deriv_type > wrapped_deriv_type;

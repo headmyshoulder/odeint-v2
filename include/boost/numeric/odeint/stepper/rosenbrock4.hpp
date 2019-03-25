@@ -28,6 +28,7 @@
 #include <boost/numeric/ublas/lu.hpp>
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
+#include <boost/numeric/odeint/stepper/system_categories.hpp>
 
 #include <boost/numeric/odeint/util/ublas_wrapper.hpp>
 #include <boost/numeric/odeint/util/is_resizeable.hpp>
@@ -141,6 +142,7 @@ public:
     typedef Resizer resizer_type;
     typedef Coefficients rosenbrock_coefficients;
     typedef stepper_tag stepper_category;
+    typedef implicit_system_tag system_category;
     typedef unsigned short order_type;
 
     typedef state_wrapper< state_type > wrapped_state_type;

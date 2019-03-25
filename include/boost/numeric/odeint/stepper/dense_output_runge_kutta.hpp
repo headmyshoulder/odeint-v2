@@ -36,6 +36,7 @@
 
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
+#include <boost/numeric/odeint/stepper/system_categories.hpp>
 
 #include <boost/numeric/odeint/integrate/max_step_checker.hpp>
 
@@ -81,6 +82,7 @@ public:
     typedef typename stepper_type::resizer_type resizer_type;
     typedef dense_output_stepper_tag stepper_category;
     typedef dense_output_runge_kutta< Stepper > dense_output_stepper_type;
+    typedef explicit_system_tag system_category;
 
 
     /**

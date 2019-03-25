@@ -36,6 +36,7 @@
 #include <boost/numeric/odeint/util/resizer.hpp>
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
+#include <boost/numeric/odeint/stepper/system_categories.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
 #include <boost/numeric/odeint/stepper/extrapolation_stepper.hpp>
 
@@ -99,6 +100,7 @@ public :
     typedef Time time_type;
     typedef Resizer resizer_type;
     typedef stepper_tag stepper_category;
+    typedef explicit_system_tag system_category;
 
     typedef InitializingStepper initializing_stepper_type;
 

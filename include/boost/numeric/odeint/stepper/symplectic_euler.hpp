@@ -20,6 +20,7 @@
 
 
 #include <boost/numeric/odeint/stepper/base/symplectic_rkn_stepper_base.hpp>
+#include <boost/numeric/odeint/stepper/system_categories.hpp>
 
 #include <boost/numeric/odeint/algebra/range_algebra.hpp>
 #include <boost/numeric/odeint/algebra/default_operations.hpp>
@@ -91,6 +92,7 @@ public:
 #endif
     typedef typename stepper_base_type::algebra_type algebra_type;
     typedef typename stepper_base_type::value_type value_type;
+    typedef symplectic_or_simple_symplectic_system_tag system_category;
 
 
     symplectic_euler( const algebra_type &algebra = algebra_type() )

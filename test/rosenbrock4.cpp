@@ -70,6 +70,7 @@ BOOST_AUTO_TEST_CASE( test_rosenbrock4_stepper )
 {
     typedef rosenbrock4< value_type > stepper_type;
     stepper_type stepper;
+    BOOST_STATIC_ASSERT_MSG( ( boost::is_same< stepper_type::system_category , implicit_system_tag >::value ) , "System category" );
 
     typedef stepper_type::state_type state_type;
     typedef stepper_type::value_type stepper_value_type;
