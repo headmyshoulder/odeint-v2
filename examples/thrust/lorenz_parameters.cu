@@ -82,7 +82,7 @@ struct lorenz_system
                         boost::begin( x ) + m_N ,
                         boost::begin( x ) + 2 * m_N ,
                         boost::begin( x ) + 3 * m_N ,
-                        m_beta.begin() ,
+                        m_beta.end() ,
                         boost::begin( dxdt ) + m_N ,
                         boost::begin( dxdt ) + 2 * m_N ,
                         boost::begin( dxdt ) + 3 * m_N  ) ) ,
@@ -149,7 +149,7 @@ struct lorenz_perturbation_system
                                 boost::begin( x ) + 4 * m_N ,
                                 boost::begin( x ) + 5 * m_N ,
                                 boost::begin( x ) + 6 * m_N ) ) ,
-                        m_beta.begin() ,
+                        m_beta.end() ,
                         thrust::make_zip_iterator( thrust::make_tuple(
                                 boost::begin( dxdt ) + m_N ,
                                 boost::begin( dxdt ) + 2 * m_N ,
