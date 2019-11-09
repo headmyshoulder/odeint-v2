@@ -198,7 +198,7 @@ int main(int /* argc */ , char** /* argv */ )
     
     
     //[ harm_iterator_const_step]
-    std::for_each( make_const_step_time_iterator_begin( stepper , harmonic_oscillator, x , 0.0 , 0.1 , 10.0 ) ,
+    std::for_each( make_const_step_time_iterator_begin( stepper , harmonic_oscillator, x , 0.0 , 10.0 , 0.1 ) ,
                    make_const_step_time_iterator_end( stepper , harmonic_oscillator, x ) ,
                    []( std::pair< const state_type & , const double & > x ) {
                        cout << x.second << " " << x.first[0] << " " << x.first[1] << "\n"; } );
